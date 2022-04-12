@@ -1,0 +1,27 @@
+{
+  "name": "test-room",
+  "frameWidth": 320,
+  "width": 640,
+  "height": 200,
+  "background": [
+    {
+      "url": "./assets/backgrounds/sky.png",
+      "parallax": 0
+    },
+    {
+      "url": "./assets/backgrounds/hill.png",
+      "parallax": 0.5,
+      "width": 480
+    },
+    {
+      "url": "./assets/backgrounds/indoors.png",
+      "parallax": 1,
+      "width": 640
+    },
+    {
+      "url": "./assets/backgrounds/trees.png",
+      "parallax": 1,
+      "width": 640
+    }
+  ]
+}
