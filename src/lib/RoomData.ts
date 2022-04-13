@@ -6,13 +6,21 @@ type BackgroundLayer = {
     height?: number,
 }
 
+type Zone = {
+    name: string,
+    x: number,
+    y: number,
+    path: string,
+    parallax: number,
+}
 
 type RoomData = {
     name: string
-    frameWidth:number,
+    frameWidth: number,
     width: number
     height: number
-    background: BackgroundLayer[]
+    background: BackgroundLayer[],
+    zones: Zone[]
 }
 
-export type { RoomData, BackgroundLayer}
+export type { RoomData, BackgroundLayer, Zone }
