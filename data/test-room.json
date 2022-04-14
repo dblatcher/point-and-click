@@ -1,7 +1,7 @@
 {
   "name": "test-room",
   "frameWidth": 320,
-  "width": 640,
+  "width": 480,
   "height": 200,
   "background": [
     {
@@ -10,13 +10,11 @@
     },
     {
       "url": "./assets/backgrounds/hill.png",
-      "parallax": 0.5,
-      "width": 480
+      "parallax": 0.5
     },
     {
       "url": "./assets/backgrounds/trees.png",
-      "parallax": 1,
-      "width": 640
+      "parallax": 1
     }
   ],
   "zones": [
