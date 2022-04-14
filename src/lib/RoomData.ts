@@ -2,7 +2,6 @@
 type BackgroundLayer = {
     url: string,
     parallax: number,
-    width?: number,
     height?: number,
 }
 
