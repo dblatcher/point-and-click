@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { BackgroundLayer, RoomData } from "../../lib/RoomData";
 import Background from "./Background";
-import ZoneShape from "./Zone";
+import ZoneShape from "./ZoneShape";
 
 interface Props {
     data: RoomData,

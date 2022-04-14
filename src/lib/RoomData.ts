@@ -10,8 +10,10 @@ type Zone = {
     name: string,
     x: number,
     y: number,
-    path: string,
     parallax: number,
+    path?: string,
+    circle?: number,
+    rect?: [number, number]
 }
 
 type RoomData = {
