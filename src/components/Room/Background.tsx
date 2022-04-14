@@ -11,9 +11,8 @@ interface Props {
 function makeLayerStyle(
     layer: BackgroundLayer, roomData: RoomData, scale: number, x: number
 ): h.JSX.CSSProperties {
-    const { url, parallax,  height = roomData.height } = layer
+    const { url, parallax, width = roomData.frameWidth, height = roomData.height } = layer
 
-    const layerWidth = roomData.frameWidth + (parallax * (roomData.width - roomData.frameWidth))
     const offcenter = (x - (roomData.width / 2)) / roomData.width
     const offset = (offcenter + .5) * parallax * 100
 
@@ -23,8 +22,8 @@ function makeLayerStyle(
         height: '100%',
         backgroundImage: `url(${url})`,
         backgroundRepeat: 'no-repeat',
-        backgroundSize: `${layerWidth * scale}px ${height * scale}px`,
-        backgroundPositionX: `${offset-25}%`,
+        backgroundSize: `${width * scale}px ${height * scale}px`,
+        backgroundPositionX: `${offset}%`,
         backgroundPositionY: 'bottom',
     }
 }
