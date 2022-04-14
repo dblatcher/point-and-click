@@ -1,0 +1,10 @@
+.zone {
+    fill: rgba(0, 243, 8, 0);
+    transition: fill .5s;
+}
+
+.zone:hover {
+    fill: rgba(0, 243, 8, 0.5);
+    stroke: white;
+    stroke-dasharray: 1,1;
+}

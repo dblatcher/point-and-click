@@ -1,4 +1,5 @@
 import { RoomData, Zone } from "../../lib/RoomData"
+import styles from  './styles.module.css';
 
 interface Props {
     zone: Zone
@@ -18,12 +19,10 @@ export default function ZoneShape({zone, roomData, x}:Props) {
             x={zone.x - parallax**2 * (x * (frameWidth / width))}
             y={zone.y} >
 
-            <path
+            <path className={styles.zone}
                 style={{
                     pointerEvents:'all'
                 }}
-                stroke='red'
-                fill='none'
                 onClick={() => { console.log(name) }}
                 d={path} />
         </svg>
