@@ -27,3 +27,7 @@ export function unMapXvalue(
 ): number {
     return mappedX + getPerspectiveAdjustment(parallax, observerX, roomData)
 }
+
+export function parallaxPosition(x, parallax, roomData: RoomData) {
+    return x * ((roomData.frameWidth * parallax ** 2 + roomData.width * (1 - parallax ** 2)) / roomData.frameWidth)
+}

@@ -21,7 +21,8 @@ function Marker(props: { scaledX: number }) {
         backgroundColor: 'violet',
         left: `${props.scaledX}px`,
         bottom: '0',
-        transform: 'translateX(-50%)'
+        transform: 'translateX(-50%)',
+        pointerEvents: 'none',
     }}></div>
 }
 
@@ -30,7 +31,7 @@ export const Room = ({ data, scale = 1, x = 0, handleRoomClick, handleZoneClick 
     const scaledX = x * scale * (data.frameWidth / data.width)
 
     const processRoomClick = (event: PointerEvent) => {
-        const vX = unMapXvalue(event.offsetX / scale, 1, x,data)
+        const vX = Math.floor(unMapXvalue(event.offsetX / scale, 1, x, data))
         return handleRoomClick(vX, event.offsetY / scale)
     }
 

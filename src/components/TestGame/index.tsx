@@ -3,6 +3,7 @@ import { RoomData, Zone } from "../../lib/RoomData";
 import { Room } from "../Room";
 
 import { useInterval } from "../../lib/useInterval"
+import { parallaxPosition } from "../../lib/util";
 
 interface Props {
     data: RoomData,
@@ -15,8 +16,8 @@ export const TestGame = ({ data }: Props) => {
     const [xCurrent, setCurrentX] = useState(0)
     const [xDestination, setXDestination] = useState(0)
 
-    useInterval(() => { 
-        moveHorizontalStep(xCurrent, xDestination, speed) 
+    useInterval(() => {
+        moveHorizontalStep(xCurrent, xDestination, speed)
     }, 10)
 
     const handleRoomClick = (x, y) => {
@@ -25,6 +26,8 @@ export const TestGame = ({ data }: Props) => {
     }
     const handleZoneClick = (zone: Zone) => {
         console.log('zone click', zone)
+        const destination = Math.floor(parallaxPosition(zone.x, zone.parallax, data))
+        setXDestination(destination)
     }
 
     const moveHorizontalStep = (current: number, destination: number, speed: number) => {
@@ -40,8 +43,14 @@ export const TestGame = ({ data }: Props) => {
 
     return (
         <main>
-            <button onClick={() => { setCurrentX(xCurrent - 10) }}>left</button>
-            <button onClick={() => { setCurrentX(xCurrent + 10) }}>right</button>
+            <button onClick={() => {
+                setCurrentX(xCurrent - 10)
+                setXDestination(xCurrent - 10)
+            }}>left</button>
+            <button onClick={() => {
+                setCurrentX(xCurrent + 10)
+                setXDestination(xCurrent + 10)
+            }}>right</button>
             <span>{xCurrent}</span>
             <Room
                 data={data} scale={2.5} x={xCurrent}
