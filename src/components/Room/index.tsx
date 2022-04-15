@@ -16,7 +16,7 @@ interface Props {
 export const Room = ({ data, scale = 1, x = 0, handleRoomClick, handleZoneClick }: Props) => {
 
     const processRoomClick = (event: PointerEvent) => {
-        const vX = Math.floor(unMapXvalue(event.offsetX / scale, 1, x, data))
+        const vX = unMapXvalue(event.offsetX / scale, 0, x, data)
         return handleRoomClick(vX, event.offsetY / scale)
     }
 
