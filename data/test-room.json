@@ -14,6 +14,12 @@
     },
     {
       "url": "./assets/backgrounds/house.png",
+      "parallax": 0.5,
+      "width": 100,
+      "x": 250
+    },
+    {
+      "url": "./assets/backgrounds/house.png",
       "parallax": 1,
       "width": 200,
       "x": 100
@@ -37,6 +43,13 @@
       "y": 30,
       "circle": 35,
       "parallax": 0
+    },
+    {
+      "name": "distant house",
+      "x": 250,
+      "y": 90,
+      "rect":[100,60],
+      "parallax": 0.5
     },
     {
       "name": "house",
