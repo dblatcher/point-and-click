@@ -2,6 +2,7 @@
     fill: rgba(0, 243, 8, 0);
     transition: fill .5s;
     pointer-events: all;
+    stroke: white;
 }
 
 .zone:hover {

@@ -2,7 +2,7 @@ import { h } from 'preact';
 import style from './style.css';
 import type { RoomData } from '../../lib/RoomData';
 
-import testRoomImport from '../../../data/test-room-2.json';
+import testRoomImport from '../../../data/test-room.json';
 import { TestGame } from '../../components/TestGame';
 
 const  testRoom = testRoomImport as RoomData;

@@ -3,7 +3,7 @@ import { RoomData, Zone } from "../../lib/RoomData";
 import { Room } from "../Room";
 
 import { useInterval } from "../../lib/useInterval"
-import { parallaxPosition } from "../../lib/util";
+
 
 interface Props {
     data: RoomData,
@@ -25,9 +25,7 @@ export const TestGame = ({ data }: Props) => {
         setXDestination(x)
     }
     const handleZoneClick = (zone: Zone) => {
-        console.log('zone click', zone)
-        const destination = Math.floor(parallaxPosition(zone.x, zone.parallax, data))
-        setXDestination(destination)
+        console.log('zone click', zone.name)
     }
 
     const moveHorizontalStep = (current: number, destination: number, speed: number) => {
