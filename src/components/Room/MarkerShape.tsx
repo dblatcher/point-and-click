@@ -16,7 +16,7 @@ export default function MarkerShape({
     return (
         <svg
             style={{ overflow: 'visible' }}
-            x={mapXvalue(x, 0, x, roomData)}
+            x={mapXvalue(x, 1, x, roomData)}
             y={roomData.height-50} >
             <rect className={styles.zone}
                 style={{ fill: 'violet', stroke:'green' }}
