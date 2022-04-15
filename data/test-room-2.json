@@ -10,26 +10,19 @@
     },
     {
       "url": "./assets/backgrounds/hill.png",
-      "parallax": 0.5,
-      "width": 480
+      "parallax": 0.5
     },
     {
       "url": "./assets/backgrounds/indoors.png",
-      "parallax": 1,
-      "width": 640
-    },
-    {
-      "url": "./assets/backgrounds/trees.png",
-      "parallax": 1,
-      "width": 640
+      "parallax": 1
     }
   ],
   "zones": [
     {
-      "name": "flag",
-      "x":200,
-      "y":150,
-      "path": "M 0 0 L 5 25 L 25 25 Z",
+      "name": "window",
+      "x": 235,
+      "y": 70,
+      "rect": [190, 60],
       "parallax": 1
     }
   ]
