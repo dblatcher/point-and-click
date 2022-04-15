@@ -3,6 +3,7 @@ import { RoomData, Zone } from "../../lib/RoomData";
 import { Room } from "../Room";
 
 import { useInterval } from "../../lib/useInterval"
+import { unMapXvalue } from "../../lib/util";
 
 
 interface Props {
@@ -21,8 +22,10 @@ export const TestGame = ({ data }: Props) => {
     }, 10)
 
     const handleRoomClick = (x, y) => {
-        console.log('room click', x, y)
-        setXDestination(x)
+
+        const vX = unMapXvalue(x, 1, xCurrent, data)
+        console.log('room click', x, y, { vX, xCurrent })
+        setXDestination(vX)
     }
     const handleZoneClick = (zone: Zone) => {
         console.log('zone click', zone.name)
@@ -51,7 +54,7 @@ export const TestGame = ({ data }: Props) => {
             }}>right</button>
             <span>{xCurrent}</span>
             <Room
-                data={data} scale={2.5} x={xCurrent}
+                data={data} scale={2} x={xCurrent}
                 handleRoomClick={handleRoomClick}
                 handleZoneClick={handleZoneClick} />
         </main>

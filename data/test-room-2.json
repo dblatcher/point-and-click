@@ -7,13 +7,14 @@
 
     {
       "url": "./assets/backgrounds/indoors.png",
-      "parallax": 1
+      "parallax": 1,
+      "width":480
     }
   ],
   "zones": [
     {
       "name": "window",
-      "x": 235,
+      "x": 150,
       "y": 70,
       "rect": [190, 60],
       "parallax": 1
