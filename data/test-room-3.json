@@ -1,0 +1,29 @@
+{
+  "name": "test-room",
+  "frameWidth": 320,
+  "width": 320,
+  "height": 200,
+  "background": [
+
+    {
+      "url": "./assets/backgrounds/indoors.png",
+      "parallax": 0
+    }
+  ],
+  "zones": [
+    {
+      "name": "window-l",
+      "x": 100,
+      "y": 70,
+      "rect": [10, 60],
+      "parallax": 0
+    },
+    {
+      "name": "window-r",
+      "x": 220,
+      "y": 70,
+      "rect": [10, 60],
+      "parallax": 0
+    }
+  ]
+}
