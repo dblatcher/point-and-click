@@ -1,32 +1,26 @@
 import { h } from "preact";
 import { BackgroundLayer, RoomData } from "../../lib/RoomData"
-import { mapXvalue } from "../../lib/util";
+import { getLayerWidth, getShift } from "../../lib/util";
+
 
 interface Props {
     layer: BackgroundLayer;
     roomData: RoomData;
-    x: number;
+    viewAngle: number;
 }
 
 
-export default function BackgroundShape({ layer, roomData, x }: Props) {
+export default function BackgroundShape({ layer, roomData, viewAngle }: Props) {
+    const { parallax, url } = layer
+    const { frameWidth, height: roomHeight } = roomData
 
-    const { parallax, url, width: layerWidth, x: layerX = 0 } = layer
-    const { frameWidth, width: roomWidth, height: roomHeight } = roomData
+    const layerWidth = getLayerWidth(parallax, roomData)
 
-    // asumption - layer is full width and parallax is in proportion to frame
-    const start = layerX
-    const imageWidth = layerWidth ||
-        frameWidth + (parallax * (roomWidth - frameWidth))
+    const center = (frameWidth / 2) + getShift(viewAngle,parallax,roomData)
+    const left = center - layerWidth / 2
 
-    const left = mapXvalue(start, parallax, x, roomData)
-    const top = 0
-
-    return <svg x={left} y={top} style={{ overflow: 'visible' }}>
-
-        <image width={imageWidth} height={roomHeight} href={url}>
+    return <svg x={left} y={0} style={{ overflow: 'visible' }}>
+        <image width={layerWidth} height={roomHeight} href={url} preserveAspectRatio='none'>
         </image>
     </svg>
-
-
 }

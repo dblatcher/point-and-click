@@ -13,18 +13,6 @@
       "parallax": 0.5
     },
     {
-      "url": "./assets/backgrounds/house.png",
-      "parallax": 0.5,
-      "width": 100,
-      "x": 250
-    },
-    {
-      "url": "./assets/backgrounds/house.png",
-      "parallax": 1,
-      "width": 200,
-      "x": 100
-    },
-    {
       "url": "./assets/backgrounds/trees.png",
       "parallax": 1
     }

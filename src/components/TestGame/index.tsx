@@ -14,6 +14,7 @@ const speed = 2
 
 export const TestGame = ({ data }: Props) => {
 
+    const [viewAngle, setViewAngle] = useState(0)
     const [xCurrent, setCurrentX] = useState(0)
     const [xDestination, setXDestination] = useState(0)
 
@@ -44,17 +45,34 @@ export const TestGame = ({ data }: Props) => {
 
     return (
         <main>
-            <button onClick={() => {
-                setCurrentX(xCurrent - 10)
-                setXDestination(xCurrent - 10)
-            }}>left</button>
-            <button onClick={() => {
-                setCurrentX(xCurrent + 10)
-                setXDestination(xCurrent + 10)
-            }}>right</button>
-            <span>{xCurrent}</span>
+            <div>
+
+                <button onClick={() => {
+                    setCurrentX(xCurrent - 10)
+                    setXDestination(xCurrent - 10)
+                }}>left</button>
+                <span>position {xCurrent}</span>
+                <button onClick={() => {
+                    setCurrentX(xCurrent + 10)
+                    setXDestination(xCurrent + 10)
+                }}>right</button>
+            </div>
+
+
+            <div>
+
+                <button onClick={() => {
+                    setViewAngle(viewAngle + .1)
+                }}>&larr;</button>
+                <span>viewAngle {viewAngle.toFixed(3)}</span>
+                <button onClick={() => {
+                    setViewAngle(viewAngle - .1)
+                }}>&rarr;</button>
+
+            </div>
             <Room
                 data={data} scale={2} x={xCurrent}
+                viewAngle={viewAngle}
                 handleRoomClick={handleRoomClick}
                 handleZoneClick={handleZoneClick} />
         </main>

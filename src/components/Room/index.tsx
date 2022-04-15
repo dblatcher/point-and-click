@@ -8,12 +8,13 @@ import ZoneShape from "./ZoneShape";
 interface Props {
     data: RoomData,
     scale?: number,
-    x?: number,
+    x: number,
+    viewAngle: number,
     handleRoomClick: { (x: number, y: number): void }
     handleZoneClick: { (zone: Zone): void }
 }
 
-export const Room = ({ data, scale = 1, x = 0, handleRoomClick, handleZoneClick }: Props) => {
+export const Room = ({ data, scale = 1, x = 0, viewAngle, handleRoomClick, handleZoneClick }: Props) => {
 
     const processRoomClick = (event: MouseEvent) => {
         return handleRoomClick(event.offsetX/scale, event.offsetY / scale)
@@ -41,21 +42,21 @@ export const Room = ({ data, scale = 1, x = 0, handleRoomClick, handleZoneClick 
                 {data.background.map(layer =>
                     <BackgroundShape
                         layer={layer}
-                        x={x}
+                        viewAngle={viewAngle}
                         roomData={data}
                     />
                 )}
 
-                {data.zones.map(zone =>
+                {/* {data.zones.map(zone =>
                     <ZoneShape
                         zone={zone}
                         x={x}
                         roomData={data}
                         clickHandler={handleZoneClick}
                     />
-                )}
+                )} */}
 
-                <MarkerShape x={x} roomData={data} />
+                {/* <MarkerShape x={x} roomData={data} /> */}
             </svg>
 
             <figcaption>{data.name}</figcaption>

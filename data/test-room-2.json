@@ -6,9 +6,12 @@
   "background": [
 
     {
+      "url": "./assets/backgrounds/trees.png",
+      "parallax": 0.5
+    },
+    {
       "url": "./assets/backgrounds/indoors.png",
-      "parallax": 1,
-      "width":480
+      "parallax": 1
     }
   ],
   "zones": [
