@@ -11,15 +11,20 @@ interface Props {
 
 export default function BackgroundShape({ layer, roomData, x }: Props) {
 
+    const { parallax, url, width: layerWidth, x: layerX = 0 } = layer
+    const { frameWidth, width: roomWidth, height: roomHeight } = roomData
 
-    const start = 0
+    // asumption - layer is full width and parallax is in proportion to frame
+    const start = layerX
+    const imageWidth = layerWidth ||
+        frameWidth + (parallax * (roomWidth - frameWidth))
 
-    const left = mapXvalue(start,layer.parallax,x,roomData)
+    const left = mapXvalue(start, parallax, x, roomData)
     const top = 0
 
-    return <svg x={left} y={top} style={{overflow:'visible'}}>
+    return <svg x={left} y={top} style={{ overflow: 'visible' }}>
 
-        <image  width={layer.width} height={roomData.height} href={layer.url}>
+        <image width={imageWidth} height={roomHeight} href={url}>
         </image>
     </svg>
 

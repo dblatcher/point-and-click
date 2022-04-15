@@ -4,6 +4,7 @@ type BackgroundLayer = {
     parallax: number,
     width?: number,
     height?: number,
+    x?:number,
 }
 
 type Zone = {
