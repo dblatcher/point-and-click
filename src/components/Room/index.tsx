@@ -1,5 +1,6 @@
 import { h } from "preact";
-import { RoomData } from "../../lib/RoomData";
+import { RoomData, Zone } from "../../lib/RoomData";
+import { mapXvalue, unMapXvalue } from "../../lib/util";
 import BackgroundShape from "./BackgroundShape";
 import ZoneShape from "./ZoneShape";
 
@@ -7,6 +8,8 @@ interface Props {
     data: RoomData,
     scale?: number,
     x?: number,
+    handleRoomClick: { (x: number, y: number): void }
+    handleZoneClick: { (zone: Zone): void }
 }
 
 function Marker(props: { scaledX: number }) {
@@ -22,9 +25,14 @@ function Marker(props: { scaledX: number }) {
     }}></div>
 }
 
-export const Room = ({ data, scale = 1, x = 0 }: Props) => {
+export const Room = ({ data, scale = 1, x = 0, handleRoomClick, handleZoneClick }: Props) => {
 
     const scaledX = x * scale * (data.frameWidth / data.width)
+
+    const processRoomClick = (event: PointerEvent) => {
+        const vX = unMapXvalue(event.offsetX / scale, 1, x,data)
+        return handleRoomClick(vX, event.offsetY / scale)
+    }
 
     return (
         <figure style={{
@@ -32,7 +40,9 @@ export const Room = ({ data, scale = 1, x = 0 }: Props) => {
             width: `${data.frameWidth * scale}px`,
             height: `${data.height * scale}px`,
             position: 'relative',
-        }}>
+        }}
+            onClick={processRoomClick}
+        >
 
             <svg xmlns="http://www.w3.org/2000/svg"
                 style={{
@@ -56,6 +66,7 @@ export const Room = ({ data, scale = 1, x = 0 }: Props) => {
                         zone={zone}
                         x={x}
                         roomData={data}
+                        clickHandler={handleZoneClick}
                     />
                 )}
             </svg>
