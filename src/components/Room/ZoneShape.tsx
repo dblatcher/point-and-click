@@ -1,4 +1,5 @@
 import { RoomData, Zone } from "../../lib/RoomData"
+import { mapXvalue } from "../../lib/util";
 import styles from './styles.module.css';
 
 interface Props {
@@ -12,15 +13,13 @@ export default function ZoneShape({
     zone, roomData, x,
     clickHandler = (zone) => { console.log(zone) }
 }: Props) {
-    const { parallax, path, circle, rect } = zone
-    const { width, frameWidth } = roomData
-
+    const { path, circle, rect } = zone
     const shape = path ? 'path' : circle ? 'circle' : rect ? 'rect' : undefined;
 
     return (
         <svg
             style={{ overflow: 'visible' }}
-            x={zone.x - parallax ** 2 * (x * (frameWidth / width))}
+            x={mapXvalue(zone.x, zone.parallax, x, roomData)}
             y={zone.y} >
 
             {shape === 'path' &&
