@@ -1,19 +1,19 @@
 import { RoomData, Zone } from "../../lib/RoomData"
-import { mapXvalue } from "../../lib/util";
+import { getShift } from "../../lib/util";
 import styles from './styles.module.css';
 
 interface Props {
     zone: Zone
     roomData: RoomData
-    x: number
+    viewAngle:number
     clickHandler?: { (zone: Zone): void }
 }
 
 export default function ZoneShape({
-    zone, roomData, x,
+    zone, roomData, viewAngle,
     clickHandler = (zone) => { console.log(zone) }
 }: Props) {
-    const { path, circle, rect } = zone
+    const { path, circle, rect, parallax } = zone
     const shape = path ? 'path' : circle ? 'circle' : rect ? 'rect' : undefined;
 
     const processClick = (event: PointerEvent, zone) => {
@@ -24,7 +24,7 @@ export default function ZoneShape({
     return (
         <svg
             style={{ overflow: 'visible' }}
-            x={mapXvalue(zone.x, zone.parallax, x, roomData)}
+            x={zone.x + getShift(viewAngle,parallax,roomData)}
             y={zone.y} >
 
             {shape === 'path' &&

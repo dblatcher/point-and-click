@@ -20,7 +20,7 @@
   "zones": [
     {
       "name": "flag",
-      "x": 230,
+      "x": 150,
       "y": 20,
       "path": "M 0 0 L 20 0 L 20 50 L 0 20 Z",
       "parallax": 0.5
@@ -33,29 +33,15 @@
       "parallax": 0
     },
     {
-      "name": "distant house",
-      "x": 250,
-      "y": 90,
-      "rect":[100,60],
-      "parallax": 0.5
-    },
-    {
-      "name": "house",
-      "x": 100,
-      "y": 80,
-      "rect":[200,200],
-      "parallax": 1
-    },
-    {
       "name": "tree",
-      "x": 180,
+      "x": 110,
       "y": 100,
       "rect": [70, 100],
       "parallax": 1
     },
     {
       "name": "bush",
-      "x": 330,
+      "x": 175,
       "y": 150,
       "rect": [60, 50],
       "parallax": 1

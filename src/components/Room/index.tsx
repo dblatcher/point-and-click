@@ -17,7 +17,7 @@ interface Props {
 export const Room = ({ data, scale = 1, x = 0, viewAngle, handleRoomClick, handleZoneClick }: Props) => {
 
     const processRoomClick = (event: MouseEvent) => {
-        return handleRoomClick(event.offsetX/scale, event.offsetY / scale)
+        return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
     }
 
     return (
@@ -47,14 +47,14 @@ export const Room = ({ data, scale = 1, x = 0, viewAngle, handleRoomClick, handl
                     />
                 )}
 
-                {/* {data.zones.map(zone =>
+                {data.zones.map(zone =>
                     <ZoneShape
                         zone={zone}
-                        x={x}
+                        viewAngle={viewAngle}
                         roomData={data}
                         clickHandler={handleZoneClick}
                     />
-                )} */}
+                )}
 
                 {/* <MarkerShape x={x} roomData={data} /> */}
             </svg>

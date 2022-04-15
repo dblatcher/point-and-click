@@ -17,9 +17,9 @@
   "zones": [
     {
       "name": "window",
-      "x": 150,
+      "x": 50,
       "y": 70,
-      "rect": [190, 60],
+      "rect": [240, 60],
       "parallax": 1
     }
   ]
