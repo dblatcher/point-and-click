@@ -1,7 +1,8 @@
 import { h } from "preact";
 import { RoomData, Zone } from "../../lib/RoomData";
-import { mapXvalue, unMapXvalue } from "../../lib/util";
+import { unMapXvalue } from "../../lib/util";
 import BackgroundShape from "./BackgroundShape";
+import MarkerShape from "./MarkerShape";
 import ZoneShape from "./ZoneShape";
 
 interface Props {
@@ -12,23 +13,7 @@ interface Props {
     handleZoneClick: { (zone: Zone): void }
 }
 
-function Marker(props: { scaledX: number }) {
-    return <div style={{
-        display: 'inlineBlock',
-        width: '10px',
-        height: '30px',
-        position: 'absolute',
-        backgroundColor: 'violet',
-        left: `${props.scaledX}px`,
-        bottom: '0',
-        transform: 'translateX(-50%)',
-        pointerEvents: 'none',
-    }}></div>
-}
-
 export const Room = ({ data, scale = 1, x = 0, handleRoomClick, handleZoneClick }: Props) => {
-
-    const scaledX = x * scale * (data.frameWidth / data.width)
 
     const processRoomClick = (event: PointerEvent) => {
         const vX = Math.floor(unMapXvalue(event.offsetX / scale, 1, x, data))
@@ -70,9 +55,10 @@ export const Room = ({ data, scale = 1, x = 0, handleRoomClick, handleZoneClick 
                         clickHandler={handleZoneClick}
                     />
                 )}
+
+                <MarkerShape x={x} roomData={data} />
             </svg>
 
-            <Marker {...{ scaledX }} />
             <figcaption>{data.name}</figcaption>
         </figure>
     )
