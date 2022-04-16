@@ -4,25 +4,27 @@ export function clamp(value: number, max = 1, min = 0) {
 }
 
 export function placeOnScreen(xPosition: number, viewAngle: number, roomData: RoomData) {
-    const layerWidth = getLayerWidth(1, roomData)
-    const offCenter = 2 * (xPosition - layerWidth / 2) / layerWidth
+    const { width, frameWidth } = roomData
+    const offCenter = 2 * (xPosition - width / 2) / width
     const shift = getShift(viewAngle, 1, roomData)
-    return (roomData.frameWidth / 2) + (offCenter * roomData.frameWidth) + shift
+    return (frameWidth / 2) + (offCenter * frameWidth) + shift
 }
 
 // only works when layerWidth = frameWidth/2
 export function locateClickInWorld(clickXPosition: number, viewAngle: number, roomData: RoomData) {
-    const layerWidth = getLayerWidth(1, roomData)
+    const { width , frameWidth} = roomData
     const shift = getShift(viewAngle, 1, roomData)
-    const offCenterInPoints = (clickXPosition - roomData.frameWidth / 2)
-    const centerOfScreenXPosition = (layerWidth / 2) - shift
+    const offCenterInPoints = (clickXPosition - frameWidth / 2)
+    const centerOfScreenXPosition = (width / 2) - shift
     const xPosition = offCenterInPoints + centerOfScreenXPosition
+
+    console.log({ offCenterInPoints, centerOfScreenXPosition })
     return xPosition
 }
 
 export function getViewAngleCenteredOn(xPosition: number, roomData: RoomData) {
-    const layerWidth = getLayerWidth(1, roomData)
-    const offCenter = 2 * (xPosition - layerWidth / 2) / layerWidth
+    const { width } = roomData
+    const offCenter = 2 * (xPosition - width / 2) / width
     return -offCenter * 2
 }
 

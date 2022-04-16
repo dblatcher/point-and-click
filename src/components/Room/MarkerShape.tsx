@@ -6,10 +6,11 @@ interface Props {
     roomData: RoomData
     x: number
     viewAngle: number
+    color:string
 }
 
 export default function MarkerShape({
-    roomData, x, viewAngle
+    roomData, x, viewAngle, color
 }: Props) {
 
     return (
@@ -18,8 +19,9 @@ export default function MarkerShape({
             x={placeOnScreen(x, viewAngle, roomData)}
             y={roomData.height - 50} >
             <rect className={styles.zone}
-                style={{ fill: 'violet', stroke: 'green' }}
+                style={{ fill: color, stroke: 'white' }}
                 x={-5} y={0} width={10} height={50} />
+            <text stroke={'white'}>{x}</text>
         </svg>
     )
 }

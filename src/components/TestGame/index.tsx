@@ -23,7 +23,7 @@ export const TestGame = ({ data }: Props) => {
             const distance = Math.min(speed, Math.abs(xCurrent - xDestination))
             const direction = xCurrent < xDestination ? 1 : -1
             setCurrentX(xCurrent + (distance * direction))
-            followMarker()
+            // followMarker()
         }
     }
 

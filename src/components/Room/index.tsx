@@ -55,7 +55,12 @@ export const Room = ({ data, scale = 1, markerX = 0, viewAngle, handleRoomClick,
                     />
                 )}
 
-                <MarkerShape x={markerX} viewAngle={viewAngle} roomData={data} />
+                <MarkerShape x={data.width * 0} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape x={data.width * .25} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape x={data.width * .5} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape x={data.width * .75} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape x={data.width * 1} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape x={markerX} viewAngle={viewAngle} roomData={data} color='violet' />
             </svg>
 
             <figcaption>{data.name}</figcaption>
