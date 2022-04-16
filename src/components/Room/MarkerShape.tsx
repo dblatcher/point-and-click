@@ -21,7 +21,7 @@ export default function MarkerShape({
             <rect className={styles.zone}
                 style={{ fill: color, stroke: 'white' }}
                 x={-5} y={0} width={10} height={50} />
-            <text stroke={'white'}>{x}</text>
+            <text stroke={'white'} fill={'red'}>{x}</text>
         </svg>
     )
 }

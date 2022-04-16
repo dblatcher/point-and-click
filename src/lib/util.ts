@@ -7,18 +7,17 @@ export function placeOnScreen(xPosition: number, viewAngle: number, roomData: Ro
     const { width, frameWidth } = roomData
     const offCenter = 2 * (xPosition - width / 2) / width
     const shift = getShift(viewAngle, 1, roomData)
-    return (frameWidth / 2) + (offCenter * frameWidth) + shift
+    const result = (frameWidth / 2) + (offCenter * (width / 2)) + shift
+    return result
 }
 
-// only works when layerWidth = frameWidth/2
+
 export function locateClickInWorld(clickXPosition: number, viewAngle: number, roomData: RoomData) {
-    const { width , frameWidth} = roomData
+    const { width, frameWidth } = roomData
     const shift = getShift(viewAngle, 1, roomData)
     const offCenterInPoints = (clickXPosition - frameWidth / 2)
     const centerOfScreenXPosition = (width / 2) - shift
     const xPosition = offCenterInPoints + centerOfScreenXPosition
-
-    console.log({ offCenterInPoints, centerOfScreenXPosition })
     return xPosition
 }
 
