@@ -3,7 +3,7 @@ import { RoomData, Zone } from "../../lib/RoomData";
 import { Room } from "../Room";
 
 import { useInterval } from "../../lib/useInterval"
-import { unMapXvalue } from "../../lib/util";
+import { getShift } from "../../lib/util";
 
 
 interface Props {
@@ -23,9 +23,8 @@ export const TestGame = ({ data }: Props) => {
     }, 10)
 
     const handleRoomClick = (x, y) => {
-
-        const vX = unMapXvalue(x, 1, xCurrent, data)
-        console.log('room click', x, y, { vX, xCurrent })
+        const vX = x - getShift(viewAngle,1,data)
+        console.log('room click', x, y)
         setXDestination(vX)
     }
     const handleZoneClick = (zone: Zone) => {
@@ -41,12 +40,9 @@ export const TestGame = ({ data }: Props) => {
         }
     }
 
-
-
     return (
         <main>
             <div>
-
                 <button onClick={() => {
                     setCurrentX(xCurrent - 10)
                     setXDestination(xCurrent - 10)
@@ -58,9 +54,7 @@ export const TestGame = ({ data }: Props) => {
                 }}>right</button>
             </div>
 
-
             <div>
-
                 <button onClick={() => {
                     setViewAngle(viewAngle + .1)
                 }}>&larr;</button>
@@ -68,10 +62,10 @@ export const TestGame = ({ data }: Props) => {
                 <button onClick={() => {
                     setViewAngle(viewAngle - .1)
                 }}>&rarr;</button>
-
             </div>
+
             <Room
-                data={data} scale={2} x={xCurrent}
+                data={data} scale={2} markerX={xCurrent}
                 viewAngle={viewAngle}
                 handleRoomClick={handleRoomClick}
                 handleZoneClick={handleZoneClick} />

@@ -1,22 +1,21 @@
 import { RoomData, Zone } from "../../lib/RoomData"
-import { mapXvalue } from "../../lib/util";
+import { getShift } from "../../lib/util";
 import styles from './styles.module.css';
 
 interface Props {
     roomData: RoomData
     x: number
+    viewAngle:number
 }
 
 export default function MarkerShape({
-    roomData, x,
-
+    roomData, x, viewAngle
 }: Props) {
-
 
     return (
         <svg
             style={{ overflow: 'visible' }}
-            x={mapXvalue(x, 0, x, roomData)}
+            x={x + getShift(viewAngle,1,roomData)}
             y={roomData.height-50} >
             <rect className={styles.zone}
                 style={{ fill: 'violet', stroke:'green' }}

@@ -1,6 +1,5 @@
 import { h } from "preact";
 import { RoomData, Zone } from "../../lib/RoomData";
-import { unMapXvalue } from "../../lib/util";
 import BackgroundShape from "./BackgroundShape";
 import MarkerShape from "./MarkerShape";
 import ZoneShape from "./ZoneShape";
@@ -8,13 +7,13 @@ import ZoneShape from "./ZoneShape";
 interface Props {
     data: RoomData,
     scale?: number,
-    x: number,
+    markerX: number,
     viewAngle: number,
     handleRoomClick: { (x: number, y: number): void }
     handleZoneClick: { (zone: Zone): void }
 }
 
-export const Room = ({ data, scale = 1, x = 0, viewAngle, handleRoomClick, handleZoneClick }: Props) => {
+export const Room = ({ data, scale = 1, markerX = 0, viewAngle, handleRoomClick, handleZoneClick }: Props) => {
 
     const processRoomClick = (event: MouseEvent) => {
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
@@ -56,7 +55,7 @@ export const Room = ({ data, scale = 1, x = 0, viewAngle, handleRoomClick, handl
                     />
                 )}
 
-                {/* <MarkerShape x={x} roomData={data} /> */}
+                <MarkerShape x={markerX} viewAngle={viewAngle} roomData={data} />
             </svg>
 
             <figcaption>{data.name}</figcaption>
