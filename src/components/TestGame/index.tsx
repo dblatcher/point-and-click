@@ -3,7 +3,7 @@ import { RoomData, Zone } from "../../lib/RoomData";
 import { Room } from "../Room";
 
 import { useInterval } from "../../lib/useInterval"
-import { clamp, getLayerWidth, locateClickInWorld } from "../../lib/util";
+import { getViewAngleCenteredOn, clamp, getLayerWidth, locateClickInWorld } from "../../lib/util";
 
 
 interface Props {
@@ -23,14 +23,12 @@ export const TestGame = ({ data }: Props) => {
             const distance = Math.min(speed, Math.abs(xCurrent - xDestination))
             const direction = xCurrent < xDestination ? 1 : -1
             setCurrentX(xCurrent + (distance * direction))
-            // followMarker()
+            followMarker()
         }
     }
 
     const followMarker = () => {
-        const relativePosition = .5 - (xCurrent / getLayerWidth(1, data))
-        //console.log({ relativePosition, xCurrent })
-        setViewAngle(clamp(relativePosition * 1.5, 1, -1))
+        setViewAngle(clamp(getViewAngleCenteredOn(xCurrent, data), 1, -1))
     }
 
     useInterval(() => {
