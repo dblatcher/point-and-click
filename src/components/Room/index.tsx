@@ -2,7 +2,7 @@ import { h } from "preact";
 import { RoomData, Zone } from "../../lib/RoomData";
 import BackgroundShape from "./BackgroundShape";
 import MarkerShape from "./MarkerShape";
-import ZoneShape from "./ZoneShape";
+import HotSpot from "./HotSpot";
 
 interface Props {
     data: RoomData,
@@ -10,10 +10,10 @@ interface Props {
     markerX: number,
     viewAngle: number,
     handleRoomClick: { (x: number, y: number): void }
-    handleZoneClick: { (zone: Zone): void }
+    handleHotSpotClick: { (zone: Zone): void }
 }
 
-export const Room = ({ data, scale = 1, markerX = 0, viewAngle, handleRoomClick, handleZoneClick }: Props) => {
+export const Room = ({ data, scale = 1, markerX = 0, viewAngle, handleRoomClick, handleHotSpotClick }: Props) => {
 
     const processRoomClick = (event: MouseEvent) => {
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
@@ -46,12 +46,12 @@ export const Room = ({ data, scale = 1, markerX = 0, viewAngle, handleRoomClick,
                     />
                 )}
 
-                {data.zones.map(zone =>
-                    <ZoneShape
+                {data.hotspots.map(zone =>
+                    <HotSpot
                         zone={zone}
                         viewAngle={viewAngle}
                         roomData={data}
-                        clickHandler={handleZoneClick}
+                        clickHandler={handleHotSpotClick}
                     />
                 )}
 

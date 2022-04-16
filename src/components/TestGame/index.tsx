@@ -39,8 +39,8 @@ export const TestGame = ({ data }: Props) => {
         const vX = locateClickInWorld(x, viewAngle, data)
         setXDestination(vX)
     }
-    const handleZoneClick = (zone: Zone) => {
-        console.log('zone click', zone.name)
+    const handleHotSpotClick = (zone: Zone) => {
+        console.log('hotspot click', zone.name)
     }
 
     return (
@@ -71,7 +71,7 @@ export const TestGame = ({ data }: Props) => {
                 data={data} scale={2} markerX={xCurrent}
                 viewAngle={viewAngle}
                 handleRoomClick={handleRoomClick}
-                handleZoneClick={handleZoneClick} />
+                handleHotSpotClick={handleHotSpotClick} />
         </main>
     )
 

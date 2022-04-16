@@ -14,7 +14,7 @@
       "parallax": 1
     }
   ],
-  "zones": [
+  "hotspots": [
     {
       "name": "window",
       "x": 50,

@@ -1,3 +1,4 @@
+import { polygonToPathD } from "../../lib/Polygon";
 import { RoomData, Zone } from "../../lib/RoomData"
 import { getShift } from "../../lib/util";
 import styles from './styles.module.css';
@@ -5,16 +6,16 @@ import styles from './styles.module.css';
 interface Props {
     zone: Zone
     roomData: RoomData
-    viewAngle:number
+    viewAngle: number
     clickHandler?: { (zone: Zone): void }
 }
 
-export default function ZoneShape({
+export default function HotSpot({
     zone, roomData, viewAngle,
     clickHandler = (zone) => { console.log(zone) }
 }: Props) {
-    const { path, circle, rect, parallax } = zone
-    const shape = path ? 'path' : circle ? 'circle' : rect ? 'rect' : undefined;
+    const { path, circle, rect, polygon, parallax } = zone
+    const shape = polygon ? 'polygon' : path ? 'path' : circle ? 'circle' : rect ? 'rect' : undefined;
 
     const processClick = (event: PointerEvent, zone) => {
         event.stopPropagation()
@@ -24,9 +25,14 @@ export default function ZoneShape({
     return (
         <svg
             style={{ overflow: 'visible' }}
-            x={zone.x + getShift(viewAngle,parallax,roomData)}
+            x={zone.x + getShift(viewAngle, parallax, roomData)}
             y={zone.y} >
 
+            {shape === 'polygon' &&
+                <path className={styles.zone}
+                    onClick={(event: PointerEvent) => { processClick(event, zone) }}
+                    d={polygonToPathD(polygon)} />
+            }
             {shape === 'path' &&
                 <path className={styles.zone}
                     onClick={(event: PointerEvent) => { processClick(event, zone) }}
