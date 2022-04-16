@@ -3,7 +3,7 @@ import { RoomData, Zone } from "../../lib/RoomData";
 import { Room } from "../Room";
 
 import { useInterval } from "../../lib/useInterval"
-import { clamp, getLayerWidth, getShift } from "../../lib/util";
+import { clamp, getLayerWidth, locateClickInWorld } from "../../lib/util";
 
 
 interface Props {
@@ -15,7 +15,7 @@ const speed = 2
 export const TestGame = ({ data }: Props) => {
 
     const [viewAngle, setViewAngle] = useState(0)
-    const [xCurrent, setCurrentX] = useState(data.width/2)
+    const [xCurrent, setCurrentX] = useState(data.width / 2)
     const [xDestination, setXDestination] = useState(xCurrent)
 
     const moveHorizontalStep = (speed: number) => {
@@ -23,13 +23,13 @@ export const TestGame = ({ data }: Props) => {
             const distance = Math.min(speed, Math.abs(xCurrent - xDestination))
             const direction = xCurrent < xDestination ? 1 : -1
             setCurrentX(xCurrent + (distance * direction))
-            followMarker()
+            // followMarker()
         }
     }
 
     const followMarker = () => {
         const relativePosition = .5 - (xCurrent / getLayerWidth(1, data))
-        console.log({ relativePosition, xCurrent })
+        //console.log({ relativePosition, xCurrent })
         setViewAngle(clamp(relativePosition * 1.5, 1, -1))
     }
 
@@ -38,8 +38,7 @@ export const TestGame = ({ data }: Props) => {
     }, 10)
 
     const handleRoomClick = (x, y) => {
-        const vX = x - getShift(viewAngle, 1, data)
-        console.log('room click', x, y)
+        const vX = locateClickInWorld(x, viewAngle, data)
         setXDestination(vX)
     }
     const handleZoneClick = (zone: Zone) => {
