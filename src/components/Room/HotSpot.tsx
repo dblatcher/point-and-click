@@ -1,4 +1,5 @@
-import { RoomData, Zone } from "../../lib/RoomData"
+import { RoomData } from "../../lib/RoomData"
+import { Zone } from "../../lib/Zone"
 import { getShift } from "../../lib/util";
 import ZoneSvg from "../ZoneSvg";
 import styles from './styles.module.css';
@@ -17,12 +18,12 @@ export default function HotSpot({
     const { parallax } = zone
 
     return (
-        <ZoneSvg 
+        <ZoneSvg
             className={styles.hotSpot}
-            x={zone.x + getShift(viewAngle, parallax, roomData)} 
-            y={zone.y} 
-            clickHandler={clickHandler} 
-            stopPropagation={true} 
+            x={zone.x + getShift(viewAngle, parallax, roomData)}
+            y={zone.y}
+            clickHandler={clickHandler}
+            stopPropagation={true}
             zone={zone} />
     )
 }

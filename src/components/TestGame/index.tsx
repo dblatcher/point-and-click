@@ -1,5 +1,6 @@
 import { useState } from "preact/hooks";
-import { RoomData, Zone } from "../../lib/RoomData";
+import { RoomData } from "../../lib/RoomData";
+import { Zone } from "../../lib/Zone";
 import { Room } from "../Room";
 
 import { useInterval } from "../../lib/useInterval"

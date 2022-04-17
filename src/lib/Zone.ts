@@ -1,14 +1,17 @@
 import { Polygon } from "./Polygon"
 
-type Zone = {
-    name: string,
+interface Zone  {
     x: number,
     y: number,
-    parallax: number,
     path?: string,
     polygon?: Polygon,
     circle?: number,
     rect?: [number, number]
 }
 
-export type { Zone }
+interface HotSpotZone extends Zone {
+    name: string,
+    parallax: number,
+}
+
+export type { Zone, HotSpotZone }

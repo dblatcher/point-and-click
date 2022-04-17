@@ -1,7 +1,5 @@
 import { polygonToPathD } from "../lib/Polygon";
-import { Zone } from "../lib/RoomData"
-
-
+import { Zone } from "../lib/Zone"
 
 interface Props {
     zone: Zone

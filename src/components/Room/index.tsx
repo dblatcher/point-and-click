@@ -1,14 +1,15 @@
 import { h, ComponentChildren } from "preact";
-import { RoomData, Zone } from "../../lib/RoomData";
+import { RoomData } from "../../lib/RoomData";
+import { Zone } from "../../lib/Zone";
 import BackgroundShape from "./BackgroundShape";
 import MarkerShape from "../MarkerShape";
 import HotSpot from "./HotSpot";
+import ZoneSvg from "../ZoneSvg";
+import styles from './styles.module.css';
 
 interface Props {
     data: RoomData,
     scale?: number,
-    markerX: number,
-    markerY: number,
     viewAngle: number,
     handleRoomClick: { (x: number, y: number): void }
     handleHotSpotClick: { (zone: Zone): void }
@@ -18,8 +19,6 @@ interface Props {
 export const Room = ({
     data,
     scale = 1,
-    markerX = 0,
-    markerY,
     viewAngle,
     handleRoomClick,
     handleHotSpotClick,
@@ -29,12 +28,13 @@ export const Room = ({
     const processRoomClick = (event: MouseEvent) => {
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
     }
+    const { name, frameWidth, width, height, background, hotspots, walkableAreas = [] } = data;
 
     return (
         <figure style={{
             border: '1px solid black',
-            width: `${data.frameWidth * scale}px`,
-            height: `${data.height * scale}px`,
+            width: `${frameWidth * scale}px`,
+            height: `${height * scale}px`,
             position: 'relative',
         }}
             onClick={processRoomClick}
@@ -47,9 +47,9 @@ export const Room = ({
                     height: '100%',
                     left: 0,
                     top: 0,
-                }} viewBox={`0 0 ${data.frameWidth} ${data.height}`}>
+                }} viewBox={`0 0 ${frameWidth} ${height}`}>
 
-                {data.background.map(layer =>
+                {background.map(layer =>
                     <BackgroundShape
                         layer={layer}
                         viewAngle={viewAngle}
@@ -57,7 +57,17 @@ export const Room = ({
                     />
                 )}
 
-                {data.hotspots.map(zone =>
+                {walkableAreas.map(zone =>
+                    <ZoneSvg
+                        className={styles.walkableArea}
+                        stopPropagation={false}
+                        zone={zone}
+                        x={zone.x}
+                        y={zone.y}
+                    />
+                )}
+
+                {hotspots.map(zone =>
                     <HotSpot
                         zone={zone}
                         viewAngle={viewAngle}
@@ -66,17 +76,17 @@ export const Room = ({
                     />
                 )}
 
-                <MarkerShape y={10} height={20} x={data.width * 0} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape y={10} height={20} x={data.width * .25} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape y={10} height={20} x={data.width * .5} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape y={10} height={20} x={data.width * .75} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape y={10} height={20} x={data.width * 1} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape y={10} height={20} x={width * 0} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape y={10} height={20} x={width * .25} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape y={10} height={20} x={width * .5} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape y={10} height={20} x={width * .75} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape y={10} height={20} x={width * 1} viewAngle={viewAngle} roomData={data} color='blue' />
 
                 {children}
 
             </svg>
 
-            <figcaption>{data.name}</figcaption>
+            <figcaption>{name}</figcaption>
         </figure>
     )
 

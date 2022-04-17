@@ -1,4 +1,4 @@
-import { Zone } from "./Zone"
+import { HotSpotZone, Zone } from "./Zone"
 
 type BackgroundLayer = {
     url: string,
@@ -14,7 +14,8 @@ type RoomData = {
     width: number
     height: number
     background: BackgroundLayer[],
-    hotspots?: Zone[]
+    hotspots?: HotSpotZone[],
+    walkableAreas?: Zone[]
 }
 
-export type { RoomData, BackgroundLayer, Zone }
+export type { RoomData, BackgroundLayer }
