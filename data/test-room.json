@@ -10,7 +10,7 @@
     },
     {
       "url": "./assets/backgrounds/hill.png",
-      "parallax": 0.5
+      "parallax": 0.1
     },
     {
       "url": "./assets/backgrounds/trees.png",
@@ -23,7 +23,7 @@
       "x": 150,
       "y": 20,
       "polygon": [[0,0],[20,0],[20, 50],[0,20]],
-      "parallax": 0.5
+      "parallax": 0.1
     },
     {
       "name": "sun",
