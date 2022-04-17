@@ -84,5 +84,4 @@ export const TestGame = ({ data }: Props) => {
                 handleHotSpotClick={handleHotSpotClick} />
         </main>
     )
-
 }
