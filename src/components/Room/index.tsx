@@ -1,7 +1,7 @@
-import { h } from "preact";
+import { h, ComponentChildren } from "preact";
 import { RoomData, Zone } from "../../lib/RoomData";
 import BackgroundShape from "./BackgroundShape";
-import MarkerShape from "./MarkerShape";
+import MarkerShape from "../MarkerShape";
 import HotSpot from "./HotSpot";
 
 interface Props {
@@ -12,9 +12,19 @@ interface Props {
     viewAngle: number,
     handleRoomClick: { (x: number, y: number): void }
     handleHotSpotClick: { (zone: Zone): void }
+    children?: ComponentChildren
 }
 
-export const Room = ({ data, scale = 1, markerX = 0, markerY, viewAngle, handleRoomClick, handleHotSpotClick }: Props) => {
+export const Room = ({
+    data,
+    scale = 1,
+    markerX = 0,
+    markerY,
+    viewAngle,
+    handleRoomClick,
+    handleHotSpotClick,
+    children,
+}: Props) => {
 
     const processRoomClick = (event: MouseEvent) => {
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
@@ -62,7 +72,8 @@ export const Room = ({ data, scale = 1, markerX = 0, markerY, viewAngle, handleR
                 <MarkerShape y={10} height={20} x={data.width * .75} viewAngle={viewAngle} roomData={data} color='blue' />
                 <MarkerShape y={10} height={20} x={data.width * 1} viewAngle={viewAngle} roomData={data} color='blue' />
 
-                <MarkerShape x={markerX} y={markerY} viewAngle={viewAngle} roomData={data} color='violet' />
+                {children}
+
             </svg>
 
             <figcaption>{data.name}</figcaption>

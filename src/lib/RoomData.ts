@@ -14,7 +14,7 @@ type RoomData = {
     width: number
     height: number
     background: BackgroundLayer[],
-    hotspots: Zone[]
+    hotspots?: Zone[]
 }
 
 export type { RoomData, BackgroundLayer, Zone }

@@ -2,10 +2,11 @@ import { Component } from "preact";
 import { RoomData, Zone } from "../../lib/RoomData";
 import { Room } from "../Room";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
+import MarkerShape from "../MarkerShape";
 
 
 interface Props {
-    data: RoomData,
+    rooms: RoomData[],
 }
 
 interface State {
@@ -15,9 +16,10 @@ interface State {
     destinationX: number
     destinationY: number
     timer?: number
+    room: RoomData
 }
 
-const speed = 2
+const speed = 1
 
 export default class Game extends Component<Props, State> {
 
@@ -25,12 +27,14 @@ export default class Game extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
+        const [firstRoom] = props.rooms
         this.state = {
             viewAngle: 0,
-            markerX: props.data.width / 2,
+            markerX: firstRoom.width / 2,
             markerY: 0,
-            destinationX: props.data.width / 2,
+            destinationX: firstRoom.width / 2,
             destinationY: 10,
+            room: firstRoom,
         }
 
         this.tick = this.tick.bind(this)
@@ -75,9 +79,8 @@ export default class Game extends Component<Props, State> {
     }
 
     followMarker() {
-        const { markerX } = this.state
-        const { data } = this.props
-        const viewAngle = clamp(getViewAngleCenteredOn(markerX, data), 1, -1)
+        const { markerX, room } = this.state
+        const viewAngle = clamp(getViewAngleCenteredOn(markerX, room), 1, -1)
         this.setState({ viewAngle })
     }
 
@@ -86,28 +89,31 @@ export default class Game extends Component<Props, State> {
     }
 
     handleRoomClick(x: number, y: number) {
-        const { data } = this.props
-        const { viewAngle } = this.state
-        const vX = locateClickInWorld(x, viewAngle, data)
+        const { viewAngle, room } = this.state
 
         this.setState({
-            destinationX: vX,
-            destinationY: data.height - y
+            destinationX: locateClickInWorld(x, viewAngle, room),
+            destinationY: room.height - y
         })
     }
 
     render() {
-        const { data } = this.props
-        const { viewAngle, markerX, markerY, } = this.state
+        const { viewAngle, markerX, markerY, room } = this.state
 
         return (
             <main>
                 <Room
-                    data={data} scale={2} markerX={markerX} markerY={markerY}
+                    data={room} scale={2} markerX={markerX} markerY={markerY}
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
-                />
+                >
+                    <MarkerShape
+                        x={markerX} y={markerY}
+                        roomData={room}
+                        viewAngle={viewAngle}
+                        color='red' />
+                </Room>
             </main>
         )
     }
