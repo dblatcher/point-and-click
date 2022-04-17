@@ -1,11 +1,11 @@
-.zone {
+.hotSpot {
     fill: rgba(0, 243, 8, 0);
     transition: fill .5s;
     pointer-events: all;
     stroke: white;
 }
 
-.zone:hover {
+.hotSpot:hover {
     fill: rgba(0, 243, 8, 0.5);
     stroke: white;
     stroke-dasharray: 1,1;
