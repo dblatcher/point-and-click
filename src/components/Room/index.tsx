@@ -8,12 +8,13 @@ interface Props {
     data: RoomData,
     scale?: number,
     markerX: number,
+    markerY: number,
     viewAngle: number,
     handleRoomClick: { (x: number, y: number): void }
     handleHotSpotClick: { (zone: Zone): void }
 }
 
-export const Room = ({ data, scale = 1, markerX = 0, viewAngle, handleRoomClick, handleHotSpotClick }: Props) => {
+export const Room = ({ data, scale = 1, markerX = 0, markerY, viewAngle, handleRoomClick, handleHotSpotClick }: Props) => {
 
     const processRoomClick = (event: MouseEvent) => {
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
@@ -55,12 +56,13 @@ export const Room = ({ data, scale = 1, markerX = 0, viewAngle, handleRoomClick,
                     />
                 )}
 
-                <MarkerShape x={data.width * 0} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape x={data.width * .25} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape x={data.width * .5} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape x={data.width * .75} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape x={data.width * 1} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape x={markerX} viewAngle={viewAngle} roomData={data} color='violet' />
+                <MarkerShape y={10} height={20} x={data.width * 0} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape y={10} height={20} x={data.width * .25} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape y={10} height={20} x={data.width * .5} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape y={10} height={20} x={data.width * .75} viewAngle={viewAngle} roomData={data} color='blue' />
+                <MarkerShape y={10} height={20} x={data.width * 1} viewAngle={viewAngle} roomData={data} color='blue' />
+
+                <MarkerShape x={markerX} y={markerY} viewAngle={viewAngle} roomData={data} color='violet' />
             </svg>
 
             <figcaption>{data.name}</figcaption>

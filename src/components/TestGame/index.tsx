@@ -17,13 +17,21 @@ export const TestGame = ({ data }: Props) => {
     const [viewAngle, setViewAngle] = useState(0)
     const [xCurrent, setCurrentX] = useState(data.width / 2)
     const [xDestination, setXDestination] = useState(xCurrent)
+    const [yCurrent, setCurrentY] = useState(0)
+    const [yDestination, setYDestination] = useState(yCurrent)
 
     const moveHorizontalStep = (speed: number) => {
         if (xCurrent !== xDestination) {
             const distance = Math.min(speed, Math.abs(xCurrent - xDestination))
             const direction = xCurrent < xDestination ? 1 : -1
             setCurrentX(xCurrent + (distance * direction))
-            followMarker()
+        }
+    }
+    const moveVerticalStep = (speed: number) => {
+        if (yCurrent !== yDestination) {
+            const distance = Math.min(speed, Math.abs(yCurrent - yDestination))
+            const direction = yCurrent < yDestination ? 1 : -1
+            setCurrentY(yCurrent + (distance * direction))
         }
     }
 
@@ -33,11 +41,14 @@ export const TestGame = ({ data }: Props) => {
 
     useInterval(() => {
         moveHorizontalStep(speed)
+        moveVerticalStep(speed)
+        followMarker()
     }, 10)
 
     const handleRoomClick = (x, y) => {
         const vX = locateClickInWorld(x, viewAngle, data)
         setXDestination(vX)
+        setYDestination(data.height - y)
     }
     const handleHotSpotClick = (zone: Zone) => {
         console.log('hotspot click', zone.name)
@@ -68,7 +79,7 @@ export const TestGame = ({ data }: Props) => {
             </div>
 
             <Room
-                data={data} scale={2} markerX={xCurrent}
+                data={data} scale={2} markerX={xCurrent} markerY={yCurrent}
                 viewAngle={viewAngle}
                 handleRoomClick={handleRoomClick}
                 handleHotSpotClick={handleHotSpotClick} />
