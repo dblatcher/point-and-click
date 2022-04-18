@@ -64,11 +64,6 @@ export const Room = ({
                     />
                 )}
 
-                {walkableCells &&
-                    <WalkableCellOverlay roomData={data} viewAngle={viewAngle} cellMatrix={walkableCells} />
-                }
-
-
                 {showWalkableAreas && walkableAreas.map(zone => {
                     const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
                     const left = center - data.width / 2
@@ -80,6 +75,10 @@ export const Room = ({
                         y={data.height - zone.y}
                     />
                 })}
+
+                {walkableCells &&
+                    <WalkableCellOverlay roomData={data} viewAngle={viewAngle} cellMatrix={walkableCells} />
+                }
 
                 {hotspots.map(zone =>
                     <HotSpot

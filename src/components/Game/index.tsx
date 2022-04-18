@@ -3,9 +3,8 @@ import { RoomData } from "../../lib/RoomData";
 import { Room } from "../Room";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import MarkerShape from "../MarkerShape";
-import { isPointInsidePolygon } from "../../lib/pathfinding/geometry";
 import { HotSpotZone } from "../../lib/Zone";
-import { CellMatrix, generateCellMatrix, getWalkablePolygons } from "../../lib/pathfinding/cells";
+import { CellMatrix, generateCellMatrix, getWalkablePolygons, isPointWalkable } from "../../lib/pathfinding/cells";
 
 
 interface Props {
@@ -96,10 +95,8 @@ export default class Game extends Component<Props, State> {
 
     handleRoomClick(x: number, y: number) {
         const { viewAngle, room } = this.state
-        const walkablePolygons = getWalkablePolygons(room);
-
         const pointClicked = locateClickInWorld(x, y, viewAngle, room)
-        const pointIsWalkable = walkablePolygons.some(walkable => isPointInsidePolygon(pointClicked, walkable))
+        const pointIsWalkable = isPointWalkable(pointClicked, getWalkablePolygons(room))
 
         console.log(pointIsWalkable, pointClicked)
 
@@ -115,12 +112,12 @@ export default class Game extends Component<Props, State> {
 
     updateCellMatrix() {
         this.setState({
-            cellMatrix: generateCellMatrix(this.state.room, 5)
+            cellMatrix: generateCellMatrix(this.state.room, 10)
         })
     }
 
     render() {
-        const { viewAngle, markerX, markerY, room, cellMatrix } = this.state
+        const { viewAngle, markerX, markerY, room } = this.state
 
         return (
             <main>
@@ -130,7 +127,7 @@ export default class Game extends Component<Props, State> {
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
                     // use for debugging - slows render!
-                    // walkableCells={cellMatrix} 
+                    walkableCells={this.state.cellMatrix}
                     showWalkableAreas
                 >
                     <MarkerShape

@@ -7,20 +7,22 @@ type CellMatrix = (0 | 1)[][]
 export type { CellMatrix }
 
 function isCellWalkable(rowIndex: number, cellIndex: number, walkablePolygons: Point[][], cellSize: number): boolean {
-
     const cellCenter: Point = {
         x: (cellIndex + .5) * cellSize,
         y: (rowIndex - .5) * cellSize,
     }
 
     const higherPoint: Point = {
-        x:cellCenter.x,
-        y:cellCenter.y+ (cellSize/10)
+        x: cellCenter.x,
+        y: cellCenter.y + (cellSize / 10)
     }
 
-    return walkablePolygons.some(polygon => isPointInsidePolygon(cellCenter, polygon) && isPointInsidePolygon(higherPoint, polygon))
+    return isPointWalkable(cellCenter, walkablePolygons) && isPointWalkable(higherPoint, walkablePolygons)
 }
 
+export function isPointWalkable(point: Point, walkablePolygons: Point[][]): boolean {
+    return walkablePolygons.some(walkable => isPointInsidePolygon(point, walkable))
+}
 
 
 export function getWalkablePolygons(roomData: RoomData): Point[][] {
@@ -38,12 +40,9 @@ export function getWalkablePolygons(roomData: RoomData): Point[][] {
 export function generateCellMatrix(roomData: RoomData, cellSize: number) {
 
     const { width, height } = roomData
-
     const walkablePolygons = getWalkablePolygons(roomData)
-
     const matrixHeight = Math.ceil(height / cellSize)
     const matrixWidth = Math.ceil(width / cellSize)
-
     const matrix: CellMatrix = [];
 
     for (let i = 0; i < matrixHeight; i++) {
@@ -53,6 +52,5 @@ export function generateCellMatrix(roomData: RoomData, cellSize: number) {
         }
         matrix.push(row)
     }
-
     return matrix
 }
