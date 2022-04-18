@@ -1,9 +1,10 @@
 interface Point { x: number, y: number }
-
 interface Circle { x: number, y: number, radius: number }
+export type { Point }
+
 const _extreme = 10 ** 30
 
-export const pairToPoint = (x: number, y: number):Point => { return { x, y } }
+export const pairToPoint = (x: number, y: number): Point => { return { x, y } }
 
 // Given three colinear points p, q, r, the function checks if 
 // point q lies on line segment 'pr' 
@@ -62,7 +63,9 @@ function doLineSegmentsIntersect(segment1: [Point, Point], segment2: [Point, Poi
 
 
 /**
- * PROBLEM - seems to fail when squares are at a 45 degree orientation...?
+ * BUG - if line from point to the extreme point passes through a vertex
+ * the same vertex is on two edges of the polygon, so this is counted
+ * as two intersections, not one!!
  * @param point 
  * @param polygon 
  * @returns if the point is inside the polygon

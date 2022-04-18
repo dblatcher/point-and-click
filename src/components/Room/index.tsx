@@ -7,6 +7,8 @@ import HotSpot from "./HotSpot";
 import ZoneSvg from "../ZoneSvg";
 import styles from './styles.module.css';
 import { getShift } from "../../lib/util";
+import WalkableCellOverlay from "./WalkableCellOverLay";
+import { CellMatrix } from "../../lib/pathfinding/cells";
 
 interface Props {
     data: RoomData,
@@ -15,6 +17,8 @@ interface Props {
     handleRoomClick: { (x: number, y: number): void }
     handleHotSpotClick: { (zone: HotSpotZone): void }
     children?: ComponentChildren
+    showWalkableAreas?: boolean
+    walkableCells?: CellMatrix
 }
 
 export const Room = ({
@@ -24,6 +28,8 @@ export const Room = ({
     handleRoomClick,
     handleHotSpotClick,
     children,
+    showWalkableAreas,
+    walkableCells,
 }: Props) => {
 
     const processRoomClick = (event: MouseEvent) => {
@@ -58,7 +64,12 @@ export const Room = ({
                     />
                 )}
 
-                {walkableAreas.map(zone => {
+                {walkableCells &&
+                    <WalkableCellOverlay roomData={data} viewAngle={viewAngle} cellMatrix={walkableCells} />
+                }
+
+
+                {showWalkableAreas && walkableAreas.map(zone => {
                     const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
                     const left = center - data.width / 2
                     return <ZoneSvg

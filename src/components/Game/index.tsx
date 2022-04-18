@@ -5,6 +5,7 @@ import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/uti
 import MarkerShape from "../MarkerShape";
 import { isPointInsidePolygon, pairToPoint } from "../../lib/pathfinding/geometry";
 import { HotSpotZone } from "../../lib/Zone";
+import { CellMatrix, generateCellMatrix, getWalkablePolygons } from "../../lib/pathfinding/cells";
 
 
 interface Props {
@@ -19,6 +20,7 @@ interface State {
     destinationY: number
     timer?: number
     room: RoomData
+    cellMatrix?: CellMatrix
 }
 
 const speed = 1
@@ -45,11 +47,13 @@ export default class Game extends Component<Props, State> {
         this.moveHorizontalStep = this.moveHorizontalStep.bind(this)
         this.moveVerticalStep = this.moveVerticalStep.bind(this)
         this.followMarker = this.followMarker.bind(this)
+        this.updateCellMatrix = this.updateCellMatrix.bind(this)
     }
 
     componentWillMount(): void {
         const timer = window.setInterval(() => { this.tick() }, 10)
         this.setState({ timer })
+        this.updateCellMatrix()
     }
 
     componentWillUnmount(): void {
@@ -92,7 +96,7 @@ export default class Game extends Component<Props, State> {
 
     handleRoomClick(x: number, y: number) {
         const { viewAngle, room } = this.state
-        const { walkablePolygons } = this
+        const walkablePolygons = getWalkablePolygons(room);
 
         const pointClicked = locateClickInWorld(x, y, viewAngle, room)
         const pointIsWalkable = walkablePolygons.some(walkable => isPointInsidePolygon(pointClicked, walkable))
@@ -100,17 +104,23 @@ export default class Game extends Component<Props, State> {
         console.log(pointIsWalkable, pointClicked)
 
         if (!pointIsWalkable) {
-            return
+            // return
         }
-        
+
         this.setState({
             destinationX: pointClicked.x,
             destinationY: pointClicked.y,
         })
     }
 
+    updateCellMatrix() {
+        this.setState({
+            cellMatrix: generateCellMatrix(this.state.room, 5)
+        })
+    }
+
     render() {
-        const { viewAngle, markerX, markerY, room } = this.state
+        const { viewAngle, markerX, markerY, room, cellMatrix } = this.state
 
         return (
             <main>
@@ -119,6 +129,9 @@ export default class Game extends Component<Props, State> {
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
+                    // use for debugging - slows render!
+                    // walkableCells={cellMatrix} 
+                    showWalkableAreas
                 >
                     <MarkerShape
                         x={markerX} y={markerY}
