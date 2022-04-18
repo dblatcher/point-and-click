@@ -66,7 +66,7 @@ export const Room = ({
                         stopPropagation={false}
                         zone={zone}
                         x={zone.x + left}
-                        y={zone.y}
+                        y={data.height - zone.y}
                     />
                 })}
 
