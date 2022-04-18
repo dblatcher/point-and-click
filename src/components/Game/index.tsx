@@ -102,7 +102,7 @@ export default class Game extends Component<Props, State> {
             .map(area => {
                 const { x, y, polygon } = area
                 return polygon.map(coords => {
-                    return { x: x + coords[0], y: y - coords[1] }
+                    return { x: x + coords[0], y: y + coords[1] }
                 })
             })
 
