@@ -1,9 +1,10 @@
 import { Component } from "preact";
-import { RoomData, Zone } from "../../lib/RoomData";
+import { RoomData } from "../../lib/RoomData";
 import { Room } from "../Room";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import MarkerShape from "../MarkerShape";
 import { isPointInsidePolygon, pairToPoint } from "../../lib/pathfinding/geometry";
+import { HotSpotZone } from "../../lib/Zone";
 
 
 interface Props {
@@ -85,27 +86,18 @@ export default class Game extends Component<Props, State> {
         this.setState({ viewAngle })
     }
 
-    handleHotSpotClick(zone: Zone) {
+    handleHotSpotClick(zone: HotSpotZone) {
         console.log('hotspot click', zone.name)
     }
 
     handleRoomClick(x: number, y: number) {
         const { viewAngle, room } = this.state
+        const { walkablePolygons } = this
 
         const destinationX = locateClickInWorld(x, viewAngle, room)
         const destinationY = room.height - y
 
         const pointClicked = pairToPoint(destinationX, destinationY)
-
-        const walkablePolygons = room.walkableAreas
-            .filter(area => area.polygon)
-            .map(area => {
-                const { x, y, polygon } = area
-                return polygon.map(coords => {
-                    return { x: x + coords[0], y: y + coords[1] }
-                })
-            })
-
         const pointIsWalkable = walkablePolygons.some(walkable => isPointInsidePolygon(pointClicked, walkable))
 
         console.log(pointIsWalkable, pointClicked)
@@ -122,7 +114,7 @@ export default class Game extends Component<Props, State> {
         return (
             <main>
                 <Room
-                    data={room} scale={2} markerX={markerX} markerY={markerY}
+                    data={room} scale={2}
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
@@ -135,5 +127,17 @@ export default class Game extends Component<Props, State> {
                 </Room>
             </main>
         )
+    }
+
+    get walkablePolygons() {
+        const { room } = this.state
+        return room.walkableAreas
+            .filter(area => area.polygon)
+            .map(area => {
+                const { x, y, polygon } = area
+                return polygon.map(coords => {
+                    return { x: x + coords[0], y: y + coords[1] }
+                })
+            })
     }
 }

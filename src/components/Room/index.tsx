@@ -1,6 +1,6 @@
 import { h, ComponentChildren } from "preact";
 import { RoomData } from "../../lib/RoomData";
-import { Zone } from "../../lib/Zone";
+import { HotSpotZone } from "../../lib/Zone";
 import BackgroundShape from "./BackgroundShape";
 import MarkerShape from "../MarkerShape";
 import HotSpot from "./HotSpot";
@@ -13,7 +13,7 @@ interface Props {
     scale?: number,
     viewAngle: number,
     handleRoomClick: { (x: number, y: number): void }
-    handleHotSpotClick: { (zone: Zone): void }
+    handleHotSpotClick: { (zone: HotSpotZone): void }
     children?: ComponentChildren
 }
 
