@@ -8,7 +8,7 @@ export function polygonToPathD(polygon: Polygon): string {
     polygon.forEach((point, index) => {
         const [x, y] = point
         const command = index === 0 ? "M" : "L"
-        output += `${command} ${x} ${y} `
+        output += `${command} ${x} ${-y} `
     })
 
     output += 'Z'

@@ -21,7 +21,7 @@ export default function HotSpot({
         <ZoneSvg
             className={styles.hotSpot}
             x={zone.x + getShift(viewAngle, parallax, roomData)}
-            y={zone.y}
+            y={roomData.height - zone.y}
             clickHandler={clickHandler}
             stopPropagation={true}
             zone={zone} />
