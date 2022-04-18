@@ -6,6 +6,7 @@ import MarkerShape from "../MarkerShape";
 import HotSpot from "./HotSpot";
 import ZoneSvg from "../ZoneSvg";
 import styles from './styles.module.css';
+import { getShift } from "../../lib/util";
 
 interface Props {
     data: RoomData,
@@ -57,15 +58,17 @@ export const Room = ({
                     />
                 )}
 
-                {walkableAreas.map(zone =>
-                    <ZoneSvg
+                {walkableAreas.map(zone => {
+                    const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
+                    const left = center - data.width / 2
+                    return <ZoneSvg
                         className={styles.walkableArea}
                         stopPropagation={false}
                         zone={zone}
-                        x={zone.x}
+                        x={zone.x + left}
                         y={zone.y}
                     />
-                )}
+                })}
 
                 {hotspots.map(zone =>
                     <HotSpot

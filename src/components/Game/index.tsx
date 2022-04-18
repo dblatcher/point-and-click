@@ -3,6 +3,7 @@ import { RoomData, Zone } from "../../lib/RoomData";
 import { Room } from "../Room";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import MarkerShape from "../MarkerShape";
+import { isPointInsidePolygon, pairToPoint } from "../../lib/pathfinding/geometry";
 
 
 interface Props {
@@ -91,9 +92,27 @@ export default class Game extends Component<Props, State> {
     handleRoomClick(x: number, y: number) {
         const { viewAngle, room } = this.state
 
+        const destinationX = locateClickInWorld(x, viewAngle, room)
+        const destinationY = room.height - y
+
+        const pointClicked = pairToPoint(destinationX, y)
+
+        const walkablePolygons = room.walkableAreas
+            .filter(area => area.polygon)
+            .map(area => {
+                const { x, y, polygon } = area
+                return polygon.map(coords => {
+                    return { x: x + coords[0], y: y + coords[1] }
+                })
+            })
+
+        const pointIsWalkable = walkablePolygons.some(walkable => isPointInsidePolygon(pointClicked, walkable))
+
+        console.log(pointIsWalkable)
+
         this.setState({
-            destinationX: locateClickInWorld(x, viewAngle, room),
-            destinationY: room.height - y
+            destinationX: destinationX,
+            destinationY: destinationY,
         })
     }
 

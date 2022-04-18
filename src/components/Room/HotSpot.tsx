@@ -1,14 +1,14 @@
 import { RoomData } from "../../lib/RoomData"
-import { Zone } from "../../lib/Zone"
+import { HotSpotZone } from "../../lib/Zone"
 import { getShift } from "../../lib/util";
 import ZoneSvg from "../ZoneSvg";
 import styles from './styles.module.css';
 
 interface Props {
-    zone: Zone
+    zone: HotSpotZone
     roomData: RoomData
     viewAngle: number
-    clickHandler?: { (zone: Zone): void }
+    clickHandler?: { (zone: HotSpotZone): void }
 }
 
 export default function HotSpot({
