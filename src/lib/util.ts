@@ -12,13 +12,14 @@ export function placeOnScreen(xPosition: number, viewAngle: number, roomData: Ro
 }
 
 
-export function locateClickInWorld(clickXPosition: number, viewAngle: number, roomData: RoomData) {
-    const { width, frameWidth } = roomData
+export function locateClickInWorld(clickXPosition: number, clickYposition: number, viewAngle: number, roomData: RoomData) {
+    const { width, frameWidth, height } = roomData
     const shift = getShift(viewAngle, 1, roomData)
     const offCenterInPoints = (clickXPosition - frameWidth / 2)
     const centerOfScreenXPosition = (width / 2) - shift
-    const xPosition = offCenterInPoints + centerOfScreenXPosition
-    return xPosition
+    const x = offCenterInPoints + centerOfScreenXPosition
+    const y = height - clickYposition
+    return { x, y }
 }
 
 export function getViewAngleCenteredOn(xPosition: number, roomData: RoomData) {

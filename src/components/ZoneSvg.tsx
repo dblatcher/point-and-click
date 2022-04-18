@@ -12,7 +12,7 @@ interface Props {
 
 export default function ZoneSvg({
     zone, x, y, className, stopPropagation,
-    clickHandler = (zone) => { console.log(zone) }
+    clickHandler = () => { }
 }: Props) {
     const { path, circle, rect, polygon } = zone
     const shape = polygon ? 'polygon' : path ? 'path' : circle ? 'circle' : rect ? 'rect' : undefined;

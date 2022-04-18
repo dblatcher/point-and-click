@@ -94,17 +94,18 @@ export default class Game extends Component<Props, State> {
         const { viewAngle, room } = this.state
         const { walkablePolygons } = this
 
-        const destinationX = locateClickInWorld(x, viewAngle, room)
-        const destinationY = room.height - y
-
-        const pointClicked = pairToPoint(destinationX, destinationY)
+        const pointClicked = locateClickInWorld(x, y, viewAngle, room)
         const pointIsWalkable = walkablePolygons.some(walkable => isPointInsidePolygon(pointClicked, walkable))
 
         console.log(pointIsWalkable, pointClicked)
 
+        if (!pointIsWalkable) {
+            return
+        }
+        
         this.setState({
-            destinationX: destinationX,
-            destinationY: destinationY,
+            destinationX: pointClicked.x,
+            destinationY: pointClicked.y,
         })
     }
 
