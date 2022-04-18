@@ -2,6 +2,13 @@ interface Point { x: number, y: number }
 interface Circle { x: number, y: number, radius: number }
 export type { Point }
 
+interface Rectangle extends Point {
+    width: number,
+    height: number
+}
+
+export type { Rectangle }
+
 const _extreme = 10 ** 30
 
 export const pairToPoint = (x: number, y: number): Point => { return { x, y } }
@@ -84,4 +91,10 @@ export function isPointInsidePolygon(point: Point, polygon: Point[]) {
     }
 
     return intersections % 2 !== 0
+}
+
+export function isPointInsideRectangle(point: Point, rectangle: Rectangle): boolean {
+    const { x, y, width, height } = rectangle
+
+    return point.x >= x && point.x <= (x + width) && point.y >= y && point.y <= y + height
 }

@@ -4,7 +4,7 @@ import { Room } from "../Room";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import MarkerShape from "../MarkerShape";
 import { HotSpotZone } from "../../lib/Zone";
-import { CellMatrix, generateCellMatrix, getWalkablePolygons, isPointWalkable } from "../../lib/pathfinding/cells";
+import { CellMatrix, generateCellMatrix, getWalkablePolygons, getWalkableRectangle, isPointWalkable } from "../../lib/pathfinding/cells";
 
 
 interface Props {
@@ -96,7 +96,7 @@ export default class Game extends Component<Props, State> {
     handleRoomClick(x: number, y: number) {
         const { viewAngle, room } = this.state
         const pointClicked = locateClickInWorld(x, y, viewAngle, room)
-        const pointIsWalkable = isPointWalkable(pointClicked, getWalkablePolygons(room))
+        const pointIsWalkable = isPointWalkable(pointClicked, getWalkablePolygons(room) , getWalkableRectangle(room))
 
         console.log(pointIsWalkable, pointClicked)
 
