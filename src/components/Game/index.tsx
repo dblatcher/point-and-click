@@ -3,7 +3,7 @@ import { RoomData } from "../../lib/RoomData";
 import { Room } from "../Room";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import MarkerShape from "../MarkerShape";
-import { isPointInsidePolygon, pairToPoint } from "../../lib/pathfinding/geometry";
+import { isPointInsidePolygon } from "../../lib/pathfinding/geometry";
 import { HotSpotZone } from "../../lib/Zone";
 import { CellMatrix, generateCellMatrix, getWalkablePolygons } from "../../lib/pathfinding/cells";
 
@@ -141,17 +141,5 @@ export default class Game extends Component<Props, State> {
                 </Room>
             </main>
         )
-    }
-
-    get walkablePolygons() {
-        const { room } = this.state
-        return room.walkableAreas
-            .filter(area => area.polygon)
-            .map(area => {
-                const { x, y, polygon } = area
-                return polygon.map(coords => {
-                    return { x: x + coords[0], y: y + coords[1] }
-                })
-            })
     }
 }
