@@ -9,6 +9,7 @@ import MarkerShape from "../MarkerShape";
 import { MoveOrder, Order } from "../../lib/Order";
 import { exectuteMove } from "../../lib/characters/executeMove";
 import { exectuteTalk } from "../../lib/characters/executeTalk";
+import SpriteShape from "../SpriteShape";
 
 
 interface Props {
@@ -155,6 +156,18 @@ export default class Game extends Component<Props, State> {
                         roomData={room}
                         viewAngle={viewAngle}
                         color='red' />
+
+                    <SpriteShape 
+                        x={markerX} y={markerY}
+
+                        roomData={room}
+                        viewAngle={viewAngle}
+                        width={50}
+                        height={50}
+                        sprite={'skinner'}
+                        sequence={'walk'}
+                        frameIndex={0}
+                    />
                 </Room>
             </main>
         )

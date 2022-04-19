@@ -1,6 +1,5 @@
 import { RoomData } from "../lib/RoomData"
 import { placeOnScreen } from "../lib/util";
-import styles from './styles.module.css';
 
 interface Props {
     roomData: RoomData
