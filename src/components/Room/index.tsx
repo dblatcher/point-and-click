@@ -1,14 +1,13 @@
 import { h, ComponentChildren } from "preact";
+import { CellMatrix } from "../../lib/pathfinding/cells";
 import { RoomData } from "../../lib/RoomData";
 import { HotSpotZone } from "../../lib/Zone";
-import BackgroundShape from "./BackgroundShape";
-import MarkerShape from "../MarkerShape";
+import { getShift } from "../../lib/util";
+import styles from './styles.module.css';
 import HotSpot from "./HotSpot";
 import ZoneSvg from "../ZoneSvg";
-import styles from './styles.module.css';
-import { getShift } from "../../lib/util";
 import WalkableCellOverlay from "./WalkableCellOverLay";
-import { CellMatrix } from "../../lib/pathfinding/cells";
+import BackgroundShape from "./BackgroundShape";
 
 interface Props {
     data: RoomData,
@@ -35,7 +34,7 @@ export const Room = ({
     const processRoomClick = (event: MouseEvent) => {
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
     }
-    const { name, frameWidth, width, height, background, hotspots, walkableAreas = [] } = data;
+    const { name, frameWidth, height, background, hotspots, walkableAreas = [] } = data;
 
     return (
         <figure style={{
@@ -89,14 +88,7 @@ export const Room = ({
                     />
                 )}
 
-                <MarkerShape y={10} height={20} x={width * 0} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape y={10} height={20} x={width * .25} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape y={10} height={20} x={width * .5} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape y={10} height={20} x={width * .75} viewAngle={viewAngle} roomData={data} color='blue' />
-                <MarkerShape y={10} height={20} x={width * 1} viewAngle={viewAngle} roomData={data} color='blue' />
-
                 {children}
-
             </svg>
 
             <figcaption>{name}</figcaption>
