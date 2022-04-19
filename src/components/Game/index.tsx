@@ -2,11 +2,12 @@ import { Component } from "preact";
 import { RoomData } from "../../lib/RoomData";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import { HotSpotZone } from "../../lib/Zone";
-import { CellMatrix, generateCellMatrix, getObstacleCircles, getObstaclePolygons, getObstacleRectangle, isPointObstacle } from "../../lib/pathfinding/cells";
+import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { findPath } from "../../lib/pathfinding/pathfind";
-import { Point } from "../../lib/pathfinding/geometry";
 import { Room } from "../Room";
 import MarkerShape from "../MarkerShape";
+import { MoveOrder, Order } from "../../lib/Order";
+import { exectuteMove } from "../../lib/characters/executeMove";
 
 
 interface Props {
@@ -15,16 +16,17 @@ interface Props {
 
 interface State {
     viewAngle: number
-    markerX: number
-    markerY: number
-    timer?: number
     room: RoomData
     cellMatrix?: CellMatrix
-    path?: Point[]
+    timer?: number
+
+    markerX: number
+    markerY: number
+    orders: Order[]
 }
 
-const speed = 1
-const cellSize = 5
+const speed = 4
+const cellSize = 10
 
 export default class Game extends Component<Props, State> {
 
@@ -35,16 +37,16 @@ export default class Game extends Component<Props, State> {
         const [firstRoom] = props.rooms
         this.state = {
             viewAngle: 0,
+            room: firstRoom,
             markerX: firstRoom.width / 2,
             markerY: 0,
-            room: firstRoom,
-            path: [],
+            orders: []
         }
 
         this.tick = this.tick.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.handleHotSpotClick = this.handleHotSpotClick.bind(this)
-        this.moveAlongPath = this.moveAlongPath.bind(this)
+        this.executeOrder = this.executeOrder.bind(this)
         this.followMarker = this.followMarker.bind(this)
         this.updateCellMatrix = this.updateCellMatrix.bind(this)
     }
@@ -60,34 +62,23 @@ export default class Game extends Component<Props, State> {
     }
 
     tick() {
-        this.moveAlongPath(speed)
+        this.executeOrder(speed)
         this.followMarker()
     }
 
-    moveAlongPath(speed: number) {
-        const { path, markerX, markerY } = this.state
-        const [nextStep] = path;
-        if (!nextStep) { return }
+    executeOrder(speed: number) {
+        const { orders, markerX, markerY } = this.state
+        const [nextOrder] = orders
+        if (!nextOrder) { return }
 
-        let newMarkerX = markerX
-        let newMarkerY = markerY
-        if (markerX !== nextStep.x) {
-            const distance = Math.min(speed, Math.abs(markerX - nextStep.x))
-            const direction = markerX < nextStep.x ? 1 : -1
-            newMarkerX = markerX + (distance * direction)
+        if (nextOrder.type === 'move') {
+            const newPosition = exectuteMove(nextOrder, markerX, markerY, speed)
+            if (nextOrder.path.length === 0) {
+                orders.shift()
+                console.log('order done')
+            }
+            this.setState({ markerX: newPosition.x, markerY: newPosition.y, orders })
         }
-        if (markerY !== nextStep.y) {
-            const distance = Math.min(speed, Math.abs(markerY - nextStep.y))
-            const direction = markerY < nextStep.y ? 1 : -1
-            newMarkerY = markerY + (distance * direction)
-        }
-
-        if (nextStep.x == newMarkerX && nextStep.y == newMarkerY) {
-            path.shift()
-            this.setState({ path })
-        }
-
-        this.setState({ markerX: newMarkerX, markerY: newMarkerY, path })
     }
 
     followMarker() {
@@ -108,15 +99,13 @@ export default class Game extends Component<Props, State> {
 
         const { viewAngle, room, cellMatrix, markerX, markerY } = this.state
         const pointClicked = locateClickInWorld(x, y, viewAngle, room)
-        const pointIsObstacle = isPointObstacle(pointClicked, getObstaclePolygons(room), getObstacleRectangle(room), getObstacleCircles(room))
-
-        if (pointIsObstacle) {
-            return
-        }
 
         const path = findPath({ x: markerX, y: markerY }, pointClicked, cellMatrix, cellSize)
+        const newOrder: MoveOrder = { type: 'move', path }
+        const orders = [newOrder] // clears any existing orders, even if the point was unreachable
+
         this.setState({
-            path
+            orders
         })
     }
 
