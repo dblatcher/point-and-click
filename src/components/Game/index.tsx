@@ -2,7 +2,7 @@ import { Component } from "preact";
 import { RoomData } from "../../lib/RoomData";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import { HotSpotZone } from "../../lib/Zone";
-import { CellMatrix, generateCellMatrix, getWalkableCircles, getWalkablePolygons, getWalkableRectangle, isPointWalkable } from "../../lib/pathfinding/cells";
+import { CellMatrix, generateCellMatrix, getObstacleCircles, getObstaclePolygons, getObstacleRectangle, isPointObstacle } from "../../lib/pathfinding/cells";
 import { findPath } from "../../lib/pathfinding/pathfind";
 import { Point } from "../../lib/pathfinding/geometry";
 import { Room } from "../Room";
@@ -36,7 +36,7 @@ export default class Game extends Component<Props, State> {
         this.state = {
             viewAngle: 0,
             markerX: firstRoom.width / 2,
-            markerY: 50,
+            markerY: 0,
             room: firstRoom,
             path: [],
         }
@@ -108,9 +108,9 @@ export default class Game extends Component<Props, State> {
 
         const { viewAngle, room, cellMatrix, markerX, markerY } = this.state
         const pointClicked = locateClickInWorld(x, y, viewAngle, room)
-        const pointIsWalkable = isPointWalkable(pointClicked, getWalkablePolygons(room), getWalkableRectangle(room), getWalkableCircles(room))
+        const pointIsObstacle = isPointObstacle(pointClicked, getObstaclePolygons(room), getObstacleRectangle(room), getObstacleCircles(room))
 
-        if (!pointIsWalkable) {
+        if (pointIsObstacle) {
             return
         }
 
@@ -137,8 +137,8 @@ export default class Game extends Component<Props, State> {
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
                     // use for debugging - slows render!
-                    // walkableCells={this.state.cellMatrix}
-                    showWalkableAreas
+                    obstacleCells={this.state.cellMatrix}
+                    showObstacleAreas
                 >
                     <MarkerShape
                         x={markerX} y={markerY}

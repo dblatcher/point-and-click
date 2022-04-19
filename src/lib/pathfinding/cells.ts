@@ -6,11 +6,11 @@ type CellMatrix = (0 | 1)[][]
 
 export type { CellMatrix }
 
-function isCellWalkable(
+function isCellObstacle(
     rowIndex: number, cellIndex: number, cellSize: number,
-    walkablePolygons: Point[][],
-    walkableRectangles: Rectangle[],
-    walkableCircles: Circle[]
+    obstaclePolygons: Point[][],
+    obstacleRectangles: Rectangle[],
+    obstacleCircles: Circle[]
 ): boolean {
     const cellCenter: Point = {
         x: (cellIndex + .5) * cellSize,
@@ -22,19 +22,19 @@ function isCellWalkable(
         y: cellCenter.y + (cellSize / 10)
     }
 
-    return isPointWalkable(cellCenter, walkablePolygons, walkableRectangles, walkableCircles)
-        && isPointWalkable(higherPoint, walkablePolygons, walkableRectangles, walkableCircles)
+    return isPointObstacle(cellCenter, obstaclePolygons, obstacleRectangles, obstacleCircles)
+        && isPointObstacle(higherPoint, obstaclePolygons, obstacleRectangles, obstacleCircles)
 }
 
-export function isPointWalkable(point: Point, walkablePolygons: Point[][], walkableRectangles: Rectangle[], walkableCircles: Circle[]): boolean {
-    return walkablePolygons.some(polygon => isPointInsidePolygon(point, polygon))
-        || walkableRectangles.some(rectangle => isPointInsideRectangle(point, rectangle))
-        || walkableCircles.some(circle => isPointInsideCircle(point, circle))
+export function isPointObstacle(point: Point, obstaclePolygons: Point[][], obstacleRectangles: Rectangle[], obstacleCircles: Circle[]): boolean {
+    return obstaclePolygons.some(polygon => isPointInsidePolygon(point, polygon))
+        || obstacleRectangles.some(rectangle => isPointInsideRectangle(point, rectangle))
+        || obstacleCircles.some(circle => isPointInsideCircle(point, circle))
 }
 
 
-export function getWalkablePolygons(roomData: RoomData): Point[][] {
-    return roomData.walkableAreas
+export function getObstaclePolygons(roomData: RoomData): Point[][] {
+    return roomData.obstacleAreas
         .filter(area => area.polygon)
         .map(area => {
             const { x, y, polygon } = area
@@ -44,8 +44,8 @@ export function getWalkablePolygons(roomData: RoomData): Point[][] {
         })
 }
 
-export function getWalkableRectangle(roomData: RoomData): Rectangle[] {
-    return roomData.walkableAreas
+export function getObstacleRectangle(roomData: RoomData): Rectangle[] {
+    return roomData.obstacleAreas
         .filter(area => area.rect)
         .map(area => {
             const { x, y, rect } = area
@@ -56,8 +56,8 @@ export function getWalkableRectangle(roomData: RoomData): Rectangle[] {
         })
 }
 
-export function getWalkableCircles(roomData: RoomData): Circle[] {
-    return roomData.walkableAreas
+export function getObstacleCircles(roomData: RoomData): Circle[] {
+    return roomData.obstacleAreas
         .filter(area => area.circle)
         .map(area => {
             const { x, y, circle } = area
@@ -70,9 +70,9 @@ export function getWalkableCircles(roomData: RoomData): Circle[] {
 
 export function generateCellMatrix(roomData: RoomData, cellSize: number) {
     const { width, height } = roomData
-    const walkablePolygons = getWalkablePolygons(roomData)
-    const walkableRectangles = getWalkableRectangle(roomData)
-    const walkableCircles = getWalkableCircles  (roomData)
+    const obstaclePolygons = getObstaclePolygons(roomData)
+    const obstacleRectangles = getObstacleRectangle(roomData)
+    const obstacleCircles = getObstacleCircles  (roomData)
     const matrixHeight = Math.ceil(height / cellSize)
     const matrixWidth = Math.ceil(width / cellSize)
     const matrix: CellMatrix = [];
@@ -81,7 +81,7 @@ export function generateCellMatrix(roomData: RoomData, cellSize: number) {
         const row = []
         for (let j = 0; j < matrixWidth; j++) {
             row.push(
-                isCellWalkable(matrixHeight - i, j, cellSize, walkablePolygons, walkableRectangles, walkableCircles) ? 1:0
+                isCellObstacle(matrixHeight - i, j, cellSize, obstaclePolygons, obstacleRectangles, obstacleCircles) ? 1:0
             )
         }
         matrix.push(row)

@@ -11,6 +11,6 @@
     stroke-dasharray: 1,1;
 }
 
-.walkableArea {
+.obstacleArea {
     fill: rgba(255, 100, 255, .8);
 }

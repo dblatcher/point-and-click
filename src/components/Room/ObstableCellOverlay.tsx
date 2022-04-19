@@ -12,7 +12,7 @@ interface Props {
 
 
 
-export default function WalkableCellOverlay({ roomData, viewAngle, cellMatrix }: Props) {
+export default function ObstacleCellOverlay({ roomData, viewAngle, cellMatrix }: Props) {
 
     const { frameWidth, height: roomHeight } = roomData
     const center = (frameWidth / 2) + getShift(viewAngle, 1, roomData)
@@ -29,7 +29,7 @@ export default function WalkableCellOverlay({ roomData, viewAngle, cellMatrix }:
                         {(!!cell) && <rect key={cellIndex}
                             x={cellIndex * cellSize} y={rowIndex * cellSize}
                             width={cellSize} height={cellSize} style={{
-                                fill: 'rgba(0,255,0,.75)',
+                                fill: 'rgba(255,0,0,.75)',
                             }} />
                         }
                     </>

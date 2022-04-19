@@ -15,7 +15,7 @@ type RoomData = {
     height: number
     background: BackgroundLayer[],
     hotspots?: HotSpotZone[],
-    walkableAreas?: Zone[]
+    obstacleAreas?: Zone[]
 }
 
 export type { RoomData, BackgroundLayer }

@@ -4,7 +4,9 @@ import { Point } from "./geometry";
 
 
 const invertMatrix = (cellMatrix: CellMatrix): CellMatrix => {
-    return cellMatrix.map(row => row.map(cell => cell === 1 ? 0 : 1)).reverse()
+    return cellMatrix
+        .map(row => row.map(cell => cell))
+        .reverse()
 }
 
 export function findPath(start: Point, goal: Point, matrix: CellMatrix, cellSize: number): Point[] {
@@ -25,7 +27,7 @@ export function findPath(start: Point, goal: Point, matrix: CellMatrix, cellSize
     const finder = new AStarFinder({ grid: { matrix: invertedMatrix } })
     const pathPairs = finder.findPath(toCell(start), toCell(goal));
 
-    if (pathPairs.length === 0 ) {
+    if (pathPairs.length === 0) {
         return []
     }
 

@@ -54,7 +54,7 @@
       "parallax": 1
     }
   ],
-  "walkableAreas": [
+  "obstacleAreas": [
     {
       "x": 0,
       "y": 30,

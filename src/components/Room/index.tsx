@@ -6,7 +6,7 @@ import { getShift } from "../../lib/util";
 import styles from './styles.module.css';
 import HotSpot from "./HotSpot";
 import ZoneSvg from "../ZoneSvg";
-import WalkableCellOverlay from "./WalkableCellOverLay";
+import ObstacleCellOverlay from "./ObstableCellOverlay";
 import BackgroundShape from "./BackgroundShape";
 
 interface Props {
@@ -16,8 +16,8 @@ interface Props {
     handleRoomClick: { (x: number, y: number): void }
     handleHotSpotClick: { (zone: HotSpotZone): void }
     children?: ComponentChildren
-    showWalkableAreas?: boolean
-    walkableCells?: CellMatrix
+    showObstacleAreas?: boolean
+    obstacleCells?: CellMatrix
 }
 
 export const Room = ({
@@ -27,14 +27,14 @@ export const Room = ({
     handleRoomClick,
     handleHotSpotClick,
     children,
-    showWalkableAreas,
-    walkableCells,
+    showObstacleAreas,
+    obstacleCells,
 }: Props) => {
 
     const processRoomClick = (event: MouseEvent) => {
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
     }
-    const { name, frameWidth, height, background, hotspots, walkableAreas = [] } = data;
+    const { name, frameWidth, height, background, hotspots, obstacleAreas = [] } = data;
 
     return (
         <figure style={{
@@ -63,11 +63,11 @@ export const Room = ({
                     />
                 )}
 
-                {showWalkableAreas && walkableAreas.map(zone => {
+                {showObstacleAreas && obstacleAreas.map(zone => {
                     const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
                     const left = center - data.width / 2
                     return <ZoneSvg
-                        className={styles.walkableArea}
+                        className={styles.obstacleArea}
                         stopPropagation={false}
                         zone={zone}
                         x={zone.x + left}
@@ -75,8 +75,8 @@ export const Room = ({
                     />
                 })}
 
-                {walkableCells &&
-                    <WalkableCellOverlay roomData={data} viewAngle={viewAngle} cellMatrix={walkableCells} />
+                {obstacleCells &&
+                    <ObstacleCellOverlay roomData={data} viewAngle={viewAngle} cellMatrix={obstacleCells} />
                 }
 
                 {hotspots.map(zone =>
