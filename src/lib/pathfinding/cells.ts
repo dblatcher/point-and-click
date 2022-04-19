@@ -80,7 +80,9 @@ export function generateCellMatrix(roomData: RoomData, cellSize: number) {
     for (let i = 0; i < matrixHeight; i++) {
         const row = []
         for (let j = 0; j < matrixWidth; j++) {
-            row.push(isCellWalkable(matrixHeight - i, j, cellSize, walkablePolygons, walkableRectangles, walkableCircles))
+            row.push(
+                isCellWalkable(matrixHeight - i, j, cellSize, walkablePolygons, walkableRectangles, walkableCircles) ? 1:0
+            )
         }
         matrix.push(row)
     }

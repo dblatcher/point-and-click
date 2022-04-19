@@ -1,10 +1,12 @@
 import { Component } from "preact";
 import { RoomData } from "../../lib/RoomData";
-import { Room } from "../Room";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
-import MarkerShape from "../MarkerShape";
 import { HotSpotZone } from "../../lib/Zone";
 import { CellMatrix, generateCellMatrix, getWalkableCircles, getWalkablePolygons, getWalkableRectangle, isPointWalkable } from "../../lib/pathfinding/cells";
+import { findPath } from "../../lib/pathfinding/pathfind";
+import { Point } from "../../lib/pathfinding/geometry";
+import { Room } from "../Room";
+import MarkerShape from "../MarkerShape";
 
 
 interface Props {
@@ -15,14 +17,14 @@ interface State {
     viewAngle: number
     markerX: number
     markerY: number
-    destinationX: number
-    destinationY: number
     timer?: number
     room: RoomData
     cellMatrix?: CellMatrix
+    path?: Point[]
 }
 
 const speed = 1
+const cellSize = 5
 
 export default class Game extends Component<Props, State> {
 
@@ -34,17 +36,15 @@ export default class Game extends Component<Props, State> {
         this.state = {
             viewAngle: 0,
             markerX: firstRoom.width / 2,
-            markerY: 0,
-            destinationX: firstRoom.width / 2,
-            destinationY: 10,
+            markerY: 50,
             room: firstRoom,
+            path: [],
         }
 
         this.tick = this.tick.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.handleHotSpotClick = this.handleHotSpotClick.bind(this)
-        this.moveHorizontalStep = this.moveHorizontalStep.bind(this)
-        this.moveVerticalStep = this.moveVerticalStep.bind(this)
+        this.moveAlongPath = this.moveAlongPath.bind(this)
         this.followMarker = this.followMarker.bind(this)
         this.updateCellMatrix = this.updateCellMatrix.bind(this)
     }
@@ -60,27 +60,34 @@ export default class Game extends Component<Props, State> {
     }
 
     tick() {
-        this.moveHorizontalStep(speed)
-        this.moveVerticalStep(speed)
+        this.moveAlongPath(speed)
         this.followMarker()
     }
 
-    moveHorizontalStep(speed: number) {
-        const { markerX, destinationX } = this.state
-        if (markerX !== destinationX) {
-            const distance = Math.min(speed, Math.abs(markerX - destinationX))
-            const direction = markerX < destinationX ? 1 : -1
-            this.setState({ markerX: markerX + (distance * direction) })
-        }
-    }
+    moveAlongPath(speed: number) {
+        const { path, markerX, markerY } = this.state
+        const [nextStep] = path;
+        if (!nextStep) { return }
 
-    moveVerticalStep(speed: number) {
-        const { markerY, destinationY } = this.state
-        if (markerY !== destinationY) {
-            const distance = Math.min(speed, Math.abs(markerY - destinationY))
-            const direction = markerY < destinationY ? 1 : -1
-            this.setState({ markerY: markerY + (distance * direction) })
+        let newMarkerX = markerX
+        let newMarkerY = markerY
+        if (markerX !== nextStep.x) {
+            const distance = Math.min(speed, Math.abs(markerX - nextStep.x))
+            const direction = markerX < nextStep.x ? 1 : -1
+            newMarkerX = markerX + (distance * direction)
         }
+        if (markerY !== nextStep.y) {
+            const distance = Math.min(speed, Math.abs(markerY - nextStep.y))
+            const direction = markerY < nextStep.y ? 1 : -1
+            newMarkerY = markerY + (distance * direction)
+        }
+
+        if (nextStep.x == newMarkerX && nextStep.y == newMarkerY) {
+            path.shift()
+            this.setState({ path })
+        }
+
+        this.setState({ markerX: newMarkerX, markerY: newMarkerY, path })
     }
 
     followMarker() {
@@ -94,25 +101,28 @@ export default class Game extends Component<Props, State> {
     }
 
     handleRoomClick(x: number, y: number) {
-        const { viewAngle, room } = this.state
-        const pointClicked = locateClickInWorld(x, y, viewAngle, room)
-        const pointIsWalkable = isPointWalkable(pointClicked, getWalkablePolygons(room) , getWalkableRectangle(room), getWalkableCircles(room))
-
-        console.log(pointIsWalkable, pointClicked)
-
-        if (!pointIsWalkable) {
-            // return
+        if (!this.state.cellMatrix) {
+            console.warn('NO CELLMATRIX IN STATE')
+            return
         }
 
+        const { viewAngle, room, cellMatrix, markerX, markerY } = this.state
+        const pointClicked = locateClickInWorld(x, y, viewAngle, room)
+        const pointIsWalkable = isPointWalkable(pointClicked, getWalkablePolygons(room), getWalkableRectangle(room), getWalkableCircles(room))
+
+        if (!pointIsWalkable) {
+            return
+        }
+
+        const path = findPath({ x: markerX, y: markerY }, pointClicked, cellMatrix, cellSize)
         this.setState({
-            destinationX: pointClicked.x,
-            destinationY: pointClicked.y,
+            path
         })
     }
 
     updateCellMatrix() {
         this.setState({
-            cellMatrix: generateCellMatrix(this.state.room, 10)
+            cellMatrix: generateCellMatrix(this.state.room, cellSize)
         })
     }
 
@@ -127,7 +137,7 @@ export default class Game extends Component<Props, State> {
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
                     // use for debugging - slows render!
-                    walkableCells={this.state.cellMatrix}
+                    // walkableCells={this.state.cellMatrix}
                     showWalkableAreas
                 >
                     <MarkerShape
