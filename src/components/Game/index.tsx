@@ -147,7 +147,7 @@ export default class Game extends Component<Props, State> {
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
                     // use for debugging - slows render!
-                    obstacleCells={this.state.cellMatrix}
+                    // obstacleCells={this.state.cellMatrix}
                     showObstacleAreas
                 >
                     <MarkerShape
