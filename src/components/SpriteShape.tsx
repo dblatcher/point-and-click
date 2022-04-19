@@ -11,8 +11,8 @@ interface Props {
     height?: number
     width?: number
     sprite: string
-    sequence: string
-    frameIndex: number
+    sequence?: string
+    frameIndex?: number
 }
 
 

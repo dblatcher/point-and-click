@@ -165,8 +165,6 @@ export default class Game extends Component<Props, State> {
                         width={50}
                         height={50}
                         sprite={'skinner'}
-                        sequence={'walk'}
-                        frameIndex={0}
                     />
                 </Room>
             </main>

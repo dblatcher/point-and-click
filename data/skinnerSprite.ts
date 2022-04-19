@@ -1,4 +1,4 @@
-import { Sprite, SpriteData, SpriteSheet } from "../src/lib/Sprite";
+import { SpriteData, SpriteSheet } from "../src/lib/Sprite";
 
 export const sheetLeft: SpriteSheet = {
     id: 'skinner-1-l',
@@ -10,8 +10,9 @@ export const sheetLeft: SpriteSheet = {
 export const skinner: SpriteData = {
     id: 'skinner',
     sequences: {
-        wait: [
+        default: [
             { sheetId: 'skinner-1-l', row: 0, col: 10 },
+            { sheetId: 'skinner-1-l', row: 0, col: 11 },
             { sheetId: 'skinner-1-l', row: 0, col: 4 }
         ],
         walk: [

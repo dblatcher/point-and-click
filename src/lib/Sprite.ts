@@ -48,14 +48,14 @@ export class Sprite {
         }
     }
 
-    public getStyle(sequence: string, frameIndex: number) {
+    public getStyle(sequence = 'default', frameIndex = 0) {
         const frame = this.getFrame(sequence, frameIndex)
-        if (!frame) {return undefined}
+        if (!frame) { return undefined }
 
         return {
             backgroundImage: `url(${frame.sheet.url})`,
-            backgroundPositionX: `${100 * frame.col}%`,
-            backgroundPositionY: `${100 * frame.row}%`,
+            backgroundPositionX: `${-100 * frame.col}%`,
+            backgroundPositionY: `${-100 * frame.row}%`,
             backgroundSize: `${100 * frame.sheet.cols}% ${100 * frame.sheet.rows}%`,
             width: '100%',
             height: '100%',
