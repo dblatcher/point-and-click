@@ -9,11 +9,14 @@ interface Props {
     height?: number
     viewAngle: number
     color: string
+    text?: string
 }
 
 export default function MarkerShape({
-    roomData, x, viewAngle, color, y=0, height=50
+    roomData, x, viewAngle, color, y=0, height=50, text
 }: Props) {
+
+    const textToDisplay = text || `${x.toFixed(0)},${y.toFixed(0)}`
 
     return (
         <svg
@@ -29,7 +32,7 @@ export default function MarkerShape({
                 stroke-width={.25} 
                 font-size={10} 
                 font-family='monospace'
-            >{x.toFixed(0)},{y.toFixed(0)}</text>
+            >{textToDisplay}</text>
         </svg>
     )
 }

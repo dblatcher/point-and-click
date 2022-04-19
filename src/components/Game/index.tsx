@@ -8,6 +8,7 @@ import { Room } from "../Room";
 import MarkerShape from "../MarkerShape";
 import { MoveOrder, Order } from "../../lib/Order";
 import { exectuteMove } from "../../lib/characters/executeMove";
+import { exectuteTalk } from "../../lib/characters/executeTalk";
 
 
 interface Props {
@@ -22,6 +23,7 @@ interface State {
 
     markerX: number
     markerY: number
+    dialogue?: string
     orders: Order[]
 }
 
@@ -73,11 +75,20 @@ export default class Game extends Component<Props, State> {
 
         if (nextOrder.type === 'move') {
             const newPosition = exectuteMove(nextOrder, markerX, markerY, speed)
-            if (nextOrder.path.length === 0) {
+            if (nextOrder.steps.length === 0) {
                 orders.shift()
-                console.log('order done')
             }
-            this.setState({ markerX: newPosition.x, markerY: newPosition.y, orders })
+            this.setState({ markerX: newPosition.x, markerY: newPosition.y, orders, dialogue:undefined })
+        }
+
+        if (nextOrder.type === 'talk') {
+            let dialogue = exectuteTalk(nextOrder)
+
+            if (nextOrder.steps.length === 0) {
+                orders.shift()
+                dialogue = undefined
+            }
+            this.setState({ orders, dialogue })
         }
     }
 
@@ -89,6 +100,15 @@ export default class Game extends Component<Props, State> {
 
     handleHotSpotClick(zone: HotSpotZone) {
         console.log('hotspot click', zone.name)
+        const { orders } = this.state
+
+        orders.push({
+            type: 'talk',
+            steps: [
+                { text: `You clicked on the ${zone.name}`, time: 50 },
+                { text: `Yayy!`, time: 25 },
+            ]
+        })
     }
 
     handleRoomClick(x: number, y: number) {
@@ -100,8 +120,8 @@ export default class Game extends Component<Props, State> {
         const { viewAngle, room, cellMatrix, markerX, markerY } = this.state
         const pointClicked = locateClickInWorld(x, y, viewAngle, room)
 
-        const path = findPath({ x: markerX, y: markerY }, pointClicked, cellMatrix, cellSize)
-        const newOrder: MoveOrder = { type: 'move', path }
+        const steps = findPath({ x: markerX, y: markerY }, pointClicked, cellMatrix, cellSize)
+        const newOrder: MoveOrder = { type: 'move', steps }
         const orders = [newOrder] // clears any existing orders, even if the point was unreachable
 
         this.setState({
@@ -116,7 +136,7 @@ export default class Game extends Component<Props, State> {
     }
 
     render() {
-        const { viewAngle, markerX, markerY, room } = this.state
+        const { viewAngle, markerX, markerY, room, dialogue } = this.state
 
         return (
             <main>
@@ -131,6 +151,7 @@ export default class Game extends Component<Props, State> {
                 >
                     <MarkerShape
                         x={markerX} y={markerY}
+                        text={dialogue}
                         roomData={room}
                         viewAngle={viewAngle}
                         color='red' />

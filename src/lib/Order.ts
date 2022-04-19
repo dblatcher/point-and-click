@@ -2,9 +2,19 @@ import { Point } from "./pathfinding/geometry"
 
 interface MoveOrder {
     type: 'move',
-    path: Point[]
+    steps: Point[]
 }
 
-type Order = MoveOrder
+interface DialogueLine {
+    text: string
+    time: number
+}
 
-export type { Order, MoveOrder }
+interface TalkOrder {
+    type: 'talk',
+    steps: DialogueLine[]
+}
+
+type Order = MoveOrder | TalkOrder
+
+export type { Order, MoveOrder, TalkOrder }

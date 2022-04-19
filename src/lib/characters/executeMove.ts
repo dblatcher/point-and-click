@@ -3,7 +3,7 @@ import { Point } from "../pathfinding/geometry";
 
 export function exectuteMove(moveOrder: MoveOrder, x: number, y: number, speed: number): Point {
 
-    const [nextStep] = moveOrder.path;
+    const [nextStep] = moveOrder.steps;
     if (!nextStep) { return { x, y } }
 
     let newX = x
@@ -20,8 +20,7 @@ export function exectuteMove(moveOrder: MoveOrder, x: number, y: number, speed: 
     }
 
     if (nextStep.x == newX && nextStep.y == newY) {
-        moveOrder.path.shift()
-        console.log('step done')
+        moveOrder.steps.shift()
     }
 
     return { x:newX, y:newY }
