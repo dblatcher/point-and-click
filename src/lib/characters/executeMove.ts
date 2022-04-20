@@ -1,8 +1,9 @@
+import { CharacterData } from "../CharacterData";
 import { MoveOrder } from "../Order";
 import { Point } from "../pathfinding/geometry";
 
-export function exectuteMove(moveOrder: MoveOrder, x: number, y: number, speed: number): Point {
-
+export function executeMove(moveOrder: MoveOrder, character: CharacterData): Point {
+    const { x, y, speed = 1 } = character
     const [nextStep] = moveOrder.steps;
     if (!nextStep) { return { x, y } }
 
@@ -23,5 +24,5 @@ export function exectuteMove(moveOrder: MoveOrder, x: number, y: number, speed: 
         moveOrder.steps.shift()
     }
 
-    return { x:newX, y:newY }
+    return { x: newX, y: newY }
 }

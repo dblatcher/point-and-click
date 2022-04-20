@@ -5,11 +5,10 @@ import { HotSpotZone } from "../../lib/Zone";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { findPath } from "../../lib/pathfinding/pathfind";
 import { Room } from "../Room";
-import { MoveOrder, Order } from "../../lib/Order";
-import { exectuteMove } from "../../lib/characters/executeMove";
-import { exectuteTalk } from "../../lib/characters/executeTalk";
+import { MoveOrder } from "../../lib/Order";
 import Character from "../Character";
-
+import { CharacterData } from "../../lib/CharacterData"
+import followOrder from "../../lib/characters/followOrder";
 
 interface Props {
     rooms: RoomData[],
@@ -21,12 +20,9 @@ interface State {
     cellMatrix?: CellMatrix
     timer?: number
 
-    markerX: number
-    markerY: number
-    orders: Order[]
+    player: CharacterData
 }
 
-const speed = 4
 const cellSize = 10
 
 export default class Game extends Component<Props, State> {
@@ -39,15 +35,20 @@ export default class Game extends Component<Props, State> {
         this.state = {
             viewAngle: 0,
             room: firstRoom,
-            markerX: firstRoom.width / 2,
-            markerY: 0,
-            orders: []
+            player: {
+                x: (firstRoom.width / 2),
+                y: 10,
+                width: 40,
+                height: 80,
+                orders: [],
+                sprite: 'skinner',
+            }
         }
 
         this.tick = this.tick.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.handleHotSpotClick = this.handleHotSpotClick.bind(this)
-        this.executeOrder = this.executeOrder.bind(this)
+        this.makePlayerAct = this.makePlayerAct.bind(this)
         this.followMarker = this.followMarker.bind(this)
         this.updateCellMatrix = this.updateCellMatrix.bind(this)
     }
@@ -63,49 +64,36 @@ export default class Game extends Component<Props, State> {
     }
 
     tick() {
-        this.executeOrder(speed)
+        this.makePlayerAct()
         this.followMarker()
     }
 
-    executeOrder(speed: number) {
-        const { orders, markerX, markerY } = this.state
-        const [nextOrder] = orders
-        if (!nextOrder) { return }
+    makePlayerAct() {
+        const { player } = this.state
 
-        if (nextOrder.type === 'move') {
-            const newPosition = exectuteMove(nextOrder, markerX, markerY, speed)
-            if (nextOrder.steps.length === 0) {
-                orders.shift()
-            }
-            this.setState({ markerX: newPosition.x, markerY: newPosition.y, orders })
-        }
-
-        if (nextOrder.type === 'talk') {
-            exectuteTalk(nextOrder)
-            if (nextOrder.steps.length === 0) {
-                orders.shift()
-            }
-            this.setState({ orders })
-        }
+        followOrder(player)
+        this.setState({ player })
     }
 
     followMarker() {
-        const { markerX, room } = this.state
-        const viewAngle = clamp(getViewAngleCenteredOn(markerX, room), 1, -1)
+        const { player, room } = this.state
+        const viewAngle = clamp(getViewAngleCenteredOn(player.x, room), 1, -1)
         this.setState({ viewAngle })
     }
 
     handleHotSpotClick(zone: HotSpotZone) {
         console.log('hotspot click', zone.name)
-        const { orders } = this.state
+        const { player } = this.state
 
-        orders.push({
+        player.orders.push({
             type: 'talk',
             steps: [
                 { text: `You clicked on the ${zone.name}`, time: 150 },
                 { text: `Yayy!`, time: 125 },
             ]
         })
+
+        this.setState({ player })
     }
 
     handleRoomClick(x: number, y: number) {
@@ -114,16 +102,14 @@ export default class Game extends Component<Props, State> {
             return
         }
 
-        const { viewAngle, room, cellMatrix, markerX, markerY } = this.state
+        const { viewAngle, room, cellMatrix, player } = this.state
         const pointClicked = locateClickInWorld(x, y, viewAngle, room)
 
-        const steps = findPath({ x: markerX, y: markerY }, pointClicked, cellMatrix, cellSize)
+        const steps = findPath({ x: player.x, y: player.y }, pointClicked, cellMatrix, cellSize)
         const newOrder: MoveOrder = { type: 'move', steps }
-        const orders = [newOrder] // clears any existing orders, even if the point was unreachable
+        player.orders = [newOrder] // clears any existing orders, even if the point was unreachable
 
-        this.setState({
-            orders
-        })
+        this.setState({ player })
     }
 
     updateCellMatrix() {
@@ -133,7 +119,7 @@ export default class Game extends Component<Props, State> {
     }
 
     render() {
-        const { viewAngle, markerX, markerY, room } = this.state
+        const { viewAngle, room, player } = this.state
 
         return (
             <main>
@@ -146,14 +132,10 @@ export default class Game extends Component<Props, State> {
                     // obstacleCells={this.state.cellMatrix}
                     showObstacleAreas
                 >
-                    <Character 
-                        x={markerX} y={markerY}
+                    <Character
+                        characterData={player}
                         roomData={room}
-                        viewAngle={viewAngle}
-                        width={50}
-                        height={100}
-                        orders={this.state.orders}
-                        sprite={'skinner'} />
+                        viewAngle={viewAngle}/>
                 </Room>
             </main>
         )

@@ -5,26 +5,26 @@ import SpriteShape from "../SpriteShape";
 import { useInterval } from "../../lib/useInterval"
 import { useEffect, useState } from "preact/hooks";
 import { Order } from "../../lib/Order";
+import { CharacterData } from "../../lib/CharacterData";
 
 interface Props {
     roomData: RoomData
     viewAngle: number
-    x: number
-    y: number
-    height?: number
-    width?: number
-    sprite: string
+    characterData: CharacterData
     animationRate?: number
-    orders?: Order[]
 }
 
 
 export default function Character({
-    roomData, viewAngle, x, y, 
-    height = 50, width = 50, sprite, 
-    animationRate = 250,
-    orders
+    roomData, viewAngle,
+    animationRate = 250, characterData
 }: Props) {
+    const {
+        orders,
+        x, y,
+        height = 50, width = 50, sprite,
+
+    } = characterData
     const [currentOrder] = orders
     const text = currentOrder?.type === 'talk' ? currentOrder.steps[0].text : undefined;
     const sequence = currentOrder?.type === 'move' ? 'walk' : currentOrder?.type === 'talk' ? 'talk' : 'default'
