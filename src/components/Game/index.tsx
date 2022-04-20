@@ -5,11 +5,10 @@ import { HotSpotZone } from "../../lib/Zone";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { findPath } from "../../lib/pathfinding/pathfind";
 import { Room } from "../Room";
-import MarkerShape from "../MarkerShape";
 import { MoveOrder, Order } from "../../lib/Order";
 import { exectuteMove } from "../../lib/characters/executeMove";
 import { exectuteTalk } from "../../lib/characters/executeTalk";
-import SpriteShape from "../SpriteShape";
+import Character from "../Character";
 
 
 interface Props {
@@ -24,7 +23,6 @@ interface State {
 
     markerX: number
     markerY: number
-    dialogue?: string
     orders: Order[]
 }
 
@@ -79,17 +77,15 @@ export default class Game extends Component<Props, State> {
             if (nextOrder.steps.length === 0) {
                 orders.shift()
             }
-            this.setState({ markerX: newPosition.x, markerY: newPosition.y, orders, dialogue:undefined })
+            this.setState({ markerX: newPosition.x, markerY: newPosition.y, orders })
         }
 
         if (nextOrder.type === 'talk') {
-            let dialogue = exectuteTalk(nextOrder)
-
+            exectuteTalk(nextOrder)
             if (nextOrder.steps.length === 0) {
                 orders.shift()
-                dialogue = undefined
             }
-            this.setState({ orders, dialogue })
+            this.setState({ orders })
         }
     }
 
@@ -106,8 +102,8 @@ export default class Game extends Component<Props, State> {
         orders.push({
             type: 'talk',
             steps: [
-                { text: `You clicked on the ${zone.name}`, time: 50 },
-                { text: `Yayy!`, time: 25 },
+                { text: `You clicked on the ${zone.name}`, time: 150 },
+                { text: `Yayy!`, time: 125 },
             ]
         })
     }
@@ -137,7 +133,7 @@ export default class Game extends Component<Props, State> {
     }
 
     render() {
-        const { viewAngle, markerX, markerY, room, dialogue } = this.state
+        const { viewAngle, markerX, markerY, room } = this.state
 
         return (
             <main>
@@ -150,22 +146,14 @@ export default class Game extends Component<Props, State> {
                     // obstacleCells={this.state.cellMatrix}
                     showObstacleAreas
                 >
-                    <MarkerShape
+                    <Character 
                         x={markerX} y={markerY}
-                        text={dialogue}
-                        roomData={room}
-                        viewAngle={viewAngle}
-                        color='red' />
-
-                    <SpriteShape 
-                        x={markerX} y={markerY}
-
                         roomData={room}
                         viewAngle={viewAngle}
                         width={50}
-                        height={50}
-                        sprite={'skinner'}
-                    />
+                        height={100}
+                        orders={this.state.orders}
+                        sprite={'skinner'} />
                 </Room>
             </main>
         )

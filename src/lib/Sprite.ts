@@ -28,8 +28,8 @@ interface SheetWithFrame {
 }
 
 export class Sprite {
-    private data: SpriteData
-    private sheets: SpriteSheet[]
+    readonly data: SpriteData
+    readonly sheets: SpriteSheet[]
     constructor(data: SpriteData, sheets: SpriteSheet[]) {
         this.data = data
         this.sheets = sheets
