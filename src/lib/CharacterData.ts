@@ -1,4 +1,5 @@
 import { Order } from "./Order"
+import { Direction } from "./Sprite"
 
 interface CharacterData {
     x: number
@@ -8,6 +9,7 @@ interface CharacterData {
     sprite: string
     orders: Order[]
     speed?: number
+    direction?: Direction
 }
 
 export type { CharacterData }

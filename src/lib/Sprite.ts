@@ -12,14 +12,20 @@ interface SpriteFrame {
     col: number
 }
 
+type Direction = 'left' | 'right'
+
 interface SpriteData {
     id: string
+    defaultDirection: Direction
     sequences: {
-        [index: string]: SpriteFrame[]
+        [index: string]: {
+            left?: SpriteFrame[]
+            right?: SpriteFrame[]
+        }
     }
 }
 
-export type { SpriteSheet, SpriteFrame, SpriteData }
+export type { SpriteSheet, SpriteFrame, SpriteData, Direction }
 
 interface SheetWithFrame {
     sheet: SpriteSheet
@@ -35,10 +41,21 @@ export class Sprite {
         this.sheets = sheets
     }
 
-    public getFrame(sequence: string, frameIndex: number): SheetWithFrame | undefined {
-        const frames = this.data.sequences[sequence]
-        if (!frames) { return undefined }
-        const frame = frames[frameIndex]
+    public getFrames(sequence:string, direction:Direction): SpriteFrame[] | undefined {
+        const sequenceObject = this.data.sequences[sequence]
+        if (!sequenceObject) { return undefined }
+        const directionToUse = !direction || !sequenceObject[direction] ? this.data.defaultDirection : direction;
+        return sequenceObject[directionToUse] 
+    }
+
+
+    public getFrame(sequence: string, frameIndex: number, direction: Direction): SheetWithFrame | undefined {
+
+        const frames = this.getFrames(sequence,direction);
+        if (!frames) {return undefined}
+
+        const frame = frames[frameIndex] 
+
         if (!frame) { return undefined }
         const sheet = this.sheets.find(sheet => sheet.id === frame.sheetId)
         return {
@@ -48,8 +65,8 @@ export class Sprite {
         }
     }
 
-    public getStyle(sequence = 'default', frameIndex = 0) {
-        const frame = this.getFrame(sequence, frameIndex)
+    public getStyle(sequence = 'default', frameIndex = 0, direction?: Direction) {
+        const frame = this.getFrame(sequence, frameIndex, direction)
         if (!frame) { return undefined }
 
         return {

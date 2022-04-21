@@ -4,8 +4,8 @@ import { placeOnScreen } from "../../lib/util";
 import SpriteShape from "../SpriteShape";
 import { useInterval } from "../../lib/useInterval"
 import { useEffect, useState } from "preact/hooks";
-import { Order } from "../../lib/Order";
 import { CharacterData } from "../../lib/CharacterData";
+import { Direction } from "../../lib/Sprite";
 
 interface Props {
     roomData: RoomData
@@ -23,13 +23,14 @@ export default function Character({
         orders,
         x, y,
         height = 50, width = 50, sprite,
-
     } = characterData
     const [currentOrder] = orders
     const text = currentOrder?.type === 'talk' ? currentOrder.steps[0].text : undefined;
     const sequence = currentOrder?.type === 'move' ? 'walk' : currentOrder?.type === 'talk' ? 'talk' : 'default'
-
-    const frames = sprites[sprite].data.sequences[sequence]
+    const spriteObject = sprites[sprite]
+    const direction = characterData.direction || spriteObject.data.defaultDirection;
+    const frames = spriteObject.getFrames(sequence, direction)
+    
     const [frameIndex, setFrameIndex] = useState(0)
 
     const updateFrame = () => {
@@ -57,6 +58,7 @@ export default function Character({
                 sprite={sprite}
                 frameIndex={frameIndex}
                 sequence={sequence}
+                direction={direction}
             />
             <svg
                 style={{ overflow: 'visible' }}

@@ -1,7 +1,7 @@
-import { sheetLeft, skinner as skinnerData } from "../data/skinnerSprite";
+import * as skinnerSprite from "../data/skinnerSprite";
 import { Sprite } from "./lib/Sprite";
 
-const skinner = new Sprite(skinnerData, [sheetLeft])
+const skinner = new Sprite(skinnerSprite.data, skinnerSprite.sheets)
 
 const sprites: { [index: string]: Sprite } = {
     skinner

@@ -1,6 +1,7 @@
 import { sprites } from "../sprites"
 import { RoomData } from "../lib/RoomData"
 import { placeOnScreen } from "../lib/util";
+import { Direction } from "../lib/Sprite";
 
 
 interface Props {
@@ -13,14 +14,15 @@ interface Props {
     sprite: string
     sequence?: string
     frameIndex?: number
+    direction: Direction
 }
 
 
 export default function SpriteShape({
-    roomData, viewAngle, x, y, height = 50, width = 50, sequence, frameIndex, sprite
+    roomData, viewAngle, x, y, height = 50, width = 50, sequence, frameIndex, sprite, direction
 }: Props) {
 
-    const style = sprites[sprite]?.getStyle(sequence, frameIndex);
+    const style = sprites[sprite]?.getStyle(sequence, frameIndex, direction);
 
     return (
         <svg

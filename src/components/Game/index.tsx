@@ -42,6 +42,7 @@ export default class Game extends Component<Props, State> {
                 height: 80,
                 orders: [],
                 sprite: 'skinner',
+                direction:'left'
             }
         }
 
