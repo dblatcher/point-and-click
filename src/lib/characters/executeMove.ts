@@ -1,28 +1,31 @@
 import { CharacterData } from "../CharacterData";
 import { MoveOrder } from "../Order";
 import { Point } from "../pathfinding/geometry";
+import { Direction } from "../Sprite";
 
-export function executeMove(moveOrder: MoveOrder, character: CharacterData): Point {
-    const { x, y, speed = 1 } = character
+export function executeMove(moveOrder: MoveOrder, character: CharacterData): Point & {direction:Direction} {
+    const { x, y, speed = 1, direction } = character
     const [nextStep] = moveOrder.steps;
-    if (!nextStep) { return { x, y } }
+    if (!nextStep) { return { x, y, direction } }
 
     let newX = x
     let newY = y
+    let newDirection = direction
     if (x !== nextStep.x) {
         const distance = Math.min(speed, Math.abs(x - nextStep.x))
-        const direction = x < nextStep.x ? 1 : -1
-        newX = x + (distance * direction)
+        const directionX = x < nextStep.x ? 1 : -1
+        newX = x + (distance * directionX)
+        newDirection = directionX < 0 ? 'left' : 'right'
     }
     if (y !== nextStep.y) {
         const distance = Math.min(speed, Math.abs(y - nextStep.y))
-        const direction = y < nextStep.y ? 1 : -1
-        newY = y + (distance * direction)
+        const directionY = y < nextStep.y ? 1 : -1
+        newY = y + (distance * directionY)
     }
 
     if (nextStep.x == newX && nextStep.y == newY) {
         moveOrder.steps.shift()
     }
 
-    return { x: newX, y: newY }
+    return { x: newX, y: newY, direction:newDirection }
 }

@@ -3,7 +3,7 @@ import { RoomData } from "../../lib/RoomData"
 import { placeOnScreen } from "../../lib/util";
 import SpriteShape from "../SpriteShape";
 import { useInterval } from "../../lib/useInterval"
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useLayoutEffect, useState } from "preact/hooks";
 import { CharacterData } from "../../lib/CharacterData";
 import { Direction } from "../../lib/Sprite";
 
@@ -39,11 +39,11 @@ export default function Character({
         setFrameIndex(nextFrameIndex)
     }
 
-
-    // need tp set frameIndex to zero when sequence
-    useEffect(() => {
+    // need tp set frameIndex to zero when sequence or direction changes
+    // to avoid 'flash of missing frame' before next updateFrame
+    useLayoutEffect(() => {
         setFrameIndex(0)
-    }, [sequence])
+    }, [sequence, direction])
 
 
     useInterval(updateFrame, animationRate)
