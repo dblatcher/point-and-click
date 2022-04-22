@@ -16,19 +16,21 @@ interface Props {
     frameIndex?: number
     direction: Direction
     filter?: string
+    clickHandler?: Function
 }
 
 
 export default function SpriteShape({
-    roomData, viewAngle, x, y, height = 50, width = 50, sequence, frameIndex, sprite, direction, filter
+    roomData, viewAngle, x, y, height = 50, width = 50, sequence, frameIndex, sprite, direction, filter,
+    clickHandler = () => {}
 }: Props) {
 
     const style = sprites[sprite]?.getStyle(sequence, frameIndex, direction);
-
     style.filter = filter
 
     return (
         <svg
+            onClick={clickHandler}
             style={{ overflow: 'hidden' }}
             x={placeOnScreen(x - (width / 2), viewAngle, roomData)}
             y={roomData.height - y - height} >

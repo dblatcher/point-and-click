@@ -42,6 +42,7 @@ export default class Game extends Component<Props, State> {
         this.tick = this.tick.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.handleHotSpotClick = this.handleHotSpotClick.bind(this)
+        this.handleCharacterClick = this.handleCharacterClick.bind(this)
         this.makePlayerAct = this.makePlayerAct.bind(this)
         this.followMarker = this.followMarker.bind(this)
         this.updateCellMatrix = this.updateCellMatrix.bind(this)
@@ -96,6 +97,10 @@ export default class Game extends Component<Props, State> {
         this.setState({ characters })
     }
 
+    handleCharacterClick(characterData:CharacterData) {
+        console.log('character click', characterData.id)
+    }
+
     handleRoomClick(x: number, y: number) {
         if (!this.state.cellMatrix) {
             console.warn('NO CELLMATRIX IN STATE')
@@ -134,6 +139,7 @@ export default class Game extends Component<Props, State> {
                     showObstacleAreas
                 >
                     {characters.map(characterData => <Character
+                        clickHandler={characterData.isPlayer ? undefined : this.handleCharacterClick }
                         characterData={characterData}
                         roomData={room}
                         viewAngle={viewAngle} />

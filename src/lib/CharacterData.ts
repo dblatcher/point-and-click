@@ -2,6 +2,7 @@ import { Order } from "./Order"
 import { Direction } from "./Sprite"
 
 interface CharacterData {
+    id:string
     isPlayer?: boolean
     x: number
     y: number

@@ -2,6 +2,7 @@ import { CharacterData } from "../../lib/CharacterData"
 
 export const initialCharacters: CharacterData[] = [
     {
+        id:'PLAYER',
         isPlayer: true,
         x: (640 / 2),
         y: 10,
@@ -12,6 +13,7 @@ export const initialCharacters: CharacterData[] = [
         direction: 'left',
     },
     {
+        id:'EVIL_SKINNER',
         x: (640 * 2 / 5),
         y: 10,
         width: 40,
@@ -26,6 +28,7 @@ export const initialCharacters: CharacterData[] = [
         filter: 'hue-rotate(45deg)',
     },
     {
+        id:'MIRROR_SKINNER',
         x: (640 * 3 / 5),
         y: 10,
         width: 40,

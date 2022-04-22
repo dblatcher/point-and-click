@@ -3,21 +3,22 @@ import { RoomData } from "../../lib/RoomData"
 import { placeOnScreen } from "../../lib/util";
 import SpriteShape from "../SpriteShape";
 import { useInterval } from "../../lib/useInterval"
-import { useEffect, useLayoutEffect, useState } from "preact/hooks";
+import { useLayoutEffect, useState } from "preact/hooks";
 import { CharacterData } from "../../lib/CharacterData";
-import { Direction } from "../../lib/Sprite";
 
 interface Props {
     roomData: RoomData
     viewAngle: number
     characterData: CharacterData
     animationRate?: number
+    clickHandler?: { (character: CharacterData): void }
 }
 
 
 export default function Character({
     roomData, viewAngle,
-    animationRate = 250, characterData
+    animationRate = 250, characterData,
+    clickHandler = (character) => { console.log(character) }
 }: Props) {
     const {
         orders,
@@ -48,9 +49,12 @@ export default function Character({
 
     useInterval(updateFrame, animationRate)
 
+    const processClick = () => {clickHandler(characterData)}
+
     return (
         <>
-            <SpriteShape
+            <SpriteShape 
+                clickHandler ={processClick}
                 roomData={roomData}
                 viewAngle={viewAngle}
                 x={x} y={y}
