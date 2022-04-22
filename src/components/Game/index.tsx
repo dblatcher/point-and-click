@@ -9,6 +9,7 @@ import { MoveOrder } from "../../lib/Order";
 import Character from "../Character";
 import { CharacterData } from "../../lib/CharacterData"
 import followOrder from "../../lib/characters/followOrder";
+import { initialCharacters } from "./characters";
 
 interface Props {
     rooms: RoomData[],
@@ -19,8 +20,6 @@ interface State {
     room: RoomData
     cellMatrix?: CellMatrix
     timer?: number
-
-    player: CharacterData
     characters: CharacterData[]
 }
 
@@ -36,42 +35,8 @@ export default class Game extends Component<Props, State> {
         this.state = {
             viewAngle: 0,
             room: firstRoom,
-            player: {
-                isPlayer: true,
-                x: (firstRoom.width / 2),
-                y: 10,
-                width: 40,
-                height: 80,
-                orders: [],
-                sprite: 'skinner',
-                direction: 'left',
-            },
-            characters: [
-                {
-                    x: (firstRoom.width*  2/ 5),
-                    y: 10,
-                    width: 40,
-                    height: 80,
-                    orders: [
-                        {type:'talk', steps:[{text:'I am evil skinner...', time:100}]},
-                        {type:'talk', steps:[{text:'...I AM evil skinner', time:100}]},
-                        {type:'move', steps:[{x:200, y:30}]},
-                    ],
-                    sprite: 'skinner',
-                    direction: 'right',
-                    filter: 'hue-rotate(45deg)',
-                },
-                {
-                    x: (firstRoom.width*  3/ 5),
-                    y: 10,
-                    width: 40,
-                    height: 80,
-                    orders: [],
-                    sprite: 'skinner',
-                    direction: 'right',
-                    filter: 'invert(1)',
-                },
-            ]
+
+            characters: initialCharacters
         }
 
         this.tick = this.tick.bind(this)
@@ -80,6 +45,10 @@ export default class Game extends Component<Props, State> {
         this.makePlayerAct = this.makePlayerAct.bind(this)
         this.followMarker = this.followMarker.bind(this)
         this.updateCellMatrix = this.updateCellMatrix.bind(this)
+    }
+
+    get player(): (CharacterData | undefined) {
+        return this.state.characters.find(character => character.isPlayer)
     }
 
     componentWillMount(): void {
@@ -98,23 +67,23 @@ export default class Game extends Component<Props, State> {
     }
 
     makePlayerAct() {
-        const { player, characters } = this.state
-        followOrder(player)
-
+        const { characters } = this.state
         characters.forEach(followOrder)
-
-        this.setState({ player, characters })
+        this.setState({ characters })
     }
 
     followMarker() {
-        const { player, room } = this.state
+        const { room } = this.state
+        const { player } = this
+        if (!player) { return }
         const viewAngle = clamp(getViewAngleCenteredOn(player.x, room), 1, -1)
         this.setState({ viewAngle })
     }
 
     handleHotSpotClick(zone: HotSpotZone) {
         console.log('hotspot click', zone.name)
-        const { player } = this.state
+        const { characters } = this.state
+        const { player } = this
 
         player.orders.push({
             type: 'talk',
@@ -124,7 +93,7 @@ export default class Game extends Component<Props, State> {
             ]
         })
 
-        this.setState({ player })
+        this.setState({ characters })
     }
 
     handleRoomClick(x: number, y: number) {
@@ -133,14 +102,15 @@ export default class Game extends Component<Props, State> {
             return
         }
 
-        const { viewAngle, room, cellMatrix, player } = this.state
+        const { viewAngle, room, cellMatrix, characters } = this.state
+        const { player } = this
         const pointClicked = locateClickInWorld(x, y, viewAngle, room)
 
         const steps = findPath({ x: player.x, y: player.y }, pointClicked, cellMatrix, cellSize)
         const newOrder: MoveOrder = { type: 'move', steps }
         player.orders = [newOrder] // clears any existing orders, even if the point was unreachable
 
-        this.setState({ player })
+        this.setState({ characters })
     }
 
     updateCellMatrix() {
@@ -150,7 +120,7 @@ export default class Game extends Component<Props, State> {
     }
 
     render() {
-        const { viewAngle, room, player, characters } = this.state
+        const { viewAngle, room, characters } = this.state
 
         return (
             <main>
@@ -163,11 +133,6 @@ export default class Game extends Component<Props, State> {
                     // obstacleCells={this.state.cellMatrix}
                     showObstacleAreas
                 >
-                    <Character
-                        characterData={player}
-                        roomData={room}
-                        viewAngle={viewAngle} />
-
                     {characters.map(characterData => <Character
                         characterData={characterData}
                         roomData={room}
