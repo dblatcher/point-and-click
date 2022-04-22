@@ -29,7 +29,7 @@ export const initialCharacters: CharacterData[] = [
     },
     {
         id:'MIRROR_SKINNER',
-        x: (640 * 3 / 5),
+        x: (640 * 3.5 / 5),
         y: 10,
         width: 40,
         height: 80,

@@ -85,6 +85,7 @@ export default class Game extends Component<Props, State> {
         console.log('hotspot click', zone.name)
         const { characters } = this.state
         const { player } = this
+        if (!player) { return }
 
         player.orders.push({
             type: 'talk',
@@ -97,7 +98,7 @@ export default class Game extends Component<Props, State> {
         this.setState({ characters })
     }
 
-    handleCharacterClick(characterData:CharacterData) {
+    handleCharacterClick(characterData: CharacterData) {
         console.log('character click', characterData.id)
     }
 
@@ -109,6 +110,7 @@ export default class Game extends Component<Props, State> {
 
         const { viewAngle, room, cellMatrix, characters } = this.state
         const { player } = this
+        if (!player) { return }
         const pointClicked = locateClickInWorld(x, y, viewAngle, room)
 
         const steps = findPath({ x: player.x, y: player.y }, pointClicked, cellMatrix, cellSize)
@@ -126,6 +128,7 @@ export default class Game extends Component<Props, State> {
 
     render() {
         const { viewAngle, room, characters } = this.state
+        const charactersInRenderOrder = characters.sort((a, b) => b.y - a.y)
 
         return (
             <main>
@@ -138,8 +141,8 @@ export default class Game extends Component<Props, State> {
                     // obstacleCells={this.state.cellMatrix}
                     showObstacleAreas
                 >
-                    {characters.map(characterData => <Character
-                        clickHandler={characterData.isPlayer ? undefined : this.handleCharacterClick }
+                    {charactersInRenderOrder.map(characterData => <Character
+                        clickHandler={characterData.isPlayer ? undefined : this.handleCharacterClick}
                         characterData={characterData}
                         roomData={room}
                         viewAngle={viewAngle} />
