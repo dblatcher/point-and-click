@@ -22,7 +22,7 @@ export default function Character({
     const {
         orders,
         x, y,
-        height = 50, width = 50, sprite,
+        height = 50, width = 50, sprite, filter,
     } = characterData
     const [currentOrder] = orders
     const text = currentOrder?.type === 'talk' ? currentOrder.steps[0].text : undefined;
@@ -59,6 +59,7 @@ export default function Character({
                 frameIndex={frameIndex}
                 sequence={sequence}
                 direction={direction}
+                filter={filter}
             />
             <svg
                 style={{ overflow: 'visible' }}

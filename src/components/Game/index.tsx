@@ -21,6 +21,7 @@ interface State {
     timer?: number
 
     player: CharacterData
+    characters: CharacterData[]
 }
 
 const cellSize = 10
@@ -36,14 +37,41 @@ export default class Game extends Component<Props, State> {
             viewAngle: 0,
             room: firstRoom,
             player: {
+                isPlayer: true,
                 x: (firstRoom.width / 2),
                 y: 10,
                 width: 40,
                 height: 80,
                 orders: [],
                 sprite: 'skinner',
-                direction:'left'
-            }
+                direction: 'left',
+            },
+            characters: [
+                {
+                    x: (firstRoom.width*  2/ 5),
+                    y: 10,
+                    width: 40,
+                    height: 80,
+                    orders: [
+                        {type:'talk', steps:[{text:'I am evil skinner...', time:100}]},
+                        {type:'talk', steps:[{text:'...I AM evil skinner', time:100}]},
+                        {type:'move', steps:[{x:200, y:30}]},
+                    ],
+                    sprite: 'skinner',
+                    direction: 'right',
+                    filter: 'hue-rotate(45deg)',
+                },
+                {
+                    x: (firstRoom.width*  3/ 5),
+                    y: 10,
+                    width: 40,
+                    height: 80,
+                    orders: [],
+                    sprite: 'skinner',
+                    direction: 'right',
+                    filter: 'invert(1)',
+                },
+            ]
         }
 
         this.tick = this.tick.bind(this)
@@ -70,10 +98,12 @@ export default class Game extends Component<Props, State> {
     }
 
     makePlayerAct() {
-        const { player } = this.state
-
+        const { player, characters } = this.state
         followOrder(player)
-        this.setState({ player })
+
+        characters.forEach(followOrder)
+
+        this.setState({ player, characters })
     }
 
     followMarker() {
@@ -120,7 +150,7 @@ export default class Game extends Component<Props, State> {
     }
 
     render() {
-        const { viewAngle, room, player } = this.state
+        const { viewAngle, room, player, characters } = this.state
 
         return (
             <main>
@@ -136,7 +166,13 @@ export default class Game extends Component<Props, State> {
                     <Character
                         characterData={player}
                         roomData={room}
-                        viewAngle={viewAngle}/>
+                        viewAngle={viewAngle} />
+
+                    {characters.map(characterData => <Character
+                        characterData={characterData}
+                        roomData={room}
+                        viewAngle={viewAngle} />
+                    )}
                 </Room>
             </main>
         )

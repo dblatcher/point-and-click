@@ -15,14 +15,17 @@ interface Props {
     sequence?: string
     frameIndex?: number
     direction: Direction
+    filter?: string
 }
 
 
 export default function SpriteShape({
-    roomData, viewAngle, x, y, height = 50, width = 50, sequence, frameIndex, sprite, direction
+    roomData, viewAngle, x, y, height = 50, width = 50, sequence, frameIndex, sprite, direction, filter
 }: Props) {
 
     const style = sprites[sprite]?.getStyle(sequence, frameIndex, direction);
+
+    style.filter = filter
 
     return (
         <svg
