@@ -1,5 +1,5 @@
 {
-  "name": "test-room",
+  "name": "test-room-2",
   "frameWidth": 320,
   "width": 480,
   "height": 200,
@@ -22,5 +22,6 @@
       "rect": [240, 60],
       "parallax": 1
     }
-  ]
+  ],
+  "obstacleAreas": []
 }

@@ -4,6 +4,7 @@ export const initialCharacters: CharacterData[] = [
     {
         id:'PLAYER',
         isPlayer: true,
+        room:'test-room-2',
         x: (640 / 2),
         y: 10,
         width: 40,
@@ -14,6 +15,7 @@ export const initialCharacters: CharacterData[] = [
     },
     {
         id:'EVIL_SKINNER',
+        room:'test-room-2',
         x: (640 * 2 / 5),
         y: 10,
         width: 40,
@@ -29,6 +31,7 @@ export const initialCharacters: CharacterData[] = [
     },
     {
         id:'MIRROR_SKINNER',
+        room:'OUTSIDE',
         x: (640 * 3.5 / 5),
         y: 10,
         width: 40,

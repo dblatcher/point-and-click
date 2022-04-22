@@ -4,12 +4,12 @@ import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/uti
 import { HotSpotZone } from "../../lib/Zone";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { findPath } from "../../lib/pathfinding/pathfind";
-import { Room } from "../Room";
 import { MoveOrder } from "../../lib/Order";
-import Character from "../Character";
 import { CharacterData } from "../../lib/CharacterData"
 import followOrder from "../../lib/characters/followOrder";
 import { initialCharacters } from "./characters";
+import { Room } from "../Room";
+import Character from "../Character";
 
 interface Props {
     rooms: RoomData[],
@@ -31,11 +31,13 @@ export default class Game extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
+        const player = initialCharacters.find(character => character.isPlayer)
+        const startingRoom = props.rooms.find(room => room.name === player?.room)
         const [firstRoom] = props.rooms
+
         this.state = {
             viewAngle: 0,
-            room: firstRoom,
-
+            room: startingRoom || firstRoom,
             characters: initialCharacters
         }
 
@@ -45,7 +47,6 @@ export default class Game extends Component<Props, State> {
         this.handleCharacterClick = this.handleCharacterClick.bind(this)
         this.makePlayerAct = this.makePlayerAct.bind(this)
         this.followMarker = this.followMarker.bind(this)
-        this.updateCellMatrix = this.updateCellMatrix.bind(this)
     }
 
     get player(): (CharacterData | undefined) {
@@ -54,8 +55,8 @@ export default class Game extends Component<Props, State> {
 
     componentWillMount(): void {
         const timer = window.setInterval(() => { this.tick() }, 10)
-        this.setState({ timer })
-        this.updateCellMatrix()
+        const cellMatrix = generateCellMatrix(this.state.room, cellSize)
+        this.setState({ timer, cellMatrix })
     }
 
     componentWillUnmount(): void {
@@ -81,11 +82,34 @@ export default class Game extends Component<Props, State> {
         this.setState({ viewAngle })
     }
 
+    changeRoom(roomName: string, takePlayer?:boolean) {
+        const { rooms } = this.props
+        const { characters } = this.state
+        const newRoom = rooms.find(room => room.name === roomName)
+        if (!newRoom) { return }
+
+        if (takePlayer) {
+            this.player.room = newRoom.name
+        }
+
+        const cellMatrix = generateCellMatrix(newRoom, cellSize)
+        this.setState({
+            room: newRoom, cellMatrix, characters
+        })
+    }
+
     handleHotSpotClick(zone: HotSpotZone) {
         console.log('hotspot click', zone.name)
         const { characters } = this.state
         const { player } = this
         if (!player) { return }
+
+        if (zone.name === 'bush') {
+            return this.changeRoom('test-room-2', true)
+        }
+        if (zone.name === 'window') {
+            return this.changeRoom('OUTSIDE',true)
+        }
 
         player.orders.push({
             type: 'talk',
@@ -120,15 +144,11 @@ export default class Game extends Component<Props, State> {
         this.setState({ characters })
     }
 
-    updateCellMatrix() {
-        this.setState({
-            cellMatrix: generateCellMatrix(this.state.room, cellSize)
-        })
-    }
-
     render() {
         const { viewAngle, room, characters } = this.state
-        const charactersInRenderOrder = characters.sort((a, b) => b.y - a.y)
+        const charactersInRenderOrder = characters
+            .filter(_ => _.room === room.name)
+            .sort((a, b) => b.y - a.y)
 
         return (
             <main>
@@ -138,8 +158,8 @@ export default class Game extends Component<Props, State> {
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
                     // use for debugging - slows render!
-                    // obstacleCells={this.state.cellMatrix}
-                    showObstacleAreas
+                    obstacleCells={this.state.cellMatrix}
+                // showObstacleAreas
                 >
                     {charactersInRenderOrder.map(characterData => <Character
                         clickHandler={characterData.isPlayer ? undefined : this.handleCharacterClick}
