@@ -1,0 +1,14 @@
+import { ThingData } from "../src/lib/ThingData";
+
+export const initialThings: ThingData[] = [
+    {
+        id: 'fire',
+        type:'thing',
+        room: 'OUTSIDE',
+        x: 200,
+        y: 10,
+        height: 50,
+        width: 50,
+        sprite: 'fire'
+    }
+]

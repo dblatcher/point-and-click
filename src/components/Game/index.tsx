@@ -7,9 +7,12 @@ import { findPath } from "../../lib/pathfinding/pathfind";
 import { MoveOrder } from "../../lib/Order";
 import { CharacterData } from "../../lib/CharacterData"
 import followOrder from "../../lib/characters/followOrder";
-import { initialCharacters } from "./characters";
+import { initialCharacters } from "../../../data/characters";
+import { initialThings } from "../../../data/things";
 import { Room } from "../Room";
 import Character from "../Character";
+import { ThingData } from "../../lib/ThingData";
+import Thing from "../Thing";
 
 interface Props {
     rooms: RoomData[],
@@ -21,6 +24,7 @@ interface State {
     cellMatrix?: CellMatrix
     timer?: number
     characters: CharacterData[]
+    things: ThingData[]
 }
 
 const cellSize = 10
@@ -38,13 +42,15 @@ export default class Game extends Component<Props, State> {
         this.state = {
             viewAngle: 0,
             room: startingRoom || firstRoom,
-            characters: initialCharacters
+            characters: initialCharacters,
+            things: initialThings,
         }
 
         this.tick = this.tick.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.handleHotSpotClick = this.handleHotSpotClick.bind(this)
         this.handleCharacterClick = this.handleCharacterClick.bind(this)
+        this.handleThingClick = this.handleThingClick.bind(this)
         this.makePlayerAct = this.makePlayerAct.bind(this)
         this.followMarker = this.followMarker.bind(this)
     }
@@ -126,6 +132,10 @@ export default class Game extends Component<Props, State> {
         console.log('character click', characterData.id)
     }
 
+    handleThingClick(thingData: ThingData) {
+        console.log('thing click', thingData.id)
+    }
+
     handleRoomClick(x: number, y: number) {
         if (!this.state.cellMatrix) {
             console.warn('NO CELLMATRIX IN STATE')
@@ -145,8 +155,9 @@ export default class Game extends Component<Props, State> {
     }
 
     render() {
-        const { viewAngle, room, characters } = this.state
-        const charactersInRenderOrder = characters
+        const { viewAngle, room, characters, things } = this.state
+
+        const charactersAndThings = [...characters, ...things]
             .filter(_ => _.room === room.name)
             .sort((a, b) => b.y - a.y)
 
@@ -157,15 +168,23 @@ export default class Game extends Component<Props, State> {
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
-                    // use for debugging - slows render!
-                    // obstacleCells={this.state.cellMatrix}
-                    // showObstacleAreas
+                // use for debugging - slows render!
+                obstacleCells={this.state.cellMatrix}
+                // showObstacleAreas
                 >
-                    {charactersInRenderOrder.map(characterData => <Character
-                        clickHandler={characterData.isPlayer ? undefined : this.handleCharacterClick}
-                        characterData={characterData}
-                        roomData={room}
-                        viewAngle={viewAngle} />
+                    {charactersAndThings.map(data =>
+                        data.type === 'thing' ?
+                            <Thing
+                                clickHandler={this.handleThingClick}
+                                thingData={data}
+                                roomData={room}
+                                viewAngle={viewAngle}
+                            />
+                            : <Character
+                                clickHandler={data.isPlayer ? undefined : this.handleCharacterClick}
+                                characterData={data}
+                                roomData={room}
+                                viewAngle={viewAngle} />
                     )}
                 </Room>
             </main>

@@ -1,10 +1,11 @@
-import { CharacterData } from "../../lib/CharacterData"
+import { CharacterData } from "../src/lib/CharacterData"
 
 export const initialCharacters: CharacterData[] = [
     {
         id:'PLAYER',
+        type:'character',
         isPlayer: true,
-        room:'test-room-2',
+        room:'OUTSIDE',
         x: (640 / 2),
         y: 10,
         width: 40,
@@ -16,6 +17,7 @@ export const initialCharacters: CharacterData[] = [
     },
     {
         id:'EVIL_SKINNER',
+        type:'character',
         room:'test-room-2',
         x: (640 * 2 / 5),
         y: 10,
@@ -32,6 +34,7 @@ export const initialCharacters: CharacterData[] = [
     },
     {
         id:'MARIO',
+        type:'character',
         room:'OUTSIDE',
         x: (640 * 3.5 / 5),
         y: 10,

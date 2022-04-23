@@ -1,4 +1,4 @@
-import { sprites } from "../../sprites"
+import { sprites } from "../../../data/sprites"
 import { RoomData } from "../../lib/RoomData"
 import { placeOnScreen } from "../../lib/util";
 import SpriteShape from "../SpriteShape";
@@ -18,7 +18,7 @@ interface Props {
 export default function Character({
     roomData, viewAngle,
     animationRate = 250, characterData,
-    clickHandler = (character) => { console.log(character) }
+    clickHandler = () => { }
 }: Props) {
     const {
         orders,
@@ -71,7 +71,7 @@ export default function Character({
                 y={roomData.height - y - height} >
                 <text
                     stroke={'black'}
-                    fill={dialogueColor || 'white' }
+                    fill={dialogueColor || 'white'}
                     stroke-width={.25}
                     font-size={12}
                     font-family='arial'

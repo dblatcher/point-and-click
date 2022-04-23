@@ -1,19 +1,12 @@
 import { Order } from "./Order"
-import { Direction } from "./Sprite"
+import { BaseData } from "./ThingData"
 
-interface CharacterData {
-    id: string
+
+interface CharacterData extends BaseData{
+    type: 'character'
     isPlayer?: boolean
-    room?: string
-    x: number
-    y: number
-    height: number
-    width: number
-    sprite: string
     orders: Order[]
     speed?: number
-    direction?: Direction
-    filter?: string
     dialogueColor?: string
 }
 
