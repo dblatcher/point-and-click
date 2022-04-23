@@ -13,6 +13,7 @@ import { Room } from "../Room";
 import Character from "../Character";
 import { ThingData } from "../../lib/ThingData";
 import Thing from "../Thing";
+import { Point } from "../../lib/pathfinding/geometry";
 
 interface Props {
     rooms: RoomData[],
@@ -88,14 +89,19 @@ export default class Game extends Component<Props, State> {
         this.setState({ viewAngle })
     }
 
-    changeRoom(roomName: string, takePlayer?: boolean) {
+    changeRoom(roomName: string, takePlayer?: boolean, newPosition?: Point) {
         const { rooms } = this.props
         const { characters } = this.state
+        const { player } = this
         const newRoom = rooms.find(room => room.name === roomName)
         if (!newRoom) { return }
 
-        if (takePlayer) {
-            this.player.room = newRoom.name
+        if (takePlayer && player) {
+            player.room = newRoom.name
+            if (newPosition) {
+                player.x = newPosition.x
+                player.y = newPosition.y
+            }
         }
 
         const cellMatrix = generateCellMatrix(newRoom, cellSize)
@@ -111,10 +117,10 @@ export default class Game extends Component<Props, State> {
         if (!player) { return }
 
         if (zone.name === 'bush') {
-            return this.changeRoom('test-room-2', true)
+            return this.changeRoom('test-room-2', true, { y: 5, x: 100 })
         }
         if (zone.name === 'window') {
-            return this.changeRoom('OUTSIDE', true)
+            return this.changeRoom('OUTSIDE', true, { y: 12, x: 200 })
         }
 
         player.orders.push({
@@ -168,8 +174,8 @@ export default class Game extends Component<Props, State> {
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
-                // use for debugging - slows render!
-                obstacleCells={this.state.cellMatrix}
+                    // use for debugging - slows render!
+                    obstacleCells={this.state.cellMatrix}
                 // showObstacleAreas
                 >
                     {charactersAndThings.map(data =>

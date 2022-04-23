@@ -24,6 +24,13 @@ export function findPath(start: Point, goal: Point, matrix: CellMatrix, cellSize
         }
     }
 
+    const startCell = toCell(start)
+
+    // starting outside matrix
+    if (startCell.x >= matrix[0].length || startCell.y >= matrix.length) {
+        return []
+    }
+
     const finder = new AStarFinder({ grid: { matrix: invertedMatrix } })
     const pathPairs = finder.findPath(toCell(start), toCell(goal));
 
