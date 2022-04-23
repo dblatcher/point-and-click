@@ -31,15 +31,14 @@ export const initialCharacters: CharacterData[] = [
         filter: 'hue-rotate(45deg)',
     },
     {
-        id:'MIRROR_SKINNER',
+        id:'MARIO',
         room:'OUTSIDE',
         x: (640 * 3.5 / 5),
         y: 10,
         width: 40,
         height: 80,
         orders: [],
-        sprite: 'skinner',
+        sprite: 'mario',
         direction: 'right',
-        filter: 'invert(1)',
     },
 ]
