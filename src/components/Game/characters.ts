@@ -12,6 +12,7 @@ export const initialCharacters: CharacterData[] = [
         orders: [],
         sprite: 'skinner',
         direction: 'left',
+        dialogueColor: 'red',
     },
     {
         id:'EVIL_SKINNER',

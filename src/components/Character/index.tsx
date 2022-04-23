@@ -23,7 +23,7 @@ export default function Character({
     const {
         orders,
         x, y,
-        height = 50, width = 50, sprite, filter,
+        height = 50, width = 50, sprite, filter, dialogueColor
     } = characterData
     const [currentOrder] = orders
     const text = currentOrder?.type === 'talk' ? currentOrder.steps[0].text : undefined;
@@ -31,7 +31,7 @@ export default function Character({
     const spriteObject = sprites[sprite]
     const direction = characterData.direction || spriteObject.data.defaultDirection;
     const frames = spriteObject.getFrames(sequence, direction)
-    
+
     const [frameIndex, setFrameIndex] = useState(0)
 
     const updateFrame = () => {
@@ -49,12 +49,12 @@ export default function Character({
 
     useInterval(updateFrame, animationRate)
 
-    const processClick = () => {clickHandler(characterData)}
+    const processClick = () => { clickHandler(characterData) }
 
     return (
         <>
-            <SpriteShape 
-                clickHandler ={processClick}
+            <SpriteShape
+                clickHandler={processClick}
                 roomData={roomData}
                 viewAngle={viewAngle}
                 x={x} y={y}
@@ -70,11 +70,11 @@ export default function Character({
                 x={placeOnScreen(x, viewAngle, roomData)}
                 y={roomData.height - y - height} >
                 <text
-                    stroke={'white'}
-                    fill={'black'}
+                    stroke={'black'}
+                    fill={dialogueColor || 'white' }
                     stroke-width={.25}
-                    font-size={10}
-                    font-family='monospace'
+                    font-size={12}
+                    font-family='arial'
                 >{text}</text>
             </svg>
         </>

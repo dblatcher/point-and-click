@@ -82,7 +82,7 @@ export default class Game extends Component<Props, State> {
         this.setState({ viewAngle })
     }
 
-    changeRoom(roomName: string, takePlayer?:boolean) {
+    changeRoom(roomName: string, takePlayer?: boolean) {
         const { rooms } = this.props
         const { characters } = this.state
         const newRoom = rooms.find(room => room.name === roomName)
@@ -108,7 +108,7 @@ export default class Game extends Component<Props, State> {
             return this.changeRoom('test-room-2', true)
         }
         if (zone.name === 'window') {
-            return this.changeRoom('OUTSIDE',true)
+            return this.changeRoom('OUTSIDE', true)
         }
 
         player.orders.push({
@@ -158,8 +158,8 @@ export default class Game extends Component<Props, State> {
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
                     // use for debugging - slows render!
-                    obstacleCells={this.state.cellMatrix}
-                // showObstacleAreas
+                    // obstacleCells={this.state.cellMatrix}
+                    // showObstacleAreas
                 >
                     {charactersInRenderOrder.map(characterData => <Character
                         clickHandler={characterData.isPlayer ? undefined : this.handleCharacterClick}

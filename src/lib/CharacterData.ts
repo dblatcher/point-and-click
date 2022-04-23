@@ -14,6 +14,7 @@ interface CharacterData {
     speed?: number
     direction?: Direction
     filter?: string
+    dialogueColor?: string
 }
 
 export type { CharacterData }
