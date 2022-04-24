@@ -1,4 +1,4 @@
-import { CharacterData } from "../CharacterData";
+import { CharacterData } from "../../../lib/CharacterData";
 import { executeMove } from "./executeMove";
 import { exectuteTalk } from "./executeTalk";
 

@@ -6,7 +6,7 @@ import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { findPath } from "../../lib/pathfinding/pathfind";
 import { MoveOrder } from "../../lib/Order";
 import { CharacterData } from "../../lib/CharacterData"
-import followOrder from "../../lib/characters/followOrder";
+import followOrder from "./orders/followOrder";
 import { initialCharacters } from "../../../data/characters";
 import { initialThings } from "../../../data/things";
 import { Room } from "../Room";
