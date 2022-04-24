@@ -3,8 +3,6 @@ import { RoomData } from "../../lib/RoomData";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import { HotSpotZone } from "../../lib/Zone";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
-import { findPath } from "../../lib/pathfinding/pathfind";
-import { MoveOrder } from "../../lib/Order";
 import { CharacterData } from "../../lib/CharacterData"
 import followOrder from "./orders/followOrder";
 import { initialCharacters } from "../../../data/characters";
@@ -15,6 +13,7 @@ import { ThingData } from "../../lib/ThingData";
 import Thing from "../Thing";
 import { Point } from "../../lib/pathfinding/geometry";
 import { changeRoom } from "./changeRoom";
+import { issueMoveOrder } from "./issueMoveOrder";
 
 interface Props {
     rooms: RoomData[],
@@ -31,7 +30,7 @@ interface GameState {
 
 export type { GameState }
 
-const cellSize = 10
+export const cellSize = 10
 
 export default class Game extends Component<Props, GameState> {
 
@@ -55,7 +54,7 @@ export default class Game extends Component<Props, GameState> {
         this.handleHotSpotClick = this.handleHotSpotClick.bind(this)
         this.handleCharacterClick = this.handleCharacterClick.bind(this)
         this.handleThingClick = this.handleThingClick.bind(this)
-        this.makePlayerAct = this.makePlayerAct.bind(this)
+        this.makeCharactersAct = this.makeCharactersAct.bind(this)
         this.followMarker = this.followMarker.bind(this)
     }
 
@@ -80,11 +79,11 @@ export default class Game extends Component<Props, GameState> {
     }
 
     tick() {
-        this.makePlayerAct()
+        this.makeCharactersAct()
         this.followMarker()
     }
 
-    makePlayerAct() {
+    makeCharactersAct() {
         const { characters } = this.state
         characters.forEach(followOrder)
         this.setState({ characters })
@@ -142,22 +141,10 @@ export default class Game extends Component<Props, GameState> {
 
     handleRoomClick(x: number, y: number) {
         console.log('room click', x, y)
-        if (!this.state.cellMatrix) {
-            console.warn('NO CELLMATRIX IN STATE')
-            return
-        }
-
-        const { viewAngle, cellMatrix, characters } = this.state
-
         const { player, currentRoom } = this
         if (!player || !currentRoom) { return }
-        const pointClicked = locateClickInWorld(x, y, viewAngle, currentRoom)
-
-        const steps = findPath({ x: player.x, y: player.y }, pointClicked, cellMatrix, cellSize)
-        const newOrder: MoveOrder = { type: 'move', steps }
-        player.orders = [newOrder] // clears any existing orders, even if the point was unreachable
-
-        this.setState({ characters })
+        const pointClicked = locateClickInWorld(x, y, this.state.viewAngle, currentRoom)
+        this.setState(issueMoveOrder(pointClicked, player.id))
     }
 
     render() {
