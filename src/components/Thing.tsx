@@ -10,14 +10,14 @@ interface Props {
     viewAngle: number
     thingData: ThingData
     animationRate?: number
-    clickHandler?: { (character: ThingData): void }
+    clickHandler?: { (data: ThingData): void }
 }
 
 
 export default function Thing({
     roomData, viewAngle,
     animationRate = 250, thingData,
-    clickHandler = () => { }
+    clickHandler = null
 }: Props) {
     const {
         status,
@@ -46,7 +46,12 @@ export default function Thing({
 
     useInterval(updateFrame, animationRate)
 
-    const processClick = () => { clickHandler(thingData) }
+    const processClick = clickHandler
+        ? (event: PointerEvent) => {
+            event.stopPropagation()
+            clickHandler(thingData)
+        }
+        : null
 
     return (
         <>

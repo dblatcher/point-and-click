@@ -1,10 +1,10 @@
-import { sprites } from "../../../data/sprites"
-import { RoomData } from "../../lib/RoomData"
-import { placeOnScreen } from "../../lib/util";
-import SpriteShape from "../SpriteShape";
-import { useInterval } from "../../lib/useInterval"
+import { sprites } from "../../data/sprites"
+import { RoomData } from "../lib/RoomData"
+import { placeOnScreen } from "../lib/util";
+import SpriteShape from "./SpriteShape";
+import { useInterval } from "../lib/useInterval"
 import { useLayoutEffect, useState } from "preact/hooks";
-import { CharacterData } from "../../lib/CharacterData";
+import { CharacterData } from "../lib/CharacterData";
 
 interface Props {
     roomData: RoomData
@@ -18,7 +18,7 @@ interface Props {
 export default function Character({
     roomData, viewAngle,
     animationRate = 250, characterData,
-    clickHandler = () => { }
+    clickHandler
 }: Props) {
     const {
         orders,
@@ -49,7 +49,12 @@ export default function Character({
 
     useInterval(updateFrame, animationRate)
 
-    const processClick = () => { clickHandler(characterData) }
+    const processClick = clickHandler
+        ? (event: PointerEvent) => {
+            event.stopPropagation()
+            clickHandler(characterData)
+        }
+        : null
 
     return (
         <>

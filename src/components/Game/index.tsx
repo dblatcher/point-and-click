@@ -141,6 +141,7 @@ export default class Game extends Component<Props, GameState> {
     }
 
     handleRoomClick(x: number, y: number) {
+        console.log('room click', x, y)
         if (!this.state.cellMatrix) {
             console.warn('NO CELLMATRIX IN STATE')
             return
