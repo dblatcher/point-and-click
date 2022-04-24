@@ -14,23 +14,26 @@ import Character from "../Character";
 import { ThingData } from "../../lib/ThingData";
 import Thing from "../Thing";
 import { Point } from "../../lib/pathfinding/geometry";
+import { changeRoom } from "./changeRoom";
 
 interface Props {
     rooms: RoomData[],
 }
 
-interface State {
+interface GameState {
     viewAngle: number
-    room: RoomData
     cellMatrix?: CellMatrix
     timer?: number
+    currentRoomName: string
     characters: CharacterData[]
     things: ThingData[]
 }
 
+export type { GameState }
+
 const cellSize = 10
 
-export default class Game extends Component<Props, State> {
+export default class Game extends Component<Props, GameState> {
 
     refs: {}
 
@@ -42,7 +45,7 @@ export default class Game extends Component<Props, State> {
 
         this.state = {
             viewAngle: 0,
-            room: startingRoom || firstRoom,
+            currentRoomName: startingRoom.name || firstRoom.name,
             characters: initialCharacters,
             things: initialThings,
         }
@@ -60,9 +63,15 @@ export default class Game extends Component<Props, State> {
         return this.state.characters.find(character => character.isPlayer)
     }
 
+    get currentRoom(): (RoomData | undefined) {
+        const { rooms } = this.props
+        const { currentRoomName } = this.state
+        return rooms.find(_ => _.name === currentRoomName)
+    }
+
     componentWillMount(): void {
         const timer = window.setInterval(() => { this.tick() }, 10)
-        const cellMatrix = generateCellMatrix(this.state.room, cellSize)
+        const cellMatrix = generateCellMatrix(this.currentRoom, cellSize)
         this.setState({ timer, cellMatrix })
     }
 
@@ -82,32 +91,21 @@ export default class Game extends Component<Props, State> {
     }
 
     followMarker() {
-        const { room } = this.state
+        const { currentRoom } = this
         const { player } = this
-        if (!player) { return }
-        const viewAngle = clamp(getViewAngleCenteredOn(player.x, room), 1, -1)
+        if (!player || !currentRoom) { return }
+        const viewAngle = clamp(getViewAngleCenteredOn(player.x, currentRoom), 1, -1)
         this.setState({ viewAngle })
     }
 
-    changeRoom(roomName: string, takePlayer?: boolean, newPosition?: Point) {
+    changeCurrentRoom(roomName: string, takePlayer?: boolean, newPosition?: Point) {
         const { rooms } = this.props
-        const { characters } = this.state
-        const { player } = this
         const newRoom = rooms.find(room => room.name === roomName)
         if (!newRoom) { return }
 
-        if (takePlayer && player) {
-            player.room = newRoom.name
-            if (newPosition) {
-                player.x = newPosition.x
-                player.y = newPosition.y
-            }
-        }
-
-        const cellMatrix = generateCellMatrix(newRoom, cellSize)
-        this.setState({
-            room: newRoom, cellMatrix, characters
-        })
+        this.setState(changeRoom(
+            newRoom, cellSize, takePlayer, newPosition
+        ))
     }
 
     handleHotSpotClick(zone: HotSpotZone) {
@@ -117,10 +115,10 @@ export default class Game extends Component<Props, State> {
         if (!player) { return }
 
         if (zone.name === 'bush') {
-            return this.changeRoom('test-room-2', true, { y: 5, x: 100 })
+            return this.changeCurrentRoom('test-room-2', true, { y: 5, x: 100 })
         }
         if (zone.name === 'window') {
-            return this.changeRoom('OUTSIDE', true, { y: 12, x: 200 })
+            return this.changeCurrentRoom('OUTSIDE', true, { y: 12, x: 200 })
         }
 
         player.orders.push({
@@ -148,10 +146,11 @@ export default class Game extends Component<Props, State> {
             return
         }
 
-        const { viewAngle, room, cellMatrix, characters } = this.state
-        const { player } = this
-        if (!player) { return }
-        const pointClicked = locateClickInWorld(x, y, viewAngle, room)
+        const { viewAngle, cellMatrix, characters } = this.state
+
+        const { player, currentRoom } = this
+        if (!player || !currentRoom) { return }
+        const pointClicked = locateClickInWorld(x, y, viewAngle, currentRoom)
 
         const steps = findPath({ x: player.x, y: player.y }, pointClicked, cellMatrix, cellSize)
         const newOrder: MoveOrder = { type: 'move', steps }
@@ -161,16 +160,17 @@ export default class Game extends Component<Props, State> {
     }
 
     render() {
-        const { viewAngle, room, characters, things } = this.state
+        const { viewAngle, characters, things } = this.state
+        const { currentRoom } = this
 
         const charactersAndThings = [...characters, ...things]
-            .filter(_ => _.room === room.name)
+            .filter(_ => _.room === currentRoom.name)
             .sort((a, b) => b.y - a.y)
 
         return (
             <main>
                 <Room
-                    data={room} scale={2}
+                    data={currentRoom} scale={2}
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleHotSpotClick}
@@ -183,13 +183,13 @@ export default class Game extends Component<Props, State> {
                             <Thing
                                 clickHandler={this.handleThingClick}
                                 thingData={data}
-                                roomData={room}
+                                roomData={currentRoom}
                                 viewAngle={viewAngle}
                             />
                             : <Character
                                 clickHandler={data.isPlayer ? undefined : this.handleCharacterClick}
                                 characterData={data}
-                                roomData={room}
+                                roomData={currentRoom}
                                 viewAngle={viewAngle} />
                     )}
                 </Room>
