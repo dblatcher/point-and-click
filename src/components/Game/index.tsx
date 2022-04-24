@@ -5,8 +5,6 @@ import { HotSpotZone } from "../../lib/Zone";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { CharacterData } from "../../lib/CharacterData"
 import followOrder from "./orders/followOrder";
-import { initialCharacters } from "../../../data/characters";
-import { initialThings } from "../../../data/things";
 import { Room } from "../Room";
 import Character from "../Character";
 import { ThingData } from "../../lib/ThingData";
@@ -16,7 +14,9 @@ import { changeRoom } from "./changeRoom";
 import { issueMoveOrder } from "./issueMoveOrder";
 
 interface Props {
-    rooms: RoomData[],
+    initialRooms: RoomData[],
+    initialThings: ThingData[],
+    initialCharacters: CharacterData[],
 }
 
 interface GameState {
@@ -26,6 +26,7 @@ interface GameState {
     currentRoomName: string
     characters: CharacterData[]
     things: ThingData[]
+    rooms: RoomData[]
 }
 
 export type { GameState }
@@ -38,15 +39,20 @@ export default class Game extends Component<Props, GameState> {
 
     constructor(props: Props) {
         super(props)
-        const player = initialCharacters.find(character => character.isPlayer)
-        const startingRoom = props.rooms.find(room => room.name === player?.room)
-        const [firstRoom] = props.rooms
+        const rooms = props.initialRooms.map (data => JSON.parse(JSON.stringify(data))) as RoomData[];
+        const characters = props.initialCharacters.map (data => JSON.parse(JSON.stringify(data))) as CharacterData[];
+        const things = props.initialThings.map (data => JSON.parse(JSON.stringify(data))) as ThingData[];
+
+        const player = characters.find(character => character.isPlayer)
+        const startingRoom = props.initialRooms.find(room => room.name === player?.room)
+        const [firstRoom] = props.initialRooms
 
         this.state = {
             viewAngle: 0,
             currentRoomName: startingRoom.name || firstRoom.name,
-            characters: initialCharacters,
-            things: initialThings,
+            characters,
+            things,
+            rooms,
         }
 
         this.tick = this.tick.bind(this)
@@ -63,8 +69,8 @@ export default class Game extends Component<Props, GameState> {
     }
 
     get currentRoom(): (RoomData | undefined) {
-        const { rooms } = this.props
-        const { currentRoomName } = this.state
+
+        const { currentRoomName, rooms } = this.state
         return rooms.find(_ => _.name === currentRoomName)
     }
 
@@ -98,7 +104,7 @@ export default class Game extends Component<Props, GameState> {
     }
 
     changeCurrentRoom(roomName: string, takePlayer?: boolean, newPosition?: Point) {
-        const { rooms } = this.props
+        const { rooms } = this.state
         const newRoom = rooms.find(room => room.name === roomName)
         if (!newRoom) { return }
 
@@ -167,14 +173,14 @@ export default class Game extends Component<Props, GameState> {
                 // showObstacleAreas
                 >
                     {charactersAndThings.map(data =>
-                        data.type === 'thing' ?
-                            <Thing
+                        data.type === 'thing'
+                            ? <Thing key={data.id}
                                 clickHandler={this.handleThingClick}
                                 thingData={data}
                                 roomData={currentRoom}
                                 viewAngle={viewAngle}
                             />
-                            : <Character
+                            : <Character key={data.id}
                                 clickHandler={data.isPlayer ? undefined : this.handleCharacterClick}
                                 characterData={data}
                                 roomData={currentRoom}
