@@ -5,6 +5,7 @@ import Game from '../../components/Game';
 import { initialCharacters } from "../../../data/characters";
 import { initialThings } from "../../../data/things";
 import { initialRooms } from '../../../data/rooms';
+import { verbs } from '../../../data/verbs';
 
 const Home = () => (
 	<div className={style.home}>
@@ -14,6 +15,7 @@ const Home = () => (
 			initialRooms={initialRooms}
 			initialCharacters={initialCharacters}
 			initialThings={initialThings}
+			verbs={verbs}
 		/>
 
 	</div>

@@ -12,11 +12,14 @@ import Thing from "../Thing";
 import { Point } from "../../lib/pathfinding/geometry";
 import { changeRoom } from "./changeRoom";
 import { issueMoveOrder } from "./issueMoveOrder";
+import { Verb } from "../../lib/Verb";
+import { VerbMenu } from "../VerbMenu";
 
 interface Props {
     initialRooms: RoomData[],
     initialThings: ThingData[],
     initialCharacters: CharacterData[],
+    verbs: Verb[]
 }
 
 interface GameState {
@@ -27,6 +30,7 @@ interface GameState {
     characters: CharacterData[]
     things: ThingData[]
     rooms: RoomData[]
+    currentVerbId: string
 }
 
 export type { GameState }
@@ -39,9 +43,9 @@ export default class Game extends Component<Props, GameState> {
 
     constructor(props: Props) {
         super(props)
-        const rooms = props.initialRooms.map (data => JSON.parse(JSON.stringify(data))) as RoomData[];
-        const characters = props.initialCharacters.map (data => JSON.parse(JSON.stringify(data))) as CharacterData[];
-        const things = props.initialThings.map (data => JSON.parse(JSON.stringify(data))) as ThingData[];
+        const rooms = props.initialRooms.map(data => JSON.parse(JSON.stringify(data))) as RoomData[];
+        const characters = props.initialCharacters.map(data => JSON.parse(JSON.stringify(data))) as CharacterData[];
+        const things = props.initialThings.map(data => JSON.parse(JSON.stringify(data))) as ThingData[];
 
         const player = characters.find(character => character.isPlayer)
         const startingRoom = props.initialRooms.find(room => room.name === player?.room)
@@ -53,6 +57,7 @@ export default class Game extends Component<Props, GameState> {
             characters,
             things,
             rooms,
+            currentVerbId: props.verbs[0].id,
         }
 
         this.tick = this.tick.bind(this)
@@ -154,7 +159,8 @@ export default class Game extends Component<Props, GameState> {
     }
 
     render() {
-        const { viewAngle, characters, things } = this.state
+        const { verbs = [] } = this.props
+        const { viewAngle, characters, things, currentVerbId } = this.state
         const { currentRoom } = this
 
         const charactersAndThings = [...characters, ...things]
@@ -187,6 +193,12 @@ export default class Game extends Component<Props, GameState> {
                                 viewAngle={viewAngle} />
                     )}
                 </Room>
+
+                <VerbMenu 
+                    verbs={verbs} 
+                    currentVerbId={currentVerbId} 
+                    select={(verb: Verb) => { this.setState({ currentVerbId: verb.id }) }} 
+                />
             </main>
         )
     }
