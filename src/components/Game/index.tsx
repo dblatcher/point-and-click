@@ -108,16 +108,6 @@ export default class Game extends Component<Props, GameState> {
         this.setState({ viewAngle })
     }
 
-    changeCurrentRoom(roomName: string, takePlayer?: boolean, newPosition?: Point) {
-        const { rooms } = this.state
-        const newRoom = rooms.find(room => room.name === roomName)
-        if (!newRoom) { return }
-
-        this.setState(changeRoom(
-            newRoom, cellSize, takePlayer, newPosition
-        ))
-    }
-
     handleHotSpotClick(zone: HotSpotZone) {
         console.log('hotspot click', zone.name)
         const { characters } = this.state
@@ -125,10 +115,14 @@ export default class Game extends Component<Props, GameState> {
         if (!player) { return }
 
         if (zone.name === 'bush') {
-            return this.changeCurrentRoom('test-room-2', true, { y: 5, x: 100 })
+            return this.setState(changeRoom(
+                'test-room-2', true, { y: 5, x: 100 }
+            ))
         }
         if (zone.name === 'window') {
-            return this.changeCurrentRoom('OUTSIDE', true, { y: 12, x: 200 })
+            return this.setState(changeRoom(
+                'OUTSIDE', true, { y: 12, x: 200 }
+            ))
         }
 
         player.orders.push({
@@ -194,10 +188,10 @@ export default class Game extends Component<Props, GameState> {
                     )}
                 </Room>
 
-                <VerbMenu 
-                    verbs={verbs} 
-                    currentVerbId={currentVerbId} 
-                    select={(verb: Verb) => { this.setState({ currentVerbId: verb.id }) }} 
+                <VerbMenu
+                    verbs={verbs}
+                    currentVerbId={currentVerbId}
+                    select={(verb: Verb) => { this.setState({ currentVerbId: verb.id }) }}
                 />
             </main>
         )

@@ -1,18 +1,20 @@
-import { GameState } from ".";
+import { cellSize, GameState } from ".";
 import { generateCellMatrix } from "../../lib/pathfinding/cells";
 import { Point } from "../../lib/pathfinding/geometry";
-import { RoomData } from "../../lib/RoomData";
 
 
 export function changeRoom(
-    room: RoomData,
-    cellSize: number,
+    roomName: string,
     takePlayer?: boolean,
     newPosition?: Point
 ): { (state: GameState): Partial<GameState> } {
 
     return (state: GameState) => {
-        const { characters } = state
+
+        const { rooms, characters } = state
+        const room = rooms.find(room => room.name === roomName)
+        if (!room) { return {} }
+
         const player = characters.find(_ => _.isPlayer)
         const cellMatrix = generateCellMatrix(room, cellSize)
 
@@ -25,7 +27,7 @@ export function changeRoom(
         }
 
         return {
-            currentRoomName:room.name, cellMatrix, characters
+            currentRoomName: room.name, cellMatrix, characters
         }
     }
 }
