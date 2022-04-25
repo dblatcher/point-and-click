@@ -12,6 +12,7 @@ interface Props {
     characterData: CharacterData
     animationRate?: number
     clickHandler?: { (character: CharacterData): void }
+    key: string | number
 }
 
 

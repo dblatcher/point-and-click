@@ -11,6 +11,7 @@ interface Props {
     thingData: ThingData
     animationRate?: number
     clickHandler?: { (data: ThingData): void }
+    key: string | number
 }
 
 
@@ -22,7 +23,7 @@ export default function Thing({
     const {
         status,
         x, y,
-        height = 50, width = 50, sprite, filter
+        height = 50, width = 50, sprite, filter,
     } = thingData
 
     const spriteObject = sprites[sprite]
