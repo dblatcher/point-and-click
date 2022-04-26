@@ -3,6 +3,7 @@ import { Direction } from "./Sprite"
 
 interface BaseData {
     type: string
+    name?: string
     id: string
     room?: string
     x: number

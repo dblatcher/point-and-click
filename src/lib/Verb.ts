@@ -1,4 +1,5 @@
-import { BaseData } from './ThingData'
+import { CharacterData } from './CharacterData'
+import { ThingData } from './ThingData'
 import { HotSpotZone } from './Zone'
 
 interface Verb {
@@ -9,7 +10,7 @@ interface Verb {
 
 interface Command {
     verb: Verb
-    target: BaseData | HotSpotZone
+    target: CharacterData | ThingData | HotSpotZone
     item?: any
 }
 

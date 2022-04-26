@@ -16,10 +16,12 @@
   ],
   "hotspots": [
     {
+      "id": "window",
       "name": "window",
-      "x": 50,
-      "y": 70,
-      "rect": [240, 60],
+      "type": "hotspot",
+      "x": 70,
+      "y": 130,
+      "rect": [190, 60],
       "parallax": 1
     }
   ],

@@ -20,6 +20,7 @@
   "hotspots": [
     {
       "name": "flag",
+      "type": "hotspot",
       "x": 150,
       "y": 130,
       "polygon": [
@@ -33,21 +34,27 @@
       "parallax": 0.1
     },
     {
+      "id": "sun",
       "name": "sun",
+      "type": "hotspot",
       "x": 33,
       "y": 170,
       "circle": 35,
       "parallax": 0
     },
     {
+      "id": "tree",
       "name": "tree",
+      "type": "hotspot",
       "x": 110,
       "y": 100,
       "rect": [70, 100],
       "parallax": 1
     },
     {
+      "id": "bush",
       "name": "bush",
+      "type": "hotspot",
       "x": 175,
       "y": 50,
       "rect": [60, 50],

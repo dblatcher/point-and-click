@@ -1,6 +1,7 @@
 import { Polygon } from "./Polygon"
 
-interface Zone  {
+interface Zone {
+    type: 'hotspot',
     x: number,
     y: number,
     path?: string,
@@ -10,7 +11,8 @@ interface Zone  {
 }
 
 interface HotSpotZone extends Zone {
-    name: string,
+    id: string,
+    name?: string,
     parallax: number,
 }
 

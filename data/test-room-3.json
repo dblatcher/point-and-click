@@ -12,14 +12,18 @@
   ],
   "hotspots": [
     {
+      "id": "window-l",
       "name": "window-l",
+      "type": "hotspot",
       "x": 100,
       "y": 70,
       "rect": [10, 60],
       "parallax": 0
     },
     {
+      "id": "window-r",
       "name": "window-r",
+      "type": "hotspoot",
       "x": 220,
       "y": 70,
       "rect": [10, 60],

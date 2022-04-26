@@ -14,6 +14,7 @@ import { changeRoom } from "./changeRoom";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { Verb } from "../../lib/Verb";
 import { VerbMenu } from "../VerbMenu";
+import { handleCommand } from "./handleCommand";
 
 interface Props {
     initialRooms: RoomData[],
@@ -109,17 +110,23 @@ export default class Game extends Component<Props, GameState> {
     }
 
     handleHotSpotClick(zone: HotSpotZone) {
-        console.log('hotspot click', zone.name)
+        console.log('hotspot click', zone.id)
+
+        this.setState(handleCommand({
+            verb: this.props.verbs.find(_ => _.id == this.state.currentVerbId),
+            target: zone,
+        }))
+
         const { characters } = this.state
         const { player } = this
         if (!player) { return }
 
-        if (zone.name === 'bush') {
+        if (zone.id === 'bush') {
             return this.setState(changeRoom(
                 'test-room-2', true, { y: 5, x: 100 }
             ))
         }
-        if (zone.name === 'window') {
+        if (zone.id === 'window') {
             return this.setState(changeRoom(
                 'OUTSIDE', true, { y: 12, x: 200 }
             ))
@@ -128,7 +135,7 @@ export default class Game extends Component<Props, GameState> {
         player.orders.push({
             type: 'talk',
             steps: [
-                { text: `You clicked on the ${zone.name}`, time: 150 },
+                { text: `You clicked on the ${zone.id}`, time: 150 },
                 { text: `Yayy!`, time: 125 },
             ]
         })
@@ -138,10 +145,19 @@ export default class Game extends Component<Props, GameState> {
 
     handleCharacterClick(characterData: CharacterData) {
         console.log('character click', characterData.id)
+        this.setState(handleCommand({
+            verb: this.props.verbs.find(_ => _.id == this.state.currentVerbId),
+            target: characterData,
+        }))
+
     }
 
     handleThingClick(thingData: ThingData) {
         console.log('thing click', thingData.id)
+        this.setState(handleCommand({
+            verb: this.props.verbs.find(_ => _.id == this.state.currentVerbId),
+            target: thingData,
+        }))
     }
 
     handleRoomClick(x: number, y: number) {
