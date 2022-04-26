@@ -13,12 +13,14 @@ import { Verb } from "../../lib/Verb";
 import { VerbMenu } from "../VerbMenu";
 import { handleCommand } from "./handleCommand";
 import { CommandTarget } from "../../lib/Command";
+import { Interaction } from "../../lib/Interaction";
 
 interface Props {
     initialRooms: RoomData[],
     initialThings: ThingData[],
     initialCharacters: CharacterData[],
-    verbs: Verb[]
+    verbs: Verb[],
+    interactions: Interaction[],
 }
 
 interface GameState {
@@ -29,7 +31,8 @@ interface GameState {
     characters: CharacterData[]
     things: ThingData[]
     rooms: RoomData[]
-    currentVerbId: string
+    currentVerbId: string,
+    interactions: Interaction[]
 }
 
 export type { GameState }
@@ -57,6 +60,7 @@ export default class Game extends Component<Props, GameState> {
             things,
             rooms,
             currentVerbId: props.verbs[0].id,
+            interactions: [...props.interactions],
         }
 
         this.tick = this.tick.bind(this)

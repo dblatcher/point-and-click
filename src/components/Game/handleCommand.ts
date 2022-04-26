@@ -1,15 +1,32 @@
 import { GameState } from ".";
 import { Command } from "../../lib/Command";
+import { Interaction } from "../../lib/Interaction";
+import { RoomData } from "../../lib/RoomData";
 import { changeRoom } from "./changeRoom";
 
-export function handleCommand(command: Command): { (state: GameState): Partial<GameState> } {
+function matchInteraction(
+    command: Command, 
+    room: RoomData, 
+    interactions: Interaction[]
+): Interaction | undefined {
 
-    console.log(command)
+    return interactions.find( interaction => {
+        return interaction.verbId === command.verb.id
+        && interaction.targetId === command.target.id
+        && (!interaction.roomId || interaction?.roomId === room.name)
+        && ((!interaction.itemId && !command.item) || (interaction?.itemId == command.item?.id))
+    })
+}
+
+export function handleCommand(command: Command): { (state: GameState): Partial<GameState> } {
 
     return (state) => {
 
         const { currentRoomName, rooms } = state
         const currentRoom = rooms.find(_ => _.name === currentRoomName)
+
+        const matchingInteraction = matchInteraction(command, currentRoom, state.interactions)
+        console.log({matchingInteraction})
 
         if (command.target.type === 'hotspot') {
 
