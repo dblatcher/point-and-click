@@ -1,4 +1,4 @@
-import { Verb } from "../src/lib/Verb";
+import { Verb } from "../src/definitions/Verb";
 
 export const verbs: Verb[] = [
     { id: 'LOOK', label: 'Look at' },

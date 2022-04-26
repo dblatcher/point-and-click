@@ -1,5 +1,5 @@
 
-import { Direction } from "./Sprite"
+import { Direction } from "./SpriteSheet"
 
 interface BaseData {
     type: string

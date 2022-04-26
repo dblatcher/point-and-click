@@ -1,7 +1,7 @@
 import { sprites } from "../../data/sprites"
-import { RoomData } from "../lib/RoomData"
+import { RoomData } from "../definitions/RoomData"
 import { placeOnScreen } from "../lib/util";
-import { Direction } from "../lib/Sprite";
+import { Direction } from "../definitions/SpriteSheet";
 
 
 interface Props {

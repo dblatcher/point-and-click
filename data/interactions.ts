@@ -1,4 +1,4 @@
-import { Interaction } from '../src/lib/Interaction'
+import { Interaction } from '../src/definitions/Interaction'
 
 export const interactions: Interaction[] = [
     {

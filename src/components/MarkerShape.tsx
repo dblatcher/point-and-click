@@ -1,4 +1,4 @@
-import { RoomData } from "../lib/RoomData"
+import { RoomData } from "../definitions/RoomData"
 import { placeOnScreen } from "../lib/util";
 
 interface Props {

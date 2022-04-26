@@ -1,4 +1,4 @@
-import { Verb } from "../../lib/Verb"
+import { Verb } from "../../definitions/Verb"
 
 interface Props {
     verbs: Verb[]

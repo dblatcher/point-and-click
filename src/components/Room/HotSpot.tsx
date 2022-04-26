@@ -1,5 +1,5 @@
-import { RoomData } from "../../lib/RoomData"
-import { HotSpotZone } from "../../lib/Zone"
+import { RoomData } from "../../definitions/RoomData"
+import { HotSpotZone } from "../../definitions/Zone"
 import { getShift } from "../../lib/util";
 import ZoneSvg from "../ZoneSvg";
 import styles from './styles.module.css';

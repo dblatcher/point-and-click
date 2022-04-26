@@ -1,9 +1,9 @@
 import { sprites } from "../../data/sprites"
-import { RoomData } from "../lib/RoomData"
+import { RoomData } from "../definitions/RoomData"
 import SpriteShape from "./SpriteShape";
 import { useInterval } from "../lib/useInterval"
 import { useLayoutEffect, useState } from "preact/hooks";
-import { ThingData } from "../lib/ThingData";
+import { ThingData } from "../definitions/ThingData";
 
 interface Props {
     roomData: RoomData

@@ -1,19 +1,19 @@
 import { Component } from "preact";
-import { RoomData } from "../../lib/RoomData";
+import { RoomData } from "../../definitions/RoomData";
+import { CharacterData } from "../../definitions/CharacterData"
+import { ThingData } from "../../definitions/ThingData";
+import { Verb } from "../../definitions/Verb";
+import { CommandTarget } from "../../definitions/Command";
+import { Interaction } from "../../definitions/Interaction";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
-import { CharacterData } from "../../lib/CharacterData"
 import followOrder from "./orders/followOrder";
+import { issueMoveOrder } from "./issueMoveOrder";
+import { handleCommand } from "./handleCommand";
 import { Room } from "../Room";
 import Character from "../Character";
-import { ThingData } from "../../lib/ThingData";
 import Thing from "../Thing";
-import { issueMoveOrder } from "./issueMoveOrder";
-import { Verb } from "../../lib/Verb";
 import { VerbMenu } from "../VerbMenu";
-import { handleCommand } from "./handleCommand";
-import { CommandTarget } from "../../lib/Command";
-import { Interaction } from "../../lib/Interaction";
 
 interface Props {
     initialRooms: RoomData[],

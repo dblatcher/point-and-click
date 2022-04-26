@@ -1,4 +1,4 @@
-import { TalkOrder } from "../../../lib/Order";
+import { TalkOrder } from "../../../definitions/Order";
 
 
 export function exectuteTalk(talkOrder: TalkOrder): string | undefined {

@@ -1,10 +1,10 @@
 import { sprites } from "../../data/sprites"
-import { RoomData } from "../lib/RoomData"
+import { RoomData } from "../definitions/RoomData"
 import { placeOnScreen } from "../lib/util";
 import SpriteShape from "./SpriteShape";
 import { useInterval } from "../lib/useInterval"
 import { useLayoutEffect, useState } from "preact/hooks";
-import { CharacterData } from "../lib/CharacterData";
+import { CharacterData } from "../definitions/CharacterData";
 
 interface Props {
     roomData: RoomData

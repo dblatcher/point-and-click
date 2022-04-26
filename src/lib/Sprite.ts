@@ -1,31 +1,5 @@
-interface SpriteSheet {
-    id: string
-    url: string
-    rows: number
-    cols: number
-}
+import { SpriteSheet, SpriteData, Direction, SpriteFrame } from "../definitions/SpriteSheet"
 
-
-interface SpriteFrame {
-    sheetId: string
-    row: number
-    col: number
-}
-
-type Direction = 'left' | 'right'
-
-interface SpriteData {
-    id: string
-    defaultDirection: Direction
-    sequences: {
-        [index: string]: {
-            left?: SpriteFrame[]
-            right?: SpriteFrame[]
-        }
-    }
-}
-
-export type { SpriteSheet, SpriteFrame, SpriteData, Direction }
 
 interface SheetWithFrame {
     sheet: SpriteSheet

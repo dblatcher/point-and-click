@@ -1,4 +1,4 @@
-import { Point } from "./pathfinding/geometry"
+import { Point } from "../lib/pathfinding/geometry"
 
 interface MoveOrder {
     type: 'move',

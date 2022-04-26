@@ -1,4 +1,4 @@
-import { ThingData } from "../src/lib/ThingData";
+import { ThingData } from "../src/definitions/ThingData";
 
 export const initialThings: ThingData[] = [
     {

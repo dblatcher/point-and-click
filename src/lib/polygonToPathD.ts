@@ -1,6 +1,4 @@
-type Polygon = [number, number][]
-
-export type { Polygon }
+import { Polygon } from "../definitions/Zone"
 
 export function polygonToPathD(polygon: Polygon): string {
     let output = ''

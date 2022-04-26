@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { BackgroundLayer, RoomData } from "../../lib/RoomData"
+import { BackgroundLayer, RoomData } from "../../definitions/RoomData"
 import { getLayerWidth, getShift } from "../../lib/util";
 
 

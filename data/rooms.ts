@@ -1,7 +1,7 @@
 import testRoomImport from './test-room.json';
 import testRoomImport2 from './test-room-2.json';
 import testRoomImport3 from './test-room-3.json';
-import { RoomData } from '../src/lib/RoomData';
+import { RoomData } from '../src/definitions/RoomData';
 
 const testRoom = testRoomImport as RoomData;
 const testRoom2 = testRoomImport2 as RoomData;

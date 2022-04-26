@@ -1,5 +1,5 @@
-import { polygonToPathD } from "../lib/Polygon";
-import { Zone } from "../lib/Zone"
+import { polygonToPathD } from "../lib/polygonToPathD";
+import { Zone } from "../definitions/Zone"
 
 interface Props {
     zone: Zone

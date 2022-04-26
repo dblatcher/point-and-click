@@ -1,4 +1,4 @@
-import { CharacterData } from "../src/lib/CharacterData"
+import { CharacterData } from "../src/definitions/CharacterData"
 
 export const initialCharacters: CharacterData[] = [
     {

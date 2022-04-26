@@ -1,7 +1,7 @@
-import { CharacterData } from "../../../lib/CharacterData";
-import { MoveOrder } from "../../../lib/Order";
+import { CharacterData } from "../../../definitions/CharacterData";
+import { MoveOrder } from "../../../definitions/Order";
 import { Point } from "../../../lib/pathfinding/geometry";
-import { Direction } from "../../../lib/Sprite";
+import { Direction } from "../../../definitions/SpriteSheet";
 
 export function executeMove(moveOrder: MoveOrder, character: CharacterData): Point & {direction:Direction} {
     const { x, y, speed = 1, direction } = character

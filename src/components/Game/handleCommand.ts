@@ -1,7 +1,7 @@
 import { GameState } from ".";
-import { Command } from "../../lib/Command";
-import { Interaction } from "../../lib/Interaction";
-import { RoomData } from "../../lib/RoomData";
+import { Command } from "../../definitions/Command";
+import { Interaction } from "../../definitions/Interaction";
+import { RoomData } from "../../definitions/RoomData";
 import { changeRoom } from "./changeRoom";
 
 function matchInteraction(

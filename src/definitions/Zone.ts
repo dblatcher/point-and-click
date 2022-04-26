@@ -1,4 +1,5 @@
-import { Polygon } from "./Polygon"
+type Polygon = [number, number][]
+
 
 interface Zone {
     type: 'hotspot',
@@ -16,4 +17,4 @@ interface HotSpotZone extends Zone {
     parallax: number,
 }
 
-export type { Zone, HotSpotZone }
+export type { Zone, HotSpotZone, Polygon }
