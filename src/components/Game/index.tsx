@@ -1,7 +1,6 @@
 import { Component } from "preact";
 import { RoomData } from "../../lib/RoomData";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
-import { HotSpotZone } from "../../lib/Zone";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { CharacterData } from "../../lib/CharacterData"
 import followOrder from "./orders/followOrder";
@@ -9,12 +8,11 @@ import { Room } from "../Room";
 import Character from "../Character";
 import { ThingData } from "../../lib/ThingData";
 import Thing from "../Thing";
-import { Point } from "../../lib/pathfinding/geometry";
-import { changeRoom } from "./changeRoom";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { Verb } from "../../lib/Verb";
 import { VerbMenu } from "../VerbMenu";
 import { handleCommand } from "./handleCommand";
+import { CommandTarget } from "../../lib/Command";
 
 interface Props {
     initialRooms: RoomData[],
@@ -63,9 +61,7 @@ export default class Game extends Component<Props, GameState> {
 
         this.tick = this.tick.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
-        this.handleHotSpotClick = this.handleHotSpotClick.bind(this)
-        this.handleCharacterClick = this.handleCharacterClick.bind(this)
-        this.handleThingClick = this.handleThingClick.bind(this)
+        this.handleTargetClick = this.handleTargetClick.bind(this)
         this.makeCharactersAct = this.makeCharactersAct.bind(this)
         this.followMarker = this.followMarker.bind(this)
     }
@@ -75,7 +71,6 @@ export default class Game extends Component<Props, GameState> {
     }
 
     get currentRoom(): (RoomData | undefined) {
-
         const { currentRoomName, rooms } = this.state
         return rooms.find(_ => _.name === currentRoomName)
     }
@@ -109,54 +104,11 @@ export default class Game extends Component<Props, GameState> {
         this.setState({ viewAngle })
     }
 
-    handleHotSpotClick(zone: HotSpotZone) {
-        console.log('hotspot click', zone.id)
-
+    handleTargetClick(target: CommandTarget) {
+        console.log('click', target.type, target.id)
         this.setState(handleCommand({
             verb: this.props.verbs.find(_ => _.id == this.state.currentVerbId),
-            target: zone,
-        }))
-
-        const { characters } = this.state
-        const { player } = this
-        if (!player) { return }
-
-        if (zone.id === 'bush') {
-            return this.setState(changeRoom(
-                'test-room-2', true, { y: 5, x: 100 }
-            ))
-        }
-        if (zone.id === 'window') {
-            return this.setState(changeRoom(
-                'OUTSIDE', true, { y: 12, x: 200 }
-            ))
-        }
-
-        player.orders.push({
-            type: 'talk',
-            steps: [
-                { text: `You clicked on the ${zone.id}`, time: 150 },
-                { text: `Yayy!`, time: 125 },
-            ]
-        })
-
-        this.setState({ characters })
-    }
-
-    handleCharacterClick(characterData: CharacterData) {
-        console.log('character click', characterData.id)
-        this.setState(handleCommand({
-            verb: this.props.verbs.find(_ => _.id == this.state.currentVerbId),
-            target: characterData,
-        }))
-
-    }
-
-    handleThingClick(thingData: ThingData) {
-        console.log('thing click', thingData.id)
-        this.setState(handleCommand({
-            verb: this.props.verbs.find(_ => _.id == this.state.currentVerbId),
-            target: thingData,
+            target
         }))
     }
 
@@ -183,7 +135,7 @@ export default class Game extends Component<Props, GameState> {
                     data={currentRoom} scale={2}
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
-                    handleHotSpotClick={this.handleHotSpotClick}
+                    handleHotSpotClick={this.handleTargetClick}
                     // use for debugging - slows render!
                     obstacleCells={this.state.cellMatrix}
                 // showObstacleAreas
@@ -191,13 +143,13 @@ export default class Game extends Component<Props, GameState> {
                     {charactersAndThings.map(data =>
                         data.type === 'thing'
                             ? <Thing key={data.id}
-                                clickHandler={this.handleThingClick}
+                                clickHandler={this.handleTargetClick}
                                 thingData={data}
                                 roomData={currentRoom}
                                 viewAngle={viewAngle}
                             />
                             : <Character key={data.id}
-                                clickHandler={data.isPlayer ? undefined : this.handleCharacterClick}
+                                clickHandler={data.isPlayer ? undefined : this.handleTargetClick}
                                 characterData={data}
                                 roomData={currentRoom}
                                 viewAngle={viewAngle} />

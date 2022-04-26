@@ -3,6 +3,7 @@ import { CharacterData } from "../src/lib/CharacterData"
 export const initialCharacters: CharacterData[] = [
     {
         id:'PLAYER',
+        name:'Seymour Skinner',
         type:'character',
         isPlayer: true,
         room:'OUTSIDE',
@@ -17,6 +18,7 @@ export const initialCharacters: CharacterData[] = [
     },
     {
         id:'EVIL_SKINNER',
+        name:'Evil Skinner',
         type:'character',
         room:'test-room-2',
         x: (640 * 2 / 5),
@@ -34,6 +36,7 @@ export const initialCharacters: CharacterData[] = [
     },
     {
         id:'MARIO',
+        name: 'Mario',
         type:'character',
         room:'OUTSIDE',
         x: (640 * 3.5 / 5),
