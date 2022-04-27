@@ -14,6 +14,8 @@ import { Room } from "../Room";
 import Character from "../Character";
 import Thing from "../Thing";
 import { VerbMenu } from "../VerbMenu";
+import { ItemData } from "../../definitions/ItemData";
+import { items } from "../../../data/items";
 
 interface Props {
     initialRooms: RoomData[],
@@ -21,6 +23,7 @@ interface Props {
     initialCharacters: CharacterData[],
     verbs: Verb[],
     interactions: Interaction[],
+    items: ItemData[],
 }
 
 interface GameState {
@@ -32,7 +35,8 @@ interface GameState {
     things: ThingData[]
     rooms: RoomData[]
     currentVerbId: string,
-    interactions: Interaction[]
+    interactions: Interaction[],
+    items: ItemData[],
 }
 
 export type { GameState }
@@ -61,6 +65,7 @@ export default class Game extends Component<Props, GameState> {
             rooms,
             currentVerbId: props.verbs[0].id,
             interactions: [...props.interactions],
+            items: [...props.items]
         }
 
         this.tick = this.tick.bind(this)

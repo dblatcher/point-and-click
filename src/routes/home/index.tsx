@@ -5,6 +5,7 @@ import Game from '../../components/Game';
 import { initialCharacters } from "../../../data/characters";
 import { initialThings } from "../../../data/things";
 import { initialRooms } from '../../../data/rooms';
+import { items } from '../../../data/items';
 import { verbs } from '../../../data/verbs';
 import { interactions } from '../../../data/interactions';
 
@@ -18,6 +19,7 @@ const Home = () => (
 			initialThings={initialThings}
 			verbs={verbs}
 			interactions={interactions}
+			items={items}
 		/>
 
 	</div>

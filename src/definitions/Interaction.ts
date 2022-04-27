@@ -27,6 +27,7 @@ type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence
 interface Interaction {
     verbId: string
     targetId: string
+    targetType?: string // to do -implement
     roomId?: string
     itemId?: string
     consequences: Consequence[]
