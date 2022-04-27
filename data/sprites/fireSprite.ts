@@ -1,4 +1,4 @@
-import { SpriteData, SpriteSheet } from "../src/definitions/SpriteSheet";
+import { SpriteData, SpriteSheet } from "../../src/definitions/SpriteSheet";
 
 export const sheets:SpriteSheet[] = [
     {
