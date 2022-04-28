@@ -16,6 +16,8 @@ import Thing from "../Thing";
 import { VerbMenu } from "../VerbMenu";
 import { ItemData } from "../../definitions/ItemData";
 import { items } from "../../../data/items";
+import { ItemMenu } from "../ItemMenu";
+
 
 interface Props {
     initialRooms: RoomData[],
@@ -35,6 +37,7 @@ interface GameState {
     things: ThingData[]
     rooms: RoomData[]
     currentVerbId: string,
+    currentItemId?: string,
     interactions: Interaction[],
     items: ItemData[],
 }
@@ -52,6 +55,7 @@ export default class Game extends Component<Props, GameState> {
         const rooms = props.initialRooms.map(data => JSON.parse(JSON.stringify(data))) as RoomData[];
         const characters = props.initialCharacters.map(data => JSON.parse(JSON.stringify(data))) as CharacterData[];
         const things = props.initialThings.map(data => JSON.parse(JSON.stringify(data))) as ThingData[];
+        const items = props.items.map(data => JSON.parse(JSON.stringify(data))) as ItemData[];
 
         const player = characters.find(character => character.isPlayer)
         const startingRoom = props.initialRooms.find(room => room.name === player?.room)
@@ -63,9 +67,10 @@ export default class Game extends Component<Props, GameState> {
             characters,
             things,
             rooms,
+            
             currentVerbId: props.verbs[0].id,
             interactions: [...props.interactions],
-            items: [...props.items]
+            items,
         }
 
         this.tick = this.tick.bind(this)
@@ -114,7 +119,6 @@ export default class Game extends Component<Props, GameState> {
     }
 
     handleTargetClick(target: CommandTarget) {
-        console.log('click', target.type, target.id)
         this.setState(handleCommand({
             verb: this.props.verbs.find(_ => _.id == this.state.currentVerbId),
             target
@@ -131,8 +135,8 @@ export default class Game extends Component<Props, GameState> {
 
     render() {
         const { verbs = [] } = this.props
-        const { viewAngle, characters, things, currentVerbId } = this.state
-        const { currentRoom } = this
+        const { viewAngle, characters, things, currentVerbId, currentItemId } = this.state
+        const { currentRoom, player } = this
 
         const charactersAndThings = [...characters, ...things]
             .filter(_ => _.room === currentRoom.name)
@@ -146,8 +150,8 @@ export default class Game extends Component<Props, GameState> {
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleTargetClick}
                     // use for debugging - slows render!
-                    obstacleCells={this.state.cellMatrix}
-                // showObstacleAreas
+                    // obstacleCells={this.state.cellMatrix}
+                    showObstacleAreas
                 >
                     {charactersAndThings.map(data =>
                         data.type === 'thing'
@@ -169,6 +173,12 @@ export default class Game extends Component<Props, GameState> {
                     verbs={verbs}
                     currentVerbId={currentVerbId}
                     select={(verb: Verb) => { this.setState({ currentVerbId: verb.id }) }}
+                />
+
+                <ItemMenu
+                    items={items.filter(_ => _.characterId === player.id)}
+                    currentItemId={currentItemId}
+                    select={(item: ItemData) => {this.handleTargetClick(item)}}
                 />
             </main>
         )

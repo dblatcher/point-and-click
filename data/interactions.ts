@@ -23,6 +23,27 @@ export const interactions: Interaction[] = [
         ]
     },
     {
+        verbId: 'LOOK',
+        targetId: 'BUCKET',
+        consequences: [
+            {
+                type: 'order',
+                characterId: 'PLAYER',
+                orders: [
+                    {
+                        type: 'talk',
+                        steps: [
+                            {
+                                text: 'I am carrying a bucket',
+                                time: 100,
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
         verbId: 'TALK',
         targetId: 'MARIO',
         consequences: [
