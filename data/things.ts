@@ -2,7 +2,7 @@ import { ThingData } from "../src/definitions/ThingData";
 
 export const initialThings: ThingData[] = [
     {
-        id: 'fire',
+        id: 'FIRE',
         type:'thing',
         room: 'OUTSIDE',
         x: 200,
@@ -12,7 +12,7 @@ export const initialThings: ThingData[] = [
         sprite: 'fire'
     },
     {
-        id: 'tube',
+        id: 'TUBE',
         type:'thing',
         room: 'OUTSIDE',
         x: 240,

@@ -3,11 +3,10 @@ import { Interaction } from '../src/definitions/Interaction'
 export const interactions: Interaction[] = [
     {
         verbId: 'LOOK',
-        targetId: 'fire',
+        targetId: 'FIRE',
         consequences: [
             {
                 type: 'order',
-                characterId: 'PLAYER',
                 orders: [
                     {
                         type: 'talk',
@@ -28,7 +27,6 @@ export const interactions: Interaction[] = [
         consequences: [
             {
                 type: 'order',
-                characterId: 'PLAYER',
                 orders: [
                     {
                         type: 'talk',
@@ -49,7 +47,6 @@ export const interactions: Interaction[] = [
         consequences: [
             {
                 type: 'talk',
-                characterId: 'PLAYER',
                 text: 'Hello.',
                 time: 100,
             },
@@ -67,7 +64,6 @@ export const interactions: Interaction[] = [
         consequences: [
             {
                 type: 'order',
-                characterId: 'PLAYER',
                 orders: [
                     {
                         type: 'talk',
@@ -95,7 +91,6 @@ export const interactions: Interaction[] = [
             },
             {
                 type: 'order',
-                characterId: 'PLAYER',
                 orders: [
                     {
                         type: 'talk',
@@ -123,7 +118,6 @@ export const interactions: Interaction[] = [
             },
             {
                 type: 'order',
-                characterId: 'PLAYER',
                 orders: [
                     {
                         type: 'talk',
@@ -138,4 +132,20 @@ export const interactions: Interaction[] = [
             }
         ]
     },
+    {
+        verbId:'TAKE',
+        targetId:'TUBE',
+        consequences: [
+            {
+                type:'inventory',
+                addOrRemove: 'ADD',
+                itemId:'PASTA',
+            },
+            {
+                type:'talk',
+                text: 'I took it.',
+            }
+        ]
+    },
+
 ]

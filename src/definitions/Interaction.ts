@@ -2,27 +2,34 @@ import { Point } from "../lib/pathfinding/geometry"
 import { Order } from "./Order"
 
 interface OrderConsequence {
-    type:'order',
-    characterId: string
+    type: 'order',
+    characterId?: string
     orders: Order[]
     replaceCurrentOrders?: boolean
 }
 
 interface TalkConsequence {
-    type:'talk',
-    characterId: string
+    type: 'talk',
+    characterId?: string
     text: string,
-    time: number,
+    time?: number,
 }
 
 interface ChangeRoomConsequence {
-    type:'changeRoom'
+    type: 'changeRoom'
     roomId: string,
     takePlayer: boolean,
     point?: Point
 }
 
-type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence
+interface InventoryConsequence {
+    type: 'inventory',
+    itemId: string,
+    characterId?: string,
+    addOrRemove: 'ADD' | 'REMOVE',
+}
+
+type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence | InventoryConsequence
 
 interface Interaction {
     verbId: string
@@ -33,4 +40,4 @@ interface Interaction {
     consequences: Consequence[]
 }
 
-export type { Interaction, Consequence, OrderConsequence, ChangeRoomConsequence }
+export type { Interaction, Consequence, OrderConsequence, ChangeRoomConsequence, InventoryConsequence }

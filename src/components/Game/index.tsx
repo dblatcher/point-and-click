@@ -15,7 +15,6 @@ import Character from "../Character";
 import Thing from "../Thing";
 import { VerbMenu } from "../VerbMenu";
 import { ItemData } from "../../definitions/ItemData";
-import { items } from "../../../data/items";
 import { ItemMenu } from "../ItemMenu";
 
 
@@ -135,7 +134,7 @@ export default class Game extends Component<Props, GameState> {
 
     render() {
         const { verbs = [] } = this.props
-        const { viewAngle, characters, things, currentVerbId, currentItemId } = this.state
+        const { viewAngle, characters, things, currentVerbId, currentItemId, items } = this.state
         const { currentRoom, player } = this
 
         const charactersAndThings = [...characters, ...things]
