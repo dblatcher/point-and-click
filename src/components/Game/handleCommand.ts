@@ -1,9 +1,8 @@
 import { GameState } from ".";
 import { Command } from "../../definitions/Command";
 import { Interaction } from "../../definitions/Interaction";
-import { Order } from "../../definitions/Order";
 import { RoomData } from "../../definitions/RoomData";
-import { changeRoom } from "./changeRoom";
+import { makeConsequenceExecutor } from "./executeConsequence";
 
 function matchInteraction(
     command: Command,
@@ -39,72 +38,15 @@ export function handleCommand(command: Command): { (state: GameState): Partial<G
 
     return (state) => {
 
-        const { currentRoomName, rooms, characters, items, things } = state
+        const { currentRoomName, rooms } = state
         const currentRoom = rooms.find(_ => _.name === currentRoomName)
         const matchingInteraction = matchInteraction(command, currentRoom, state.interactions)
 
         if (matchingInteraction) {
-            const player = characters.find(_ => _.isPlayer)
-
-            const getCharacter = (characterId?: string) => characterId ? characters.find(_ => _.id === characterId) : player
-
-            matchingInteraction.consequences.forEach(consequence => {
-
-                switch (consequence.type) {
-                    case 'order': {
-                        const { characterId, orders } = consequence
-                        const character = getCharacter(characterId)
-                        if (!character) { return }
-                        const clonedOrders = JSON.parse(JSON.stringify(orders)) as Order[]
-                        if (consequence.replaceCurrentOrders) {
-                            character.orders = clonedOrders
-                        } else {
-                            character.orders.push(...clonedOrders)
-                        }
-                        break;
-                    }
-                    case 'talk': {
-                        const { characterId, text, time = 100 } = consequence
-                        const character = getCharacter(characterId)
-                        if (!character) { return }
-
-                        character.orders.push({
-                            type: 'talk',
-                            steps: [{ text, time }]
-                        })
-                        break;
-                    }
-                    case 'changeRoom': {
-                        const { roomId, takePlayer, point } = consequence;
-                        const modificationFunction = changeRoom(roomId, takePlayer, point)
-                        Object.assign(state, modificationFunction(state))
-                        break;
-                    }
-                    case 'inventory': {
-                        const { characterId, itemId, addOrRemove } = consequence
-                        const character = getCharacter(characterId)
-                        const item = items.find(_ => _.id === itemId)
-                        if (!character || !item) { return }
-
-                        if (addOrRemove === 'ADD') {
-                            item.characterId = character.id
-
-                        } else if (item.characterId === character.id) {
-                            item.characterId = undefined
-                        }
-                        break;
-                    }
-                    case 'removeThing': {
-                        const { thingId } = consequence
-                        const thing = things.find(_ => _.id === thingId)
-                        if (!thing) { return }
-                        thing.room = undefined;
-                        break;
-                    }
-                }
-            })
+            const execute = makeConsequenceExecutor(state)
+            matchingInteraction.consequences.forEach(execute)
         } else {
-            state = doDefaultResponse(command, state)
+            doDefaultResponse(command, state)
         }
 
         return state
