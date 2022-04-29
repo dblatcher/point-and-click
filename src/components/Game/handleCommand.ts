@@ -39,7 +39,7 @@ export function handleCommand(command: Command): { (state: GameState): Partial<G
 
     return (state) => {
 
-        const { currentRoomName, rooms, characters, items } = state
+        const { currentRoomName, rooms, characters, items, things } = state
         const currentRoom = rooms.find(_ => _.name === currentRoomName)
         const matchingInteraction = matchInteraction(command, currentRoom, state.interactions)
 
@@ -64,7 +64,7 @@ export function handleCommand(command: Command): { (state: GameState): Partial<G
                         break;
                     }
                     case 'talk': {
-                        const { characterId, text, time=100 } = consequence
+                        const { characterId, text, time = 100 } = consequence
                         const character = getCharacter(characterId)
                         if (!character) { return }
 
@@ -92,6 +92,14 @@ export function handleCommand(command: Command): { (state: GameState): Partial<G
                         } else if (item.characterId === character.id) {
                             item.characterId = undefined
                         }
+                        break;
+                    }
+                    case 'removeThing': {
+                        const { thingId } = consequence
+                        const thing = things.find(_ => _.id === thingId)
+                        if (!thing) { return }
+                        thing.room = undefined;
+                        break;
                     }
                 }
             })

@@ -29,7 +29,12 @@ interface InventoryConsequence {
     addOrRemove: 'ADD' | 'REMOVE',
 }
 
-type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence | InventoryConsequence
+interface RemoveThingConsequence {
+    type: 'removeThing',
+    thingId: string,
+}
+
+type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence | InventoryConsequence | RemoveThingConsequence
 
 interface Interaction {
     verbId: string
@@ -40,4 +45,4 @@ interface Interaction {
     consequences: Consequence[]
 }
 
-export type { Interaction, Consequence, OrderConsequence, ChangeRoomConsequence, InventoryConsequence }
+export type { Interaction, Consequence }

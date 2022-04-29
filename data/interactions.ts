@@ -137,6 +137,10 @@ export const interactions: Interaction[] = [
         targetId:'TUBE',
         consequences: [
             {
+                type: 'removeThing',
+                thingId: 'TUBE',
+            },
+            {
                 type:'inventory',
                 addOrRemove: 'ADD',
                 itemId:'PASTA',
