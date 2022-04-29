@@ -15,6 +15,11 @@ export class Sprite {
         this.sheets = sheets
     }
 
+    public hasSequence(sequence: string): boolean {
+        const { sequences } = this.data
+        return !!sequences[sequence]
+    }
+
     public getFrames(sequence: string, direction: Direction): SpriteFrame[] | undefined {
         const sequenceObject = this.data.sequences[sequence]
         if (!sequenceObject) { return undefined }
@@ -40,7 +45,7 @@ export class Sprite {
     }
 
     public getStyle(sequence = 'default', frameIndex = 0, direction?: Direction) {
-        const frame = this.getFrame(sequence, frameIndex, direction) || this.getFrame('default', 0,  this.data.defaultDirection)
+        const frame = this.getFrame(sequence, frameIndex, direction) || this.getFrame('default', 0, this.data.defaultDirection)
         if (!frame) { return {} }
 
         return {

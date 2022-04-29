@@ -23,8 +23,6 @@ export const data: SpriteData = {
         },
         out: {
             left: [
-                { sheetId: 'fire', row: 1, col: 0 },
-                { sheetId: 'fire', row: 1, col: 1 },
                 { sheetId: 'fire', row: 1, col: 2 },
                 { sheetId: 'fire', row: 1, col: 3 },
             ],

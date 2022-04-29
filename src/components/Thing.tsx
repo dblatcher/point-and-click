@@ -28,7 +28,9 @@ export default function Thing({
 
     const spriteObject = sprites[sprite]
     const direction = thingData.direction || spriteObject.data.defaultDirection;
-    const frames = spriteObject.getFrames(status || 'default', direction)
+
+    const sequence = spriteObject.hasSequence(status) ? status : 'default'
+    const frames = spriteObject.getFrames(sequence, direction)
 
     const [frameIndex, setFrameIndex] = useState(0)
 
@@ -42,7 +44,7 @@ export default function Thing({
     // to avoid 'flash of missing frame' before next updateFrame
     useLayoutEffect(() => {
         setFrameIndex(0)
-    }, [status, direction])
+    }, [sequence, direction])
 
 
     useInterval(updateFrame, animationRate)
@@ -63,6 +65,7 @@ export default function Thing({
                 x={x} y={y}
                 height={height} width={width}
                 sprite={sprite}
+                sequence={sequence}
                 frameIndex={frameIndex}
                 direction={direction}
                 filter={filter}
