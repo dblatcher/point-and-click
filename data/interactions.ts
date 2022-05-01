@@ -156,8 +156,18 @@ export const interactions: Interaction[] = [
         verbId: 'USE',
         targetId: 'FIRE',
         itemId: 'BUCKET',
+        targetStatus: 'out',
         consequences: [
-            { type: 'talk', text: 'Is it out?' }
+            { type: 'talk', text: 'It is out already' }
+        ]
+    },
+    {
+        verbId: 'USE',
+        targetId: 'FIRE',
+        itemId: 'BUCKET',
+        consequences: [
+            { type: 'talk', text: 'I wish to put it out.' },
+            { type: 'changeStatus', targetType: 'thing', targetId: 'FIRE', status: 'out' }
         ]
     },
 ]

@@ -34,7 +34,14 @@ interface RemoveThingConsequence {
     thingId: string,
 }
 
-type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence | InventoryConsequence | RemoveThingConsequence
+interface ChangeStatusConsequence {
+    type: 'changeStatus',
+    targetId: string,
+    targetType: 'character' | 'item' | 'hotspot' | 'thing',
+    status: string,
+}
+
+type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence | InventoryConsequence | RemoveThingConsequence | ChangeStatusConsequence
 
 interface Interaction {
     verbId: string
@@ -42,6 +49,7 @@ interface Interaction {
     targetType?: string // to do -implement
     roomId?: string
     itemId?: string
+    targetStatus?: string
     consequences: Consequence[]
 }
 

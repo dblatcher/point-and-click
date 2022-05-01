@@ -1,13 +1,17 @@
 import { GameState } from "."
+import { CommandTarget } from "../../definitions/Command"
 import { Consequence } from "../../definitions/Interaction"
 import { Order } from "../../definitions/Order"
 import { changeRoom } from "./changeRoom"
 
+
+
 export const makeConsequenceExecutor = (state: GameState) => {
 
-    const { characters, items, things } = state
+    const { characters, items, things, rooms, currentRoomName } = state
     const player = characters.find(_ => _.isPlayer)
     const getCharacter = (characterId?: string) => characterId ? characters.find(_ => _.id === characterId) : player
+    const currentRoom = rooms.find(_ => _.name === currentRoomName)
 
     return (consequence: Consequence) => {
 
@@ -60,6 +64,29 @@ export const makeConsequenceExecutor = (state: GameState) => {
                 const thing = things.find(_ => _.id === thingId)
                 if (!thing) { return }
                 thing.room = undefined;
+                break;
+            }
+            case 'changeStatus': {
+                const { targetId, targetType, status } = consequence
+                let target: CommandTarget;
+                switch (targetType) {
+                    case 'character':
+                        target = characters.find(_ => _.id === targetId);
+                        break;
+                    case 'item':
+                        target = items.find(_ => _.id === targetId);
+                        break;
+                    case 'thing':
+                        target = things.find(_ => _.id === targetId);
+                        break;
+                    case 'hotspot':
+                        target = currentRoom?.hotspots?.find(_=>_.id===targetId)
+                        break;
+                }
+
+                if (target) {
+                    target.status = status
+                }
                 break;
             }
         }

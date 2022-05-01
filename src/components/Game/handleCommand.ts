@@ -15,6 +15,7 @@ function matchInteraction(
             && interaction.targetId === target.id
             && (!interaction.roomId || interaction?.roomId === room.name)
             && ((!interaction.itemId && !item) || (interaction?.itemId == item?.id))
+            && ((!interaction.targetStatus) || (interaction.targetStatus == target.status))
     })
 }
 

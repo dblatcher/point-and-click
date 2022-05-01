@@ -10,7 +10,7 @@ export const initialThings: ThingData[] = [
         height: 50,
         width: 50,
         sprite: 'fire',
-        status:'out',
+        status:'burning',
     },
     {
         id: 'TUBE',
