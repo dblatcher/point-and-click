@@ -1,8 +1,7 @@
 import { Order } from "./Order"
-import { BaseData } from "./ThingData"
+import { Ident, Position, SpriteParams } from "./BaseTypes"
 
-
-interface CharacterData extends BaseData{
+type CharacterData  = Ident & SpriteParams & Position & {
     type: 'character'
     isPlayer?: boolean
     orders: Order[]

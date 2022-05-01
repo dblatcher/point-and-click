@@ -1,7 +1,7 @@
-interface ItemData {
+import { Ident } from "./BaseTypes"
+
+type ItemData = Ident & {
     type: 'item'
-    name?: string
-    id: string
     characterId?: string
 }
 

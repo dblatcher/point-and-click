@@ -1,8 +1,9 @@
-type Polygon = [number, number][]
+import { Ident } from './BaseTypes'
+
+type Polygon = [number, number][];
 
 
 interface Zone {
-    type: 'hotspot',
     x: number,
     y: number,
     path?: string,
@@ -11,9 +12,8 @@ interface Zone {
     rect?: [number, number]
 }
 
-interface HotSpotZone extends Zone {
-    id: string,
-    name?: string,
+type HotSpotZone = Ident & Zone & {
+    type: 'hotspot',
     parallax: number,
 }
 
