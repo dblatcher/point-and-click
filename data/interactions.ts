@@ -133,23 +133,31 @@ export const interactions: Interaction[] = [
         ]
     },
     {
-        verbId:'TAKE',
-        targetId:'TUBE',
+        verbId: 'TAKE',
+        targetId: 'TUBE',
         consequences: [
             {
                 type: 'removeThing',
                 thingId: 'TUBE',
             },
             {
-                type:'inventory',
+                type: 'inventory',
                 addOrRemove: 'ADD',
-                itemId:'PASTA',
+                itemId: 'PASTA',
             },
             {
-                type:'talk',
+                type: 'talk',
                 text: 'I took it.',
             }
         ]
     },
 
+    {
+        verbId: 'USE',
+        targetId: 'FIRE',
+        itemId: 'BUCKET',
+        consequences: [
+            { type: 'talk', text: 'Is it out?' }
+        ]
+    },
 ]

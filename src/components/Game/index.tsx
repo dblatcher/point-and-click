@@ -66,7 +66,7 @@ export default class Game extends Component<Props, GameState> {
             characters,
             things,
             rooms,
-            
+
             currentVerbId: props.verbs[0].id,
             interactions: [...props.interactions],
             items,
@@ -118,9 +118,18 @@ export default class Game extends Component<Props, GameState> {
     }
 
     handleTargetClick(target: CommandTarget) {
+        const { currentVerbId, currentItemId, items } = this.state
+        const { verbs } = this.props
+        const verb = verbs.find(_ => _.id == currentVerbId);
+        const item = items.find(_ => _.id == currentItemId);
+
+        if (target.type === 'item' && !currentItemId && verb.preposition) {
+            this.setState ({currentItemId:target.id})
+            return
+        }
+
         this.setState(handleCommand({
-            verb: this.props.verbs.find(_ => _.id == this.state.currentVerbId),
-            target
+            verb, target, item
         }))
     }
 
@@ -171,13 +180,13 @@ export default class Game extends Component<Props, GameState> {
                 <VerbMenu
                     verbs={verbs}
                     currentVerbId={currentVerbId}
-                    select={(verb: Verb) => { this.setState({ currentVerbId: verb.id }) }}
+                    select={(verb: Verb) => { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }}
                 />
 
                 <ItemMenu
                     items={items.filter(_ => _.characterId === player.id)}
                     currentItemId={currentItemId}
-                    select={(item: ItemData) => {this.handleTargetClick(item)}}
+                    select={(item: ItemData) => { this.handleTargetClick(item) }}
                 />
             </main>
         )

@@ -9,26 +9,28 @@ function matchInteraction(
     room: RoomData,
     interactions: Interaction[]
 ): Interaction | undefined {
-
+    const { verb, item, target } = command
     return interactions.find(interaction => {
-        return interaction.verbId === command.verb.id
-            && interaction.targetId === command.target.id
+        return interaction.verbId === verb.id
+            && interaction.targetId === target.id
             && (!interaction.roomId || interaction?.roomId === room.name)
-            && ((!interaction.itemId && !command.item) || (interaction?.itemId == command.item?.id))
+            && ((!interaction.itemId && !item) || (interaction?.itemId == item?.id))
     })
 }
 
 function doDefaultResponse(command: Command, state: GameState): GameState {
     const { characters } = state
+    const { verb, item, target } = command
     const player = characters.find(_ => _.isPlayer)
     if (!player) { return state }
 
+    const text = item
+        ? `I can\'t ${verb.label} the ${item.name || item.id} ${verb.preposition} the ${target.name || target.id}`
+        : `Nothing happens when I ${verb.label} the ${target.name || target.id}`;
+
     player.orders.push({
         type: 'talk',
-        steps: [{
-            text: `Nothing happens when you ${command.verb.label} the ${command.target.name || command.target.id}`,
-            time: 100
-        }]
+        steps: [{ text, time: 100 }]
     })
 
     return state

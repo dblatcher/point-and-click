@@ -11,7 +11,6 @@ import { interactions } from '../../../data/interactions';
 
 const Home = () => (
 	<div className={style.home}>
-		<h1>Home</h1>
 
 		<Game
 			initialRooms={initialRooms}
