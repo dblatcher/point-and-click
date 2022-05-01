@@ -16,6 +16,7 @@ import Thing from "../Thing";
 import { VerbMenu } from "../VerbMenu";
 import { ItemData } from "../../definitions/ItemData";
 import { ItemMenu } from "../ItemMenu";
+import { CommandLine } from "../CommandLine";
 
 
 interface Props {
@@ -88,6 +89,14 @@ export default class Game extends Component<Props, GameState> {
         return rooms.find(_ => _.name === currentRoomName)
     }
 
+    get currentVerb(): Verb {
+        return this.props.verbs.find(_ => _.id == this.state.currentVerbId)
+    }
+
+    get currentItem(): ItemData {
+        return this.state.items.find(_ => _.id == this.state.currentItemId)
+    }
+
     componentWillMount(): void {
         const timer = window.setInterval(() => { this.tick() }, 10)
         const cellMatrix = generateCellMatrix(this.currentRoom, cellSize)
@@ -124,7 +133,7 @@ export default class Game extends Component<Props, GameState> {
         const item = items.find(_ => _.id == currentItemId);
 
         if (target.type === 'item' && !currentItemId && verb.preposition) {
-            this.setState ({currentItemId:target.id})
+            this.setState({ currentItemId: target.id })
             return
         }
 
@@ -176,6 +185,8 @@ export default class Game extends Component<Props, GameState> {
                                 viewAngle={viewAngle} />
                     )}
                 </Room>
+
+                <CommandLine verb={this.currentVerb} item={this.currentItem} />
 
                 <VerbMenu
                     verbs={verbs}
