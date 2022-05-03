@@ -17,6 +17,7 @@ import { VerbMenu } from "../VerbMenu";
 import { ItemData } from "../../definitions/ItemData";
 import { ItemMenu } from "../ItemMenu";
 import { CommandLine } from "../CommandLine";
+import { Order } from "../../definitions/Order";
 
 
 interface Props {
@@ -40,6 +41,7 @@ interface GameState {
     currentItemId?: string,
     interactions: Interaction[],
     items: ItemData[],
+    characterOrders: { [index: string]: Order[] }
 }
 
 export type { GameState }
@@ -71,6 +73,17 @@ export default class Game extends Component<Props, GameState> {
             currentVerbId: props.verbs[0].id,
             interactions: [...props.interactions],
             items,
+            characterOrders: {
+                EVIL_SKINNER: [
+                    {
+                        type: 'talk',
+                        steps: [
+                            { text: 'ha ha ha ha!', time: 200 }
+                        ]
+                    },
+                    { type: 'move', steps: [{ x: 200, y: 30 }] },
+                ]
+            },
         }
 
         this.tick = this.tick.bind(this)
@@ -113,8 +126,8 @@ export default class Game extends Component<Props, GameState> {
     }
 
     makeCharactersAct() {
-        const { characters } = this.state
-        characters.forEach(followOrder)
+        const { characters, characterOrders } = this.state
+        characters.forEach(character => followOrder(character, characterOrders[character.id]))
         this.setState({ characters })
     }
 
@@ -152,7 +165,7 @@ export default class Game extends Component<Props, GameState> {
 
     render() {
         const { verbs = [] } = this.props
-        const { viewAngle, characters, things, currentVerbId, currentItemId, items } = this.state
+        const { viewAngle, characters, things, currentVerbId, currentItemId, items, characterOrders } = this.state
         const { currentRoom, player } = this
 
         const charactersAndThings = [...characters, ...things]
@@ -181,6 +194,7 @@ export default class Game extends Component<Props, GameState> {
                             : <Character key={data.id}
                                 clickHandler={data.isPlayer ? undefined : this.handleTargetClick}
                                 characterData={data}
+                                orders={characterOrders[data.id]}
                                 roomData={currentRoom}
                                 viewAngle={viewAngle} />
                     )}

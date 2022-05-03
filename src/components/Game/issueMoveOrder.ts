@@ -20,9 +20,9 @@ export function issueMoveOrder(
         const newOrder: MoveOrder = { type: 'move', steps }
 
         if (appendToExisting) {
-            character.orders.push(newOrder)
+            state.characterOrders[character.id].push(newOrder)
         } else {
-            character.orders = [newOrder] // clears any existing orders, even if the point was unreachable
+            state.characterOrders[character.id] = [newOrder] // clears any existing orders, even if the point was unreachable
         }
 
         return { characters }

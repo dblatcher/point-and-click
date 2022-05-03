@@ -8,7 +8,7 @@ import { changeRoom } from "./changeRoom"
 
 export const makeConsequenceExecutor = (state: GameState) => {
 
-    const { characters, items, things, rooms, currentRoomName } = state
+    const { characters, items, things, rooms, currentRoomName, characterOrders } = state
     const player = characters.find(_ => _.isPlayer)
     const getCharacter = (characterId?: string) => characterId ? characters.find(_ => _.id === characterId) : player
     const currentRoom = rooms.find(_ => _.name === currentRoomName)
@@ -22,9 +22,9 @@ export const makeConsequenceExecutor = (state: GameState) => {
                 if (!character) { return }
                 const clonedOrders = JSON.parse(JSON.stringify(orders)) as Order[]
                 if (consequence.replaceCurrentOrders) {
-                    character.orders = clonedOrders
+                    characterOrders[character.id] = clonedOrders
                 } else {
-                    character.orders.push(...clonedOrders)
+                    characterOrders[character.id].push(...clonedOrders)
                 }
                 break;
             }
@@ -33,7 +33,7 @@ export const makeConsequenceExecutor = (state: GameState) => {
                 const character = getCharacter(characterId)
                 if (!character) { return }
 
-                character.orders.push({
+                characterOrders[character.id].push({
                     type: 'talk',
                     steps: [{ text, time }]
                 })

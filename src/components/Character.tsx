@@ -5,6 +5,7 @@ import SpriteShape from "./SpriteShape";
 import { useInterval } from "../lib/useInterval"
 import { useLayoutEffect, useState } from "preact/hooks";
 import { CharacterData } from "../definitions/CharacterData";
+import { Order } from "../definitions/Order";
 
 interface Props {
     roomData: RoomData
@@ -13,16 +14,16 @@ interface Props {
     animationRate?: number
     clickHandler?: { (character: CharacterData): void }
     key: string | number
+    orders?: Order[]
 }
 
 
 export default function Character({
     roomData, viewAngle,
     animationRate = 250, characterData,
-    clickHandler
+    clickHandler, orders =[]
 }: Props) {
     const {
-        orders,
         x, y,
         height = 50, width = 50, sprite, filter, dialogueColor
     } = characterData
