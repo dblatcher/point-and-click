@@ -26,9 +26,6 @@ export const initialCharacters: CharacterData[] = [
         width: 40,
         height: 80,
         orders: [
-            { type: 'talk', steps: [{ text: 'I am evil skinner...', time: 100 }] },
-            { type: 'talk', steps: [{ text: '...I AM evil skinner', time: 100 }] },
-            { type: 'move', steps: [{ x: 200, y: 30 }] },
         ],
         sprite: 'skinner',
         direction: 'right',
