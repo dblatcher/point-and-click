@@ -1,5 +1,5 @@
-import testRoomImport from './test-room.json';
-import testRoomImport2 from './test-room-2.json';
+import testRoomImport from './OUTSIDE.json';
+import testRoomImport2 from './INSIDE.json';
 import testRoomImport3 from './test-room-3.json';
 import { RoomData } from '../src/definitions/RoomData';
 

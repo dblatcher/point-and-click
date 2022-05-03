@@ -85,7 +85,7 @@ export const interactions: Interaction[] = [
         consequences: [
             {
                 type: 'changeRoom',
-                roomId: 'test-room-2',
+                roomId: 'INSIDE',
                 takePlayer: true,
                 point: { y: 5, x: 100 },
             },
@@ -108,7 +108,7 @@ export const interactions: Interaction[] = [
     {
         verbId: 'USE',
         targetId: 'window',
-        roomId: 'test-room-2',
+        roomId: 'INSIDE',
         consequences: [
             {
                 type: 'changeRoom',
