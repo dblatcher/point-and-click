@@ -7,10 +7,7 @@ export default function followOrder(character: CharacterData): CharacterData {
     if (!nextOrder) { return }
 
     if (nextOrder.type === 'move') {
-        const newPosition = executeMove(nextOrder, character)
-        character.x = newPosition.x
-        character.y = newPosition.y
-        character.direction = newPosition.direction
+        executeMove(nextOrder, character)
     }
 
     if (nextOrder.type === 'talk') {

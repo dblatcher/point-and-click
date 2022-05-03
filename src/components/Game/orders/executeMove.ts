@@ -27,5 +27,7 @@ export function executeMove(moveOrder: MoveOrder, character: CharacterData): Poi
         moveOrder.steps.shift()
     }
 
-    return { x: newX, y: newY, direction:newDirection }
+    character.x = newX
+    character.y = newY
+    character.direction = newDirection
 }
