@@ -1,6 +1,6 @@
 import { Sequence, Stage } from "../../src/definitions/Sequence";
 
-export const Dialogue: Sequence = [
+const DIALOGUE: Sequence = [
     {
         characterOrders: {
             PLAYER: [
@@ -11,7 +11,18 @@ export const Dialogue: Sequence = [
                         { text: 'I am Skinner', time: 100 },
                     ]
                 }
-            ]
+            ],
+            FAKE_PLAYER_NO_ORDERS: [
+
+            ],
+            FAKE_PLAYER_WITH_ORDERS: [
+                {
+                    type: 'talk',
+                    steps: [
+                        { text: 'I do not exist', time: 100 },
+                    ]
+                }
+            ],
         }
     },
     {
@@ -48,3 +59,5 @@ export const Dialogue: Sequence = [
         }
     },
 ]
+
+export const sequences = { DIALOGUE }

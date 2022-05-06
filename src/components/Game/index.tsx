@@ -18,7 +18,10 @@ import { ItemData } from "../../definitions/ItemData";
 import { ItemMenu } from "../ItemMenu";
 import { CommandLine } from "../CommandLine";
 import { Order } from "../../definitions/Order";
+import { Sequence } from "../../definitions/Sequence"
+import { cloneData } from "../../lib/clone";
 
+const TIMER_SPEED = 10
 
 interface Props {
     initialRooms: RoomData[],
@@ -27,6 +30,7 @@ interface Props {
     verbs: Verb[],
     interactions: Interaction[],
     items: ItemData[],
+    sequences: { [index: string]: Sequence }
 }
 
 interface GameState {
@@ -42,6 +46,7 @@ interface GameState {
     interactions: Interaction[],
     items: ItemData[],
     characterOrders: { [index: string]: Order[] }
+    sequence?: Sequence;
 }
 
 export type { GameState }
@@ -84,6 +89,7 @@ export default class Game extends Component<Props, GameState> {
                     { type: 'move', steps: [{ x: 200, y: 30 }] },
                 ]
             },
+            sequence: cloneData(props.sequences['DIALOGUE'])
         }
 
         this.tick = this.tick.bind(this)
@@ -111,7 +117,7 @@ export default class Game extends Component<Props, GameState> {
     }
 
     componentWillMount(): void {
-        const timer = window.setInterval(() => { this.tick() }, 10)
+        const timer = window.setInterval(() => { this.tick() }, TIMER_SPEED)
         const cellMatrix = generateCellMatrix(this.currentRoom, cellSize)
         this.setState({ timer, cellMatrix })
     }
@@ -126,9 +132,43 @@ export default class Game extends Component<Props, GameState> {
     }
 
     makeCharactersAct() {
-        const { characters, characterOrders } = this.state
-        characters.forEach(character => followOrder(character, characterOrders[character.id]))
-        this.setState({ characters })
+        const { characters, characterOrders, sequence } = this.state
+        let sequenceIsFinished: boolean
+
+        if (sequence) {
+            const orderSource = sequence[0].characterOrders;
+
+            const validCharacterIds = characters.map(_ => _.id)
+            const invalidIds = Object.keys(orderSource).filter(_ => !validCharacterIds.includes(_))
+
+            invalidIds.forEach(_ => {
+                console.warn(`invalid character id in stage: ${_}`)
+                delete orderSource[_]
+            })
+
+            const emptyOrderLists = Object.keys(orderSource).filter(_ => orderSource[_].length === 0)
+
+            emptyOrderLists.forEach(_ => {
+                console.log(`character finished orders in stage: ${_}`)
+                delete orderSource[_]
+            })
+
+            characters.forEach(character => followOrder(character, orderSource[character.id]))
+
+            const stageIsFinished = Object.keys(orderSource).length === 0
+            if (stageIsFinished) {
+                sequence.shift()
+                console.log(`stage finished, ${sequence.length } left.`)
+                sequenceIsFinished = sequence.length === 0;
+            }
+
+        } else {
+            characters.forEach(character => followOrder(character, characterOrders[character.id]))
+        }
+
+        const newSequenceValue = sequenceIsFinished ? undefined : sequence;
+
+        this.setState({ characters, sequence:newSequenceValue, characterOrders })
     }
 
     followMarker() {
@@ -165,8 +205,10 @@ export default class Game extends Component<Props, GameState> {
 
     render() {
         const { verbs = [] } = this.props
-        const { viewAngle, characters, things, currentVerbId, currentItemId, items, characterOrders } = this.state
+        const { viewAngle, characters, things, currentVerbId, currentItemId, items, characterOrders, sequence } = this.state
         const { currentRoom, player } = this
+
+        const orderSource: { [index: string]: Order[] } = sequence ? sequence[0].characterOrders : characterOrders;
 
         const charactersAndThings = [...characters, ...things]
             .filter(_ => _.room === currentRoom.name)
@@ -194,7 +236,7 @@ export default class Game extends Component<Props, GameState> {
                             : <Character key={data.id}
                                 clickHandler={data.isPlayer ? undefined : this.handleTargetClick}
                                 characterData={data}
-                                orders={characterOrders[data.id]}
+                                orders={orderSource[data.id]}
                                 roomData={currentRoom}
                                 viewAngle={viewAngle} />
                     )}

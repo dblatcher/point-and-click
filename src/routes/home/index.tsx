@@ -8,6 +8,7 @@ import { initialRooms } from '../../../data/rooms';
 import { items } from '../../../data/items';
 import { verbs } from '../../../data/verbs';
 import { interactions } from '../../../data/interactions';
+import { sequences } from '../../../data/sequences';
 
 const Home = () => (
 	<div className={style.home}>
@@ -19,6 +20,7 @@ const Home = () => (
 			verbs={verbs}
 			interactions={interactions}
 			items={items}
+			sequences={sequences}
 		/>
 
 	</div>
