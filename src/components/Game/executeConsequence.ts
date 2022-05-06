@@ -1,14 +1,15 @@
-import { GameState } from "."
+import { GameProps, GameState } from "."
 import { CommandTarget } from "../../definitions/Command"
 import { Consequence } from "../../definitions/Interaction"
 import { Order } from "../../definitions/Order"
+import { cloneData } from "../../lib/clone"
 import { changeRoom } from "./changeRoom"
 
 
 
-export const makeConsequenceExecutor = (state: GameState) => {
+export const makeConsequenceExecutor = (state: GameState, props: GameProps) => {
 
-    const { characters, items, things, rooms, currentRoomName, characterOrders } = state
+    const { characters, items, things, rooms, currentRoomName, characterOrders, } = state
     const player = characters.find(_ => _.isPlayer)
     const getCharacter = (characterId?: string) => characterId ? characters.find(_ => _.id === characterId) : player
     const currentRoom = rooms.find(_ => _.name === currentRoomName)
@@ -80,12 +81,22 @@ export const makeConsequenceExecutor = (state: GameState) => {
                         target = things.find(_ => _.id === targetId);
                         break;
                     case 'hotspot':
-                        target = currentRoom?.hotspots?.find(_=>_.id===targetId)
+                        target = currentRoom?.hotspots?.find(_ => _.id === targetId)
                         break;
                 }
 
                 if (target) {
                     target.status = status
+                }
+                break;
+            }
+            case 'sequence': {
+                const { sequence } = consequence
+                const originalSequenceEntry = Object.entries(props.sequences).find(_ => _[0] === sequence)
+                if (originalSequenceEntry) {
+                    state.sequence = cloneData(originalSequenceEntry[1])
+                } else {
+                    console.warn(`No such sequence ${sequence}`)
                 }
                 break;
             }

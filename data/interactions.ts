@@ -59,6 +59,16 @@ export const interactions: Interaction[] = [
         ]
     },
     {
+        verbId: 'TALK',
+        targetId: 'EVIL_SKINNER',
+        consequences: [
+            {
+                type: 'sequence',
+                sequence: 'DIALOGUE',
+            }
+        ]
+    },
+    {
         verbId: 'LOOK',
         targetId: 'sun',
         consequences: [

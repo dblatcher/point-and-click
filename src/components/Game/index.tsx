@@ -23,14 +23,14 @@ import { cloneData } from "../../lib/clone";
 
 const TIMER_SPEED = 10
 
-interface Props {
-    initialRooms: RoomData[],
-    initialThings: ThingData[],
-    initialCharacters: CharacterData[],
-    verbs: Verb[],
-    interactions: Interaction[],
-    items: ItemData[],
-    sequences: { [index: string]: Sequence }
+interface GameProps {
+    readonly initialRooms: RoomData[],
+    readonly initialThings: ThingData[],
+    readonly initialCharacters: CharacterData[],
+    readonly verbs: Verb[],
+    readonly interactions: Interaction[],
+    readonly items: ItemData[],
+    readonly sequences: { [index: string]: Sequence }
 }
 
 interface GameState {
@@ -49,15 +49,15 @@ interface GameState {
     sequence?: Sequence;
 }
 
-export type { GameState }
+export type { GameState, GameProps }
 
 export const cellSize = 10
 
-export default class Game extends Component<Props, GameState> {
+export default class Game extends Component<GameProps, GameState> {
 
     refs: {}
 
-    constructor(props: Props) {
+    constructor(props: GameProps) {
         super(props)
         const rooms = props.initialRooms.map(data => JSON.parse(JSON.stringify(data))) as RoomData[];
         const characters = props.initialCharacters.map(data => JSON.parse(JSON.stringify(data))) as CharacterData[];
@@ -78,18 +78,7 @@ export default class Game extends Component<Props, GameState> {
             currentVerbId: props.verbs[0].id,
             interactions: [...props.interactions],
             items,
-            characterOrders: {
-                EVIL_SKINNER: [
-                    {
-                        type: 'talk',
-                        steps: [
-                            { text: 'ha ha ha ha!', time: 200 }
-                        ]
-                    },
-                    { type: 'move', steps: [{ x: 200, y: 30 }] },
-                ]
-            },
-            sequence: cloneData(props.sequences['DIALOGUE'])
+            characterOrders: {},
         }
 
         this.tick = this.tick.bind(this)
@@ -158,7 +147,7 @@ export default class Game extends Component<Props, GameState> {
             const stageIsFinished = Object.keys(orderSource).length === 0
             if (stageIsFinished) {
                 sequence.shift()
-                console.log(`stage finished, ${sequence.length } left.`)
+                console.log(`stage finished, ${sequence.length} left.`)
                 sequenceIsFinished = sequence.length === 0;
             }
 
@@ -168,7 +157,7 @@ export default class Game extends Component<Props, GameState> {
 
         const newSequenceValue = sequenceIsFinished ? undefined : sequence;
 
-        this.setState({ characters, sequence:newSequenceValue, characterOrders })
+        this.setState({ characters, sequence: newSequenceValue, characterOrders })
     }
 
     followMarker() {
@@ -190,9 +179,9 @@ export default class Game extends Component<Props, GameState> {
             return
         }
 
-        this.setState(handleCommand({
-            verb, target, item
-        }))
+        this.setState(
+            handleCommand({ verb, target, item }, this.props)
+        )
     }
 
     handleRoomClick(x: number, y: number) {

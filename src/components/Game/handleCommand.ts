@@ -1,4 +1,4 @@
-import { GameState } from ".";
+import { GameProps, GameState } from ".";
 import { Command } from "../../definitions/Command";
 import { Interaction } from "../../definitions/Interaction";
 import { RoomData } from "../../definitions/RoomData";
@@ -37,7 +37,7 @@ function doDefaultResponse(command: Command, state: GameState): GameState {
     return state
 }
 
-export function handleCommand(command: Command): { (state: GameState): Partial<GameState> } {
+export function handleCommand(command: Command, props: GameProps): { (state: GameState): Partial<GameState> } {
 
     return (state) => {
 
@@ -46,7 +46,7 @@ export function handleCommand(command: Command): { (state: GameState): Partial<G
         const matchingInteraction = matchInteraction(command, currentRoom, state.interactions)
 
         if (matchingInteraction) {
-            const execute = makeConsequenceExecutor(state)
+            const execute = makeConsequenceExecutor(state, props)
             matchingInteraction.consequences.forEach(execute)
         } else {
             doDefaultResponse(command, state)

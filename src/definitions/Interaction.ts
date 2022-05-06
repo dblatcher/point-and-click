@@ -41,7 +41,12 @@ interface ChangeStatusConsequence {
     status: string,
 }
 
-type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence | InventoryConsequence | RemoveThingConsequence | ChangeStatusConsequence
+interface SequenceConsequence {
+    type: 'sequence',
+    sequence: string,
+}
+
+type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence | InventoryConsequence | RemoveThingConsequence | ChangeStatusConsequence| SequenceConsequence
 
 interface Interaction {
     verbId: string
