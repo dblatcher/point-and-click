@@ -35,8 +35,9 @@ interface GameProps {
 
 interface GameState {
     viewAngle: number
-    cellMatrix?: CellMatrix
+    isPaused: boolean
     timer?: number
+    cellMatrix?: CellMatrix
     currentRoomName: string
     characters: CharacterData[]
     things: ThingData[]
@@ -70,6 +71,7 @@ export default class Game extends Component<GameProps, GameState> {
 
         this.state = {
             viewAngle: 0,
+            isPaused: false,
             currentRoomName: startingRoom.name || firstRoom.name,
             characters,
             things,
@@ -85,7 +87,7 @@ export default class Game extends Component<GameProps, GameState> {
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.handleTargetClick = this.handleTargetClick.bind(this)
         this.makeCharactersAct = this.makeCharactersAct.bind(this)
-        this.followMarker = this.followMarker.bind(this)
+        this.centerViewOnPLayer = this.centerViewOnPLayer.bind(this)
     }
 
     get player(): (CharacterData | undefined) {
@@ -116,12 +118,15 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     tick() {
+        const { isPaused } = this.state
+        if (isPaused) { return }
         this.makeCharactersAct()
-        this.followMarker()
+        this.centerViewOnPLayer()
     }
 
     makeCharactersAct() {
         const { characters, characterOrders, sequenceRunning: sequence } = this.state
+
         let sequenceIsFinished: boolean
 
         if (sequence) {
@@ -160,7 +165,7 @@ export default class Game extends Component<GameProps, GameState> {
         this.setState({ characters, sequenceRunning: newSequenceValue, characterOrders })
     }
 
-    followMarker() {
+    centerViewOnPLayer() {
         const { currentRoom } = this
         const { player } = this
         if (!player || !currentRoom) { return }
@@ -196,7 +201,9 @@ export default class Game extends Component<GameProps, GameState> {
 
     render() {
         const { verbs = [] } = this.props
-        const { viewAngle, characters, things, currentVerbId, currentItemId, items, characterOrders, sequenceRunning } = this.state
+        const { viewAngle, isPaused,
+            characters, things, currentVerbId, currentItemId, items,
+            characterOrders, sequenceRunning } = this.state
         const { currentRoom, player } = this
 
         const orderSource = sequenceRunning ? sequenceRunning[0].characterOrders : characterOrders;
@@ -207,6 +214,7 @@ export default class Game extends Component<GameProps, GameState> {
 
         return (
             <main>
+                <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>
                 <Room
                     data={currentRoom} scale={2}
                     viewAngle={viewAngle}
@@ -219,12 +227,14 @@ export default class Game extends Component<GameProps, GameState> {
                     {charactersAndThings.map(data =>
                         data.type === 'thing'
                             ? <Thing key={data.id}
+                                isPaused={isPaused}
                                 clickHandler={this.handleTargetClick}
                                 thingData={data}
                                 roomData={currentRoom}
                                 viewAngle={viewAngle}
                             />
                             : <Character key={data.id}
+                                isPaused={isPaused}
                                 clickHandler={data.isPlayer ? undefined : this.handleTargetClick}
                                 characterData={data}
                                 orders={orderSource[data.id]}

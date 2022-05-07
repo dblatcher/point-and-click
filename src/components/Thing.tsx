@@ -12,13 +12,15 @@ interface Props {
     animationRate?: number
     clickHandler?: { (data: ThingData): void }
     key: string | number
+    isPaused: boolean
 }
 
 
 export default function Thing({
     roomData, viewAngle,
     animationRate = 250, thingData,
-    clickHandler = null
+    clickHandler = null,
+    isPaused,
 }: Props) {
     const {
         status,
@@ -35,7 +37,7 @@ export default function Thing({
     const [frameIndex, setFrameIndex] = useState(0)
 
     const updateFrame = () => {
-        if (!frames) { return }
+        if (!frames || isPaused) { return }
         const nextFrameIndex = frameIndex + 1 < frames.length ? frameIndex + 1 : 0
         setFrameIndex(nextFrameIndex)
     }

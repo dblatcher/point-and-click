@@ -15,13 +15,14 @@ interface Props {
     clickHandler?: { (character: CharacterData): void }
     key: string | number
     orders?: Order[]
+    isPaused: boolean
 }
 
 
 export default function Character({
     roomData, viewAngle,
-    animationRate = 250, characterData,
-    clickHandler, orders =[]
+    animationRate = 250, characterData, isPaused,
+    clickHandler, orders = []
 }: Props) {
     const {
         x, y,
@@ -37,7 +38,7 @@ export default function Character({
     const [frameIndex, setFrameIndex] = useState(0)
 
     const updateFrame = () => {
-        if (!frames) { return }
+        if (!frames || isPaused) { return }
         const nextFrameIndex = frameIndex + 1 < frames.length ? frameIndex + 1 : 0
         setFrameIndex(nextFrameIndex)
     }
