@@ -20,6 +20,7 @@ import { CommandLine } from "../CommandLine";
 import { Order } from "../../definitions/Order";
 import { Sequence } from "../../definitions/Sequence"
 import { cloneData } from "../../lib/clone";
+import { continueSequence } from "./continueSequence";
 
 
 const TIMER_SPEED = 10
@@ -126,44 +127,13 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     makeCharactersAct() {
-        const { characters, characterOrders, sequenceRunning: sequence } = this.state
-
-        let sequenceIsFinished: boolean
-
-        if (sequence) {
-            const orderSource = sequence[0].characterOrders;
-
-            const validCharacterIds = characters.map(_ => _.id)
-            const invalidIds = Object.keys(orderSource).filter(_ => !validCharacterIds.includes(_))
-
-            invalidIds.forEach(_ => {
-                console.warn(`invalid character id in stage: ${_}`)
-                delete orderSource[_]
-            })
-
-            const emptyOrderLists = Object.keys(orderSource).filter(_ => orderSource[_].length === 0)
-
-            emptyOrderLists.forEach(_ => {
-                console.log(`character finished orders in stage: ${_}`)
-                delete orderSource[_]
-            })
-
-            characters.forEach(character => followOrder(character, orderSource[character.id]))
-
-            const stageIsFinished = Object.keys(orderSource).length === 0
-            if (stageIsFinished) {
-                sequence.shift()
-                console.log(`stage finished, ${sequence.length} left.`)
-                sequenceIsFinished = sequence.length === 0;
-            }
-
+        const { characters, characterOrders, sequenceRunning } = this.state
+        if (sequenceRunning) {
+            return this.setState(continueSequence(this.state))
         } else {
             characters.forEach(character => followOrder(character, characterOrders[character.id]))
+            return this.setState({ characters, characterOrders })
         }
-
-        const newSequenceValue = sequenceIsFinished ? undefined : sequence;
-
-        this.setState({ characters, sequenceRunning: newSequenceValue, characterOrders })
     }
 
     centerViewOnPLayer() {
