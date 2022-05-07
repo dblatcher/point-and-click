@@ -19,7 +19,7 @@ import { ItemMenu } from "../ItemMenu";
 import { CommandLine } from "../CommandLine";
 import { Order } from "../../definitions/Order";
 import { Sequence } from "../../definitions/Sequence"
-import { cloneData } from "../../lib/clone";
+
 
 const TIMER_SPEED = 10
 
@@ -46,7 +46,7 @@ interface GameState {
     interactions: Interaction[],
     items: ItemData[],
     characterOrders: { [index: string]: Order[] }
-    sequence?: Sequence;
+    sequenceRunning?: Sequence;
 }
 
 export type { GameState, GameProps }
@@ -121,7 +121,7 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     makeCharactersAct() {
-        const { characters, characterOrders, sequence } = this.state
+        const { characters, characterOrders, sequenceRunning: sequence } = this.state
         let sequenceIsFinished: boolean
 
         if (sequence) {
@@ -157,7 +157,7 @@ export default class Game extends Component<GameProps, GameState> {
 
         const newSequenceValue = sequenceIsFinished ? undefined : sequence;
 
-        this.setState({ characters, sequence: newSequenceValue, characterOrders })
+        this.setState({ characters, sequenceRunning: newSequenceValue, characterOrders })
     }
 
     followMarker() {
@@ -169,7 +169,8 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     handleTargetClick(target: CommandTarget) {
-        const { currentVerbId, currentItemId, items } = this.state
+        const { currentVerbId, currentItemId, items, sequenceRunning } = this.state
+        if (sequenceRunning) { return }
         const { verbs } = this.props
         const verb = verbs.find(_ => _.id == currentVerbId);
         const item = items.find(_ => _.id == currentItemId);
@@ -185,7 +186,8 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     handleRoomClick(x: number, y: number) {
-        console.log('room click', x, y)
+        const { sequenceRunning } = this.state
+        if (sequenceRunning) { return }
         const { player, currentRoom } = this
         if (!player || !currentRoom) { return }
         const pointClicked = locateClickInWorld(x, y, this.state.viewAngle, currentRoom)
@@ -194,10 +196,10 @@ export default class Game extends Component<GameProps, GameState> {
 
     render() {
         const { verbs = [] } = this.props
-        const { viewAngle, characters, things, currentVerbId, currentItemId, items, characterOrders, sequence } = this.state
+        const { viewAngle, characters, things, currentVerbId, currentItemId, items, characterOrders, sequenceRunning } = this.state
         const { currentRoom, player } = this
 
-        const orderSource: { [index: string]: Order[] } = sequence ? sequence[0].characterOrders : characterOrders;
+        const orderSource = sequenceRunning ? sequenceRunning[0].characterOrders : characterOrders;
 
         const charactersAndThings = [...characters, ...things]
             .filter(_ => _.room === currentRoom.name)
@@ -231,19 +233,21 @@ export default class Game extends Component<GameProps, GameState> {
                     )}
                 </Room>
 
-                <CommandLine verb={this.currentVerb} item={this.currentItem} />
+                {!sequenceRunning && <>
+                    <CommandLine verb={this.currentVerb} item={this.currentItem} />
 
-                <VerbMenu
-                    verbs={verbs}
-                    currentVerbId={currentVerbId}
-                    select={(verb: Verb) => { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }}
-                />
+                    <VerbMenu
+                        verbs={verbs}
+                        currentVerbId={currentVerbId}
+                        select={(verb: Verb) => { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }}
+                    />
 
-                <ItemMenu
-                    items={items.filter(_ => _.characterId === player.id)}
-                    currentItemId={currentItemId}
-                    select={(item: ItemData) => { this.handleTargetClick(item) }}
-                />
+                    <ItemMenu
+                        items={items.filter(_ => _.characterId === player.id)}
+                        currentItemId={currentItemId}
+                        select={(item: ItemData) => { this.handleTargetClick(item) }}
+                    />
+                </>}
             </main>
         )
     }

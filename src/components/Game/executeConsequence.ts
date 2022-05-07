@@ -94,7 +94,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps) => {
                 const { sequence } = consequence
                 const originalSequenceEntry = Object.entries(props.sequences).find(_ => _[0] === sequence)
                 if (originalSequenceEntry) {
-                    state.sequence = cloneData(originalSequenceEntry[1])
+                    state.sequenceRunning = cloneData(originalSequenceEntry[1])
                 } else {
                     console.warn(`No such sequence ${sequence}`)
                 }
