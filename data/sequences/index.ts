@@ -7,7 +7,7 @@ const DIALOGUE: Sequence = [
                 {
                     type: 'move',
                     steps: [
-                        { x: 350, y: 30, animation: 'run' },
+                        { x: 350, y: 30, animation: 'run', speed: 2 },
                         { x: 340, y: 30, animation: 'run' },
                     ]
                 }

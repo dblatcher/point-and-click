@@ -2,7 +2,7 @@ import { Point } from "../lib/pathfinding/geometry"
 
 interface MoveOrder {
     type: 'move',
-    steps: (Point & { animation?: string })[]
+    steps: (Point & { animation?: string, speed?: number })[]
 }
 
 interface DialogueLine {
@@ -19,7 +19,7 @@ interface TalkOrder {
 interface ActionStep {
     animation?: string
     duration: number
-    timeElapsed?:number
+    timeElapsed?: number
 }
 
 interface ActOrder {
