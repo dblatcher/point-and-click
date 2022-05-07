@@ -29,15 +29,24 @@ export const interactions: Interaction[] = [
                 type: 'order',
                 orders: [
                     {
+                        type: 'act',
+                        steps: [
+                            {
+                                duration: 200,
+                                animation: 'think',
+                            }
+                        ]
+                    },
+                    {
                         type: 'talk',
                         steps: [
                             {
-                                text: 'I am carrying a bucket',
-                                time: 100,
+                                time: 300,
+                                text:'I have a bucket!!',
                                 animation: 'yell',
                             }
                         ]
-                    }
+                    },
                 ]
             }
         ]

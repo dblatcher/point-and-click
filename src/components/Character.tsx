@@ -46,8 +46,16 @@ export default function Character({
 
     const updateFrame = () => {
         if (!frames || isPaused) { return }
-        const nextFrameIndex = frameIndex + 1 < frames.length ? frameIndex + 1 : 0
-        setFrameIndex(nextFrameIndex)
+        if (currentOrder?.type === 'act') {
+            const [currentAction] = currentOrder.steps
+            if (!currentAction) { return }
+            const { timeElapsed = 0, duration } = currentAction
+            const frame = Math.floor(frames.length * (timeElapsed / duration))
+            setFrameIndex(frame)
+        } else {
+            const nextFrameIndex = frameIndex + 1 < frames.length ? frameIndex + 1 : 0
+            setFrameIndex(nextFrameIndex)
+        }
     }
 
     // need to set frameIndex to zero when animation or direction changes

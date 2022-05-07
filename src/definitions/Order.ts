@@ -16,6 +16,17 @@ interface TalkOrder {
     steps: DialogueLine[]
 }
 
-type Order = MoveOrder | TalkOrder
+interface ActionStep {
+    animation?: string
+    duration: number
+    timeElapsed?:number
+}
 
-export type { Order, MoveOrder, TalkOrder }
+interface ActOrder {
+    type: 'act',
+    steps: ActionStep[]
+}
+
+type Order = MoveOrder | TalkOrder | ActOrder
+
+export type { Order, MoveOrder, TalkOrder, ActOrder }
