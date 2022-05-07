@@ -1,7 +1,7 @@
 import { Order } from "./Order"
 
 type Stage = {
-    characterOrders: { [index: string]: Order[] }
+    characterOrders: Record<string, Order[]>
 }
 
 type Sequence = Stage[]

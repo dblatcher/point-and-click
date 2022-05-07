@@ -32,7 +32,7 @@ interface GameProps {
     readonly verbs: Verb[],
     readonly interactions: Interaction[],
     readonly items: ItemData[],
-    readonly sequences: { [index: string]: Sequence }
+    readonly sequences: Record<string, Sequence>
 }
 
 interface GameState {
@@ -48,7 +48,7 @@ interface GameState {
     currentItemId?: string,
     interactions: Interaction[],
     items: ItemData[],
-    characterOrders: { [index: string]: Order[] }
+    characterOrders: Record<string, Order[]>
     sequenceRunning?: Sequence;
 }
 

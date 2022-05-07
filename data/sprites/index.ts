@@ -10,7 +10,7 @@ const fire = new Sprite(fireSprite.data, fireSprite.sheets)
 const tube = new Sprite(tubeSprite.data, tubeSprite.sheets)
 
 
-const sprites: { [index: string]: Sprite } = {
+const sprites: Record<string, Sprite> = {
     skinner, mario, fire, tube
 }
 

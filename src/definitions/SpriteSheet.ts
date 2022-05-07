@@ -17,12 +17,10 @@ type Direction = 'left' | 'right'
 interface SpriteData {
     id: string
     defaultDirection: Direction
-    animations: {
-        [index: string]: {
-            left?: SpriteFrame[]
-            right?: SpriteFrame[]
-        }
-    }
+    animations: Record<string, {
+        left?: SpriteFrame[]
+        right?: SpriteFrame[]
+    }>
 }
 
 export type { SpriteSheet, SpriteFrame, SpriteData, Direction }
