@@ -62,6 +62,7 @@ export default class Game extends Component<GameProps, GameState> {
 
     constructor(props: GameProps) {
         super(props)
+        //TO DO - integrity check - no duplicate ids
         const rooms = props.initialRooms.map(cloneData);
         const characters = props.initialCharacters.map(cloneData);
         const things = props.initialThings.map(cloneData);
@@ -151,6 +152,13 @@ export default class Game extends Component<GameProps, GameState> {
         const verb = verbs.find(_ => _.id == currentVerbId);
         const item = items.find(_ => _.id == currentItemId);
 
+        if (target.type === 'item' && target.id === currentItemId) {
+            this.setState({ currentItemId: undefined })
+            return
+        }
+
+        // TO DO - handle 'USE $ITEM' as target with no other $ITEM
+        // could check interactions
         if (target.type === 'item' && !currentItemId && verb.preposition) {
             this.setState({ currentItemId: target.id })
             return
