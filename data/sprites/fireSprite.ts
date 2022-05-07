@@ -12,7 +12,7 @@ export const sheets:SpriteSheet[] = [
 export const data: SpriteData = {
     id: 'fire',
     defaultDirection: 'left',
-    sequences: {
+    animations: {
         default: {
             left: [
                 { sheetId: 'fire', row: 0, col: 0 },

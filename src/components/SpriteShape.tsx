@@ -12,7 +12,7 @@ interface Props {
     height?: number
     width?: number
     sprite: string
-    sequence?: string
+    animationName?: string
     frameIndex?: number
     direction: Direction
     filter?: string
@@ -21,11 +21,11 @@ interface Props {
 
 
 export default function SpriteShape({
-    roomData, viewAngle, x, y, height = 50, width = 50, sequence, frameIndex, sprite, direction, filter,
+    roomData, viewAngle, x, y, height = 50, width = 50, animationName, frameIndex, sprite, direction, filter,
     clickHandler = null
 }: Props) {
 
-    const divStyle = sprites[sprite]?.getStyle(sequence, frameIndex, direction);
+    const divStyle = sprites[sprite]?.getStyle(animationName, frameIndex, direction);
     divStyle.filter = filter
 
     const svgStyle = {

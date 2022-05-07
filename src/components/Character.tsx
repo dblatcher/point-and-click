@@ -30,10 +30,10 @@ export default function Character({
     } = characterData
     const [currentOrder] = orders
     const text = currentOrder?.type === 'talk' ? currentOrder.steps[0].text : undefined;
-    const sequence = currentOrder?.type === 'move' ? 'walk' : currentOrder?.type === 'talk' ? 'talk' : 'default'
+    const animation = currentOrder?.type === 'move' ? 'walk' : currentOrder?.type === 'talk' ? 'talk' : 'default'
     const spriteObject = sprites[sprite]
     const direction = characterData.direction || spriteObject.data.defaultDirection;
-    const frames = spriteObject.getFrames(sequence, direction)
+    const frames = spriteObject.getFrames(animation, direction)
 
     const [frameIndex, setFrameIndex] = useState(0)
 
@@ -43,11 +43,11 @@ export default function Character({
         setFrameIndex(nextFrameIndex)
     }
 
-    // need tp set frameIndex to zero when sequence or direction changes
+    // need tp set frameIndex to zero when animation or direction changes
     // to avoid 'flash of missing frame' before next updateFrame
     useLayoutEffect(() => {
         setFrameIndex(0)
-    }, [sequence, direction])
+    }, [animation, direction])
 
 
     useInterval(updateFrame, animationRate)
@@ -69,7 +69,7 @@ export default function Character({
                 height={height} width={width}
                 sprite={sprite}
                 frameIndex={frameIndex}
-                sequence={sequence}
+                animationName={animation}
                 direction={direction}
                 filter={filter}
             />

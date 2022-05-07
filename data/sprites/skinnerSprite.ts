@@ -1,4 +1,4 @@
-import { SpriteData, SpriteSheet } from "../src/definitions/SpriteSheet";
+import { SpriteData, SpriteSheet } from '../../src/definitions/SpriteSheet'
 
 export const sheets:SpriteSheet[] = [
     {
@@ -18,7 +18,7 @@ export const sheets:SpriteSheet[] = [
 export const data: SpriteData = {
     id: 'skinner',
     defaultDirection: 'right',
-    sequences: {
+    animations: {
         default: {
             left: [
                 { sheetId: 'skinner-1-l', row: 0, col: 10 },

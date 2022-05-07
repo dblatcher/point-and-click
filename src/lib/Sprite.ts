@@ -15,22 +15,22 @@ export class Sprite {
         this.sheets = sheets
     }
 
-    public hasSequence(sequence: string): boolean {
-        const { sequences } = this.data
-        return !!sequences[sequence]
+    public hasAnimation(animationName: string): boolean {
+        const { animations } = this.data
+        return !!animations[animationName]
     }
 
-    public getFrames(sequence: string, direction: Direction): SpriteFrame[] | undefined {
-        const sequenceObject = this.data.sequences[sequence]
-        if (!sequenceObject) { return undefined }
-        const directionToUse = !direction || !sequenceObject[direction] ? this.data.defaultDirection : direction;
-        return sequenceObject[directionToUse]
+    public getFrames(animationName: string, direction: Direction): SpriteFrame[] | undefined {
+        const animationObject = this.data.animations[animationName]
+        if (!animationObject) { return undefined }
+        const directionToUse = !direction || !animationObject[direction] ? this.data.defaultDirection : direction;
+        return animationObject[directionToUse]
     }
 
 
-    public getFrame(sequence: string, frameIndex: number, direction: Direction): SheetWithFrame | undefined {
+    public getFrame(animationName: string, frameIndex: number, direction: Direction): SheetWithFrame | undefined {
 
-        const frames = this.getFrames(sequence, direction);
+        const frames = this.getFrames(animationName, direction);
         if (!frames) { return undefined }
 
         const frame = frames[frameIndex]
@@ -44,8 +44,8 @@ export class Sprite {
         }
     }
 
-    public getStyle(sequence = 'default', frameIndex = 0, direction?: Direction) {
-        const frame = this.getFrame(sequence, frameIndex, direction) || this.getFrame('default', 0, this.data.defaultDirection)
+    public getStyle(animationName = 'default', frameIndex = 0, direction?: Direction) {
+        const frame = this.getFrame(animationName, frameIndex, direction) || this.getFrame('default', 0, this.data.defaultDirection)
         if (!frame) { return {} }
 
         return {

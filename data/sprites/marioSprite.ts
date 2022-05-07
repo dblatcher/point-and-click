@@ -1,6 +1,6 @@
-import { SpriteData, SpriteSheet } from "../src/definitions/SpriteSheet";
+import { SpriteData, SpriteSheet } from "../../src/definitions/SpriteSheet";
 
-export const sheets:SpriteSheet[] = [
+export const sheets: SpriteSheet[] = [
     {
         id: 'mario',
         "url": "./assets/characters/mario.png",
@@ -12,7 +12,7 @@ export const sheets:SpriteSheet[] = [
 export const data: SpriteData = {
     id: 'mario',
     defaultDirection: 'right',
-    sequences: {
+    animations: {
         default: {
             left: [
                 { sheetId: 'mario', row: 1, col: 0 },

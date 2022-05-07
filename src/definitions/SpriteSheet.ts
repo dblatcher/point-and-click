@@ -17,7 +17,7 @@ type Direction = 'left' | 'right'
 interface SpriteData {
     id: string
     defaultDirection: Direction
-    sequences: {
+    animations: {
         [index: string]: {
             left?: SpriteFrame[]
             right?: SpriteFrame[]
