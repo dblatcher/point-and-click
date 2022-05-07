@@ -19,6 +19,7 @@ import { ItemMenu } from "../ItemMenu";
 import { CommandLine } from "../CommandLine";
 import { Order } from "../../definitions/Order";
 import { Sequence } from "../../definitions/Sequence"
+import { cloneData } from "../../lib/clone";
 
 
 const TIMER_SPEED = 10
@@ -60,14 +61,14 @@ export default class Game extends Component<GameProps, GameState> {
 
     constructor(props: GameProps) {
         super(props)
-        const rooms = props.initialRooms.map(data => JSON.parse(JSON.stringify(data))) as RoomData[];
-        const characters = props.initialCharacters.map(data => JSON.parse(JSON.stringify(data))) as CharacterData[];
-        const things = props.initialThings.map(data => JSON.parse(JSON.stringify(data))) as ThingData[];
-        const items = props.items.map(data => JSON.parse(JSON.stringify(data))) as ItemData[];
+        const rooms = props.initialRooms.map(cloneData);
+        const characters = props.initialCharacters.map(cloneData);
+        const things = props.initialThings.map(cloneData);
+        const items = props.items.map(cloneData);
 
         const player = characters.find(character => character.isPlayer)
-        const startingRoom = props.initialRooms.find(room => room.name === player?.room)
-        const [firstRoom] = props.initialRooms
+        const startingRoom = rooms.find(room => room.name === player?.room)
+        const [firstRoom] = rooms
 
         this.state = {
             viewAngle: 0,
