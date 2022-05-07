@@ -22,11 +22,15 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps) => {
                 const character = getCharacter(characterId)
                 if (!character) { return }
                 const clonedOrders = JSON.parse(JSON.stringify(orders)) as Order[]
+
                 if (consequence.replaceCurrentOrders) {
                     characterOrders[character.id] = clonedOrders
-                } else {
+                } else if (characterOrders[character.id]) {
                     characterOrders[character.id].push(...clonedOrders)
+                } else {
+                    characterOrders[character.id] = clonedOrders
                 }
+
                 break;
             }
             case 'talk': {
