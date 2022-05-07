@@ -25,6 +25,7 @@ export const initialCharacters: CharacterData[] = [
         width: 40,
         height: 80,
         sprite: 'skinner',
+        status:'think',
         direction: 'right',
         filter: 'hue-rotate(45deg)',
     },

@@ -13,6 +13,18 @@ export const sheets:SpriteSheet[] = [
         rows: 1,
         cols: 12
     },
+    {
+        id: 'skinner-2-l',
+        "url": "./assets/characters/skinner-2-l.png",
+        rows: 1,
+        cols: 5
+    },
+    {
+        id: 'skinner-2-r',
+        "url": "./assets/characters/skinner-2-r.png",
+        rows: 1,
+        cols: 5
+    },
 ]
 
 export const data: SpriteData = {
@@ -61,5 +73,49 @@ export const data: SpriteData = {
                 { sheetId: 'skinner-1-r', row: 0, col: 0 },
             ],
         },
+        yell: {
+            left: [
+                { sheetId: 'skinner-1-l', row: 0, col: 0 },
+                { sheetId: 'skinner-1-l', row: 0, col: 1 },
+                { sheetId: 'skinner-1-l', row: 0, col: 3 },
+                { sheetId: 'skinner-1-l', row: 0, col: 1 },
+            ],
+            right :[
+                { sheetId: 'skinner-1-r', row: 0, col: 11 },
+                { sheetId: 'skinner-1-r', row: 0, col: 10 },
+                { sheetId: 'skinner-1-r', row: 0, col: 8 },
+                { sheetId: 'skinner-1-r', row: 0, col: 10 },
+            ]
+        },
+        think: {
+            left: [
+                { sheetId: 'skinner-1-l', row: 0, col: 2 },
+                { sheetId: 'skinner-1-l', row: 0, col: 2 },
+                { sheetId: 'skinner-1-l', row: 0, col: 2 },
+                { sheetId: 'skinner-1-l', row: 0, col: 3 },
+            ],
+            right :[
+                { sheetId: 'skinner-1-r', row: 0, col: 9 },
+                { sheetId: 'skinner-1-r', row: 0, col: 9 },
+                { sheetId: 'skinner-1-r', row: 0, col: 9 },
+                { sheetId: 'skinner-1-r', row: 0, col: 8 },
+            ]
+        },
+        run: {
+            left: [
+                { sheetId: 'skinner-2-l', row: 0, col: 0 },
+                { sheetId: 'skinner-2-l', row: 0, col: 1 },
+                { sheetId: 'skinner-2-l', row: 0, col: 2 },
+                { sheetId: 'skinner-2-l', row: 0, col: 3 },
+                { sheetId: 'skinner-2-l', row: 0, col: 4 },
+            ],
+            right: [
+                { sheetId: 'skinner-2-r', row: 0, col: 0 },
+                { sheetId: 'skinner-2-r', row: 0, col: 1 },
+                { sheetId: 'skinner-2-r', row: 0, col: 2 },
+                { sheetId: 'skinner-2-r', row: 0, col: 3 },
+                { sheetId: 'skinner-2-r', row: 0, col: 4 },
+            ],
+        }
     }
 }

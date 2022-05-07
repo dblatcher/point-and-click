@@ -6,6 +6,7 @@ import { useInterval } from "../lib/useInterval"
 import { useLayoutEffect, useState } from "preact/hooks";
 import { CharacterData } from "../definitions/CharacterData";
 import { Order } from "../definitions/Order";
+import { Sprite } from "../lib/Sprite";
 
 interface Props {
     roomData: RoomData
@@ -19,6 +20,12 @@ interface Props {
 }
 
 
+const getAnimationName = (currentOrder: Order, status: string | undefined, sprite: Sprite): string => {
+    const animationName = currentOrder ? currentOrder.steps[0]?.animation : status;
+    const validAnimationName = (animationName && sprite.hasAnimation(animationName)) ? animationName : undefined;
+    return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
+}
+
 export default function Character({
     roomData, viewAngle,
     animationRate = 250, characterData, isPaused,
@@ -30,10 +37,10 @@ export default function Character({
     } = characterData
     const [currentOrder] = orders
     const text = currentOrder?.type === 'talk' ? currentOrder.steps[0].text : undefined;
-    const animation = currentOrder?.type === 'move' ? 'walk' : currentOrder?.type === 'talk' ? 'talk' : 'default'
     const spriteObject = sprites[sprite]
+    const animationName = getAnimationName(currentOrder, characterData.status, spriteObject)
     const direction = characterData.direction || spriteObject.data.defaultDirection;
-    const frames = spriteObject.getFrames(animation, direction)
+    const frames = spriteObject.getFrames(animationName, direction)
 
     const [frameIndex, setFrameIndex] = useState(0)
 
@@ -43,11 +50,11 @@ export default function Character({
         setFrameIndex(nextFrameIndex)
     }
 
-    // need tp set frameIndex to zero when animation or direction changes
+    // need to set frameIndex to zero when animation or direction changes
     // to avoid 'flash of missing frame' before next updateFrame
     useLayoutEffect(() => {
         setFrameIndex(0)
-    }, [animation, direction])
+    }, [animationName, direction])
 
 
     useInterval(updateFrame, animationRate)
@@ -69,7 +76,7 @@ export default function Character({
                 height={height} width={width}
                 sprite={sprite}
                 frameIndex={frameIndex}
-                animationName={animation}
+                animationName={animationName}
                 direction={direction}
                 filter={filter}
             />

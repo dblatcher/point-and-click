@@ -5,6 +5,20 @@ const DIALOGUE: Sequence = [
         characterOrders: {
             PLAYER: [
                 {
+                    type: 'move',
+                    steps: [
+                        { x: 350, y: 30, animation: 'run' },
+                        { x: 340, y: 30, animation: 'run' },
+                    ]
+                }
+
+            ]
+        }
+    },
+    {
+        characterOrders: {
+            PLAYER: [
+                {
                     type: 'talk',
                     steps: [
                         { text: 'hello', time: 100 },
@@ -43,7 +57,7 @@ const DIALOGUE: Sequence = [
                 {
                     type: 'talk',
                     steps: [
-                        { text: 'ha ha ha ha!', time: 200 }
+                        { text: 'ha ha ha ha!', time: 120 }
                     ]
                 },
                 { type: 'move', steps: [{ x: 200, y: 30 }] },
@@ -52,7 +66,7 @@ const DIALOGUE: Sequence = [
                 {
                     type: 'talk',
                     steps: [
-                        { text: 'nooo', time: 100 },
+                        { text: 'nooo', time: 200, animation: 'yell' },
                     ]
                 }
             ]

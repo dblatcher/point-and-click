@@ -34,6 +34,7 @@ export const interactions: Interaction[] = [
                             {
                                 text: 'I am carrying a bucket',
                                 time: 100,
+                                animation: 'yell',
                             }
                         ]
                     }

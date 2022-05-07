@@ -2,12 +2,13 @@ import { Point } from "../lib/pathfinding/geometry"
 
 interface MoveOrder {
     type: 'move',
-    steps: Point[]
+    steps: (Point & { animation?: string })[]
 }
 
 interface DialogueLine {
     text: string
     time: number
+    animation?: string
 }
 
 interface TalkOrder {

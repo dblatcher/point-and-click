@@ -15,7 +15,14 @@ export class Sprite {
         this.sheets = sheets
     }
 
-    public hasAnimation(animationName: string): boolean {
+    readonly DEFAULT_ANIMATIONS = {
+        talk: 'talk',
+        move: 'walk',
+        wait: 'default',
+    }
+
+    public hasAnimation(animationName: string | undefined): boolean {
+        if (!animationName) { return false }
         const { animations } = this.data
         return !!animations[animationName]
     }
