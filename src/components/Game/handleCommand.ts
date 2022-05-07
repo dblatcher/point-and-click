@@ -29,6 +29,10 @@ function doDefaultResponse(command: Command, state: GameState): GameState {
         ? `I can\'t ${verb.label} the ${item.name || item.id} ${verb.preposition} the ${target.name || target.id}`
         : `Nothing happens when I ${verb.label} the ${target.name || target.id}`;
 
+    if (!state.characterOrders[player.id]) {
+        state.characterOrders[player.id] = []
+    }
+
     state.characterOrders[player.id].push({
         type: 'talk',
         steps: [{ text, time: 100 }]
