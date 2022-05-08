@@ -11,7 +11,7 @@ import followOrder from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { handleCommand } from "./handleCommand";
 import { Room } from "../Room";
-import Character from "../Character";
+import CharacterOrThing from "../CharacterOrThing";
 import Thing from "../Thing";
 import { VerbMenu } from "../VerbMenu";
 import { ItemData } from "../../definitions/ItemData";
@@ -189,8 +189,8 @@ export default class Game extends Component<GameProps, GameState> {
             characterOrders, sequenceRunning, thingOrders } = this.state
         const { currentRoom, player } = this
 
-        const orderSource = sequenceRunning ? sequenceRunning[0].characterOrders || {} : characterOrders;
-        const thingOrderSource = sequenceRunning ? sequenceRunning[0].thingOrders || {} : thingOrders;
+        const characterOrderMap = sequenceRunning ? sequenceRunning[0].characterOrders || {} : characterOrders;
+        const thingOrderMap = sequenceRunning ? sequenceRunning[0].thingOrders || {} : thingOrders;
 
         const charactersAndThings = [...characters, ...things]
             .filter(_ => _.room === currentRoom.name)
@@ -209,22 +209,14 @@ export default class Game extends Component<GameProps, GameState> {
                     showObstacleAreas
                 >
                     {charactersAndThings.map(data =>
-                        data.type === 'thing'
-                            ? <Thing key={data.id}
-                                isPaused={isPaused}
-                                clickHandler={this.handleTargetClick}
-                                thingData={data}
-                                orders={thingOrderSource[data.id]}
-                                roomData={currentRoom}
-                                viewAngle={viewAngle}
-                            />
-                            : <Character key={data.id}
-                                isPaused={isPaused}
-                                clickHandler={data.isPlayer ? undefined : this.handleTargetClick}
-                                characterData={data}
-                                orders={orderSource[data.id]}
-                                roomData={currentRoom}
-                                viewAngle={viewAngle} />
+                        <CharacterOrThing key={data.id}
+                            isPaused={isPaused}
+                            clickHandler={data.type == 'character' && data.isPlayer ? undefined : this.handleTargetClick}
+                            data={data}
+                            orders={data.type == 'character' ? characterOrderMap[data.id] : thingOrderMap[data.id]}
+                            roomData={currentRoom}
+                            viewAngle={viewAngle}
+                        />
                     )}
                 </Room>
 

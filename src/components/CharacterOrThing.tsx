@@ -8,13 +8,14 @@ import { CharacterData } from "../definitions/CharacterData";
 import { Order } from "../definitions/Order";
 import { Sprite } from "../lib/Sprite";
 import { DialogueBubble } from "./DialogueBubble";
+import { ThingData } from "../definitions/ThingData";
 
 interface Props {
     roomData: RoomData
     viewAngle: number
-    characterData: CharacterData
+    data: CharacterData |ThingData
     animationRate?: number
-    clickHandler?: { (character: CharacterData): void }
+    clickHandler?: { (character: CharacterData|ThingData): void }
     key: string | number
     orders?: Order[]
     isPaused: boolean
@@ -26,20 +27,20 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
-export default function Character({
+export default function CharacterOrThing({
     roomData, viewAngle,
-    animationRate = 250, characterData, isPaused,
+    animationRate = 250, data, isPaused,
     clickHandler, orders = []
 }: Props) {
     const {
         x, y,
-        height = 50, width = 50, sprite, filter, dialogueColor
-    } = characterData
+        height = 50, width = 50, sprite, filter
+    } = data
     const [currentOrder] = orders
     const text = currentOrder?.type === 'talk' ? currentOrder.steps[0].text : undefined;
     const spriteObject = sprites[sprite]
-    const animationName = getAnimationName(currentOrder, characterData.status, spriteObject)
-    const direction = characterData.direction || spriteObject.data.defaultDirection;
+    const animationName = getAnimationName(currentOrder, data.status, spriteObject)
+    const direction = data.direction || spriteObject.data.defaultDirection;
     const frames = spriteObject.getFrames(animationName, direction)
 
     const [frameIndex, setFrameIndex] = useState(0)
@@ -70,9 +71,11 @@ export default function Character({
     const processClick = clickHandler
         ? (event: PointerEvent) => {
             event.stopPropagation()
-            clickHandler(characterData)
+            clickHandler(data)
         }
         : null
+
+    const dialogueColor = data.type == 'character' ? data.dialogueColor : '';
 
     return (
         <>
