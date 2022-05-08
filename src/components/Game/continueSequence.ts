@@ -4,7 +4,6 @@ import { ThingData } from "../../definitions/ThingData";
 import { CharacterData } from "../../definitions/CharacterData";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import followOrder from "./orders/followOrder";
-import followThingOrder from "./orders/followThingOrder";
 
 
 function validateOrderIdsAndClearEmpties(orders: Record<string, Order[]>, targets: (CharacterData | ThingData)[]) {
@@ -39,7 +38,7 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     validateOrderIdsAndClearEmpties(stageThingOrders, things)
 
     characters.forEach(character => followOrder(character, stageCharacterOrders[character.id]))
-    things.forEach(thing => followThingOrder(thing,stageThingOrders[thing.id]))
+    things.forEach(thing => followOrder(thing,stageThingOrders[thing.id]))
 
     if (sequence[0]?.immediateConsequences) {
         const consequenceExecutor = makeConsequenceExecutor(state, props)

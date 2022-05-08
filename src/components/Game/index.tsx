@@ -20,7 +20,6 @@ import { Order, ThingOrder } from "../../definitions/Order";
 import { Sequence } from "../../definitions/Sequence"
 import { cloneData } from "../../lib/clone";
 import { continueSequence } from "./continueSequence";
-import followThingOrder from "./orders/followThingOrder";
 
 
 const TIMER_SPEED = 10
@@ -135,7 +134,7 @@ export default class Game extends Component<GameProps, GameState> {
             return this.setState(continueSequence(this.state, this.props))
         } else {
             characters.forEach(character => followOrder(character, characterOrders[character.id]))
-            things.forEach(thing => followThingOrder(thing, thingOrders[thing.id]))
+            things.forEach(thing => followOrder(thing, thingOrders[thing.id]))
             return this.setState({ characters, characterOrders })
         }
     }
