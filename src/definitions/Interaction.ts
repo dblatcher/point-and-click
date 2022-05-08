@@ -46,7 +46,8 @@ interface SequenceConsequence {
     sequence: string,
 }
 
-type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence | InventoryConsequence | RemoveThingConsequence | ChangeStatusConsequence| SequenceConsequence
+type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence | InventoryConsequence | RemoveThingConsequence | ChangeStatusConsequence | SequenceConsequence
+type ImmediateConsequence = RemoveThingConsequence | ChangeStatusConsequence | InventoryConsequence;
 
 interface Interaction {
     verbId: string
@@ -58,4 +59,4 @@ interface Interaction {
     consequences: Consequence[]
 }
 
-export type { Interaction, Consequence }
+export type { Interaction, Consequence, ImmediateConsequence }

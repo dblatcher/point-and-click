@@ -38,6 +38,9 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps) => {
                 const character = getCharacter(characterId)
                 if (!character) { return }
 
+                if (!characterOrders[character.id]) {
+                    characterOrders[character.id] = []
+                }
                 characterOrders[character.id].push({
                     type: 'talk',
                     steps: [{ text, time }]
@@ -96,9 +99,9 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps) => {
             }
             case 'sequence': {
                 const { sequence } = consequence
-                const originalSequenceEntry = Object.entries(props.sequences).find(_ => _[0] === sequence)
-                if (originalSequenceEntry) {
-                    state.sequenceRunning = cloneData(originalSequenceEntry[1])
+                const [, originalSequence] = Object.entries(props.sequences).find(_ => _[0] === sequence)
+                if (originalSequence) {
+                    state.sequenceRunning = cloneData(originalSequence)
                 } else {
                     console.warn(`No such sequence ${sequence}`)
                 }

@@ -12,4 +12,10 @@ export const items: ItemData[] = [
         type:'item',
         characterId:'PLAYER'
     },
+    {
+        id:'MATCHES',
+        name:'matches',
+        type:'item',
+        characterId:'PLAYER'
+    },
 ]

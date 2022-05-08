@@ -186,8 +186,24 @@ export const interactions: Interaction[] = [
         targetId: 'FIRE',
         itemId: 'BUCKET',
         consequences: [
-            { type: 'talk', text: 'I wish to put it out.' },
-            { type: 'changeStatus', targetType: 'thing', targetId: 'FIRE', status: 'out' }
+            {type: 'sequence', sequence:'PUT_OUT_FIRE'}
+        ]
+    },
+    {
+        verbId: 'USE',
+        targetId: 'FIRE',
+        itemId: 'MATCHES',
+        targetStatus: 'burning',
+        consequences: [
+            { type: 'talk', text: 'It is burning already' }
+        ]
+    },
+    {
+        verbId: 'USE',
+        targetId: 'FIRE',
+        itemId: 'MATCHES',
+        consequences: [
+            {type: 'sequence', sequence:'LIGHT_FIRE'}
         ]
     },
 ]

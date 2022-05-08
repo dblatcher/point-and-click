@@ -130,7 +130,7 @@ export default class Game extends Component<GameProps, GameState> {
     makeCharactersAct() {
         const { characters, characterOrders, sequenceRunning } = this.state
         if (sequenceRunning) {
-            return this.setState(continueSequence(this.state))
+            return this.setState(continueSequence(this.state, this.props))
         } else {
             characters.forEach(character => followOrder(character, characterOrders[character.id]))
             return this.setState({ characters, characterOrders })

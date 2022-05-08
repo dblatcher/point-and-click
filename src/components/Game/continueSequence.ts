@@ -1,4 +1,5 @@
-import { GameState } from ".";
+import { GameProps, GameState } from ".";
+import { makeConsequenceExecutor } from "./executeConsequence";
 import followOrder from "./orders/followOrder";
 
 /**
@@ -7,28 +8,37 @@ import followOrder from "./orders/followOrder";
  * @param state 
  * @returns a partial state
  */
-export function continueSequence(state: GameState): Partial<GameState> {
+export function continueSequence(state: GameState, props:GameProps): Partial<GameState> {
     const { characters, sequenceRunning: sequence } = state
-    const orderSource = sequence[0].characterOrders;
+    const characterOrders = sequence[0]?.characterOrders;
 
     const validCharacterIds = characters.map(_ => _.id)
-    const invalidIds = Object.keys(orderSource).filter(_ => !validCharacterIds.includes(_))
+    const invalidCharacterIds = Object.keys(characterOrders).filter(_ => !validCharacterIds.includes(_))
 
-    invalidIds.forEach(_ => {
+    invalidCharacterIds.forEach(_ => {
         console.warn(`invalid character id in stage: ${_}`)
-        delete orderSource[_]
+        delete characterOrders[_]
     })
 
-    const emptyOrderLists = Object.keys(orderSource).filter(_ => orderSource[_].length === 0)
+    const emptyOrderLists = Object.keys(characterOrders).filter(_ => characterOrders[_].length === 0)
 
     emptyOrderLists.forEach(_ => {
         console.log(`character finished orders in stage: ${_}`)
-        delete orderSource[_]
+        delete characterOrders[_]
     })
 
-    characters.forEach(character => followOrder(character, orderSource[character.id]))
+    characters.forEach(character => followOrder(character, characterOrders[character.id]))
 
-    const stageIsFinished = Object.keys(orderSource).length === 0
+    if (sequence[0]?.immediateConsequences) {
+        const consequenceExecutor = makeConsequenceExecutor(state,props)
+        sequence[0]?.immediateConsequences.forEach(consequence => {
+            console.log(`executing: ${consequence.type}`)
+            consequenceExecutor(consequence)
+        })
+        delete sequence[0]?.immediateConsequences
+    }
+
+    const stageIsFinished = Object.keys(characterOrders).length === 0
     if (stageIsFinished) {
         sequence.shift()
         console.log(`stage finished, ${sequence.length} left.`)
