@@ -7,7 +7,7 @@ import { CommandTarget } from "../../definitions/Command";
 import { Interaction } from "../../definitions/Interaction";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
-import followOrder from "./orders/followOrder";
+import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { handleCommand } from "./handleCommand";
 import { Room } from "../Room";

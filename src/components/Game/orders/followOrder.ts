@@ -5,7 +5,7 @@ import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
 import { exectuteTalk } from "./executeTalk";
 
-export default function followOrder(subject: CharacterData | ThingData, orders?: Order[]) {
+export function followOrder(subject: CharacterData | ThingData, orders?: Order[]) {
     if (!orders || orders.length === 0) { return }
     const [nextOrder] = orders
 
