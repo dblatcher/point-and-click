@@ -7,6 +7,7 @@ import { useLayoutEffect, useState } from "preact/hooks";
 import { CharacterData } from "../definitions/CharacterData";
 import { Order } from "../definitions/Order";
 import { Sprite } from "../lib/Sprite";
+import { DialogueBubble } from "./DialogueBubble";
 
 interface Props {
     roomData: RoomData
@@ -18,7 +19,6 @@ interface Props {
     orders?: Order[]
     isPaused: boolean
 }
-
 
 const getAnimationName = (currentOrder: Order, status: string | undefined, sprite: Sprite): string => {
     const animationName = currentOrder ? currentOrder.steps[0]?.animation : status;
@@ -88,18 +88,13 @@ export default function Character({
                 direction={direction}
                 filter={filter}
             />
-            <svg
-                style={{ overflow: 'visible' }}
-                x={placeOnScreen(x, viewAngle, roomData)}
-                y={roomData.height - y - height} >
-                <text
-                    stroke={'black'}
-                    fill={dialogueColor || 'white'}
-                    stroke-width={.25}
-                    font-size={12}
-                    font-family='arial'
-                >{text}</text>
-            </svg>
+            {text &&
+                <DialogueBubble text={text}
+                    x={placeOnScreen(x, viewAngle, roomData)}
+                    y={roomData.height - y - height}
+                    dialogueColor={dialogueColor}
+                    roomData={roomData} />
+            }
         </>
     )
 }
