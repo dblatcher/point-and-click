@@ -27,5 +27,14 @@ export const data: SpriteData = {
                 { sheetId: 'fire', row: 1, col: 3 },
             ],
         },
+        fade: {
+            left: [
+                { sheetId: 'fire', row: 0, col: 1 },
+                { sheetId: 'fire', row: 0, col: 0 },
+                { sheetId: 'fire', row: 1, col: 0 },
+                { sheetId: 'fire', row: 1, col: 1 },
+                { sheetId: 'fire', row: 1, col: 2 },
+            ]
+        }
     }
 }

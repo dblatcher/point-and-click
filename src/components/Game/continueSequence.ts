@@ -1,6 +1,28 @@
 import { GameProps, GameState } from ".";
+import { Order } from "../../definitions/Order";
+import { ThingData } from "../../definitions/ThingData";
+import { CharacterData } from "../../definitions/CharacterData";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import followOrder from "./orders/followOrder";
+import followThingOrder from "./orders/followThingOrder";
+
+
+function validateOrderIdsAndClearEmpties(orders: Record<string, Order[]>, targets: (CharacterData | ThingData)[]) {
+    const validIds = targets.map(_ => _.id)
+    const invalidIds = Object.keys(orders).filter(_ => !validIds.includes(_))
+
+    invalidIds.forEach(_ => {
+        console.warn(`invalid id in stage: ${_}`)
+        delete orders[_]
+    })
+
+    const emptyOrderLists = Object.keys(orders).filter(_ => orders[_].length === 0)
+
+    emptyOrderLists.forEach(_ => {
+        console.log(`finished orders in stage: ${_}`)
+        delete orders[_]
+    })
+}
 
 /**
  * Takes the next step in the sequence, shifting stages the array
@@ -8,29 +30,19 @@ import followOrder from "./orders/followOrder";
  * @param state 
  * @returns a partial state
  */
-export function continueSequence(state: GameState, props:GameProps): Partial<GameState> {
-    const { characters, sequenceRunning: sequence } = state
-    const characterOrders = sequence[0]?.characterOrders;
+export function continueSequence(state: GameState, props: GameProps): Partial<GameState> {
+    const { characters, things, sequenceRunning: sequence } = state
+    const stageCharacterOrders = sequence[0]?.characterOrders || {};
+    const stageThingOrders = sequence[0]?.thingOrders || {};
 
-    const validCharacterIds = characters.map(_ => _.id)
-    const invalidCharacterIds = Object.keys(characterOrders).filter(_ => !validCharacterIds.includes(_))
+    validateOrderIdsAndClearEmpties(stageCharacterOrders, characters)
+    validateOrderIdsAndClearEmpties(stageThingOrders, things)
 
-    invalidCharacterIds.forEach(_ => {
-        console.warn(`invalid character id in stage: ${_}`)
-        delete characterOrders[_]
-    })
-
-    const emptyOrderLists = Object.keys(characterOrders).filter(_ => characterOrders[_].length === 0)
-
-    emptyOrderLists.forEach(_ => {
-        console.log(`character finished orders in stage: ${_}`)
-        delete characterOrders[_]
-    })
-
-    characters.forEach(character => followOrder(character, characterOrders[character.id]))
+    characters.forEach(character => followOrder(character, stageCharacterOrders[character.id]))
+    things.forEach(thing => followThingOrder(thing,stageThingOrders[thing.id]))
 
     if (sequence[0]?.immediateConsequences) {
-        const consequenceExecutor = makeConsequenceExecutor(state,props)
+        const consequenceExecutor = makeConsequenceExecutor(state, props)
         sequence[0]?.immediateConsequences.forEach(consequence => {
             console.log(`executing: ${consequence.type}`)
             consequenceExecutor(consequence)
@@ -38,7 +50,7 @@ export function continueSequence(state: GameState, props:GameProps): Partial<Gam
         delete sequence[0]?.immediateConsequences
     }
 
-    const stageIsFinished = Object.keys(characterOrders).length === 0
+    const stageIsFinished = Object.keys(stageCharacterOrders).length === 0 && Object.keys(stageThingOrders).length === 0
     if (stageIsFinished) {
         sequence.shift()
         console.log(`stage finished, ${sequence.length} left.`)
@@ -47,6 +59,7 @@ export function continueSequence(state: GameState, props:GameProps): Partial<Gam
 
     return {
         characters,
+        things,
         sequenceRunning: sequence.length === 0 ? undefined : sequence
     }
 }

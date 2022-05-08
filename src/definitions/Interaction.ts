@@ -1,10 +1,17 @@
 import { Point } from "../lib/pathfinding/geometry"
-import { Order } from "./Order"
+import { Order, ThingOrder } from "./Order"
 
 interface OrderConsequence {
     type: 'order',
     characterId?: string
     orders: Order[]
+    replaceCurrentOrders?: boolean
+}
+
+interface ThingOrderConsequence {
+    type: 'thingOrder',
+    thingId?: string
+    orders: ThingOrder[]
     replaceCurrentOrders?: boolean
 }
 
@@ -46,7 +53,9 @@ interface SequenceConsequence {
     sequence: string,
 }
 
-type Consequence = OrderConsequence | ChangeRoomConsequence | TalkConsequence | InventoryConsequence | RemoveThingConsequence | ChangeStatusConsequence | SequenceConsequence
+type Consequence = OrderConsequence | ChangeRoomConsequence
+    | TalkConsequence | InventoryConsequence | RemoveThingConsequence
+    | ChangeStatusConsequence | SequenceConsequence | ThingOrderConsequence;
 type ImmediateConsequence = RemoveThingConsequence | ChangeStatusConsequence | InventoryConsequence;
 
 interface Interaction {

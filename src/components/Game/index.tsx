@@ -17,10 +17,11 @@ import { VerbMenu } from "../VerbMenu";
 import { ItemData } from "../../definitions/ItemData";
 import { ItemMenu } from "../ItemMenu";
 import { CommandLine } from "../CommandLine";
-import { Order } from "../../definitions/Order";
+import { Order, ThingOrder } from "../../definitions/Order";
 import { Sequence } from "../../definitions/Sequence"
 import { cloneData } from "../../lib/clone";
 import { continueSequence } from "./continueSequence";
+import followThingOrder from "./orders/followThingOrder";
 
 
 const TIMER_SPEED = 10
@@ -49,6 +50,7 @@ interface GameState {
     interactions: Interaction[],
     items: ItemData[],
     characterOrders: Record<string, Order[]>
+    thingOrders: Record<string, ThingOrder[]>
     sequenceRunning?: Sequence;
 }
 
@@ -84,6 +86,7 @@ export default class Game extends Component<GameProps, GameState> {
             interactions: [...props.interactions],
             items,
             characterOrders: {},
+            thingOrders: {},
         }
 
         this.tick = this.tick.bind(this)
@@ -128,11 +131,12 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     makeCharactersAct() {
-        const { characters, characterOrders, sequenceRunning } = this.state
+        const { characters, characterOrders, thingOrders, sequenceRunning, things } = this.state
         if (sequenceRunning) {
             return this.setState(continueSequence(this.state, this.props))
         } else {
             characters.forEach(character => followOrder(character, characterOrders[character.id]))
+            things.forEach(thing => followThingOrder(thing, thingOrders[thing.id]))
             return this.setState({ characters, characterOrders })
         }
     }
@@ -182,10 +186,11 @@ export default class Game extends Component<GameProps, GameState> {
         const { verbs = [] } = this.props
         const { viewAngle, isPaused,
             characters, things, currentVerbId, currentItemId, items,
-            characterOrders, sequenceRunning } = this.state
+            characterOrders, sequenceRunning, thingOrders } = this.state
         const { currentRoom, player } = this
 
-        const orderSource = sequenceRunning ? sequenceRunning[0].characterOrders : characterOrders;
+        const orderSource = sequenceRunning ? sequenceRunning[0].characterOrders || {} : characterOrders;
+        const thingOrderSource = sequenceRunning ? sequenceRunning[0].thingOrders || {} : thingOrders;
 
         const charactersAndThings = [...characters, ...things]
             .filter(_ => _.room === currentRoom.name)
@@ -209,6 +214,7 @@ export default class Game extends Component<GameProps, GameState> {
                                 isPaused={isPaused}
                                 clickHandler={this.handleTargetClick}
                                 thingData={data}
+                                orders={thingOrderSource[data.id]}
                                 roomData={currentRoom}
                                 viewAngle={viewAngle}
                             />

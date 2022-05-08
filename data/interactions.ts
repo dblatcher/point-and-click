@@ -42,7 +42,7 @@ export const interactions: Interaction[] = [
                         steps: [
                             {
                                 time: 300,
-                                text:'I have a bucket!!',
+                                text: 'I have a bucket!!',
                                 animation: 'yell',
                             }
                         ]
@@ -186,7 +186,7 @@ export const interactions: Interaction[] = [
         targetId: 'FIRE',
         itemId: 'BUCKET',
         consequences: [
-            {type: 'sequence', sequence:'PUT_OUT_FIRE'}
+            { type: 'sequence', sequence: 'PUT_OUT_FIRE' }
         ]
     },
     {
@@ -203,7 +203,21 @@ export const interactions: Interaction[] = [
         targetId: 'FIRE',
         itemId: 'MATCHES',
         consequences: [
-            {type: 'sequence', sequence:'LIGHT_FIRE'}
+            { type: 'sequence', sequence: 'LIGHT_FIRE' }
+        ]
+    },
+    {
+        verbId: 'TAKE',
+        targetId: 'FIRE',
+        consequences: [
+            {
+                type: 'thingOrder', thingId: 'FIRE', orders: [{
+                    type: 'act',
+                    steps: [
+                        { duration: 150, animation: 'fade' }
+                    ]
+                }]
+            }
         ]
     },
 ]

@@ -28,5 +28,6 @@ interface ActOrder {
 }
 
 type Order = MoveOrder | TalkOrder | ActOrder
+type ThingOrder = ActOrder
 
-export type { Order, MoveOrder, TalkOrder, ActOrder }
+export type { Order, ThingOrder, MoveOrder, TalkOrder, ActOrder }

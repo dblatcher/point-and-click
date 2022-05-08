@@ -19,6 +19,7 @@ export class Sprite {
         talk: 'talk',
         move: 'walk',
         wait: 'default',
+        act: 'default',
     }
 
     public hasAnimation(animationName: string | undefined): boolean {

@@ -22,7 +22,16 @@ export const PUT_OUT_FIRE: Sequence = [
             PLAYER: [
                 {
                     type: 'talk', steps: [{
-                        text: 'here goes...', time: 150,
+                        text: 'ok...', time: 100,
+                    }]
+                }
+            ]
+        },
+        thingOrders:{
+            FIRE:[
+                {
+                    type:'act',steps:[{
+                        duration:200, animation:'fade'
                     }]
                 }
             ]
