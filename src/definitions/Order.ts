@@ -20,6 +20,7 @@ interface ActionStep {
     animation?: string
     duration: number
     timeElapsed?: number
+    reverse?:boolean
 }
 
 interface ActOrder {

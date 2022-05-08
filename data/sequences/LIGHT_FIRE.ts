@@ -18,7 +18,7 @@ export const LIGHT_FIRE: Sequence = [
         }
     },
     {
-        characterOrders:{
+        characterOrders: {
             PLAYER: [
                 {
                     type: 'talk', steps: [{
@@ -27,9 +27,15 @@ export const LIGHT_FIRE: Sequence = [
                 }
             ]
         },
-        immediateConsequences: [
-            {type:'changeStatus', targetId:'FIRE', status:'burning', targetType:'thing'}
-        ]
+        thingOrders: {
+            FIRE: [
+                {
+                    type: 'act', steps: [{
+                        duration: 200, animation: 'fade', reverse: true
+                    }]
+                }
+            ]
+        },
     },
     {
         characterOrders: {
@@ -40,6 +46,9 @@ export const LIGHT_FIRE: Sequence = [
                     }]
                 }
             ]
-        }
+        },
+        immediateConsequences: [
+            { type: 'changeStatus', targetId: 'FIRE', status: 'burning', targetType: 'thing' }
+        ]
     }
 ]

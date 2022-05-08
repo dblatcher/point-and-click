@@ -13,9 +13,9 @@ import { ThingData } from "../definitions/ThingData";
 interface Props {
     roomData: RoomData
     viewAngle: number
-    data: CharacterData |ThingData
+    data: CharacterData | ThingData
     animationRate?: number
-    clickHandler?: { (character: CharacterData|ThingData): void }
+    clickHandler?: { (character: CharacterData | ThingData): void }
     key: string | number
     orders?: Order[]
     isPaused: boolean
@@ -29,7 +29,7 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
 
 export default function CharacterOrThing({
     roomData, viewAngle,
-    animationRate = 250, data, isPaused,
+    animationRate = 200, data, isPaused,
     clickHandler, orders = []
 }: Props) {
     const {
@@ -50,8 +50,10 @@ export default function CharacterOrThing({
         if (currentOrder?.type === 'act') {
             const [currentAction] = currentOrder.steps
             if (!currentAction) { return }
-            const { timeElapsed = 0, duration } = currentAction
-            const frame = Math.floor(frames.length * (timeElapsed / duration))
+            const { timeElapsed = 0, duration, reverse } = currentAction
+            const frame = reverse
+                ? Math.floor(frames.length * ((duration - timeElapsed) / duration))
+                : Math.floor(frames.length * (timeElapsed / duration))
             setFrameIndex(frame)
         } else {
             const nextFrameIndex = frameIndex + 1 < frames.length ? frameIndex + 1 : 0
