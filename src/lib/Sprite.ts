@@ -52,6 +52,12 @@ export class Sprite {
         }
     }
 
+    public getFrameScale(animationName = 'default', frameIndex = 0, direction?: Direction): [number, number] {
+        const frame = this.getFrame(animationName, frameIndex, direction) || this.getFrame('default', 0, this.data.defaultDirection)
+        if (!frame) { return [1, 1] }
+        return [frame.sheet.widthScale || 1, frame.sheet.heightScale || 1]
+    }
+
     public getStyle(animationName = 'default', frameIndex = 0, direction?: Direction) {
         const frame = this.getFrame(animationName, frameIndex, direction) || this.getFrame('default', 0, this.data.defaultDirection)
         if (!frame) { return {} }

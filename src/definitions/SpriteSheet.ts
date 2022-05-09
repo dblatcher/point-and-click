@@ -3,6 +3,8 @@ interface SpriteSheet {
     url: string
     rows: number
     cols: number
+    widthScale?:number
+    heightScale?:number
 }
 
 

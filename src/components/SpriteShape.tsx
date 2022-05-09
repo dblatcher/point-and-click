@@ -25,7 +25,9 @@ export default function SpriteShape({
     clickHandler = null
 }: Props) {
 
-    const divStyle = sprites[sprite]?.getStyle(animationName, frameIndex, direction);
+    const spriteObject = sprites[sprite];
+    const [widthScale, heightScale] = spriteObject?.getFrameScale(animationName, frameIndex, direction);
+    const divStyle = spriteObject?.getStyle(animationName, frameIndex, direction);
     divStyle.filter = filter
 
     const svgStyle = {
@@ -39,7 +41,7 @@ export default function SpriteShape({
             style={svgStyle}
             x={placeOnScreen(x - (width / 2), viewAngle, roomData)}
             y={roomData.height - y - height} >
-            <foreignObject x="0" y="0" width={width} height={height}>
+            <foreignObject x="0" y="0" width={width * widthScale} height={height * heightScale}>
                 <div xmlns="http://www.w3.org/1999/xhtml" style={divStyle}></div>
             </foreignObject>
         </svg>

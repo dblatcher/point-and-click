@@ -1,6 +1,6 @@
 import { SpriteData, SpriteSheet } from '../../src/definitions/SpriteSheet'
 
-export const sheets:SpriteSheet[] = [
+export const sheets: SpriteSheet[] = [
     {
         id: 'skinner-1-l',
         "url": "./assets/characters/skinner-1-l.png",
@@ -17,13 +17,15 @@ export const sheets:SpriteSheet[] = [
         id: 'skinner-2-l',
         "url": "./assets/characters/skinner-2-l.png",
         rows: 1,
-        cols: 5
+        cols: 5,
+        widthScale: 1.75
     },
     {
         id: 'skinner-2-r',
         "url": "./assets/characters/skinner-2-r.png",
         rows: 1,
-        cols: 5
+        cols: 5,
+        widthScale: 1.75
     },
 ]
 
@@ -53,12 +55,16 @@ export const data: SpriteData = {
                 { sheetId: 'skinner-1-l', row: 0, col: 6 },
                 { sheetId: 'skinner-1-l', row: 0, col: 7 },
                 { sheetId: 'skinner-1-l', row: 0, col: 8 },
+                { sheetId: 'skinner-1-l', row: 0, col: 7 },
+                { sheetId: 'skinner-1-l', row: 0, col: 6 },
             ],
             right: [
                 { sheetId: 'skinner-1-r', row: 0, col: 6 },
                 { sheetId: 'skinner-1-r', row: 0, col: 5 },
                 { sheetId: 'skinner-1-r', row: 0, col: 4 },
                 { sheetId: 'skinner-1-r', row: 0, col: 3 },
+                { sheetId: 'skinner-1-r', row: 0, col: 4 },
+                { sheetId: 'skinner-1-r', row: 0, col: 5 },
             ],
         },
         talk: {
@@ -80,7 +86,7 @@ export const data: SpriteData = {
                 { sheetId: 'skinner-1-l', row: 0, col: 3 },
                 { sheetId: 'skinner-1-l', row: 0, col: 1 },
             ],
-            right :[
+            right: [
                 { sheetId: 'skinner-1-r', row: 0, col: 11 },
                 { sheetId: 'skinner-1-r', row: 0, col: 10 },
                 { sheetId: 'skinner-1-r', row: 0, col: 8 },
@@ -94,7 +100,7 @@ export const data: SpriteData = {
                 { sheetId: 'skinner-1-l', row: 0, col: 2 },
                 { sheetId: 'skinner-1-l', row: 0, col: 3 },
             ],
-            right :[
+            right: [
                 { sheetId: 'skinner-1-r', row: 0, col: 9 },
                 { sheetId: 'skinner-1-r', row: 0, col: 9 },
                 { sheetId: 'skinner-1-r', row: 0, col: 9 },
@@ -108,6 +114,9 @@ export const data: SpriteData = {
                 { sheetId: 'skinner-2-l', row: 0, col: 2 },
                 { sheetId: 'skinner-2-l', row: 0, col: 3 },
                 { sheetId: 'skinner-2-l', row: 0, col: 4 },
+                { sheetId: 'skinner-2-l', row: 0, col: 3 },
+                { sheetId: 'skinner-2-l', row: 0, col: 2 },
+                { sheetId: 'skinner-2-l', row: 0, col: 1 },
             ],
             right: [
                 { sheetId: 'skinner-2-r', row: 0, col: 0 },
@@ -115,6 +124,9 @@ export const data: SpriteData = {
                 { sheetId: 'skinner-2-r', row: 0, col: 2 },
                 { sheetId: 'skinner-2-r', row: 0, col: 3 },
                 { sheetId: 'skinner-2-r', row: 0, col: 4 },
+                { sheetId: 'skinner-2-r', row: 0, col: 3 },
+                { sheetId: 'skinner-2-r', row: 0, col: 2 },
+                { sheetId: 'skinner-2-r', row: 0, col: 1 },
             ],
         }
     }
