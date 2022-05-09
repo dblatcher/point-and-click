@@ -4,9 +4,10 @@ import { Point } from "../../lib/pathfinding/geometry";
 import { findPath } from "../../lib/pathfinding/pathfind";
 
 export function issueMoveOrder(
-    pointClicked: Point,
+    destination: Point,
     characterId: string,
-    appendToExisting?: boolean
+    appendToExisting?: boolean,
+    ignoreObstacles?: boolean
 ): { (state: GameState): Partial<GameState> } {
 
     return (state: GameState): Partial<GameState> => {
@@ -15,9 +16,8 @@ export function issueMoveOrder(
         const character = characters.find(_ => _.id === characterId)
         if (!character || !cellMatrix) { return {} }
 
-        const steps = findPath({ x: character.x, y: character.y }, pointClicked, cellMatrix, cellSize)
-
-        const newOrder: MoveOrder = { type: 'move', steps }
+        const steps = ignoreObstacles ? [destination] : findPath({ x: character.x, y: character.y }, destination, cellMatrix, cellSize)
+        const newOrder: MoveOrder = { type: 'move', steps, pathIsSet: true }
 
         if (!state.characterOrders[character.id]) {
             state.characterOrders[character.id] = []

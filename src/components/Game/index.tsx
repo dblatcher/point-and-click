@@ -129,12 +129,12 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     makeCharactersAct() {
-        const { characters, characterOrders, thingOrders, sequenceRunning, things } = this.state
+        const { characters, characterOrders, thingOrders, sequenceRunning, things, cellMatrix } = this.state
         if (sequenceRunning) {
             return this.setState(continueSequence(this.state, this.props))
         } else {
-            characters.forEach(character => followOrder(character, characterOrders[character.id]))
-            things.forEach(thing => followOrder(thing, thingOrders[thing.id]))
+            characters.forEach(character => followOrder(character, cellMatrix, characterOrders[character.id]))
+            things.forEach(thing => followOrder(thing, cellMatrix, thingOrders[thing.id]))
             return this.setState({ characters, characterOrders })
         }
     }
@@ -177,7 +177,7 @@ export default class Game extends Component<GameProps, GameState> {
         const { player, currentRoom } = this
         if (!player || !currentRoom) { return }
         const pointClicked = locateClickInWorld(x, y, this.state.viewAngle, currentRoom)
-        this.setState(issueMoveOrder(pointClicked, player.id))
+        this.setState(issueMoveOrder(pointClicked, player.id, false, false))
     }
 
     render() {

@@ -2,6 +2,7 @@ import { Point } from "../lib/pathfinding/geometry"
 
 interface MoveOrder {
     type: 'move',
+    pathIsSet?: boolean,
     steps: (Point & { animation?: string, speed?: number })[]
 }
 

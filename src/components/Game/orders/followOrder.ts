@@ -1,15 +1,48 @@
+import { cellSize } from "..";
 import { CharacterData } from "../../../definitions/CharacterData";
-import { Order } from "../../../definitions/Order";
+import { MoveOrder, Order } from "../../../definitions/Order";
 import { ThingData } from "../../../definitions/ThingData";
+import { CellMatrix } from "../../../lib/pathfinding/cells";
+import { Point } from "../../../lib/pathfinding/geometry";
+import { findPath } from "../../../lib/pathfinding/pathfind";
 import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
 import { exectuteTalk } from "./executeTalk";
 
-export function followOrder(subject: CharacterData | ThingData, orders?: Order[]) {
+
+function findPathBetweenSteps(subject: CharacterData | ThingData, cellMatrix: CellMatrix, order: MoveOrder) {
+
+    const { steps: oldSteps } = order
+    let pointReached: Point = { x: subject.x, y: subject.y }
+
+    const newSteps = oldSteps.flatMap(step => {
+        const substeps = findPath(pointReached, step, cellMatrix, cellSize) as (Point & { animation?: string, speed?: number })[]
+        substeps.forEach(subStep => {
+            subStep.animation = step.animation
+            subStep.speed = step.speed
+        })
+        if (substeps.length === 0) {
+            console.warn('failed to findPathBetweenSteps')
+            pointReached = { x: step.x, y: step.y }
+        } else {
+            pointReached = substeps[substeps.length - 1]
+        }
+
+        return substeps
+    })
+
+    order.pathIsSet = true
+    order.steps = newSteps
+}
+
+export function followOrder(subject: CharacterData | ThingData, cellMatrix: CellMatrix, orders?: Order[]) {
     if (!orders || orders.length === 0) { return }
     const [nextOrder] = orders
 
     if (nextOrder.type === 'move' && subject.type === 'character') {
+        if (!nextOrder.pathIsSet) {
+            findPathBetweenSteps(subject, cellMatrix, nextOrder)
+        }
         executeMove(nextOrder, subject)
     } else if (nextOrder.type === 'talk') {
         exectuteTalk(nextOrder)

@@ -30,7 +30,7 @@ function validateOrderIdsAndClearEmpties(orders: Record<string, Order[]>, target
  * @returns a partial state
  */
 export function continueSequence(state: GameState, props: GameProps): Partial<GameState> {
-    const { characters, things, sequenceRunning } = state
+    const { characters, things, sequenceRunning, cellMatrix } = state
     const [currentStage] = sequenceRunning
     if (!currentStage) { return {} }
 
@@ -38,8 +38,8 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     validateOrderIdsAndClearEmpties(stageCharacterOrders, characters)
     validateOrderIdsAndClearEmpties(stageThingOrders, things)
 
-    characters.forEach(character => followOrder(character, stageCharacterOrders[character.id]))
-    things.forEach(thing => followOrder(thing, stageThingOrders[thing.id]))
+    characters.forEach(character => followOrder(character, cellMatrix, stageCharacterOrders[character.id]))
+    things.forEach(thing => followOrder(thing, cellMatrix, stageThingOrders[thing.id]))
 
     if (currentStage.immediateConsequences) {
         const consequenceExecutor = makeConsequenceExecutor(state, props)
