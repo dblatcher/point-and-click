@@ -1,4 +1,6 @@
-{
+import { RoomData } from "../src/definitions/RoomData"
+
+export const INSIDE: RoomData = {
   "name": "INSIDE",
   "frameWidth": 320,
   "width": 480,
@@ -25,5 +27,11 @@
       "parallax": 1
     }
   ],
-  "obstacleAreas": []
+  "obstacleAreas": [
+    {
+      x: 300,
+      y: 100,
+      rect: [10, 90],
+    },
+  ]
 }
