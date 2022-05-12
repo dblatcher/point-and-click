@@ -16,7 +16,7 @@ import { ItemMenu } from "../ItemMenu";
 import { CommandLine } from "../CommandLine";
 import { cloneData } from "../../lib/clone";
 import { continueSequence } from "./continueSequence";
-import { GameProps, GameState } from "../../definitions/Game";
+import { GameData, GameProps, GameState } from "../../definitions/Game";
 
 
 export type { GameState, GameProps }
@@ -57,6 +57,16 @@ export default class Game extends Component<GameProps, GameState> {
         this.handleTargetClick = this.handleTargetClick.bind(this)
         this.makeCharactersAct = this.makeCharactersAct.bind(this)
         this.centerViewOnPLayer = this.centerViewOnPLayer.bind(this)
+    }
+
+    get saveData(): GameData {
+        const {
+            rooms, things, characters, interactions, items, currentRoomName, characterOrders, thingOrders, sequenceRunning
+        } = this.state
+
+        return {
+            rooms, things, characters, interactions, items, currentRoomName, characterOrders, thingOrders, sequenceRunning
+        }
     }
 
     get player(): (CharacterData | undefined) {
@@ -146,7 +156,7 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     render() {
-        const { verbs = [] } = this.props
+        const { verbs = [], save } = this.props
         const { viewAngle, isPaused,
             characters, things, currentVerbId, currentItemId, items,
             characterOrders, sequenceRunning, thingOrders } = this.state
@@ -161,6 +171,10 @@ export default class Game extends Component<GameProps, GameState> {
 
         return (
             <main>
+                {!!save &&
+                    <button onClick={() => { save(this.saveData) }}>SAVE</button>
+                }
+
                 <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>
                 <Room
                     data={currentRoom} scale={2}
