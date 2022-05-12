@@ -26,17 +26,28 @@ const TIMER_SPEED = 10
 
 export default class Game extends Component<GameProps, GameState> {
 
-    refs: {}
+    refs!: {}
 
     constructor(props: GameProps) {
         super(props)
         //TO DO - integrity check - no duplicate ids
+
+        this.state = this.getInitialGameState(props)
+
+        this.tick = this.tick.bind(this)
+        this.handleRoomClick = this.handleRoomClick.bind(this)
+        this.handleTargetClick = this.handleTargetClick.bind(this)
+        this.makeCharactersAct = this.makeCharactersAct.bind(this)
+        this.centerViewOnPLayer = this.centerViewOnPLayer.bind(this)
+    }
+
+    getInitialGameState(props:GameProps):GameState {
         const rooms = props.rooms.map(cloneData);
         const characters = props.characters.map(cloneData);
         const things = props.things.map(cloneData);
         const items = props.items.map(cloneData);
 
-        this.state = {
+        return {
             viewAngle: 0,
             isPaused: false,
             currentRoomName: props.currentRoomName,
@@ -51,12 +62,6 @@ export default class Game extends Component<GameProps, GameState> {
             characterOrders: props.characterOrders || {},
             thingOrders: props.thingOrders || {},
         }
-
-        this.tick = this.tick.bind(this)
-        this.handleRoomClick = this.handleRoomClick.bind(this)
-        this.handleTargetClick = this.handleTargetClick.bind(this)
-        this.makeCharactersAct = this.makeCharactersAct.bind(this)
-        this.centerViewOnPLayer = this.centerViewOnPLayer.bind(this)
     }
 
     get saveData(): GameData {
@@ -156,7 +161,7 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     render() {
-        const { verbs = [], save } = this.props
+        const { verbs = [], save, reset, load } = this.props
         const { viewAngle, isPaused,
             characters, things, currentVerbId, currentItemId, items,
             characterOrders, sequenceRunning, thingOrders } = this.state
@@ -173,6 +178,12 @@ export default class Game extends Component<GameProps, GameState> {
             <main>
                 {!!save &&
                     <button onClick={() => { save(this.saveData) }}>SAVE</button>
+                }
+                {!!reset &&
+                    <button onClick={() => { reset() }}>RESET</button>
+                }
+                {!!load &&
+                    <button onClick={() => { load() }}>LOAD</button>
                 }
 
                 <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>

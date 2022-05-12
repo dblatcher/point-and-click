@@ -29,6 +29,8 @@ type GameProps = Readonly<{
     verbs: Verb[],
     sequences: Record<string, Sequence>
     save?: { (saveDate: GameData): void }
+    reset?:{ (): void }
+    load?:{ (): void }
 } & GameContents & Partial<GameHappenings>>
 
 type GameState = GameData & {
