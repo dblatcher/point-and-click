@@ -27,7 +27,7 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
-export default function CharacterOrThing({
+export function CharacterOrThing({
     roomData, viewAngle,
     animationRate = 200, data, isPaused,
     clickHandler, orders = []

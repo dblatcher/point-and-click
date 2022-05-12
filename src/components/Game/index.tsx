@@ -9,7 +9,7 @@ import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { handleCommand } from "./handleCommand";
 import { Room } from "../Room";
-import CharacterOrThing from "../CharacterOrThing";
+import { CharacterOrThing } from "../CharacterOrThing";
 import { VerbMenu } from "../VerbMenu";
 import { ItemData } from "../../definitions/ItemData";
 import { ItemMenu } from "../ItemMenu";
