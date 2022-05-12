@@ -10,17 +10,21 @@ import { verbs } from '../../../data/verbs';
 import { interactions } from '../../../data/interactions';
 import { sequences } from '../../../data/sequences';
 
+const player = initialCharacters.find(character => character.isPlayer)
+const startingRoom = initialRooms.find(room => room.name === player?.room)
+
 const Home = () => (
 	<div className={style.home}>
 
 		<Game
-			initialRooms={initialRooms}
-			initialCharacters={initialCharacters}
-			initialThings={initialThings}
+			rooms={initialRooms}
+			characters={initialCharacters}
+			things={initialThings}
 			verbs={verbs}
 			interactions={interactions}
 			items={items}
 			sequences={sequences}
+			currentRoomName={startingRoom.name}
 		/>
 
 	</div>

@@ -1,12 +1,10 @@
 import { Component } from "preact";
 import { RoomData } from "../../definitions/RoomData";
 import { CharacterData } from "../../definitions/CharacterData"
-import { ThingData } from "../../definitions/ThingData";
 import { Verb } from "../../definitions/Verb";
 import { CommandTarget } from "../../definitions/Command";
-import { Interaction } from "../../definitions/Interaction";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
-import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
+import { generateCellMatrix } from "../../lib/pathfinding/cells";
 import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { handleCommand } from "./handleCommand";
@@ -16,45 +14,15 @@ import { VerbMenu } from "../VerbMenu";
 import { ItemData } from "../../definitions/ItemData";
 import { ItemMenu } from "../ItemMenu";
 import { CommandLine } from "../CommandLine";
-import { Order, ThingOrder } from "../../definitions/Order";
-import { Sequence } from "../../definitions/Sequence"
 import { cloneData } from "../../lib/clone";
 import { continueSequence } from "./continueSequence";
+import { GameProps, GameState } from "../../definitions/Game";
 
-
-const TIMER_SPEED = 10
-
-interface GameProps {
-    readonly initialRooms: RoomData[],
-    readonly initialThings: ThingData[],
-    readonly initialCharacters: CharacterData[],
-    readonly verbs: Verb[],
-    readonly interactions: Interaction[],
-    readonly items: ItemData[],
-    readonly sequences: Record<string, Sequence>
-}
-
-interface GameState {
-    viewAngle: number
-    isPaused: boolean
-    timer?: number
-    cellMatrix?: CellMatrix
-    currentRoomName: string
-    characters: CharacterData[]
-    things: ThingData[]
-    rooms: RoomData[]
-    currentVerbId: string,
-    currentItemId?: string,
-    interactions: Interaction[],
-    items: ItemData[],
-    characterOrders: Record<string, Order[]>
-    thingOrders: Record<string, ThingOrder[]>
-    sequenceRunning?: Sequence;
-}
 
 export type { GameState, GameProps }
 
 export const cellSize = 10
+const TIMER_SPEED = 10
 
 export default class Game extends Component<GameProps, GameState> {
 
@@ -63,19 +31,15 @@ export default class Game extends Component<GameProps, GameState> {
     constructor(props: GameProps) {
         super(props)
         //TO DO - integrity check - no duplicate ids
-        const rooms = props.initialRooms.map(cloneData);
-        const characters = props.initialCharacters.map(cloneData);
-        const things = props.initialThings.map(cloneData);
+        const rooms = props.rooms.map(cloneData);
+        const characters = props.characters.map(cloneData);
+        const things = props.things.map(cloneData);
         const items = props.items.map(cloneData);
-
-        const player = characters.find(character => character.isPlayer)
-        const startingRoom = rooms.find(room => room.name === player?.room)
-        const [firstRoom] = rooms
 
         this.state = {
             viewAngle: 0,
             isPaused: false,
-            currentRoomName: startingRoom.name || firstRoom.name,
+            currentRoomName: props.currentRoomName,
             characters,
             things,
             rooms,
@@ -83,8 +47,9 @@ export default class Game extends Component<GameProps, GameState> {
             currentVerbId: props.verbs[0].id,
             interactions: [...props.interactions],
             items,
-            characterOrders: {},
-            thingOrders: {},
+            sequenceRunning: props.sequenceRunning || undefined,
+            characterOrders: props.characterOrders || {},
+            thingOrders: props.thingOrders || {},
         }
 
         this.tick = this.tick.bind(this)
