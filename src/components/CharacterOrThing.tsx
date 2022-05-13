@@ -1,5 +1,5 @@
 import { sprites } from "../../data/sprites"
-import { RoomData } from "../definitions/RoomData"
+import { RoomData, ScaleLevel } from "../definitions/RoomData"
 import { placeOnScreen } from "../lib/util";
 import SpriteShape from "./SpriteShape";
 import { useInterval } from "../lib/useInterval"
@@ -19,6 +19,7 @@ interface Props {
     key: string | number
     orders?: Order[]
     isPaused: boolean
+    roomScale?: number
 }
 
 const getAnimationName = (currentOrder: Order, status: string | undefined, sprite: Sprite): string => {
@@ -27,10 +28,47 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
+const getSpriteScale = (y: number, scaleLevel?: ScaleLevel): number => {
+
+    if (!scaleLevel || scaleLevel.length == 0) { return 1 }
+
+    let lowerLevel: [number, number];
+    let upperLevel: [number, number];
+
+    let i;
+    for (i = 0; i < scaleLevel.length; i++) {
+        let current = scaleLevel[i]
+        let next = scaleLevel[i + 1]
+
+        if (y < current[0]) { continue }
+        lowerLevel = current;
+        upperLevel = next;
+        break;
+    }
+
+    if (!lowerLevel) {
+        return 1
+    }
+
+    if (!upperLevel) {
+        return lowerLevel[1]
+    }
+
+
+    const [lowY, lowScale] = lowerLevel
+    const [uppY, uppScale] = upperLevel
+
+    const normalisedDistance = (y - lowY) / (uppY - lowY)
+
+    const scale = lowScale + (uppScale - lowScale) * normalisedDistance
+
+    return scale
+}
+
 export function CharacterOrThing({
     roomData, viewAngle,
     animationRate = 200, data, isPaused,
-    clickHandler, orders = []
+    clickHandler, orders = [], roomScale = 1
 }: Props) {
     const {
         x, y,
@@ -44,6 +82,7 @@ export function CharacterOrThing({
     const frames = spriteObject.getFrames(animationName, direction)
 
     const [frameIndex, setFrameIndex] = useState(0)
+    const spriteScale = getSpriteScale(y, roomData.scaling)
 
     const updateFrame = () => {
         if (!frames || isPaused) { return }
@@ -86,7 +125,7 @@ export function CharacterOrThing({
                 roomData={roomData}
                 viewAngle={viewAngle}
                 x={x} y={y}
-                height={height} width={width}
+                height={height * spriteScale} width={width * spriteScale}
                 sprite={sprite}
                 frameIndex={frameIndex}
                 animationName={animationName}
@@ -96,9 +135,9 @@ export function CharacterOrThing({
             {text &&
                 <DialogueBubble text={text}
                     x={placeOnScreen(x, viewAngle, roomData)}
-                    y={roomData.height - y - height}
+                    y={roomData.height - y - (height * spriteScale)}
                     dialogueColor={dialogueColor}
-                    roomData={roomData} />
+                    roomData={roomData} roomScale={roomScale}/>
             }
         </>
     )

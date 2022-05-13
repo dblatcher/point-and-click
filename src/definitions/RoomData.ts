@@ -5,8 +5,10 @@ type BackgroundLayer = {
     parallax: number,
     width?: number,
     height?: number,
-    x?:number,
+    x?: number,
 }
+
+type ScaleLevel = [number, number][]
 
 type RoomData = {
     name: string
@@ -16,6 +18,7 @@ type RoomData = {
     background: BackgroundLayer[],
     hotspots?: HotSpotZone[],
     obstacleAreas?: Zone[]
+    scaling?: ScaleLevel
 }
 
-export type { RoomData, BackgroundLayer }
+export type { RoomData, BackgroundLayer, ScaleLevel }

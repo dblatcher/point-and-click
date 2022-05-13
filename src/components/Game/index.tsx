@@ -189,6 +189,8 @@ export default class Game extends Component<GameProps, GameState> {
             .filter(_ => _.room === currentRoom.name)
             .sort((a, b) => b.y - a.y)
 
+        const roomScale = Math.min(600 / currentRoom.frameWidth, 400 / currentRoom.height)
+
         return (
             <main>
                 {!!save &&
@@ -203,7 +205,7 @@ export default class Game extends Component<GameProps, GameState> {
 
                 <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>
                 <Room
-                    data={currentRoom} scale={600/currentRoom.frameWidth}
+                    data={currentRoom} scale={roomScale}
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleTargetClick}
@@ -219,6 +221,7 @@ export default class Game extends Component<GameProps, GameState> {
                             orders={data.type == 'character' ? characterOrderMap[data.id] : thingOrderMap[data.id]}
                             roomData={currentRoom}
                             viewAngle={viewAngle}
+                            roomScale={roomScale}
                         />
                     )}
                 </Room>
