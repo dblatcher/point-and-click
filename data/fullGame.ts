@@ -5,13 +5,22 @@ import { items } from './items';
 import { verbs } from './verbs';
 import { interactions } from './interactions';
 import { sequences } from './sequences';
+import { GameData, FixedGameInfo } from "../src/definitions/Game";
 
-export {
-    initialRooms as rooms, 
-    initialThings as things, 
-    initialCharacters as characters, 
-    interactions, 
-    items, 
-    verbs, 
-    sequences
+
+const player = initialCharacters.find(character => character.isPlayer)
+const startingRoom = initialRooms.find(room => room.name === player?.room)
+
+export const startingGameCondition: GameData & FixedGameInfo = {
+    rooms: initialRooms,
+    things: initialThings,
+    characters: initialCharacters,
+    interactions,
+    items,
+    verbs,
+    sequences,
+    characterOrders: {},
+    thingOrders: {},
+    sequenceRunning: undefined,
+    currentRoomName: startingRoom.name,
 }

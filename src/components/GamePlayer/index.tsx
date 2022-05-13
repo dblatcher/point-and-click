@@ -1,6 +1,6 @@
 import { Component } from "preact";
-import { GameData, GameProps } from "../../definitions/Game";
-import * as initialGameData from '../../../data/fullGame';
+import { FixedGameInfo, GameData } from "../../definitions/Game";
+import { startingGameCondition } from '../../../data/fullGame';
 
 import Game from "../Game";
 import { cloneData } from "../../lib/clone";
@@ -9,14 +9,14 @@ const storageKey = "POINT_AND_CLICK"
 
 export default class GamePlayer extends Component<{
 
-}, { gameProps: GameProps, timestamp: number }> {
+}, { gameCondition: GameData & FixedGameInfo, timestamp: number }> {
 
     refs: {}
 
     constructor(props) {
         super(props)
         this.state = {
-            gameProps: this.getInitialGameState(),
+            gameCondition: this.getInitialGameCondtions(),
             timestamp: Date.now()
         }
         this.save = this.save.bind(this)
@@ -25,7 +25,6 @@ export default class GamePlayer extends Component<{
     }
 
     save(data: GameData) {
-        console.log('save data is', data)
         localStorage.setItem(storageKey, JSON.stringify(data))
     }
 
@@ -34,12 +33,11 @@ export default class GamePlayer extends Component<{
 
         try {
             const data = JSON.parse(jsonString) as GameData
-            const newGameProps = Object.assign({}, this.state.gameProps, data)
-            console.log('newGameProps', newGameProps)
+            const loadedConditions = Object.assign({}, this.state.gameCondition, data)
 
             this.setState({
                 timestamp: Date.now(),
-                gameProps: newGameProps
+                gameCondition: loadedConditions
             })
 
         } catch (error) {
@@ -48,28 +46,22 @@ export default class GamePlayer extends Component<{
     }
 
     reset() {
-        console.log('Resetting props')
         this.setState({
-            gameProps: this.getInitialGameState(),
+            gameCondition: this.getInitialGameCondtions(),
             timestamp: Date.now()
         })
     }
 
-    getInitialGameState(): GameProps {
-        const clone = cloneData(initialGameData)
-        const player = clone.characters.find(character => character.isPlayer)
-        const startingRoom = clone.rooms.find(room => room.name === player?.room)
-
+    getInitialGameCondtions(): GameData & FixedGameInfo {
         return {
-            ...clone,
-            currentRoomName: startingRoom.name,
+            ...cloneData(startingGameCondition),
         }
     }
 
     render() {
-        const { gameProps, timestamp } = this.state
+        const { gameCondition, timestamp } = this.state
         return <>
-            <Game {...gameProps}
+            <Game {...gameCondition}
                 save={this.save}
                 reset={this.reset}
                 load={this.load}

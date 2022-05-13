@@ -4,7 +4,7 @@ import { CharacterData } from "../../definitions/CharacterData"
 import { Verb } from "../../definitions/Verb";
 import { CommandTarget } from "../../definitions/Command";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
-import { generateCellMatrix } from "../../lib/pathfinding/cells";
+import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { handleCommand } from "./handleCommand";
@@ -16,8 +16,23 @@ import { ItemMenu } from "../ItemMenu";
 import { CommandLine } from "../CommandLine";
 import { cloneData } from "../../lib/clone";
 import { continueSequence } from "./continueSequence";
-import { GameData, GameProps, GameState } from "../../definitions/Game";
+import { GameData, GameCondition } from "../../definitions/Game";
 
+
+type GameProps = Readonly<{
+    save?: { (saveDate: GameData): void }
+    reset?: { (): void }
+    load?: { (): void }
+} & GameCondition>
+
+type GameState = GameData & {
+    viewAngle: number
+    isPaused: boolean
+    timer?: number
+    cellMatrix?: CellMatrix
+    currentVerbId: string,
+    currentItemId?: string,
+}
 
 export type { GameState, GameProps }
 
@@ -41,7 +56,7 @@ export default class Game extends Component<GameProps, GameState> {
         this.centerViewOnPLayer = this.centerViewOnPLayer.bind(this)
     }
 
-    getInitialGameState(props:GameProps):GameState {
+    getInitialGameState(props: GameProps): GameState {
         const rooms = props.rooms.map(cloneData);
         const characters = props.characters.map(cloneData);
         const things = props.things.map(cloneData);
