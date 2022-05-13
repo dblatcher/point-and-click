@@ -6,7 +6,7 @@ export const initialCharacters: CharacterData[] = [
         name:'Seymour Skinner',
         type:'character',
         isPlayer: true,
-        room:'INSIDE',
+        room:'SQUARE_ROOM',
         x: (200),
         y: 10,
         width: 40,

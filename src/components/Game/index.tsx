@@ -203,7 +203,7 @@ export default class Game extends Component<GameProps, GameState> {
 
                 <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>
                 <Room
-                    data={currentRoom} scale={2}
+                    data={currentRoom} scale={600/currentRoom.frameWidth}
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
                     handleHotSpotClick={this.handleTargetClick}
