@@ -1,5 +1,5 @@
 import { Component } from "preact";
-import { FixedGameInfo, GameData } from "../../definitions/Game";
+import { GameCondition, GameData } from "../../definitions/Game";
 import { startingGameCondition } from '../../../data/fullGame';
 
 import Game from "../Game";
@@ -9,7 +9,7 @@ const storageKey = "POINT_AND_CLICK"
 
 export default class GamePlayer extends Component<{
 
-}, { gameCondition: GameData & FixedGameInfo, timestamp: number }> {
+}, { gameCondition: GameCondition, timestamp: number }> {
 
     refs: {}
 
@@ -52,7 +52,7 @@ export default class GamePlayer extends Component<{
         })
     }
 
-    getInitialGameCondtions(): GameData & FixedGameInfo {
+    getInitialGameCondtions():GameCondition {
         return {
             ...cloneData(startingGameCondition),
         }
