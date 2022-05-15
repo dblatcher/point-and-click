@@ -3,9 +3,6 @@ import { HotSpotZone, Zone } from "./Zone"
 type BackgroundLayer = {
     url: string,
     parallax: number,
-    width?: number,
-    height?: number,
-    x?: number,
 }
 
 type ScaleLevel = [number, number][]

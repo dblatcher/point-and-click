@@ -6,13 +6,14 @@ import Header from './header';
 // Code-splitting is automated for `routes` directory
 import Home from '../routes/home';
 import Profile from '../routes/profile';
+import Editor from '../routes/editor'
 
 const App = () => (
 	<div id="app">
 		<Header />
 		<Router>
 			<Home path="/" />
-			<Profile path="/profile/" user="me" />
+			<Editor path="/editor/" user="me" />
 			<Profile path="/profile/:user" />
 		</Router>
 	</div>
