@@ -5,7 +5,12 @@ import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 
 
-type RoomEditorState = RoomData & { viewAngle: number, assetList: string[] };
+type RoomEditorState = RoomData & {
+    viewAngle: number,
+    assetList: string[],
+    viewScale: number,
+    showObstacleAreas: boolean,
+};
 
 const path = "/assets/backgrounds/"
 function getAssets(): string[] {
@@ -39,7 +44,9 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         this.state = {
             ...getBlankRoom(),
             viewAngle: 0,
+            viewScale: 1,
             assetList: assets,
+            showObstacleAreas: true,
         }
 
         this.removeBackground = this.removeBackground.bind(this)
@@ -75,7 +82,9 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
     }
 
     render() {
-        const { viewAngle, name, background, assetList } = this.state
+        const { viewAngle, viewScale, assetList, showObstacleAreas,
+            name, background, height, width, frameWidth
+        } = this.state
 
         return <article>
             <h2>Room Editor</h2>
@@ -85,7 +94,25 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     <fieldset>
                         <legend>Name</legend>
                         <input value={name} onInput={event => this.setState({ name: event.target.value })} />
-                        <span>{name}</span>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Dimensions</legend>
+                        <div>
+                            <label>height</label>
+                            <input type='number' value={height} onInput={event => this.setState({ height: Number(event.target.value) })} />
+                        </div>
+                        <div>
+                            <label>width</label>
+                            <input type='number' value={width} onInput={event => this.setState({ width: Number(event.target.value) })} />
+                        </div>
+                        <div>
+                            <label>frameWidth</label>
+                            <input type='number' value={frameWidth} onInput={event => this.setState({ frameWidth: Number(event.target.value) })} />
+                            {frameWidth > width && (
+                                <span>! frame width is bigger than room width</span>
+                            )}
+                        </div>
                     </fieldset>
 
                     <fieldset>
@@ -107,13 +134,31 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     </fieldset>
                 </section>
                 <section>
-                    <Room scale={1.5} data={this.state}
+
+                    <Room data={this.state}
+                        showObstacleAreas={showObstacleAreas}
+                        scale={viewScale}
                         viewAngle={viewAngle}
                         handleHotSpotClick={() => { }}
                         handleRoomClick={() => { }}
                     />
-                    <input type='range' value={viewAngle} max={1} min={-1} step={.01} onChange={(event) => this.setState({ viewAngle: event.target.value })} />
-                    <label>viewAngle: {viewAngle}</label>
+
+                    <div>
+                        <label>view scale</label>
+                        <input type='range' value={viewScale} max={2} min={1} step={.01} onChange={(event) => this.setState({ viewScale: event.target.value })} />
+                        <span>{viewScale}</span>
+                    </div>
+
+                    <div>
+                        <label>view angle</label>
+                        <input type='range' value={viewAngle} max={1} min={-1} step={.01} onChange={(event) => this.setState({ viewAngle: event.target.value })} />
+                        <span>{viewAngle}</span>
+                    </div>
+                    <div>
+                        <label>show obstables</label>
+                        <input type='checkbox' checked={showObstacleAreas} onChange={(event) => this.setState({ showObstacleAreas: event.target.checked })} />
+                        <span>{showObstacleAreas ? 'YES' : 'NO'}</span>
+                    </div>
                 </section>
             </div>
 
