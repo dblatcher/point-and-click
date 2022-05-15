@@ -1,5 +1,6 @@
 import { Component } from "preact";
 import { BackgroundLayer, RoomData } from "../../definitions/RoomData";
+import { locateClickInWorld } from "../../lib/util";
 import { Room } from "../Room";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
@@ -53,6 +54,12 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         this.addBackground = this.addBackground.bind(this)
         this.changeBackground = this.changeBackground.bind(this)
         this.moveBackground = this.moveBackground.bind(this)
+        this.handleRoomClick = this.handleRoomClick.bind(this)
+    }
+
+    handleRoomClick(x: number, y: number) {
+        const pointClicked = locateClickInWorld(x, y, this.state.viewAngle, this.state)
+        console.log(pointClicked)
     }
 
     removeBackground(index: number) {
@@ -140,7 +147,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         scale={viewScale}
                         viewAngle={viewAngle}
                         handleHotSpotClick={() => { }}
-                        handleRoomClick={() => { }}
+                        handleRoomClick={this.handleRoomClick}
                     />
 
                     <div>
