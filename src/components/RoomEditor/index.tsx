@@ -1,9 +1,11 @@
 import { Component } from "preact";
 import { BackgroundLayer, RoomData } from "../../definitions/RoomData";
+import { SupportedZoneShape } from "../../definitions/Zone";
 import { locateClickInWorld } from "../../lib/util";
 import { Room } from "../Room";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
+import { ObstacleControl } from "./ObstacleControl";
 
 
 type RoomEditorState = RoomData & {
@@ -32,7 +34,10 @@ function getBlankRoom(): RoomData {
         height: 200,
         background: [],
         hotspots: [],
-        obstacleAreas: [],
+        obstacleAreas: [
+            { x: 100, y: 50, circle: 30 },
+            { x: 130, y: 110, rect: [30,50] },
+        ],
     }
 }
 
@@ -54,6 +59,9 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         this.addBackground = this.addBackground.bind(this)
         this.changeBackground = this.changeBackground.bind(this)
         this.moveBackground = this.moveBackground.bind(this)
+        this.removeObstacle = this.removeObstacle.bind(this)
+        this.moveObstacle = this.moveObstacle.bind(this)
+        this.changeObstacle = this.changeObstacle.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
     }
 
@@ -62,6 +70,25 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         console.log(pointClicked)
     }
 
+    removeObstacle(index: number) {
+        const { obstacleAreas } = this.state
+        obstacleAreas.splice(index, 1)
+        this.setState({ obstacleAreas })
+    }
+    moveObstacle(index: number, x: number, y: number) {
+        const { obstacleAreas } = this.state
+        const obstacle = obstacleAreas[index]
+        obstacle.x = x
+        obstacle.y = y
+        this.setState({ obstacleAreas })
+    }
+    changeObstacle(index: number, propery: SupportedZoneShape, newValue: any) {
+        const { obstacleAreas } = this.state
+        const obstacle = obstacleAreas[index]
+        if (typeof obstacle[propery] === 'undefined') { return }
+        obstacle[propery] = newValue
+        this.setState({ obstacleAreas })
+    }
     removeBackground(index: number) {
         const { background } = this.state
         background.splice(index, 1)
@@ -90,7 +117,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
 
     render() {
         const { viewAngle, viewScale, assetList, showObstacleAreas,
-            name, background, height, width, frameWidth
+            name, background, height, width, frameWidth, obstacleAreas
         } = this.state
 
         return <article>
@@ -138,6 +165,17 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         <BackgroundLayerForm
                             urls={assetList}
                             addNewLayer={this.addBackground} />
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Obstacles</legend>
+                        {obstacleAreas.map((obstacle, index) =>
+                            <ObstacleControl
+                                obstacle={obstacle} index={index}
+                                move={this.moveObstacle}
+                                change={this.changeObstacle}
+                                remove={this.removeObstacle} />
+                        )}
                     </fieldset>
                 </section>
                 <section>

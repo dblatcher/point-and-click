@@ -1,5 +1,6 @@
 import { Ident } from './BaseTypes'
 
+type SupportedZoneShape = 'rect' | 'circle' | 'polygon'
 type Polygon = [number, number][];
 
 
@@ -17,4 +18,4 @@ type HotSpotZone = Ident & Zone & {
     parallax: number,
 }
 
-export type { Zone, HotSpotZone, Polygon }
+export type { Zone, HotSpotZone, Polygon, SupportedZoneShape }

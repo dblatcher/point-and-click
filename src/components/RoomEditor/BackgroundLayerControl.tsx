@@ -16,7 +16,7 @@ export function BackgroundLayerControl({ layer, remove, index, urls, change, mov
 
     return <div>
         <label>URL:</label>
-        <select value={urlIndex} readonly onChange={(event) => { change(index, 'url', urls[Number(event.target.value)]) }}>
+        <select value={urlIndex} onChange={(event) => { change(index, 'url', urls[Number(event.target.value)]) }}>
             {urls.map((url, index) => <option value={index}>{url}</option>)}
         </select>
 
@@ -24,7 +24,7 @@ export function BackgroundLayerControl({ layer, remove, index, urls, change, mov
         <input type='number'
             value={layer.parallax}
             max={1} min={0} step={.01}
-            onChange={(event) => { change(index, 'parallax', clamp(event.target.value, 1, 0)) }}
+            onChange={(event) => { change(index, 'parallax', clamp(Number(event.target.value), 1, 0)) }}
         />
 
         <button onClick={() => remove(index)}>delete</button>
