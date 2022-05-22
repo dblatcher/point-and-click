@@ -1,3 +1,4 @@
+import { ClickEffect } from ".";
 import { SupportedZoneShape, Zone } from "../../definitions/Zone";
 
 interface Props {
@@ -6,9 +7,10 @@ interface Props {
     remove: { (index: number): void };
     move: { (index: number, x: number, y: number): void };
     change: { (index: number, propery: SupportedZoneShape, newValue: any): void }
+    setClickEffect: { (clickEffect: ClickEffect): void }
 }
 
-export function ObstacleControl({ obstacle, remove, index, move, change }: Props) {
+export function ObstacleControl({ obstacle, remove, index, move, change, setClickEffect }: Props) {
     const { x, y, circle, rect, polygon } = obstacle
     const type: SupportedZoneShape = polygon ? 'polygon' : rect ? 'rect' : circle ? 'circle' : undefined;
 
@@ -60,6 +62,16 @@ export function ObstacleControl({ obstacle, remove, index, move, change }: Props
                     <input type="number" value={rect[0]} onChange={event => { changeRect(event, 'x') }} />
                     <label>height: </label>
                     <input type="number" value={rect[1]} onChange={event => { changeRect(event, 'y') }} />
+                </div>
+            )}
+            {type === 'polygon' && (
+                <div>
+                    <ol>
+                        {polygon.map((point, index) => (
+                            <li key={index}>[ {point[0]}, {point[1]} ]</li>
+                        ))}
+                    </ol>
+                    <button onClick={() => { setClickEffect({ type: 'POLYGON_POINT_OBSTACLE', index }) }}>add points</button>
                 </div>
             )}
             <hr></hr>

@@ -14,7 +14,12 @@ type NewObstableEffect = {
     shape: SupportedZoneShape
 }
 
-export type ClickEffect = NewObstableEffect
+export type NewObstaclePolygonPointEffect = {
+    type: 'POLYGON_POINT_OBSTACLE';
+    index: number;
+}
+
+export type ClickEffect = NewObstableEffect | NewObstaclePolygonPointEffect
 
 type RoomEditorState = RoomData & {
     viewAngle: number;
@@ -32,10 +37,11 @@ function makeNewZone(point: Point, effect: NewObstableEffect): Zone {
             break;
         case 'rect': zone.rect = [20, 20]
             break;
-        case 'polygon': zone.polygon = [[0, 0], [20, 0], [0, 20]]
+        case 'polygon': zone.polygon = [[0, 0]]
     }
     return zone
 }
+
 
 const path = "/assets/backgrounds/"
 function getAssets(): string[] {
@@ -99,9 +105,19 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
 
         switch (clickEffect.type) {
             case 'OBSTACLE':
-                const zone = makeNewZone(pointClicked, clickEffect)
-                obstacleAreas.push(zone)
-                return this.setState({ obstacleAreas, clickEffect: undefined })
+                obstacleAreas.push(makeNewZone(pointClicked, clickEffect))
+                return this.setState({ 
+                    obstacleAreas, 
+                    clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined 
+                })
+
+            case 'POLYGON_POINT_OBSTACLE':
+                const obstacle = obstacleAreas[clickEffect.index]
+                if (!obstacle?.polygon) { return }
+                obstacle.polygon.push([
+                    pointClicked.x - obstacle.x, pointClicked.y - obstacle.y
+                ])
+                return this.setState({ obstacleAreas })
         }
     }
 
@@ -207,6 +223,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         {obstacleAreas.map((obstacle, index) =>
                             <ObstacleControl
                                 obstacle={obstacle} index={index}
+                                setClickEffect={this.setClickEffect}
                                 move={this.moveObstacle}
                                 change={this.changeObstacle}
                                 remove={this.removeObstacle} />
@@ -224,6 +241,9 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         &nbsp;
                         {clickEffect?.type === 'OBSTACLE' && (
                             <span>Click to add new {clickEffect.shape} obstable</span>
+                        )}
+                        {clickEffect?.type === 'POLYGON_POINT_OBSTACLE' && (
+                            <span>Click to add new point </span>
                         )}
                     </p>
                     <Room data={this.state}
@@ -256,3 +276,5 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         </article>
     }
 }
+
+
