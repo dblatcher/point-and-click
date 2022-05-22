@@ -4,14 +4,14 @@ import { HotSpotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 interface Props {
     zone: Zone | HotSpotZone;
     index: number;
-    remove: { (index: number): void };
-    move: { (index: number, x: number, y: number): void };
-    change: { (index: number, propery: SupportedZoneShape, newValue: any): void }
+    remove: { (index: number, type?: string): void };
+    move: { (index: number, x: number, y: number, type?: string): void };
+    change: { (index: number, propery: SupportedZoneShape, newValue: any, type?: string): void }
     setClickEffect: { (clickEffect: ClickEffect): void }
 }
 
 export function ZoneControl({ zone, remove, index, move, change, setClickEffect }: Props) {
-    const { x, y, circle, rect, polygon } = zone
+    const { x, y, circle, rect, polygon, type } = zone
     const shape: SupportedZoneShape = polygon ? 'polygon' : rect ? 'rect' : circle ? 'circle' : undefined;
 
 
@@ -20,13 +20,13 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
         if (isNaN(value)) { return }
         const newX = coor === 'x' ? value : x;
         const newY = coor === 'y' ? value : y;
-        return move(index, newX, newY)
+        return move(index, newX, newY, type)
     }
 
     function changeRadius(event: React.ChangeEvent<HTMLInputElement>) {
         const value = Number(event.target.value)
         if (isNaN(value)) { return }
-        change(index, 'circle', value)
+        change(index, 'circle', value, type)
     }
     function changeRect(event: React.ChangeEvent<HTMLInputElement>, coor: 'x' | 'y') {
         const value = Number(event.target.value)
@@ -37,7 +37,7 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
             coor === 'y' ? value : rect[1],
         ]
 
-        change(index, 'rect', newRect)
+        change(index, 'rect', newRect, type)
     }
 
     return (
@@ -48,7 +48,7 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
                 <input type="number" value={x} onChange={(event) => { moveZone(event, 'x') }} />
                 <label>Y: </label>
                 <input type="number" value={y} onChange={(event) => { moveZone(event, 'y') }} />
-                <button onClick={() => { remove(index) }}>delete</button>
+                <button onClick={() => { remove(index, type) }}>delete</button>
             </span>
             {shape === 'circle' && (
                 <div>

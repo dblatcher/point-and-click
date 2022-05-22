@@ -61,7 +61,9 @@ function getBlankRoom(): RoomData {
         width: 400,
         height: 200,
         background: [],
-        hotspots: [],
+        hotspots: [
+            { x: 40, y: 40, type: 'hotspot', 'circle': 30, parallax: 1, id: 'THING_ONE', name: 'thing' }
+        ],
         obstacleAreas: [
         ],
     }
@@ -85,9 +87,9 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         this.addBackground = this.addBackground.bind(this)
         this.changeBackground = this.changeBackground.bind(this)
         this.moveBackground = this.moveBackground.bind(this)
-        this.removeObstacle = this.removeObstacle.bind(this)
-        this.moveObstacle = this.moveObstacle.bind(this)
-        this.changeObstacle = this.changeObstacle.bind(this)
+        this.removeZone = this.removeZone.bind(this)
+        this.moveZone = this.moveZone.bind(this)
+        this.changeZone = this.changeZone.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.setClickEffect = this.setClickEffect.bind(this)
     }
@@ -124,24 +126,30 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         }
     }
 
-    removeObstacle(index: number) {
-        const { obstacleAreas } = this.state
-        obstacleAreas.splice(index, 1)
-        this.setState({ obstacleAreas })
+    removeZone(index: number, type?: string) {
+        const { obstacleAreas, hotspots } = this.state
+        switch (type) {
+            case 'hotspot':
+                hotspots.splice(index, 1)
+                break;
+            default:
+                obstacleAreas.splice(index, 1)
+        }
+        this.setState({ obstacleAreas, hotspots })
     }
-    moveObstacle(index: number, x: number, y: number) {
-        const { obstacleAreas } = this.state
-        const obstacle = obstacleAreas[index]
-        obstacle.x = x
-        obstacle.y = y
-        this.setState({ obstacleAreas })
+    moveZone(index: number, x: number, y: number, type?: string) {
+        const { obstacleAreas, hotspots } = this.state
+        const zone = type === 'hotspot' ? hotspots[index] : obstacleAreas[index]
+        zone.x = x
+        zone.y = y
+        this.setState({ obstacleAreas, hotspots })
     }
-    changeObstacle(index: number, propery: SupportedZoneShape, newValue: any) {
-        const { obstacleAreas } = this.state
-        const obstacle = obstacleAreas[index]
-        if (typeof obstacle[propery] === 'undefined') { return }
-        obstacle[propery] = newValue
-        this.setState({ obstacleAreas })
+    changeZone(index: number, propery: SupportedZoneShape, newValue: any, type?: string) {
+        const { obstacleAreas, hotspots } = this.state
+        const zone = type === 'hotspot' ? hotspots[index] : obstacleAreas[index]
+        if (typeof zone[propery] === 'undefined') { return }
+        zone[propery] = newValue
+        this.setState({ obstacleAreas, hotspots })
     }
     removeBackground(index: number) {
         const { background } = this.state
@@ -171,7 +179,8 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
 
     render() {
         const { viewAngle, viewScale, assetList, showObstacleAreas,
-            name, background, height, width, frameWidth, obstacleAreas, clickEffect
+            name, background, height, width, frameWidth, obstacleAreas, hotspots = [],
+            clickEffect
         } = this.state
 
         return <article>
@@ -227,14 +236,27 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                             <ZoneControl
                                 zone={obstacle} index={index}
                                 setClickEffect={this.setClickEffect}
-                                move={this.moveObstacle}
-                                change={this.changeObstacle}
-                                remove={this.removeObstacle} />
+                                move={this.moveZone}
+                                change={this.changeZone}
+                                remove={this.removeZone} />
                         )}
                         <div>
                             <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'circle' })}>New circle</button>
                             <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'rect' })}>New rect</button>
                             <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'polygon' })}>New polygon</button>
+                        </div>
+                    </fieldset>
+                    <fieldset className={styles.fieldset}>
+                        <legend>Hotspots</legend>
+                        {hotspots.map((hotspot, index) =>
+                            <ZoneControl
+                                zone={hotspot} index={index}
+                                setClickEffect={this.setClickEffect}
+                                move={this.moveZone}
+                                change={this.changeZone}
+                                remove={this.removeZone} />
+                        )}
+                        <div>
                         </div>
                     </fieldset>
                 </section>
