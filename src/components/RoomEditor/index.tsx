@@ -13,7 +13,7 @@ type NewObstableEffect = {
     type: 'OBSTACLE',
     shape: SupportedZoneShape
 }
-console.log(styles)
+
 export type NewObstaclePolygonPointEffect = {
     type: 'POLYGON_POINT_OBSTACLE';
     index: number;
@@ -57,8 +57,8 @@ function getAssets(): string[] {
 function getBlankRoom(): RoomData {
     return {
         name: '_NEW_',
-        frameWidth: 200,
-        width: 300,
+        frameWidth: 400,
+        width: 400,
         height: 200,
         background: [],
         hotspots: [],
@@ -179,10 +179,10 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
 
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 <section style={{ flexBasis: '20rem' }}>
-                    <div>
-                        <label>Name</label>
+                    <fieldset className={styles.fieldset}>
+                        <legend>name</legend>
                         <input value={name} onInput={event => this.setState({ name: event.target.value })} />
-                    </div>
+                    </fieldset>
 
                     <fieldset className={styles.fieldset}>
                         <legend>Dimensions</legend>

@@ -10,7 +10,7 @@ interface Props {
 export function BackgroundLayerForm({ urls, addNewLayer }: Props) {
 
     const [urlIndex, setUrlIndex] = useState<number>(0);
-    const [parallax, setParallax] = useState<number>(.5);
+    const [parallax, setParallax] = useState<number>(0);
 
     return <div>
 
@@ -23,7 +23,7 @@ export function BackgroundLayerForm({ urls, addNewLayer }: Props) {
         <input type='number' value={parallax} max={1} min={0} step={.01} onChange={(event) => { setParallax(clamp(event.target.value, 1, 0)) }} />
         <button onClick={() => { 
             addNewLayer({ url: urls[urlIndex], parallax }) 
-            setParallax(.5)
+            setParallax(0)
             setUrlIndex(0)
         }}>ADD</button>
     </div>
