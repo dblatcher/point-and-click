@@ -1,0 +1,12 @@
+.fieldset {
+    background-color: aquamarine;
+    margin-bottom: 1rem;
+
+}
+.fieldset legend {
+    background-color: aquamarine;
+    border: 1px solid;
+}
+.fieldset input[type=number] {
+    width: 3rem;
+}

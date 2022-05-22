@@ -7,13 +7,13 @@ import { Room } from "../Room";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ObstacleControl } from "./ObstacleControl";
-
+import styles from './styles.module.css';
 
 type NewObstableEffect = {
     type: 'OBSTACLE',
     shape: SupportedZoneShape
 }
-
+console.log(styles)
 export type NewObstaclePolygonPointEffect = {
     type: 'POLYGON_POINT_OBSTACLE';
     index: number;
@@ -184,7 +184,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         <input value={name} onInput={event => this.setState({ name: event.target.value })} />
                     </div>
 
-                    <fieldset>
+                    <fieldset className={styles.fieldset}>
                         <legend>Dimensions</legend>
                         <div>
                             <label>height</label>
@@ -203,7 +203,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         </div>
                     </fieldset>
 
-                    <fieldset>
+                    <fieldset className={styles.fieldset}>
                         <legend>Background</legend>
 
                         {background.map(
@@ -221,7 +221,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                             urls={assetList}
                             addNewLayer={this.addBackground} />
                     </fieldset>
-                    <fieldset>
+                    <fieldset className={styles.fieldset}>
                         <legend>Obstacles</legend>
                         {obstacleAreas.map((obstacle, index) =>
                             <ObstacleControl
