@@ -1,8 +1,8 @@
 import { ClickEffect } from ".";
-import { SupportedZoneShape, Zone } from "../../definitions/Zone";
+import { HotSpotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 
 interface Props {
-    obstacle: Zone;
+    zone: Zone | HotSpotZone;
     index: number;
     remove: { (index: number): void };
     move: { (index: number, x: number, y: number): void };
@@ -10,12 +10,12 @@ interface Props {
     setClickEffect: { (clickEffect: ClickEffect): void }
 }
 
-export function ObstacleControl({ obstacle, remove, index, move, change, setClickEffect }: Props) {
-    const { x, y, circle, rect, polygon } = obstacle
-    const type: SupportedZoneShape = polygon ? 'polygon' : rect ? 'rect' : circle ? 'circle' : undefined;
+export function ZoneControl({ zone, remove, index, move, change, setClickEffect }: Props) {
+    const { x, y, circle, rect, polygon } = zone
+    const shape: SupportedZoneShape = polygon ? 'polygon' : rect ? 'rect' : circle ? 'circle' : undefined;
 
 
-    function makeMoveFromEvent(event: React.ChangeEvent<HTMLInputElement>, coor: 'x' | 'y') {
+    function moveZone(event: React.ChangeEvent<HTMLInputElement>, coor: 'x' | 'y') {
         const value = Number(event.target.value)
         if (isNaN(value)) { return }
         const newX = coor === 'x' ? value : x;
@@ -42,21 +42,21 @@ export function ObstacleControl({ obstacle, remove, index, move, change, setClic
 
     return (
         <div>
-            <div><strong>{type}</strong></div>
+            <div><strong>{shape}</strong></div>
             <span>
                 <label>X: </label>
-                <input type="number" value={x} onChange={(event) => { makeMoveFromEvent(event, 'x') }} />
+                <input type="number" value={x} onChange={(event) => { moveZone(event, 'x') }} />
                 <label>Y: </label>
-                <input type="number" value={y} onChange={(event) => { makeMoveFromEvent(event, 'y') }} />
+                <input type="number" value={y} onChange={(event) => { moveZone(event, 'y') }} />
                 <button onClick={() => { remove(index) }}>delete</button>
             </span>
-            {type === 'circle' && (
+            {shape === 'circle' && (
                 <div>
                     <label>Radius: </label>
                     <input type="number" value={circle} onChange={changeRadius} />
                 </div>
             )}
-            {type === 'rect' && (
+            {shape === 'rect' && (
                 <div>
                     <label>width: </label>
                     <input type="number" value={rect[0]} onChange={event => { changeRect(event, 'x') }} />
@@ -64,7 +64,7 @@ export function ObstacleControl({ obstacle, remove, index, move, change, setClic
                     <input type="number" value={rect[1]} onChange={event => { changeRect(event, 'y') }} />
                 </div>
             )}
-            {type === 'polygon' && (
+            {shape === 'polygon' && (
                 <div>
                     <ol>
                         {polygon.map((point, index) => (

@@ -6,7 +6,7 @@ import { locateClickInWorld } from "../../lib/util";
 import { Room } from "../Room";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
-import { ObstacleControl } from "./ObstacleControl";
+import { ZoneControl } from "./ZoneControl";
 import styles from './styles.module.css';
 
 type NewObstableEffect = {
@@ -224,8 +224,8 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     <fieldset className={styles.fieldset}>
                         <legend>Obstacles</legend>
                         {obstacleAreas.map((obstacle, index) =>
-                            <ObstacleControl
-                                obstacle={obstacle} index={index}
+                            <ZoneControl
+                                zone={obstacle} index={index}
                                 setClickEffect={this.setClickEffect}
                                 move={this.moveObstacle}
                                 change={this.changeObstacle}
