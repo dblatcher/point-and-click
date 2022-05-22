@@ -99,23 +99,26 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
     handleRoomClick(x: number, y: number) {
         const { clickEffect, obstacleAreas } = this.state
         const pointClicked = locateClickInWorld(x, y, this.state.viewAngle, this.state)
-        console.log(pointClicked)
+        const roundedPoint = {
+            x: Math.round(pointClicked.x),
+            y: Math.round(pointClicked.y),
+        }
 
         if (!clickEffect) { return }
 
         switch (clickEffect.type) {
             case 'OBSTACLE':
-                obstacleAreas.push(makeNewZone(pointClicked, clickEffect))
-                return this.setState({ 
-                    obstacleAreas, 
-                    clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined 
+                obstacleAreas.push(makeNewZone(roundedPoint, clickEffect))
+                return this.setState({
+                    obstacleAreas,
+                    clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined
                 })
 
             case 'POLYGON_POINT_OBSTACLE':
                 const obstacle = obstacleAreas[clickEffect.index]
                 if (!obstacle?.polygon) { return }
                 obstacle.polygon.push([
-                    pointClicked.x - obstacle.x, pointClicked.y - obstacle.y
+                    roundedPoint.x - obstacle.x, roundedPoint.y - obstacle.y
                 ])
                 return this.setState({ obstacleAreas })
         }
