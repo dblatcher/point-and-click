@@ -26,7 +26,7 @@ export function ObstacleControl({ obstacle, remove, index, move, change }: Props
         if (isNaN(value)) { return }
         change(index, 'circle', value)
     }
-    function changeRect(event: React.ChangeEvent<HTMLInputElement>, coor:'x'|'y') {
+    function changeRect(event: React.ChangeEvent<HTMLInputElement>, coor: 'x' | 'y') {
         const value = Number(event.target.value)
         if (isNaN(value)) { return }
 
@@ -57,9 +57,9 @@ export function ObstacleControl({ obstacle, remove, index, move, change }: Props
             {type === 'rect' && (
                 <div>
                     <label>width: </label>
-                    <input type="number" value={rect[0]} onChange={event => {changeRect(event, 'x')}} />
+                    <input type="number" value={rect[0]} onChange={event => { changeRect(event, 'x') }} />
                     <label>height: </label>
-                    <input type="number" value={rect[1]} onChange={event => {changeRect(event, 'y')}} />
+                    <input type="number" value={rect[1]} onChange={event => { changeRect(event, 'y') }} />
                 </div>
             )}
             <hr></hr>

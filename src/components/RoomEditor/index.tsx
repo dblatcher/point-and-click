@@ -1,6 +1,7 @@
 import { Component } from "preact";
 import { BackgroundLayer, RoomData } from "../../definitions/RoomData";
-import { SupportedZoneShape } from "../../definitions/Zone";
+import { SupportedZoneShape, Zone } from "../../definitions/Zone";
+import { Point } from "../../lib/pathfinding/geometry";
 import { locateClickInWorld } from "../../lib/util";
 import { Room } from "../Room";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
@@ -8,12 +9,33 @@ import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ObstacleControl } from "./ObstacleControl";
 
 
+type NewObstableEffect = {
+    type: 'OBSTACLE',
+    shape: SupportedZoneShape
+}
+
+export type ClickEffect = NewObstableEffect
+
 type RoomEditorState = RoomData & {
-    viewAngle: number,
-    assetList: string[],
-    viewScale: number,
-    showObstacleAreas: boolean,
+    viewAngle: number;
+    assetList: string[];
+    viewScale: number;
+    showObstacleAreas: boolean;
+    clickEffect?: ClickEffect;
 };
+
+function makeNewZone(point: Point, effect: NewObstableEffect): Zone {
+
+    const zone: Zone = { x: point.x, y: point.y }
+    switch (effect.shape) {
+        case 'circle': zone.circle = 20;
+            break;
+        case 'rect': zone.rect = [20, 20]
+            break;
+        case 'polygon': zone.polygon = [[0, 0], [20, 0], [0, 20]]
+    }
+    return zone
+}
 
 const path = "/assets/backgrounds/"
 function getAssets(): string[] {
@@ -35,8 +57,6 @@ function getBlankRoom(): RoomData {
         background: [],
         hotspots: [],
         obstacleAreas: [
-            { x: 100, y: 50, circle: 30 },
-            { x: 130, y: 110, rect: [30,50] },
         ],
     }
 }
@@ -63,11 +83,26 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         this.moveObstacle = this.moveObstacle.bind(this)
         this.changeObstacle = this.changeObstacle.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
+        this.setClickEffect = this.setClickEffect.bind(this)
+    }
+
+    setClickEffect(clickEffect?: ClickEffect) {
+        this.setState({ clickEffect })
     }
 
     handleRoomClick(x: number, y: number) {
+        const { clickEffect, obstacleAreas } = this.state
         const pointClicked = locateClickInWorld(x, y, this.state.viewAngle, this.state)
         console.log(pointClicked)
+
+        if (!clickEffect) { return }
+
+        switch (clickEffect.type) {
+            case 'OBSTACLE':
+                const zone = makeNewZone(pointClicked, clickEffect)
+                obstacleAreas.push(zone)
+                return this.setState({ obstacleAreas, clickEffect: undefined })
+        }
     }
 
     removeObstacle(index: number) {
@@ -117,18 +152,18 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
 
     render() {
         const { viewAngle, viewScale, assetList, showObstacleAreas,
-            name, background, height, width, frameWidth, obstacleAreas
+            name, background, height, width, frameWidth, obstacleAreas, clickEffect
         } = this.state
 
         return <article>
             <h2>Room Editor</h2>
 
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                <section>
-                    <fieldset>
-                        <legend>Name</legend>
+                <section style={{ flexBasis: '20rem' }}>
+                    <div>
+                        <label>Name</label>
                         <input value={name} onInput={event => this.setState({ name: event.target.value })} />
-                    </fieldset>
+                    </div>
 
                     <fieldset>
                         <legend>Dimensions</legend>
@@ -151,6 +186,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
 
                     <fieldset>
                         <legend>Background</legend>
+
                         {background.map(
                             (layer, index) =>
                                 <BackgroundLayerControl index={index}
@@ -166,7 +202,6 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                             urls={assetList}
                             addNewLayer={this.addBackground} />
                     </fieldset>
-
                     <fieldset>
                         <legend>Obstacles</legend>
                         {obstacleAreas.map((obstacle, index) =>
@@ -176,10 +211,21 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                                 change={this.changeObstacle}
                                 remove={this.removeObstacle} />
                         )}
+                        <div>
+                            <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'circle' })}>New circle</button>
+                            <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'rect' })}>New rect</button>
+                            <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'polygon' })}>New polygon</button>
+                        </div>
                     </fieldset>
                 </section>
-                <section>
 
+                <section>
+                    <p>
+                        &nbsp;
+                        {clickEffect?.type === 'OBSTACLE' && (
+                            <span>Click to add new {clickEffect.shape} obstable</span>
+                        )}
+                    </p>
                     <Room data={this.state}
                         showObstacleAreas={showObstacleAreas}
                         scale={viewScale}
