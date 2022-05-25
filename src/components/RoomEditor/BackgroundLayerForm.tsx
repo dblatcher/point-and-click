@@ -1,6 +1,7 @@
 import { useState } from "preact/hooks"
 import { BackgroundLayer } from "../../definitions/RoomData";
 import { clamp } from "../../lib/util";
+import { ParallaxInput } from "../formControls";
 
 interface Props {
     urls: string[]
@@ -19,10 +20,12 @@ export function BackgroundLayerForm({ urls, addNewLayer }: Props) {
             {urls.map((url, index) => <option value={index}>{url}</option>)}
         </select>
 
-        <label>parallax:</label>
-        <input type='number' value={parallax} max={1} min={0} step={.01} onChange={(event) => { setParallax(clamp(event.target.value, 1, 0)) }} />
-        <button onClick={() => { 
-            addNewLayer({ url: urls[urlIndex], parallax }) 
+        <ParallaxInput value={parallax}
+            onChange={(event) => { setParallax(clamp(Number(event.target.value), 1, 0)) }}
+        />
+
+        <button onClick={() => {
+            addNewLayer({ url: urls[urlIndex], parallax })
             setParallax(0)
             setUrlIndex(0)
         }}>ADD</button>

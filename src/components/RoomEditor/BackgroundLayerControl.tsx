@@ -1,5 +1,6 @@
 import { BackgroundLayer } from "../../definitions/RoomData";
 import { clamp } from "../../lib/util";
+import { ParallaxInput } from "../formControls";
 
 interface Props {
     index: number;
@@ -11,7 +12,7 @@ interface Props {
 }
 
 export function BackgroundLayerControl({ layer, remove, index, urls, change, move }: Props) {
-
+    const {parallax} = layer
     const urlIndex = urls.indexOf(layer.url)
 
     return <div>
@@ -20,10 +21,7 @@ export function BackgroundLayerControl({ layer, remove, index, urls, change, mov
             {urls.map((url, index) => <option value={index}>{url}</option>)}
         </select>
 
-        <label>parallax:</label>
-        <input type='number'
-            value={layer.parallax}
-            max={1} min={0} step={.01}
+        <ParallaxInput value={parallax}
             onChange={(event) => { change(index, 'parallax', clamp(Number(event.target.value), 1, 0)) }}
         />
 

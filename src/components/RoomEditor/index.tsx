@@ -1,6 +1,6 @@
 import { Component } from "preact";
 import { BackgroundLayer, RoomData } from "../../definitions/RoomData";
-import { SupportedZoneShape, Zone } from "../../definitions/Zone";
+import { HotSpotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 import { Point } from "../../lib/pathfinding/geometry";
 import { locateClickInWorld } from "../../lib/util";
 import { Room } from "../Room";
@@ -8,6 +8,7 @@ import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ZoneControl } from "./ZoneControl";
 import styles from './styles.module.css';
+import { HotSpotControl } from "./HotSpotControl";
 
 type NewObstableEffect = {
     type: 'OBSTACLE',
@@ -144,7 +145,8 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         zone.y = y
         this.setState({ obstacleAreas, hotspots })
     }
-    changeZone(index: number, propery: SupportedZoneShape, newValue: any, type?: string) {
+    changeZone(index: number, propery: Exclude<keyof HotSpotZone, ('type' & SupportedZoneShape)>, newValue: any, type?: string) {
+        console.log(index, propery, newValue, type)
         const { obstacleAreas, hotspots } = this.state
         const zone = type === 'hotspot' ? hotspots[index] : obstacleAreas[index]
         if (typeof zone[propery] === 'undefined') { return }
@@ -197,15 +199,18 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         <legend>Dimensions</legend>
                         <div>
                             <label>height</label>
-                            <input type='number' value={height} onInput={event => this.setState({ height: Number(event.target.value) })} />
+                            <input type='number' value={height} 
+                            onInput={event => this.setState({ height: Number(event.target.value) })} />
                         </div>
                         <div>
                             <label>width</label>
-                            <input type='number' value={width} onInput={event => this.setState({ width: Number(event.target.value) })} />
+                            <input type='number' value={width} 
+                            onInput={event => this.setState({ width: Number(event.target.value) })} />
                         </div>
                         <div>
                             <label>frameWidth</label>
-                            <input type='number' value={frameWidth} onInput={event => this.setState({ frameWidth: Number(event.target.value) })} />
+                            <input type='number' value={frameWidth} 
+                            onInput={event => this.setState({ frameWidth: Number(event.target.value) })} />
                             {frameWidth > width && (
                                 <span>! frame width is bigger than room width</span>
                             )}
@@ -248,13 +253,18 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     </fieldset>
                     <fieldset className={styles.fieldset}>
                         <legend>Hotspots</legend>
-                        {hotspots.map((hotspot, index) =>
-                            <ZoneControl
-                                zone={hotspot} index={index}
-                                setClickEffect={this.setClickEffect}
-                                move={this.moveZone}
-                                change={this.changeZone}
-                                remove={this.removeZone} />
+                        {hotspots.map((hotSpot, index) =>
+                            <>
+                                <HotSpotControl hotSpot={hotSpot} index={index}
+                                    change={this.changeZone}
+                                />
+                                <ZoneControl
+                                    zone={hotSpot} index={index}
+                                    setClickEffect={this.setClickEffect}
+                                    move={this.moveZone}
+                                    change={this.changeZone}
+                                    remove={this.removeZone} />
+                            </>
                         )}
                         <div>
                         </div>
@@ -281,18 +291,21 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
 
                     <div>
                         <label>view scale</label>
-                        <input type='range' value={viewScale} max={2} min={1} step={.01} onChange={(event) => this.setState({ viewScale: event.target.value })} />
+                        <input type='range' value={viewScale} max={2} min={1} step={.01} 
+                            onChange={(event) => this.setState({ viewScale: Number(event.target.value) })} />
                         <span>{viewScale}</span>
                     </div>
 
                     <div>
                         <label>view angle</label>
-                        <input type='range' value={viewAngle} max={1} min={-1} step={.01} onChange={(event) => this.setState({ viewAngle: event.target.value })} />
+                        <input type='range' value={viewAngle} max={1} min={-1} step={.01} 
+                            onChange={(event) => this.setState({ viewAngle: Number(event.target.value) })} />
                         <span>{viewAngle}</span>
                     </div>
                     <div>
                         <label>show obstables</label>
-                        <input type='checkbox' checked={showObstacleAreas} onChange={(event) => this.setState({ showObstacleAreas: event.target.checked })} />
+                        <input type='checkbox' checked={showObstacleAreas} 
+                            onChange={(event) => this.setState({ showObstacleAreas: event.target.checked })} />
                         <span>{showObstacleAreas ? 'YES' : 'NO'}</span>
                     </div>
                 </section>
