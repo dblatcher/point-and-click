@@ -1,3 +1,4 @@
+import { ComponentChild } from "preact"
 import { Ident } from "../definitions/BaseTypes"
 
 export function ParallaxInput(props: {
@@ -50,4 +51,26 @@ export function IdentInput(props: {
             />
         </div>
     </>
+}
+
+export function NumberInput(props: {
+    label: string
+    value: number
+    onInput: React.ChangeEventHandler<HTMLInputElement>
+}) {
+    const { label, value, onInput } = props
+    return <>
+        <label>{label}</label>
+        <input type='number' value={value} onInput={onInput} />
+    </>
+}
+
+export function Warning(props: { children?: ComponentChild }) {
+    return (
+        <>
+            <b style={{ color: 'red' }}>!</b>
+            {props.children}
+            <b style={{ color: 'red' }}>!</b>
+        </>
+    )
 }

@@ -9,18 +9,29 @@ import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ZoneControl } from "./ZoneControl";
 import styles from './styles.module.css';
 import { HotSpotControl } from "./HotSpotControl";
+import { NumberInput, Warning } from "../formControls";
 
 type NewObstableEffect = {
     type: 'OBSTACLE',
     shape: SupportedZoneShape
 }
 
-export type NewObstaclePolygonPointEffect = {
+type NewHotSpotEffect = {
+    type: 'HOTSPOT',
+    shape: SupportedZoneShape
+}
+
+type NewObstaclePolygonPointEffect = {
     type: 'POLYGON_POINT_OBSTACLE';
     index: number;
 }
 
-export type ClickEffect = NewObstableEffect | NewObstaclePolygonPointEffect
+type NewHotSpotPolygonPointEffect = {
+    type: 'POLYGON_POINT_HOTSPOT';
+    index: number;
+}
+
+export type ClickEffect = NewObstableEffect | NewObstaclePolygonPointEffect | NewHotSpotEffect | NewHotSpotPolygonPointEffect
 
 type RoomEditorState = RoomData & {
     viewAngle: number;
@@ -29,6 +40,19 @@ type RoomEditorState = RoomData & {
     showObstacleAreas: boolean;
     clickEffect?: ClickEffect;
 };
+
+function makeNewHotspot(point: Point, effect: NewHotSpotEffect): HotSpotZone {
+
+    const zone: HotSpotZone = { x: point.x, y: point.y, type: 'hotspot', id: 'NEW_ID', parallax: 1 }
+    switch (effect.shape) {
+        case 'circle': zone.circle = 20;
+            break;
+        case 'rect': zone.rect = [20, 20]
+            break;
+        case 'polygon': zone.polygon = [[0, 0]]
+    }
+    return zone
+}
 
 function makeNewZone(point: Point, effect: NewObstableEffect): Zone {
 
@@ -100,7 +124,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
     }
 
     handleRoomClick(x: number, y: number) {
-        const { clickEffect, obstacleAreas } = this.state
+        const { clickEffect, obstacleAreas, hotspots } = this.state
         const pointClicked = locateClickInWorld(x, y, this.state.viewAngle, this.state)
         const roundedPoint = {
             x: Math.round(pointClicked.x),
@@ -117,6 +141,13 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined
                 })
 
+            case 'HOTSPOT':
+                hotspots.push(makeNewHotspot(roundedPoint, clickEffect))
+                return this.setState({
+                    hotspots,
+                    clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1 } : undefined
+                })
+
             case 'POLYGON_POINT_OBSTACLE':
                 const obstacle = obstacleAreas[clickEffect.index]
                 if (!obstacle?.polygon) { return }
@@ -124,6 +155,14 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     roundedPoint.x - obstacle.x, roundedPoint.y - obstacle.y
                 ])
                 return this.setState({ obstacleAreas })
+
+            case 'POLYGON_POINT_HOTSPOT':
+                const hotSpot = hotspots[clickEffect.index]
+                if (!hotSpot?.polygon) { return }
+                hotSpot.polygon.push([
+                    roundedPoint.x - hotSpot.x, roundedPoint.y - hotSpot.y
+                ])
+                return this.setState({ hotspots })
         }
     }
 
@@ -192,27 +231,24 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                 <section style={{ flexBasis: '20rem' }}>
                     <fieldset className={styles.fieldset}>
                         <legend>name</legend>
-                        <input value={name} onInput={event => this.setState({ name: event.target.value })} />
+                        <input type="text" value={name} onInput={event => this.setState({ name: event.target.value })} />
                     </fieldset>
 
                     <fieldset className={styles.fieldset}>
                         <legend>Dimensions</legend>
                         <div>
-                            <label>height</label>
-                            <input type='number' value={height} 
-                            onInput={event => this.setState({ height: Number(event.target.value) })} />
+                            <NumberInput label="height" value={height}
+                                onInput={event => this.setState({ height: Number(event.target.value) })} />
                         </div>
                         <div>
-                            <label>width</label>
-                            <input type='number' value={width} 
-                            onInput={event => this.setState({ width: Number(event.target.value) })} />
+                            <NumberInput label="width" value={width}
+                                onInput={event => this.setState({ width: Number(event.target.value) })} />
                         </div>
                         <div>
-                            <label>frameWidth</label>
-                            <input type='number' value={frameWidth} 
-                            onInput={event => this.setState({ frameWidth: Number(event.target.value) })} />
+                            <NumberInput label="Frame Width" value={frameWidth}
+                                onInput={event => this.setState({ frameWidth: Number(event.target.value) })} />
                             {frameWidth > width && (
-                                <span>! frame width is bigger than room width</span>
+                                <Warning>frame width is bigger than room width</Warning>
                             )}
                         </div>
                     </fieldset>
@@ -267,6 +303,9 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                             </>
                         )}
                         <div>
+                            <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'circle' })}>New circle</button>
+                            <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'rect' })}>New rect</button>
+                            <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'polygon' })}>New polygon</button>
                         </div>
                     </fieldset>
                 </section>
@@ -280,6 +319,12 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         {clickEffect?.type === 'POLYGON_POINT_OBSTACLE' && (
                             <span>Click to add new point </span>
                         )}
+                        {clickEffect?.type === 'HOTSPOT' && (
+                            <span>Click to add new {clickEffect.shape} hotSpot</span>
+                        )}
+                        {clickEffect?.type === 'POLYGON_POINT_HOTSPOT' && (
+                            <span>Click to add new point </span>
+                        )}
                     </p>
                     <Room data={this.state}
                         showObstacleAreas={showObstacleAreas}
@@ -291,20 +336,20 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
 
                     <div>
                         <label>view scale</label>
-                        <input type='range' value={viewScale} max={2} min={1} step={.01} 
+                        <input type='range' value={viewScale} max={2} min={1} step={.01}
                             onChange={(event) => this.setState({ viewScale: Number(event.target.value) })} />
                         <span>{viewScale}</span>
                     </div>
 
                     <div>
                         <label>view angle</label>
-                        <input type='range' value={viewAngle} max={1} min={-1} step={.01} 
+                        <input type='range' value={viewAngle} max={1} min={-1} step={.01}
                             onChange={(event) => this.setState({ viewAngle: Number(event.target.value) })} />
                         <span>{viewAngle}</span>
                     </div>
                     <div>
                         <label>show obstables</label>
-                        <input type='checkbox' checked={showObstacleAreas} 
+                        <input type='checkbox' checked={showObstacleAreas}
                             onChange={(event) => this.setState({ showObstacleAreas: event.target.checked })} />
                         <span>{showObstacleAreas ? 'YES' : 'NO'}</span>
                     </div>
