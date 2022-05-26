@@ -1,13 +1,18 @@
+import { ClickEffect } from ".";
 import { HotspotZone, SupportedZoneShape } from "../../definitions/Zone";
 import { IdentInput, ParallaxInput } from "../formControls";
+import { ZoneControl } from "./ZoneControl";
 
 interface Props {
     hotspot: HotspotZone;
     index: number;
     change: { (index: number, propery: Exclude<keyof HotspotZone, ('type' & SupportedZoneShape)>, newValue: any, type?: string): void }
+    remove: { (index: number, type?: string): void };
+    move: { (index: number, x: number, y: number, type?: string): void };
+    setClickEffect: { (clickEffect: ClickEffect): void }
 }
 
-export function HotspotControl({ hotspot, index, change }: Props) {
+export function HotspotControl({ hotspot, index, change,move,remove,setClickEffect }: Props) {
     const { parallax, type } = hotspot
 
     return (
@@ -20,6 +25,13 @@ export function HotspotControl({ hotspot, index, change }: Props) {
 
             <ParallaxInput value={parallax}
                 onChange={event => { change(index, 'parallax', Number(event.target.value), type) }} />
+
+            <ZoneControl
+                zone={hotspot} index={index}
+                setClickEffect={setClickEffect}
+                move={move}
+                change={change}
+                remove={remove} />
         </div>
     )
 

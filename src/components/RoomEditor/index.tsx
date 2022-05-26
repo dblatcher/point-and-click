@@ -292,17 +292,12 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     <fieldset className={styles.fieldset}>
                         <legend>Hotspots</legend>
                         {hotspots.map((hotspot, index) =>
-                            <>
-                                <HotspotControl hotspot={hotspot} index={index}
-                                    change={this.changeZone}
-                                />
-                                <ZoneControl
-                                    zone={hotspot} index={index}
-                                    setClickEffect={this.setClickEffect}
-                                    move={this.moveZone}
-                                    change={this.changeZone}
-                                    remove={this.removeZone} />
-                            </>
+                            <HotspotControl hotspot={hotspot} index={index}
+                                setClickEffect={this.setClickEffect}
+                                move={this.moveZone}
+                                change={this.changeZone}
+                                remove={this.removeZone} />
+
                         )}
                         <div>
                             <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'circle' })}>New circle</button>
