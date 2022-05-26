@@ -42,7 +42,6 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
 
     return (
         <div>
-            <div><strong>{shape}</strong></div>
             <span>
                 <label>X: </label>
                 <input type="number" value={x} onChange={(event) => { moveZone(event, 'x') }} />
@@ -58,14 +57,15 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
             )}
             {shape === 'rect' && (
                 <div>
-                    <label>width: </label>
+                    <label>Width: </label>
                     <input type="number" value={rect[0]} onChange={event => { changeRect(event, 'x') }} />
-                    <label>height: </label>
+                    <label>Height: </label>
                     <input type="number" value={rect[1]} onChange={event => { changeRect(event, 'y') }} />
                 </div>
             )}
             {shape === 'polygon' && (
                 <div>
+                    <label>points: </label>
                     <ol>
                         {polygon.map((point, index) => (
                             <li key={index}>[ {point[0]}, {point[1]} ]</li>

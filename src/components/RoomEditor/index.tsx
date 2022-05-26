@@ -68,6 +68,21 @@ function makeNewZone(point: Point, effect: NewObstableEffect): Zone {
     return zone
 }
 
+function getClickCaption(clickEffect?: ClickEffect): string {
+    if (!clickEffect) return '_'
+    switch (clickEffect.type) {
+        case 'OBSTACLE':
+            return `Click to add new ${clickEffect.shape} obstable`
+        case 'POLYGON_POINT_OBSTACLE':
+            return `Click to add new point`
+        case 'HOTSPOT':
+            return `Click to add new ${clickEffect.shape} hotspot`
+        case 'POLYGON_POINT_HOTSPOT':
+            return `Click to add new point`
+        default:
+            return 'UNKNOWN!'
+    }
+}
 
 const path = "/assets/backgrounds/"
 function getAssets(): string[] {
@@ -238,15 +253,15 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
 
                     <fieldset className={styles.fieldset}>
                         <legend>Dimensions</legend>
-                        <div>
+                        <div className={styles.row}>
                             <NumberInput label="height" value={height}
                                 onInput={event => this.setState({ height: Number(event.target.value) })} />
                         </div>
-                        <div>
+                        <div className={styles.row}>
                             <NumberInput label="width" value={width}
                                 onInput={event => this.setState({ width: Number(event.target.value) })} />
                         </div>
-                        <div>
+                        <div className={styles.row}>
                             <NumberInput label="Frame Width" value={frameWidth}
                                 onInput={event => this.setState({ frameWidth: Number(event.target.value) })} />
                             {frameWidth > width && (
@@ -308,21 +323,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                 </section>
 
                 <section>
-                    <p>
-                        &nbsp;
-                        {clickEffect?.type === 'OBSTACLE' && (
-                            <span>Click to add new {clickEffect.shape} obstable</span>
-                        )}
-                        {clickEffect?.type === 'POLYGON_POINT_OBSTACLE' && (
-                            <span>Click to add new point </span>
-                        )}
-                        {clickEffect?.type === 'HOTSPOT' && (
-                            <span>Click to add new {clickEffect.shape} hotspot</span>
-                        )}
-                        {clickEffect?.type === 'POLYGON_POINT_HOTSPOT' && (
-                            <span>Click to add new point </span>
-                        )}
-                    </p>
+                    <p>{getClickCaption(clickEffect)}</p>
                     <Room data={this.state}
                         showObstacleAreas={showObstacleAreas}
                         scale={viewScale}
@@ -332,31 +333,33 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         handleRoomClick={this.handleRoomClick}
                     />
 
-                    <div>
-                        <label>view scale</label>
-                        <input type='range' value={viewScale} max={2} min={1} step={.01}
-                            onChange={(event) => this.setState({ viewScale: Number(event.target.value) })} />
-                        <span>{viewScale}</span>
-                    </div>
+                    <fieldset>
+                        <div>
+                            <label>view scale</label>
+                            <input type='range' value={viewScale} max={2} min={1} step={.01}
+                                onChange={(event) => this.setState({ viewScale: Number(event.target.value) })} />
+                            <span>{viewScale}</span>
+                        </div>
 
-                    <div>
-                        <label>view angle</label>
-                        <input type='range' value={viewAngle} max={1} min={-1} step={.01}
-                            onChange={(event) => this.setState({ viewAngle: Number(event.target.value) })} />
-                        <span>{viewAngle}</span>
-                    </div>
-                    <div>
-                        <label>show obstables</label>
-                        <input type='checkbox' checked={showObstacleAreas}
-                            onChange={(event) => this.setState({ showObstacleAreas: event.target.checked })} />
-                        <span>{showObstacleAreas ? 'YES' : 'NO'}</span>
-                    </div>
-                    <div>
-                        <label>show hotspots</label>
-                        <input type='checkbox' checked={highlightHotspots}
-                            onChange={(event) => this.setState({ highlightHotspots: event.target.checked })} />
-                        <span>{highlightHotspots ? 'YES' : 'NO'}</span>
-                    </div>
+                        <div>
+                            <label>view angle</label>
+                            <input type='range' value={viewAngle} max={1} min={-1} step={.01}
+                                onChange={(event) => this.setState({ viewAngle: Number(event.target.value) })} />
+                            <span>{viewAngle}</span>
+                        </div>
+                        <div>
+                            <label>show obstables</label>
+                            <input type='checkbox' checked={showObstacleAreas}
+                                onChange={(event) => this.setState({ showObstacleAreas: event.target.checked })} />
+                            <span>{showObstacleAreas ? 'YES' : 'NO'}</span>
+                        </div>
+                        <div>
+                            <label>show hotspots</label>
+                            <input type='checkbox' checked={highlightHotspots}
+                                onChange={(event) => this.setState({ highlightHotspots: event.target.checked })} />
+                            <span>{highlightHotspots ? 'YES' : 'NO'}</span>
+                        </div>
+                    </fieldset>
                 </section>
             </div>
 

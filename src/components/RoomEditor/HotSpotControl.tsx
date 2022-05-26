@@ -2,6 +2,7 @@ import { ClickEffect } from ".";
 import { HotspotZone, SupportedZoneShape } from "../../definitions/Zone";
 import { IdentInput, ParallaxInput } from "../formControls";
 import { ZoneControl } from "./ZoneControl";
+import styles from './styles.module.css';
 
 interface Props {
     hotspot: HotspotZone;
@@ -12,7 +13,7 @@ interface Props {
     setClickEffect: { (clickEffect: ClickEffect): void }
 }
 
-export function HotspotControl({ hotspot, index, change,move,remove,setClickEffect }: Props) {
+export function HotspotControl({ hotspot, index, change, move, remove, setClickEffect }: Props) {
     const { parallax, type } = hotspot
 
     return (
@@ -23,8 +24,10 @@ export function HotspotControl({ hotspot, index, change,move,remove,setClickEffe
                 onChangeId={event => { change(index, 'id', event.target.value.toUpperCase(), type) }}
             />
 
-            <ParallaxInput value={parallax}
-                onChange={event => { change(index, 'parallax', Number(event.target.value), type) }} />
+            <div className={styles.row}>
+                <ParallaxInput value={parallax}
+                    onChange={event => { change(index, 'parallax', Number(event.target.value), type) }} />
+            </div>
 
             <ZoneControl
                 zone={hotspot} index={index}

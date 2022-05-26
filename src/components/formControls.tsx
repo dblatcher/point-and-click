@@ -1,5 +1,6 @@
 import { ComponentChild } from "preact"
 import { Ident } from "../definitions/BaseTypes"
+import styles from './RoomEditor/styles.module.css';
 
 export function ParallaxInput(props: {
     value: number,
@@ -26,7 +27,7 @@ export function IdentInput(props: {
     const { type, name, id, status } = props.value
     return <>
         {showType && <label><b>{type}</b></label>}
-        <div>
+        <div className={styles.row}>
             <label>ID:</label>
             <input type='text'
                 value={id}
@@ -34,7 +35,7 @@ export function IdentInput(props: {
                 onChange={onChangeId}
             />
         </div>
-        <div>
+        <div className={styles.row}>
             <label>name:</label>
             <input type='text'
                 value={name}
@@ -42,7 +43,7 @@ export function IdentInput(props: {
                 onChange={onChangeName}
             />
         </div>
-        <div>
+        <div className={styles.row}>
             <label>status:</label>
             <input type='text'
                 value={status}
