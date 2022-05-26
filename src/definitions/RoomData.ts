@@ -1,4 +1,4 @@
-import { HotSpotZone, Zone } from "./Zone"
+import { HotspotZone, Zone } from "./Zone"
 
 type BackgroundLayer = {
     url: string,
@@ -13,7 +13,7 @@ type RoomData = {
     width: number
     height: number
     background: BackgroundLayer[],
-    hotspots?: HotSpotZone[],
+    hotspots?: HotspotZone[],
     obstacleAreas?: Zone[]
     scaling?: ScaleLevel
 }

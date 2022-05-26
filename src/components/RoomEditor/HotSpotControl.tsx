@@ -1,18 +1,18 @@
-import { HotSpotZone, SupportedZoneShape } from "../../definitions/Zone";
+import { HotspotZone, SupportedZoneShape } from "../../definitions/Zone";
 import { IdentInput, ParallaxInput } from "../formControls";
 
 interface Props {
-    hotSpot: HotSpotZone;
+    hotspot: HotspotZone;
     index: number;
-    change: { (index: number, propery: Exclude<keyof HotSpotZone, ('type' & SupportedZoneShape)>, newValue: any, type?: string): void }
+    change: { (index: number, propery: Exclude<keyof HotspotZone, ('type' & SupportedZoneShape)>, newValue: any, type?: string): void }
 }
 
-export function HotSpotControl({ hotSpot, index, change }: Props) {
-    const { parallax, type } = hotSpot
+export function HotspotControl({ hotspot, index, change }: Props) {
+    const { parallax, type } = hotspot
 
     return (
         <div>
-            <IdentInput value={hotSpot}
+            <IdentInput value={hotspot}
                 onChangeName={event => { change(index, 'name', event.target.value, type) }}
                 onChangeStatus={event => { change(index, 'status', event.target.value, type) }}
                 onChangeId={event => { change(index, 'id', event.target.value.toUpperCase(), type) }}

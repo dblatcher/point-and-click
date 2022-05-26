@@ -14,9 +14,9 @@ interface Zone {
     rect?: [number, number];
 }
 
-type HotSpotZone = Ident & Zone & {
+type HotspotZone = Ident & Zone & {
     type: 'hotspot';
     parallax: number;
 }
 
-export type { Zone, HotSpotZone, Polygon, SupportedZoneShape }
+export type { Zone, HotspotZone, Polygon, SupportedZoneShape }

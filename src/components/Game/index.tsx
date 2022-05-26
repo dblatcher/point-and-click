@@ -208,7 +208,7 @@ export default class Game extends Component<GameProps, GameState> {
                     data={currentRoom} scale={roomScale}
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
-                    handleHotSpotClick={this.handleTargetClick}
+                    handleHotspotClick={this.handleTargetClick}
                     // use for debugging - slows render!
                     // obstacleCells={this.state.cellMatrix}
                     showObstacleAreas

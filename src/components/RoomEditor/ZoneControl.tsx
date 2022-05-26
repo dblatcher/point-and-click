@@ -1,8 +1,8 @@
 import { ClickEffect } from ".";
-import { HotSpotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
+import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 
 interface Props {
-    zone: Zone | HotSpotZone;
+    zone: Zone | HotspotZone;
     index: number;
     remove: { (index: number, type?: string): void };
     move: { (index: number, x: number, y: number, type?: string): void };

@@ -1,24 +1,24 @@
 import { RoomData } from "../../definitions/RoomData"
-import { HotSpotZone } from "../../definitions/Zone"
+import { HotspotZone } from "../../definitions/Zone"
 import { getShift } from "../../lib/util";
 import ZoneSvg from "../ZoneSvg";
 import styles from './styles.module.css';
 
 interface Props {
-    zone: HotSpotZone
+    zone: HotspotZone
     roomData: RoomData
     viewAngle: number
-    clickHandler?: { (zone: HotSpotZone): void }
+    clickHandler?: { (zone: HotspotZone): void }
     highlight?: boolean
 }
 
-export default function HotSpot({
+export default function Hotspot({
     zone, roomData, viewAngle, highlight,
     clickHandler = (zone) => { console.log(zone) }
 }: Props) {
     const { parallax } = zone
 
-    const className = highlight ? styles.highlightedHotSpot : styles.hotSpot
+    const className = highlight ? styles.highlightedHotspot : styles.hotspot
 
     return (
         <ZoneSvg

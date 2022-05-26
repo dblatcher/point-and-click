@@ -1,16 +1,16 @@
-.hotSpot {
+.hotspot {
     fill: rgba(0, 243, 8, 0);
     transition: fill .5s;
     pointer-events: all;
 }
 
-.hotSpot:hover {
+.hotspot:hover {
     fill: rgba(0, 243, 8, 0.25);
     stroke: white;
     stroke-dasharray: 1,1;
 }
 
-.highlightedHotSpot {
+.highlightedHotspot {
     stroke: white;
     fill: rgba(0, 243, 8, 0.5);
 }

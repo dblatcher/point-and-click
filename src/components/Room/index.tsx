@@ -1,10 +1,10 @@
 import { h, ComponentChildren } from "preact";
 import { CellMatrix } from "../../lib/pathfinding/cells";
 import { RoomData } from "../../definitions/RoomData";
-import { HotSpotZone } from "../../definitions/Zone";
+import { HotspotZone } from "../../definitions/Zone";
 import { getShift } from "../../lib/util";
 import styles from './styles.module.css';
-import HotSpot from "./HotSpot";
+import Hotspot from "./Hotspot";
 import ZoneSvg from "../ZoneSvg";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import BackgroundShape from "./BackgroundShape";
@@ -14,7 +14,7 @@ interface Props {
     scale?: number,
     viewAngle: number,
     handleRoomClick: { (x: number, y: number): void }
-    handleHotSpotClick: { (zone: HotSpotZone): void }
+    handleHotspotClick: { (zone: HotspotZone): void }
     children?: ComponentChildren
     showObstacleAreas?: boolean
     highlightHotspots?: boolean
@@ -26,7 +26,7 @@ export const Room = ({
     scale = 1,
     viewAngle,
     handleRoomClick,
-    handleHotSpotClick,
+    handleHotspotClick,
     children,
     showObstacleAreas,
     highlightHotspots,
@@ -82,12 +82,12 @@ export const Room = ({
                 }
 
                 {hotspots.map(zone =>
-                    <HotSpot
+                    <Hotspot
                         zone={zone}
                         viewAngle={viewAngle}
                         roomData={data}
                         highlight={highlightHotspots}
-                        clickHandler={handleHotSpotClick}
+                        clickHandler={handleHotspotClick}
                     />
                 )}
 

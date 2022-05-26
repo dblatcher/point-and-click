@@ -1,6 +1,6 @@
 import { Component } from "preact";
 import { BackgroundLayer, RoomData } from "../../definitions/RoomData";
-import { HotSpotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
+import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 import { Point } from "../../lib/pathfinding/geometry";
 import { locateClickInWorld } from "../../lib/util";
 import { Room } from "../Room";
@@ -8,7 +8,7 @@ import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ZoneControl } from "./ZoneControl";
 import styles from './styles.module.css';
-import { HotSpotControl } from "./HotSpotControl";
+import { HotspotControl } from "./HotspotControl";
 import { NumberInput, Warning } from "../formControls";
 
 type NewObstableEffect = {
@@ -16,7 +16,7 @@ type NewObstableEffect = {
     shape: SupportedZoneShape
 }
 
-type NewHotSpotEffect = {
+type NewHotspotEffect = {
     type: 'HOTSPOT',
     shape: SupportedZoneShape
 }
@@ -26,12 +26,12 @@ type NewObstaclePolygonPointEffect = {
     index: number;
 }
 
-type NewHotSpotPolygonPointEffect = {
+type NewHotspotPolygonPointEffect = {
     type: 'POLYGON_POINT_HOTSPOT';
     index: number;
 }
 
-export type ClickEffect = NewObstableEffect | NewObstaclePolygonPointEffect | NewHotSpotEffect | NewHotSpotPolygonPointEffect
+export type ClickEffect = NewObstableEffect | NewObstaclePolygonPointEffect | NewHotspotEffect | NewHotspotPolygonPointEffect
 
 type RoomEditorState = RoomData & {
     viewAngle: number;
@@ -42,9 +42,9 @@ type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
 };
 
-function makeNewHotspot(point: Point, effect: NewHotSpotEffect): HotSpotZone {
+function makeNewHotspot(point: Point, effect: NewHotspotEffect): HotspotZone {
 
-    const zone: HotSpotZone = { x: point.x, y: point.y, type: 'hotspot', id: 'NEW_ID', parallax: 1 }
+    const zone: HotspotZone = { x: point.x, y: point.y, type: 'hotspot', id: 'NEW_ID', parallax: 1 }
     switch (effect.shape) {
         case 'circle': zone.circle = 20;
             break;
@@ -159,10 +159,10 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                 return this.setState({ obstacleAreas })
 
             case 'POLYGON_POINT_HOTSPOT':
-                const hotSpot = hotspots[clickEffect.index]
-                if (!hotSpot?.polygon) { return }
-                hotSpot.polygon.push([
-                    roundedPoint.x - hotSpot.x, roundedPoint.y - hotSpot.y
+                const hotspot = hotspots[clickEffect.index]
+                if (!hotspot?.polygon) { return }
+                hotspot.polygon.push([
+                    roundedPoint.x - hotspot.x, roundedPoint.y - hotspot.y
                 ])
                 return this.setState({ hotspots })
         }
@@ -186,7 +186,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         zone.y = y
         this.setState({ obstacleAreas, hotspots })
     }
-    changeZone(index: number, propery: Exclude<keyof HotSpotZone, ('type' & SupportedZoneShape)>, newValue: any, type?: string) {
+    changeZone(index: number, propery: Exclude<keyof HotspotZone, ('type' & SupportedZoneShape)>, newValue: any, type?: string) {
         console.log(index, propery, newValue, type)
         const { obstacleAreas, hotspots } = this.state
         const zone = type === 'hotspot' ? hotspots[index] : obstacleAreas[index]
@@ -291,13 +291,13 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     </fieldset>
                     <fieldset className={styles.fieldset}>
                         <legend>Hotspots</legend>
-                        {hotspots.map((hotSpot, index) =>
+                        {hotspots.map((hotspot, index) =>
                             <>
-                                <HotSpotControl hotSpot={hotSpot} index={index}
+                                <HotspotControl hotspot={hotspot} index={index}
                                     change={this.changeZone}
                                 />
                                 <ZoneControl
-                                    zone={hotSpot} index={index}
+                                    zone={hotspot} index={index}
                                     setClickEffect={this.setClickEffect}
                                     move={this.moveZone}
                                     change={this.changeZone}
@@ -322,7 +322,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                             <span>Click to add new point </span>
                         )}
                         {clickEffect?.type === 'HOTSPOT' && (
-                            <span>Click to add new {clickEffect.shape} hotSpot</span>
+                            <span>Click to add new {clickEffect.shape} hotspot</span>
                         )}
                         {clickEffect?.type === 'POLYGON_POINT_HOTSPOT' && (
                             <span>Click to add new point </span>
@@ -333,7 +333,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         scale={viewScale}
                         viewAngle={viewAngle}
                         highlightHotspots={highlightHotspots}
-                        handleHotSpotClick={() => { }}
+                        handleHotspotClick={() => { }}
                         handleRoomClick={this.handleRoomClick}
                     />
 
