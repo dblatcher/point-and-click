@@ -17,6 +17,7 @@ interface Props {
     handleHotSpotClick: { (zone: HotSpotZone): void }
     children?: ComponentChildren
     showObstacleAreas?: boolean
+    highlightHotspots?: boolean
     obstacleCells?: CellMatrix
 }
 
@@ -28,6 +29,7 @@ export const Room = ({
     handleHotSpotClick,
     children,
     showObstacleAreas,
+    highlightHotspots,
     obstacleCells,
 }: Props) => {
 
@@ -84,6 +86,7 @@ export const Room = ({
                         zone={zone}
                         viewAngle={viewAngle}
                         roomData={data}
+                        highlight={highlightHotspots}
                         clickHandler={handleHotSpotClick}
                     />
                 )}

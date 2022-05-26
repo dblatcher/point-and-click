@@ -2,13 +2,17 @@
     fill: rgba(0, 243, 8, 0);
     transition: fill .5s;
     pointer-events: all;
-    stroke: white;
 }
 
 .hotSpot:hover {
-    fill: rgba(0, 243, 8, 0.5);
+    fill: rgba(0, 243, 8, 0.25);
     stroke: white;
     stroke-dasharray: 1,1;
+}
+
+.highlightedHotSpot {
+    stroke: white;
+    fill: rgba(0, 243, 8, 0.5);
 }
 
 .obstacleArea {

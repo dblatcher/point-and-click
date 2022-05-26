@@ -9,17 +9,20 @@ interface Props {
     roomData: RoomData
     viewAngle: number
     clickHandler?: { (zone: HotSpotZone): void }
+    highlight?: boolean
 }
 
 export default function HotSpot({
-    zone, roomData, viewAngle,
+    zone, roomData, viewAngle, highlight,
     clickHandler = (zone) => { console.log(zone) }
 }: Props) {
     const { parallax } = zone
 
+    const className = highlight ? styles.highlightedHotSpot : styles.hotSpot
+
     return (
         <ZoneSvg
-            className={styles.hotSpot}
+            className={className}
             x={zone.x + getShift(viewAngle, parallax, roomData)}
             y={roomData.height - zone.y}
             clickHandler={clickHandler}

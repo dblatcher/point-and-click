@@ -38,6 +38,7 @@ type RoomEditorState = RoomData & {
     assetList: string[];
     viewScale: number;
     showObstacleAreas: boolean;
+    highlightHotspots: boolean;
     clickEffect?: ClickEffect;
 };
 
@@ -106,6 +107,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
             viewScale: 1,
             assetList: assets,
             showObstacleAreas: true,
+            highlightHotspots: true,
         }
 
         this.removeBackground = this.removeBackground.bind(this)
@@ -219,7 +221,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
     }
 
     render() {
-        const { viewAngle, viewScale, assetList, showObstacleAreas,
+        const { viewAngle, viewScale, assetList, showObstacleAreas, highlightHotspots,
             name, background, height, width, frameWidth, obstacleAreas, hotspots = [],
             clickEffect
         } = this.state
@@ -330,6 +332,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         showObstacleAreas={showObstacleAreas}
                         scale={viewScale}
                         viewAngle={viewAngle}
+                        highlightHotspots={highlightHotspots}
                         handleHotSpotClick={() => { }}
                         handleRoomClick={this.handleRoomClick}
                     />
@@ -352,6 +355,12 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                         <input type='checkbox' checked={showObstacleAreas}
                             onChange={(event) => this.setState({ showObstacleAreas: event.target.checked })} />
                         <span>{showObstacleAreas ? 'YES' : 'NO'}</span>
+                    </div>
+                    <div>
+                        <label>show hotspots</label>
+                        <input type='checkbox' checked={highlightHotspots}
+                            onChange={(event) => this.setState({ highlightHotspots: event.target.checked })} />
+                        <span>{highlightHotspots ? 'YES' : 'NO'}</span>
                     </div>
                 </section>
             </div>
