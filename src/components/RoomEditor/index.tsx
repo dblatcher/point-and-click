@@ -1,5 +1,5 @@
 import { Component } from "preact";
-import { BackgroundLayer, RoomData } from "../../definitions/RoomData";
+import { BackgroundLayer, RoomData, ScaleLevel } from "../../definitions/RoomData";
 import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 import { Point } from "../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
@@ -68,8 +68,7 @@ function getBlankRoom(): RoomData {
         obstacleAreas: [
         ],
         scaling: [
-            [0, 2],
-            [200, .5],
+            [0, 1],
         ]
     }
 }
@@ -230,7 +229,10 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     </fieldset>
                     <fieldset className={styles.fieldset}>
                         <legend>Scaling</legend>
-                        <ScalingControl scaling={scaling} />
+                        <ScalingControl
+                            change={(scaling: ScaleLevel) => { this.setState({ scaling }) }}
+                            scaling={scaling}
+                            height={this.state.height} />
                     </fieldset>
                     <fieldset className={styles.fieldset}>
                         <legend>Background</legend>

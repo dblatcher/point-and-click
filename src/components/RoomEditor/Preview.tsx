@@ -7,6 +7,7 @@ import { Room } from "../Room";
 import { ClickEffect } from "./ClickEffect";
 import { CharacterData } from "../../definitions/CharacterData";
 import { locateClickInWorld } from "../../lib/util";
+import HorizontalLine from "../HorizontalLine";
 
 const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
     return {
@@ -30,6 +31,7 @@ type State = {
     viewScale: number;
     showObstacleAreas: boolean;
     highlightHotspots: boolean;
+    showScaleLines: boolean;
     showMarker: boolean;
     markerPosition: Point;
     showCharacter: boolean;
@@ -68,7 +70,8 @@ export class Preview extends Component<Props, State>{
             viewScale: 1,
             showObstacleAreas: true,
             highlightHotspots: true,
-            showMarker: true,
+            showScaleLines:true,
+            showMarker: false,
             markerPosition: { x: props.roomData.width / 2, y: 20 },
             showCharacter: true,
             testCharacter: makeTestCharacter({ x: props.roomData.width / 2, y: 20 }),
@@ -105,7 +108,11 @@ export class Preview extends Component<Props, State>{
     }
 
     render() {
-        const { viewAngle, viewScale, showObstacleAreas, highlightHotspots, showMarker, markerPosition, testCharacter, showCharacter } = this.state
+        const { 
+            viewAngle, viewScale, showObstacleAreas, highlightHotspots, 
+            showMarker, markerPosition, testCharacter, showCharacter,
+            showScaleLines,
+        } = this.state
         const { roomData, handleRoomClick, clickEffect } = this.props
 
         const processClick = (x: number, y: number) => {
@@ -136,6 +143,10 @@ export class Preview extends Component<Props, State>{
                             roomData={roomData}
                             viewAngle={viewAngle} isPaused={false} key={'test'} />
                     )}
+
+                    {showScaleLines && roomData.scaling.map(yAndScale => (
+                        <HorizontalLine y={yAndScale[0]} text={`scale: ${yAndScale[1]}`} roomData={roomData}/>
+                    ))}
                 </Room>
 
                 <fieldset>
@@ -155,6 +166,7 @@ export class Preview extends Component<Props, State>{
 
                     {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
                     {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
+                    {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
 
                 </fieldset>
 

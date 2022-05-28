@@ -58,11 +58,14 @@ export function NumberInput(props: {
     label: string
     value: number
     onInput: React.ChangeEventHandler<HTMLInputElement>
+    max?:number
+    min?:number
+    step?:number
 }) {
     const { label, value, onInput } = props
     return <>
         <label>{label}</label>
-        <input type='number' value={value} onInput={onInput} />
+        <input type='number'{...props} />
     </>
 }
 
