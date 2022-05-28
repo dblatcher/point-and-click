@@ -29,7 +29,7 @@ export default function MarkerShape({
                 stroke={'white'} 
                 fill={'black'} 
                 stroke-width={.25} 
-                font-size={10} 
+                font-size={15} 
                 font-family='monospace'
             >{textToDisplay}</text>
         </svg>

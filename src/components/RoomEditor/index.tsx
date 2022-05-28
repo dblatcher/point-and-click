@@ -3,7 +3,6 @@ import { BackgroundLayer, RoomData } from "../../definitions/RoomData";
 import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 import { Point } from "../../lib/pathfinding/geometry";
 import { locateClickInWorld } from "../../lib/util";
-import { Room } from "../Room";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ZoneControl } from "./ZoneControl";
@@ -11,14 +10,11 @@ import styles from './styles.module.css';
 import { HotspotControl } from "./HotspotControl";
 import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect";
+import { Preview } from "./Preview";
 
 
 type RoomEditorState = RoomData & {
-    viewAngle: number;
     assetList: string[];
-    viewScale: number;
-    showObstacleAreas: boolean;
-    highlightHotspots: boolean;
     clickEffect?: ClickEffect;
 };
 
@@ -48,22 +44,6 @@ function makeNewZone(point: Point, effect: NewObstableEffect): Zone {
     return zone
 }
 
-function getClickCaption(clickEffect?: ClickEffect): string {
-    if (!clickEffect) return '_'
-    switch (clickEffect.type) {
-        case 'OBSTACLE':
-            return `Click to add new ${clickEffect.shape} obstable`
-        case 'POLYGON_POINT_OBSTACLE':
-            return `Click to add new point`
-        case 'HOTSPOT':
-            return `Click to add new ${clickEffect.shape} hotspot`
-        case 'POLYGON_POINT_HOTSPOT':
-            return `Click to add new point`
-        default:
-            return 'UNKNOWN!'
-    }
-}
-
 const path = "/assets/backgrounds/"
 function getAssets(): string[] {
     return [
@@ -87,6 +67,8 @@ function getBlankRoom(): RoomData {
         ],
         obstacleAreas: [
         ],
+        scaling: [
+        ]
     }
 }
 
@@ -98,11 +80,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
 
         this.state = {
             ...getBlankRoom(),
-            viewAngle: 0,
-            viewScale: 1,
             assetList: assets,
-            showObstacleAreas: true,
-            highlightHotspots: true,
         }
 
         this.removeBackground = this.removeBackground.bind(this)
@@ -216,7 +194,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
     }
 
     render() {
-        const { viewAngle, viewScale, assetList, showObstacleAreas, highlightHotspots,
+        const { assetList,
             name, background, height, width, frameWidth, obstacleAreas, hotspots = [],
             clickEffect
         } = this.state
@@ -302,45 +280,10 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     </fieldset>
                 </section>
 
-                <section>
-                    <p>{getClickCaption(clickEffect)}</p>
-                    <Room data={this.state}
-                        showObstacleAreas={showObstacleAreas}
-                        scale={viewScale}
-                        viewAngle={viewAngle}
-                        highlightHotspots={highlightHotspots}
-                        handleHotspotClick={() => { }}
-                        handleRoomClick={this.handleRoomClick}
-                    />
-
-                    <fieldset>
-                        <div>
-                            <label>view scale</label>
-                            <input type='range' value={viewScale} max={2} min={1} step={.01}
-                                onChange={(event) => this.setState({ viewScale: Number(event.target.value) })} />
-                            <span>{viewScale}</span>
-                        </div>
-
-                        <div>
-                            <label>view angle</label>
-                            <input type='range' value={viewAngle} max={1} min={-1} step={.01}
-                                onChange={(event) => this.setState({ viewAngle: Number(event.target.value) })} />
-                            <span>{viewAngle}</span>
-                        </div>
-                        <div>
-                            <label>show obstables</label>
-                            <input type='checkbox' checked={showObstacleAreas}
-                                onChange={(event) => this.setState({ showObstacleAreas: event.target.checked })} />
-                            <span>{showObstacleAreas ? 'YES' : 'NO'}</span>
-                        </div>
-                        <div>
-                            <label>show hotspots</label>
-                            <input type='checkbox' checked={highlightHotspots}
-                                onChange={(event) => this.setState({ highlightHotspots: event.target.checked })} />
-                            <span>{highlightHotspots ? 'YES' : 'NO'}</span>
-                        </div>
-                    </fieldset>
-                </section>
+                <Preview
+                    roomData={this.state} 
+                    clickEffect={clickEffect} 
+                    handleRoomClick={this.handleRoomClick} />
             </div>
 
         </article>
