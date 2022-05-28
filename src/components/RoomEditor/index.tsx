@@ -11,6 +11,7 @@ import { HotspotControl } from "./HotspotControl";
 import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect";
 import { Preview } from "./Preview";
+import { ScalingControl } from "./ScalingControl";
 
 
 type RoomEditorState = RoomData & {
@@ -68,6 +69,8 @@ function getBlankRoom(): RoomData {
         obstacleAreas: [
         ],
         scaling: [
+            [0, 2],
+            [200, .5],
         ]
     }
 }
@@ -196,6 +199,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
     render() {
         const { assetList,
             name, background, height, width, frameWidth, obstacleAreas, hotspots = [],
+            scaling = [],
             clickEffect
         } = this.state
 
@@ -227,7 +231,10 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                             )}
                         </div>
                     </fieldset>
-
+                    <fieldset className={styles.fieldset}>
+                        <legend>Scaling</legend>
+                        <ScalingControl scaling={scaling} />
+                    </fieldset>
                     <fieldset className={styles.fieldset}>
                         <legend>Background</legend>
 
@@ -281,8 +288,8 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                 </section>
 
                 <Preview
-                    roomData={this.state} 
-                    clickEffect={clickEffect} 
+                    roomData={this.state}
+                    clickEffect={clickEffect}
                     handleRoomClick={this.handleRoomClick} />
             </div>
 

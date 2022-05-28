@@ -1,5 +1,5 @@
 import { sprites } from "../../data/sprites"
-import { RoomData, ScaleLevel } from "../definitions/RoomData"
+import { RoomData } from "../definitions/RoomData"
 import { placeOnScreen } from "../lib/util";
 import SpriteShape from "./SpriteShape";
 import { useInterval } from "../lib/useInterval"
@@ -9,6 +9,7 @@ import { Order } from "../definitions/Order";
 import { Sprite } from "../lib/Sprite";
 import { DialogueBubble } from "./DialogueBubble";
 import { ThingData } from "../definitions/ThingData";
+import { getScale } from "../lib/getScale";
 
 interface Props {
     roomData: RoomData
@@ -28,43 +29,6 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
-const getSpriteScale = (y: number, scaleLevel?: ScaleLevel): number => {
-
-    if (!scaleLevel || scaleLevel.length == 0) { return 1 }
-
-    let lowerLevel: [number, number];
-    let upperLevel: [number, number];
-
-    let i;
-    for (i = 0; i < scaleLevel.length; i++) {
-        let current = scaleLevel[i]
-        let next = scaleLevel[i + 1]
-
-        if (y < current[0]) { continue }
-        lowerLevel = current;
-        upperLevel = next;
-        break;
-    }
-
-    if (!lowerLevel) {
-        return 1
-    }
-
-    if (!upperLevel) {
-        return lowerLevel[1]
-    }
-
-
-    const [lowY, lowScale] = lowerLevel
-    const [uppY, uppScale] = upperLevel
-
-    const normalisedDistance = (y - lowY) / (uppY - lowY)
-
-    const scale = lowScale + (uppScale - lowScale) * normalisedDistance
-
-    return scale
-}
-
 export function CharacterOrThing({
     roomData, viewAngle,
     animationRate = 200, data, isPaused,
@@ -82,7 +46,7 @@ export function CharacterOrThing({
     const frames = spriteObject.getFrames(animationName, direction)
 
     const [frameIndex, setFrameIndex] = useState(0)
-    const spriteScale = getSpriteScale(y, roomData.scaling)
+    const spriteScale = getScale(y, roomData.scaling)
 
     const updateFrame = () => {
         if (!frames || isPaused) { return }
