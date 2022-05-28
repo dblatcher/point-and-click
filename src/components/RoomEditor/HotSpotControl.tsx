@@ -1,4 +1,4 @@
-import { ClickEffect } from ".";
+import { ClickEffect } from "./ClickEffect";
 import { HotspotZone, SupportedZoneShape } from "../../definitions/Zone";
 import { IdentInput, ParallaxInput } from "../formControls";
 import { ZoneControl } from "./ZoneControl";

@@ -10,28 +10,8 @@ import { ZoneControl } from "./ZoneControl";
 import styles from './styles.module.css';
 import { HotspotControl } from "./HotspotControl";
 import { NumberInput, Warning } from "../formControls";
+import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect";
 
-type NewObstableEffect = {
-    type: 'OBSTACLE',
-    shape: SupportedZoneShape
-}
-
-type NewHotspotEffect = {
-    type: 'HOTSPOT',
-    shape: SupportedZoneShape
-}
-
-type NewObstaclePolygonPointEffect = {
-    type: 'POLYGON_POINT_OBSTACLE';
-    index: number;
-}
-
-type NewHotspotPolygonPointEffect = {
-    type: 'POLYGON_POINT_HOTSPOT';
-    index: number;
-}
-
-export type ClickEffect = NewObstableEffect | NewObstaclePolygonPointEffect | NewHotspotEffect | NewHotspotPolygonPointEffect
 
 type RoomEditorState = RoomData & {
     viewAngle: number;

@@ -1,4 +1,4 @@
-import { ClickEffect } from ".";
+import { ClickEffect } from "./ClickEffect";
 import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 
 interface Props {
