@@ -6,6 +6,7 @@ import { CharacterOrThing } from "../CharacterOrThing";
 import { Room } from "../Room";
 import { ClickEffect } from "./ClickEffect";
 import { CharacterData } from "../../definitions/CharacterData";
+import { locateClickInWorld } from "../../lib/util";
 
 const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
     return {
@@ -38,7 +39,7 @@ type State = {
 type Props = {
     roomData: RoomData
     clickEffect?: ClickEffect;
-    handleRoomClick: { (x: number, y: number): void }
+    handleRoomClick: { (pointClicked: { x: number, y: number }): void }
 }
 
 
@@ -107,6 +108,10 @@ export class Preview extends Component<Props, State>{
         const { viewAngle, viewScale, showObstacleAreas, highlightHotspots, showMarker, markerPosition, testCharacter, showCharacter } = this.state
         const { roomData, handleRoomClick, clickEffect } = this.props
 
+        const processClick = (x: number, y: number) => {
+            handleRoomClick(locateClickInWorld(x, y, viewAngle, roomData))
+        }
+
         return (
             <section>
                 <p>{getClickCaption(clickEffect)}</p>
@@ -116,10 +121,9 @@ export class Preview extends Component<Props, State>{
                     viewAngle={viewAngle}
                     highlightHotspots={highlightHotspots}
                     handleHotspotClick={() => { }}
-                    handleRoomClick={handleRoomClick}
+                    handleRoomClick={processClick}
                 >
                     {showMarker && (
-
                         <MarkerShape roomData={roomData}
                             height={50}
                             viewAngle={viewAngle}

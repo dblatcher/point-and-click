@@ -2,7 +2,6 @@ import { Component } from "preact";
 import { BackgroundLayer, RoomData } from "../../definitions/RoomData";
 import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 import { Point } from "../../lib/pathfinding/geometry";
-import { locateClickInWorld } from "../../lib/util";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ZoneControl } from "./ZoneControl";
@@ -101,9 +100,8 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         this.setState({ clickEffect })
     }
 
-    handleRoomClick(x: number, y: number) {
+    handleRoomClick(pointClicked: { x: number, y: number }) {
         const { clickEffect, obstacleAreas, hotspots } = this.state
-        const pointClicked = locateClickInWorld(x, y, this.state.viewAngle, this.state)
         const roundedPoint = {
             x: Math.round(pointClicked.x),
             y: Math.round(pointClicked.y),
@@ -163,7 +161,6 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         this.setState({ obstacleAreas, hotspots })
     }
     changeZone(index: number, propery: Exclude<keyof HotspotZone, ('type' & SupportedZoneShape)>, newValue: any, type?: string) {
-        console.log(index, propery, newValue, type)
         const { obstacleAreas, hotspots } = this.state
         const zone = type === 'hotspot' ? hotspots[index] : obstacleAreas[index]
         if (typeof zone[propery] === 'undefined') { return }
