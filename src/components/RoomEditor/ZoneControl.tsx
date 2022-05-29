@@ -15,7 +15,7 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
     const shape: SupportedZoneShape = polygon ? 'polygon' : rect ? 'rect' : circle ? 'circle' : undefined;
 
 
-    function moveZone(event: React.ChangeEvent<HTMLInputElement>, coor: 'x' | 'y') {
+    function moveZone(event: Event & { target: HTMLInputElement }, coor: 'x' | 'y') {
         const value = Number(event.target.value)
         if (isNaN(value)) { return }
         const newX = coor === 'x' ? value : x;
@@ -23,12 +23,12 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
         return move(index, newX, newY, type)
     }
 
-    function changeRadius(event: React.ChangeEvent<HTMLInputElement>) {
+    function changeRadius(event: Event & { target: HTMLInputElement }) {
         const value = Number(event.target.value)
         if (isNaN(value)) { return }
         change(index, 'circle', value, type)
     }
-    function changeRect(event: React.ChangeEvent<HTMLInputElement>, coor: 'x' | 'y') {
+    function changeRect(event: Event & { target: HTMLInputElement }, coor: 'x' | 'y') {
         const value = Number(event.target.value)
         if (isNaN(value)) { return }
 
