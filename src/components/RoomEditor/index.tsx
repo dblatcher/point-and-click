@@ -18,9 +18,9 @@ type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
 };
 
-function makeNewHotspot(point: Point, effect: NewHotspotEffect): HotspotZone {
+function makeNewHotspot(point: Point, effect: NewHotspotEffect, idNumber: number): HotspotZone {
 
-    const zone: HotspotZone = { x: point.x, y: point.y, type: 'hotspot', id: 'NEW_ID', parallax: 1 }
+    const zone: HotspotZone = { x: point.x, y: point.y, type: 'hotspot', id: `HOTSPOT_${idNumber}`, parallax: 1 }
     switch (effect.shape) {
         case 'circle': zone.circle = 20;
             break;
@@ -117,7 +117,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                 })
 
             case 'HOTSPOT':
-                hotspots.push(makeNewHotspot(roundedPoint, clickEffect))
+                hotspots.push(makeNewHotspot(roundedPoint, clickEffect, hotspots.length + 1))
                 return this.setState({
                     hotspots,
                     clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1 } : undefined

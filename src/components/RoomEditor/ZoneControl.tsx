@@ -71,7 +71,12 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
                             <li key={index}>[ {point[0]}, {point[1]} ]</li>
                         ))}
                     </ol>
-                    <button onClick={() => { setClickEffect({ type: 'POLYGON_POINT_OBSTACLE', index }) }}>add points</button>
+                    <button onClick={() => {
+                        setClickEffect({
+                            type: type === 'hotspot' ? 'POLYGON_POINT_HOTSPOT' : 'POLYGON_POINT_OBSTACLE',
+                            index
+                        })
+                    }}>add points</button>
                 </div>
             )}
             <hr></hr>
