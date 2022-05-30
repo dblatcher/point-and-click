@@ -16,7 +16,7 @@ export function BackgroundLayerControl({ layer, remove, index, urls, change, mov
     const urlIndex = urls.indexOf(layer.url)
 
     return <div>
-        <label>URL:</label>
+        <label>URL:</label>{layer.url}
         <select value={urlIndex} onChange={(event) => { change(index, 'url', urls[Number(event.target.value)]) }}>
             {urls.map((url, index) => <option value={index}>{url}</option>)}
         </select>

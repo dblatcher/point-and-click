@@ -114,13 +114,14 @@ export class Preview extends Component<Props, State>{
             showScaleLines,
         } = this.state
         const { roomData, handleRoomClick, clickEffect } = this.props
+        const {scaling = []} = roomData
 
         const processClick = (x: number, y: number) => {
             handleRoomClick(locateClickInWorld(x, y, viewAngle, roomData))
         }
 
         return (
-            <section>
+            <>
                 <p>{getClickCaption(clickEffect)}</p>
                 <Room data={roomData}
                     showObstacleAreas={showObstacleAreas}
@@ -144,7 +145,7 @@ export class Preview extends Component<Props, State>{
                             viewAngle={viewAngle} isPaused={false} key={'test'} />
                     )}
 
-                    {showScaleLines && roomData.scaling.map(yAndScale => (
+                    {showScaleLines && scaling.map(yAndScale => (
                         <HorizontalLine y={yAndScale[0]} text={`scale: ${yAndScale[1]}`} roomData={roomData}/>
                     ))}
                 </Room>
@@ -230,7 +231,7 @@ export class Preview extends Component<Props, State>{
                     </div>
 
                 </fieldset>
-            </section>
+            </>
         )
     }
 }

@@ -11,12 +11,18 @@ import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
+import { cloneData } from "../../lib/clone";
 
 
 type RoomEditorState = RoomData & {
-    assetList: string[];
     clickEffect?: ClickEffect;
 };
+
+type RoomEditorProps = {
+    data?: RoomData;
+    assetList?: string[];
+    saveFunction: { (data: RoomData): void }
+}
 
 function makeNewHotspot(point: Point, effect: NewHotspotEffect, idNumber: number): HotspotZone {
 
@@ -44,26 +50,15 @@ function makeNewZone(point: Point, effect: NewObstableEffect): Zone {
     return zone
 }
 
-const path = "/assets/backgrounds/"
-function getAssets(): string[] {
-    return [
-        "square-room.png",
-        "hill.png",
-        "indoors.png",
-        "sky.png",
-        "trees.png",
-    ].map(filename => path + filename)
-}
 
 function getBlankRoom(): RoomData {
     return {
-        name: '_NEW_',
+        name: '_NEW_ROOM',
         frameWidth: 400,
         width: 400,
         height: 200,
         background: [],
         hotspots: [
-            { x: 40, y: 40, type: 'hotspot', 'circle': 30, parallax: 1, id: 'THING_ONE', name: 'thing' }
         ],
         obstacleAreas: [
         ],
@@ -73,15 +68,14 @@ function getBlankRoom(): RoomData {
     }
 }
 
-export class RoomEditor extends Component<{}, RoomEditorState>{
+export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
     constructor(props: RoomEditor['props']) {
         super(props)
-        const assets = getAssets()
 
+        const initialState = props.data ? cloneData(props.data) : getBlankRoom()
         this.state = {
-            ...getBlankRoom(),
-            assetList: assets,
+            ...initialState,
         }
 
         this.removeBackground = this.removeBackground.bind(this)
@@ -93,6 +87,7 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         this.changeZone = this.changeZone.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.setClickEffect = this.setClickEffect.bind(this)
+        this.handleSaveButton = this.handleSaveButton.bind(this)
     }
 
     setClickEffect(clickEffect?: ClickEffect) {
@@ -191,13 +186,22 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
         background.splice(direction === 'DOWN' ? index + 1 : index - 1, 0, layer)
         this.setState({ background })
     }
+    handleSaveButton() {
+        const data = cloneData(this.state) as RoomEditorState;
+        delete data.clickEffect
+        this.props.saveFunction(data)
+    }
 
     render() {
-        const { assetList,
+        const {
             name, background, height, width, frameWidth, obstacleAreas, hotspots = [],
             scaling = [],
             clickEffect
         } = this.state
+
+        const {
+            assetList = []
+        } = this.props
 
         return <article>
             <h2>Room Editor</h2>
@@ -286,10 +290,15 @@ export class RoomEditor extends Component<{}, RoomEditorState>{
                     </fieldset>
                 </section>
 
-                <Preview
-                    roomData={this.state}
-                    clickEffect={clickEffect}
-                    handleRoomClick={this.handleRoomClick} />
+                <section>
+                    <div>
+                        <button onClick={this.handleSaveButton}>Save</button>
+                    </div>
+                    <Preview
+                        roomData={this.state}
+                        clickEffect={clickEffect}
+                        handleRoomClick={this.handleRoomClick} />
+                </section>
             </div>
 
         </article>
