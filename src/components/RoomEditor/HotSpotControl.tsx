@@ -1,3 +1,4 @@
+import { h } from "preact";
 import { ClickEffect } from "./ClickEffect";
 import { HotspotZone, SupportedZoneShape } from "../../definitions/Zone";
 import { IdentInput, ParallaxInput } from "../formControls";

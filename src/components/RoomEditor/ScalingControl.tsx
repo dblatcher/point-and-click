@@ -1,4 +1,5 @@
-import { RoomData, ScaleLevel } from "../../definitions/RoomData";
+import { h } from "preact";
+import { ScaleLevel } from "../../definitions/RoomData";
 import { NumberInput } from "../formControls";
 import { cloneData } from "../../lib/clone"
 

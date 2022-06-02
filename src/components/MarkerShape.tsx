@@ -1,3 +1,4 @@
+import { h } from "preact";
 import { RoomData } from "../definitions/RoomData"
 import { placeOnScreen } from "../lib/util";
 

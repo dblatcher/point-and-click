@@ -1,3 +1,4 @@
+import { h } from "preact";
 import { BackgroundLayer } from "../../definitions/RoomData";
 import { clamp } from "../../lib/util";
 import { ParallaxInput } from "../formControls";

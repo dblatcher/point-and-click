@@ -1,3 +1,4 @@
+import { h } from "preact";
 import { RoomData } from "../../definitions/RoomData"
 import { HotspotZone } from "../../definitions/Zone"
 import { getShift } from "../../lib/util";

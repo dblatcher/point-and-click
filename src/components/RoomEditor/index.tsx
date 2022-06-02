@@ -1,4 +1,4 @@
-import { Component } from "preact";
+import { Component, h } from "preact";
 import { BackgroundLayer, RoomData, ScaleLevel } from "../../definitions/RoomData";
 import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 import { Point } from "../../lib/pathfinding/geometry";

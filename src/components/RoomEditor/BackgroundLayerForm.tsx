@@ -1,3 +1,4 @@
+import { h } from "preact";
 import { useState } from "preact/hooks"
 import { BackgroundLayer } from "../../definitions/RoomData";
 import { clamp } from "../../lib/util";

@@ -1,4 +1,4 @@
-import { Component } from "preact";
+import { Component, h } from "preact";
 import { RoomData } from "../../definitions/RoomData";
 import { Point } from "../../lib/pathfinding/geometry";
 import MarkerShape from "../MarkerShape";

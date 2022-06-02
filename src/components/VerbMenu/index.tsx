@@ -1,3 +1,4 @@
+import { h } from "preact"
 import { Verb } from "../../definitions/Verb"
 
 interface Props {

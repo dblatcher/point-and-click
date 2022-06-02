@@ -1,3 +1,4 @@
+import { h } from "preact";
 import { ClickEffect } from "./ClickEffect";
 import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 
