@@ -1,15 +1,17 @@
-import { h } from "preact";
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { h, FunctionalComponent } from "preact";
 import { ScaleLevel } from "../../definitions/RoomData";
 import { NumberInput } from "../formControls";
 import { cloneData } from "../../lib/clone"
+import { eventToNumber } from "../../lib/util";
 
 interface Props {
-    scaling: ScaleLevel
-    height: number
-    change: { (scaling: ScaleLevel): void }
+    scaling: ScaleLevel;
+    height: number;
+    change: { (scaling: ScaleLevel): void };
 }
 
-export function ScalingControl({ scaling, height, change }: Props) {
+export const ScalingControl: FunctionalComponent<Props> = ({ scaling, height, change }: Props) => {
 
     const handleAdjustment = (
         index: number, value: number, property: 'scale' | 'y'
@@ -31,7 +33,7 @@ export function ScalingControl({ scaling, height, change }: Props) {
     const addNew = () => {
         const newScaling = cloneData(scaling)
         const last = newScaling[newScaling.length - 1]
-        newScaling.push( last ? [last[0] + 5, last[1]] : [0,1])
+        newScaling.push(last ? [last[0] + 5, last[1]] : [0, 1])
         change(newScaling)
     }
 
@@ -41,10 +43,10 @@ export function ScalingControl({ scaling, height, change }: Props) {
                 const [y, scale] = level
                 return <div key={index}>
                     <NumberInput label="Y" value={y}
-                        onInput={(event) => handleAdjustment(index, Number(event.target.value), 'y')}
+                        onInput={(event) => handleAdjustment(index, eventToNumber(event), 'y')}
                         max={height} min={0} step={5} />
                     <NumberInput label="scale" value={scale}
-                        onInput={(event) => handleAdjustment(index, Number(event.target.value), 'scale')}
+                        onInput={(event) => handleAdjustment(index, eventToNumber(event), 'scale')}
                         max={5} min={0} step={.1} />
                     <button onClick={() => handleDelete(index)}>delete</button>
                 </div>

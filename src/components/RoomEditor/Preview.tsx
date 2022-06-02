@@ -1,4 +1,5 @@
-import { Component, h } from "preact";
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Component, h, Fragment, JSX } from "preact";
 import { RoomData } from "../../definitions/RoomData";
 import { Point } from "../../lib/pathfinding/geometry";
 import MarkerShape from "../MarkerShape";
@@ -6,7 +7,7 @@ import { CharacterOrThing } from "../CharacterOrThing";
 import { Room } from "../Room";
 import { ClickEffect } from "./ClickEffect";
 import { CharacterData } from "../../definitions/CharacterData";
-import { locateClickInWorld } from "../../lib/util";
+import { eventToBoolean, eventToNumber, locateClickInWorld } from "../../lib/util";
 import HorizontalLine from "../HorizontalLine";
 
 const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
@@ -26,22 +27,25 @@ const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
     }
 }
 
-type State = {
-    viewAngle: number;
-    viewScale: number;
+type BooleanState = {
     showObstacleAreas: boolean;
     highlightHotspots: boolean;
     showScaleLines: boolean;
     showMarker: boolean;
-    markerPosition: Point;
     showCharacter: boolean;
+}
+
+type State = BooleanState & {
+    viewAngle: number;
+    viewScale: number;
+    markerPosition: Point;
     testCharacter: CharacterData;
 };
 
 type Props = {
-    roomData: RoomData
+    roomData: RoomData;
     clickEffect?: ClickEffect;
-    handleRoomClick: { (pointClicked: { x: number, y: number }): void }
+    handleRoomClick: { (pointClicked: { x: number; y: number }): void };
 }
 
 
@@ -70,7 +74,7 @@ export class Preview extends Component<Props, State>{
             viewScale: 1,
             showObstacleAreas: true,
             highlightHotspots: true,
-            showScaleLines:true,
+            showScaleLines: true,
             showMarker: false,
             markerPosition: { x: props.roomData.width / 2, y: 20 },
             showCharacter: true,
@@ -80,17 +84,17 @@ export class Preview extends Component<Props, State>{
         this.changeCharacterNumberProperty = this.changeCharacterNumberProperty.bind(this)
     }
 
-    renderCheckBox(label: string, propery: keyof Preview['state']) {
+    renderCheckBox(label: string, propery: keyof BooleanState) {
         const { state } = this
-        const setValue = (event) => {
-            const mod = {}
-            mod[propery] = event.target.checked;
+        const setValue = (event: JSX.TargetedEvent<HTMLInputElement>) => {
+            const mod: Partial<BooleanState> = {}
+            mod[propery] = eventToBoolean(event);
             this.setState(mod)
         }
         return (
             <div>
                 <label>{label}</label>
-                <input type='checkbox' checked={state[propery]}
+                <input type='checkbox' checked={!!state[propery]}
                     onChange={setValue} />
                 <span>{state[propery] ? 'YES' : 'NO'}</span>
             </div>
@@ -108,13 +112,13 @@ export class Preview extends Component<Props, State>{
     }
 
     render() {
-        const { 
-            viewAngle, viewScale, showObstacleAreas, highlightHotspots, 
+        const {
+            viewAngle, viewScale, showObstacleAreas, highlightHotspots,
             showMarker, markerPosition, testCharacter, showCharacter,
             showScaleLines,
         } = this.state
         const { roomData, handleRoomClick, clickEffect } = this.props
-        const {scaling = []} = roomData
+        const { scaling = [] } = roomData
 
         const processClick = (x: number, y: number) => {
             handleRoomClick(locateClickInWorld(x, y, viewAngle, roomData))
@@ -128,6 +132,7 @@ export class Preview extends Component<Props, State>{
                     scale={viewScale}
                     viewAngle={viewAngle}
                     highlightHotspots={highlightHotspots}
+                    // eslint-disable-next-line @typescript-eslint/no-empty-function
                     handleHotspotClick={() => { }}
                     handleRoomClick={processClick}
                 >
@@ -145,8 +150,11 @@ export class Preview extends Component<Props, State>{
                             viewAngle={viewAngle} isPaused={false} key={'test'} />
                     )}
 
-                    {showScaleLines && scaling.map(yAndScale => (
-                        <HorizontalLine y={yAndScale[0]} text={`scale: ${yAndScale[1]}`} roomData={roomData}/>
+                    {showScaleLines && scaling.map((yAndScale, index) => (
+                        <HorizontalLine key={index}
+                            y={yAndScale[0]}
+                            text={`scale: ${yAndScale[1]}`}
+                            roomData={roomData} />
                     ))}
                 </Room>
 
@@ -154,14 +162,14 @@ export class Preview extends Component<Props, State>{
                     <div>
                         <label>view scale</label>
                         <input type='range' value={viewScale} max={2} min={1} step={.01}
-                            onChange={(event) => this.setState({ viewScale: Number(event.target.value) })} />
+                            onChange={(event) => this.setState({ viewScale: eventToNumber(event) })} />
                         <span>{viewScale}</span>
                     </div>
 
                     <div>
                         <label>view angle</label>
                         <input type='range' value={viewAngle} max={1} min={-1} step={.01}
-                            onChange={(event) => this.setState({ viewAngle: Number(event.target.value) })} />
+                            onChange={(event) => this.setState({ viewAngle: eventToNumber(event) })} />
                         <span>{viewAngle}</span>
                     </div>
 
@@ -178,7 +186,7 @@ export class Preview extends Component<Props, State>{
                         <input type='range'
                             value={testCharacter.x}
                             min={0} max={roomData.width} step={10}
-                            onChange={(event) => this.changeCharacterNumberProperty(Number(event.target.value), 'x')} />
+                            onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'x')} />
                         <span>{testCharacter.x}</span>
                     </div>
                     <div>
@@ -186,7 +194,7 @@ export class Preview extends Component<Props, State>{
                         <input type='range'
                             value={testCharacter.y}
                             min={0} max={roomData.height} step={10}
-                            onChange={(event) => this.changeCharacterNumberProperty(Number(event.target.value), 'y')} />
+                            onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'y')} />
                         <span>{testCharacter.y}</span>
                     </div>
                     <div>
@@ -194,7 +202,7 @@ export class Preview extends Component<Props, State>{
                         <input type='range'
                             value={testCharacter.height}
                             min={10} max={200} step={10}
-                            onChange={(event) => this.changeCharacterNumberProperty(Number(event.target.value), 'height')} />
+                            onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'height')} />
                         <span>{testCharacter.height}</span>
                     </div>
                     <div>
@@ -202,7 +210,7 @@ export class Preview extends Component<Props, State>{
                         <input type='range'
                             value={testCharacter.width}
                             min={10} max={200} step={10}
-                            onChange={(event) => this.changeCharacterNumberProperty(Number(event.target.value), 'width')} />
+                            onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'width')} />
                         <span>{testCharacter.width}</span>
                     </div>
                 </fieldset>
@@ -216,7 +224,7 @@ export class Preview extends Component<Props, State>{
                             min={0}
                             max={roomData.width}
                             step={10}
-                            onChange={(event) => this.setState({ markerPosition: { x: Number(event.target.value), y: markerPosition.y } })} />
+                            onChange={(event) => this.setState({ markerPosition: { x: eventToNumber(event), y: markerPosition.y } })} />
                         <span>{markerPosition.x}</span>
                     </div>
                     <div>
@@ -226,7 +234,7 @@ export class Preview extends Component<Props, State>{
                             min={0}
                             max={roomData.height}
                             step={10}
-                            onChange={(event) => this.setState({ markerPosition: { y: Number(event.target.value), x: markerPosition.x } })} />
+                            onChange={(event) => this.setState({ markerPosition: { y: eventToNumber(event), x: markerPosition.x } })} />
                         <span>{markerPosition.y}</span>
                     </div>
 

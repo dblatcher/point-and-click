@@ -1,11 +1,11 @@
-import { ComponentChild } from "preact"
+import { ComponentChild, FunctionalComponent, Fragment, h, JSX } from "preact"
 import { Ident } from "../definitions/BaseTypes"
 import styles from './RoomEditor/styles.module.css';
 
-export function ParallaxInput(props: {
-    value: number,
-    onChange: React.ChangeEventHandler<HTMLInputElement>
-}) {
+export const ParallaxInput: FunctionalComponent<{
+    value: number;
+    onChange: JSX.EventHandler<JSX.TargetedEvent>;
+}> = (props) => {
     return <>
         <label>parallax:</label>
         <input type='number'
@@ -16,13 +16,14 @@ export function ParallaxInput(props: {
     </>
 }
 
-export function IdentInput(props: {
-    showType?: boolean
-    value: Ident
-    onChangeName?: React.ChangeEventHandler<HTMLInputElement>
-    onChangeStatus?: React.ChangeEventHandler<HTMLInputElement>
-    onChangeId?: React.ChangeEventHandler<HTMLInputElement>
-}) {
+
+export const IdentInput: FunctionalComponent<{
+    showType?: boolean;
+    value: Ident;
+    onChangeName?: JSX.EventHandler<JSX.TargetedEvent>;
+    onChangeStatus?: JSX.EventHandler<JSX.TargetedEvent>;
+    onChangeId?: JSX.EventHandler<JSX.TargetedEvent>;
+}> = (props) => {
     const { onChangeName, onChangeId, onChangeStatus, showType } = props
     const { type, name, id, status } = props.value
     return <>
@@ -54,22 +55,26 @@ export function IdentInput(props: {
     </>
 }
 
-export function NumberInput(props: {
-    label: string
-    value: number
-    onInput: React.ChangeEventHandler<HTMLInputElement>
-    max?:number
-    min?:number
-    step?:number
-}) {
-    const { label, value, onInput } = props
+
+export const NumberInput: FunctionalComponent<{
+    label: string;
+    value: number;
+    onInput: JSX.EventHandler<JSX.TargetedEvent>;
+    max?: number;
+    min?: number;
+    step?: number;
+}> = (props) => {
+
+    const { label } = props
     return <>
         <label>{label}</label>
         <input type='number'{...props} />
     </>
 }
 
-export function Warning(props: { children?: ComponentChild }) {
+export const Warning: FunctionalComponent<{
+    children?: ComponentChild;
+}> = (props) => {
     return (
         <>
             <b style={{ color: 'red' }}>!</b>
