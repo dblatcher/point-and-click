@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { h } from "preact";
 import { CommandTarget } from "../definitions/Command";
 import { ItemData } from "../definitions/ItemData";
 import { Verb } from "../definitions/Verb";
@@ -5,10 +7,10 @@ import { Verb } from "../definitions/Verb";
 interface Props {
     verb?: Verb;
     item?: ItemData;
-    target?: CommandTarget
+    target?: CommandTarget;
 }
 
-export function CommandLine ({verb,item,target}:Props) {
+export function CommandLine({ verb, item, target }: Props) {
 
     let text = '>'
 

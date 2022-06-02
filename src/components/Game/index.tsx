@@ -1,4 +1,5 @@
-import { Component } from "preact";
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Component, h, Fragment } from "preact";
 import { RoomData } from "../../definitions/RoomData";
 import { CharacterData } from "../../definitions/CharacterData"
 import { Verb } from "../../definitions/Verb";
@@ -19,22 +20,20 @@ import { continueSequence } from "./continueSequence";
 import { GameData, GameCondition } from "../../definitions/Game";
 
 
-type GameProps = Readonly<{
-    save?: { (saveDate: GameData): void }
-    reset?: { (): void }
-    load?: { (): void }
+export type GameProps = Readonly<{
+    save?: { (saveDate: GameData): void };
+    reset?: { (): void };
+    load?: { (): void };
 } & GameCondition>
 
-type GameState = GameData & {
-    viewAngle: number
-    isPaused: boolean
-    timer?: number
-    cellMatrix?: CellMatrix
-    currentVerbId: string,
-    currentItemId?: string,
+export type GameState = GameData & {
+    viewAngle: number;
+    isPaused: boolean;
+    timer?: number;
+    cellMatrix?: CellMatrix;
+    currentVerbId: string;
+    currentItemId?: string;
 }
-
-export type { GameState, GameProps }
 
 export const cellSize = 10
 const TIMER_SPEED = 10
@@ -98,17 +97,19 @@ export default class Game extends Component<GameProps, GameState> {
         return rooms.find(_ => _.name === currentRoomName)
     }
 
-    get currentVerb(): Verb {
+    get currentVerb(): Verb | undefined {
+        if (!this.state.currentVerbId) { return undefined }
         return this.props.verbs.find(_ => _.id == this.state.currentVerbId)
     }
 
-    get currentItem(): ItemData {
+    get currentItem(): ItemData | undefined {
+        if (!this.state.currentItemId) { return undefined }
         return this.state.items.find(_ => _.id == this.state.currentItemId)
     }
 
     componentWillMount(): void {
         const timer = window.setInterval(() => { this.tick() }, TIMER_SPEED)
-        const cellMatrix = generateCellMatrix(this.currentRoom, cellSize)
+        const cellMatrix = this.currentRoom ? generateCellMatrix(this.currentRoom, cellSize) : undefined
         this.setState({ timer, cellMatrix })
     }
 
@@ -124,14 +125,14 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     makeCharactersAct() {
-        const { characters, characterOrders, thingOrders, sequenceRunning, things, cellMatrix } = this.state
+        const { characters, characterOrders, thingOrders, sequenceRunning, things, cellMatrix = [] } = this.state
         if (sequenceRunning) {
             return this.setState(continueSequence(this.state, this.props))
-        } else {
-            characters.forEach(character => followOrder(character, cellMatrix, characterOrders[character.id]))
-            things.forEach(thing => followOrder(thing, cellMatrix, thingOrders[thing.id]))
-            return this.setState({ characters, characterOrders })
         }
+        characters.forEach(character => followOrder(character, cellMatrix, characterOrders[character.id]))
+        things.forEach(thing => followOrder(thing, cellMatrix, thingOrders[thing.id]))
+        return this.setState({ characters, characterOrders })
+
     }
 
     centerViewOnPLayer() {
@@ -147,6 +148,7 @@ export default class Game extends Component<GameProps, GameState> {
         if (sequenceRunning) { return }
         const { verbs } = this.props
         const verb = verbs.find(_ => _.id == currentVerbId);
+        if (!verb) { return }
         const item = items.find(_ => _.id == currentItemId);
 
         if (target.type === 'item' && target.id === currentItemId) {
@@ -181,6 +183,7 @@ export default class Game extends Component<GameProps, GameState> {
             characters, things, currentVerbId, currentItemId, items,
             characterOrders, sequenceRunning, thingOrders } = this.state
         const { currentRoom, player } = this
+        if (!currentRoom) { return null }
 
         const characterOrderMap = sequenceRunning ? sequenceRunning[0].characterOrders || {} : characterOrders;
         const thingOrderMap = sequenceRunning ? sequenceRunning[0].thingOrders || {} : thingOrders;
@@ -236,7 +239,7 @@ export default class Game extends Component<GameProps, GameState> {
                     />
 
                     <ItemMenu
-                        items={items.filter(_ => _.characterId === player.id)}
+                        items={items.filter(_ => _.characterId === player?.id)}
                         currentItemId={currentItemId}
                         select={(item: ItemData) => { this.handleTargetClick(item) }}
                     />
