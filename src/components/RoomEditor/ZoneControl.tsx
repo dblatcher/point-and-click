@@ -1,4 +1,5 @@
-import { h } from "preact";
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { h, FunctionalComponent, JSX } from "preact";
 import { ClickEffect } from "./ClickEffect";
 import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
 
@@ -7,30 +8,29 @@ interface Props {
     index: number;
     remove: { (index: number, type?: string): void };
     move: { (index: number, x: number, y: number, type?: string): void };
-    change: { (index: number, propery: SupportedZoneShape, newValue: any, type?: string): void }
-    setClickEffect: { (clickEffect: ClickEffect): void }
+    change: { (index: number, propery: SupportedZoneShape, newValue: unknown, type?: string): void };
+    setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export function ZoneControl({ zone, remove, index, move, change, setClickEffect }: Props) {
+export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, move, change, setClickEffect }: Props) => {
     const { x, y, circle, rect, polygon, type } = zone
-    const shape: SupportedZoneShape = polygon ? 'polygon' : rect ? 'rect' : circle ? 'circle' : undefined;
 
-
-    function moveZone(event: Event & { target: HTMLInputElement }, coor: 'x' | 'y') {
-        const value = Number(event.target.value)
+    function moveZone(event: JSX.TargetedEvent<HTMLInputElement,Event>, coor: 'x' | 'y'): void {
+        const value = Number((event.target as HTMLInputElement).value)
         if (isNaN(value)) { return }
         const newX = coor === 'x' ? value : x;
         const newY = coor === 'y' ? value : y;
         return move(index, newX, newY, type)
     }
 
-    function changeRadius(event: Event & { target: HTMLInputElement }) {
-        const value = Number(event.target.value)
+    function changeRadius(event: JSX.TargetedEvent<HTMLInputElement,Event>): void {
+        const value = Number((event.target as HTMLInputElement).value)
         if (isNaN(value)) { return }
         change(index, 'circle', value, type)
     }
-    function changeRect(event: Event & { target: HTMLInputElement }, coor: 'x' | 'y') {
-        const value = Number(event.target.value)
+    function changeRect(event: JSX.TargetedEvent<HTMLInputElement,Event>, coor: 'x' | 'y'): void {
+        if (!rect) { return }
+        const value = Number((event.target as HTMLInputElement).value)
         if (isNaN(value)) { return }
 
         const newRect = [
@@ -50,13 +50,13 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
                 <input type="number" value={y} onChange={(event) => { moveZone(event, 'y') }} />
                 <button onClick={() => { remove(index, type) }}>delete</button>
             </span>
-            {shape === 'circle' && (
+            {circle && (
                 <div>
                     <label>Radius: </label>
                     <input type="number" value={circle} onChange={changeRadius} />
                 </div>
             )}
-            {shape === 'rect' && (
+            {rect && (
                 <div>
                     <label>Width: </label>
                     <input type="number" value={rect[0]} onChange={event => { changeRect(event, 'x') }} />
@@ -64,7 +64,7 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
                     <input type="number" value={rect[1]} onChange={event => { changeRect(event, 'y') }} />
                 </div>
             )}
-            {shape === 'polygon' && (
+            {polygon && (
                 <div>
                     <label>points: </label>
                     <ol>
@@ -80,7 +80,7 @@ export function ZoneControl({ zone, remove, index, move, change, setClickEffect 
                     }}>add points</button>
                 </div>
             )}
-            <hr></hr>
+            <hr />
         </div>
     )
 
