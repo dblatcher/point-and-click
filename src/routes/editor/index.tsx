@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, FunctionComponent } from 'preact';
 
 import { RoomEditor } from '../../components/RoomEditor';
 import { INSIDE } from '../../../data/INSIDE'
@@ -15,7 +15,7 @@ function getBackgroundAssets(): string[] {
 	].map(filename => path + filename)
 }
 
-const Editor = () => (
+const Editor:FunctionComponent = () => (
 	<div>
 		<RoomEditor 
 			assetList={getBackgroundAssets()} 
