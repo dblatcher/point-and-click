@@ -28,7 +28,7 @@ export class Sprite {
         return !!animations[animationName]
     }
 
-    public getFrames(animationName: string, direction: Direction): SpriteFrame[] | undefined {
+    public getFrames(animationName: string, direction: Direction = this.data.defaultDirection): SpriteFrame[] | undefined {
         const animationObject = this.data.animations[animationName]
         if (!animationObject) { return undefined }
         const directionToUse = !direction || !animationObject[direction] ? this.data.defaultDirection : direction;
@@ -36,7 +36,7 @@ export class Sprite {
     }
 
 
-    public getFrame(animationName: string, frameIndex: number, direction: Direction): SheetWithFrame | undefined {
+    public getFrame(animationName: string, frameIndex: number, direction: Direction = this.data.defaultDirection): SheetWithFrame | undefined {
 
         const frames = this.getFrames(animationName, direction);
         if (!frames) { return undefined }
@@ -45,6 +45,7 @@ export class Sprite {
 
         if (!frame) { return undefined }
         const sheet = this.sheets.find(sheet => sheet.id === frame.sheetId)
+        if (!sheet) { return undefined }
         return {
             sheet,
             row: frame.row,

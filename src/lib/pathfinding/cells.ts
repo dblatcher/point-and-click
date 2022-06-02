@@ -1,4 +1,5 @@
-import { RoomData } from "../RoomData"
+import { RoomData } from "../../definitions/RoomData"
+import { Zone } from "../../definitions/Zone"
 import { Circle, isPointInsideCircle, isPointInsidePolygon, isPointInsideRectangle, Point, Rectangle } from "./geometry"
 
 type CellMatrix = (0 | 1)[][]
@@ -33,22 +34,22 @@ export function isPointObstacle(point: Point, obstaclePolygons: Point[][], obsta
 }
 
 
-export function getObstaclePolygons(roomData: RoomData): Point[][] {
-    return roomData.obstacleAreas
+function getObstaclePolygons(obstacleAreas: Zone[]): Point[][] {
+    return obstacleAreas
         .filter(area => area.polygon)
         .map(area => {
-            const { x, y, polygon } = area
+            const { x, y, polygon = [] } = area as Zone
             return polygon.map(coords => {
                 return { x: x + coords[0], y: y + coords[1] }
             })
         })
 }
 
-export function getObstacleRectangle(roomData: RoomData): Rectangle[] {
-    return roomData.obstacleAreas
+function getObstacleRectangle(obstacleAreas: Zone[]): Rectangle[] {
+    return obstacleAreas
         .filter(area => area.rect)
         .map(area => {
-            const { x, y, rect } = area
+            const { x, y, rect } = area as Zone & { rect: [number, number] }
             const [width, height] = rect
             return {
                 x, y: y - height, width, height
@@ -56,11 +57,11 @@ export function getObstacleRectangle(roomData: RoomData): Rectangle[] {
         })
 }
 
-export function getObstacleCircles(roomData: RoomData): Circle[] {
-    return roomData.obstacleAreas
+function getObstacleCircles(obstacleAreas: Zone[]): Circle[] {
+    return obstacleAreas
         .filter(area => area.circle)
         .map(area => {
-            const { x, y, circle } = area
+            const { x, y, circle } = area as Zone & { circle: number }
             const radius = circle
             return {
                 x, y, radius
@@ -69,19 +70,19 @@ export function getObstacleCircles(roomData: RoomData): Circle[] {
 }
 
 export function generateCellMatrix(roomData: RoomData, cellSize: number) {
-    const { width, height } = roomData
-    const obstaclePolygons = getObstaclePolygons(roomData)
-    const obstacleRectangles = getObstacleRectangle(roomData)
-    const obstacleCircles = getObstacleCircles  (roomData)
+    const { width, height, obstacleAreas = [] } = roomData
+    const obstaclePolygons = getObstaclePolygons(obstacleAreas)
+    const obstacleRectangles = getObstacleRectangle(obstacleAreas)
+    const obstacleCircles = getObstacleCircles(obstacleAreas)
     const matrixHeight = Math.ceil(height / cellSize)
     const matrixWidth = Math.ceil(width / cellSize)
     const matrix: CellMatrix = [];
 
     for (let i = 0; i < matrixHeight; i++) {
-        const row = []
+        const row: (0 | 1)[] = []
         for (let j = 0; j < matrixWidth; j++) {
             row.push(
-                isCellObstacle(matrixHeight - i, j, cellSize, obstaclePolygons, obstacleRectangles, obstacleCircles) ? 1:0
+                isCellObstacle(matrixHeight - i, j, cellSize, obstaclePolygons, obstacleRectangles, obstacleCircles) ? 1 : 0
             )
         }
         matrix.push(row)

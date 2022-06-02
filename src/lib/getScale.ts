@@ -4,8 +4,8 @@ export const getScale = (y: number, scaleLevel?: ScaleLevel): number => {
 
     if (!scaleLevel || scaleLevel.length == 0) { return 1 }
 
-    let lowerLevel: [number, number];
-    let upperLevel: [number, number];
+    let lowerLevel: [number, number] | undefined = undefined;
+    let upperLevel: [number, number] | undefined = undefined;
 
     let i;
     for (i = 0; i < scaleLevel.length; i++) {

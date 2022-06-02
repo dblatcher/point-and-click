@@ -6,7 +6,7 @@ class Position {
     yState: number;
     setXState: StateUpdater<number>;
     setYState: StateUpdater<number>;
-    constructor(xState, yState, setXState:StateUpdater<number>, setYState:StateUpdater<number>) {
+    constructor(xState: number, yState: number, setXState: StateUpdater<number>, setYState: StateUpdater<number>) {
         this.xState = xState
         this.yState = yState
         this.setXState = setXState
@@ -19,7 +19,7 @@ class Position {
     }
 
     set x(v: number) {
-        
+
         this.setXState(v)
     }
 
@@ -34,7 +34,7 @@ class Position {
 }
 
 export function usePosition(x: number, y: number) {
-    const [xv,sx] = useState(x)
-    const [yv,sy] = useState(y)
-    return new Position(xv,yv,sx,sy)
+    const [xv, sx] = useState(x)
+    const [yv, sy] = useState(y)
+    return new Position(xv, yv, sx, sy)
 }
