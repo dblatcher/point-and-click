@@ -1,5 +1,7 @@
+import { h } from "preact";
 import { polygonToPathD } from "../lib/polygonToPathD";
 import { Zone } from "../definitions/Zone"
+import { JSXInternal } from "preact/src/jsx";
 
 interface Props {
     zone: Zone
@@ -12,36 +14,33 @@ interface Props {
 
 export default function ZoneSvg({
     zone, x, y, className, stopPropagation = true,
-    clickHandler = null
+    clickHandler
 }: Props) {
     const { path, circle, rect, polygon } = zone
-    const shape = polygon ? 'polygon' : path ? 'path' : circle ? 'circle' : rect ? 'rect' : undefined;
 
-    const processClick = clickHandler
-        ? (event: PointerEvent) => {
-            if (stopPropagation) { event.stopPropagation() }
-            clickHandler(zone)
-        }
-        : null
+    const processClick: JSXInternal.MouseEventHandler<SVGElement> = (event) => {
+        if (stopPropagation) { event.stopPropagation() }
+        if (clickHandler) { clickHandler(zone) }
+    }
 
     return (
         <svg x={x} y={y} style={{ overflow: 'visible' }}>
-            {shape === 'polygon' &&
+            {polygon &&
                 <path className={className}
                     onClick={processClick}
                     d={polygonToPathD(polygon)} />
             }
-            {shape === 'path' &&
+            {path &&
                 <path className={className}
                     onClick={processClick}
                     d={path} />
             }
-            {shape === 'circle' &&
+            {circle &&
                 <circle className={className}
                     onClick={processClick}
                     cx={0} cy={0} r={circle} />
             }
-            {shape === 'rect' &&
+            {rect &&
                 <rect className={className}
                     onClick={processClick}
                     x={0} y={0} width={rect[0]} height={rect[1]} />

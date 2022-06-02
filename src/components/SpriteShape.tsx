@@ -1,8 +1,8 @@
+import { h, JSX } from "preact";
 import { sprites } from "../../data/sprites"
 import { RoomData } from "../definitions/RoomData"
 import { placeOnScreen } from "../lib/util";
 import { Direction } from "../definitions/SpriteSheet";
-
 
 interface Props {
     roomData: RoomData
@@ -16,21 +16,21 @@ interface Props {
     frameIndex?: number
     direction: Direction
     filter?: string
-    clickHandler?: Function
+    clickHandler?: JSX.MouseEventHandler<SVGElement>
 }
 
 
 export default function SpriteShape({
     roomData, viewAngle, x, y, height = 50, width = 50, animationName, frameIndex, sprite, direction, filter,
-    clickHandler = null
+    clickHandler
 }: Props) {
 
     const spriteObject = sprites[sprite];
-    const [widthScale, heightScale] = spriteObject?.getFrameScale(animationName, frameIndex, direction);
-    const divStyle = spriteObject?.getStyle(animationName, frameIndex, direction);
-    divStyle.filter = filter
+    if (!spriteObject) {return null}
+    const [widthScale, heightScale] = spriteObject.getFrameScale(animationName, frameIndex, direction);
+    const divStyle = Object.assign(spriteObject.getStyle(animationName, frameIndex, direction), { filter });
 
-    const svgStyle = {
+    const svgStyle: JSX.CSSProperties = {
         overflow: 'hidden',
         pointerEvents: clickHandler ? 'default' : 'none'
     }
@@ -42,7 +42,7 @@ export default function SpriteShape({
             x={placeOnScreen(x - (width / 2), viewAngle, roomData)}
             y={roomData.height - y - height} >
             <foreignObject x="0" y="0" width={width * widthScale} height={height * heightScale}>
-                <div xmlns="http://www.w3.org/1999/xhtml" style={divStyle}></div>
+                <div style={divStyle}></div>
             </foreignObject>
         </svg>
     )
