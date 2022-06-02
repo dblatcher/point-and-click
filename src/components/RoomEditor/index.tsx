@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
 import { BackgroundLayer, RoomData, ScaleLevel } from "../../definitions/RoomData";
-import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
+import { HotspotZone, Zone } from "../../definitions/Zone";
 import { Point } from "../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
@@ -12,6 +13,7 @@ import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect"
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../lib/clone";
+import { eventToNumber, eventToString } from "../../lib/util";
 
 
 type RoomEditorState = RoomData & {
@@ -21,7 +23,7 @@ type RoomEditorState = RoomData & {
 type RoomEditorProps = {
     data?: RoomData;
     assetList?: string[];
-    saveFunction: { (data: RoomData): void }
+    saveFunction: { (data: RoomData): void };
 }
 
 function makeNewHotspot(point: Point, effect: NewHotspotEffect, idNumber: number): HotspotZone {
@@ -94,8 +96,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.setState({ clickEffect })
     }
 
-    handleRoomClick(pointClicked: { x: number, y: number }) {
-        const { clickEffect, obstacleAreas, hotspots } = this.state
+    handleRoomClick(pointClicked: { x: number; y: number }) {
+        const { clickEffect, obstacleAreas = [], hotspots = [] } = this.state
         const roundedPoint = {
             x: Math.round(pointClicked.x),
             y: Math.round(pointClicked.y),
@@ -137,7 +139,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     removeZone(index: number, type?: string) {
-        const { obstacleAreas, hotspots } = this.state
+        const { obstacleAreas = [], hotspots = [] } = this.state
         switch (type) {
             case 'hotspot':
                 hotspots.splice(index, 1)
@@ -148,17 +150,59 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.setState({ obstacleAreas, hotspots })
     }
     moveZone(index: number, x: number, y: number, type?: string) {
-        const { obstacleAreas, hotspots } = this.state
+        const { obstacleAreas = [], hotspots = [] } = this.state
         const zone = type === 'hotspot' ? hotspots[index] : obstacleAreas[index]
         zone.x = x
         zone.y = y
         this.setState({ obstacleAreas, hotspots })
     }
-    changeZone(index: number, propery: Exclude<keyof HotspotZone, ('type' & SupportedZoneShape)>, newValue: any, type?: string) {
-        const { obstacleAreas, hotspots } = this.state
-        const zone = type === 'hotspot' ? hotspots[index] : obstacleAreas[index]
-        if (typeof zone[propery] === 'undefined') { return }
-        zone[propery] = newValue
+    changeZone(index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type?: string) {
+        const { obstacleAreas = [], hotspots = [] } = this.state
+
+        function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
+            switch (propery) {
+                case 'x':
+                case 'y':
+                case 'circle':
+                    if (typeof newValue === 'number') {
+                        zoneOrHotspot[propery] = newValue
+                    }
+                    break;
+                case 'path':
+                    if (typeof newValue === 'string') {
+                        zoneOrHotspot[propery] = newValue
+                    }
+                    break;
+                case 'rect':
+                    zoneOrHotspot[propery] = newValue as [number, number]
+                    break;
+                case 'polygon':
+                    zoneOrHotspot[propery] = newValue as [number, number][]
+                    break;
+            }
+        }
+
+        if (type === 'hotspot') {
+            const hotspot = hotspots[index]
+            handleCommonValues(hotspot)
+            switch (propery) {
+                case 'parallax':
+                    if (typeof newValue === 'number') {
+                        hotspot[propery] = newValue
+                    }
+                    break;
+                case 'id':
+                case 'name':
+                case 'status':
+                    if (typeof newValue === 'string') {
+                        hotspot[propery] = newValue
+                    }
+                    break;
+            }
+        } else {
+            const zone = obstacleAreas[index]
+            handleCommonValues(zone)
+        }
         this.setState({ obstacleAreas, hotspots })
     }
     removeBackground(index: number) {
@@ -166,11 +210,23 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         background.splice(index, 1)
         this.setState({ background })
     }
-    changeBackground(index: number, propery: string, newValue: any) {
+    changeBackground(index: number, propery: keyof BackgroundLayer, newValue: string | number) {
         const { background } = this.state
         const layer = background[index]
-        if (typeof layer[propery] === 'undefined') { return }
-        layer[propery] = newValue
+
+        switch (propery) {
+            case 'parallax':
+                if (typeof newValue === 'number') {
+                    layer[propery] = newValue
+                }
+                break;
+            case 'url':
+                if (typeof newValue === 'string') {
+                    layer[propery] = newValue
+                }
+                break;
+        }
+
         this.setState({ background })
     }
     addBackground(newLayer: BackgroundLayer) {
@@ -194,7 +250,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
     render() {
         const {
-            name, background, height, width, frameWidth, obstacleAreas, hotspots = [],
+            name, background, height, width, frameWidth, obstacleAreas = [], hotspots = [],
             scaling = [],
             clickEffect
         } = this.state
@@ -210,22 +266,22 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 <section style={{ flexBasis: '20rem' }}>
                     <fieldset className={styles.fieldset}>
                         <legend>name</legend>
-                        <input type="text" value={name} onInput={event => this.setState({ name: event.target.value })} />
+                        <input type="text" value={name} onInput={event => this.setState({ name: eventToString(event) })} />
                     </fieldset>
 
                     <fieldset className={styles.fieldset}>
                         <legend>Dimensions</legend>
                         <div className={styles.row}>
                             <NumberInput label="height" value={height}
-                                onInput={event => this.setState({ height: Number(event.target.value) })} />
+                                onInput={event => this.setState({ height: eventToNumber(event) })} />
                         </div>
                         <div className={styles.row}>
                             <NumberInput label="width" value={width}
-                                onInput={event => this.setState({ width: Number(event.target.value) })} />
+                                onInput={event => this.setState({ width: eventToNumber(event) })} />
                         </div>
                         <div className={styles.row}>
                             <NumberInput label="Frame Width" value={frameWidth}
-                                onInput={event => this.setState({ frameWidth: Number(event.target.value) })} />
+                                onInput={event => this.setState({ frameWidth: eventToNumber(event) })} />
                             {frameWidth > width && (
                                 <Warning>frame width is bigger than room width</Warning>
                             )}

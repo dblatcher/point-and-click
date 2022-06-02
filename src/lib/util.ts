@@ -15,6 +15,11 @@ export function eventToBoolean(event: Event, defaultValue = false): boolean {
     return (event.target as HTMLInputElement).checked;
 }
 
+export function eventToString(event: Event, defaultValue = ''): string {
+    if (!event.target) { return defaultValue }
+    return (event.target as HTMLInputElement).value;
+}
+
 export function getLayerWidth(parallax: number, roomData: RoomData) {
     const { frameWidth, width } = roomData
     return frameWidth + (parallax * (width - frameWidth))
