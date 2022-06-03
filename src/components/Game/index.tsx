@@ -108,9 +108,11 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     componentWillMount(): void {
-        const timer = window.setInterval(() => { this.tick() }, TIMER_SPEED)
-        const cellMatrix = this.currentRoom ? generateCellMatrix(this.currentRoom, cellSize) : undefined
-        this.setState({ timer, cellMatrix })
+        if (typeof window !== 'undefined') {
+            const timer = window.setInterval(() => { this.tick() }, TIMER_SPEED)
+            const cellMatrix = this.currentRoom ? generateCellMatrix(this.currentRoom, cellSize) : undefined
+            this.setState({ timer, cellMatrix })
+        }
     }
 
     componentWillUnmount(): void {
