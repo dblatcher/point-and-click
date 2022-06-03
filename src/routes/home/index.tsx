@@ -3,7 +3,7 @@ import style from './style.css';
 
 import GamePlayer from '../../components/GamePlayer';
 
-const Home:FunctionalComponent = () => (
+const Home: FunctionalComponent = () => (
 	<div className={style.home}>
 		<GamePlayer />
 	</div>

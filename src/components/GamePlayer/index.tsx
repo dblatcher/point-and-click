@@ -1,4 +1,5 @@
-import { Component } from "preact";
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Component, h, Fragment } from "preact";
 import { GameCondition, GameData } from "../../definitions/Game";
 import { startingGameCondition } from '../../../data/fullGame';
 
@@ -7,13 +8,12 @@ import { cloneData } from "../../lib/clone";
 
 const storageKey = "POINT_AND_CLICK"
 
-export default class GamePlayer extends Component<{
+export default class GamePlayer extends Component<{}, {
+    gameCondition: GameCondition;
+    timestamp: number;
+}> {
 
-}, { gameCondition: GameCondition, timestamp: number }> {
-
-    refs: {}
-
-    constructor(props) {
+    constructor(props: GamePlayer['props']) {
         super(props)
         this.state = {
             gameCondition: this.getInitialGameCondtions(),
@@ -30,6 +30,10 @@ export default class GamePlayer extends Component<{
 
     load() {
         const jsonString = localStorage.getItem(storageKey)
+        if (!jsonString) {
+            console.error('NO SAVE FILE', storageKey)
+            return
+        }
 
         try {
             const data = JSON.parse(jsonString) as GameData
@@ -52,7 +56,7 @@ export default class GamePlayer extends Component<{
         })
     }
 
-    getInitialGameCondtions():GameCondition {
+    getInitialGameCondtions(): GameCondition {
         return {
             ...cloneData(startingGameCondition),
         }
