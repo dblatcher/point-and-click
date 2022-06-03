@@ -1,21 +1,24 @@
 import { GameProps, GameState } from "."
 import { CommandTarget } from "../../definitions/Command"
+import { CharacterData } from "src/definitions/CharacterData"
+import { ThingData } from "src/definitions/ThingData"
 import { Consequence } from "../../definitions/Interaction"
-import { Order, ThingOrder } from "../../definitions/Order"
+import { Order } from "../../definitions/Order"
 import { cloneData } from "../../lib/clone"
 import { changeRoom } from "./changeRoom"
 
 
-
-export const makeConsequenceExecutor = (state: GameState, props: GameProps) => {
+export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
 
     const { characters, items, things, rooms, currentRoomName, characterOrders, thingOrders } = state
     const player = characters.find(_ => _.isPlayer)
-    const getCharacter = (characterId?: string) => characterId ? characters.find(_ => _.id === characterId) : player
-    const getThing = (thingId: string) => things.find(_ => _.id === thingId);
+    const getCharacter = (characterId?: string): (CharacterData | undefined) =>
+        characterId ? characters.find(_ => _.id === characterId) : player;
+    const getThing = (thingId: string): ThingData | undefined =>
+        things.find(_ => _.id === thingId);
     const currentRoom = rooms.find(_ => _.name === currentRoomName)
 
-    return (consequence: Consequence) => {
+    return (consequence: Consequence): void => {
 
         switch (consequence.type) {
             case 'order': {
@@ -93,7 +96,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps) => {
             }
             case 'changeStatus': {
                 const { targetId, targetType, status } = consequence
-                let target: CommandTarget;
+                let target: CommandTarget | undefined;
                 switch (targetType) {
                     case 'character':
                         target = characters.find(_ => _.id === targetId);
@@ -115,12 +118,13 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps) => {
                 break;
             }
             case 'sequence': {
-                const { sequence } = consequence
-                const [, originalSequence] = Object.entries(props.sequences).find(_ => _[0] === sequence)
+                const { sequence: sequenceKey } = consequence
+                const sequenceRecordEntry = Object.entries(props.sequences).find(_ => _[0] === sequenceKey) || [];
+                const [, originalSequence] = sequenceRecordEntry;
                 if (originalSequence) {
                     state.sequenceRunning = cloneData(originalSequence)
                 } else {
-                    console.warn(`No such sequence ${sequence}`)
+                    console.warn(`No such sequence ${sequenceKey}`)
                 }
                 break;
             }

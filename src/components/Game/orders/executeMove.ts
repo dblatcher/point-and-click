@@ -1,12 +1,10 @@
 import { CharacterData } from "../../../definitions/CharacterData";
 import { MoveOrder } from "../../../definitions/Order";
-import { Point } from "../../../lib/pathfinding/geometry";
-import { Direction } from "../../../definitions/SpriteSheet";
 
-export function executeMove(moveOrder: MoveOrder, character: CharacterData): Point & { direction: Direction } {
-    const { x, y, speed: characterSpeed = 1, direction } = character
+export function executeMove(moveOrder: MoveOrder, character: CharacterData): void {
+    const { x, y, speed: characterSpeed = 1, direction = 'left' } = character
     const [nextStep] = moveOrder.steps;
-    if (!nextStep) { return { x, y, direction } }
+    if (!nextStep) { return }
     const { speed: stepSpeed = 1 } = nextStep
     const speed = characterSpeed * stepSpeed
 

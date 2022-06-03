@@ -6,7 +6,10 @@ import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 
 
-function validateOrderIdsAndClearEmpties(orders: Record<string, Order[]>, targets: (CharacterData | ThingData)[]) {
+function validateOrderIdsAndClearEmpties(
+    orders: Record<string, Order[]>,
+    targets: (CharacterData | ThingData)[]
+): void {
     const validIds = targets.map(_ => _.id)
     const invalidIds = Object.keys(orders).filter(_ => !validIds.includes(_))
 
@@ -30,7 +33,8 @@ function validateOrderIdsAndClearEmpties(orders: Record<string, Order[]>, target
  * @returns a partial state
  */
 export function continueSequence(state: GameState, props: GameProps): Partial<GameState> {
-    const { characters, things, sequenceRunning, cellMatrix } = state
+    const { characters, things, sequenceRunning, cellMatrix = [] } = state
+    if (!sequenceRunning) { return {} }
     const [currentStage] = sequenceRunning
     if (!currentStage) { return {} }
 
