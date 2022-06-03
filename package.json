@@ -12,12 +12,16 @@
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
-    "extends": ["preact", "plugin:@typescript-eslint/recommended"],
+    "extends": [
+      "preact",
+      "plugin:@typescript-eslint/recommended"
+    ],
     "ignorePatterns": [
-        "build/"
+      "build/"
     ]
   },
   "devDependencies": {
+    "@types/css-modules": "^1.0.2",
     "@types/enzyme": "^3.10.5",
     "@types/jest": "^26.0.8",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
