@@ -1,21 +1,23 @@
-import { h } from "preact";
+import { FunctionalComponent, h } from "preact";
 import { polygonToPathD } from "../lib/polygonToPathD";
 import { Zone } from "../definitions/Zone"
 import { JSXInternal } from "preact/src/jsx";
 
 interface Props {
-    zone: Zone
-    x: number,
-    y: number,
-    className?: string,
-    stopPropagation?: boolean
-    clickHandler?: { (zone: Zone): void }
+    zone: Zone;
+    x: number;
+    y: number;
+    className?: string;
+    stopPropagation?: boolean;
+    // HotspotZone is a subtype of Zone but not assignable to Zone or (Zone|HotspotZone)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    clickHandler?: { (zone: any): void };
 }
 
-export default function ZoneSvg({
+const ZoneSvg: FunctionalComponent<Props> = ({
     zone, x, y, className, stopPropagation = true,
     clickHandler
-}: Props) {
+}: Props) => {
     const { path, circle, rect, polygon } = zone
 
     const processClick: JSXInternal.MouseEventHandler<SVGElement> = (event) => {
@@ -48,3 +50,5 @@ export default function ZoneSvg({
         </svg>
     )
 }
+
+export default ZoneSvg

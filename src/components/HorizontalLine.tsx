@@ -1,21 +1,23 @@
+import { h, Fragment, FunctionalComponent } from "preact";
 import { RoomData } from "../definitions/RoomData"
-import { placeOnScreen } from "../lib/util";
 
 interface Props {
-    roomData: RoomData
-    y: number
-    color?: string
-    text?: string
+    roomData: RoomData;
+    y: number;
+    color?: string;
+    text?: string;
 }
 
-export default function HorizontalLine({
+const HorizontalLine: FunctionalComponent<Props> = ({
     roomData, color = 'red', y = 0, text
-}: Props) {
-
+}: Props) => {
     const textToDisplay = text || y.toFixed(0)
 
     return (<>
-        <line x1={0} y1={roomData.height - y} x2={roomData.frameWidth} y2={roomData.height - y} stroke={color} stroke-dasharray="4 3" />
+        <line x1={0} y1={roomData.height - y} 
+            x2={roomData.frameWidth} y2={roomData.height - y} 
+            stroke={color} 
+            stroke-dasharray="4 3" />
         <text
             x={0}
             y={roomData.height - y}
@@ -28,3 +30,4 @@ export default function HorizontalLine({
     </>
     )
 }
+export default HorizontalLine
