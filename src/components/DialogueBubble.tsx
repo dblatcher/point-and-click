@@ -1,11 +1,17 @@
+import { h, FunctionalComponent } from "preact"
 import { RoomData } from "../definitions/RoomData"
 import { clamp } from "../lib/util"
 
-export const DialogueBubble = (props: {
-    text: string, x: number, y: number, roomData: RoomData, dialogueColor: string, roomScale: number
-}) => {
+export const DialogueBubble: FunctionalComponent<{
+    text: string;
+    x: number;
+    y: number;
+    roomData: RoomData;
+    dialogueColor?: string;
+    roomScale: number;
+}> = (props) => {
 
-    const { text, x, y, roomData, dialogueColor, roomScale } = props
+    const { text, x, y, roomData, dialogueColor = 'black', roomScale } = props
     const width = 160 / roomScale
     const height = 40 / roomScale
     const centerLeft = x - width / 2
@@ -17,7 +23,7 @@ export const DialogueBubble = (props: {
         x={aX}
         y={y} >
         <foreignObject x="0" y="0" width={width} height={height} style={{ overflow: 'visible' }}>
-            <div xmlns="http://www.w3.org/1999/xhtml" style={{
+            <div style={{
                 textAlign,
                 fontSize: `${16 / roomScale}px`,
                 transform: 'translateY(-100%)'

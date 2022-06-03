@@ -1,26 +1,28 @@
-import { sprites } from "../../data/sprites"
-import { RoomData } from "../definitions/RoomData"
-import { placeOnScreen } from "../lib/util";
-import SpriteShape from "./SpriteShape";
-import { useInterval } from "../lib/useInterval"
+import { h, Fragment, FunctionalComponent, JSX } from "preact";
 import { useLayoutEffect, useState } from "preact/hooks";
-import { CharacterData } from "../definitions/CharacterData";
+import { RoomData } from "../definitions/RoomData"
 import { Order } from "../definitions/Order";
-import { Sprite } from "../lib/Sprite";
-import { DialogueBubble } from "./DialogueBubble";
 import { ThingData } from "../definitions/ThingData";
+import { CharacterData } from "../definitions/CharacterData";
+import { placeOnScreen } from "../lib/util";
 import { getScale } from "../lib/getScale";
+import { Sprite } from "../lib/Sprite";
+import { useInterval } from "../lib/useInterval"
+import { sprites } from "../../data/sprites"
+
+import { SpriteShape } from "./SpriteShape";
+import { DialogueBubble } from "./DialogueBubble";
 
 interface Props {
-    roomData: RoomData
-    viewAngle: number
-    data: CharacterData | ThingData
-    animationRate?: number
-    clickHandler?: { (character: CharacterData | ThingData): void }
-    key: string | number
-    orders?: Order[]
-    isPaused: boolean
-    roomScale?: number
+    roomData: RoomData;
+    viewAngle: number;
+    data: CharacterData | ThingData;
+    animationRate?: number;
+    clickHandler?: { (character: CharacterData | ThingData): void };
+    key: string | number;
+    orders?: Order[];
+    isPaused: boolean;
+    roomScale?: number;
 }
 
 const getAnimationName = (currentOrder: Order, status: string | undefined, sprite: Sprite): string => {
@@ -29,11 +31,11 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
-export function CharacterOrThing({
+export const CharacterOrThing: FunctionalComponent<Props> = ({
     roomData, viewAngle,
     animationRate = 200, data, isPaused,
     clickHandler, orders = [], roomScale = 1
-}: Props) {
+}: Props) => {
     const {
         x, y,
         height = 50, width = 50, sprite, filter
@@ -48,7 +50,7 @@ export function CharacterOrThing({
     const [frameIndex, setFrameIndex] = useState(0)
     const spriteScale = getScale(y, roomData.scaling)
 
-    const updateFrame = () => {
+    const updateFrame = (): void => {
         if (!frames || isPaused) { return }
         if (currentOrder?.type === 'act') {
             const [currentAction] = currentOrder.steps
@@ -73,12 +75,12 @@ export function CharacterOrThing({
 
     useInterval(updateFrame, animationRate)
 
-    const processClick = clickHandler
-        ? (event: PointerEvent) => {
+    const processClick: JSX.MouseEventHandler<SVGElement> | undefined = clickHandler
+        ? (event): void => {
             event.stopPropagation()
             clickHandler(data)
         }
-        : null
+        : undefined
 
     const dialogueColor = data.type == 'character' ? data.dialogueColor : '';
 
@@ -101,7 +103,7 @@ export function CharacterOrThing({
                     x={placeOnScreen(x, viewAngle, roomData)}
                     y={roomData.height - y - (height * spriteScale)}
                     dialogueColor={dialogueColor}
-                    roomData={roomData} roomScale={roomScale}/>
+                    roomData={roomData} roomScale={roomScale} />
             }
         </>
     )
