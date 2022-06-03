@@ -7,9 +7,8 @@ import { interactions } from './interactions';
 import { sequences } from './sequences';
 import { GameData, FixedGameInfo } from "../src/definitions/Game";
 
-
 const player = characters.find(character => character.isPlayer)
-const startingRoom = rooms.find(room => room.name === player?.room)
+const startingRoom = rooms.find(room => room.name === player?.room) || rooms[0]
 
 export const startingGameCondition: GameData & FixedGameInfo = {
     rooms,
