@@ -1,21 +1,21 @@
-import { RoomData } from "../src/definitions/RoomData"
+import { RoomData } from "../../src/definitions/RoomData"
 
 export const SQUARE_ROOM: RoomData = {
-  "name": "SQUARE_ROOM",
-  "frameWidth": 480,
-  "width": 480,
-  "height": 480,
-  "background": [
+  name: "SQUARE_ROOM",
+  frameWidth: 480,
+  width: 480,
+  height: 480,
+  background: [
 
     {
-      "url": "./assets/backgrounds/square-room.png",
-      "parallax": 1
+      url: "./assets/backgrounds/square-room.png",
+      parallax: 1
     },
   ],
-  "hotspots": [
+  hotspots: [
 
   ],
-  "obstacleAreas": [
+  obstacleAreas: [
     { x: 285, y: 100, circle: 20, },
     { x: 315, y: 100, circle: 20, },
     { x: 340, y: 100, circle: 20, },

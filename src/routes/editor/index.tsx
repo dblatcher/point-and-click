@@ -1,7 +1,6 @@
 import { h, FunctionComponent } from 'preact';
 
 import { RoomEditor } from '../../components/RoomEditor';
-import { INSIDE } from '../../../data/INSIDE'
 import outside  from '../../../data/OUTSIDE.room.json'
 import { RoomData } from '../../definitions/RoomData';
 import { makeDownloadFile, dataToBlob } from '../../lib/download';
