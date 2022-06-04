@@ -10,6 +10,11 @@ import { CharacterData } from "../../definitions/CharacterData";
 import { eventToBoolean, eventToNumber } from "../../lib/util";
 import HorizontalLine from "../HorizontalLine";
 
+import { spriteList } from "../../../data/sprites";
+
+
+const testSprite = spriteList[1]
+
 const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
     return {
         id: 'TEST',
@@ -21,7 +26,7 @@ const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
         y: point.y,
         width: 20,
         height: 50,
-        sprite: 'skinner',
+        sprite: 'mario',
         direction: 'left',
         dialogueColor: 'red',
     }
@@ -162,6 +167,7 @@ export class Preview extends Component<Props, State>{
                     )}
                     {showCharacter && (
                         <CharacterOrThing
+                            overrideSprite={testSprite}
                             data={testCharacter}
                             roomData={roomData}
                             viewAngle={viewAngle} isPaused={false} key={'test'} />

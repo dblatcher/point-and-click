@@ -10,10 +10,10 @@ const fire = new Sprite(fireSprite.data, fireSprite.sheets)
 const tube = new Sprite(tubeSprite.data, tubeSprite.sheets)
 
 
-const sprites: Record<string, Sprite> = {
+const spriteList = [
     skinner, mario, fire, tube
-}
+]
 
 export {
-    sprites
+    spriteList
 }

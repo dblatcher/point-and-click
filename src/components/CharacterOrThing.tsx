@@ -8,10 +8,10 @@ import { placeOnScreen } from "../lib/util";
 import { getScale } from "../lib/getScale";
 import { Sprite } from "../lib/Sprite";
 import { useInterval } from "../lib/useInterval"
-import { sprites } from "../../data/sprites"
 
 import { SpriteShape } from "./SpriteShape";
 import { DialogueBubble } from "./DialogueBubble";
+import spriteService from "../../src/services/spriteService";
 
 interface Props {
     roomData: RoomData;
@@ -23,9 +23,11 @@ interface Props {
     orders?: Order[];
     isPaused: boolean;
     roomScale?: number;
+    overrideSprite?: Sprite;
 }
 
-const getAnimationName = (currentOrder: Order, status: string | undefined, sprite: Sprite): string => {
+const getAnimationName = (currentOrder: Order, status: string | undefined, sprite?: Sprite): string => {
+    if (!sprite) { return 'wait' }
     const animationName = currentOrder ? currentOrder.steps[0]?.animation : status;
     const validAnimationName = (animationName && sprite.hasAnimation(animationName)) ? animationName : undefined;
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
@@ -34,20 +36,19 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
 export const CharacterOrThing: FunctionalComponent<Props> = ({
     roomData, viewAngle,
     animationRate = 200, data, isPaused,
-    clickHandler, orders = [], roomScale = 1
+    clickHandler, orders = [], roomScale = 1, overrideSprite
 }: Props) => {
+    const [frameIndex, setFrameIndex] = useState<number>(0)
     const {
         x, y,
-        height = 50, width = 50, sprite, filter
+        height = 50, width = 50, sprite: spriteId, filter
     } = data
+    const spriteObject = overrideSprite || spriteService.get(spriteId)
     const [currentOrder] = orders
     const text = currentOrder?.type === 'talk' ? currentOrder.steps[0].text : undefined;
-    const spriteObject = sprites[sprite]
     const animationName = getAnimationName(currentOrder, data.status, spriteObject)
-    const direction = data.direction || spriteObject.data.defaultDirection;
-    const frames = spriteObject.getFrames(animationName, direction)
-
-    const [frameIndex, setFrameIndex] = useState(0)
+    const direction = data.direction || spriteObject?.data.defaultDirection || Sprite.prototype.data.defaultDirection;
+    const frames = spriteObject?.getFrames(animationName, direction) || []
     const spriteScale = getScale(y, roomData.scaling)
 
     const updateFrame = (): void => {
@@ -84,18 +85,19 @@ export const CharacterOrThing: FunctionalComponent<Props> = ({
 
     const dialogueColor = data.type == 'character' ? data.dialogueColor : '';
 
+    if (!spriteObject) { return null }
     return (
         <>
             <SpriteShape
+                spriteObject={spriteObject}
+                animationName={animationName}
+                direction={direction}
+                frameIndex={frameIndex}
                 clickHandler={processClick}
                 roomData={roomData}
                 viewAngle={viewAngle}
                 x={x} y={y}
                 height={height * spriteScale} width={width * spriteScale}
-                sprite={sprite}
-                frameIndex={frameIndex}
-                animationName={animationName}
-                direction={direction}
                 filter={filter}
             />
             {text &&

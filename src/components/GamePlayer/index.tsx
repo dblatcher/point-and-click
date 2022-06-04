@@ -2,9 +2,11 @@
 import { Component, h, Fragment } from "preact";
 import { GameCondition, GameData } from "../../definitions/Game";
 import { startingGameCondition } from '../../../data/fullGame';
+import { spriteList } from "../../../data/sprites";
 
 import Game from "../Game";
 import { cloneData } from "../../lib/clone";
+import spriteService from "../../services/spriteService";
 
 const storageKey = "POINT_AND_CLICK"
 
@@ -22,6 +24,12 @@ export default class GamePlayer extends Component<{}, {
         this.save = this.save.bind(this)
         this.reset = this.reset.bind(this)
         this.load = this.load.bind(this)
+    }
+
+    componentDidMount() {
+        console.log('MOUNT')
+        spriteService.add(spriteList)
+        console.log(spriteService.list())
     }
 
     save(data: GameData) {
