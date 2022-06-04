@@ -2,7 +2,7 @@ import { h, FunctionComponent } from 'preact';
 
 import { RoomEditor } from '../../components/RoomEditor';
 import { INSIDE } from '../../../data/INSIDE'
-import outside  from '../../../data/OUTSIDE.json'
+import outside  from '../../../data/OUTSIDE.room.json'
 import { RoomData } from '../../definitions/RoomData';
 import { makeDownloadFile, dataToBlob } from '../../lib/download';
 
@@ -21,7 +21,7 @@ const Editor: FunctionComponent = () => (
 	<div>
 		<RoomEditor
 			assetList={getBackgroundAssets()}
-			// data={outside as RoomData}
+			data={outside as RoomData}
 			saveFunction={(roomData: RoomData): void => {
 				const blob = dataToBlob(roomData)
 				if (blob) {
