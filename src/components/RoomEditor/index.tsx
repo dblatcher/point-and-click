@@ -13,7 +13,7 @@ import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect"
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../lib/clone";
-import { eventToNumber, eventToString } from "../../lib/util";
+import { eventToNumber, eventToString, getShift, locateClickInWorld } from "../../lib/util";
 import { TabMenu } from "../TabMenu";
 
 
@@ -27,18 +27,7 @@ type RoomEditorProps = {
     saveFunction: { (data: RoomData): void };
 }
 
-function makeNewHotspot(point: Point, effect: NewHotspotEffect, idNumber: number): HotspotZone {
-
-    const zone: HotspotZone = { x: point.x, y: point.y, type: 'hotspot', id: `HOTSPOT_${idNumber}`, parallax: 0 }
-    switch (effect.shape) {
-        case 'circle': zone.circle = 20;
-            break;
-        case 'rect': zone.rect = [20, 20]
-            break;
-        case 'polygon': zone.polygon = [[0, 0]]
-    }
-    return zone
-}
+const defaultParallax = 1;
 
 function makeNewZone(point: Point, effect: NewObstableEffect): Zone {
 
@@ -57,13 +46,16 @@ function makeNewZone(point: Point, effect: NewObstableEffect): Zone {
 function getBlankRoom(): RoomData {
     return {
         name: '_NEW_ROOM',
-        frameWidth: 400,
+        frameWidth: 200,
         width: 400,
         height: 200,
         background: [],
         hotspots: [
+            { x: 100, y: 70, circle: 20, type: 'hotspot', id: 'CIRCLE_0', parallax: 0 },
+            { x: 100, y: 100, circle: 20, type: 'hotspot', id: 'CIRCLE_1', parallax: 1 },
         ],
         obstacleAreas: [
+            { x: 100, y: 30, circle: 50 },
         ],
         scaling: [
             [0, 1],
@@ -97,25 +89,34 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.setState({ clickEffect })
     }
 
-    handleRoomClick(pointClicked: { x: number; y: number }) {
+    handleRoomClick(pointClicked: { x: number; y: number }, viewAngle: number) {
         const { clickEffect, obstacleAreas = [], hotspots = [] } = this.state
+        if (!clickEffect) { return }
         const roundedPoint = {
             x: Math.round(pointClicked.x),
             y: Math.round(pointClicked.y),
         }
 
-        if (!clickEffect) { return }
+        const targetPoint = clickEffect.type === 'OBSTACLE' || clickEffect.type === 'POLYGON_POINT_OBSTACLE'
+            ? locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngle, this.state)
+            : {
+                x: roundedPoint.x - getShift(viewAngle, defaultParallax, this.state),
+                y: this.state.height - roundedPoint.y
+            }
+
+        console.log({ roundedPoint, targetPoint })
+
 
         switch (clickEffect.type) {
             case 'OBSTACLE':
-                obstacleAreas.push(makeNewZone(roundedPoint, clickEffect))
+                obstacleAreas.push(makeNewZone(targetPoint, clickEffect))
                 return this.setState({
                     obstacleAreas,
                     clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined
                 })
 
             case 'HOTSPOT':
-                hotspots.push(makeNewHotspot(roundedPoint, clickEffect, hotspots.length + 1))
+                hotspots.push(this.makeNewHotspot(targetPoint, clickEffect, hotspots.length + 1, viewAngle))
                 return this.setState({
                     hotspots,
                     clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1 } : undefined
@@ -125,7 +126,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 const obstacle = obstacleAreas[clickEffect.index]
                 if (!obstacle?.polygon) { return }
                 obstacle.polygon.push([
-                    roundedPoint.x - obstacle.x, roundedPoint.y - obstacle.y
+                    targetPoint.x - obstacle.x, targetPoint.y - obstacle.y
                 ])
                 return this.setState({ obstacleAreas })
 
@@ -133,10 +134,23 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 const hotspot = hotspots[clickEffect.index]
                 if (!hotspot?.polygon) { return }
                 hotspot.polygon.push([
-                    roundedPoint.x - hotspot.x, roundedPoint.y - hotspot.y
+                    targetPoint.x - hotspot.x, targetPoint.y - hotspot.y
                 ])
                 return this.setState({ hotspots })
         }
+    }
+
+    makeNewHotspot(point: Point, effect: NewHotspotEffect, idNumber: number, viewAngle: number): HotspotZone {
+
+        const zone: HotspotZone = { ...point, type: 'hotspot', id: `HOTSPOT_${idNumber}`, parallax: defaultParallax }
+        switch (effect.shape) {
+            case 'circle': zone.circle = 20;
+                break;
+            case 'rect': zone.rect = [20, 20]
+                break;
+            case 'polygon': zone.polygon = [[0, 0]]
+        }
+        return zone
     }
 
     removeZone(index: number, type?: string) {

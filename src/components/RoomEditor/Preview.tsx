@@ -7,7 +7,7 @@ import { CharacterOrThing } from "../CharacterOrThing";
 import { Room } from "../Room";
 import { ClickEffect } from "./ClickEffect";
 import { CharacterData } from "../../definitions/CharacterData";
-import { eventToBoolean, eventToNumber, locateClickInWorld } from "../../lib/util";
+import { eventToBoolean, eventToNumber } from "../../lib/util";
 import HorizontalLine from "../HorizontalLine";
 
 const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
@@ -45,7 +45,7 @@ type State = BooleanState & {
 type Props = {
     roomData: RoomData;
     clickEffect?: ClickEffect;
-    handleRoomClick: { (pointClicked: { x: number; y: number }): void };
+    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number): void };
 }
 
 
@@ -121,7 +121,7 @@ export class Preview extends Component<Props, State>{
         const { scaling = [] } = roomData
 
         const processClick = (x: number, y: number) => {
-            handleRoomClick(locateClickInWorld(x, y, viewAngle, roomData))
+            handleRoomClick({x,y}, viewAngle)
         }
 
         return (
