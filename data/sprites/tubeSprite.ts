@@ -1,9 +1,9 @@
 import { SpriteData, SpriteSheet } from "../../src/definitions/SpriteSheet";
 
-export const sheets:SpriteSheet[] = [
+export const sheets: SpriteSheet[] = [
     {
         id: 'tube',
-        "url": "./assets/things/tube.png",
+        url: "./assets/things/tube.png",
         rows: 1,
         cols: 1
     },

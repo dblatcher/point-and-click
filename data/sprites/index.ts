@@ -2,18 +2,11 @@ import * as skinnerSprite from "./skinnerSprite";
 import * as marioSprite from "./marioSprite";
 import * as fireSprite from "./fireSprite";
 import * as tubeSprite from "./tubeSprite";
-import { Sprite } from "../../src/lib/Sprite";
+import { SpriteData, SpriteSheet } from "src/definitions/SpriteSheet";
 
-const skinner = new Sprite(skinnerSprite.data, skinnerSprite.sheets)
-const mario = new Sprite(marioSprite.data, marioSprite.sheets)
-const fire = new Sprite(fireSprite.data, fireSprite.sheets)
-const tube = new Sprite(tubeSprite.data, tubeSprite.sheets)
-
-
-const spriteList = [
-    skinner, mario, fire, tube
+export const spriteInputs: { data: SpriteData; sheets: SpriteSheet[] }[] = [
+    skinnerSprite,
+    marioSprite,
+    fireSprite,
+    tubeSprite,
 ]
-
-export {
-    spriteList
-}

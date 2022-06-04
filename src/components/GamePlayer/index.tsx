@@ -2,13 +2,15 @@
 import { Component, h, Fragment } from "preact";
 import { GameCondition, GameData } from "../../definitions/Game";
 import { startingGameCondition } from '../../../data/fullGame';
-import { spriteList } from "../../../data/sprites";
+import { spriteInputs } from "../../../data/sprites";
 
 import Game from "../Game";
 import { cloneData } from "../../lib/clone";
 import spriteService from "../../services/spriteService";
+import { Sprite } from "src/lib/Sprite";
 
 const storageKey = "POINT_AND_CLICK"
+const sprites = spriteInputs.map(input => new Sprite(input.data, input.sheets))
 
 export default class GamePlayer extends Component<{}, {
     gameCondition: GameCondition;
@@ -28,7 +30,7 @@ export default class GamePlayer extends Component<{}, {
 
     componentDidMount() {
         console.log('MOUNT')
-        spriteService.add(spriteList)
+        spriteService.add(sprites)
         console.log(spriteService.list())
     }
 
