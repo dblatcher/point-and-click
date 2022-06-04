@@ -80,7 +80,6 @@ export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, m
                     }}>add points</button>
                 </div>
             )}
-            <hr />
         </div>
     )
 

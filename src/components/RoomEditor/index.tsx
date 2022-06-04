@@ -14,6 +14,7 @@ import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../lib/clone";
 import { eventToNumber, eventToString } from "../../lib/util";
+import { TabMenu } from "../TabMenu";
 
 
 type RoomEditorState = RoomData & {
@@ -28,7 +29,7 @@ type RoomEditorProps = {
 
 function makeNewHotspot(point: Point, effect: NewHotspotEffect, idNumber: number): HotspotZone {
 
-    const zone: HotspotZone = { x: point.x, y: point.y, type: 'hotspot', id: `HOTSPOT_${idNumber}`, parallax: 1 }
+    const zone: HotspotZone = { x: point.x, y: point.y, type: 'hotspot', id: `HOTSPOT_${idNumber}`, parallax: 0 }
     switch (effect.shape) {
         case 'circle': zone.circle = 20;
             break;
@@ -269,81 +270,116 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         <input type="text" value={name} onInput={event => this.setState({ name: eventToString(event) })} />
                     </fieldset>
 
-                    <fieldset className={styles.fieldset}>
-                        <legend>Dimensions</legend>
-                        <div className={styles.row}>
-                            <NumberInput label="height" value={height}
-                                onInput={event => this.setState({ height: eventToNumber(event) })} />
-                        </div>
-                        <div className={styles.row}>
-                            <NumberInput label="width" value={width}
-                                onInput={event => this.setState({ width: eventToNumber(event) })} />
-                        </div>
-                        <div className={styles.row}>
-                            <NumberInput label="Frame Width" value={frameWidth}
-                                onInput={event => this.setState({ frameWidth: eventToNumber(event) })} />
-                            {frameWidth > width && (
-                                <Warning>frame width is bigger than room width</Warning>
-                            )}
-                        </div>
-                    </fieldset>
-                    <fieldset className={styles.fieldset}>
-                        <legend>Scaling</legend>
-                        <ScalingControl
-                            change={(scaling: ScaleLevel) => { this.setState({ scaling }) }}
-                            scaling={scaling}
-                            height={this.state.height} />
-                    </fieldset>
-                    <fieldset className={styles.fieldset}>
-                        <legend>Background</legend>
+                    <TabMenu tabs={[
+                        {
+                            label: 'Dimensions', content: (
+                                <fieldset className={styles.fieldset}>
+                                    <legend>Dimensions</legend>
+                                    <div className={styles.row}>
+                                        <NumberInput label="height" value={height}
+                                            onInput={event => this.setState({ height: eventToNumber(event) })} />
+                                    </div>
+                                    <div className={styles.row}>
+                                        <NumberInput label="width" value={width}
+                                            onInput={event => this.setState({ width: eventToNumber(event) })} />
+                                    </div>
+                                    <div className={styles.row}>
+                                        <NumberInput label="Frame Width" value={frameWidth}
+                                            onInput={event => this.setState({ frameWidth: eventToNumber(event) })} />
+                                        {frameWidth > width && (
+                                            <Warning>frame width is bigger than room width</Warning>
+                                        )}
+                                    </div>
+                                </fieldset>
+                            )
+                        },
+                        {
+                            label: 'Scaling', content: (
+                                <fieldset className={styles.fieldset}>
+                                    <legend>Scaling</legend>
+                                    <ScalingControl
+                                        change={(scaling: ScaleLevel) => { this.setState({ scaling }) }}
+                                        scaling={scaling}
+                                        height={this.state.height} />
+                                </fieldset>
+                            )
+                        },
+                        {
+                            label: 'Background', content: (
+                                <fieldset className={styles.fieldset}>
+                                    <legend>Background</legend>
+                                    {background.map(
+                                        (layer, index) =>
+                                            <BackgroundLayerControl index={index}
+                                                urls={assetList}
+                                                layer={layer}
+                                                remove={this.removeBackground}
+                                                change={this.changeBackground}
+                                                move={this.moveBackground}
+                                            />
+                                    )}
 
-                        {background.map(
-                            (layer, index) =>
-                                <BackgroundLayerControl index={index}
-                                    urls={assetList}
-                                    layer={layer}
-                                    remove={this.removeBackground}
-                                    change={this.changeBackground}
-                                    move={this.moveBackground}
-                                />
-                        )}
+                                    <BackgroundLayerForm
+                                        urls={assetList}
+                                        addNewLayer={this.addBackground} />
+                                </fieldset>
+                            )
+                        },
+                        {
+                            label: 'Obstacles', content: (
+                                <fieldset className={styles.fieldset}>
+                                    <legend>Obstacles</legend>
+                                    <div>
+                                        <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'circle' })}>New circle</button>
+                                        <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'rect' })}>New rect</button>
+                                        <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'polygon' })}>New polygon</button>
+                                    </div>
+                                    <hr />
+                                    <TabMenu defaultOpenIndex={obstacleAreas.length - 1} tabs={
+                                        obstacleAreas.map((obstacle, index) => {
+                                            return {
+                                                label: `obstacle #${index}`, content: (
+                                                    <ZoneControl
+                                                        zone={obstacle} index={index}
+                                                        setClickEffect={this.setClickEffect}
+                                                        move={this.moveZone}
+                                                        change={this.changeZone}
+                                                        remove={this.removeZone} />
+                                                )
+                                            }
+                                        })
+                                    }
+                                    />
 
-                        <BackgroundLayerForm
-                            urls={assetList}
-                            addNewLayer={this.addBackground} />
-                    </fieldset>
-                    <fieldset className={styles.fieldset}>
-                        <legend>Obstacles</legend>
-                        {obstacleAreas.map((obstacle, index) =>
-                            <ZoneControl
-                                zone={obstacle} index={index}
-                                setClickEffect={this.setClickEffect}
-                                move={this.moveZone}
-                                change={this.changeZone}
-                                remove={this.removeZone} />
-                        )}
-                        <div>
-                            <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'circle' })}>New circle</button>
-                            <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'rect' })}>New rect</button>
-                            <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'polygon' })}>New polygon</button>
-                        </div>
-                    </fieldset>
-                    <fieldset className={styles.fieldset}>
-                        <legend>Hotspots</legend>
-                        {hotspots.map((hotspot, index) =>
-                            <HotspotControl hotspot={hotspot} index={index}
-                                setClickEffect={this.setClickEffect}
-                                move={this.moveZone}
-                                change={this.changeZone}
-                                remove={this.removeZone} />
 
-                        )}
-                        <div>
-                            <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'circle' })}>New circle</button>
-                            <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'rect' })}>New rect</button>
-                            <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'polygon' })}>New polygon</button>
-                        </div>
-                    </fieldset>
+                                </fieldset>
+                            )
+                        },
+                        {
+                            label: 'Hotspots', content: (
+                                <fieldset className={styles.fieldset}>
+                                    <legend>Hotspots</legend>
+                                    <div>
+                                        <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'circle' })}>New circle</button>
+                                        <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'rect' })}>New rect</button>
+                                        <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'polygon' })}>New polygon</button>
+                                    </div>
+                                    <hr />
+                                    <TabMenu defaultOpenIndex={hotspots.length - 1} tabs={hotspots.map((hotspot, index) => {
+                                        return {
+                                            label: hotspot.id, content: (
+                                                <HotspotControl hotspot={hotspot} index={index}
+                                                    setClickEffect={this.setClickEffect}
+                                                    move={this.moveZone}
+                                                    change={this.changeZone}
+                                                    remove={this.removeZone} />
+                                            )
+                                        }
+                                    })} />
+                                </fieldset>
+                            )
+                        }
+                    ]} />
                 </section>
 
                 <section>
