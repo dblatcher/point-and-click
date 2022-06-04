@@ -7,7 +7,7 @@ import { spriteInputs } from "../../../data/sprites";
 import Game from "../Game";
 import { cloneData } from "../../lib/clone";
 import spriteService from "../../services/spriteService";
-import { Sprite } from "src/lib/Sprite";
+import { Sprite } from "../../lib/Sprite";
 
 const storageKey = "POINT_AND_CLICK"
 const sprites = spriteInputs.map(input => new Sprite(input.data, input.sheets))

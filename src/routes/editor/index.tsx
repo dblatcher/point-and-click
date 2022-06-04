@@ -1,7 +1,7 @@
 import { h, FunctionComponent } from 'preact';
 
 import { RoomEditor } from '../../components/RoomEditor';
-import outside  from '../../../data/OUTSIDE.room.json'
+import { startingGameCondition } from '../../../data/fullGame';
 import { RoomData } from '../../definitions/RoomData';
 import { makeDownloadFile, dataToBlob } from '../../lib/download';
 
@@ -20,7 +20,7 @@ const Editor: FunctionComponent = () => (
 	<div>
 		<RoomEditor
 			assetList={getBackgroundAssets()}
-			data={outside as RoomData}
+			data={startingGameCondition.rooms[0]}
 			saveFunction={(roomData: RoomData): void => {
 				const blob = dataToBlob(roomData)
 				if (blob) {
