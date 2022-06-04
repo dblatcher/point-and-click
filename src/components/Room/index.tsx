@@ -19,6 +19,8 @@ interface Props {
     showObstacleAreas?: boolean;
     highlightHotspots?: boolean;
     obstacleCells?: CellMatrix;
+    markHotspotVertices?: number[];
+    markObstacleVertices?: number[];
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -31,6 +33,8 @@ export const Room: FunctionComponent<Props> = ({
     showObstacleAreas,
     highlightHotspots,
     obstacleCells,
+    markHotspotVertices = [],
+    markObstacleVertices = [],
 }: Props) => {
 
     const processRoomClick = (event: MouseEvent): void => {
@@ -74,6 +78,7 @@ export const Room: FunctionComponent<Props> = ({
                         zone={zone}
                         x={zone.x + left}
                         y={data.height - zone.y}
+                        markVertices={markObstacleVertices.includes(index)}
                     />
                 })}
 
@@ -88,6 +93,7 @@ export const Room: FunctionComponent<Props> = ({
                         roomData={data}
                         highlight={highlightHotspots}
                         clickHandler={handleHotspotClick}
+                        markVertices={markHotspotVertices.includes(index)}
                     />
                 )}
 

@@ -21,7 +21,7 @@ const Editor: FunctionComponent = () => (
 	<div>
 		<RoomEditor
 			assetList={getBackgroundAssets()}
-			data={outside as RoomData}
+			// data={outside as RoomData}
 			saveFunction={(roomData: RoomData): void => {
 				const blob = dataToBlob(roomData)
 				if (blob) {

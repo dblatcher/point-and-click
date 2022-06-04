@@ -111,6 +111,22 @@ export class Preview extends Component<Props, State>{
         )
     }
 
+    get hotspotsToMark(): number[] {
+        const { clickEffect } = this.props
+        if (clickEffect?.type === 'POLYGON_POINT_HOTSPOT') {
+            return [clickEffect.index]
+        }
+        return [];
+    }
+
+    get obstaclesToMark(): number[] {
+        const { clickEffect } = this.props
+        if (clickEffect?.type === 'POLYGON_POINT_OBSTACLE') {
+            return [clickEffect.index]
+        }
+        return [];
+    }
+
     render() {
         const {
             viewAngle, viewScale, showObstacleAreas, highlightHotspots,
@@ -121,7 +137,7 @@ export class Preview extends Component<Props, State>{
         const { scaling = [] } = roomData
 
         const processClick = (x: number, y: number) => {
-            handleRoomClick({x,y}, viewAngle)
+            handleRoomClick({ x, y }, viewAngle)
         }
 
         return (
@@ -135,6 +151,8 @@ export class Preview extends Component<Props, State>{
                     // eslint-disable-next-line @typescript-eslint/no-empty-function
                     handleHotspotClick={() => { }}
                     handleRoomClick={processClick}
+                    markHotspotVertices={this.hotspotsToMark}
+                    markObstacleVertices={this.obstaclesToMark}
                 >
                     {showMarker && (
                         <MarkerShape roomData={roomData}
