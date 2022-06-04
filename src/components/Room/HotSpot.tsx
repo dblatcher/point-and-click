@@ -12,11 +12,12 @@ interface Props {
     clickHandler?: { (hotspot: HotspotZone): void };
     highlight?: boolean;
     markVertices?: boolean;
+    stopPropogation?: boolean;
 }
 
 const Hotspot: FunctionalComponent<Props> = ({
-    zone: hotspot, roomData, viewAngle, highlight, markVertices,
-    clickHandler = (zone): void => { console.log(zone) }
+    zone: hotspot, roomData, viewAngle, highlight, markVertices, stopPropogation = true,
+    clickHandler
 }: Props) => {
     const { parallax } = hotspot
 
@@ -28,7 +29,7 @@ const Hotspot: FunctionalComponent<Props> = ({
             x={hotspot.x + getShift(viewAngle, parallax, roomData)}
             y={roomData.height - hotspot.y}
             clickHandler={clickHandler}
-            stopPropagation={true}
+            stopPropagation={stopPropogation}
             zone={hotspot}
             markVertices={markVertices} />
     )

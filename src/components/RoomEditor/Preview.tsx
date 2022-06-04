@@ -149,7 +149,6 @@ export class Preview extends Component<Props, State>{
                     viewAngle={viewAngle}
                     highlightHotspots={highlightHotspots}
                     // eslint-disable-next-line @typescript-eslint/no-empty-function
-                    handleHotspotClick={() => { }}
                     handleRoomClick={processClick}
                     markHotspotVertices={this.hotspotsToMark}
                     markObstacleVertices={this.obstaclesToMark}

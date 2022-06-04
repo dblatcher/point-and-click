@@ -14,7 +14,7 @@ interface Props {
     scale?: number;
     viewAngle: number;
     handleRoomClick: { (x: number, y: number): void };
-    handleHotspotClick: { (zone: HotspotZone): void };
+    handleHotspotClick?: { (zone: HotspotZone): void };
     children?: ComponentChildren;
     showObstacleAreas?: boolean;
     highlightHotspots?: boolean;
@@ -93,6 +93,7 @@ export const Room: FunctionComponent<Props> = ({
                         roomData={data}
                         highlight={highlightHotspots}
                         clickHandler={handleHotspotClick}
+                        stopPropogation={!!handleHotspotClick}
                         markVertices={markHotspotVertices.includes(index)}
                     />
                 )}
