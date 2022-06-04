@@ -16,6 +16,25 @@ const buttonStyle = (isOpen: boolean): JSX.CSSProperties => {
     return {
         color: isOpen ? 'white' : 'black',
         backgroundColor: isOpen ? 'black' : 'white',
+        margin: 0,
+        cursor: 'pointer',
+    }
+}
+
+const navStyle = (): JSX.CSSProperties => {
+    return {
+        display: 'flex',
+        flexWrap: 'wrap',
+        backgroundColor: 'lightgrey',
+        padding: 5,
+    }
+}
+
+const containerStyle = (isOpen: boolean): JSX.CSSProperties => {
+    return {
+        display: isOpen ? 'block' : 'none',
+        backgroundColor: 'lightgrey',
+        padding: 5,
     }
 }
 
@@ -27,7 +46,7 @@ export const TabMenu: FunctionalComponent<Props> = ({ tabs, defaultOpenIndex = 0
     setSelectedTabIndex(clamp(selectedTabIndex, tabs.length - 1))
 
     return <div>
-        <nav>
+        <nav style={navStyle()}>
             {tabs.map((tab, index) =>
                 <button key={index} style={buttonStyle(index === selectedTabIndex)}
                     onClick={(): void => { setSelectedTabIndex(index) }}>
@@ -35,12 +54,11 @@ export const TabMenu: FunctionalComponent<Props> = ({ tabs, defaultOpenIndex = 0
                 </button>
             )}
         </nav>
-        <hr />
-
-        {tabs.map((tab, index) => <div key={index} style={{ display: index === selectedTabIndex ? 'unset' : 'none' }}>
-            {tab.content}
-        </div>
-        )}
+        {tabs.map((tab, index) => (
+            <div key={index} style={containerStyle(index === selectedTabIndex)}>
+                {tab.content}
+            </div>
+        ))}
     </div>
 
 }
