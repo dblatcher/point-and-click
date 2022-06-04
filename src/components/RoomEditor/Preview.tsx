@@ -9,28 +9,7 @@ import { ClickEffect } from "./ClickEffect";
 import { CharacterData } from "../../definitions/CharacterData";
 import { eventToBoolean, eventToNumber } from "../../lib/util";
 import HorizontalLine from "../HorizontalLine";
-
-import { spriteList } from "../../../data/sprites";
-
-
-const testSprite = spriteList[1]
-
-const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
-    return {
-        id: 'TEST',
-        name: 'Seymour Skinner',
-        status: 'think',
-        type: 'character',
-        room: 'SQUARE_ROOM',
-        x: point.x,
-        y: point.y,
-        width: 20,
-        height: 50,
-        sprite: 'mario',
-        direction: 'left',
-        dialogueColor: 'red',
-    }
-}
+import { makeTestCharacter, testSprite } from "./testSprite";
 
 type BooleanState = {
     showObstacleAreas: boolean;
