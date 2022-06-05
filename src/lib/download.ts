@@ -1,9 +1,3 @@
-import { RoomData } from "src/definitions/RoomData"
-
-
-
-
-
 export function dataToBlob(data: unknown) {
 
     try {
@@ -16,7 +10,6 @@ export function dataToBlob(data: unknown) {
 }
 
 export const makeDownloadFile = (fileName: string, blob: Blob): void => {
-
     if (typeof window !== 'undefined') {
         const { URL, document } = window
         const url = URL.createObjectURL(blob);
@@ -27,7 +20,44 @@ export const makeDownloadFile = (fileName: string, blob: Blob): void => {
         a.download = fileName;
         a.click();
         URL.revokeObjectURL(url);
-        document.removeChild(a);
+        document.body.removeChild(a);
+    }
+}
+
+export const uploadFile = async (): Promise<undefined | File> => {
+    if (typeof window !== 'undefined') {
+        const { document } = window
+        const input = document.createElement('input')
+        input.setAttribute('type', 'file')
+        document.body.appendChild(input);
+        input.click()
+
+        return new Promise(resolve => {
+            const callback = (): void => {
+                resolve(input.files ? input.files[0] : undefined)
+                document.body.removeChild(input)
+            }
+
+            input.addEventListener('change', callback, { once: true })
+        })
+    }
+    return undefined
+}
+
+export const readJsonFile = async (file?: File): Promise<{ data?: unknown; error?: string }> => {
+    if (!file) {
+        return { error: 'no file!' }
     }
 
+    if (file.type !== 'application/json') {
+        return { error: 'not JSON file!' }
+    }
+
+    try {
+        const contents = await file.text()
+        const data = JSON.parse(contents)
+        return { data }
+    } catch (error) {
+        return { error: 'Failed to parse file!' }
+    }
 }
