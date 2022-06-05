@@ -6,7 +6,7 @@ import { dataToBlob, makeDownloadFile } from "../../lib/download";
 import { SpriteData } from "../../definitions/SpriteSheet";
 import { RoomEditor } from "../RoomEditor";
 import { SpriteEditor } from "../SpriteEditor";
-import imageService from "../..//services/imageService";
+import imageService from "../../services/imageService";
 
 
 
@@ -18,14 +18,6 @@ const fileNames = [
     "sky.png",
     "trees.png",
 ]
-
-imageService.add(fileNames.map(fileName => {
-    return {
-        id: fileName,
-        href: path + fileName,
-        category: 'background'
-    }
-}))
 
 type State = {
 
@@ -44,6 +36,29 @@ export class GameEditor extends Component<Props, State>{
 
         this.state = {
         }
+        this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
+    }
+
+    respondToServiceUpdate(payload: unknown) {
+        console.log({payload})
+        this.forceUpdate()
+    }
+
+    componentDidMount() {
+        imageService.on('update', this.respondToServiceUpdate)
+
+        imageService.add(fileNames.map(fileName => {
+            return {
+                id: fileName,
+                href: path + fileName,
+                category: 'background'
+            }
+        }))
+        console.log(imageService.list())
+    }
+
+    componentWillUnmount() {
+        imageService.off('update', this.respondToServiceUpdate)
     }
 
     render() {
@@ -60,6 +75,7 @@ export class GameEditor extends Component<Props, State>{
             />
             <RoomEditor
                 data={startingGameCondition.rooms[0]}
+
                 saveFunction={(roomData: RoomData): void => {
                     const blob = dataToBlob(roomData)
                     if (blob) {

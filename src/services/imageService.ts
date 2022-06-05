@@ -1,14 +1,25 @@
+import { TypedEmitter } from "tiny-typed-emitter";
+
 export type ImageAsset = {
     id: string;
     href: string;
     category: 'spritesheet' | 'background';
 }
 
-class ImageService {
+interface ServiceEvents {
+    'update': (length: number) => void;
+}
+
+class ImageService extends TypedEmitter<ServiceEvents> {
     protected data: Record<string, ImageAsset | undefined>
 
     constructor() {
+        super()
         this.data = {}
+    }
+
+    reportUpdate(): void {
+        this.emit('update', this.list().length)
     }
 
     add(imageAssets: ImageAsset | ImageAsset[]): void {
@@ -16,6 +27,7 @@ class ImageService {
             imageAssets = [imageAssets]
         }
         imageAssets.forEach(imageAsset => this.data[imageAsset.id] = imageAsset)
+        this.reportUpdate()
     }
 
     get(id: string): ImageAsset | undefined {
