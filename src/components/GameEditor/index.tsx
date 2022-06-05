@@ -7,6 +7,7 @@ import { SpriteData } from "../../definitions/SpriteSheet";
 import { RoomEditor } from "../RoomEditor";
 import { SpriteEditor } from "../SpriteEditor";
 import imageService from "../../services/imageService";
+import spriteService from "../../services/spriteService";
 
 
 
@@ -46,6 +47,7 @@ export class GameEditor extends Component<Props, State>{
 
     componentDidMount() {
         imageService.on('update', this.respondToServiceUpdate)
+        spriteService.on('update', this.respondToServiceUpdate)
 
         imageService.add(fileNames.map(fileName => {
             return {
@@ -59,6 +61,7 @@ export class GameEditor extends Component<Props, State>{
 
     componentWillUnmount() {
         imageService.off('update', this.respondToServiceUpdate)
+        spriteService.off('update', this.respondToServiceUpdate)
     }
 
     render() {
@@ -73,6 +76,9 @@ export class GameEditor extends Component<Props, State>{
                     }
                 }}
             />
+
+            <hr />
+
             <RoomEditor
                 data={startingGameCondition.rooms[0]}
 
