@@ -15,6 +15,7 @@ import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../lib/clone";
 import { eventToNumber, eventToString, getShift, locateClickInWorld } from "../../lib/util";
 import { TabMenu } from "../TabMenu";
+import imageService from "../../services/imageService";
 
 
 type RoomEditorState = RoomData & {
@@ -23,7 +24,6 @@ type RoomEditorState = RoomData & {
 
 type RoomEditorProps = {
     data?: RoomData;
-    assetList?: string[];
     saveFunction: { (data: RoomData): void };
 }
 
@@ -270,9 +270,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             clickEffect
         } = this.state
 
-        const {
-            assetList = []
-        } = this.props
+        const imageAssets = imageService.getAll()
 
         return <article>
             <h2>Room Editor</h2>
@@ -325,7 +323,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                     {background.map(
                                         (layer, index) =>
                                             <BackgroundLayerControl index={index}
-                                                urls={assetList}
+                                                imageAssets={imageAssets}
                                                 layer={layer}
                                                 remove={this.removeBackground}
                                                 change={this.changeBackground}
@@ -334,7 +332,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                     )}
 
                                     <BackgroundLayerForm
-                                        urls={assetList}
+                                        imageAssets={imageAssets}
                                         addNewLayer={this.addBackground} />
                                 </fieldset>
                             )
