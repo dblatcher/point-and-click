@@ -13,9 +13,11 @@ import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect"
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../lib/clone";
+import { isRoomData } from "../../lib/typeguards";
 import { eventToNumber, eventToString, getShift, locateClickInWorld } from "../../lib/util";
 import { TabMenu } from "../TabMenu";
 import imageService from "../../services/imageService";
+import { readJsonFile, uploadFile } from "../../lib/download";
 
 
 type RoomEditorState = RoomData & {
@@ -83,6 +85,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.setClickEffect = this.setClickEffect.bind(this)
         this.handleSaveButton = this.handleSaveButton.bind(this)
+        this.handleLoadButton = this.handleLoadButton.bind(this)
     }
 
     setClickEffect(clickEffect?: ClickEffect) {
@@ -262,6 +265,21 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         delete data.clickEffect
         this.props.saveFunction(data)
     }
+    handleLoadButton = async () => {
+        const file = await uploadFile();
+        const { data, error } = await readJsonFile(file)
+
+        if (error) {
+            console.warn(error)
+        }
+
+        if (isRoomData(data)) {
+            this.setState(data)
+        } else {
+            console.warn("NOT ROOM DATA", data)
+        }
+    }
+
 
     render() {
         const {
@@ -397,6 +415,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 <section>
                     <div>
                         <button onClick={this.handleSaveButton}>Save</button>
+                        <button onClick={this.handleLoadButton}>load</button>
                     </div>
                     <Preview
                         roomData={this.state}
@@ -408,5 +427,4 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         </article>
     }
 }
-
 
