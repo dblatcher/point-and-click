@@ -16,24 +16,21 @@ function testObject<T>(castData: T, description: Record<keyof T, Property>): boo
     for (let i = 0; i < entries.length; i++) {
         const [key, property] = entries[i]
         const dataValueType = typeof castData[key]
+        const failPrefix = `fail: "${key}"(${property.optional ? 'optional' : 'required'})`
 
-        if (!property.optional) {
+        if (!property.optional || (property.optional && dataValueType !== 'undefined')) {
             if (dataValueType !== property.type) {
-                console.warn(`fail: "${key}"(not optional) is type ${dataValueType}, should be ${property.type}`)
+                console.warn(`${failPrefix} is type ${dataValueType}, should be ${property.type}`)
                 return false
             }
             if (property.values && !property.values.includes(castData[key])) {
-                console.warn(`fail: "${key}"(not optional) is not one of these valid values: ${property.values.map(_=>_.toString()).join(",")}`)
+                console.warn(`${failPrefix} is not one of these valid values: ${property.values.map(_ => _.toString()).join(",")}`)
                 return false
             }
         }
 
-        if (property.optional && (dataValueType !== property.type && dataValueType !== 'undefined')) {
-            console.warn(`fail: "${key}"(optional) is type ${dataValueType}, should be ${property.type}`)
-            return false
-        }
         if (dataValueType !== 'undefined' && property.test && !property.test(castData[key])) {
-            console.warn(`fail: "${key}" failed test ${property.test.name}`)
+            console.warn(`${failPrefix} failed test ${property.test.name}`)
             return false
         }
     }
@@ -91,7 +88,7 @@ function isZoneArray(data: unknown): data is Zone {
 }
 
 function isHotspotZoneArray(data: unknown): data is HotspotZone {
-    return  testArray(data as HotspotZone[], HotspotZoneDescription)
+    return testArray(data as HotspotZone[], HotspotZoneDescription)
 }
 
 const identDescription: Record<keyof Ident, Property> = {
@@ -119,7 +116,7 @@ const zoneDescription: Record<keyof Zone, Property> = {
 const HotspotZoneDescription: Record<keyof HotspotZone, Property> = {
     ...identDescription,
     ...zoneDescription,
-    type: { type: 'string', values:['hotspot'] },
+    type: { type: 'string', values: ['hotspot'] },
     parallax: { type: 'number' },
 }
 
@@ -129,7 +126,7 @@ const roomDataDescription: Record<keyof RoomData, Property> = {
     width: { type: 'number' },
     height: { type: 'number' },
     background: { type: 'object', test: isBackgroundlayerArray },
-    hotspots: { type: 'object', optional: true, test:isHotspotZoneArray },
+    hotspots: { type: 'object', optional: true, test: isHotspotZoneArray },
     obstacleAreas: { type: 'object', optional: true, test: isZoneArray },
     scaling: { type: 'object', optional: true, test: isNumberPairArray }
 }
