@@ -1,8 +1,10 @@
-import { Zone } from "../definitions/Zone";
+import { HotspotZone, Zone } from "../definitions/Zone";
 import { RoomData, ScaleLevel, BackgroundLayer } from "../definitions/RoomData";
+import { Ident } from "src/definitions/BaseTypes";
 
 interface Property {
     type: 'string' | 'number' | 'object' | 'boolean';
+    values?: any[];
     optional?: boolean;
     test?: { (value: unknown): boolean };
 }
@@ -15,10 +17,17 @@ function testObject<T>(castData: T, description: Record<keyof T, Property>): boo
         const [key, property] = entries[i]
         const dataValueType = typeof castData[key]
 
-        if (!property.optional && dataValueType !== property.type) {
-            console.warn(`fail: "${key}"(not optional) is type ${dataValueType}, should be ${property.type}`)
-            return false
+        if (!property.optional) {
+            if (dataValueType !== property.type) {
+                console.warn(`fail: "${key}"(not optional) is type ${dataValueType}, should be ${property.type}`)
+                return false
+            }
+            if (property.values && !property.values.includes(castData[key])) {
+                console.warn(`fail: "${key}"(not optional) is not one of these valid values: ${property.values.map(_=>_.toString()).join(",")}`)
+                return false
+            }
         }
+
         if (property.optional && (dataValueType !== property.type && dataValueType !== 'undefined')) {
             console.warn(`fail: "${key}"(optional) is type ${dataValueType}, should be ${property.type}`)
             return false
@@ -81,6 +90,17 @@ function isZoneArray(data: unknown): data is Zone {
     return testArray(data as Zone[], zoneDescription)
 }
 
+function isHotspotZoneArray(data: unknown): data is HotspotZone {
+    return  testArray(data as HotspotZone[], HotspotZoneDescription)
+}
+
+const identDescription: Record<keyof Ident, Property> = {
+    type: { type: 'string' },
+    id: { type: 'string' },
+    name: { type: 'string', optional: true },
+    status: { type: 'string', optional: true },
+}
+
 const backgroundLayerDescription: Record<keyof BackgroundLayer, Property> = {
     url: { type: 'string' },
     parallax: { type: 'number' },
@@ -96,13 +116,20 @@ const zoneDescription: Record<keyof Zone, Property> = {
     rect: { type: 'object', optional: true, test: isNumberPair },
 }
 
+const HotspotZoneDescription: Record<keyof HotspotZone, Property> = {
+    ...identDescription,
+    ...zoneDescription,
+    type: { type: 'string', values:['hotspot'] },
+    parallax: { type: 'number' },
+}
+
 const roomDataDescription: Record<keyof RoomData, Property> = {
     name: { type: 'string' },
     frameWidth: { type: 'number' },
     width: { type: 'number' },
     height: { type: 'number' },
     background: { type: 'object', test: isBackgroundlayerArray },
-    hotspots: { type: 'object', optional: true },
+    hotspots: { type: 'object', optional: true, test:isHotspotZoneArray },
     obstacleAreas: { type: 'object', optional: true, test: isZoneArray },
     scaling: { type: 'object', optional: true, test: isNumberPairArray }
 }
