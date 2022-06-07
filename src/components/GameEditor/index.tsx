@@ -8,17 +8,9 @@ import { RoomEditor } from "../RoomEditor";
 import { SpriteEditor } from "../SpriteEditor";
 import imageService from "../../services/imageService";
 import spriteService from "../../services/spriteService";
+import { spriteInputs } from "../../../data/sprites";
+import { assets } from "./images";
 
-
-
-const path = "./assets/backgrounds/"
-const fileNames = [
-    "square-room.png",
-    "hill.png",
-    "indoors.png",
-    "sky.png",
-    "trees.png",
-]
 
 type State = {
 
@@ -27,7 +19,6 @@ type State = {
 type Props = {
 
 }
-
 
 
 export class GameEditor extends Component<Props, State>{
@@ -49,13 +40,7 @@ export class GameEditor extends Component<Props, State>{
         imageService.on('update', this.respondToServiceUpdate)
         spriteService.on('update', this.respondToServiceUpdate)
 
-        imageService.add(fileNames.map(fileName => {
-            return {
-                id: fileName,
-                href: path + fileName,
-                category: 'background'
-            }
-        }))
+        imageService.add(assets)
         console.log(imageService.list())
     }
 
@@ -69,6 +54,7 @@ export class GameEditor extends Component<Props, State>{
         return <main>
             <h2>Game Editor</h2>
             <SpriteEditor
+                data={spriteInputs[2].data}
                 saveFunction={(data: SpriteData): void => {
                     const blob = dataToBlob(data)
                     if (blob) {

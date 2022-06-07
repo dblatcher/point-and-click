@@ -288,7 +288,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             clickEffect
         } = this.state
 
-        const imageAssets = imageService.getAll()
+        const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
 
         return <article>
             <h2>Room Editor</h2>

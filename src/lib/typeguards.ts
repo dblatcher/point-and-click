@@ -1,6 +1,7 @@
 import { HotspotZone, Zone } from "../definitions/Zone";
 import { RoomData, ScaleLevel, BackgroundLayer } from "../definitions/RoomData";
 import { Ident } from "src/definitions/BaseTypes";
+import { SpriteData } from "src/definitions/SpriteSheet";
 
 interface Property {
     type: 'string' | 'number' | 'object' | 'boolean';
@@ -134,4 +135,9 @@ const roomDataDescription: Record<keyof RoomData, Property> = {
 
 export function isRoomData(data: unknown): data is RoomData {
     return testObject(data as RoomData, roomDataDescription)
+}
+
+export function isSpriteData(data:unknown): data is SpriteData {
+    console.warn('no test in place')
+    return true
 }
