@@ -47,7 +47,7 @@ export const CharacterOrThing: FunctionalComponent<Props> = ({
     const [currentOrder] = orders
     const text = currentOrder?.type === 'talk' ? currentOrder.steps[0].text : undefined;
     const animationName = getAnimationName(currentOrder, data.status, spriteObject)
-    const direction = data.direction || spriteObject?.data.defaultDirection || Sprite.prototype.data.defaultDirection;
+    const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
     const frames = spriteObject?.getFrames(animationName, direction) || []
     const spriteScale = getScale(y, roomData.scaling)
 
@@ -85,7 +85,10 @@ export const CharacterOrThing: FunctionalComponent<Props> = ({
 
     const dialogueColor = data.type == 'character' ? data.dialogueColor : '';
 
-    if (!spriteObject) { return null }
+    if (!spriteObject) { 
+         console.log(spriteId, spriteService.list())
+        return null 
+    }
     return (
         <>
             <SpriteShape

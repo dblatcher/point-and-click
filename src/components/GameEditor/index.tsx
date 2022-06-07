@@ -32,7 +32,7 @@ export class GameEditor extends Component<Props, State>{
     }
 
     respondToServiceUpdate(payload: unknown) {
-        console.log({payload})
+        console.log('service update',{payload})
         this.forceUpdate()
     }
 
@@ -54,7 +54,7 @@ export class GameEditor extends Component<Props, State>{
         return <main>
             <h2>Game Editor</h2>
             <SpriteEditor
-                data={spriteInputs[2].data}
+                data={spriteInputs[1].data}
                 saveFunction={(data: SpriteData): void => {
                     const blob = dataToBlob(data)
                     if (blob) {

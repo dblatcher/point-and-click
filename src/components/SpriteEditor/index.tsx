@@ -5,7 +5,10 @@ import { Direction, SpriteData, SpriteFrame } from "../../definitions/SpriteShee
 import { cloneData } from "../../lib/clone";
 import { Sprite } from "../../lib/Sprite";
 import { readJsonFile, uploadFile } from "../../lib/download";
-import { isSpriteData  } from "../../lib/typeguards";
+import { isSpriteData } from "../../lib/typeguards";
+
+import { SpritePreview } from "./SpirtePreview";
+import { ThingData } from "../../definitions/ThingData"
 
 type SpriteEditorState = SpriteData & {
 
@@ -66,6 +69,25 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         }
     }
 
+    buildSprite(): Sprite {
+        // to do - get sheets from a sprite sheet service?
+        return new Sprite(this.state, spriteService.get(this.state.id)?.sheets || [])
+    }
+
+    buildThingData(animation: string, direction: Direction): ThingData {
+        const { state } = this
+
+        return {
+            type: 'thing',
+            id: 'preview',
+            x: 50, y: 0,
+            height: 100, width: 100,
+            sprite: state.id,
+            status: animation,
+            direction
+        }
+    }
+
     render() {
         const { id, defaultDirection, animations } = this.state
         return <article>
@@ -80,7 +102,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             </p>
             <p>
                 <b>animations:</b>
-                <ul>
+                <ul style={{ display: 'flex' }}>
                     {Object.keys(animations).map(animKey => (
                         <li key={animKey}>
                             <b>{animKey}</b>
@@ -89,13 +111,17 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                                     <li key={dirKey}>
                                         <em>{dirKey}</em>
                                         <ul>
-                                            {(animations[animKey][dirKey] as SpriteFrame[]).map((frame,index) => (
+                                            {(animations[animKey][dirKey] as SpriteFrame[]).map((frame, index) => (
                                                 <li key={index}>
                                                     <span>{frame.sheetId}</span>
                                                     <span>[{frame.col}, {frame.row}]</span>
                                                 </li>
                                             ))}
                                         </ul>
+                                        <SpritePreview
+                                            overrideSprite={this.buildSprite()}
+                                            data={this.buildThingData(animKey, dirKey)}
+                                        />
                                     </li>
                                 ))}
                             </ul>
@@ -113,5 +139,4 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             {spriteService.list().map(id => <p key={id}>{id}</p>)}
         </article>
     }
-
 }
