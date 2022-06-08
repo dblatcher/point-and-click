@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
 import spriteService from "../../services/spriteService";
+import spriteSheetService from "../../services/spriteSheetService";
 import { Direction, SpriteData, SpriteFrame } from "../../definitions/SpriteSheet";
 import { cloneData } from "../../lib/clone";
 import { Sprite } from "../../lib/Sprite";
@@ -135,8 +136,20 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             <button onClick={this.handleSaveButton}>Save to file</button>
             <button onClick={this.handleLoadButton}>load from file</button>
 
-            <h3>sprites</h3>
-            {spriteService.list().map(id => <p key={id}>{id}</p>)}
+            <section style={{ display: 'flex' }}>
+                <div>
+                    <h3>sprites</h3>
+                    <ul>
+                        {spriteService.list().map(id => <li key={id}>{id}</li>)}
+                    </ul>
+                </div>
+                <div>
+                    <h3>sheets</h3>
+                    <ul>
+                        {spriteSheetService.list().map(id => <li key={id}>{id}</li>)}
+                    </ul>
+                </div>
+            </section>
         </article>
     }
 }
