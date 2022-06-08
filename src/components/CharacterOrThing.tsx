@@ -86,7 +86,6 @@ export const CharacterOrThing: FunctionalComponent<Props> = ({
     const dialogueColor = data.type == 'character' ? data.dialogueColor : '';
 
     if (!spriteObject) { 
-         console.log(spriteId, spriteService.list())
         return null 
     }
     return (

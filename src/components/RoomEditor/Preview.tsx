@@ -9,7 +9,7 @@ import { ClickEffect } from "./ClickEffect";
 import { CharacterData } from "../../definitions/CharacterData";
 import { eventToBoolean, eventToNumber } from "../../lib/util";
 import HorizontalLine from "../HorizontalLine";
-import { makeTestCharacter, testSprite } from "./testSprite";
+import { makeTestCharacter } from "./testSprite";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -146,7 +146,6 @@ export class Preview extends Component<Props, State>{
                     )}
                     {showCharacter && (
                         <CharacterOrThing
-                            overrideSprite={testSprite}
                             data={testCharacter}
                             roomData={roomData}
                             viewAngle={viewAngle} isPaused={false} key={'test'} />

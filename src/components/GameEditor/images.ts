@@ -17,38 +17,6 @@ const bgAssets: ImageAsset[] = backgroundFileNames.map(fileName => {
     }
 })
 
-const charactersPath = "./assets/characters/"
-const charactersFileNames = [
-    "mario.png",
-    "skinner-1-l.png",
-    "skinner-1-r.png",
-    "skinner-2-l.png",
-    "skinner-2-r.png",
-]
-const chAssets: ImageAsset[] = charactersFileNames.map(fileName => {
-    return {
-        id: fileName,
-        href: charactersPath + fileName,
-        category: 'spritesheet'
-    }
-})
-
-const thingsPath = "./assets/things/"
-const thingsFileNames = [
-    "bucket.png",
-    "Fire.png",
-    "tube.png",
-]
-const thAssets: ImageAsset[] = thingsFileNames.map(fileName => {
-    return {
-        id: fileName,
-        href: thingsPath + fileName,
-        category: 'spritesheet'
-    }
-})
-
-export const assets:ImageAsset[] = [
-    ...chAssets,
+export const assets: ImageAsset[] = [
     ...bgAssets,
-    ...thAssets,
 ]

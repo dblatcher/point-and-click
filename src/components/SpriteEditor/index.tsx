@@ -46,7 +46,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     addSpriteToService() {
-        const spriteObject = new Sprite(this.state, [])
+        const spriteObject = new Sprite(this.state)
         spriteService.add(spriteObject)
     }
 
@@ -71,7 +71,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
     buildSprite(): Sprite {
         // to do - get sheets from a sprite sheet service?
-        return new Sprite(this.state, spriteService.get(this.state.id)?.sheets || [])
+        return new Sprite(this.state)
     }
 
     buildThingData(animation: string, direction: Direction): ThingData {

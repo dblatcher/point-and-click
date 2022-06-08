@@ -7,10 +7,13 @@ import { spriteInputs } from "../../../data/sprites";
 import Game from "../Game";
 import { cloneData } from "../../lib/clone";
 import spriteService from "../../services/spriteService";
+import spriteSheetService from "../../services/spriteSheetService";
 import { Sprite } from "../../lib/Sprite";
 
 const storageKey = "POINT_AND_CLICK"
-const sprites = spriteInputs.map(input => new Sprite(input.data, input.sheets))
+const sprites = spriteInputs.map(input => new Sprite(input.data))
+
+
 
 export default class GamePlayer extends Component<{}, {
     gameCondition: GameCondition;
@@ -31,7 +34,9 @@ export default class GamePlayer extends Component<{}, {
     componentDidMount() {
         console.log('MOUNT')
         spriteService.add(sprites)
+        spriteSheetService.add(spriteInputs.flatMap(input => input.sheets))
         console.log(spriteService.list())
+        console.log(spriteSheetService.list())
     }
 
     save(data: GameData) {

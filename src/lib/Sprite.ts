@@ -1,3 +1,4 @@
+import spriteSheetService from "../services/spriteSheetService";
 import { SpriteSheet, SpriteData, Direction, SpriteFrame } from "../definitions/SpriteSheet"
 
 
@@ -9,10 +10,8 @@ interface SheetWithFrame {
 
 export class Sprite {
     readonly data: SpriteData
-    readonly sheets: SpriteSheet[]
-    constructor(data: SpriteData, sheets: SpriteSheet[]) {
+    constructor(data: SpriteData) {
         this.data = data
-        this.sheets = sheets
     }
 
     readonly DEFAULT_ANIMATIONS = {
@@ -20,6 +19,10 @@ export class Sprite {
         move: 'walk',
         wait: 'default',
         act: 'default',
+    }
+
+    public get id() {
+        return this.data.id
     }
 
     public hasAnimation(animationName: string | undefined): boolean {
@@ -44,7 +47,7 @@ export class Sprite {
         const frame = frames[frameIndex]
 
         if (!frame) { return undefined }
-        const sheet = this.sheets.find(sheet => sheet.id === frame.sheetId)
+        const sheet = spriteSheetService.get(frame.sheetId)
         if (!sheet) { return undefined }
         return {
             sheet,
