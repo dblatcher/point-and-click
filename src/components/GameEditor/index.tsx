@@ -2,7 +2,7 @@
 import { Component, h } from "preact";
 import { startingGameCondition } from "../../../data/fullGame";
 import { RoomData } from "../../definitions/RoomData";
-import { dataToBlob, makeDownloadFile } from "../../lib/download";
+import { dataToBlob, makeDownloadFile } from "../../lib/files";
 import { SpriteData } from "../../definitions/SpriteSheet";
 import { RoomEditor } from "../RoomEditor";
 import { SpriteEditor } from "../SpriteEditor";
@@ -10,6 +10,7 @@ import imageService from "../../services/imageService";
 import spriteService from "../../services/spriteService";
 import { spriteInputs } from "../../../data/sprites";
 import { assets } from "./images";
+import { SpriteSheetTool } from "../SpriteSheetTool";
 
 
 type State = {
@@ -53,7 +54,8 @@ export class GameEditor extends Component<Props, State>{
 
         return <main>
             <h2>Game Editor</h2>
-            <SpriteEditor
+            <SpriteSheetTool />
+            {/* <SpriteEditor
                 data={spriteInputs[1].data}
                 saveFunction={(data: SpriteData): void => {
                     const blob = dataToBlob(data)
@@ -74,7 +76,7 @@ export class GameEditor extends Component<Props, State>{
                         makeDownloadFile(`${roomData.name || 'UNNAMED'}.room.json`, blob)
                     }
                 }}
-            />
+            /> */}
         </main>
     }
 

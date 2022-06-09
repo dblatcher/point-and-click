@@ -5,7 +5,7 @@ import spriteSheetService from "../../services/spriteSheetService";
 import { Direction, SpriteData, SpriteFrame } from "../../definitions/SpriteSheet";
 import { cloneData } from "../../lib/clone";
 import { Sprite } from "../../lib/Sprite";
-import { readJsonFile, uploadFile } from "../../lib/download";
+import { readJsonFile, uploadFile } from "../../lib/files";
 import { isSpriteData } from "../../lib/typeguards";
 
 import { SpritePreview } from "./SpirtePreview";

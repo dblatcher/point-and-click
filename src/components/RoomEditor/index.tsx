@@ -17,7 +17,7 @@ import { isRoomData } from "../../lib/typeguards";
 import { eventToNumber, eventToString, getShift, locateClickInWorld } from "../../lib/util";
 import { TabMenu } from "../TabMenu";
 import imageService from "../../services/imageService";
-import { readJsonFile, uploadFile } from "../../lib/download";
+import { readJsonFile, uploadFile } from "../../lib/files";
 
 
 type RoomEditorState = RoomData & {
