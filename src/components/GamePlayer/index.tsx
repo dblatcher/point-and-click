@@ -12,7 +12,7 @@ import { Sprite } from "../../lib/Sprite";
 
 const storageKey = "POINT_AND_CLICK"
 const sprites = spriteInputs.map(input => new Sprite(input.data))
-
+const spriteSheets = spriteInputs.flatMap(input => input.sheets)
 
 
 export default class GamePlayer extends Component<{}, {
@@ -33,10 +33,14 @@ export default class GamePlayer extends Component<{}, {
 
     componentDidMount() {
         console.log('MOUNT')
-        spriteService.add(sprites)
-        spriteSheetService.add(spriteInputs.flatMap(input => input.sheets))
-        console.log(spriteService.list())
-        console.log(spriteSheetService.list())
+        if (spriteService.list().length < sprites.length) {
+            spriteService.add(sprites)
+            console.log(spriteService.list())
+        }
+        if (spriteSheetService.list().length < spriteInputs.length) {
+            spriteSheetService.add(spriteSheets)
+            console.log(spriteSheetService.list())
+        }
     }
 
     save(data: GameData) {
