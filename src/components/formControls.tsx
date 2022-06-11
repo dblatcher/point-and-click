@@ -1,6 +1,6 @@
 import { ComponentChild, FunctionalComponent, Fragment, h, JSX } from "preact"
 import { Ident } from "../definitions/BaseTypes"
-import styles from './RoomEditor/styles.module.css';
+import styles from './editorStyles.module.css';
 
 export const ParallaxInput: FunctionalComponent<{
     value: number;

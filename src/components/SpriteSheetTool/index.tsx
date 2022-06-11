@@ -6,6 +6,7 @@ import { fileToImageUrl, uploadFile } from "../../lib/files"
 import { eventToNumber, eventToString } from "../../lib/util";
 import { NumberInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../lib/clone";
+import styles from '../editorStyles.module.css';
 
 type ExtraState = {
     urlIsObjectUrl: boolean;
@@ -60,6 +61,7 @@ export class SpriteSheetTool extends Component<{}, State> {
 
         ctx.clearRect(0, 0, canvasScale, canvasScale)
         ctx.lineWidth = 3;
+        ctx.strokeStyle = 'red';
         for (let i = 1; i < rows; i++) {
             ctx.beginPath()
             ctx.moveTo(0, canvasScale * (i / rows))
@@ -71,32 +73,6 @@ export class SpriteSheetTool extends Component<{}, State> {
             ctx.moveTo(canvasScale * (i / cols), 0)
             ctx.lineTo(canvasScale * (i / cols), canvasScale)
             ctx.stroke()
-        }
-    }
-
-    get frameStyle(): h.JSX.CSSProperties {
-        return {
-            width: '300px',
-            border: '2px solid red',
-            resize: 'horizontal',
-            overflow: 'auto',
-            position: 'relative'
-        }
-    }
-
-    get imageStyle(): h.JSX.CSSProperties {
-        return {
-            width: '100%',
-            height: 'auto,'
-        }
-    }
-    get canvasStyle(): h.JSX.CSSProperties {
-        return {
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            top: 0,
-            left: 0,
         }
     }
 
@@ -170,56 +146,74 @@ export class SpriteSheetTool extends Component<{}, State> {
         return (
             <article>
                 <h2>SpriteSheetTool</h2>
-                <div>
-                    <button onClick={this.loadFile}>select image file</button>
-                    <TextInput label="ID" value={id} onInput={event => this.changeValue('id', eventToString(event))} />
+
+                <div className={styles.container}>
+                    <section>
+                        <fieldset className={styles.fieldset}>
+                            <legend>sheet properties</legend>
+
+                            <div className={styles.row}>
+                                <button onClick={this.loadFile}>select image file</button>
+                            </div>
+                            <div className={styles.row}>
+                                <TextInput label="ID" value={id} onInput={event => this.changeValue('id', eventToString(event))} />
+                            </div>
+                            <div className={styles.row}>
+                                <NumberInput label="rows" value={rows} min={1}
+                                    onInput={
+                                        event => { this.changeValue('rows', eventToNumber(event)) }
+                                    }
+                                />
+                                <NumberInput label="cols" value={cols} min={1}
+                                    onInput={
+                                        event => { this.changeValue('cols', eventToNumber(event)) }
+                                    }
+                                />
+                            </div>
+                            <div className={styles.row}>
+                                <NumberInput label="widthScale" value={widthScale} step={.1}
+                                    onInput={
+                                        event => { this.changeValue('widthScale', eventToNumber(event)) }
+                                    }
+                                />
+                                <NumberInput label="heightScale" value={heightScale} step={.1}
+                                    onInput={
+                                        event => { this.changeValue('heightScale', eventToNumber(event)) }
+                                    }
+                                />
+                            </div>
+                        </fieldset>
+
+                        <fieldset className={styles.fieldset}>
+                            <div className={styles.row}>
+                                <button onClick={this.saveToService}>Save to service</button>
+                                {saveWarning && (
+                                    <Warning>{saveWarning}</Warning>
+                                )}
+                            </div>
+                            <div>
+                                <label>load existing sheet</label>
+                                <ul>
+                                    {spriteSheetService.list().map(id => <li key={id}>
+                                        <button onClick={() => { this.openFromService(id) }}>{id}</button>
+                                    </li>)}
+                                </ul>
+                            </div>
+                        </fieldset>
+                    </section>
+                    <section>
+                        <p>Resizing the preview does not effect the SpriteSheet data.</p>
+                        <p>The dimensions of the frame are set on the sprite objects.</p>
+                        <figure className={styles.spriteSheetPreview}>
+                            <img src={url} />
+                            <canvas ref={this.canvasRef} height={canvasScale} width={canvasScale} />
+                        </figure>
+                    </section>
                 </div>
 
-                <div>
-                    <NumberInput label="rows" value={rows} min={1}
-                        onInput={
-                            event => { this.changeValue('rows', eventToNumber(event)) }
-                        }
-                    />
-                    <NumberInput label="cols" value={cols} min={1}
-                        onInput={
-                            event => { this.changeValue('cols', eventToNumber(event)) }
-                        }
-                    />
-                </div>
-                <div>
-                    <NumberInput label="widthScale" value={widthScale} step={.1}
-                        onInput={
-                            event => { this.changeValue('widthScale', eventToNumber(event)) }
-                        }
-                    />
-                    <NumberInput label="heightScale" value={heightScale} step={.1}
-                        onInput={
-                            event => { this.changeValue('heightScale', eventToNumber(event)) }
-                        }
-                    />
-                </div>
 
-                <figure style={this.frameStyle}>
-                    <img src={url} style={this.imageStyle} />
-                    <canvas ref={this.canvasRef} height={canvasScale} width={canvasScale} style={this.canvasStyle} />
-                </figure>
 
-                <div>
-                    <button onClick={this.saveToService}>Save to service</button>
-                    {saveWarning && (
-                        <Warning>{saveWarning}</Warning>
-                    )}
-                </div>
 
-                <div>
-                    <h3>load existing sheet</h3>
-                    <ul>
-                        {spriteSheetService.list().map(id => <li key={id}>
-                            <button onClick={() => { this.openFromService(id) }}>{id}</button>
-                        </li>)}
-                    </ul>
-                </div>
             </article>
         )
     }

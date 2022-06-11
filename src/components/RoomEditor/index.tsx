@@ -6,7 +6,6 @@ import { Point } from "../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ZoneControl } from "./ZoneControl";
-import styles from './styles.module.css';
 import { HotspotControl } from "./HotspotControl";
 import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect";
@@ -16,8 +15,9 @@ import { cloneData } from "../../lib/clone";
 import { isRoomData } from "../../lib/typeguards";
 import { eventToNumber, eventToString, getShift, locateClickInWorld } from "../../lib/util";
 import { TabMenu } from "../TabMenu";
-import imageService from "../../services/imageService";
 import { readJsonFile, uploadFile } from "../../lib/files";
+import styles from '../editorStyles.module.css';
+import imageService from "../../services/imageService";
 
 
 type RoomEditorState = RoomData & {
@@ -293,7 +293,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         return <article>
             <h2>Room Editor</h2>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            <div style={styles.container}>
                 <section style={{ flexBasis: '20rem' }}>
                     <fieldset className={styles.fieldset}>
                         <legend>name</legend>

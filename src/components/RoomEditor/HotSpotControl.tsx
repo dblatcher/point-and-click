@@ -5,7 +5,7 @@ import { HotspotZone } from "../../definitions/Zone";
 import { IdentInput, ParallaxInput } from "../formControls";
 import { ZoneControl } from "./ZoneControl";
 import { eventToNumber, eventToString } from "../../lib/util";
-import styles from './styles.module.css';
+import styles from '../editorStyles.module.css';
 
 
 
