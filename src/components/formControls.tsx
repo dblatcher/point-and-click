@@ -72,6 +72,20 @@ export const NumberInput: FunctionalComponent<{
     </>
 }
 
+export const TextInput: FunctionalComponent<{
+    label: string;
+    value: string;
+    type?: string;
+    onInput: JSX.EventHandler<JSX.TargetedEvent>;
+}> = (props) => {
+
+    const { label, type = 'text' } = props
+    return <>
+        <label>{label}</label>
+        <input {...props} type={type} />
+    </>
+}
+
 export const Warning: FunctionalComponent<{
     children?: ComponentChild;
 }> = (props) => {

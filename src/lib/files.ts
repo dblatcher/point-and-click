@@ -29,13 +29,14 @@ export const uploadFile = async (): Promise<undefined | File> => {
         const { document } = window
         const input = document.createElement('input')
         input.setAttribute('type', 'file')
+        input.setAttribute('hidden', 'true')
         document.body.appendChild(input);
         input.click()
+        document.body.removeChild(input)
 
         return new Promise(resolve => {
             const callback = (): void => {
                 resolve(input.files ? input.files[0] : undefined)
-                document.body.removeChild(input)
             }
 
             input.addEventListener('change', callback, { once: true })
@@ -60,4 +61,11 @@ export const readJsonFile = async (file?: File): Promise<{ data?: unknown; error
     } catch (error) {
         return { error: 'Failed to parse file!' }
     }
+}
+
+export const fileToImageUrl = (file: File): string | undefined => {
+    if (typeof window !== 'undefined') {
+        return window.URL.createObjectURL(file)
+    }
+    return
 }
