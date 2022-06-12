@@ -120,7 +120,6 @@ export class SpriteSheetTool extends Component<{}, State> {
 
         this.setState({ saveWarning: undefined }, () => {
             spriteSheetService.add(copy)
-            this.forceUpdate()
         })
     }
 

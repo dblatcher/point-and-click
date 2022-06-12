@@ -8,7 +8,7 @@ import { Sprite } from "../../lib/Sprite";
 import { readJsonFile, uploadFile } from "../../lib/files";
 import { isSpriteData } from "../../lib/typeguards";
 
-import { SpritePreview } from "./SpirtePreview";
+import { SpritePreview } from "./SpritePreview";
 import { ThingData } from "../../definitions/ThingData"
 
 type SpriteEditorState = SpriteData & {
