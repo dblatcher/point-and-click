@@ -4,7 +4,7 @@ interface ServiceEvents {
     'update': (length: number) => void;
 }
 
-interface ServiceItem {
+export interface ServiceItem {
     id: string;
 }
 

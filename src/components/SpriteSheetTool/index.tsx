@@ -7,6 +7,8 @@ import { eventToNumber, eventToString } from "../../lib/util";
 import { NumberInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../lib/clone";
 import styles from '../editorStyles.module.css';
+import { ServiceLoader } from "../ServiceLoader";
+import { ServiceItem } from "src/services/Service";
 
 type ExtraState = {
     urlIsObjectUrl: boolean;
@@ -122,12 +124,8 @@ export class SpriteSheetTool extends Component<{}, State> {
         })
     }
 
-    openFromService(sheetId: string) {
-        const sheet = spriteSheetService.get(sheetId)
-        if (!sheet) { return }
-
-        const copy = cloneData(sheet);
-
+    openFromService(sheet: ServiceItem) {
+        const copy = cloneData(sheet as SpriteSheet);
         this.setState(state => {
             const newState = {
                 ...state,
@@ -184,6 +182,8 @@ export class SpriteSheetTool extends Component<{}, State> {
                             </div>
                         </fieldset>
 
+                        
+
                         <fieldset className={styles.fieldset}>
                             <div className={styles.row}>
                                 <button onClick={this.saveToService}>Save to service</button>
@@ -191,15 +191,8 @@ export class SpriteSheetTool extends Component<{}, State> {
                                     <Warning>{saveWarning}</Warning>
                                 )}
                             </div>
-                            <div>
-                                <label>load existing sheet</label>
-                                <ul>
-                                    {spriteSheetService.list().map(id => <li key={id}>
-                                        <button onClick={() => { this.openFromService(id) }}>{id}</button>
-                                    </li>)}
-                                </ul>
-                            </div>
                         </fieldset>
+                        <ServiceLoader service={spriteSheetService} select={this.openFromService} />
                     </section>
                     <section>
                         <p>Resizing the preview does not effect the SpriteSheet data.</p>
@@ -210,10 +203,6 @@ export class SpriteSheetTool extends Component<{}, State> {
                         </figure>
                     </section>
                 </div>
-
-
-
-
             </article>
         )
     }
