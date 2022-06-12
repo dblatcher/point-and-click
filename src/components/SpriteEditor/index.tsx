@@ -16,6 +16,7 @@ import styles from '../editorStyles.module.css';
 import { TextInput } from "../formControls";
 import { eventToString } from "../../lib/util";
 import { NewAnimationForm } from "./NewAnimationForm";
+import { AnimationControl } from "./AnimationControl";
 
 type SpriteEditorState = SpriteData & {
 
@@ -54,6 +55,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.handleLoadButton = this.handleLoadButton.bind(this)
         this.openSpriteFromService = this.openSpriteFromService.bind(this)
         this.addAnimation = this.addAnimation.bind(this)
+        this.buildThingData = this.buildThingData.bind(this)
     }
 
     changeValue(propery: keyof SpriteData, newValue: string) {
@@ -135,6 +137,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
     render() {
         const { id, defaultDirection, animations } = this.state
+        const overrideSprite = this.buildSprite()
         return <article>
             <h2>Sprite Editor</h2>
             <div className={styles.container}>
@@ -147,14 +150,13 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                         <div className={styles.row}>
                             <label>Default Direction</label>
                             <select value={defaultDirection} onChange={event => this.changeValue('defaultDirection', eventToString(event))}>
-                                {directions.map(direction =><option key={direction}>{direction}</option>)}
+                                {directions.map(direction => <option key={direction}>{direction}</option>)}
                             </select>
                         </div>
                     </fieldset>
 
                     <fieldset className={styles.fieldset}>
                         <legend>animations</legend>
-
                         <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
                     </fieldset>
 
@@ -167,32 +169,15 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 </section>
                 <section>
 
-                    <ul >
-                        {Object.keys(animations).map(animKey => (
-                            <li key={animKey}>
-                                <b>{animKey}</b>
-                                <ul style={{ display: 'flex' }}>
-                                    {(Object.keys(animations[animKey]) as Direction[]).map(dirKey => (
-                                        <li key={dirKey}>
-                                            <em>{dirKey}{dirKey === defaultDirection && '(default)'}</em>
-                                            <ul>
-                                                {(animations[animKey][dirKey] as SpriteFrame[]).map((frame, index) => (
-                                                    <li key={index}>
-                                                        <span>{frame.sheetId}</span>
-                                                        <span>[{frame.col}, {frame.row}]</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                            <SpritePreview
-                                                overrideSprite={this.buildSprite()}
-                                                data={this.buildThingData(animKey, dirKey)}
-                                            />
-                                        </li>
-                                    ))}
-                                </ul>
-                            </li>
-                        ))}
-                    </ul>
+
+                    {Object.keys(animations).map(animKey => (
+                        <AnimationControl animKey={animKey} key={animKey}
+                            defaultDirection={defaultDirection}
+                            animation={animations[animKey]}
+                            overrideSprite={overrideSprite}
+                            buildThingData={this.buildThingData}
+                        />
+                    ))}
 
                 </section>
             </div>

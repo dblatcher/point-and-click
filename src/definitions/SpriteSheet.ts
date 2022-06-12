@@ -20,10 +20,7 @@ export const directions: Direction[] = ['left', 'right']
 export interface SpriteData {
     id: string;
     defaultDirection: Direction;
-    animations: Record<string, {
-        left?: SpriteFrame[];
-        right?: SpriteFrame[];
-    }>;
+    animations: Record<string,Partial<Record<Direction, SpriteFrame[]>>>;
 }
 
 
