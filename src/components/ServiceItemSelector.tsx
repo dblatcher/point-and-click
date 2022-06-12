@@ -8,10 +8,11 @@ import styles from "./editorStyles.module.css"
 
 interface Props {
     service: Service<ServiceItem>;
+    legend: string;
     select: { (item: (ServiceItem)): void };
 }
 
-export const ServiceLoader: FunctionalComponent<Props> = ({ service, select }: Props) => {
+export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, select, legend }: Props) => {
 
     const [timestamp, setTimestamp] = useState<number>(Date.now())
     const refresh = () => {
@@ -36,9 +37,8 @@ export const ServiceLoader: FunctionalComponent<Props> = ({ service, select }: P
     }
 
     return <fieldset className={styles.fieldset}>
-
+        <legend>{legend}</legend>
         <div updated-at={timestamp}>
-            <label>load existing</label>
             <ul>
                 {service.list().map(id =>
                     <li key={id}>

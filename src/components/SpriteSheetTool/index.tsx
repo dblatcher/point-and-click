@@ -6,9 +6,9 @@ import { fileToImageUrl, uploadFile } from "../../lib/files"
 import { eventToNumber, eventToString } from "../../lib/util";
 import { NumberInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../lib/clone";
-import styles from '../editorStyles.module.css';
-import { ServiceLoader } from "../ServiceLoader";
+import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "src/services/Service";
+import styles from '../editorStyles.module.css';
 
 type ExtraState = {
     urlIsObjectUrl: boolean;
@@ -191,7 +191,8 @@ export class SpriteSheetTool extends Component<{}, State> {
                                 )}
                             </div>
                         </fieldset>
-                        <ServiceLoader service={spriteSheetService} select={this.openFromService} />
+                        <ServiceItemSelector legend="open sheet"
+                            service={spriteSheetService} select={this.openFromService} />
                     </section>
                     <section>
                         <p>Resizing the preview does not effect the SpriteSheet data.</p>

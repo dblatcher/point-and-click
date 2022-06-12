@@ -10,6 +10,11 @@ import { isSpriteData } from "../../lib/typeguards";
 
 import { SpritePreview } from "./SpritePreview";
 import { ThingData } from "../../definitions/ThingData"
+import { ServiceItemSelector } from "../ServiceItemSelector";
+import { ServiceItem } from "../../services/Service";
+import styles from '../editorStyles.module.css';
+import { TextInput } from "../formControls";
+import { eventToString } from "../../lib/util";
 
 type SpriteEditorState = SpriteData & {
 
@@ -26,7 +31,9 @@ function getBlankSprite(): SpriteData {
         id: 'NEW_SPRITE',
         defaultDirection: 'left',
         animations: {
-
+            default: {
+                left: []
+            }
         }
     }
 }
@@ -44,6 +51,24 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.addSpriteToService = this.addSpriteToService.bind(this)
         this.handleSaveButton = this.handleSaveButton.bind(this)
         this.handleLoadButton = this.handleLoadButton.bind(this)
+        this.openSpriteFromService = this.openSpriteFromService.bind(this)
+    }
+
+    changeValue(propery: keyof SpriteData, newValue: string) {
+        const modification: Partial<SpriteEditorState> = {}
+        switch (propery) {
+            case 'id':
+                if (typeof newValue === 'string') {
+                    modification[propery] = newValue.toUpperCase()
+                }
+                break;
+            case 'defaultDirection':
+                if (newValue == 'left' || newValue == 'right') {
+                    modification[propery] = newValue
+                }
+                break;
+        }
+        this.setState(modification)
     }
 
     addSpriteToService() {
@@ -69,6 +94,12 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             console.warn("NOT SPRITE DATA", data)
         }
     }
+    openSpriteFromService(item: ServiceItem) {
+        if (!(item instanceof Sprite)) {
+            return
+        }
+        this.setState(item.data)
+    }
 
     buildSprite(): Sprite {
         // to do - get sheets from a sprite sheet service?
@@ -93,63 +124,71 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         const { id, defaultDirection, animations } = this.state
         return <article>
             <h2>Sprite Editor</h2>
-            <p>
-                <b>ID:</b>
-                <span>{id}</span>
-            </p>
-            <p>
-                <b>defaultDirection:</b>
-                <span>{defaultDirection}</span>
-            </p>
-            <p>
-                <b>animations:</b>
-                <ul style={{ display: 'flex' }}>
-                    {Object.keys(animations).map(animKey => (
-                        <li key={animKey}>
-                            <b>{animKey}</b>
-                            <ul>
-                                {(Object.keys(animations[animKey]) as Direction[]).map(dirKey => (
-                                    <li key={dirKey}>
-                                        <em>{dirKey}</em>
-                                        <ul>
-                                            {(animations[animKey][dirKey] as SpriteFrame[]).map((frame, index) => (
-                                                <li key={index}>
-                                                    <span>{frame.sheetId}</span>
-                                                    <span>[{frame.col}, {frame.row}]</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        <SpritePreview
-                                            overrideSprite={this.buildSprite()}
-                                            data={this.buildThingData(animKey, dirKey)}
-                                        />
-                                    </li>
-                                ))}
-                            </ul>
-                        </li>
-                    ))}
-                </ul>
-            </p>
+            <div className={styles.container}>
+                <section>
 
+                    <fieldset className={styles.fieldset}>
+                        <div className={styles.row}>
+                            <TextInput label="sprite ID" value={id} onInput={event => this.changeValue('id', eventToString(event))} />
+                        </div>
+                        <div className={styles.row}>
+                            <label>Default Direction</label>
+                            <select value={defaultDirection} onChange={event => this.changeValue('defaultDirection', eventToString(event))}>
+                                <option>left</option>
+                                <option>right</option>
+                            </select>
+                        </div>
+                    </fieldset>
 
-            <button onClick={this.addSpriteToService}>Add to service</button>
-            <button onClick={this.handleSaveButton}>Save to file</button>
-            <button onClick={this.handleLoadButton}>load from file</button>
+                    <fieldset className={styles.fieldset}>
+                        <legend>animations</legend>
+                    </fieldset>
+
+                    <fieldset className={styles.fieldset}>
+                        <legend>storage</legend>
+                        <button onClick={this.addSpriteToService}>Add to service</button>
+                        <button onClick={this.handleSaveButton}>Save to file</button>
+                        <button onClick={this.handleLoadButton}>load from file</button>
+                    </fieldset>
+                </section>
+                <section>
+                    <p>
+                        <ul style={{ display: 'flex' }}>
+                            {Object.keys(animations).map(animKey => (
+                                <li key={animKey}>
+                                    <b>{animKey}</b>
+                                    <ul>
+                                        {(Object.keys(animations[animKey]) as Direction[]).map(dirKey => (
+                                            <li key={dirKey}>
+                                                <em>{dirKey}</em>
+                                                <ul>
+                                                    {(animations[animKey][dirKey] as SpriteFrame[]).map((frame, index) => (
+                                                        <li key={index}>
+                                                            <span>{frame.sheetId}</span>
+                                                            <span>[{frame.col}, {frame.row}]</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                                <SpritePreview
+                                                    overrideSprite={this.buildSprite()}
+                                                    data={this.buildThingData(animKey, dirKey)}
+                                                />
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </li>
+                            ))}
+                        </ul>
+                    </p>
+                </section>
+            </div>
 
             <section style={{ display: 'flex' }}>
-                <div>
-                    <h3>sprites</h3>
-                    <ul>
-                        {spriteService.list().map(id => <li key={id}>{id}</li>)}
-                    </ul>
-                </div>
-                <div>
-                    <h3>sheets</h3>
-                    <ul>
-                        {spriteSheetService.list().map(id => <li key={id}>{id}</li>)}
-                    </ul>
-                </div>
+                <ServiceItemSelector legend="open sprite"
+                    service={spriteService} select={this.openSpriteFromService} />
+                <ServiceItemSelector legend="pick sheet"
+                    service={spriteSheetService} select={(item) => { console.log(item) }} />
             </section>
-        </article>
+        </article >
     }
 }
