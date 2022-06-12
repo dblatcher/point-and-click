@@ -8,7 +8,6 @@ import { Sprite } from "../../lib/Sprite";
 import { readJsonFile, uploadFile } from "../../lib/files";
 import { isSpriteData } from "../../lib/typeguards";
 
-import { SpritePreview } from "./SpritePreview";
 import { ThingData } from "../../definitions/ThingData"
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "../../services/Service";
@@ -51,10 +50,12 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             ...initialData
         }
         this.addSpriteToService = this.addSpriteToService.bind(this)
+        this.handleNewButton = this.handleNewButton.bind(this)
         this.handleSaveButton = this.handleSaveButton.bind(this)
         this.handleLoadButton = this.handleLoadButton.bind(this)
         this.openSpriteFromService = this.openSpriteFromService.bind(this)
         this.addAnimation = this.addAnimation.bind(this)
+        this.editCycle = this.editCycle.bind(this)
         this.buildThingData = this.buildThingData.bind(this)
     }
 
@@ -76,7 +77,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     addAnimation(animationKey: string) {
-        console.log({ animationKey })
         this.setState(state => {
             const { animations, defaultDirection } = state
             const newAnimation: Partial<Record<Direction, SpriteFrame[] | undefined>> = {}
@@ -86,11 +86,39 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         })
     }
 
+    deleteAnimation(animationKey: string) {
+        this.setState(state => {
+            const { animations } = state
+            delete animations[animationKey]
+            return { animations }
+        })
+    }
+
+    editCycle(animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined) {
+        this.setState(state => {
+            const { animations, defaultDirection } = state
+            const animation = animations[animationKey]
+            if (!animation) { return {} }
+
+
+            if (newValue) {
+                animation[direction] = newValue
+            } if (direction !== defaultDirection && !newValue) {
+                delete animation[direction]
+            }
+            return { animations }
+        })
+    }
+
     addSpriteToService() {
         const spriteObject = new Sprite(this.state)
         spriteService.add(spriteObject)
     }
 
+    handleNewButton() {
+        const newSprite = getBlankSprite()
+        this.setState(newSprite)
+    }
     handleSaveButton() {
         const data = cloneData(this.state);
         this.props.saveFunction(data)
@@ -165,6 +193,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                         <button onClick={this.addSpriteToService}>Add to service</button>
                         <button onClick={this.handleSaveButton}>Save to file</button>
                         <button onClick={this.handleLoadButton}>load from file</button>
+                        <button onClick={this.handleNewButton}>new sprite</button>
                     </fieldset>
                 </section>
                 <section>
@@ -176,6 +205,8 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                             animation={animations[animKey]}
                             overrideSprite={overrideSprite}
                             buildThingData={this.buildThingData}
+                            deleteAll={() => this.deleteAnimation(animKey)}
+                            editCycle={this.editCycle}
                         />
                     ))}
 

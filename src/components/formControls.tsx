@@ -1,4 +1,5 @@
 import { ComponentChild, FunctionalComponent, Fragment, h, JSX } from "preact"
+import { useState } from "preact/hooks";
 import { Ident } from "../definitions/BaseTypes"
 import styles from './editorStyles.module.css';
 
@@ -84,6 +85,33 @@ export const TextInput: FunctionalComponent<{
         <label>{label}</label>
         <input {...props} type={type} />
     </>
+}
+
+export const DeleteButton: FunctionalComponent<{
+    label: string;
+    onClick: JSX.EventHandler<JSX.TargetedEvent>;
+    noConfirmation?: boolean;
+}> = (props) => {
+
+    const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
+
+    const handleButton = props.noConfirmation
+        ? props.onClick
+        : (): void => { setShowConfirmation(true) }
+
+    if (!showConfirmation) {
+        return <div>
+            <button onClick={handleButton}>[x]{props.label}</button>
+        </div>
+    }
+
+    return <div>
+        <p>
+            <Warning>Are you sure you want to {props.label}?</Warning>
+        </p>
+        <button onClick={(): void => { setShowConfirmation(false) }}>cancel</button>
+        <button onClick={props.onClick}>confirm</button>
+    </div>
 }
 
 export const Warning: FunctionalComponent<{
