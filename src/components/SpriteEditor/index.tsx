@@ -2,7 +2,7 @@
 import { Component, h } from "preact";
 import spriteService from "../../services/spriteService";
 import spriteSheetService from "../../services/spriteSheetService";
-import { Direction, SpriteData, SpriteFrame } from "../../definitions/SpriteSheet";
+import { Direction, directions, SpriteData, SpriteFrame } from "../../definitions/SpriteSheet";
 import { cloneData } from "../../lib/clone";
 import { Sprite } from "../../lib/Sprite";
 import { readJsonFile, uploadFile } from "../../lib/files";
@@ -15,6 +15,7 @@ import { ServiceItem } from "../../services/Service";
 import styles from '../editorStyles.module.css';
 import { TextInput } from "../formControls";
 import { eventToString } from "../../lib/util";
+import { NewAnimationForm } from "./NewAnimationForm";
 
 type SpriteEditorState = SpriteData & {
 
@@ -52,6 +53,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.handleSaveButton = this.handleSaveButton.bind(this)
         this.handleLoadButton = this.handleLoadButton.bind(this)
         this.openSpriteFromService = this.openSpriteFromService.bind(this)
+        this.addAnimation = this.addAnimation.bind(this)
     }
 
     changeValue(propery: keyof SpriteData, newValue: string) {
@@ -63,12 +65,23 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 }
                 break;
             case 'defaultDirection':
-                if (newValue == 'left' || newValue == 'right') {
-                    modification[propery] = newValue
+                if (directions.includes(newValue as Direction)) {
+                    modification[propery] = newValue as Direction
                 }
                 break;
         }
         this.setState(modification)
+    }
+
+    addAnimation(animationKey: string) {
+        console.log({ animationKey })
+        this.setState(state => {
+            const { animations, defaultDirection } = state
+            const newAnimation: Partial<Record<Direction, SpriteFrame[] | undefined>> = {}
+            newAnimation[defaultDirection] = []
+            animations[animationKey] = newAnimation
+            return { animations }
+        })
     }
 
     addSpriteToService() {
@@ -134,14 +147,15 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                         <div className={styles.row}>
                             <label>Default Direction</label>
                             <select value={defaultDirection} onChange={event => this.changeValue('defaultDirection', eventToString(event))}>
-                                <option>left</option>
-                                <option>right</option>
+                                {directions.map(direction =><option key={direction}>{direction}</option>)}
                             </select>
                         </div>
                     </fieldset>
 
                     <fieldset className={styles.fieldset}>
                         <legend>animations</legend>
+
+                        <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
                     </fieldset>
 
                     <fieldset className={styles.fieldset}>
@@ -152,34 +166,34 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     </fieldset>
                 </section>
                 <section>
-                    <p>
-                        <ul style={{ display: 'flex' }}>
-                            {Object.keys(animations).map(animKey => (
-                                <li key={animKey}>
-                                    <b>{animKey}</b>
-                                    <ul>
-                                        {(Object.keys(animations[animKey]) as Direction[]).map(dirKey => (
-                                            <li key={dirKey}>
-                                                <em>{dirKey}</em>
-                                                <ul>
-                                                    {(animations[animKey][dirKey] as SpriteFrame[]).map((frame, index) => (
-                                                        <li key={index}>
-                                                            <span>{frame.sheetId}</span>
-                                                            <span>[{frame.col}, {frame.row}]</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                                <SpritePreview
-                                                    overrideSprite={this.buildSprite()}
-                                                    data={this.buildThingData(animKey, dirKey)}
-                                                />
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </li>
-                            ))}
-                        </ul>
-                    </p>
+
+                    <ul >
+                        {Object.keys(animations).map(animKey => (
+                            <li key={animKey}>
+                                <b>{animKey}</b>
+                                <ul style={{ display: 'flex' }}>
+                                    {(Object.keys(animations[animKey]) as Direction[]).map(dirKey => (
+                                        <li key={dirKey}>
+                                            <em>{dirKey}{dirKey === defaultDirection && '(default)'}</em>
+                                            <ul>
+                                                {(animations[animKey][dirKey] as SpriteFrame[]).map((frame, index) => (
+                                                    <li key={index}>
+                                                        <span>{frame.sheetId}</span>
+                                                        <span>[{frame.col}, {frame.row}]</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <SpritePreview
+                                                overrideSprite={this.buildSprite()}
+                                                data={this.buildThingData(animKey, dirKey)}
+                                            />
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+                        ))}
+                    </ul>
+
                 </section>
             </div>
 

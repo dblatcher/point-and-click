@@ -1,4 +1,4 @@
-interface SpriteSheet {
+export interface SpriteSheet {
     id: string;
     url: string;
     rows: number;
@@ -8,15 +8,16 @@ interface SpriteSheet {
 }
 
 
-interface SpriteFrame {
+export interface SpriteFrame {
     sheetId: string;
     row: number;
     col: number;
 }
 
-type Direction = 'left' | 'right'
+export type Direction = 'left' | 'right'
+export const directions: Direction[] = ['left', 'right']
 
-interface SpriteData {
+export interface SpriteData {
     id: string;
     defaultDirection: Direction;
     animations: Record<string, {
@@ -24,7 +25,5 @@ interface SpriteData {
         right?: SpriteFrame[];
     }>;
 }
-
-export type { SpriteSheet, SpriteFrame, SpriteData, Direction }
 
 
