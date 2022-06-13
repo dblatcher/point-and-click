@@ -1,24 +1,23 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import spriteService from "../../services/spriteService";
-import spriteSheetService from "../../services/spriteSheetService";
 import { Direction, directions, SpriteData, SpriteFrame } from "../../definitions/SpriteSheet";
 import { cloneData } from "../../lib/clone";
 import { Sprite } from "../../lib/Sprite";
 import { readJsonFile, uploadFile } from "../../lib/files";
 import { isSpriteData } from "../../lib/typeguards";
-
+import { eventToString } from "../../lib/util";
 import { ThingData } from "../../definitions/ThingData"
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import { ServiceItem } from "../../services/Service";
-import styles from '../editorStyles.module.css';
 import { TextInput } from "../formControls";
-import { eventToString } from "../../lib/util";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";
+import { ServiceItem } from "../../services/Service";
+import spriteService from "../../services/spriteService";
+import spriteSheetService from "../../services/spriteSheetService";
+import styles from '../editorStyles.module.css';
 
 type SpriteEditorState = SpriteData & {
-
+    selectedAnimation?: string;
 };
 
 type SpriteEditorProps = {
@@ -47,7 +46,8 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         const initialData = props.data ? cloneData(props.data) : getBlankSprite()
 
         this.state = {
-            ...initialData
+            ...initialData,
+            selectedAnimation: 'default',
         }
         this.addSpriteToService = this.addSpriteToService.bind(this)
         this.handleNewButton = this.handleNewButton.bind(this)
@@ -164,7 +164,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     render() {
-        const { id, defaultDirection, animations } = this.state
+        const { id, defaultDirection, animations, selectedAnimation } = this.state
         const overrideSprite = this.buildSprite()
         return <article>
             <h2>Sprite Editor</h2>
@@ -185,6 +185,19 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
                     <fieldset className={styles.fieldset}>
                         <legend>animations</legend>
+
+                        <div className={styles.row}>
+                        <label>selected:</label>
+                        <select value={selectedAnimation}
+                            onChange={
+                                event => { this.setState({ selectedAnimation: eventToString(event) }) }
+                            }>
+                            {Object.keys(this.state.animations).map(animKey => (
+                                <option key={animKey}>{animKey}</option>
+                                ))}
+                        </select>
+                                </div>
+
                         <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
                     </fieldset>
 
@@ -196,20 +209,18 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                         <button onClick={this.handleNewButton}>new sprite</button>
                     </fieldset>
                 </section>
+
                 <section>
-
-
-                    {Object.keys(animations).map(animKey => (
-                        <AnimationControl animKey={animKey} key={animKey}
+                    {(selectedAnimation && animations[selectedAnimation]) && (
+                        <AnimationControl animKey={selectedAnimation}
                             defaultDirection={defaultDirection}
-                            animation={animations[animKey]}
+                            animation={animations[selectedAnimation]}
                             overrideSprite={overrideSprite}
                             buildThingData={this.buildThingData}
-                            deleteAll={() => this.deleteAnimation(animKey)}
+                            deleteAll={() => this.deleteAnimation(selectedAnimation)}
                             editCycle={this.editCycle}
                         />
-                    ))}
-
+                    )}
                 </section>
             </div>
 
