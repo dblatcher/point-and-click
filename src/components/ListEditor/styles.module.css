@@ -1,0 +1,28 @@
+
+.mainList {
+    list-style: none;
+    padding: 0 5px;
+    border: 1px solid aqua;
+}
+
+.mainList li > div {
+    border-bottom: 1px solid aqua;
+    margin-bottom: 5px;
+}
+
+.plusButton {
+    margin-left: auto;
+    background-color: green;
+}
+
+.plusButton:hover {
+    background-color: lightgreen;
+}
+
+.deleteButton {
+    background-color: red;
+}
+
+.deleteButton:hover {
+    background-color: pink;
+}

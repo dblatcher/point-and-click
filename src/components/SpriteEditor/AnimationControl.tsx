@@ -7,6 +7,8 @@ import { SpritePreview } from "./SpritePreview";
 import { DeleteButton } from "../formControls";
 import styles from '../editorStyles.module.css';
 import { useState } from "preact/hooks";
+import { ListEditor } from "../ListEditor";
+import { cloneData } from "../../lib/clone";
 
 
 interface Props {
@@ -23,14 +25,30 @@ export const AnimationControl: FunctionalComponent<Props> = ({
     animKey, animation, defaultDirection, overrideSprite, buildThingData, deleteAll, editCycle
 }: Props) => {
 
-    const [frameOpen, setFrameOpen] = useState<string | undefined>(undefined)
-
     const deleteDirection = (direction: Direction) => {
         return editCycle(animKey, direction, undefined)
     }
 
     const addDirection = (direction: Direction) => {
         return editCycle(animKey, direction, [])
+    }
+
+    const deleteFrame = (direction: Direction, index: number) => {
+        const originalList = animation[direction]
+        if (!originalList) { return }
+        const copyOfList = cloneData(originalList)
+        copyOfList.splice(index, 1)
+        return editCycle(animKey, direction, copyOfList)
+    }
+
+    const insertFrame = (direction: Direction, index: number) => {
+        const originalList = animation[direction]
+        if (!originalList) { return }
+        const copyOfList = cloneData(originalList)
+        copyOfList.splice(index, 0, {
+            row:0,col:0,sheetId:''
+        })
+        return editCycle(animKey, direction, copyOfList)
     }
 
     const directionsUsed = Object.keys(animation) as Direction[]
@@ -51,13 +69,18 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                         <div className={styles.row}>
 
                             <div style={{ minWidth: '12rem' }}>
-                                {(animation[dirKey] as SpriteFrame[]).map((frame, index) => (
-                                    <div key={index}>
-                                        <span>{frame.sheetId}</span>
-                                        <span>[{frame.col}, {frame.row}]</span>
-                                    </div>
-                                ))}
-                                <button onClick={() => { setFrameOpen(dirKey) }}>Add frame</button>
+                                <ListEditor
+                                    list={animation[dirKey] as SpriteFrame[]}
+                                    deleteItem={(frameIndex: number) => deleteFrame(dirKey, frameIndex)}
+                                    describeItem={(frame) => (
+                                        <div>
+                                            <span>{frame.sheetId}</span>
+                                            <span>[{frame.col}, {frame.row}]</span>
+                                        </div>
+                                    )}
+                                    insertItem={(frameIndex: number) => insertFrame(dirKey, frameIndex)}
+                                />
+
                             </div>
                             <SpritePreview
                                 overrideSprite={overrideSprite}
@@ -81,12 +104,5 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                     label={`Delete animation "${animKey}"`} onClick={deleteAll} />
             }
         </fieldset>
-        {frameOpen && (
-            <article>
-                <fieldset>
-                    <legend>add frame({frameOpen}) <button onClick={()=>{setFrameOpen(undefined)}}>x</button></legend>
-                </fieldset>
-            </article>
-        )}
     </>)
 }
