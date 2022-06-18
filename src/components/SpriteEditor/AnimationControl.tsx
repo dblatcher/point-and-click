@@ -19,10 +19,11 @@ interface Props {
     buildThingData: { (animkey: string, dirKey: Direction): ThingData };
     deleteAll: { (): void };
     editCycle: { (animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined): void };
+    selectedFrame?: SpriteFrame;
 }
 
 export const AnimationControl: FunctionalComponent<Props> = ({
-    animKey, animation, defaultDirection, overrideSprite, buildThingData, deleteAll, editCycle
+    animKey, animation, defaultDirection, overrideSprite, buildThingData, deleteAll, editCycle, selectedFrame,
 }: Props) => {
 
     const deleteDirection = (direction: Direction) => {
@@ -43,10 +44,10 @@ export const AnimationControl: FunctionalComponent<Props> = ({
 
     const insertFrame = (direction: Direction, index: number) => {
         const originalList = animation[direction]
-        if (!originalList) { return }
+        if (!originalList || !selectedFrame) { return }
         const copyOfList = cloneData(originalList)
         copyOfList.splice(index, 0, {
-            row:0,col:0,sheetId:''
+            ...selectedFrame
         })
         return editCycle(animKey, direction, copyOfList)
     }

@@ -112,7 +112,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             const animation = animations[animationKey]
             if (!animation) { return {} }
 
-
             if (newValue) {
                 animation[direction] = newValue
             } if (direction !== defaultDirection && !newValue) {
@@ -241,6 +240,11 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                             buildThingData={this.buildThingData}
                             deleteAll={() => this.deleteAnimation(selectedAnimation)}
                             editCycle={this.editCycle}
+                            selectedFrame={selectedSheetId ? {
+                                row: selectedRow,
+                                col: selectedCol,
+                                sheetId: selectedSheetId,
+                            } : undefined}
                         />
                     )}
                 </section>
@@ -248,7 +252,8 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
             <section style={{ display: 'flex' }}>
                 <ServiceItemSelector legend="open sprite"
-                    service={spriteService} select={this.openSpriteFromService} />
+                    service={spriteService}
+                    select={this.openSpriteFromService} />
             </section>
         </article >
     }
