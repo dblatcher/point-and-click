@@ -27,7 +27,10 @@ export const FramePicker: FunctionalComponent<Props> = ({ row, col, sheetId, pic
 
     return (<>
         <ServiceItemSelector legend="pick sheet"
-            service={spriteSheetService} select={(item): void => { pickFrame(0, 0, item.id) }} />
+            format="select"
+            service={spriteSheetService} 
+            selectedItemId={sheetId}
+            select={(item): void => { pickFrame(0, 0, item.id) }} />
         <p>{sheetId} [ <span>{col}</span>,<span>{row}</span> ]</p>
 
         {sheet && (

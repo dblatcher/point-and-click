@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
+import { eventToString } from "../lib/util";
 import { Service, ServiceItem } from "../services/Service";
 
 import styles from "./editorStyles.module.css"
@@ -10,9 +11,11 @@ interface Props {
     service: Service<ServiceItem>;
     legend: string;
     select: { (item: (ServiceItem)): void };
+    format?: 'buttons' | 'select';
+    selectedItemId?: string;
 }
 
-export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, select, legend }: Props) => {
+export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, select, legend, format = 'buttons', selectedItemId='' }: Props) => {
 
     const [timestamp, setTimestamp] = useState<number>(Date.now())
     const refresh = () => {
@@ -36,16 +39,34 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, selec
         }
     }
 
-    return <fieldset className={styles.fieldset}>
-        <legend>{legend}</legend>
-        <div updated-at={timestamp}>
-            <ul>
-                {service.list().map(id =>
-                    <li key={id}>
-                        <button onClick={() => { handleSelect(id) }}>{id}</button>
-                    </li>
-                )}
-            </ul>
-        </div>
-    </fieldset>
+    switch (format) {
+        case 'select':
+            return (
+                <div>
+                    <label>{legend}:</label>
+                    <select value={selectedItemId} readonly 
+                    onChange={event => { handleSelect(eventToString(event)) }}>
+                        <option value=''>{legend}</option>
+                        {service.list().map(id =>
+                            <option key={id} value={id}>{id}</option>
+                        )}
+                    </select>
+                </div>
+            )
+        case 'buttons':
+        default:
+            return <fieldset className={styles.fieldset}>
+                <legend>{legend}</legend>
+                <div updated-at={timestamp}>
+                    <ul>
+                        {service.list().map(id =>
+                            <li key={id}>
+                                <button onClick={() => { handleSelect(id) }}>{id}</button>
+                            </li>
+                        )}
+                    </ul>
+                </div>
+            </fieldset>
+    }
+
 }
