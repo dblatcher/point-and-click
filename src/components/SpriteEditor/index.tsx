@@ -18,6 +18,9 @@ import styles from '../editorStyles.module.css';
 
 type SpriteEditorState = SpriteData & {
     selectedAnimation?: string;
+    selectedRow: number;
+    selectedCol: number;
+    selectedSheetId?: string;
 };
 
 type SpriteEditorProps = {
@@ -48,6 +51,8 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.state = {
             ...initialData,
             selectedAnimation: 'default',
+            selectedCol: 0,
+            selectedRow: 0,
         }
         this.addSpriteToService = this.addSpriteToService.bind(this)
         this.handleNewButton = this.handleNewButton.bind(this)
@@ -57,6 +62,13 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.addAnimation = this.addAnimation.bind(this)
         this.editCycle = this.editCycle.bind(this)
         this.buildThingData = this.buildThingData.bind(this)
+        this.pickFrame = this.pickFrame.bind(this)
+    }
+
+    pickFrame(selectedRow: number, selectedCol: number, selectedSheetId?: string) {
+        this.setState({
+            selectedCol, selectedRow, selectedSheetId
+        })
     }
 
     changeValue(propery: keyof SpriteData, newValue: string) {
@@ -164,7 +176,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     render() {
-        const { id, defaultDirection, animations, selectedAnimation } = this.state
+        const { id, defaultDirection, animations, selectedAnimation, selectedCol, selectedRow, selectedSheetId } = this.state
         const overrideSprite = this.buildSprite()
         return <article>
             <h2>Sprite Editor</h2>
@@ -203,7 +215,12 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
                     <fieldset className={styles.fieldset}>
                         <legend>Pick Frame</legend>
-                        <FramePicker />
+                        <FramePicker
+                            pickFrame={this.pickFrame}
+                            sheetId={selectedSheetId}
+                            row={selectedRow}
+                            col={selectedCol}
+                        />
                     </fieldset>
 
                     <fieldset className={styles.fieldset}>
