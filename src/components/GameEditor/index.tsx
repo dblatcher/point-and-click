@@ -11,7 +11,16 @@ import spriteService from "../../services/spriteService";
 import { spriteInputs } from "../../../data/sprites";
 import { assets } from "./images";
 import { SpriteSheetTool } from "../SpriteSheetTool";
+import spriteSheetService from "../../services/spriteSheetService";
+import { Sprite } from "../../lib/Sprite";
 
+
+
+const sprites = spriteInputs.map(input => new Sprite(input.data))
+const spriteSheets = spriteInputs.flatMap(input => input.sheets)
+spriteService.add(sprites)
+spriteSheetService.add(spriteSheets)
+console.log('adding from GameEditor')
 
 type State = {
 
@@ -40,6 +49,8 @@ export class GameEditor extends Component<Props, State>{
     componentDidMount() {
         imageService.on('update', this.respondToServiceUpdate)
         spriteService.on('update', this.respondToServiceUpdate)
+
+
 
         imageService.add(assets)
         console.log(imageService.list())
