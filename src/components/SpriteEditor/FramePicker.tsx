@@ -1,7 +1,6 @@
 import { FunctionalComponent, h, Fragment, JSX } from "preact";
 import spriteSheetService from "../../services/spriteSheetService";
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import { useState } from "preact/hooks";
 import styles from '../editorStyles.module.css';
 import { SpriteSheetPreview } from "../SpriteSheetPreview";
 
@@ -28,18 +27,18 @@ export const FramePicker: FunctionalComponent<Props> = ({ row, col, sheetId, pic
     return (<>
         <ServiceItemSelector legend="pick sheet"
             format="select"
-            service={spriteSheetService} 
+            service={spriteSheetService}
             selectedItemId={sheetId}
             select={(item): void => { pickFrame(0, 0, item.id) }} />
-        <p>{sheetId} [ <span>{col}</span>,<span>{row}</span> ]</p>
 
-        {sheet && (
-            <SpriteSheetPreview 
-                sheet={sheet} 
-                highlight={{row,col}}
-                canvasScale={300} 
-                handleClick={handleClick} />
-        )}
+        {sheet && (<>
+            <SpriteSheetPreview
+            sheet={sheet}
+            highlight={{ row, col }}
+            canvasScale={300}
+            handleClick={handleClick} />
+            <span>{sheetId} [ <span>{col}</span>,<span>{row}</span> ]</span>
+        </>)}
     </>
     )
 }

@@ -8,7 +8,7 @@ import { isSpriteData } from "../../lib/typeguards";
 import { eventToString } from "../../lib/util";
 import { ThingData } from "../../definitions/ThingData"
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import { TextInput } from "../formControls";
+import { DeleteButton, TextInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";
 import { ServiceItem } from "../../services/Service";
@@ -186,28 +186,20 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                         <div className={styles.row}>
                             <TextInput label="sprite ID" value={id} onInput={event => this.changeValue('id', eventToString(event))} />
                         </div>
+                        <DeleteButton label="New sprite"
+                            confirmationText="Are you sure you want to reset this form?"
+                            onClick={this.handleNewButton} />
+                    </fieldset>
+
+                    <fieldset className={styles.fieldset}>
+                        <legend>animations</legend>
                         <div className={styles.row}>
                             <label>Default Direction</label>
                             <select value={defaultDirection} onChange={event => this.changeValue('defaultDirection', eventToString(event))}>
                                 {directions.map(direction => <option key={direction}>{direction}</option>)}
                             </select>
                         </div>
-                    </fieldset>
 
-                    <fieldset className={styles.fieldset}>
-                        <legend>animations</legend>
-
-                        <div className={styles.row}>
-                            <label>selected:</label>
-                            <select value={selectedAnimation}
-                                onChange={
-                                    event => { this.setState({ selectedAnimation: eventToString(event) }) }
-                                }>
-                                {Object.keys(this.state.animations).map(animKey => (
-                                    <option key={animKey}>{animKey}</option>
-                                ))}
-                            </select>
-                        </div>
 
                         <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
                     </fieldset>
@@ -224,14 +216,35 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
                     <fieldset className={styles.fieldset}>
                         <legend>storage</legend>
-                        <button onClick={this.addSpriteToService}>Add to service</button>
                         <button onClick={this.handleSaveButton}>Save to file</button>
                         <button onClick={this.handleLoadButton}>load from file</button>
-                        <button onClick={this.handleNewButton}>new sprite</button>
+                        <div>
+                            <button onClick={this.addSpriteToService}>
+                                {spriteService.list().includes(id) ? 'update in service' : 'Add to service'}
+                            </button>
+                            <ServiceItemSelector legend="open from service"
+                                format="select"
+                                selectedItemId={id}
+                                service={spriteService}
+                                select={this.openSpriteFromService} />
+                        </div>
                     </fieldset>
                 </section>
 
                 <section>
+
+                    <div className={styles.row}>
+                        <label>Edit Animation:</label>
+                        <select value={selectedAnimation}
+                            onChange={
+                                event => { this.setState({ selectedAnimation: eventToString(event) }) }
+                            }>
+                            {Object.keys(this.state.animations).map(animKey => (
+                                <option key={animKey}>{animKey}</option>
+                            ))}
+                        </select>
+                    </div>
+
                     {(selectedAnimation && animations[selectedAnimation]) && (
                         <AnimationControl animKey={selectedAnimation}
                             defaultDirection={defaultDirection}
@@ -249,12 +262,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     )}
                 </section>
             </div>
-
-            <section style={{ display: 'flex' }}>
-                <ServiceItemSelector legend="open sprite"
-                    service={spriteService}
-                    select={this.openSpriteFromService} />
-            </section>
         </article >
     }
 }

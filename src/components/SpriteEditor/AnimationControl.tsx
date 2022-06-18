@@ -58,7 +58,7 @@ export const AnimationControl: FunctionalComponent<Props> = ({
     return (<>
         <fieldset>
             <legend>{animKey}</legend>
-            <ul style={{ padding: 0, }}>
+            <ul style={{ padding: 0, display:'flex', flexWrap:'wrap', }}>
                 {directionsUsed.map(dirKey => (
                     <li key={dirKey} style={{ listStyle: 'none' }}>
                         <div className={styles.row}>
@@ -67,7 +67,7 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                                 <DeleteButton noConfirmation label={''} onClick={() => { deleteDirection(dirKey) }} />
                             )}
                         </div>
-                        <div className={styles.row}>
+                        <div className={styles.row} style={{alignItems:'flex-end'}}>
 
                             <div style={{ minWidth: '12rem' }}>
                                 <ListEditor

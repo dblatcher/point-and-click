@@ -42,7 +42,7 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, selec
     switch (format) {
         case 'select':
             return (
-                <div>
+                <span updated-at={timestamp}>
                     <label>{legend}:</label>
                     <select value={selectedItemId} readonly 
                     onChange={event => { handleSelect(eventToString(event)) }}>
@@ -51,7 +51,7 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, selec
                             <option key={id} value={id}>{id}</option>
                         )}
                     </select>
-                </div>
+                </span>
             )
         case 'buttons':
         default:
