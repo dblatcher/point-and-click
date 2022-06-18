@@ -31,7 +31,11 @@ export const FramePicker: FunctionalComponent<Props> = ({ row, col, sheetId, pic
         <p>{sheetId} [ <span>{col}</span>,<span>{row}</span> ]</p>
 
         {sheet && (
-            <SpriteSheetPreview sheet={sheet} canvasScale={300} handleClick={handleClick} />
+            <SpriteSheetPreview 
+                sheet={sheet} 
+                highlight={{row,col}}
+                canvasScale={300} 
+                handleClick={handleClick} />
         )}
     </>
     )

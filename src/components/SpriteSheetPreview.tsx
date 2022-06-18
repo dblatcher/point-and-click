@@ -6,10 +6,11 @@ import styles from './editorStyles.module.css';
 interface Props {
     sheet: SpriteSheet;
     canvasScale: number;
+    highlight?: { row: number; col: number };
     handleClick?: JSX.MouseEventHandler<HTMLCanvasElement>;
 }
 
-export const SpriteSheetPreview: FunctionalComponent<Props> = ({ sheet, canvasScale, handleClick }: Props) => {
+export const SpriteSheetPreview: FunctionalComponent<Props> = ({ sheet, canvasScale, handleClick, highlight }: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
@@ -34,11 +35,31 @@ export const SpriteSheetPreview: FunctionalComponent<Props> = ({ sheet, canvasSc
             ctx.lineTo(canvasScale * (i / cols), canvasScale)
             ctx.stroke()
         }
-    }, [sheet, canvasScale])
+
+        if (highlight) {
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = 'white';
+            const squarePoints: [number, number][] = [
+                [canvasScale * (highlight.col + 0) / cols, canvasScale * (highlight.row + 0) / rows],
+                [canvasScale * (highlight.col + 1) / cols, canvasScale * (highlight.row + 0) / rows],
+                [canvasScale * (highlight.col + 1) / cols, canvasScale * (highlight.row + 1) / rows],
+                [canvasScale * (highlight.col + 0) / cols, canvasScale * (highlight.row + 1) / rows],
+            ]
+            ctx.beginPath()
+            ctx.moveTo(...squarePoints[0])
+            ctx.lineTo(...squarePoints[1])
+            ctx.lineTo(...squarePoints[2])
+            ctx.lineTo(...squarePoints[3])
+            ctx.lineTo(...squarePoints[0])
+            ctx.fillStyle= "rgba(255,255,255,.25)"
+            ctx.fillRect(...squarePoints[0], canvasScale * (1/cols), canvasScale*(1/rows))
+            ctx.stroke()
+        }
+    }, [sheet, canvasScale, highlight])
 
 
     return (
-        <figure className={styles.spriteSheetPreview}>
+        <figure className={styles.spriteSheetPreview} style={{ cursor: !!handleClick ? 'pointer' : undefined }}>
             {sheet.url && <img src={sheet.url} />}
             <canvas ref={canvasRef}
                 onClick={handleClick}
