@@ -166,8 +166,8 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         return {
             type: 'thing',
             id: 'preview',
-            x: 50, y: 0,
-            height: 100, width: 100,
+            x: 75, y: 0,
+            height: 150, width: 150,
             sprite: state.id,
             status: animation,
             direction

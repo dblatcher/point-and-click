@@ -1,0 +1,23 @@
+.animationList {
+    padding: 0;
+    display: flex; 
+    flex-wrap: wrap;
+}
+
+.animationList > li {
+    list-style: none;
+}
+
+.frameBlock {
+    display: flex;
+}
+
+.frameBlock p {
+    margin: 0;
+}
+
+.frameBlockText {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

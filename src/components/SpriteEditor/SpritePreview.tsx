@@ -8,9 +8,9 @@ import { CharacterData } from "../../definitions/CharacterData";
 import { Sprite } from "../../lib/Sprite";
 
 const roomData: RoomData = {
-    height: 100,
-    width: 100,
-    frameWidth: 100,
+    height: 150,
+    width: 150,
+    frameWidth: 150,
     name: '',
     background: []
 }
@@ -44,24 +44,21 @@ export class SpritePreview extends Component<Props, State>{
 
 
         return (
-            <>
-                <Room data={roomData}
-                    showObstacleAreas={false}
-                    scale={viewScale}
-                    viewAngle={0}
-                    highlightHotspots={false}
-                    // eslint-disable-next-line @typescript-eslint/no-empty-function
-                    handleRoomClick={() => { }}
-                >
-                    <CharacterOrThing
-                        overrideSprite={overrideSprite}
-                        key={1}
-                        data={data}
-                        roomData={roomData}
-                        viewAngle={0} isPaused={false} />
-                </Room>
-
-            </>
+            <Room data={roomData}
+                showObstacleAreas={false}
+                scale={viewScale}
+                viewAngle={0}
+                highlightHotspots={false}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                handleRoomClick={() => { }}
+            >
+                <CharacterOrThing
+                    overrideSprite={overrideSprite}
+                    key={1}
+                    data={data}
+                    roomData={roomData}
+                    viewAngle={0} isPaused={false} />
+            </Room>
         )
     }
 }

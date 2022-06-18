@@ -5,10 +5,11 @@ import { Direction, directions, SpriteFrame } from "../../definitions/SpriteShee
 import { ThingData } from "src/definitions/ThingData";
 import { SpritePreview } from "./SpritePreview";
 import { DeleteButton } from "../formControls";
-import styles from '../editorStyles.module.css';
-import { useState } from "preact/hooks";
 import { ListEditor } from "../ListEditor";
 import { cloneData } from "../../lib/clone";
+import { FramePreview } from "./FramePreview";
+import editorStyles from '../editorStyles.module.css';
+import styles from './styles.module.css';
 
 
 interface Props {
@@ -58,35 +59,40 @@ export const AnimationControl: FunctionalComponent<Props> = ({
     return (<>
         <fieldset>
             <legend>{animKey}</legend>
-            <ul style={{ padding: 0, display:'flex', flexWrap:'wrap', }}>
+            <ul className={styles.animationList}>
                 {directionsUsed.map(dirKey => (
-                    <li key={dirKey} style={{ listStyle: 'none' }}>
-                        <div className={styles.row}>
+                    <li key={dirKey}>
+                        <div className={editorStyles.row}>
                             <em>{dirKey}{dirKey === defaultDirection && '(default)'}</em>
                             {dirKey !== defaultDirection && (
                                 <DeleteButton noConfirmation label={''} onClick={() => { deleteDirection(dirKey) }} />
                             )}
                         </div>
-                        <div className={styles.row} style={{alignItems:'flex-end'}}>
-
-                            <div style={{ minWidth: '12rem' }}>
+                        <SpritePreview
+                            overrideSprite={overrideSprite}
+                            data={buildThingData(animKey, dirKey)}
+                        />
+                        <div className={editorStyles.row} style={{ alignItems: 'flex-end', minWidth: '14rem' }}>
+                            <div style={{ minWidth: '14rem' }}>
                                 <ListEditor
                                     list={animation[dirKey] as SpriteFrame[]}
                                     deleteItem={(frameIndex: number) => deleteFrame(dirKey, frameIndex)}
                                     describeItem={(frame) => (
-                                        <div>
-                                            <span>{frame.sheetId}</span>
-                                            <span>[{frame.col}, {frame.row}]</span>
+                                        <div className={styles.frameBlock}>
+                                            <FramePreview
+                                                height={50}
+                                                width={50}
+                                                backgroundColor={'yellow'}
+                                                frame={frame} />
+                                            <div className={styles.frameBlockText}>
+                                                <p>{frame.sheetId}</p>
+                                                <p>[{frame.col}, {frame.row}]</p>
+                                            </div>
                                         </div>
                                     )}
                                     insertItem={(frameIndex: number) => insertFrame(dirKey, frameIndex)}
                                 />
-
                             </div>
-                            <SpritePreview
-                                overrideSprite={overrideSprite}
-                                data={buildThingData(animKey, dirKey)}
-                            />
                         </div>
                     </li>
                 ))}
