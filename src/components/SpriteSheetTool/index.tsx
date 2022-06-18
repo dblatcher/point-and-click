@@ -9,6 +9,7 @@ import { cloneData } from "../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "src/services/Service";
 import styles from '../editorStyles.module.css';
+import { SpriteSheetPreview } from "../SpriteSheetPreview";
 
 type ExtraState = {
     urlIsObjectUrl: boolean;
@@ -37,10 +38,6 @@ export class SpriteSheetTool extends Component<{}, State> {
         this.canvasRef = createRef()
     }
 
-    componentDidMount() {
-        this.updateCanvas()
-    }
-
     loadFile = async () => {
         const { urlIsObjectUrl, url: oldUrl } = this.state
         const file = await uploadFile()
@@ -52,30 +49,6 @@ export class SpriteSheetTool extends Component<{}, State> {
         }
 
         this.setState({ url: newUrl, urlIsObjectUrl: true, saveWarning: undefined })
-    }
-
-    updateCanvas() {
-        const canvas = this.canvasRef.current
-        if (!canvas) { return }
-        const ctx = canvas.getContext('2d')
-        if (!ctx) { return }
-        const { rows = 1, cols = 1 } = this.state
-
-        ctx.clearRect(0, 0, canvasScale, canvasScale)
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = 'red';
-        for (let i = 1; i < rows; i++) {
-            ctx.beginPath()
-            ctx.moveTo(0, canvasScale * (i / rows))
-            ctx.lineTo(canvasScale, canvasScale * (i / rows))
-            ctx.stroke()
-        }
-        for (let i = 1; i < cols; i++) {
-            ctx.beginPath()
-            ctx.moveTo(canvasScale * (i / cols), 0)
-            ctx.lineTo(canvasScale * (i / cols), canvasScale)
-            ctx.stroke()
-        }
     }
 
     changeValue(propery: keyof SpriteSheet, newValue: string | number) {
@@ -97,9 +70,7 @@ export class SpriteSheetTool extends Component<{}, State> {
                 }
                 break;
         }
-        this.setState(modification, () => {
-            this.updateCanvas()
-        })
+        this.setState(modification)
     }
 
     saveToService() {
@@ -131,7 +102,7 @@ export class SpriteSheetTool extends Component<{}, State> {
                 ...copy,
             }
             return newState
-        }, this.updateCanvas)
+        })
 
     }
 
@@ -181,8 +152,6 @@ export class SpriteSheetTool extends Component<{}, State> {
                             </div>
                         </fieldset>
 
-                        
-
                         <fieldset className={styles.fieldset}>
                             <div className={styles.row}>
                                 <button onClick={this.saveToService}>Save to service</button>
@@ -197,10 +166,10 @@ export class SpriteSheetTool extends Component<{}, State> {
                     <section>
                         <p>Resizing the preview does not effect the SpriteSheet data.</p>
                         <p>The dimensions of the frame are set on the sprite objects.</p>
-                        <figure className={styles.spriteSheetPreview}>
-                            <img src={url} />
-                            <canvas ref={this.canvasRef} height={canvasScale} width={canvasScale} />
-                        </figure>
+
+                        <SpriteSheetPreview 
+                            sheet={{ rows, cols, url: url || '', id }} 
+                            canvasScale={canvasScale} />
                     </section>
                 </div>
             </article>

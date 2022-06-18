@@ -13,7 +13,7 @@ import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";
 import { ServiceItem } from "../../services/Service";
 import spriteService from "../../services/spriteService";
-import spriteSheetService from "../../services/spriteSheetService";
+import { FramePicker } from "./FramePicker";
 import styles from '../editorStyles.module.css';
 
 type SpriteEditorState = SpriteData & {
@@ -187,18 +187,23 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                         <legend>animations</legend>
 
                         <div className={styles.row}>
-                        <label>selected:</label>
-                        <select value={selectedAnimation}
-                            onChange={
-                                event => { this.setState({ selectedAnimation: eventToString(event) }) }
-                            }>
-                            {Object.keys(this.state.animations).map(animKey => (
-                                <option key={animKey}>{animKey}</option>
+                            <label>selected:</label>
+                            <select value={selectedAnimation}
+                                onChange={
+                                    event => { this.setState({ selectedAnimation: eventToString(event) }) }
+                                }>
+                                {Object.keys(this.state.animations).map(animKey => (
+                                    <option key={animKey}>{animKey}</option>
                                 ))}
-                        </select>
-                                </div>
+                            </select>
+                        </div>
 
                         <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
+                    </fieldset>
+
+                    <fieldset className={styles.fieldset}>
+                        <legend>Pick Frame</legend>
+                        <FramePicker />
                     </fieldset>
 
                     <fieldset className={styles.fieldset}>
@@ -227,8 +232,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             <section style={{ display: 'flex' }}>
                 <ServiceItemSelector legend="open sprite"
                     service={spriteService} select={this.openSpriteFromService} />
-                <ServiceItemSelector legend="pick sheet"
-                    service={spriteSheetService} select={(item) => { console.log(item) }} />
             </section>
         </article >
     }
