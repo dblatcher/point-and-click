@@ -52,11 +52,8 @@ function getBlankRoom(): RoomData {
         height: 200,
         background: [],
         hotspots: [
-            { x: 100, y: 70, circle: 20, type: 'hotspot', id: 'CIRCLE_0', parallax: 0 },
-            { x: 100, y: 100, circle: 20, type: 'hotspot', id: 'CIRCLE_1', parallax: 1 },
         ],
         obstacleAreas: [
-            { x: 100, y: 30, circle: 50 },
         ],
         scaling: [
             [0, 1],
@@ -296,13 +293,19 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         return <article>
             <h2>Room Editor</h2>
 
-            <div style={styles.container}>
+            <div className={styles.container}>
                 <section style={{ flexBasis: '20rem' }}>
                     <fieldset className={styles.fieldset}>
                         <legend>name</legend>
                         <input type="text" value={name} onInput={event => this.setState({ name: eventToString(event) })} />
                     </fieldset>
-
+                    <fieldset className={styles.fieldset}>
+                        <legend>storage</legend>
+                        <div>
+                            <button onClick={this.handleSaveButton}>Save to file</button>
+                            <button onClick={this.handleLoadButton}>Load from file</button>
+                        </div>
+                    </fieldset>
                     <TabMenu tabs={[
                         {
                             label: 'Dimensions', content: (
@@ -416,10 +419,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 </section>
 
                 <section>
-                    <div>
-                        <button onClick={this.handleSaveButton}>Save</button>
-                        <button onClick={this.handleLoadButton}>load</button>
-                    </div>
+
                     <Preview
                         roomData={this.state}
                         clickEffect={clickEffect}

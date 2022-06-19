@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { startingGameCondition } from "../../../data/fullGame";
+
+import { SpriteSheetTool } from "../SpriteSheetTool";
 import { RoomEditor } from "../RoomEditor";
 import { SpriteEditor } from "../SpriteEditor";
 import imageService from "../../services/imageService";
 import spriteService from "../../services/spriteService";
+import spriteSheetService from "../../services/spriteSheetService";
 import { spriteInputs } from "../../../data/sprites";
 import { assets } from "./images";
-import { SpriteSheetTool } from "../SpriteSheetTool";
-import spriteSheetService from "../../services/spriteSheetService";
 import { Sprite } from "../../lib/Sprite";
+import { TabMenu } from "../TabMenu";
 
 
 
@@ -46,9 +47,6 @@ export class GameEditor extends Component<Props, State>{
     componentDidMount() {
         imageService.on('update', this.respondToServiceUpdate)
         spriteService.on('update', this.respondToServiceUpdate)
-
-
-
         imageService.add(assets)
         console.log(imageService.list())
     }
@@ -62,15 +60,11 @@ export class GameEditor extends Component<Props, State>{
 
         return <main>
             <h2>Game Editor</h2>
-            {/* <SpriteEditor /> */}
-            {/* <SpriteSheetTool /> */}
-
-            <hr />
-
-            <RoomEditor
-                data={startingGameCondition.rooms[0]}
-            />
+            <TabMenu backgroundColor="none" tabs={[
+                {label:'Room Editor', content: <RoomEditor />},
+                {label:'Sprite Editor', content: <SpriteEditor />},
+                {label:'Sprite Sheet Tool', content: <SpriteSheetTool />},
+            ]} />
         </main>
     }
-
 }

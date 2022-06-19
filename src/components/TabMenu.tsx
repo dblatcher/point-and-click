@@ -10,6 +10,7 @@ interface Tab {
 interface Props {
     tabs: Tab[];
     defaultOpenIndex?: number;
+    backgroundColor?: string;
 }
 
 const buttonStyle = (isOpen: boolean): JSX.CSSProperties => {
@@ -21,24 +22,28 @@ const buttonStyle = (isOpen: boolean): JSX.CSSProperties => {
     }
 }
 
-const navStyle = (): JSX.CSSProperties => {
+const navStyle = (backgroundColor: string): JSX.CSSProperties => {
     return {
         display: 'flex',
         flexWrap: 'wrap',
-        backgroundColor: 'lightgrey',
+        backgroundColor,
         padding: 5,
     }
 }
 
-const containerStyle = (isOpen: boolean): JSX.CSSProperties => {
+const containerStyle = (isOpen: boolean, backgroundColor: string): JSX.CSSProperties => {
     return {
         display: isOpen ? 'block' : 'none',
-        backgroundColor: 'lightgrey',
+        backgroundColor,
         padding: 5,
     }
 }
 
-export const TabMenu: FunctionalComponent<Props> = ({ tabs, defaultOpenIndex = 0 }: Props) => {
+export const TabMenu: FunctionalComponent<Props> = ({
+    tabs,
+    defaultOpenIndex = 0,
+    backgroundColor = 'lightgrey'
+}: Props) => {
     const [selectedTabIndex, setSelectedTabIndex] = useState<number>(defaultOpenIndex)
     useEffect(() => {
         setSelectedTabIndex(defaultOpenIndex)
@@ -46,7 +51,7 @@ export const TabMenu: FunctionalComponent<Props> = ({ tabs, defaultOpenIndex = 0
     setSelectedTabIndex(clamp(selectedTabIndex, tabs.length - 1))
 
     return <div>
-        <nav style={navStyle()}>
+        <nav style={navStyle(backgroundColor)}>
             {tabs.map((tab, index) =>
                 <button key={index} style={buttonStyle(index === selectedTabIndex)}
                     onClick={(): void => { setSelectedTabIndex(index) }}>
@@ -55,7 +60,7 @@ export const TabMenu: FunctionalComponent<Props> = ({ tabs, defaultOpenIndex = 0
             )}
         </nav>
         {tabs.map((tab, index) => (
-            <div key={index} style={containerStyle(index === selectedTabIndex)}>
+            <div key={index} style={containerStyle(index === selectedTabIndex, backgroundColor)}>
                 {tab.content}
             </div>
         ))}
