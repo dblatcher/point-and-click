@@ -3,7 +3,7 @@ import { Component, h } from "preact";
 import { Direction, directions, SpriteData, SpriteFrame } from "../../definitions/SpriteSheet";
 import { cloneData } from "../../lib/clone";
 import { Sprite } from "../../lib/Sprite";
-import { readJsonFile, uploadFile } from "../../lib/files";
+import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../lib/files";
 import { isSpriteData } from "../../lib/typeguards";
 import { eventToString } from "../../lib/util";
 import { ThingData } from "../../definitions/ThingData"
@@ -26,7 +26,6 @@ type SpriteEditorState = SpriteData & {
 type SpriteEditorProps = {
     data?: SpriteData;
     assetList?: string[];
-    saveFunction: { (data: SpriteData): void };
 }
 
 function getBlankSprite(): SpriteData {
@@ -131,8 +130,15 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.setState(newSprite)
     }
     handleSaveButton() {
-        const data = cloneData(this.state);
-        this.props.saveFunction(data)
+        const data = cloneData(this.state as Partial<SpriteEditorState>);
+        delete data.selectedAnimation;
+        delete data.selectedRow;
+        delete data.selectedCol;
+        delete data.selectedSheetId;
+        const blob = dataToBlob(data)
+        if (blob) {
+            makeDownloadFile(`${data.id || 'UNNAMED'}.sprite.json`, blob)
+        }
     }
     handleLoadButton = async () => {
         const file = await uploadFile();

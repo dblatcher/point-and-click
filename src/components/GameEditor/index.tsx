@@ -65,15 +65,7 @@ export class GameEditor extends Component<Props, State>{
 
         return <main>
             <h2>Game Editor</h2>
-            <SpriteEditor
-                data={spriteInputs[0].data}
-                saveFunction={(data: SpriteData): void => {
-                    const blob = dataToBlob(data)
-                    if (blob) {
-                        makeDownloadFile(`${data.id || 'UNNAMED'}.sprite.json`, blob)
-                    }
-                }}
-            />
+            <SpriteEditor />
             <SpriteSheetTool />
             {/*
             <hr />
