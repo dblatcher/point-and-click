@@ -418,13 +418,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     ]} />
                 </section>
 
-                <section>
+                <Preview
+                    roomData={this.state}
+                    clickEffect={clickEffect}
+                    handleRoomClick={this.handleRoomClick} />
 
-                    <Preview
-                        roomData={this.state}
-                        clickEffect={clickEffect}
-                        handleRoomClick={this.handleRoomClick} />
-                </section>
             </div>
 
         </article>

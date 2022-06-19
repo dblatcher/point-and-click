@@ -126,120 +126,124 @@ export class Preview extends Component<Props, State>{
 
         return (
             <>
-                <p>{getClickCaption(clickEffect)}</p>
-                <Room data={roomData}
-                    showObstacleAreas={showObstacleAreas}
-                    scale={viewScale}
-                    viewAngle={viewAngle}
-                    highlightHotspots={highlightHotspots}
-                    // eslint-disable-next-line @typescript-eslint/no-empty-function
-                    handleRoomClick={processClick}
-                    markHotspotVertices={this.hotspotsToMark}
-                    markObstacleVertices={this.obstaclesToMark}
-                >
-                    {showMarker && (
-                        <MarkerShape roomData={roomData}
-                            height={50}
-                            viewAngle={viewAngle}
-                            {...markerPosition}
-                            color={'red'} />
-                    )}
-                    {showCharacter && (
-                        <CharacterOrThing
-                            data={testCharacter}
-                            roomData={roomData}
-                            viewAngle={viewAngle} isPaused={false} key={'test'} />
-                    )}
 
-                    {showScaleLines && scaling.map((yAndScale, index) => (
-                        <HorizontalLine key={index}
-                            y={yAndScale[0]}
-                            text={`scale: ${yAndScale[1]}`}
-                            roomData={roomData} />
-                    ))}
-                </Room>
+                <section>
+                    <fieldset>
+                        <div>
+                            <label>view scale</label>
+                            <input type='range' value={viewScale} max={2} min={1} step={.01}
+                                onChange={(event) => this.setState({ viewScale: eventToNumber(event) })} />
+                            <span>{viewScale}</span>
+                        </div>
 
-                <fieldset>
-                    <div>
-                        <label>view scale</label>
-                        <input type='range' value={viewScale} max={2} min={1} step={.01}
-                            onChange={(event) => this.setState({ viewScale: eventToNumber(event) })} />
-                        <span>{viewScale}</span>
-                    </div>
+                        <div>
+                            <label>view angle</label>
+                            <input type='range' value={viewAngle} max={1} min={-1} step={.01}
+                                onChange={(event) => this.setState({ viewAngle: eventToNumber(event) })} />
+                            <span>{viewAngle}</span>
+                        </div>
 
-                    <div>
-                        <label>view angle</label>
-                        <input type='range' value={viewAngle} max={1} min={-1} step={.01}
-                            onChange={(event) => this.setState({ viewAngle: eventToNumber(event) })} />
-                        <span>{viewAngle}</span>
-                    </div>
+                        {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
+                        {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
+                        {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
 
-                    {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
-                    {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
-                    {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
+                    </fieldset>
 
-                </fieldset>
+                    <fieldset>
+                        {this.renderCheckBox('Show Character', 'showCharacter')}
+                        <div>
+                            <label>X</label>
+                            <input type='range'
+                                value={testCharacter.x}
+                                min={0} max={roomData.width} step={10}
+                                onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'x')} />
+                            <span>{testCharacter.x}</span>
+                        </div>
+                        <div>
+                            <label>Y</label>
+                            <input type='range'
+                                value={testCharacter.y}
+                                min={0} max={roomData.height} step={10}
+                                onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'y')} />
+                            <span>{testCharacter.y}</span>
+                        </div>
+                        <div>
+                            <label>base height</label>
+                            <input type='range'
+                                value={testCharacter.height}
+                                min={10} max={200} step={10}
+                                onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'height')} />
+                            <span>{testCharacter.height}</span>
+                        </div>
+                        <div>
+                            <label>base width</label>
+                            <input type='range'
+                                value={testCharacter.width}
+                                min={10} max={200} step={10}
+                                onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'width')} />
+                            <span>{testCharacter.width}</span>
+                        </div>
+                    </fieldset>
 
-                <fieldset>
-                    {this.renderCheckBox('Show Character', 'showCharacter')}
-                    <div>
-                        <label>X</label>
-                        <input type='range'
-                            value={testCharacter.x}
-                            min={0} max={roomData.width} step={10}
-                            onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'x')} />
-                        <span>{testCharacter.x}</span>
-                    </div>
-                    <div>
-                        <label>Y</label>
-                        <input type='range'
-                            value={testCharacter.y}
-                            min={0} max={roomData.height} step={10}
-                            onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'y')} />
-                        <span>{testCharacter.y}</span>
-                    </div>
-                    <div>
-                        <label>base height</label>
-                        <input type='range'
-                            value={testCharacter.height}
-                            min={10} max={200} step={10}
-                            onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'height')} />
-                        <span>{testCharacter.height}</span>
-                    </div>
-                    <div>
-                        <label>base width</label>
-                        <input type='range'
-                            value={testCharacter.width}
-                            min={10} max={200} step={10}
-                            onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'width')} />
-                        <span>{testCharacter.width}</span>
-                    </div>
-                </fieldset>
+                    <fieldset>
+                        {this.renderCheckBox('Show Marker', 'showMarker')}
+                        <div>
+                            <label>X</label>
+                            <input type='range'
+                                value={markerPosition.x}
+                                min={0}
+                                max={roomData.width}
+                                step={10}
+                                onChange={(event) => this.setState({ markerPosition: { x: eventToNumber(event), y: markerPosition.y } })} />
+                            <span>{markerPosition.x}</span>
+                        </div>
+                        <div>
+                            <label>Y</label>
+                            <input type='range'
+                                value={markerPosition.y}
+                                min={0}
+                                max={roomData.height}
+                                step={10}
+                                onChange={(event) => this.setState({ markerPosition: { y: eventToNumber(event), x: markerPosition.x } })} />
+                            <span>{markerPosition.y}</span>
+                        </div>
 
-                <fieldset>
-                    {this.renderCheckBox('Show Marker', 'showMarker')}
-                    <div>
-                        <label>X</label>
-                        <input type='range'
-                            value={markerPosition.x}
-                            min={0}
-                            max={roomData.width}
-                            step={10}
-                            onChange={(event) => this.setState({ markerPosition: { x: eventToNumber(event), y: markerPosition.y } })} />
-                        <span>{markerPosition.x}</span>
-                    </div>
-                    <div>
-                        <label>Y</label>
-                        <input type='range'
-                            value={markerPosition.y}
-                            min={0}
-                            max={roomData.height}
-                            step={10}
-                            onChange={(event) => this.setState({ markerPosition: { y: eventToNumber(event), x: markerPosition.x } })} />
-                        <span>{markerPosition.y}</span>
-                    </div>
+                    </fieldset>
+                </section>
+                <section>
+                    <p>{getClickCaption(clickEffect)}</p>
+                    <Room data={roomData}
+                        showObstacleAreas={showObstacleAreas}
+                        scale={viewScale}
+                        viewAngle={viewAngle}
+                        highlightHotspots={highlightHotspots}
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function
+                        handleRoomClick={processClick}
+                        markHotspotVertices={this.hotspotsToMark}
+                        markObstacleVertices={this.obstaclesToMark}
+                    >
+                        {showMarker && (
+                            <MarkerShape roomData={roomData}
+                                height={50}
+                                viewAngle={viewAngle}
+                                {...markerPosition}
+                                color={'red'} />
+                        )}
+                        {showCharacter && (
+                            <CharacterOrThing
+                                data={testCharacter}
+                                roomData={roomData}
+                                viewAngle={viewAngle} isPaused={false} key={'test'} />
+                        )}
 
-                </fieldset>
+                        {showScaleLines && scaling.map((yAndScale, index) => (
+                            <HorizontalLine key={index}
+                                y={yAndScale[0]}
+                                text={`scale: ${yAndScale[1]}`}
+                                roomData={roomData} />
+                        ))}
+                    </Room>
+                </section>
             </>
         )
     }
