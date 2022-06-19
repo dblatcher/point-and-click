@@ -8,20 +8,20 @@ import { CharacterData } from "./CharacterData"
 import { Verb } from "./Verb"
 
 type GameData = {
-    rooms: RoomData[]
-    things: ThingData[]
-    characters: CharacterData[]
-    interactions: Interaction[],
-    items: ItemData[],
-    currentRoomName: string
-    characterOrders: Record<string, Order[]>
-    thingOrders: Record<string, ThingOrder[]>
+    rooms: RoomData[];
+    things: ThingData[];
+    characters: CharacterData[];
+    interactions: Interaction[];
+    items: ItemData[];
+    currentRoomName: string;
+    characterOrders: Record<string, Order[]>;
+    thingOrders: Record<string, ThingOrder[]>;
     sequenceRunning?: Sequence;
 }
 
 type FixedGameInfo = {
-    verbs: Verb[],
-    sequences: Record<string, Sequence>
+    verbs: Verb[];
+    sequences: Record<string, Sequence>;
 }
 
 type GameCondition = GameData & FixedGameInfo;

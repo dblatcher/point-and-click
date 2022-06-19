@@ -2,9 +2,9 @@ import { ImmediateConsequence } from "./Interaction"
 import { Order, ThingOrder } from "./Order"
 
 type Stage = {
-    characterOrders?: Record<string, Order[]>,
-    thingOrders?: Record<string, ThingOrder[]>,
-    immediateConsequences?: ImmediateConsequence[],
+    characterOrders?: Record<string, Order[]>;
+    thingOrders?: Record<string, ThingOrder[]>;
+    immediateConsequences?: ImmediateConsequence[];
 }
 
 type Sequence = Stage[]

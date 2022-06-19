@@ -2,7 +2,7 @@
 import { Ident, Position, SpriteParams } from "./BaseTypes"
 
 type ThingData = Ident & Position & SpriteParams & {
-    type: 'thing'
+    type: 'thing';
 }
 
 export type { ThingData }
