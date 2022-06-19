@@ -46,7 +46,7 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, selec
                     <label>{legend}:</label>
                     <select value={selectedItemId} readonly 
                     onChange={event => { handleSelect(eventToString(event)) }}>
-                        <option value=''>{legend}</option>
+                        <option value=''>(select)</option>
                         {service.list().map(id =>
                             <option key={id} value={id}>{id}</option>
                         )}

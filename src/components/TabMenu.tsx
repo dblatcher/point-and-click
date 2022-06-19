@@ -1,4 +1,4 @@
-import { h, FunctionalComponent, ComponentChildren, JSX } from "preact";
+import { h, FunctionalComponent, JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { clamp } from "../../src/lib/util";
 
