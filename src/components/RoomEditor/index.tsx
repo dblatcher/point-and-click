@@ -15,7 +15,7 @@ import { cloneData } from "../../lib/clone";
 import { isRoomData } from "../../lib/typeguards";
 import { eventToNumber, eventToString, getShift, locateClickInWorld } from "../../lib/util";
 import { TabMenu } from "../TabMenu";
-import { readJsonFile, uploadFile } from "../../lib/files";
+import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../lib/files";
 import styles from '../editorStyles.module.css';
 import imageService from "../../services/imageService";
 
@@ -26,7 +26,6 @@ type RoomEditorState = RoomData & {
 
 type RoomEditorProps = {
     data?: RoomData;
-    saveFunction: { (data: RoomData): void };
 }
 
 const defaultParallax = 1;
@@ -261,9 +260,13 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.setState({ background })
     }
     handleSaveButton() {
-        const data = cloneData(this.state) as RoomEditorState;
-        delete data.clickEffect
-        this.props.saveFunction(data)
+        const roomData = cloneData(this.state) as RoomEditorState;
+        delete roomData.clickEffect
+
+        const blob = dataToBlob(roomData)
+        if (blob) {
+            makeDownloadFile(`${roomData.name || 'UNNAMED'}.room.json`, blob)
+        }
     }
     handleLoadButton = async () => {
         const file = await uploadFile();
@@ -427,4 +430,3 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         </article>
     }
 }
-

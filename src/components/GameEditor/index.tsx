@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
 import { startingGameCondition } from "../../../data/fullGame";
-import { RoomData } from "../../definitions/RoomData";
-import { dataToBlob, makeDownloadFile } from "../../lib/files";
-import { SpriteData } from "../../definitions/SpriteSheet";
 import { RoomEditor } from "../RoomEditor";
 import { SpriteEditor } from "../SpriteEditor";
 import imageService from "../../services/imageService";
@@ -65,21 +62,14 @@ export class GameEditor extends Component<Props, State>{
 
         return <main>
             <h2>Game Editor</h2>
-            <SpriteEditor />
-            <SpriteSheetTool />
-            {/*
+            {/* <SpriteEditor /> */}
+            {/* <SpriteSheetTool /> */}
+
             <hr />
 
             <RoomEditor
                 data={startingGameCondition.rooms[0]}
-
-                saveFunction={(roomData: RoomData): void => {
-                    const blob = dataToBlob(roomData)
-                    if (blob) {
-                        makeDownloadFile(`${roomData.name || 'UNNAMED'}.room.json`, blob)
-                    }
-                }}
-            /> */}
+            />
         </main>
     }
 
