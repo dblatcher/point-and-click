@@ -1,5 +1,6 @@
 import { ComponentChild, FunctionalComponent, Fragment, h, JSX } from "preact"
 import { useState } from "preact/hooks";
+import { eventToString } from "../lib/util";
 import { Ident } from "../definitions/BaseTypes"
 import styles from './editorStyles.module.css';
 
@@ -111,7 +112,7 @@ export const DeleteButton: FunctionalComponent<{
         <p>
             <Warning>{warningText}</Warning>
         </p>
-        <button onClick={(): void => { 
+        <button onClick={(): void => {
             setShowConfirmation(false);
         }}>cancel</button>
         <button onClick={(event): void => {
@@ -119,6 +120,31 @@ export const DeleteButton: FunctionalComponent<{
             props.onClick.bind(undefined as never)(event);
         }}>confirm</button>
     </div>
+}
+
+export const SelectInput: FunctionalComponent<{
+    label: string;
+    value: string;
+    onSelect: { (item: string): void };
+    items: string[];
+    descriptions?: string[];
+    haveEmptyOption?: boolean;
+}> = (props) => {
+
+    const { descriptions, items, haveEmptyOption } = props
+
+    return <>
+        <label>{props.label}:</label>
+        <select value={props.value} readonly
+            onChange={(event): void => { props.onSelect(eventToString(event)) }}>
+            {haveEmptyOption && <option value=''>(select)</option>}
+            {items.map((item, index) =>
+                <option key={index} value={item}>
+                    {descriptions && descriptions[index] ? descriptions[index] : item}
+                </option>
+            )}
+        </select>
+    </>
 }
 
 export const Warning: FunctionalComponent<{

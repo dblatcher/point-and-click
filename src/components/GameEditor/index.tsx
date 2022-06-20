@@ -62,7 +62,7 @@ export class GameEditor extends Component<Props, State>{
         return <main>
             <h2>Game Editor</h2>
             <TabMenu backgroundColor="none" tabs={[
-                {label:'Character Editor', content: <CharacterEditor  />},
+                {label:'Character Editor', content: <CharacterEditor />},
                 {label:'Room Editor', content: <RoomEditor />},
                 {label:'Sprite Editor', content: <SpriteEditor />},
                 {label:'Sprite Sheet Tool', content: <SpriteSheetTool />},

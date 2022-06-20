@@ -3,22 +3,24 @@ import { Component, h } from "preact";
 import { eventToNumber, eventToString } from "../../lib/util";
 import { Ident } from "../../definitions/BaseTypes";
 import { CharacterData } from "../../definitions/CharacterData";
-import { IdentInput, NumberInput } from "../formControls";
+import { IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import spriteService from "../../services/spriteService";
+import { Direction, directions } from "../../definitions/SpriteSheet";
+import { SpritePreview } from "../SpriteEditor/SpritePreview";
 
 
 type ExtraState = {
 
 }
 
-type State = Partial<CharacterData> & Ident & ExtraState;
+type State = CharacterData & { sprite: string | undefined } & ExtraState;
 
 type Props = {
     data?: CharacterData;
 }
 
-const makeBlankCharacter = (): Partial<CharacterData> & Ident => ({
+const makeBlankCharacter = (): CharacterData => ({
     id: 'NEW_CHARACTER',
     type: 'character',
     name: undefined,
@@ -59,8 +61,14 @@ export class CharacterEditor extends Component<Props, State> {
                 break;
             case 'name':
             case 'status':
+            case 'filter':
                 if (typeof newValue === 'string') {
                     modification[propery] = newValue
+                }
+                break;
+            case 'direction':
+                if (typeof newValue === 'string' && directions.includes(newValue as Direction)) {
+                    modification[propery] = newValue as Direction
                 }
                 break;
             case 'width':
@@ -75,8 +83,23 @@ export class CharacterEditor extends Component<Props, State> {
         this.setState(modification)
     }
 
+    get previewData(): CharacterData {
+        return {
+            ...this.state,
+            x: 75, y: 0
+        }
+    }
+
+    get spriteAnimations(): string[] {
+        const { sprite: spriteId } = this.state
+        const sprite = spriteService.get(spriteId)
+        if (!sprite) { return [] }
+        return Object.keys(sprite.data.animations)
+    }
+
     render() {
-        const { sprite: spriteId, width = 1, height = 1 } = this.state
+        const { state } = this
+        const { sprite: spriteId, width = 1, height = 1, } = state
 
         return (
             <article>
@@ -84,11 +107,17 @@ export class CharacterEditor extends Component<Props, State> {
 
                 <fieldset>
                     <legend>Ident</legend>
-                    <IdentInput showType value={this.state}
+                    <IdentInput showType value={state}
                         onChangeId={(event) => this.changeValue('id', eventToString(event))}
                         onChangeName={(event) => this.changeValue('name', eventToString(event))}
                         onChangeStatus={(event) => this.changeValue('status', eventToString(event))}
                     />
+
+                    <SelectInput label="status" value={state.status || ''} items={this.spriteAnimations}
+                        onSelect={(item: string) => { this.changeValue('status', item) }} />
+
+                    <SelectInput label="direction" value={state.direction || 'left'} items={directions}
+                        onSelect={(item: string) => { this.changeValue('direction', item) }} />
                 </fieldset>
 
 
@@ -102,10 +131,19 @@ export class CharacterEditor extends Component<Props, State> {
                             item => this.setState({ sprite: item.id })
                         } />
 
-                    <NumberInput label="width" value={width}
-                        onInput={(event) => this.changeValue('width', eventToNumber(event))} />
-                    <NumberInput label="height" value={height}
-                        onInput={(event) => this.changeValue('height', eventToNumber(event))} />
+                    <div>
+                        <NumberInput label="width" value={width}
+                            onInput={(event) => this.changeValue('width', eventToNumber(event))} />
+                        <NumberInput label="height" value={height}
+                            onInput={(event) => this.changeValue('height', eventToNumber(event))} />
+                    </div>
+
+
+
+                    <TextInput label="filter" value={state.filter || ''}
+                        onInput={(event) => this.changeValue('filter', eventToString(event))} />
+
+                    <SpritePreview data={this.previewData} />
                 </fieldset>
 
             </article>
