@@ -2,7 +2,7 @@
 import { Component, h } from "preact";
 import { eventToString } from "../../lib/util";
 import { CharacterData } from "../../definitions/CharacterData";
-import { IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
+import { CheckBoxInput, IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import spriteService from "../../services/spriteService";
 import { Direction, directions } from "../../definitions/SpriteSheet";
@@ -50,7 +50,7 @@ export class CharacterEditor extends Component<Props, State> {
         }
     }
 
-    changeValue(propery: keyof CharacterData, newValue: string | number) {
+    changeValue(propery: keyof CharacterData, newValue: string | number | boolean) {
         const modification: Partial<State> = {}
         switch (propery) {
             case 'id':
@@ -61,6 +61,7 @@ export class CharacterEditor extends Component<Props, State> {
             case 'name':
             case 'status':
             case 'filter':
+            case 'dialogueColor':
                 if (typeof newValue === 'string') {
                     modification[propery] = newValue
                 }
@@ -74,7 +75,13 @@ export class CharacterEditor extends Component<Props, State> {
             case 'height':
             case 'x':
             case 'y':
+            case 'speed':
                 if (typeof newValue === 'number') {
+                    modification[propery] = newValue
+                }
+                break;
+            case 'isPlayer':
+                if (typeof newValue === 'boolean') {
                     modification[propery] = newValue
                 }
                 break;
@@ -85,7 +92,7 @@ export class CharacterEditor extends Component<Props, State> {
     get previewData(): CharacterData {
         return {
             ...this.state,
-            x: this.state.width/2, y: 0
+            x: this.state.width / 2, y: 0
         }
     }
 
@@ -118,13 +125,29 @@ export class CharacterEditor extends Component<Props, State> {
                 </fieldset>
 
                 <fieldset>
+                    <legend>Character details</legend>
+                    <div>
+                        <NumberInput label="movement speed" value={state.speed || 1} inputHandler={value => { this.changeValue('speed', value) }} />
+                    </div>
+                    <div>
+                        <CheckBoxInput label="Is player character" value={state.isPlayer} inputHandler={value => { this.changeValue('isPlayer', value) }} />
+                    </div>
+                    <div>
+                        <TextInput type="color" label="dialogue color" value={state.dialogueColor || ''} onInput={event => { this.changeValue('dialogueColor', eventToString(event)) }} />
+                        <span>{state.dialogueColor}</span>
+                    </div>
+                </fieldset>
+                <fieldset>
                     <legend>Disposition</legend>
                     <SelectInput label="direction" value={state.direction || 'left'} items={directions}
                         onSelect={(item: string) => { this.changeValue('direction', item) }} />
 
                     <div>
-                        <NumberInput label="x" value={state.x} inputHandler={value => {this.changeValue('x', value)}} />
-                        <NumberInput label="y" value={state.y} inputHandler={value => {this.changeValue('y', value)}} />
+                        <NumberInput label="x" value={state.x} inputHandler={value => { this.changeValue('x', value) }} />
+                        <NumberInput label="y" value={state.y} inputHandler={value => { this.changeValue('y', value) }} />
+                    </div>
+                    <div>
+                        <TextInput label="roomId" value={state.room || ''} onInput={event => { this.changeValue('room', eventToString(event)) }} />
                     </div>
                 </fieldset>
 

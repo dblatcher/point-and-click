@@ -1,6 +1,6 @@
 import { ComponentChild, FunctionalComponent, Fragment, h, JSX } from "preact"
 import { useState } from "preact/hooks";
-import { eventToNumber, eventToString } from "../lib/util";
+import { eventToBoolean, eventToNumber, eventToString } from "../lib/util";
 import { Ident } from "../definitions/BaseTypes"
 import styles from './editorStyles.module.css';
 
@@ -94,6 +94,24 @@ export const TextInput: FunctionalComponent<{
     return <>
         <label>{label}</label>
         <input {...props} type={type} />
+    </>
+}
+
+export const CheckBoxInput: FunctionalComponent<{
+    label: string;
+    value?: boolean;
+    inputHandler: { (value: boolean): void };
+}> = (props) => {
+
+    const sendValue: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
+        props.inputHandler(eventToBoolean(event))
+    }
+    return <>
+        <label>{props.label}</label>
+        <input type='checkbox'
+            checked={props.value}
+            onInput={sendValue}
+        />
     </>
 }
 
