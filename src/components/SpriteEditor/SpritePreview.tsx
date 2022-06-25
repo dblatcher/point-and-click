@@ -7,13 +7,13 @@ import { Room } from "../Room";
 import { CharacterData } from "../../definitions/CharacterData";
 import { Sprite } from "../../lib/Sprite";
 
-const roomData: RoomData = {
-    height: 150,
-    width: 150,
-    frameWidth: 150,
+const makeRoomData: { (thingData: ThingData | CharacterData): RoomData } = (thingData) => ({
+    height: thingData.height + 10,
+    width: thingData.width + 10,
+    frameWidth: thingData.width + 10,
     name: '',
     background: []
-}
+})
 
 type State = {
     speed: number;
@@ -42,6 +42,7 @@ export class SpritePreview extends Component<Props, State>{
         } = this.state
         const { data, overrideSprite } = this.props
 
+        const roomData = makeRoomData(data)
 
         return (
             <Room data={roomData}

@@ -86,7 +86,7 @@ export class CharacterEditor extends Component<Props, State> {
     get previewData(): CharacterData {
         return {
             ...this.state,
-            x: 75, y: 0
+            x: this.state.width/2, y: 0
         }
     }
 

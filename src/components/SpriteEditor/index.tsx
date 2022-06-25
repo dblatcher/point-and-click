@@ -168,12 +168,15 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
     buildThingData(animation: string, direction: Direction): ThingData {
         const { state } = this
+        const sheet = spriteService.get(state.id)?.getFrame(animation, 0, direction)?.sheet
+        const widthScale = sheet?.widthScale || 1
+        const heightScale = sheet?.heightScale || 1
 
         return {
             type: 'thing',
             id: 'preview',
-            x: 75, y: 0,
-            height: 150, width: 150,
+            x: 75 / widthScale, y: 0,
+            height: 150 / heightScale, width: 150 / widthScale,
             sprite: state.id,
             status: animation,
             direction
