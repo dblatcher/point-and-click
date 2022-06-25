@@ -6,7 +6,7 @@
   "background": [
 
     {
-      "url": "./assets/backgrounds/indoors.png",
+      "imageId": "indoors.png",
       "parallax": 0
     }
   ],

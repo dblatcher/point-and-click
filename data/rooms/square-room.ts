@@ -8,7 +8,7 @@ export const SQUARE_ROOM: RoomData = {
   background: [
 
     {
-      url: "./assets/backgrounds/square-room.png",
+      imageId: "square-room.png",
       parallax: 1
     },
   ],

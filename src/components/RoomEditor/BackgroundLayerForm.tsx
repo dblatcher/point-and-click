@@ -13,13 +13,13 @@ interface Props {
 
 export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
 
-    const [assetIndex, setUrlIndex] = useState<number>(0);
+    const [imageIndex, setImageIndex] = useState<number>(0);
     const [parallax, setParallax] = useState<number>(0);
 
     return <div>
 
-        <label>URL:</label>
-        <select value={assetIndex} readonly onChange={event => { setUrlIndex(eventToNumber(event)) }}>
+        <label>ImageAsset:</label>
+        <select value={imageIndex} readonly onChange={event => { setImageIndex(eventToNumber(event)) }}>
             {imageAssets.map((asset, index) => <option key={index} value={index}>{asset.id}</option>)}
         </select>
 
@@ -28,9 +28,9 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
         />
 
         <button onClick={() => {
-            addNewLayer({ url: imageAssets[assetIndex].href, parallax })
+            addNewLayer({ imageId: imageAssets[imageIndex].id, parallax })
             setParallax(0)
-            setUrlIndex(0)
+            setImageIndex(0)
         }}>ADD</button>
     </div>
 }

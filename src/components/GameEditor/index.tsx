@@ -6,21 +6,15 @@ import { RoomEditor } from "../RoomEditor";
 import { SpriteEditor } from "../SpriteEditor";
 import imageService from "../../services/imageService";
 import spriteService from "../../services/spriteService";
-import spriteSheetService from "../../services/spriteSheetService";
-import { spriteInputs } from "../../../data/sprites";
-import { assets } from "./images";
-import { Sprite } from "../../lib/Sprite";
+
 import { TabMenu } from "../TabMenu";
 import { CharacterEditor } from "../CharacterEditor";
 import { ImageAssetTool } from "../ImageAssetTool";
+import { populate } from "../../services/populateServices";
 
 
+populate()
 
-const sprites = spriteInputs.map(input => new Sprite(input.data))
-const spriteSheets = spriteInputs.flatMap(input => input.sheets)
-spriteService.add(sprites)
-spriteSheetService.add(spriteSheets)
-console.log('adding from GameEditor')
 
 type State = {
 
@@ -49,8 +43,6 @@ export class GameEditor extends Component<Props, State>{
     componentDidMount() {
         imageService.on('update', this.respondToServiceUpdate)
         spriteService.on('update', this.respondToServiceUpdate)
-        imageService.add(assets)
-        console.log(imageService.list())
     }
 
     componentWillUnmount() {

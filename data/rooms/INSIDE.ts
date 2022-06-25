@@ -8,11 +8,11 @@ export const INSIDE: RoomData = {
   background: [
 
     {
-      url: "./assets/backgrounds/trees.png",
+      imageId: "trees.png",
       parallax: 0.5
     },
     {
-      url: "./assets/backgrounds/indoors.png",
+      imageId: "indoors.png",
       parallax: 1
     }
   ],

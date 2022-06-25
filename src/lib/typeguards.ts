@@ -101,7 +101,7 @@ const identDescription: Record<keyof Ident, Property> = {
 }
 
 const backgroundLayerDescription: Record<keyof BackgroundLayer, Property> = {
-    url: { type: 'string' },
+    imageId: { type: 'string'},
     parallax: { type: 'number' },
 }
 
@@ -138,12 +138,12 @@ export function isRoomData(data: unknown): data is RoomData {
     return testObject(data as RoomData, roomDataDescription)
 }
 
-export function isSpriteData(data:unknown): data is SpriteData {
+export function isSpriteData(data: unknown): data is SpriteData {
     console.warn('no test in place')
     return true
 }
 
-export function isCharacterData(data:unknown): data is CharacterData {
+export function isCharacterData(data: unknown): data is CharacterData {
     console.warn('no test in place')
     return true
 }

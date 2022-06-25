@@ -234,7 +234,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     layer[propery] = newValue
                 }
                 break;
-            case 'url':
+            case 'imageId':
                 if (typeof newValue === 'string') {
                     layer[propery] = newValue
                 }

@@ -2,17 +2,12 @@
 import { Component, h, Fragment } from "preact";
 import { GameCondition, GameData } from "../../definitions/Game";
 import { startingGameCondition } from '../../../data/fullGame';
-import { spriteInputs } from "../../../data/sprites";
-
 import Game from "../Game";
 import { cloneData } from "../../lib/clone";
-import spriteService from "../../services/spriteService";
-import spriteSheetService from "../../services/spriteSheetService";
-import { Sprite } from "../../lib/Sprite";
+import { populate } from "../../services/populateServices";
 
+populate()
 const storageKey = "POINT_AND_CLICK"
-const sprites = spriteInputs.map(input => new Sprite(input.data))
-const spriteSheets = spriteInputs.flatMap(input => input.sheets)
 
 
 export default class GamePlayer extends Component<{}, {
@@ -29,18 +24,6 @@ export default class GamePlayer extends Component<{}, {
         this.save = this.save.bind(this)
         this.reset = this.reset.bind(this)
         this.load = this.load.bind(this)
-    }
-
-    componentDidMount() {
-        console.log('MOUNT')
-        if (spriteService.list().length < sprites.length) {
-            spriteService.add(sprites)
-            console.log(spriteService.list())
-        }
-        if (spriteSheetService.list().length < spriteInputs.length) {
-            spriteSheetService.add(spriteSheets)
-            console.log(spriteSheetService.list())
-        }
     }
 
     save(data: GameData) {

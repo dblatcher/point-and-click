@@ -1,8 +1,8 @@
 import { HotspotZone, Zone } from "./Zone"
 
 type BackgroundLayer = {
-    url: string;
     parallax: number;
+    imageId: string;
 }
 
 type ScaleLevel = [number, number][]
