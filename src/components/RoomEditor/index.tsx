@@ -13,7 +13,7 @@ import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../lib/clone";
 import { isRoomData } from "../../lib/typeguards";
-import { eventToNumber, eventToString, getShift, locateClickInWorld } from "../../lib/util";
+import { eventToString, getShift, locateClickInWorld } from "../../lib/util";
 import { TabMenu } from "../TabMenu";
 import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../lib/files";
 import styles from '../editorStyles.module.css';
@@ -313,15 +313,15 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                     <legend>Dimensions</legend>
                                     <div className={styles.row}>
                                         <NumberInput label="height" value={height}
-                                            onInput={event => this.setState({ height: eventToNumber(event) })} />
+                                            inputHandler={height => this.setState({ height })} />
                                     </div>
                                     <div className={styles.row}>
                                         <NumberInput label="width" value={width}
-                                            onInput={event => this.setState({ width: eventToNumber(event) })} />
+                                            inputHandler={width => this.setState({ width})} />
                                     </div>
                                     <div className={styles.row}>
                                         <NumberInput label="Frame Width" value={frameWidth}
-                                            onInput={event => this.setState({ frameWidth: eventToNumber(event) })} />
+                                            inputHandler={frameWidth => this.setState({ frameWidth })} />
                                         {frameWidth > width && (
                                             <Warning>frame width is bigger than room width</Warning>
                                         )}

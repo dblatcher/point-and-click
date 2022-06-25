@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { eventToNumber, eventToString } from "../../lib/util";
-import { Ident } from "../../definitions/BaseTypes";
+import { eventToString } from "../../lib/util";
 import { CharacterData } from "../../definitions/CharacterData";
 import { IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
@@ -116,13 +115,22 @@ export class CharacterEditor extends Component<Props, State> {
                     <SelectInput label="status" value={state.status || ''} items={this.spriteAnimations}
                         onSelect={(item: string) => { this.changeValue('status', item) }} />
 
-                    <SelectInput label="direction" value={state.direction || 'left'} items={directions}
-                        onSelect={(item: string) => { this.changeValue('direction', item) }} />
                 </fieldset>
 
+                <fieldset>
+                    <legend>Disposition</legend>
+                    <SelectInput label="direction" value={state.direction || 'left'} items={directions}
+                        onSelect={(item: string) => { this.changeValue('direction', item) }} />
+
+                    <div>
+                        <NumberInput label="x" value={state.x} inputHandler={value => {this.changeValue('x', value)}} />
+                        <NumberInput label="y" value={state.y} inputHandler={value => {this.changeValue('y', value)}} />
+                    </div>
+                </fieldset>
 
                 <fieldset>
                     <legend>Sprite</legend>
+
                     <ServiceItemSelector legend="choose sprite"
                         selectedItemId={spriteId}
                         format='select'
@@ -133,9 +141,9 @@ export class CharacterEditor extends Component<Props, State> {
 
                     <div>
                         <NumberInput label="width" value={width}
-                            onInput={(event) => this.changeValue('width', eventToNumber(event))} />
+                            inputHandler={(value) => this.changeValue('width', value)} />
                         <NumberInput label="height" value={height}
-                            onInput={(event) => this.changeValue('height', eventToNumber(event))} />
+                            inputHandler={(value) => this.changeValue('height', value)} />
                     </div>
 
 

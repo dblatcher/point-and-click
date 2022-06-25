@@ -3,7 +3,6 @@ import { h, FunctionalComponent } from "preact";
 import { ScaleLevel } from "../../definitions/RoomData";
 import { NumberInput } from "../formControls";
 import { cloneData } from "../../lib/clone"
-import { eventToNumber } from "../../lib/util";
 
 interface Props {
     scaling: ScaleLevel;
@@ -43,10 +42,10 @@ export const ScalingControl: FunctionalComponent<Props> = ({ scaling, height, ch
                 const [y, scale] = level
                 return <div key={index}>
                     <NumberInput label="Y" value={y}
-                        onInput={(event) => handleAdjustment(index, eventToNumber(event), 'y')}
+                        inputHandler={(value) => handleAdjustment(index, value, 'y')}
                         max={height} min={0} step={5} />
                     <NumberInput label="scale" value={scale}
-                        onInput={(event) => handleAdjustment(index, eventToNumber(event), 'scale')}
+                        inputHandler={(value) => handleAdjustment(index, value, 'scale')}
                         max={5} min={0} step={.1} />
                     <button onClick={() => handleDelete(index)}>delete</button>
                 </div>

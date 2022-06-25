@@ -3,7 +3,7 @@ import { Component, createRef, h, RefObject } from "preact";
 import { SpriteSheet } from "../../definitions/SpriteSheet";
 import spriteSheetService from "../../services/spriteSheetService";
 import { fileToImageUrl, uploadFile } from "../../lib/files"
-import { eventToNumber, eventToString } from "../../lib/util";
+import { eventToString } from "../../lib/util";
 import { NumberInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
@@ -128,25 +128,25 @@ export class SpriteSheetTool extends Component<{}, State> {
                             </div>
                             <div className={styles.row}>
                                 <NumberInput label="rows" value={rows} min={1}
-                                    onInput={
-                                        event => { this.changeValue('rows', eventToNumber(event)) }
+                                    inputHandler={
+                                        value => { this.changeValue('rows', value) }
                                     }
                                 />
                                 <NumberInput label="cols" value={cols} min={1}
-                                    onInput={
-                                        event => { this.changeValue('cols', eventToNumber(event)) }
+                                    inputHandler={
+                                        value => { this.changeValue('cols',value) }
                                     }
                                 />
                             </div>
                             <div className={styles.row}>
                                 <NumberInput label="widthScale" value={widthScale} step={.1}
-                                    onInput={
-                                        event => { this.changeValue('widthScale', eventToNumber(event)) }
+                                    inputHandler={
+                                        value => { this.changeValue('widthScale', value) }
                                     }
                                 />
                                 <NumberInput label="heightScale" value={heightScale} step={.1}
-                                    onInput={
-                                        event => { this.changeValue('heightScale', eventToNumber(event)) }
+                                    inputHandler={
+                                        value => { this.changeValue('heightScale', value) }
                                     }
                                 />
                             </div>

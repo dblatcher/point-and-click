@@ -1,6 +1,6 @@
 import { ComponentChild, FunctionalComponent, Fragment, h, JSX } from "preact"
 import { useState } from "preact/hooks";
-import { eventToString } from "../lib/util";
+import { eventToNumber, eventToString } from "../lib/util";
 import { Ident } from "../definitions/BaseTypes"
 import styles from './editorStyles.module.css';
 
@@ -61,16 +61,25 @@ export const IdentInput: FunctionalComponent<{
 export const NumberInput: FunctionalComponent<{
     label: string;
     value: number;
-    onInput: JSX.EventHandler<JSX.TargetedEvent>;
+    inputHandler: { (value: number): void };
     max?: number;
     min?: number;
     step?: number;
 }> = (props) => {
 
-    const { label } = props
+    const sendValue: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
+        props.inputHandler(eventToNumber(event))
+    }
+
     return <>
-        <label>{label}</label>
-        <input type='number'{...props} />
+        <label>{props.label}</label>
+        <input type='number'
+            value={props.value}
+            max={props.max}
+            min={props.min}
+            step={props.step}
+            onInput={sendValue}
+        />
     </>
 }
 
