@@ -1,9 +1,13 @@
 import { Service } from "./Service";
 
+export type ImageAssetCategory = 'background'
+
+export const imageAssetCategories: ImageAssetCategory[] = ['background']
+
 export type ImageAsset = {
     id: string;
     href: string;
-    category: 'background';
+    category: ImageAssetCategory;
 }
 
 class ImageService extends Service<ImageAsset> {
