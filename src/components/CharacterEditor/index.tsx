@@ -7,6 +7,10 @@ import { ServiceItemSelector } from "../ServiceItemSelector";
 import spriteService from "../../services/spriteService";
 import { Direction, directions } from "../../definitions/SpriteSheet";
 import { SpritePreview } from "../SpriteEditor/SpritePreview";
+import styles from "../editorStyles.module.css"
+import { cloneData } from "../../lib/clone";
+import { dataToBlob, makeDownloadFile, uploadFile, readJsonFile } from "../../lib/files";
+import { isCharacterData } from "../../lib/typeguards";
 
 
 type ExtraState = {
@@ -48,6 +52,9 @@ export class CharacterEditor extends Component<Props, State> {
         this.state = {
             ...initialState
         }
+
+        this.handleSaveButton = this.handleSaveButton.bind(this)
+        this.handleLoadButton = this.handleLoadButton.bind(this)
     }
 
     changeValue(propery: keyof CharacterData, newValue: string | number | boolean) {
@@ -89,6 +96,31 @@ export class CharacterEditor extends Component<Props, State> {
         this.setState(modification)
     }
 
+    handleSaveButton() {
+        const characterData = cloneData(this.state) as State;
+
+        console.log({characterData}, this.state)
+        const blob = dataToBlob(characterData)
+        if (blob) {
+            makeDownloadFile(`${characterData.name || 'UNNAMED'}.character.json`, blob)
+        }
+    }
+    handleLoadButton = async () => {
+        const file = await uploadFile();
+        const { data, error } = await readJsonFile(file)
+
+        if (error) {
+            console.warn(error)
+        }
+
+        if (isCharacterData(data)) {
+            this.setState(data)
+        } else {
+            console.warn("NOT CHARACTER DATA", data)
+        }
+    }
+
+
     get previewData(): CharacterData {
         return {
             ...this.state,
@@ -110,7 +142,13 @@ export class CharacterEditor extends Component<Props, State> {
         return (
             <article>
                 <h2>Character Editor</h2>
-
+                <fieldset className={styles.fieldset}>
+                        <legend>storage</legend>
+                        <div>
+                            <button onClick={this.handleSaveButton}>Save to file</button>
+                            <button onClick={this.handleLoadButton}>Load from file</button>
+                        </div>
+                    </fieldset>
                 <fieldset>
                     <legend>Ident</legend>
                     <IdentInput showType value={state}
