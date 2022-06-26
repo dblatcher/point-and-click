@@ -19,4 +19,9 @@ const bgAssets: ImageAsset[] = backgroundFileNames.map(fileName => {
 
 export const assets: ImageAsset[] = [
     ...bgAssets,
+    {
+        id: 'bucket.png',
+        href: './assets/things/bucket.png',
+        category: 'item'
+    }
 ]

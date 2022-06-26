@@ -10,7 +10,8 @@ export const items: ItemData[] = [
         id:'BUCKET',
         name:'bucket',
         type:'item',
-        characterId:'PLAYER'
+        characterId:'PLAYER',
+        imageId: 'bucket.png',
     },
     {
         id:'MATCHES',
