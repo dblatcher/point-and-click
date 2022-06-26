@@ -41,25 +41,4 @@ export const initialCharacters: CharacterData[] = [
         sprite: 'mario',
         direction: 'right',
     },
-    {
-        id: 'TUBE',
-        type: 'character',
-        room: 'OUTSIDE',
-        x: 240,
-        y: 10,
-        height: 30,
-        width: 20,
-        sprite: 'tube'
-    },
-    {
-        id: 'FIRE',
-        type:'character',
-        room: 'OUTSIDE',
-        x: 200,
-        y: 10,
-        height: 50,
-        width: 50,
-        sprite: 'fire',
-        status:'burning',
-    },
 ]
