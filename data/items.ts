@@ -4,7 +4,8 @@ export const items: ItemData[] = [
     {
         id:'PASTA',
         name:'big tube of pasta',
-        type:'item'
+        type:'item',
+        imageId: 'tube.png',
     },
     {
         id:'BUCKET',

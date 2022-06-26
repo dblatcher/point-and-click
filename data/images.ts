@@ -23,5 +23,10 @@ export const assets: ImageAsset[] = [
         id: 'bucket.png',
         href: './assets/things/bucket.png',
         category: 'item'
-    }
+    },
+    {
+        id: 'tube.png',
+        href: './assets/things/tube.png',
+        category: 'item'
+    },
 ]
