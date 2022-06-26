@@ -2,6 +2,7 @@ import { h, FunctionalComponent } from "preact";
 import { RoomData } from "../../definitions/RoomData"
 import { HotspotZone } from "../../definitions/Zone"
 import { getShift } from "../../lib/util";
+import { HandleHoverFunction } from "../Game";
 import ZoneSvg from "../ZoneSvg";
 import styles from './styles.module.css';
 
@@ -10,6 +11,7 @@ interface Props {
     roomData: RoomData;
     viewAngle: number;
     clickHandler?: { (hotspot: HotspotZone): void };
+    handleHover?: HandleHoverFunction;
     highlight?: boolean;
     markVertices?: boolean;
     stopPropogation?: boolean;
@@ -17,7 +19,7 @@ interface Props {
 
 const Hotspot: FunctionalComponent<Props> = ({
     zone: hotspot, roomData, viewAngle, highlight, markVertices, stopPropogation = true,
-    clickHandler
+    clickHandler, handleHover
 }: Props) => {
     const { parallax } = hotspot
 
@@ -31,7 +33,9 @@ const Hotspot: FunctionalComponent<Props> = ({
             clickHandler={clickHandler}
             stopPropagation={stopPropogation}
             zone={hotspot}
-            markVertices={markVertices} />
+            markVertices={markVertices}
+            handleHover={handleHover}
+        />
     )
 }
 export default Hotspot

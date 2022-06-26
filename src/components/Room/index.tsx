@@ -8,6 +8,7 @@ import Hotspot from "./Hotspot";
 import ZoneSvg from "../ZoneSvg";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import BackgroundShape from "./BackgroundShape";
+import { HandleHoverFunction } from "../Game";
 
 interface Props {
     data: RoomData;
@@ -15,6 +16,7 @@ interface Props {
     viewAngle: number;
     handleRoomClick: { (x: number, y: number): void };
     handleHotspotClick?: { (zone: HotspotZone): void };
+    handleHover?: HandleHoverFunction;
     children?: ComponentChildren;
     showObstacleAreas?: boolean;
     highlightHotspots?: boolean;
@@ -29,6 +31,7 @@ export const Room: FunctionComponent<Props> = ({
     viewAngle,
     handleRoomClick,
     handleHotspotClick,
+    handleHover,
     children,
     showObstacleAreas,
     highlightHotspots,
@@ -94,6 +97,7 @@ export const Room: FunctionComponent<Props> = ({
                         highlight={highlightHotspots}
                         clickHandler={handleHotspotClick}
                         stopPropogation={!!handleHotspotClick}
+                        handleHover={handleHover}
                         markVertices={markHotspotVertices.includes(index)}
                     />
                 )}

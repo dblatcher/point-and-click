@@ -8,9 +8,10 @@ interface Props {
     verb?: Verb;
     item?: ItemData;
     target?: CommandTarget;
+    hoverTarget?: CommandTarget;
 }
 
-export function CommandLine({ verb, item, target }: Props) {
+export function CommandLine({ verb, item, target, hoverTarget }: Props) {
 
     let text = '>'
 
@@ -23,11 +24,17 @@ export function CommandLine({ verb, item, target }: Props) {
 
         if (target) {
             text += ` ${target.name || target.id}`
-        } else {
-            text += '...'
         }
     }
 
+    const hoverText = hoverTarget ? hoverTarget.name || hoverTarget.id :'...';
 
-    return <p>{text}</p>
+    return (
+        <p>
+            <span>{text}</span>
+            {!target && (
+                <span style={{ color: 'red' }}>{' '}{hoverText}</span>
+            )}
+        </p>
+    )
 }

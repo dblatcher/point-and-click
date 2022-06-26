@@ -7,9 +7,9 @@ import { HotspotZone } from './Zone'
 type CommandTarget = CharacterData | ThingData | HotspotZone | ItemData;
 
 interface Command {
-    verb: Verb
-    target: CommandTarget
-    item?: ItemData
+    verb: Verb;
+    target: CommandTarget;
+    item?: ItemData;
 }
 
 export type { Command, CommandTarget }

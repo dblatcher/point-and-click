@@ -12,6 +12,7 @@ import { useInterval } from "../lib/useInterval"
 import { SpriteShape } from "./SpriteShape";
 import { DialogueBubble } from "./DialogueBubble";
 import spriteService from "../../src/services/spriteService";
+import { HandleHoverFunction } from "./Game";
 
 interface Props {
     roomData: RoomData;
@@ -19,6 +20,7 @@ interface Props {
     data: CharacterData | ThingData;
     animationRate?: number;
     clickHandler?: { (character: CharacterData | ThingData): void };
+    handleHover?: HandleHoverFunction;
     key: string | number;
     orders?: Order[];
     isPaused: boolean;
@@ -34,9 +36,13 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
 }
 
 export const CharacterOrThing: FunctionalComponent<Props> = ({
-    roomData, viewAngle,
-    animationRate = 200, data, isPaused,
-    clickHandler, orders = [], roomScale = 1, overrideSprite
+    data, 
+    roomData, 
+    viewAngle,
+    animationRate = 200, 
+    isPaused,
+    clickHandler, handleHover,
+    orders = [], roomScale = 1, overrideSprite
 }: Props) => {
     const [frameIndex, setFrameIndex] = useState<number>(0)
     const {
@@ -85,8 +91,8 @@ export const CharacterOrThing: FunctionalComponent<Props> = ({
 
     const dialogueColor = data.type == 'character' ? data.dialogueColor : '';
 
-    if (!spriteObject) { 
-        return null 
+    if (!spriteObject) {
+        return null
     }
     return (
         <>
@@ -96,6 +102,8 @@ export const CharacterOrThing: FunctionalComponent<Props> = ({
                 direction={direction}
                 frameIndex={frameIndex}
                 clickHandler={processClick}
+                handleHover={processClick ? handleHover : undefined}
+                hoverData={data}
                 roomData={roomData}
                 viewAngle={viewAngle}
                 x={x} y={y}

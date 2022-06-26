@@ -1,7 +1,8 @@
 import { FunctionalComponent, h, Fragment } from "preact";
 import { polygonToPathD } from "../lib/polygonToPathD";
-import { Zone } from "../definitions/Zone"
+import { Zone, HotspotZone } from "../definitions/Zone"
 import { JSXInternal } from "preact/src/jsx";
+import { HandleHoverFunction } from "./Game";
 
 interface Props {
     zone: Zone;
@@ -12,6 +13,7 @@ interface Props {
     // HotspotZone is a subtype of Zone but not assignable to Zone or (Zone|HotspotZone)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     clickHandler?: { (zone: any): void };
+    handleHover?: HandleHoverFunction;
     markVertices?: boolean;
 }
 
@@ -33,7 +35,7 @@ const plotVertex = (point: [number, number], index: number) => (
 const ZoneSvg: FunctionalComponent<Props> = ({
     zone, x, y, className, stopPropagation = true,
     markVertices = false,
-    clickHandler
+    clickHandler, handleHover,
 }: Props) => {
     const { path, circle, rect, polygon } = zone
 
@@ -42,8 +44,15 @@ const ZoneSvg: FunctionalComponent<Props> = ({
         if (clickHandler) { clickHandler(zone) }
     }
 
+    const shouldReportHover = handleHover && zone.type === 'hotspot';
+    const onMouseEnter = shouldReportHover ? () => { handleHover(zone as HotspotZone, 'enter') } : undefined
+    const onMouseLeave = shouldReportHover ? () => { handleHover(zone as HotspotZone, 'leave') } : undefined
+
     return (
-        <svg x={x} y={y} style={{ overflow: 'visible' }}>
+        <svg x={x} y={y} style={{ overflow: 'visible' }}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+        >
             {polygon && <>
                 <path className={className}
                     onClick={processClick}

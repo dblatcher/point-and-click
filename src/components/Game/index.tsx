@@ -33,7 +33,10 @@ export type GameState = GameData & {
     cellMatrix?: CellMatrix;
     currentVerbId: string;
     currentItemId?: string;
+    hoverTarget?: CommandTarget;
 }
+
+export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
 
 export const cellSize = 10
 const TIMER_SPEED = 10
@@ -53,6 +56,7 @@ export default class Game extends Component<GameProps, GameState> {
         this.handleTargetClick = this.handleTargetClick.bind(this)
         this.makeCharactersAct = this.makeCharactersAct.bind(this)
         this.centerViewOnPLayer = this.centerViewOnPLayer.bind(this)
+        this.handleHover = this.handleHover.bind(this)
     }
 
     getInitialGameState(props: GameProps): GameState {
@@ -179,11 +183,20 @@ export default class Game extends Component<GameProps, GameState> {
         this.setState(issueMoveOrder(pointClicked, player.id, false, false))
     }
 
+    handleHover(target: CommandTarget, event: 'enter' | 'leave') {
+        if (event === 'enter') {
+            return this.setState({ hoverTarget: target })
+        }
+        if (event === 'leave' && target.id === this.state.hoverTarget?.id) {
+            return this.setState({ hoverTarget: undefined })
+        }
+    }
+
     render() {
         const { verbs = [], save, reset, load } = this.props
         const { viewAngle, isPaused,
             characters, things, currentVerbId, currentItemId, items,
-            characterOrders, sequenceRunning, thingOrders } = this.state
+            characterOrders, sequenceRunning, thingOrders, hoverTarget } = this.state
         const { currentRoom, player } = this
         if (!currentRoom) { return null }
 
@@ -214,9 +227,9 @@ export default class Game extends Component<GameProps, GameState> {
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
                     handleHotspotClick={this.handleTargetClick}
+                    handleHover={this.handleHover}
                     // use for debugging - slows render!
                     // obstacleCells={this.state.cellMatrix}
-                    showObstacleAreas
                 >
                     {charactersAndThings.map(data =>
                         <CharacterOrThing key={data.id}
@@ -227,12 +240,17 @@ export default class Game extends Component<GameProps, GameState> {
                             roomData={currentRoom}
                             viewAngle={viewAngle}
                             roomScale={roomScale}
+                            handleHover={this.handleHover}
                         />
                     )}
                 </Room>
 
                 {!sequenceRunning && <>
-                    <CommandLine verb={this.currentVerb} item={this.currentItem} />
+                    <CommandLine
+                        verb={this.currentVerb}
+                        item={this.currentItem}
+                        hoverTarget={hoverTarget} 
+                    />
 
                     <VerbMenu
                         verbs={verbs}
@@ -244,6 +262,7 @@ export default class Game extends Component<GameProps, GameState> {
                         items={items.filter(_ => _.characterId === player?.id)}
                         currentItemId={currentItemId}
                         select={(item: ItemData) => { this.handleTargetClick(item) }}
+                        handleHover={this.handleHover}
                     />
                 </>}
             </main>
