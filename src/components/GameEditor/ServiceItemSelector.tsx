@@ -10,12 +10,14 @@ import styles from "./editorStyles.module.css"
 interface Props {
     service: Service<ServiceItem>;
     legend: string;
-    select: { (item: (ServiceItem)): void };
+    select: { (item: ServiceItem): void };
+    selectNone?: { (): void };
     format?: 'buttons' | 'select';
     selectedItemId?: string;
+    filterItems?: { (item: ServiceItem): boolean };
 }
 
-export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, select, legend, format = 'buttons', selectedItemId='' }: Props) => {
+export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, select, selectNone, legend, format = 'buttons', selectedItemId = '', filterItems }: Props) => {
 
     const [timestamp, setTimestamp] = useState<number>(Date.now())
     const refresh = () => {
@@ -30,24 +32,31 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, selec
         }
     })
 
-
-
     const handleSelect = (id: string) => {
+
+        if (id === '' && selectNone) {
+            return selectNone();
+        }
+
         const item = service.get(id)
         if (item) {
             select(item)
         }
     }
 
+    const list = filterItems
+        ? service.getAll().filter(filterItems).map(item => item.id)
+        : service.list();
+
     switch (format) {
         case 'select':
             return (
                 <span updated-at={timestamp}>
                     <label>{legend}:</label>
-                    <select value={selectedItemId} readonly 
-                    onChange={event => { handleSelect(eventToString(event)) }}>
+                    <select value={selectedItemId} readonly
+                        onChange={event => { handleSelect(eventToString(event)) }}>
                         <option value=''>(select)</option>
-                        {service.list().map(id =>
+                        {list.map(id =>
                             <option key={id} value={id}>{id}</option>
                         )}
                     </select>
@@ -59,7 +68,7 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, selec
                 <legend>{legend}</legend>
                 <div updated-at={timestamp}>
                     <ul>
-                        {service.list().map(id =>
+                        {list.map(id =>
                             <li key={id}>
                                 <button onClick={() => { handleSelect(id) }}>{id}</button>
                             </li>

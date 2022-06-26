@@ -11,6 +11,7 @@ import { TabMenu } from "../TabMenu";
 import { CharacterEditor } from "./CharacterEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
 import { populate } from "../../services/populateServices";
+import { ItemEditor } from "./itemEditor";
 
 
 populate()
@@ -55,6 +56,7 @@ export class GameEditor extends Component<Props, State>{
         return <main>
             <h2>Game Editor</h2>
             <TabMenu backgroundColor="none" tabs={[
+                {label:'Items', content: <ItemEditor />},
                 {label:'Images', content: <ImageAssetTool />},
                 {label:'Character Editor', content: <CharacterEditor />},
                 {label:'Room Editor', content: <RoomEditor />},

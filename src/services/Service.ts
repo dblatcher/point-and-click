@@ -35,4 +35,8 @@ export class Service<T extends ServiceItem> extends TypedEmitter<ServiceEvents> 
     list(): string[] {
         return Object.keys(this.data)
     }
+
+    getAll(): T[] {
+        return Object.values(this.data).filter(item => !!item) as T[]
+    }
 }
