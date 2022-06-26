@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, FunctionalComponent } from "preact";
-import { ScaleLevel } from "../../definitions/RoomData";
+import { ScaleLevel } from "../../../definitions/RoomData";
 import { NumberInput } from "../formControls";
-import { cloneData } from "../../lib/clone"
+import { cloneData } from "../../../lib/clone"
 
 interface Props {
     scaling: ScaleLevel;

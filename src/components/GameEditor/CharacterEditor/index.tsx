@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { eventToString } from "../../lib/util";
-import { CharacterData } from "../../definitions/CharacterData";
+import { eventToString } from "../../../lib/util";
+import { CharacterData } from "../../../definitions/CharacterData";
 import { CheckBoxInput, IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import spriteService from "../../services/spriteService";
-import { Direction, directions } from "../../definitions/SpriteSheet";
-import { SpritePreview } from "../SpriteEditor/SpritePreview";
+import spriteService from "../../../services/spriteService";
+import { Direction, directions } from "../../../definitions/SpriteSheet";
+import { SpritePreview } from "../SpritePreview";
 import styles from "../editorStyles.module.css"
-import { cloneData } from "../../lib/clone";
-import { dataToBlob, makeDownloadFile, uploadFile, readJsonFile } from "../../lib/files";
-import { isCharacterData } from "../../lib/typeguards";
+import { cloneData } from "../../../lib/clone";
+import { dataToBlob, makeDownloadFile, uploadFile, readJsonFile } from "../../../lib/files";
+import { isCharacterData } from "../../../lib/typeguards";
 
 
 type ExtraState = {

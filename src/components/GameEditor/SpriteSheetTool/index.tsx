@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, createRef, h, RefObject } from "preact";
-import { SpriteSheet } from "../../definitions/SpriteSheet";
-import spriteSheetService from "../../services/spriteSheetService";
-import { fileToImageUrl, uploadFile } from "../../lib/files"
-import { eventToString } from "../../lib/util";
+import { SpriteSheet } from "../../../definitions/SpriteSheet";
+import spriteSheetService from "../../../services/spriteSheetService";
+import { fileToImageUrl, uploadFile } from "../../../lib/files"
+import { eventToString } from "../../../lib/util";
 import { NumberInput, TextInput, Warning } from "../formControls";
-import { cloneData } from "../../lib/clone";
+import { cloneData } from "../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "src/services/Service";
 import styles from '../editorStyles.module.css';

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { eventToString } from "../lib/util";
-import { Service, ServiceItem } from "../services/Service";
+import { eventToString } from "../../lib/util";
+import { Service, ServiceItem } from "../../services/Service";
 
 import styles from "./editorStyles.module.css"
 

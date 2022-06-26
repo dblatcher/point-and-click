@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, FunctionalComponent, JSX } from "preact";
 import { ClickEffect } from "./ClickEffect";
-import { HotspotZone, SupportedZoneShape, Zone } from "../../definitions/Zone";
+import { HotspotZone, SupportedZoneShape, Zone } from "../../../definitions/Zone";
 
 interface Props {
     zone: Zone | HotspotZone;

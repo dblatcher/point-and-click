@@ -1,7 +1,7 @@
 import { ComponentChild, FunctionalComponent, Fragment, h, JSX } from "preact"
 import { useState } from "preact/hooks";
-import { eventToBoolean, eventToNumber, eventToString } from "../lib/util";
-import { Ident } from "../definitions/BaseTypes"
+import { eventToBoolean, eventToNumber, eventToString } from "../../lib/util";
+import { Ident } from "../../definitions/BaseTypes"
 import styles from './editorStyles.module.css';
 
 export const ParallaxInput: FunctionalComponent<{

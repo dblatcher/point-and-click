@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { Direction, directions, SpriteData, SpriteFrame } from "../../definitions/SpriteSheet";
-import { cloneData } from "../../lib/clone";
-import { Sprite } from "../../lib/Sprite";
-import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../lib/files";
-import { isSpriteData } from "../../lib/typeguards";
-import { eventToString } from "../../lib/util";
-import { ThingData } from "../../definitions/ThingData"
+import { Direction, directions, SpriteData, SpriteFrame } from "../../../definitions/SpriteSheet";
+import { cloneData } from "../../../lib/clone";
+import { Sprite } from "../../../lib/Sprite";
+import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../../lib/files";
+import { isSpriteData } from "../../../lib/typeguards";
+import { eventToString } from "../../../lib/util";
+import { ThingData } from "../../../definitions/ThingData"
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { DeleteButton, TextInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";
-import { ServiceItem } from "../../services/Service";
-import spriteService from "../../services/spriteService";
+import { ServiceItem } from "../../../services/Service";
+import spriteService from "../../../services/spriteService";
 import { FramePicker } from "./FramePicker";
 import styles from '../editorStyles.module.css';
 

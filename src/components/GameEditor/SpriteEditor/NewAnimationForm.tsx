@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
 import { useState } from "preact/hooks";
-import { eventToString } from "../../lib/util";
+import { eventToString } from "../../../lib/util";
 import { TextInput, Warning } from "../formControls";
 
 interface Props {

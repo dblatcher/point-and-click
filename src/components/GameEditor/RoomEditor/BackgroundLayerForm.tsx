@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact";
 import { useState } from "preact/hooks"
-import { ImageAsset } from "../../services/imageService";
-import { BackgroundLayer } from "../../definitions/RoomData";
-import { clamp, eventToNumber } from "../../lib/util";
+import { ImageAsset } from "../../../services/imageService";
+import { BackgroundLayer } from "../../../definitions/RoomData";
+import { clamp, eventToNumber } from "../../../lib/util";
 import { ParallaxInput } from "../formControls";
 
 interface Props {

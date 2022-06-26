@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h, Fragment } from "preact";
-import { Sprite } from "../../lib/Sprite";
-import { Direction, directions, SpriteFrame } from "../../definitions/SpriteSheet";
+import { Sprite } from "../../../lib/Sprite";
+import { Direction, directions, SpriteFrame } from "../../../definitions/SpriteSheet";
 import { ThingData } from "src/definitions/ThingData";
-import { SpritePreview } from "./SpritePreview";
+import { SpritePreview } from "../SpritePreview";
 import { DeleteButton } from "../formControls";
 import { ListEditor } from "../ListEditor";
-import { cloneData } from "../../lib/clone";
+import { cloneData } from "../../../lib/clone";
 import { FramePreview } from "./FramePreview";
 import editorStyles from '../editorStyles.module.css';
 import styles from './styles.module.css';

@@ -1,6 +1,6 @@
 import { FunctionalComponent, h, JSX } from "preact";
-import { SpriteFrame } from "../../definitions/SpriteSheet";
-import spriteSheetService from "../../services/spriteSheetService";
+import { SpriteFrame } from "../../../definitions/SpriteSheet";
+import spriteSheetService from "../../../services/spriteSheetService";
 
 
 

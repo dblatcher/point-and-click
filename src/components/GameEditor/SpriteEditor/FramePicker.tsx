@@ -1,5 +1,5 @@
 import { FunctionalComponent, h, Fragment, JSX } from "preact";
-import spriteSheetService from "../../services/spriteSheetService";
+import spriteSheetService from "../../../services/spriteSheetService";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import styles from '../editorStyles.module.css';
 import { SpriteSheetPreview } from "../SpriteSheetPreview";

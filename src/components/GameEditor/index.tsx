@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
 
-import { SpriteSheetTool } from "../SpriteSheetTool";
-import { RoomEditor } from "../RoomEditor";
-import { SpriteEditor } from "../SpriteEditor";
+import { SpriteSheetTool } from "./SpriteSheetTool";
+import { RoomEditor } from "./RoomEditor";
+import { SpriteEditor } from "./SpriteEditor";
 import imageService from "../../services/imageService";
 import spriteService from "../../services/spriteService";
 
 import { TabMenu } from "../TabMenu";
-import { CharacterEditor } from "../CharacterEditor";
-import { ImageAssetTool } from "../ImageAssetTool";
+import { CharacterEditor } from "./CharacterEditor";
+import { ImageAssetTool } from "./ImageAssetTool";
 import { populate } from "../../services/populateServices";
 
 

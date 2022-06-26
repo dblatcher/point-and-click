@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, createRef, h, RefObject } from "preact";
-import { fileToImageUrl, uploadFile } from "../../lib/files"
-import { eventToString } from "../../lib/util";
+import { fileToImageUrl, uploadFile } from "../../../lib/files"
+import { eventToString } from "../../../lib/util";
 import { SelectInput, TextInput, Warning } from "../formControls";
-import { cloneData } from "../../lib/clone";
+import { cloneData } from "../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "src/services/Service";
 import styles from '../editorStyles.module.css';
 import { SpriteSheetPreview } from "../SpriteSheetPreview";
-import imageService, { ImageAsset, ImageAssetCategory, imageAssetCategories } from "../../services/imageService";
+import imageService, { ImageAsset, ImageAssetCategory, imageAssetCategories } from "../../../services/imageService";
 
 type ExtraState = {
     urlIsObjectUrl: boolean;

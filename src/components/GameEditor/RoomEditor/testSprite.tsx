@@ -1,9 +1,9 @@
-import { SpriteData, SpriteSheet } from "../../definitions/SpriteSheet";
-import { CharacterData } from "../../definitions/CharacterData"
-import { Point } from "../../lib/pathfinding/geometry";
-import { Sprite } from "../../lib/Sprite";
-import spriteService from "../../services/spriteService";
-import spriteSheetService from "../../services/spriteSheetService";
+import { SpriteData, SpriteSheet } from "../../../definitions/SpriteSheet";
+import { CharacterData } from "../../../definitions/CharacterData"
+import { Point } from "../../../lib/pathfinding/geometry";
+import { Sprite } from "../../../lib/Sprite";
+import spriteService from "../../../services/spriteService";
+import spriteSheetService from "../../../services/spriteSheetService";
 
 
 const testSpriteSheets: SpriteSheet[] = [

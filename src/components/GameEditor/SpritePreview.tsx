@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h, Fragment, JSX } from "preact";
+import { Component, h } from "preact";
 import { RoomData } from "../../definitions/RoomData";
 import { CharacterOrThing } from "../CharacterOrThing";
 import { ThingData } from "../../definitions/ThingData";
