@@ -6,7 +6,7 @@ import { Sprite } from "../../../lib/Sprite";
 import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../../lib/files";
 import { isSpriteData } from "../../../lib/typeguards";
 import { eventToString } from "../../../lib/util";
-import { ThingData } from "../../../definitions/ThingData"
+import { CharacterData } from "../../../definitions/CharacterData"
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { DeleteButton, TextInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";
@@ -60,7 +60,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.openSpriteFromService = this.openSpriteFromService.bind(this)
         this.addAnimation = this.addAnimation.bind(this)
         this.editCycle = this.editCycle.bind(this)
-        this.buildThingData = this.buildThingData.bind(this)
+        this.buildCharacterData = this.buildCharacterData.bind(this)
         this.pickFrame = this.pickFrame.bind(this)
     }
 
@@ -166,14 +166,14 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         return new Sprite(this.state)
     }
 
-    buildThingData(animation: string, direction: Direction): ThingData {
+    buildCharacterData(animation: string, direction: Direction): CharacterData {
         const { state } = this
         const sheet = spriteService.get(state.id)?.getFrame(animation, 0, direction)?.sheet
         const widthScale = sheet?.widthScale || 1
         const heightScale = sheet?.heightScale || 1
 
         return {
-            type: 'thing',
+            type: 'character',
             id: 'preview',
             x: 75 / widthScale, y: 0,
             height: 150 / heightScale, width: 150 / widthScale,
@@ -259,7 +259,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                             defaultDirection={defaultDirection}
                             animation={animations[selectedAnimation]}
                             overrideSprite={overrideSprite}
-                            buildThingData={this.buildThingData}
+                            buildCharacterData={this.buildCharacterData}
                             deleteAll={() => this.deleteAnimation(selectedAnimation)}
                             editCycle={this.editCycle}
                             selectedFrame={selectedSheetId ? {

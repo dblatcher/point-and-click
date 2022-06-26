@@ -2,15 +2,15 @@
 import { Component, h } from "preact";
 import { RoomData } from "../../definitions/RoomData";
 import { CharacterOrThing } from "../CharacterOrThing";
-import { ThingData } from "../../definitions/ThingData";
-import { Room } from "../Room";
 import { CharacterData } from "../../definitions/CharacterData";
+import { Room } from "../Room";
+
 import { Sprite } from "../../lib/Sprite";
 
-const makeRoomData: { (thingData: ThingData | CharacterData): RoomData } = (thingData) => ({
-    height: thingData.height + 10,
-    width: thingData.width + 10,
-    frameWidth: thingData.width + 10,
+const makeRoomData: { (characterData: CharacterData ): RoomData } = (characterData) => ({
+    height: characterData.height + 10,
+    width: characterData.width + 10,
+    frameWidth: characterData.width + 10,
     name: '',
     background: []
 })
@@ -21,7 +21,7 @@ type State = {
 };
 
 type Props = {
-    data: CharacterData | ThingData;
+    data: CharacterData;
     overrideSprite?: Sprite;
 }
 
