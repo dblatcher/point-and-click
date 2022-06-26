@@ -41,6 +41,28 @@ function doDefaultResponse(command: Command, state: GameState): GameState {
     return state
 }
 
+function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): GameState {
+    const { hoverTarget } = state
+    if (!hoverTarget) {
+        return state
+    }
+    const player = state.characters.find(_=>_.isPlayer)
+
+    if (currentRoom) {
+        if (hoverTarget.type === 'character' || hoverTarget.type === 'thing') {
+            if (hoverTarget.room !== currentRoom.name) {
+                state.hoverTarget = undefined
+            }
+        }
+    }
+    if (player) {
+        if (hoverTarget.type === 'item' && hoverTarget.characterId !== player.id) {
+            state.hoverTarget = undefined
+        }
+    }
+    return state
+}
+
 export function handleCommand(command: Command, props: GameProps): { (state: GameState): Partial<GameState> } {
 
     return (state): GameState => {
@@ -55,6 +77,8 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
         } else {
             doDefaultResponse(command, state)
         }
+
+        removeHoverTargetIfGone(state, currentRoom)
 
         return state
     }
