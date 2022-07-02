@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
 import { RoomData } from "../../definitions/RoomData";
-import { CharacterOrThing } from "../CharacterOrThing";
 import { CharacterData } from "../../definitions/CharacterData";
 import { Room } from "../Room";
 
 import { Sprite } from "../../lib/Sprite";
 
-const makeRoomData: { (characterData: CharacterData ): RoomData } = (characterData) => ({
+const makeRoomData: { (characterData: CharacterData): RoomData } = (characterData) => ({
     height: characterData.height + 10,
     width: characterData.width + 10,
     frameWidth: characterData.width + 10,
@@ -52,14 +51,8 @@ export class SpritePreview extends Component<Props, State>{
                 highlightHotspots={false}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 handleRoomClick={() => { }}
-            >
-                <CharacterOrThing
-                    overrideSprite={overrideSprite}
-                    key={1}
-                    data={data}
-                    roomData={roomData}
-                    viewAngle={0} isPaused={false} />
-            </Room>
+                contents={[{ overrideSprite, data, }]}
+            />
         )
     }
 }

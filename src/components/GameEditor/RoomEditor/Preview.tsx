@@ -3,7 +3,6 @@ import { Component, h, Fragment, JSX } from "preact";
 import { RoomData } from "../../../definitions/RoomData";
 import { Point } from "../../../lib/pathfinding/geometry";
 import MarkerShape from "../../MarkerShape";
-import { CharacterOrThing } from "../../CharacterOrThing";
 import { Room } from "../../Room";
 import { ClickEffect } from "./ClickEffect";
 import { CharacterData } from "../../../definitions/CharacterData";
@@ -221,6 +220,12 @@ export class Preview extends Component<Props, State>{
                         handleRoomClick={processClick}
                         markHotspotVertices={this.hotspotsToMark}
                         markObstacleVertices={this.obstaclesToMark}
+                        contents={showCharacter ? [
+                            {
+                                data: testCharacter,
+                                orders: [],
+                            }
+                        ] : undefined}
                     >
                         {showMarker && (
                             <MarkerShape roomData={roomData}
@@ -228,12 +233,6 @@ export class Preview extends Component<Props, State>{
                                 viewAngle={viewAngle}
                                 {...markerPosition}
                                 color={'red'} />
-                        )}
-                        {showCharacter && (
-                            <CharacterOrThing
-                                data={testCharacter}
-                                roomData={roomData}
-                                viewAngle={viewAngle} isPaused={false} key={'test'} />
                         )}
 
                         {showScaleLines && scaling.map((yAndScale, index) => (

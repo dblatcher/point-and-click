@@ -10,7 +10,6 @@ import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { handleCommand } from "./handleCommand";
 import { Room } from "../Room";
-import { CharacterOrThing } from "../CharacterOrThing";
 import { VerbMenu } from "../VerbMenu";
 import { ItemData } from "../../definitions/ItemData";
 import { ItemMenu } from "../ItemMenu";
@@ -18,6 +17,9 @@ import { CommandLine } from "../CommandLine";
 import { cloneData } from "../../lib/clone";
 import { continueSequence } from "./continueSequence";
 import { GameData, GameCondition } from "../../definitions/Game";
+import { ThingData } from "src/definitions/ThingData";
+import { Order } from "src/definitions/Order";
+import { Sprite } from "src/lib/Sprite";
 
 
 export type GameProps = Readonly<{
@@ -37,6 +39,14 @@ export type GameState = GameData & {
 }
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
+export type HandleClickFunction<T extends CommandTarget> = { (target: T): void };
+export type RoomContentItem = {
+    data: CharacterData | ThingData;
+    orders?: Order[];
+    clickHandler?: HandleClickFunction<CharacterData | ThingData>;
+    overrideSprite?: Sprite;
+}
+
 
 export const cellSize = 10
 const TIMER_SPEED = 10
@@ -207,6 +217,12 @@ export default class Game extends Component<GameProps, GameState> {
             .filter(_ => _.room === currentRoom.name)
             .sort((a, b) => b.y - a.y)
 
+        const contentList: RoomContentItem[] = charactersAndThings.map(data => ({
+            data,
+            orders: data.type == 'character' ? characterOrderMap[data.id] : thingOrderMap[data.id],
+            clickHandler: data.type == 'character' && data.isPlayer ? undefined : this.handleTargetClick
+        }))
+
         const roomScale = Math.min(600 / currentRoom.frameWidth, 400 / currentRoom.height)
 
         return (
@@ -224,32 +240,22 @@ export default class Game extends Component<GameProps, GameState> {
                 <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>
                 <Room
                     data={currentRoom} scale={roomScale}
+                    isPaused={isPaused}
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}
                     handleHotspotClick={this.handleTargetClick}
                     handleHover={this.handleHover}
-                    // use for debugging - slows render!
-                    // obstacleCells={this.state.cellMatrix}
-                >
-                    {charactersAndThings.map(data =>
-                        <CharacterOrThing key={data.id}
-                            isPaused={isPaused}
-                            clickHandler={data.type == 'character' && data.isPlayer ? undefined : this.handleTargetClick}
-                            data={data}
-                            orders={data.type == 'character' ? characterOrderMap[data.id] : thingOrderMap[data.id]}
-                            roomData={currentRoom}
-                            viewAngle={viewAngle}
-                            roomScale={roomScale}
-                            handleHover={this.handleHover}
-                        />
-                    )}
-                </Room>
+                    contents={contentList}
+                // use for debugging - slows render!
+                // obstacleCells={this.state.cellMatrix}
+                />
+
 
                 {!sequenceRunning && <>
                     <CommandLine
                         verb={this.currentVerb}
                         item={this.currentItem}
-                        hoverTarget={hoverTarget} 
+                        hoverTarget={hoverTarget}
                     />
 
                     <VerbMenu

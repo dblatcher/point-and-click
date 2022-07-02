@@ -8,7 +8,8 @@ import Hotspot from "./Hotspot";
 import ZoneSvg from "../ZoneSvg";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import BackgroundShape from "./BackgroundShape";
-import { HandleHoverFunction } from "../Game";
+import { HandleHoverFunction, RoomContentItem } from "../Game";
+import { CharacterOrThing } from "../CharacterOrThing";
 
 interface Props {
     data: RoomData;
@@ -17,13 +18,15 @@ interface Props {
     handleRoomClick: { (x: number, y: number): void };
     handleHotspotClick?: { (zone: HotspotZone): void };
     handleHover?: HandleHoverFunction;
-    children?: ComponentChildren;
     showObstacleAreas?: boolean;
     highlightHotspots?: boolean;
     obstacleCells?: CellMatrix;
     markHotspotVertices?: number[];
     markObstacleVertices?: number[];
     showCaption?: boolean;
+    isPaused?: boolean;
+    contents?: RoomContentItem[];
+    children?: ComponentChildren;
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -33,13 +36,15 @@ export const Room: FunctionComponent<Props> = ({
     handleRoomClick,
     handleHotspotClick,
     handleHover,
-    children,
     showObstacleAreas,
     highlightHotspots,
     obstacleCells,
     markHotspotVertices = [],
     markObstacleVertices = [],
     showCaption = false,
+    isPaused = false,
+    contents = [],
+    children,
 }: Props) => {
 
     const processRoomClick = (event: MouseEvent): void => {
@@ -98,6 +103,20 @@ export const Room: FunctionComponent<Props> = ({
                         markVertices={markHotspotVertices.includes(index)}
                     />
                 )}
+
+                {contents.map(entry => (
+                    <CharacterOrThing key={entry.data.id}
+                        isPaused={isPaused}
+                        data={entry.data}
+                        orders={entry.orders || []}
+                        clickHandler={entry.clickHandler}
+                        roomData={data}
+                        viewAngle={viewAngle}
+                        roomScale={scale}
+                        handleHover={handleHover}
+                        overrideSprite={entry.overrideSprite}
+                    />
+                ))}
 
                 {children}
             </svg>

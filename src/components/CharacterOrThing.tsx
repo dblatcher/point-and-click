@@ -12,16 +12,15 @@ import { useInterval } from "../lib/useInterval"
 import { SpriteShape } from "./SpriteShape";
 import { DialogueBubble } from "./DialogueBubble";
 import spriteService from "../../src/services/spriteService";
-import { HandleHoverFunction } from "./Game";
+import { HandleClickFunction, HandleHoverFunction } from "./Game";
 
 interface Props {
     roomData: RoomData;
     viewAngle: number;
     data: CharacterData | ThingData;
     animationRate?: number;
-    clickHandler?: { (character: CharacterData | ThingData): void };
+    clickHandler?: HandleClickFunction<CharacterData | ThingData>;
     handleHover?: HandleHoverFunction;
-    key: string | number;
     orders?: Order[];
     isPaused: boolean;
     roomScale?: number;
