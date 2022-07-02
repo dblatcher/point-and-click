@@ -23,6 +23,7 @@ interface Props {
     obstacleCells?: CellMatrix;
     markHotspotVertices?: number[];
     markObstacleVertices?: number[];
+    showCaption?: boolean;
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -38,6 +39,7 @@ export const Room: FunctionComponent<Props> = ({
     obstacleCells,
     markHotspotVertices = [],
     markObstacleVertices = [],
+    showCaption = false,
 }: Props) => {
 
     const processRoomClick = (event: MouseEvent): void => {
@@ -46,23 +48,18 @@ export const Room: FunctionComponent<Props> = ({
     const { name, frameWidth, height, background, hotspots = [], obstacleAreas = [] } = data;
 
     return (
-        <figure style={{
-            border: '1px solid black',
-            width: `${frameWidth * scale}px`,
-            height: `${height * scale}px`,
-            position: 'relative',
-        }}
+        <figure className={styles.roomFigure}
+            style={{
+                width: `${frameWidth * scale}px`,
+                height: `${height * scale}px`,
+                position: 'relative',
+            }}
             onClick={processRoomClick}
         >
 
             <svg xmlns="http://www.w3.org/2000/svg"
-                style={{
-                    position: "absolute",
-                    width: '100%',
-                    height: '100%',
-                    left: 0,
-                    top: 0,
-                }} viewBox={`0 0 ${frameWidth} ${height}`}>
+                className={styles.roomSvg}
+                viewBox={`0 0 ${frameWidth} ${height}`}>
 
                 {background.map((layer, index) =>
                     <BackgroundShape key={index}
@@ -105,7 +102,9 @@ export const Room: FunctionComponent<Props> = ({
                 {children}
             </svg>
 
-            <figcaption>{name}</figcaption>
+            {showCaption && (
+                <figcaption className={styles.roomCaption}>{name}</figcaption>
+            )}
         </figure>
     )
 
