@@ -6,6 +6,7 @@ import { Sequence } from "./Sequence"
 import { ThingData } from "./ThingData"
 import { CharacterData } from "./CharacterData"
 import { Verb } from "./Verb"
+import { Conversation } from "./Conversation"
 
 type GameData = {
     rooms: RoomData[];
@@ -17,6 +18,8 @@ type GameData = {
     characterOrders: Record<string, Order[]>;
     thingOrders: Record<string, ThingOrder[]>;
     sequenceRunning?: Sequence;
+    conversations: Conversation[];
+    currentConversationId?: string;
 }
 
 type FixedGameInfo = {

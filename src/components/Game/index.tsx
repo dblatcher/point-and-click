@@ -20,6 +20,8 @@ import { GameData, GameCondition } from "../../definitions/Game";
 import { ThingData } from "src/definitions/ThingData";
 import { Order } from "src/definitions/Order";
 import { Sprite } from "src/lib/Sprite";
+import { Conversation } from "src/definitions/Conversation";
+import { ConversationMenu } from "../ConversationMenu";
 
 
 export type GameProps = Readonly<{
@@ -74,6 +76,7 @@ export default class Game extends Component<GameProps, GameState> {
         const characters = props.characters.map(cloneData);
         const things = props.things.map(cloneData);
         const items = props.items.map(cloneData);
+        const conversations = props.conversations.map(cloneData);
 
         return {
             viewAngle: 0,
@@ -89,21 +92,32 @@ export default class Game extends Component<GameProps, GameState> {
             sequenceRunning: props.sequenceRunning || undefined,
             characterOrders: props.characterOrders || {},
             thingOrders: props.thingOrders || {},
+            conversations,
+            currentConversationId: props.currentConversationId,
         }
     }
 
     get saveData(): GameData {
         const {
-            rooms, things, characters, interactions, items, currentRoomName, characterOrders, thingOrders, sequenceRunning
+            rooms, things, characters, interactions, items,
+            currentRoomName, characterOrders, thingOrders, sequenceRunning,
+            conversations, currentConversationId,
         } = this.state
 
         return {
-            rooms, things, characters, interactions, items, currentRoomName, characterOrders, thingOrders, sequenceRunning
+            rooms, things, characters, interactions, items,
+            currentRoomName, characterOrders, thingOrders, sequenceRunning,
+            conversations, currentConversationId,
         }
     }
 
     get player(): (CharacterData | undefined) {
         return this.state.characters.find(character => character.isPlayer)
+    }
+
+    get currentConversation(): (Conversation | undefined) {
+        const { conversations, currentConversationId } = this.state
+        return conversations.find(conversation => conversation.id === currentConversationId)
     }
 
     get currentRoom(): (RoomData | undefined) {
@@ -206,8 +220,9 @@ export default class Game extends Component<GameProps, GameState> {
         const { verbs = [], save, reset, load } = this.props
         const { viewAngle, isPaused,
             characters, things, currentVerbId, currentItemId, items,
-            characterOrders, sequenceRunning, thingOrders, hoverTarget } = this.state
-        const { currentRoom, player } = this
+            characterOrders, sequenceRunning, thingOrders, hoverTarget,
+        } = this.state
+        const { currentRoom, player, currentConversation } = this
         if (!currentRoom) { return null }
 
         const characterOrderMap = sequenceRunning ? sequenceRunning[0].characterOrders || {} : characterOrders;
@@ -249,6 +264,9 @@ export default class Game extends Component<GameProps, GameState> {
                 // obstacleCells={this.state.cellMatrix}
                 />
 
+                {currentConversation && (
+                    <ConversationMenu conversation={currentConversation} select={(choice) => { console.log(choice) }} />
+                )}
 
                 {!sequenceRunning && <>
                     <CommandLine

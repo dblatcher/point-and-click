@@ -5,6 +5,7 @@ import { items } from './items';
 import { verbs } from './verbs';
 import { interactions } from './interactions';
 import { sequences } from './sequences';
+import { conversations } from './conversations';
 import { GameData, FixedGameInfo } from "../src/definitions/Game";
 
 const player = characters.find(character => character.isPlayer)
@@ -22,4 +23,5 @@ export const startingGameCondition: GameData & FixedGameInfo = {
     thingOrders: {},
     sequenceRunning: undefined,
     currentRoomName: startingRoom.name,
+    conversations,
 }
