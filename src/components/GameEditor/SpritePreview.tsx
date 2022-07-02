@@ -16,7 +16,7 @@ const makeRoomData: { (characterData: CharacterData): RoomData } = (characterDat
 
 type State = {
     speed: number;
-    viewScale: number;
+    maxWidth: number;
 };
 
 type Props = {
@@ -30,15 +30,13 @@ export class SpritePreview extends Component<Props, State>{
     constructor(props: SpritePreview['props']) {
         super(props)
         this.state = {
-            viewScale: 1,
+            maxWidth: 100,
             speed: 1
         }
     }
 
     render() {
-        const {
-            viewScale
-        } = this.state
+        const { maxWidth } = this.state
         const { data, overrideSprite } = this.props
 
         const roomData = makeRoomData(data)
@@ -46,7 +44,7 @@ export class SpritePreview extends Component<Props, State>{
         return (
             <Room data={roomData}
                 showObstacleAreas={false}
-                scale={viewScale}
+                maxWidth={maxWidth}
                 viewAngle={0}
                 highlightHotspots={false}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function

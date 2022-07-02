@@ -223,8 +223,6 @@ export default class Game extends Component<GameProps, GameState> {
             clickHandler: data.type == 'character' && data.isPlayer ? undefined : this.handleTargetClick
         }))
 
-        const roomScale = Math.min(600 / currentRoom.frameWidth, 400 / currentRoom.height)
-
         return (
             <main>
                 {!!save &&
@@ -239,7 +237,8 @@ export default class Game extends Component<GameProps, GameState> {
 
                 <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>
                 <Room
-                    data={currentRoom} scale={roomScale}
+                    data={currentRoom}
+                    maxWidth={600} maxHeight={400}
                     isPaused={isPaused}
                     viewAngle={viewAngle}
                     handleRoomClick={this.handleRoomClick}

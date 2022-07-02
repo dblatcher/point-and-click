@@ -20,7 +20,7 @@ type BooleanState = {
 
 type State = BooleanState & {
     viewAngle: number;
-    viewScale: number;
+    maxWidth: number;
     markerPosition: Point;
     testCharacter: CharacterData;
 };
@@ -54,7 +54,7 @@ export class Preview extends Component<Props, State>{
         super(props)
         this.state = {
             viewAngle: 0,
-            viewScale: 1,
+            maxWidth: 400,
             showObstacleAreas: true,
             highlightHotspots: true,
             showScaleLines: true,
@@ -112,7 +112,7 @@ export class Preview extends Component<Props, State>{
 
     render() {
         const {
-            viewAngle, viewScale, showObstacleAreas, highlightHotspots,
+            viewAngle, maxWidth, showObstacleAreas, highlightHotspots,
             showMarker, markerPosition, testCharacter, showCharacter,
             showScaleLines,
         } = this.state
@@ -129,10 +129,10 @@ export class Preview extends Component<Props, State>{
                 <section>
                     <fieldset>
                         <div>
-                            <label>view scale</label>
-                            <input type='range' value={viewScale} max={2} min={1} step={.01}
-                                onChange={(event) => this.setState({ viewScale: eventToNumber(event) })} />
-                            <span>{viewScale}</span>
+                            <label>View width</label>
+                            <input type='range' value={maxWidth} max={1000} min={100} step={50}
+                                onChange={(event) => this.setState({ maxWidth: eventToNumber(event) })} />
+                            <span>{maxWidth}</span>
                         </div>
 
                         <div>
@@ -213,7 +213,7 @@ export class Preview extends Component<Props, State>{
                     <p>{getClickCaption(clickEffect)}</p>
                     <Room data={roomData}
                         showObstacleAreas={showObstacleAreas}
-                        scale={viewScale}
+                        maxWidth={maxWidth} maxHeight={1000}
                         viewAngle={viewAngle}
                         highlightHotspots={highlightHotspots}
                         // eslint-disable-next-line @typescript-eslint/no-empty-function

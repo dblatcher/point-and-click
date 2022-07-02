@@ -13,7 +13,8 @@ import { CharacterOrThing } from "../CharacterOrThing";
 
 interface Props {
     data: RoomData;
-    scale?: number;
+    maxWidth?: number;
+    maxHeight?: number;
     viewAngle: number;
     handleRoomClick: { (x: number, y: number): void };
     handleHotspotClick?: { (zone: HotspotZone): void };
@@ -31,7 +32,8 @@ interface Props {
 
 export const Room: FunctionComponent<Props> = ({
     data,
-    scale = 1,
+    maxWidth = 300,
+    maxHeight = 200,
     viewAngle,
     handleRoomClick,
     handleHotspotClick,
@@ -46,6 +48,8 @@ export const Room: FunctionComponent<Props> = ({
     contents = [],
     children,
 }: Props) => {
+
+    const scale = Math.min(maxWidth / data.frameWidth, maxHeight / data.height)
 
     const processRoomClick = (event: MouseEvent): void => {
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
