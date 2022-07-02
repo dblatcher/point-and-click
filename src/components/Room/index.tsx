@@ -10,6 +10,7 @@ import ObstacleCellOverlay from "./ObstableCellOverlay";
 import BackgroundShape from "./BackgroundShape";
 import { HandleHoverFunction, RoomContentItem } from "../Game";
 import { CharacterOrThing } from "../CharacterOrThing";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 interface Props {
     data: RoomData;
@@ -48,16 +49,38 @@ export const Room: FunctionComponent<Props> = ({
     contents = [],
     children,
 }: Props) => {
+    const { name, frameWidth, height, background, hotspots = [], obstacleAreas = [] } = data;
+    const figureRef = useRef<HTMLElement>(null)
+    const [parentWidth, setParentWidth] = useState(Infinity)
+    const [parentHeight, setParentHeight] = useState(Infinity)
 
-    const scale = Math.min(maxWidth / data.frameWidth, maxHeight / data.height)
+    const handleResize = (): void => {
+        const { current: figure } = figureRef
+        if (!figure || !figure.parentElement) {
+            return
+        }
+        setParentWidth(figure.parentElement.clientWidth)
+        setParentHeight(figure.parentElement.clientHeight)
+    }
+    useEffect(() => {
+        handleResize()
+        window.addEventListener('resize', handleResize)
+        return (): void => {
+            window.removeEventListener('resize', handleResize)
+        }
+    })
+
+    const figureWidth = Math.min(parentWidth, maxWidth)
+    const figureHeight = Math.min(parentHeight, maxHeight)
+    const scale = Math.min(figureWidth / frameWidth, figureHeight / height)
 
     const processRoomClick = (event: MouseEvent): void => {
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
     }
-    const { name, frameWidth, height, background, hotspots = [], obstacleAreas = [] } = data;
 
     return (
-        <figure className={styles.roomFigure}
+        <figure ref={figureRef}
+            className={styles.roomFigure}
             style={{
                 width: `${frameWidth * scale}px`,
                 height: `${height * scale}px`,
