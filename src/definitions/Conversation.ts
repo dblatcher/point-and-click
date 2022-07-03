@@ -1,6 +1,3 @@
-
-import { Sequence } from "./Sequence";
-
 export type Conversation = {
     id: string;
     branches: Record<string, ConversationBranch | undefined>;
@@ -15,10 +12,11 @@ export type ConversationBranch = {
 export type ConversationChoice = {
     ref?: string;
     text: string;
-    sequence: Sequence;
+    sequence: string;
     nextBranch?: string;
     once?: boolean;
     disabled?: boolean;
     enablesChoices?: (string | undefined)[][];
+    disablesChoices?: (string | undefined)[][];
     end?: boolean;
 }

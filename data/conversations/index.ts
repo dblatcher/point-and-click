@@ -8,49 +8,14 @@ const chat: Conversation = {
             choices: [
                 {
                     text: 'hello there, lets talk about tools',
+                    ref: 'ASK_ABOUT_TOOLS',
                     nextBranch: 'tools',
-                    sequence: [
-                        {
-                            characterOrders: {
-                                PLAYER: [
-                                    {
-                                        type: 'talk', steps: [
-                                            { text: 'hello there, lets talk about tools', time: 100 },
-                                            { text: 'I am doing dialogue', time: 100 },
-                                        ]
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            characterOrders: {
-                                MARIO: [
-                                    {
-                                        type: 'talk', steps: [
-                                            { text: 'hello!', time: 100 },
-                                        ]
-                                    }
-                                ]
-                            }
-                        },
-                    ]
+                    sequence: "CHAT_HELLO_0",
                 },
                 {
                     text: 'good bye',
                     end: true,
-                    sequence: [
-                        {
-                            characterOrders: {
-                                PLAYER: [
-                                    {
-                                        type: 'talk', steps: [
-                                            { text: 'good bye', time: 100 }
-                                        ]
-                                    }
-                                ]
-                            }
-                        },
-                    ]
+                    sequence: "CHAT_HELLO_1"
                 },
             ]
         },
@@ -60,86 +25,30 @@ const chat: Conversation = {
                     text: 'Do you have a hammer?',
                     once: true,
                     enablesChoices: [
-                        ['ASK_HAMMER','tools']
+                        ['ASK_FOR_HAMMER']
                     ],
-                    sequence: [
-                        {
-                            characterOrders: {
-                                PLAYER: [
-                                    { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
-                                    { type: 'talk', steps: [{ text: 'Do you have a hammer?', time: 100 }] },
-                                ]
-                            }
-                        },
-                        {
-                            characterOrders: {
-                                MARIO: [
-                                    { type: 'talk', steps: [{ text: 'Yes.', time: 100 }] },
-                                ]
-                            }
-                        },
-                    ]
+                    disablesChoices: [
+                        ['ASK_ABOUT_TOOLS', 'hello']
+                    ],
+                    sequence: "CHAT_TOOLS_0"
                 },
                 {
-                    ref: 'ASK_HAMMER',
+                    ref: 'ASK_FOR_HAMMER',
                     text: 'Can I have the hammer?',
+                    nextBranch: 'hello',
                     disabled: true,
                     once: true,
-                    sequence: [
-                        {
-                            characterOrders: {
-                                PLAYER: [
-                                    { type: 'talk', steps: [{ text: 'Can I have the hammer?', time: 100 }] },
-
-                                ]
-                            }
-                        },
-                        {
-                            characterOrders: {
-                                MARIO: [
-                                    { type: 'talk', steps: [{ text: 'Here you go.', time: 100 }] },
-                                    { type: 'act', steps: [{ animation: 'walk', duration: 150 }] },
-                                ]
-                            },
-                            immediateConsequences: [
-                                { type: 'inventory', itemId: 'HAMMER', addOrRemove: 'ADD', }
-                            ]
-                        },
-                    ]
+                    sequence: "CHAT_TOOLS_1"
                 },
                 {
                     text: 'Do you have a screwdriver?',
                     once: true,
-                    sequence: [
-                        {
-                            characterOrders: {
-                                PLAYER: [
-                                    { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
-                                    { type: 'talk', steps: [{ text: 'Do you have a screwdriver?', time: 100 }] },
-                                ]
-                            }
-                        },
-                        {
-                            characterOrders: {
-                                MARIO: [
-                                    { type: 'talk', steps: [{ text: 'No.', time: 100 }] },
-                                ]
-                            }
-                        },
-                    ]
+                    sequence: "CHAT_TOOLS_2"
                 },
                 {
                     text: 'Never mind.',
                     nextBranch: 'hello',
-                    sequence: [
-                        {
-                            characterOrders: {
-                                PLAYER: [
-                                    { type: 'talk', steps: [{ text: 'Never mind.', time: 100 }] },
-                                ]
-                            }
-                        },
-                    ]
+                    sequence: "CHAT_TOOLS_3",
                 },
             ]
         }

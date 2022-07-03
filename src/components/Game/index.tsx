@@ -207,7 +207,7 @@ export default class Game extends Component<GameProps, GameState> {
             console.log('sequence already running', sequenceRunning)
             return
         }
-        this.setState(handleConversationChoice(choice))
+        this.setState(handleConversationChoice(choice, this.props.sequences))
     }
 
     handleRoomClick(x: number, y: number) {
@@ -235,13 +235,12 @@ export default class Game extends Component<GameProps, GameState> {
             characterOrders, sequenceRunning, thingOrders, hoverTarget,
         } = this.state
         const { currentRoom, player, currentConversation } = this
-        if (!currentRoom) { return null }
 
         const characterOrderMap = sequenceRunning ? sequenceRunning[0].characterOrders || {} : characterOrders;
         const thingOrderMap = sequenceRunning ? sequenceRunning[0].thingOrders || {} : thingOrders;
 
         const charactersAndThings = [...characters, ...things]
-            .filter(_ => _.room === currentRoom.name)
+            .filter(_ => _.room === currentRoom?.name)
             .sort((a, b) => b.y - a.y)
 
         const contentList: RoomContentItem[] = charactersAndThings.map(data => ({
@@ -263,18 +262,20 @@ export default class Game extends Component<GameProps, GameState> {
                 }
 
                 <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>
-                <Room
-                    data={currentRoom}
-                    maxWidth={600} maxHeight={400}
-                    isPaused={isPaused}
-                    viewAngle={viewAngle}
-                    handleRoomClick={this.handleRoomClick}
-                    handleHotspotClick={this.handleTargetClick}
-                    handleHover={this.handleHover}
-                    contents={contentList}
-                // use for debugging - slows render!
-                // obstacleCells={this.state.cellMatrix}
-                />
+                {currentRoom &&
+                    <Room
+                        data={currentRoom}
+                        maxWidth={600} maxHeight={400}
+                        isPaused={isPaused}
+                        viewAngle={viewAngle}
+                        handleRoomClick={this.handleRoomClick}
+                        handleHotspotClick={this.handleTargetClick}
+                        handleHover={this.handleHover}
+                        contents={contentList}
+                    // use for debugging - slows render!
+                    // obstacleCells={this.state.cellMatrix}
+                    />
+                }
 
                 {(!sequenceRunning && currentConversation) && (
                     <ConversationMenu
