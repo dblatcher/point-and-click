@@ -128,6 +128,18 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 }
                 break;
             }
+            case 'conversation': {
+                const { conversationId, end } = consequence
+                const conversation = state.conversations.find(_ => _.id === conversationId)
+                if (conversation && !end) {
+                    state.currentConversationId = conversationId;
+                } else if (end) {
+                    state.currentConversationId = undefined;
+                } else {
+                    console.warn(`No such conversation ${conversationId}`)
+                }
+                break;
+            }
         }
     }
 }

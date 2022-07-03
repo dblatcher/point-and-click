@@ -20,7 +20,7 @@ import { GameData, GameCondition } from "../../definitions/Game";
 import { ThingData } from "src/definitions/ThingData";
 import { Order } from "src/definitions/Order";
 import { Sprite } from "src/lib/Sprite";
-import { Conversation } from "src/definitions/Conversation";
+import { Conversation, ConversationChoice } from "src/definitions/Conversation";
 import { ConversationMenu } from "../ConversationMenu";
 
 
@@ -65,6 +65,7 @@ export default class Game extends Component<GameProps, GameState> {
 
         this.tick = this.tick.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
+        this.handleConversationChoice = this.handleConversationChoice.bind(this)
         this.handleTargetClick = this.handleTargetClick.bind(this)
         this.makeCharactersAct = this.makeCharactersAct.bind(this)
         this.centerViewOnPLayer = this.centerViewOnPLayer.bind(this)
@@ -198,6 +199,28 @@ export default class Game extends Component<GameProps, GameState> {
         )
     }
 
+    handleConversationChoice(choice: ConversationChoice) {
+        const { currentConversationId = '', sequenceRunning } = this.state
+
+        if (sequenceRunning) {
+            console.log('sequence already running', sequenceRunning)
+            return
+        }
+        const sequenceCopy = cloneData(choice.sequence)
+        if (choice.end) {
+            sequenceCopy.push({
+                immediateConsequences: [{ type: 'conversation', end: true, conversationId: currentConversationId }]
+            })
+        }
+        this.setState(() => {
+            const {currentConversation} = this
+            if (choice.nextBranch && currentConversation?.branches[choice.nextBranch]) {
+                currentConversation.currentBranch = choice.nextBranch
+            }
+            return { sequenceRunning: sequenceCopy, currentConversation }
+        })
+    }
+
     handleRoomClick(x: number, y: number) {
         const { sequenceRunning } = this.state
         if (sequenceRunning) { return }
@@ -264,11 +287,14 @@ export default class Game extends Component<GameProps, GameState> {
                 // obstacleCells={this.state.cellMatrix}
                 />
 
-                {currentConversation && (
-                    <ConversationMenu conversation={currentConversation} select={(choice) => { console.log(choice) }} />
+                {(!sequenceRunning && currentConversation) && (
+                    <ConversationMenu
+                        conversation={currentConversation}
+                        select={this.handleConversationChoice}
+                    />
                 )}
 
-                {!sequenceRunning && <>
+                {(!sequenceRunning && !currentConversation) && <>
                     <CommandLine
                         verb={this.currentVerb}
                         item={this.currentItem}

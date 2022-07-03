@@ -53,10 +53,16 @@ interface SequenceConsequence {
     sequence: string;
 }
 
+interface ConversationConsequence {
+    type: 'conversation';
+    conversationId: string;
+    end?: boolean;
+}
+
 type Consequence = OrderConsequence | ChangeRoomConsequence
     | TalkConsequence | InventoryConsequence | RemoveThingConsequence
-    | ChangeStatusConsequence | SequenceConsequence | ThingOrderConsequence;
-type ImmediateConsequence = RemoveThingConsequence | ChangeStatusConsequence | InventoryConsequence;
+    | ChangeStatusConsequence | SequenceConsequence | ThingOrderConsequence | ConversationConsequence;
+type ImmediateConsequence = RemoveThingConsequence | ChangeStatusConsequence | InventoryConsequence | ConversationConsequence;
 
 interface Interaction {
     verbId: string;

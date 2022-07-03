@@ -66,6 +66,10 @@ export const interactions: Interaction[] = [
                 text: 'Itsa me, Mario.',
                 time: 100,
             },
+            {
+                type:'conversation',
+                conversationId: 'CHAT'
+            }
         ]
     },
     {

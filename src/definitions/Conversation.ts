@@ -14,7 +14,7 @@ export type ConversationBranch = {
 
 export type ConversationChoice = {
     text: string;
-    consequences: Sequence;
+    sequence: Sequence;
     nextBranch?: string;
     end?: boolean;
 }
