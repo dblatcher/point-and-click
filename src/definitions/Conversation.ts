@@ -19,5 +19,6 @@ export type ConversationChoice = {
     nextBranch?: string;
     once?: boolean;
     disabled?: boolean;
+    enablesChoices?: (string | undefined)[][];
     end?: boolean;
 }
