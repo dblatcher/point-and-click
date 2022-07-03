@@ -12,13 +12,16 @@ import { CharacterEditor } from "./CharacterEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
 import { populate } from "../../services/populateServices";
 import { ItemEditor } from "./itemEditor";
+import { GameCondition } from "../../definitions/Game";
+import { defaultVerbs1, getBlankRoom } from "./defaults";
 
 
 populate()
 
+type GameDesign = Omit<GameCondition, 'characterOrders' | 'thingOrders' | 'sequenceRunning'>
 
 type State = {
-
+    gameDesign: GameDesign;
 };
 
 type Props = {
@@ -30,8 +33,19 @@ export class GameEditor extends Component<Props, State>{
 
     constructor(props: Props) {
         super(props)
-
+        const blankRoom = getBlankRoom();
         this.state = {
+            gameDesign: {
+                rooms: [blankRoom],
+                things: [],
+                characters: [],
+                interactions: [],
+                items: [],
+                conversations: [],
+                verbs: defaultVerbs1(),
+                currentRoomName: blankRoom.name,
+                sequences: {},
+            }
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
     }
@@ -56,12 +70,12 @@ export class GameEditor extends Component<Props, State>{
         return <main>
             <h2>Game Editor</h2>
             <TabMenu backgroundColor="none" tabs={[
-                {label:'Items', content: <ItemEditor />},
-                {label:'Images', content: <ImageAssetTool />},
-                {label:'Character Editor', content: <CharacterEditor />},
-                {label:'Room Editor', content: <RoomEditor />},
-                {label:'Sprite Editor', content: <SpriteEditor />},
-                {label:'Sprite Sheet Tool', content: <SpriteSheetTool />},
+                { label: 'Items', content: <ItemEditor /> },
+                { label: 'Images', content: <ImageAssetTool /> },
+                { label: 'Character Editor', content: <CharacterEditor /> },
+                { label: 'Room Editor', content: <RoomEditor /> },
+                { label: 'Sprite Editor', content: <SpriteEditor /> },
+                { label: 'Sprite Sheet Tool', content: <SpriteSheetTool /> },
             ]} />
         </main>
     }

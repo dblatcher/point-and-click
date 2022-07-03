@@ -18,6 +18,7 @@ import { TabMenu } from "../../TabMenu";
 import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../../lib/files";
 import styles from '../editorStyles.module.css';
 import imageService from "../../../services/imageService";
+import { getBlankRoom } from "../defaults";
 
 
 type RoomEditorState = RoomData & {
@@ -41,24 +42,6 @@ function makeNewZone(point: Point, effect: NewObstableEffect): Zone {
         case 'polygon': zone.polygon = [[0, 0]]
     }
     return zone
-}
-
-
-function getBlankRoom(): RoomData {
-    return {
-        name: '_NEW_ROOM',
-        frameWidth: 200,
-        width: 400,
-        height: 200,
-        background: [],
-        hotspots: [
-        ],
-        obstacleAreas: [
-        ],
-        scaling: [
-            [0, 1],
-        ]
-    }
 }
 
 export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
