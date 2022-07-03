@@ -125,8 +125,43 @@ export class Preview extends Component<Props, State>{
 
         return (
             <>
-
                 <section>
+                    <p>{getClickCaption(clickEffect)}</p>
+                    <Room data={roomData} noResize
+                        showObstacleAreas={showObstacleAreas}
+                        maxWidth={maxWidth} maxHeight={1000}
+                        viewAngle={viewAngle}
+                        highlightHotspots={highlightHotspots}
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function
+                        handleRoomClick={processClick}
+                        markHotspotVertices={this.hotspotsToMark}
+                        markObstacleVertices={this.obstaclesToMark}
+                        contents={showCharacter ? [
+                            {
+                                data: testCharacter,
+                                orders: [],
+                            }
+                        ] : undefined}
+                    >
+                        {showMarker && (
+                            <MarkerShape roomData={roomData}
+                                height={50}
+                                viewAngle={viewAngle}
+                                {...markerPosition}
+                                color={'red'} />
+                        )}
+
+                        {showScaleLines && scaling.map((yAndScale, index) => (
+                            <HorizontalLine key={index}
+                                y={yAndScale[0]}
+                                text={`scale: ${yAndScale[1]}`}
+                                roomData={roomData} />
+                        ))}
+                    </Room>
+                </section>
+                <section style={{
+                    display:'flex',
+                }}>
                     <fieldset>
                         <div>
                             <label>View width</label>
@@ -209,40 +244,7 @@ export class Preview extends Component<Props, State>{
 
                     </fieldset>
                 </section>
-                <section>
-                    <p>{getClickCaption(clickEffect)}</p>
-                    <Room data={roomData}
-                        showObstacleAreas={showObstacleAreas}
-                        maxWidth={maxWidth} maxHeight={1000}
-                        viewAngle={viewAngle}
-                        highlightHotspots={highlightHotspots}
-                        // eslint-disable-next-line @typescript-eslint/no-empty-function
-                        handleRoomClick={processClick}
-                        markHotspotVertices={this.hotspotsToMark}
-                        markObstacleVertices={this.obstaclesToMark}
-                        contents={showCharacter ? [
-                            {
-                                data: testCharacter,
-                                orders: [],
-                            }
-                        ] : undefined}
-                    >
-                        {showMarker && (
-                            <MarkerShape roomData={roomData}
-                                height={50}
-                                viewAngle={viewAngle}
-                                {...markerPosition}
-                                color={'red'} />
-                        )}
 
-                        {showScaleLines && scaling.map((yAndScale, index) => (
-                            <HorizontalLine key={index}
-                                y={yAndScale[0]}
-                                text={`scale: ${yAndScale[1]}`}
-                                roomData={roomData} />
-                        ))}
-                    </Room>
-                </section>
             </>
         )
     }

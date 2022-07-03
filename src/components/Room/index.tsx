@@ -16,6 +16,7 @@ interface Props {
     data: RoomData;
     maxWidth?: number;
     maxHeight?: number;
+    noResize?: boolean;
     viewAngle: number;
     handleRoomClick: { (x: number, y: number): void };
     handleHotspotClick?: { (zone: HotspotZone): void };
@@ -35,6 +36,7 @@ export const Room: FunctionComponent<Props> = ({
     data,
     maxWidth = 300,
     maxHeight = 200,
+    noResize,
     viewAngle,
     handleRoomClick,
     handleHotspotClick,
@@ -42,11 +44,11 @@ export const Room: FunctionComponent<Props> = ({
     showObstacleAreas,
     highlightHotspots,
     obstacleCells,
-    markHotspotVertices = [],
-    markObstacleVertices = [],
+    markHotspotVertices =[],
+    markObstacleVertices =[],
     showCaption = false,
     isPaused = false,
-    contents = [],
+    contents =[],
     children,
 }: Props) => {
     const { name, frameWidth, height, background, hotspots = [], obstacleAreas = [] } = data;
@@ -56,6 +58,11 @@ export const Room: FunctionComponent<Props> = ({
 
     const handleResize = (): void => {
         const { current: figure } = figureRef
+        if (noResize) {
+            setParentWidth(Infinity)
+            setParentHeight(Infinity)
+            return
+        }
         if (!figure || !figure.parentElement) {
             return
         }
