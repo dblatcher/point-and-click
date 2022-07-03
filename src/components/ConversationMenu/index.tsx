@@ -15,7 +15,7 @@ export function ConversationMenu({ conversation, select, }: Props) {
 
     return (
         <nav className={styles.menu}>
-            {branch && branch.choices.map((choice, index) => (
+            {branch && branch.choices.filter(_ => !_.disabled).map((choice, index) => (
 
                 <button onClick={() => { select(choice) }} key={index}>{choice.text}</button>
             ))}

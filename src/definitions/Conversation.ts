@@ -13,8 +13,11 @@ export type ConversationBranch = {
 }
 
 export type ConversationChoice = {
+    ref?: string;
     text: string;
     sequence: Sequence;
     nextBranch?: string;
+    once?: boolean;
+    disabled?: boolean;
     end?: boolean;
 }

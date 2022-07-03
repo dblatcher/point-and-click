@@ -7,15 +7,15 @@ const chat: Conversation = {
         hello: {
             choices: [
                 {
-                    text: 'hello there',
-                    nextBranch: 'hammer',
+                    text: 'hello there, lets talk about tools',
+                    nextBranch: 'tools',
                     sequence: [
                         {
                             characterOrders: {
                                 PLAYER: [
                                     {
                                         type: 'talk', steps: [
-                                            { text: 'hello there', time: 100 },
+                                            { text: 'hello there, lets talk about tools', time: 100 },
                                             { text: 'I am doing dialogue', time: 100 },
                                         ]
                                     }
@@ -54,17 +54,38 @@ const chat: Conversation = {
                 },
             ]
         },
-        hammer: {
+        tools: {
             choices: [
                 {
                     text: 'Do you have a hammer?',
-                    nextBranch: 'hello',
+                    once: true,
                     sequence: [
                         {
                             characterOrders: {
                                 PLAYER: [
                                     { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
                                     { type: 'talk', steps: [{ text: 'Do you have a hammer?', time: 100 }] },
+                                ]
+                            }
+                        },
+                        {
+                            characterOrders: {
+                                MARIO: [
+                                    { type: 'talk', steps: [{ text: 'No.', time: 100 }] },
+                                ]
+                            }
+                        },
+                    ]
+                },
+                {
+                    text: 'Do you have a screwdriver?',
+                    once: true,
+                    sequence: [
+                        {
+                            characterOrders: {
+                                PLAYER: [
+                                    { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
+                                    { type: 'talk', steps: [{ text: 'Do you have a screwdriver?', time: 100 }] },
                                 ]
                             }
                         },
