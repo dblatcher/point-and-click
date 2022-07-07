@@ -54,6 +54,7 @@ export class GameEditor extends Component<Props, State>{
             tabOpen: 2,
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
+        this.receiveUpdate = this.receiveUpdate.bind(this)
     }
 
     respondToServiceUpdate(payload: unknown) {
@@ -75,6 +76,27 @@ export class GameEditor extends Component<Props, State>{
         const { roomId } = this.state
         const { rooms } = this.state.gameDesign
         return rooms.find(_ => _.id === roomId)
+    }
+
+    receiveUpdate(property: keyof GameDesign, data: unknown) {
+        console.log(property, data)
+        switch (property) {
+            case 'rooms': {
+                const roomData = data as RoomData;
+                this.setState(state => {
+                    const { gameDesign } = state
+                    const matchingRoomIndex = gameDesign.rooms.findIndex(_ => _.id === roomData.id)
+
+                    if (matchingRoomIndex !== -1) {
+                        gameDesign.rooms.splice(matchingRoomIndex, 1, roomData)
+                    } else {
+                        gameDesign.rooms.push(roomData)
+                    }
+                    return { gameDesign }
+                })
+                break;
+            }
+        }
     }
 
     render() {
@@ -99,9 +121,11 @@ export class GameEditor extends Component<Props, State>{
                 { label: 'Items', content: <ItemEditor /> },
                 { label: 'Images', content: <ImageAssetTool /> },
                 { label: 'Character Editor', content: <CharacterEditor /> },
-                { label: 'Room Editor', content: <RoomEditor 
-                    updateData={data=>(console.log('UPDATE', data.id, data))}
-                    key={roomId} data={this.currentRoom} /> },
+                {
+                    label: 'Room Editor', content: <RoomEditor
+                        updateData={data => { this.receiveUpdate('rooms', data) }}
+                        key={roomId} data={this.currentRoom} />
+                },
                 { label: 'Sprite Editor', content: <SpriteEditor /> },
                 { label: 'Sprite Sheet Tool', content: <SpriteSheetTool /> },
             ]} />
