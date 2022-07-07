@@ -123,7 +123,7 @@ const HotspotZoneDescription: Record<keyof HotspotZone, Property> = {
 }
 
 const roomDataDescription: Record<keyof RoomData, Property> = {
-    name: { type: 'string' },
+    id: { type: 'string' },
     frameWidth: { type: 'number' },
     width: { type: 'number' },
     height: { type: 'number' },

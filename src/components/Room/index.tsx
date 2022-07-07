@@ -51,7 +51,7 @@ export const Room: FunctionComponent<Props> = ({
     contents =[],
     children,
 }: Props) => {
-    const { name, frameWidth, height, background, hotspots = [], obstacleAreas = [] } = data;
+    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [] } = data;
     const figureRef = useRef<HTMLElement>(null)
     const [parentWidth, setParentWidth] = useState(Infinity)
     const [parentHeight, setParentHeight] = useState(Infinity)
@@ -156,7 +156,7 @@ export const Room: FunctionComponent<Props> = ({
             </svg>
 
             {showCaption && (
-                <figcaption className={styles.roomCaption}>{name}</figcaption>
+                <figcaption className={styles.roomCaption}>{id}</figcaption>
             )}
         </figure>
     )

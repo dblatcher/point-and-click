@@ -8,7 +8,7 @@ type BackgroundLayer = {
 type ScaleLevel = [number, number][]
 
 type RoomData = {
-    name: string;
+    id: string;
     frameWidth: number;
     width: number;
     height: number;

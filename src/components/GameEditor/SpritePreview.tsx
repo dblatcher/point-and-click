@@ -10,7 +10,7 @@ const makeRoomData: { (characterData: CharacterData): RoomData } = (characterDat
     height: characterData.height + 10,
     width: characterData.width + 10,
     frameWidth: characterData.width + 10,
-    name: '',
+    id: '',
     background: []
 })
 

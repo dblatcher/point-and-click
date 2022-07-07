@@ -13,7 +13,7 @@ function matchInteraction(
     return interactions.find(interaction => {
         return interaction.verbId === verb.id
             && interaction.targetId === target.id
-            && (!interaction.roomId || interaction?.roomId === room?.name)
+            && (!interaction.roomId || interaction?.roomId === room?.id)
             && ((!interaction.itemId && !item) || (interaction?.itemId == item?.id))
             && ((!interaction.targetStatus) || (interaction.targetStatus == target.status))
     })
@@ -50,7 +50,7 @@ function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): Game
 
     if (currentRoom) {
         if (hoverTarget.type === 'character' || hoverTarget.type === 'thing') {
-            if (hoverTarget.room !== currentRoom.name) {
+            if (hoverTarget.room !== currentRoom.id) {
                 state.hoverTarget = undefined
             }
         }
@@ -67,8 +67,8 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
 
     return (state): GameState => {
 
-        const { currentRoomName, rooms } = state
-        const currentRoom = rooms.find(_ => _.name === currentRoomName)
+        const { currentRoomId, rooms } = state
+        const currentRoom = rooms.find(_ => _.id === currentRoomId)
         const matchingInteraction = matchInteraction(command, currentRoom, state.interactions)
 
         if (matchingInteraction) {

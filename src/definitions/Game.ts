@@ -14,7 +14,7 @@ type GameData = {
     characters: CharacterData[];
     interactions: Interaction[];
     items: ItemData[];
-    currentRoomName: string;
+    currentRoomId: string;
     characterOrders: Record<string, Order[]>;
     thingOrders: Record<string, ThingOrder[]>;
     sequenceRunning?: Sequence;

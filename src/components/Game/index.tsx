@@ -83,7 +83,7 @@ export default class Game extends Component<GameProps, GameState> {
         return {
             viewAngle: 0,
             isPaused: false,
-            currentRoomName: props.currentRoomName,
+            currentRoomId: props.currentRoomId,
             characters,
             things,
             rooms,
@@ -102,13 +102,13 @@ export default class Game extends Component<GameProps, GameState> {
     get saveData(): GameData {
         const {
             rooms, things, characters, interactions, items,
-            currentRoomName, characterOrders, thingOrders, sequenceRunning,
+            currentRoomId, characterOrders, thingOrders, sequenceRunning,
             conversations, currentConversationId,
         } = this.state
 
         return {
             rooms, things, characters, interactions, items,
-            currentRoomName, characterOrders, thingOrders, sequenceRunning,
+            currentRoomId, characterOrders, thingOrders, sequenceRunning,
             conversations, currentConversationId,
         }
     }
@@ -123,8 +123,8 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     get currentRoom(): (RoomData | undefined) {
-        const { currentRoomName, rooms } = this.state
-        return rooms.find(_ => _.name === currentRoomName)
+        const { currentRoomId, rooms } = this.state
+        return rooms.find(_ => _.id === currentRoomId)
     }
 
     get currentVerb(): Verb | undefined {
@@ -240,7 +240,7 @@ export default class Game extends Component<GameProps, GameState> {
         const thingOrderMap = sequenceRunning ? sequenceRunning[0].thingOrders || {} : thingOrders;
 
         const charactersAndThings = [...characters, ...things]
-            .filter(_ => _.room === currentRoom?.name)
+            .filter(_ => _.room === currentRoom?.id)
             .sort((a, b) => b.y - a.y)
 
         const contentList: RoomContentItem[] = charactersAndThings.map(data => ({

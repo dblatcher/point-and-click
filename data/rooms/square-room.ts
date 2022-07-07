@@ -1,7 +1,7 @@
 import { RoomData } from "../../src/definitions/RoomData"
 
 export const SQUARE_ROOM: RoomData = {
-  name: "SQUARE_ROOM",
+  id: "SQUARE_ROOM",
   frameWidth: 480,
   width: 480,
   height: 480,

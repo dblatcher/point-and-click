@@ -10,7 +10,7 @@ export const defaultVerbs1: { (): Verb[] } = () => [
 ]
 
 export const getBlankRoom: { (): RoomData } = () => ({
-    name: '_NEW_ROOM',
+    id: '_NEW_ROOM',
     frameWidth: 200,
     width: 400,
     height: 200,

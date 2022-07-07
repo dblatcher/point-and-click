@@ -245,7 +245,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
         const blob = dataToBlob(roomData)
         if (blob) {
-            makeDownloadFile(`${roomData.name || 'UNNAMED'}.room.json`, blob)
+            makeDownloadFile(`${roomData.id || 'UNNAMED'}.room.json`, blob)
         }
     }
     handleLoadButton = async () => {
@@ -277,14 +277,14 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
     render() {
         const {
-            name, background, height, width, frameWidth, obstacleAreas = [], hotspots = [],
+            id, background, height, width, frameWidth, obstacleAreas = [], hotspots = [],
             scaling = [],
             clickEffect
         } = this.state
 
         const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
 
-        const updateButtonText = this.state.name === this.props.data?.name ? `update ${this.state.name}` : 'add new room'
+        const updateButtonText = this.state.id === this.props.data?.id ? `update ${this.state.id}` : 'add new room'
 
         return <article>
             <h2>Room Editor</h2>
@@ -292,8 +292,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             <div className={styles.container}>
                 <section style={{ flexBasis: '20rem' }}>
                     <fieldset className={styles.fieldset}>
-                        <legend>name</legend>
-                        <input type="text" value={name} onInput={event => this.setState({ name: eventToString(event) })} />
+                        <legend>ID</legend>
+                        <input type="text" value={id} onInput={event => this.setState({ id: eventToString(event) })} />
                     </fieldset>
                     <fieldset className={styles.fieldset}>
                         <legend>storage</legend>
@@ -304,7 +304,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         <div>
                             {this.props.data && <button onClick={this.handleResetButton}>Reset</button>}
 
-                            {this.state.name && <button onClick={this.handleUpdateButton}>
+                            {this.state.id && <button onClick={this.handleUpdateButton}>
                                 {updateButtonText}
                             </button>}
                         </div>

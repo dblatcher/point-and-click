@@ -1,7 +1,7 @@
 import { RoomData } from "../../src/definitions/RoomData"
 
 export const INSIDE: RoomData = {
-  name: "INSIDE",
+  id: "INSIDE",
   frameWidth: 320,
   width: 480,
   height: 200,

@@ -24,7 +24,7 @@ type GameDesign = Omit<GameCondition, 'characterOrders' | 'thingOrders' | 'seque
 
 type State = {
     gameDesign: GameDesign;
-    roomName?: string;
+    roomId?: string;
     tabOpen: number;
 };
 
@@ -37,8 +37,8 @@ export class GameEditor extends Component<Props, State>{
 
     constructor(props: Props) {
         super(props)
-        const blankRoom: RoomData = Object.assign(getBlankRoom(), { name: 'ROOM_1', height: 150 })
-        const blankRoom2: RoomData = Object.assign(getBlankRoom(), { name: 'ROOM_2', height: 250 })
+        const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
+        const blankRoom2: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_2', height: 250 })
         this.state = {
             gameDesign: {
                 rooms: [blankRoom, blankRoom2],
@@ -48,7 +48,7 @@ export class GameEditor extends Component<Props, State>{
                 items: [],
                 conversations: [],
                 verbs: defaultVerbs1(),
-                currentRoomName: blankRoom.name,
+                currentRoomId: blankRoom.id,
                 sequences: {},
             },
             tabOpen: 2,
@@ -72,23 +72,23 @@ export class GameEditor extends Component<Props, State>{
     }
 
     get currentRoom() {
-        const { roomName } = this.state
+        const { roomId } = this.state
         const { rooms } = this.state.gameDesign
-        return rooms.find(_ => _.name === roomName)
+        return rooms.find(_ => _.id === roomId)
     }
 
     render() {
-        const { gameDesign, roomName, tabOpen } = this.state
+        const { gameDesign, roomId, tabOpen } = this.state
         return <main>
             <h2>Game Editor</h2>
 
             <SelectInput
                 label="rooms"
-                value={roomName || ''}
-                items={gameDesign.rooms.map(room => room.name)}
-                onSelect={(roomName) => {
+                value={roomId || ''}
+                items={gameDesign.rooms.map(room => room.id)}
+                onSelect={(roomId) => {
                     this.setState({
-                        roomName,
+                        roomId,
                         tabOpen: 3
                     })
                 }}
@@ -100,8 +100,8 @@ export class GameEditor extends Component<Props, State>{
                 { label: 'Images', content: <ImageAssetTool /> },
                 { label: 'Character Editor', content: <CharacterEditor /> },
                 { label: 'Room Editor', content: <RoomEditor 
-                    updateData={data=>(console.log('UPDATE', data.name, data))}
-                    key={roomName} data={this.currentRoom} /> },
+                    updateData={data=>(console.log('UPDATE', data.id, data))}
+                    key={roomId} data={this.currentRoom} /> },
                 { label: 'Sprite Editor', content: <SpriteEditor /> },
                 { label: 'Sprite Sheet Tool', content: <SpriteSheetTool /> },
             ]} />

@@ -4,7 +4,7 @@ import { Point } from "../../lib/pathfinding/geometry";
 
 
 export function changeRoom(
-    roomName: string,
+    roomId: string,
     takePlayer?: boolean,
     newPosition?: Point
 ): { (state: GameState): Partial<GameState> } {
@@ -12,14 +12,14 @@ export function changeRoom(
     return (state: GameState) => {
 
         const { rooms, characters } = state
-        const room = rooms.find(room => room.name === roomName)
+        const room = rooms.find(room => room.id === roomId)
         if (!room) { return {} }
 
         const player = characters.find(_ => _.isPlayer)
         const cellMatrix = generateCellMatrix(room, cellSize)
 
         if (takePlayer && player) {
-            player.room = room.name
+            player.room = room.id
             if (newPosition) {
                 player.x = newPosition.x
                 player.y = newPosition.y
@@ -27,7 +27,7 @@ export function changeRoom(
         }
 
         return {
-            currentRoomName: room.name, cellMatrix, characters
+            currentRoomId: room.id, cellMatrix, characters
         }
     }
 }

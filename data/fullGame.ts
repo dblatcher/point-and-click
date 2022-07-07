@@ -9,7 +9,7 @@ import { conversations } from './conversations';
 import { GameData, FixedGameInfo } from "../src/definitions/Game";
 
 const player = characters.find(character => character.isPlayer)
-const startingRoom = rooms.find(room => room.name === player?.room) || rooms[0]
+const startingRoom = rooms.find(room => room.id === player?.room) || rooms[0]
 
 export const startingGameCondition: GameData & FixedGameInfo = {
     rooms,
@@ -22,6 +22,6 @@ export const startingGameCondition: GameData & FixedGameInfo = {
     characterOrders: {},
     thingOrders: {},
     sequenceRunning: undefined,
-    currentRoomName: startingRoom.name,
+    currentRoomId: startingRoom.id,
     conversations,
 }

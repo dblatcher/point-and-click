@@ -10,13 +10,13 @@ import { changeRoom } from "./changeRoom"
 
 export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
 
-    const { characters, items, things, rooms, currentRoomName, characterOrders, thingOrders } = state
+    const { characters, items, things, rooms, currentRoomId, characterOrders, thingOrders } = state
     const player = characters.find(_ => _.isPlayer)
     const getCharacter = (characterId?: string): (CharacterData | undefined) =>
         characterId ? characters.find(_ => _.id === characterId) : player;
     const getThing = (thingId: string): ThingData | undefined =>
         things.find(_ => _.id === thingId);
-    const currentRoom = rooms.find(_ => _.name === currentRoomName)
+    const currentRoom = rooms.find(_ => _.id === currentRoomId)
 
     return (consequence: Consequence): void => {
 
