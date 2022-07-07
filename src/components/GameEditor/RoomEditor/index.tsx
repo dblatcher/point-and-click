@@ -27,6 +27,7 @@ type RoomEditorState = RoomData & {
 
 type RoomEditorProps = {
     data?: RoomData;
+    updateData?: { (data: RoomData): void }
 }
 
 const defaultParallax = 1;
@@ -65,6 +66,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.setClickEffect = this.setClickEffect.bind(this)
         this.handleSaveButton = this.handleSaveButton.bind(this)
         this.handleLoadButton = this.handleLoadButton.bind(this)
+        this.handleResetButton = this.handleResetButton.bind(this)
+        this.handleUpdateButton = this.handleUpdateButton.bind(this)
     }
 
     setClickEffect(clickEffect?: ClickEffect) {
@@ -85,9 +88,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 x: roundedPoint.x - getShift(viewAngle, defaultParallax, this.state),
                 y: this.state.height - roundedPoint.y
             }
-
-        console.log({ roundedPoint, targetPoint })
-
 
         switch (clickEffect.type) {
             case 'OBSTACLE':
@@ -262,7 +262,18 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             console.warn("NOT ROOM DATA", data)
         }
     }
-
+    handleResetButton() {
+        const { props } = this
+        const initialState = props.data ? cloneData(props.data) : getBlankRoom()
+        this.setState({
+            ...initialState
+        })
+    }
+    handleUpdateButton() {
+        if (this.props.updateData) {
+            this.props.updateData(this.state)
+        }
+    }
 
     render() {
         const {
@@ -272,6 +283,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         } = this.state
 
         const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
+
+        const updateButtonText = this.state.name === this.props.data?.name ? `update ${this.state.name}` : 'add new room'
 
         return <article>
             <h2>Room Editor</h2>
@@ -288,6 +301,13 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                             <button onClick={this.handleSaveButton}>Save to file</button>
                             <button onClick={this.handleLoadButton}>Load from file</button>
                         </div>
+                        <div>
+                            {this.props.data && <button onClick={this.handleResetButton}>Reset</button>}
+
+                            {this.state.name && <button onClick={this.handleUpdateButton}>
+                                {updateButtonText}
+                            </button>}
+                        </div>
                     </fieldset>
                     <TabMenu tabs={[
                         {
@@ -300,7 +320,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                     </div>
                                     <div className={styles.row}>
                                         <NumberInput label="width" value={width}
-                                            inputHandler={width => this.setState({ width})} />
+                                            inputHandler={width => this.setState({ width })} />
                                     </div>
                                     <div className={styles.row}>
                                         <NumberInput label="Frame Width" value={frameWidth}
