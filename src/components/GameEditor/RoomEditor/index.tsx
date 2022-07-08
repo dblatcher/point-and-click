@@ -19,6 +19,7 @@ import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../..
 import styles from '../editorStyles.module.css';
 import imageService from "../../../services/imageService";
 import { getBlankRoom } from "../defaults";
+import { StorageMenu } from "../StorageMenu";
 
 
 type RoomEditorState = RoomData & {
@@ -27,7 +28,7 @@ type RoomEditorState = RoomData & {
 
 type RoomEditorProps = {
     data?: RoomData;
-    updateData?: { (data: RoomData): void }
+    updateData?: { (data: RoomData): void };
 }
 
 const defaultParallax = 1;
@@ -68,6 +69,12 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.handleLoadButton = this.handleLoadButton.bind(this)
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
+    }
+
+    get currentData(): RoomData {
+        const roomData = cloneData(this.state) as RoomEditorState;
+        delete roomData.clickEffect
+        return roomData
     }
 
     setClickEffect(clickEffect?: ClickEffect) {
@@ -240,12 +247,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.setState({ background })
     }
     handleSaveButton() {
-        const roomData = cloneData(this.state) as RoomEditorState;
-        delete roomData.clickEffect
+        const { currentData } = this
 
-        const blob = dataToBlob(roomData)
+        const blob = dataToBlob(currentData)
         if (blob) {
-            makeDownloadFile(`${roomData.id || 'UNNAMED'}.room.json`, blob)
+            makeDownloadFile(`${currentData.id || 'UNNAMED'}.room.json`, blob)
         }
     }
     handleLoadButton = async () => {
@@ -271,7 +277,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
     handleUpdateButton() {
         if (this.props.updateData) {
-            this.props.updateData(this.state)
+            this.props.updateData(this.currentData)
         }
     }
 
@@ -295,20 +301,17 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         <legend>ID</legend>
                         <input type="text" value={id} onInput={event => this.setState({ id: eventToString(event) })} />
                     </fieldset>
-                    <fieldset className={styles.fieldset}>
-                        <legend>storage</legend>
-                        <div>
-                            <button onClick={this.handleSaveButton}>Save to file</button>
-                            <button onClick={this.handleLoadButton}>Load from file</button>
-                        </div>
-                        <div>
-                            {this.props.data && <button onClick={this.handleResetButton}>Reset</button>}
 
-                            {this.state.id && <button onClick={this.handleUpdateButton}>
-                                {updateButtonText}
-                            </button>}
-                        </div>
-                    </fieldset>
+                    <StorageMenu
+                        type="roomData"
+                        data={this.props.data}
+                        currentId={id}
+                        reset={this.handleResetButton}
+                        update={this.handleUpdateButton}
+                        save={this.handleSaveButton}
+                        load={this.handleLoadButton}
+                    />
+
                     <TabMenu tabs={[
                         {
                             label: 'Dimensions', content: (

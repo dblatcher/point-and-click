@@ -8,6 +8,7 @@ import imageService, { ImageAsset } from "../../services/imageService";
 import styles from "./editorStyles.module.css"
 import { ItemMenu } from "../ItemMenu";
 import { cloneData } from "../../lib/clone";
+import { StorageMenu } from "./StorageMenu";
 
 interface Props {
     data?: ItemData;
@@ -35,8 +36,8 @@ export class ItemEditor extends Component<Props, State> {
             ...initialData
         }
 
-        this.handleResetButton=this.handleResetButton.bind(this)
-        this.handleUpdateButton=this.handleUpdateButton.bind(this)
+        this.handleResetButton = this.handleResetButton.bind(this)
+        this.handleUpdateButton = this.handleUpdateButton.bind(this)
     }
 
     handleResetButton() {
@@ -73,7 +74,6 @@ export class ItemEditor extends Component<Props, State> {
 
     render() {
         const { characterId = '', id } = this.state
-        const updateButtonText = this.state.id === this.props.data?.id ? `update ${this.state.id}` : 'add new item'
 
         return (
             <article>
@@ -113,20 +113,9 @@ export class ItemEditor extends Component<Props, State> {
                     </fieldset>
                 </div>
                 <div>
-                <fieldset className={styles.fieldset}>
-                        <legend>storage</legend>
-                        <div>
-                            {/* <button onClick={this.handleSaveButton}>Save to file</button> */}
-                            {/* <button onClick={this.handleLoadButton}>Load from file</button> */}
-                        </div>
-                        <div>
-                            {this.props.data && <button onClick={this.handleResetButton}>Reset</button>}
-
-                            {this.state.id && <button onClick={this.handleUpdateButton}>
-                                {updateButtonText}
-                            </button>}
-                        </div>
-                    </fieldset>
+                    <StorageMenu data={this.props.data} type='ItemData' currentId={this.state.id}
+                        reset={this.handleResetButton}
+                        update={this.handleUpdateButton} />
                 </div>
             </article>
         )

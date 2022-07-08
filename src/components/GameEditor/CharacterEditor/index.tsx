@@ -11,6 +11,7 @@ import styles from "../editorStyles.module.css"
 import { cloneData } from "../../../lib/clone";
 import { dataToBlob, makeDownloadFile, uploadFile, readJsonFile } from "../../../lib/files";
 import { isCharacterData } from "../../../lib/typeguards";
+import { StorageMenu } from "../StorageMenu";
 
 
 type ExtraState = {
@@ -21,6 +22,7 @@ type State = CharacterData & { sprite: string | undefined } & ExtraState;
 
 type Props = {
     data?: CharacterData;
+    updateData?: { (data: CharacterData): void };
 }
 
 const makeBlankCharacter = (): CharacterData => ({
@@ -55,6 +57,13 @@ export class CharacterEditor extends Component<Props, State> {
 
         this.handleSaveButton = this.handleSaveButton.bind(this)
         this.handleLoadButton = this.handleLoadButton.bind(this)
+        this.handleResetButton = this.handleResetButton.bind(this)
+        this.handleUpdateButton = this.handleUpdateButton.bind(this)
+    }
+
+    get currentData(): CharacterData {
+        const characterData = cloneData(this.state) as State;
+        return characterData
     }
 
     changeValue(propery: keyof CharacterData, newValue: string | number | boolean) {
@@ -97,12 +106,10 @@ export class CharacterEditor extends Component<Props, State> {
     }
 
     handleSaveButton() {
-        const characterData = cloneData(this.state) as State;
-
-        console.log({characterData}, this.state)
-        const blob = dataToBlob(characterData)
+        const { currentData } = this;
+        const blob = dataToBlob(currentData)
         if (blob) {
-            makeDownloadFile(`${characterData.name || 'UNNAMED'}.character.json`, blob)
+            makeDownloadFile(`${currentData.id || 'UNNAMED'}.character.json`, blob)
         }
     }
     handleLoadButton = async () => {
@@ -117,6 +124,18 @@ export class CharacterEditor extends Component<Props, State> {
             this.setState(data)
         } else {
             console.warn("NOT CHARACTER DATA", data)
+        }
+    }
+    handleResetButton() {
+        const { props } = this
+        const initialState = props.data ? cloneData(props.data) : makeBlankCharacter()
+        this.setState({
+            ...initialState
+        })
+    }
+    handleUpdateButton() {
+        if (this.props.updateData) {
+            this.props.updateData(this.currentData)
         }
     }
 
@@ -142,13 +161,7 @@ export class CharacterEditor extends Component<Props, State> {
         return (
             <article>
                 <h2>Character Editor</h2>
-                <fieldset className={styles.fieldset}>
-                        <legend>storage</legend>
-                        <div>
-                            <button onClick={this.handleSaveButton}>Save to file</button>
-                            <button onClick={this.handleLoadButton}>Load from file</button>
-                        </div>
-                    </fieldset>
+
                 <fieldset>
                     <legend>Ident</legend>
                     <IdentInput showType value={state}
@@ -162,6 +175,15 @@ export class CharacterEditor extends Component<Props, State> {
 
                 </fieldset>
 
+                <StorageMenu
+                    type="characterData"
+                    data={this.props.data}
+                    currentId={state.id}
+                    reset={this.handleResetButton}
+                    update={this.handleUpdateButton}
+                    save={this.handleSaveButton}
+                    load={this.handleLoadButton}
+                />
                 <fieldset>
                     <legend>Character details</legend>
                     <div>

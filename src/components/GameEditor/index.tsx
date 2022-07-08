@@ -16,7 +16,8 @@ import { GameCondition } from "../../definitions/Game";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { SelectInput } from "./formControls";
 import { RoomData } from "../../definitions/RoomData";
-import { ItemData } from "src/definitions/ItemData";
+import { ItemData } from "../../definitions/ItemData";
+import { CharacterData } from "../../definitions/CharacterData";
 
 
 populate()
@@ -28,6 +29,7 @@ type State = {
     tabOpen: number;
     roomId?: string;
     itemId?: string;
+    characterId?: string;
 };
 
 type Props = {
@@ -42,12 +44,13 @@ function findIndexById<T extends { id: string }>(id: string | undefined, list: T
     if (!id) { return -1 }
     return list.findIndex(_ => _.id === id)
 }
-function addNewOrUpdate<T extends { id: string }>(newData: T, list: T[]): T[] {
-    const matchIndex = findIndexById(newData.id, list)
+function addNewOrUpdate<T extends { id: string }>(newData: unknown, list: T[]): T[] {
+    const newItem = newData as T;
+    const matchIndex = findIndexById(newItem.id, list)
     if (matchIndex !== -1) {
-        list.splice(matchIndex, 1, newData)
+        list.splice(matchIndex, 1, newItem)
     } else {
-        list.push(newData)
+        list.push(newItem)
     }
     return list
 }
@@ -96,31 +99,35 @@ export class GameEditor extends Component<Props, State>{
     get currentItem() {
         return findById(this.state.itemId, this.state.gameDesign.items)
     }
+    get currentCharacter() {
+        return findById(this.state.characterId, this.state.gameDesign.characters)
+    }
 
     performUpdate(property: keyof GameDesign, data: unknown) {
         console.log(property, data)
-        switch (property) {
-            case 'rooms': {
-                this.setState(state => {
-                    const { gameDesign } = state
-                    addNewOrUpdate(data as RoomData, gameDesign.rooms)
-                    return { gameDesign }
-                })
-                break;
+
+        this.setState(state => {
+            const { gameDesign } = state
+            switch (property) {
+                case 'rooms': {
+                    addNewOrUpdate(data, gameDesign[property])
+                    break
+                }
+                case 'items': {
+                    addNewOrUpdate(data, gameDesign[property])
+                    break
+                }
+                case 'characters': {
+                    addNewOrUpdate(data, gameDesign[property])
+                    break
+                }
             }
-            case 'items': {
-                this.setState(state => {
-                    const { gameDesign } = state
-                    addNewOrUpdate(data as ItemData, gameDesign.items)
-                    return { gameDesign }
-                })
-                break;
-            }
-        }
+            return { gameDesign }
+        })
     }
 
     render() {
-        const { gameDesign, tabOpen, roomId, itemId } = this.state
+        const { gameDesign, tabOpen, roomId, itemId, characterId } = this.state
         return <main>
             <h2>Game Editor</h2>
 
@@ -150,6 +157,19 @@ export class GameEditor extends Component<Props, State>{
                 haveEmptyOption={true}
             />
 
+            <SelectInput
+                label="character"
+                value={characterId || ''}
+                items={gameDesign.characters.map(item => item.id)}
+                onSelect={(characterId) => {
+                    this.setState({
+                        characterId,
+                        tabOpen: 2,
+                    })
+                }}
+                haveEmptyOption={true}
+            />
+
             <TabMenu backgroundColor="none" defaultOpenIndex={tabOpen} tabs={[
                 {
                     label: 'Room Editor', content: <RoomEditor
@@ -162,7 +182,12 @@ export class GameEditor extends Component<Props, State>{
                         key={itemId} data={this.currentItem}
                     />
                 },
-                { label: 'Character Editor', content: <CharacterEditor /> },
+                {
+                    label: 'Character Editor', content: <CharacterEditor
+                        updateData={data => { this.performUpdate('characters', data) }}
+                        key={characterId} data={this.currentCharacter}
+                    />
+                },
                 { label: 'Sprite Editor', content: <SpriteEditor /> },
                 { label: 'Sprite Sheet Tool', content: <SpriteSheetTool /> },
                 { label: 'Image uploader', content: <ImageAssetTool /> },
