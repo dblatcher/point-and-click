@@ -16,6 +16,7 @@ import { GameCondition } from "../../definitions/Game";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { SelectInput } from "./formControls";
 import { RoomData } from "../../definitions/RoomData";
+import { ItemData } from "src/definitions/ItemData";
 
 
 populate()
@@ -24,24 +25,41 @@ type GameDesign = Omit<GameCondition, 'characterOrders' | 'thingOrders' | 'seque
 
 type State = {
     gameDesign: GameDesign;
-    roomId?: string;
     tabOpen: number;
+    roomId?: string;
+    itemId?: string;
 };
 
 type Props = {
 
 }
 
+function findById<T extends { id: string }>(id: string | undefined, list: T[]): (T | undefined) {
+    if (!id) { return undefined }
+    return list.find(_ => _.id === id)
+}
+function findIndexById<T extends { id: string }>(id: string | undefined, list: T[]): (number) {
+    if (!id) { return -1 }
+    return list.findIndex(_ => _.id === id)
+}
+function addNewOrUpdate<T extends { id: string }>(newData: T, list: T[]): T[] {
+    const matchIndex = findIndexById(newData.id, list)
+    if (matchIndex !== -1) {
+        list.splice(matchIndex, 1, newData)
+    } else {
+        list.push(newData)
+    }
+    return list
+}
 
 export class GameEditor extends Component<Props, State>{
 
     constructor(props: Props) {
         super(props)
         const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
-        const blankRoom2: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_2', height: 250 })
         this.state = {
             gameDesign: {
-                rooms: [blankRoom, blankRoom2],
+                rooms: [blankRoom],
                 things: [],
                 characters: [],
                 interactions: [],
@@ -54,7 +72,7 @@ export class GameEditor extends Component<Props, State>{
             tabOpen: 2,
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
-        this.receiveUpdate = this.receiveUpdate.bind(this)
+        this.performUpdate = this.performUpdate.bind(this)
     }
 
     respondToServiceUpdate(payload: unknown) {
@@ -73,25 +91,27 @@ export class GameEditor extends Component<Props, State>{
     }
 
     get currentRoom() {
-        const { roomId } = this.state
-        const { rooms } = this.state.gameDesign
-        return rooms.find(_ => _.id === roomId)
+        return findById(this.state.roomId, this.state.gameDesign.rooms)
+    }
+    get currentItem() {
+        return findById(this.state.itemId, this.state.gameDesign.items)
     }
 
-    receiveUpdate(property: keyof GameDesign, data: unknown) {
+    performUpdate(property: keyof GameDesign, data: unknown) {
         console.log(property, data)
         switch (property) {
             case 'rooms': {
-                const roomData = data as RoomData;
                 this.setState(state => {
                     const { gameDesign } = state
-                    const matchingRoomIndex = gameDesign.rooms.findIndex(_ => _.id === roomData.id)
-
-                    if (matchingRoomIndex !== -1) {
-                        gameDesign.rooms.splice(matchingRoomIndex, 1, roomData)
-                    } else {
-                        gameDesign.rooms.push(roomData)
-                    }
+                    addNewOrUpdate(data as RoomData, gameDesign.rooms)
+                    return { gameDesign }
+                })
+                break;
+            }
+            case 'items': {
+                this.setState(state => {
+                    const { gameDesign } = state
+                    addNewOrUpdate(data as ItemData, gameDesign.items)
                     return { gameDesign }
                 })
                 break;
@@ -100,7 +120,7 @@ export class GameEditor extends Component<Props, State>{
     }
 
     render() {
-        const { gameDesign, roomId, tabOpen } = this.state
+        const { gameDesign, tabOpen, roomId, itemId } = this.state
         return <main>
             <h2>Game Editor</h2>
 
@@ -111,23 +131,41 @@ export class GameEditor extends Component<Props, State>{
                 onSelect={(roomId) => {
                     this.setState({
                         roomId,
-                        tabOpen: 3
+                        tabOpen: 0
+                    })
+                }}
+                haveEmptyOption={true}
+            />
+
+            <SelectInput
+                label="items"
+                value={itemId || ''}
+                items={gameDesign.items.map(item => item.id)}
+                onSelect={(itemId) => {
+                    this.setState({
+                        itemId,
+                        tabOpen: 1,
                     })
                 }}
                 haveEmptyOption={true}
             />
 
             <TabMenu backgroundColor="none" defaultOpenIndex={tabOpen} tabs={[
-                { label: 'Items', content: <ItemEditor /> },
-                { label: 'Images', content: <ImageAssetTool /> },
-                { label: 'Character Editor', content: <CharacterEditor /> },
                 {
                     label: 'Room Editor', content: <RoomEditor
-                        updateData={data => { this.receiveUpdate('rooms', data) }}
+                        updateData={data => { this.performUpdate('rooms', data) }}
                         key={roomId} data={this.currentRoom} />
                 },
+                {
+                    label: 'Items', content: <ItemEditor
+                        updateData={data => { this.performUpdate('items', data) }}
+                        key={itemId} data={this.currentItem}
+                    />
+                },
+                { label: 'Character Editor', content: <CharacterEditor /> },
                 { label: 'Sprite Editor', content: <SpriteEditor /> },
                 { label: 'Sprite Sheet Tool', content: <SpriteSheetTool /> },
+                { label: 'Image uploader', content: <ImageAssetTool /> },
             ]} />
         </main>
     }
