@@ -7,9 +7,9 @@ import { ThingData } from "./ThingData"
 import { CharacterData } from "./CharacterData"
 import { Verb } from "./Verb"
 import { Conversation } from "./Conversation"
-import { SpriteData } from "./SpriteSheet"
+import { SpriteData, SpriteSheet } from "./SpriteSheet"
 
-type GameData = {
+export type GameData = {
     rooms: RoomData[];
     things: ThingData[];
     characters: CharacterData[];
@@ -23,13 +23,11 @@ type GameData = {
     currentConversationId?: string;
 }
 
-type FixedGameInfo = {
+export type FixedGameInfo = {
     verbs: Verb[];
     sequences: Record<string, Sequence>;
     sprites: SpriteData[];
+    spriteSheets: SpriteSheet[];
 }
 
-type GameCondition = GameData & FixedGameInfo;
-
-
-export type { GameCondition, GameData, FixedGameInfo }
+export type GameCondition = GameData & FixedGameInfo;

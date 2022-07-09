@@ -31,6 +31,7 @@ type State = {
     itemId?: string;
     characterId?: string;
     spriteId?: string;
+    spriteSheetId?: string;
 };
 
 type Props = {
@@ -82,7 +83,8 @@ export class GameEditor extends Component<Props, State>{
                     verbs: defaultVerbs1(),
                     currentRoomId: blankRoom.id,
                     sequences: {},
-                    sprites:[]
+                    sprites: [],
+                    spriteSheets: []
                 },
                 tabOpen: 2,
             }
@@ -147,7 +149,7 @@ export class GameEditor extends Component<Props, State>{
     }
 
     render() {
-        const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId } = this.state
+        const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId } = this.state
         return <main>
             <h2>Game Editor</h2>
             <SelectInput
@@ -202,6 +204,19 @@ export class GameEditor extends Component<Props, State>{
                 haveEmptyOption={true}
             />
 
+            <SelectInput
+                label="spriteSheets"
+                value={spriteSheetId || ''}
+                items={gameDesign.spriteSheets.map(item => item.id)}
+                onSelect={(spriteSheetId) => {
+                    this.setState({
+                        spriteSheetId,
+                        tabOpen: 4,
+                    })
+                }}
+                haveEmptyOption={true}
+            />
+
             <TabMenu backgroundColor="none" defaultOpenIndex={tabOpen} tabs={[
                 {
                     label: 'Room Editor', content: <RoomEditor
@@ -220,11 +235,13 @@ export class GameEditor extends Component<Props, State>{
                         key={characterId} data={this.currentCharacter}
                     />
                 },
-                { label: 'Sprite Editor', content: <SpriteEditor 
-                updateData={data => { this.performUpdate('sprites', data) }}
-                key={spriteId} data={this.currentSprite}
-                /> },
-                { label: 'Sprite Sheet Tool', content: <SpriteSheetTool /> },
+                {
+                    label: 'Sprite Editor', content: <SpriteEditor
+                        updateData={data => { this.performUpdate('sprites', data) }}
+                        key={spriteId} data={this.currentSprite}
+                    />
+                },
+                { label: 'Sprite Sheets', content: <SpriteSheetTool /> },
                 { label: 'Image uploader', content: <ImageAssetTool /> },
             ]} />
         </main>

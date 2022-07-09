@@ -26,4 +26,5 @@ export const startingGameCondition: GameData & FixedGameInfo = {
     currentRoomId: startingRoom.id,
     conversations,
     sprites: spriteInputs.map(input=>input.data),
+    spriteSheets: spriteInputs.flatMap(input => input.sheets),
 }
