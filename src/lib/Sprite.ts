@@ -1,5 +1,6 @@
-import spriteSheetService from "../services/spriteSheetService";
 import { SpriteSheet, SpriteData, Direction, SpriteFrame } from "../definitions/SpriteSheet"
+import spriteSheetService from "../services/spriteSheetService";
+import imageService from "../services/imageService";
 
 
 interface SheetWithFrame {
@@ -65,9 +66,10 @@ export class Sprite {
     public getStyle(animationName = 'default', frameIndex = 0, direction?: Direction) {
         const frame = this.getFrame(animationName, frameIndex, direction) || this.getFrame('default', 0, this.data.defaultDirection)
         if (!frame) { return {} }
+        const href = imageService.get(frame.sheet.imageId)?.href
 
         return {
-            backgroundImage: `url(${frame.sheet.url})`,
+            backgroundImage: `url(${href})`,
             backgroundPositionX: `${-100 * frame.col}%`,
             backgroundPositionY: `${-100 * frame.row}%`,
             backgroundSize: `${100 * frame.sheet.cols}% ${100 * frame.sheet.rows}%`,

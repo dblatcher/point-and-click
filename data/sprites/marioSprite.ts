@@ -3,7 +3,7 @@ import { SpriteData, SpriteSheet } from "../../src/definitions/SpriteSheet";
 export const sheets: SpriteSheet[] = [
     {
         id: 'mario',
-        url: "./assets/characters/mario.png",
+        imageId: "mario.png",
         rows: 2,
         cols: 3
     },

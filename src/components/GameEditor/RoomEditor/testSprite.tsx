@@ -9,7 +9,7 @@ import spriteSheetService from "../../../services/spriteSheetService";
 const testSpriteSheets: SpriteSheet[] = [
     {
         id: '_test_sprite_sheet',
-        url: "./assets/characters/mario.png",
+        imageId: "mario.png",
         rows: 2,
         cols: 3
     },

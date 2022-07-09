@@ -1,6 +1,6 @@
 export interface SpriteSheet {
     id: string;
-    url: string;
+    imageId: string;
     rows: number;
     cols: number;
     widthScale?: number;

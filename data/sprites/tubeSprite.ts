@@ -3,7 +3,7 @@ import { SpriteData, SpriteSheet } from "../../src/definitions/SpriteSheet";
 export const sheets: SpriteSheet[] = [
     {
         id: 'tube',
-        url: "./assets/things/tube.png",
+        imageId: "tube.png",
         rows: 1,
         cols: 1
     },

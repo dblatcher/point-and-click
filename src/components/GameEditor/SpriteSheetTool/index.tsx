@@ -2,7 +2,6 @@
 import { Component, createRef, h, RefObject } from "preact";
 import { SpriteSheet } from "../../../definitions/SpriteSheet";
 import spriteSheetService from "../../../services/spriteSheetService";
-import { fileToImageUrl, uploadFile } from "../../../lib/files"
 import { eventToString } from "../../../lib/util";
 import { NumberInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../../lib/clone";
@@ -10,6 +9,7 @@ import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "src/services/Service";
 import styles from '../editorStyles.module.css';
 import { SpriteSheetPreview } from "../SpriteSheetPreview";
+import imageService, { ImageAsset } from "../../../services/imageService";
 
 type ExtraState = {
     urlIsObjectUrl: boolean;
@@ -31,24 +31,10 @@ export class SpriteSheetTool extends Component<{}, State> {
             rows: 1,
             id: "NEW_SHEET"
         }
-        this.loadFile = this.loadFile.bind(this)
         this.saveToService = this.saveToService.bind(this)
         this.openFromService = this.openFromService.bind(this)
 
         this.canvasRef = createRef()
-    }
-
-    loadFile = async () => {
-        const { urlIsObjectUrl, url: oldUrl } = this.state
-        const file = await uploadFile()
-        if (!file) { return }
-        const newUrl = fileToImageUrl(file)
-
-        if (oldUrl && urlIsObjectUrl && typeof window !== undefined) {
-            window.URL.revokeObjectURL(oldUrl)
-        }
-
-        this.setState({ url: newUrl, urlIsObjectUrl: true, saveWarning: undefined })
     }
 
     changeValue(propery: keyof SpriteSheet, newValue: string | number) {
@@ -61,6 +47,11 @@ export class SpriteSheetTool extends Component<{}, State> {
             case 'heightScale':
             case 'widthScale':
                 if (typeof newValue === 'number') {
+                    modification[propery] = newValue
+                }
+                break;
+            case 'imageId':
+                if (typeof newValue === 'string') {
                     modification[propery] = newValue
                 }
                 break;
@@ -80,8 +71,8 @@ export class SpriteSheetTool extends Component<{}, State> {
             this.setState({ saveWarning: 'NO ID' })
             return
         }
-        if (!state.url) {
-            this.setState({ saveWarning: 'NO FILE' })
+        if (!state.imageId) {
+            this.setState({ saveWarning: 'NO ImageId' })
             return
         }
 
@@ -108,7 +99,7 @@ export class SpriteSheetTool extends Component<{}, State> {
 
     render() {
         const {
-            url, rows = 1, cols = 1, widthScale = 1, heightScale = 1, id = "", saveWarning
+            imageId = "", rows = 1, cols = 1, widthScale = 1, heightScale = 1, id = "", saveWarning
         } = this.state
 
         return (
@@ -120,11 +111,18 @@ export class SpriteSheetTool extends Component<{}, State> {
                         <fieldset className={styles.fieldset}>
                             <legend>sheet properties</legend>
 
-                            <div className={styles.row}>
-                                <button onClick={this.loadFile}>select image file</button>
-                            </div>
+
                             <div className={styles.row}>
                                 <TextInput label="ID" value={id} onInput={event => this.changeValue('id', eventToString(event))} />
+                            </div>
+                            <div className={styles.row}>
+                                <ServiceItemSelector
+                                    format='select'
+                                    selectedItemId={imageId}
+                                    service={imageService} legend="pick image"
+                                    select={(item) => { this.changeValue('imageId', item.id) }}
+                                    filterItems={(item) => (item as ImageAsset).category === 'spriteSheet'}
+                                />
                             </div>
                             <div className={styles.row}>
                                 <NumberInput label="rows" value={rows} min={1}
@@ -134,7 +132,7 @@ export class SpriteSheetTool extends Component<{}, State> {
                                 />
                                 <NumberInput label="cols" value={cols} min={1}
                                     inputHandler={
-                                        value => { this.changeValue('cols',value) }
+                                        value => { this.changeValue('cols', value) }
                                     }
                                 />
                             </div>
@@ -167,8 +165,8 @@ export class SpriteSheetTool extends Component<{}, State> {
                         <p>Resizing the preview does not effect the SpriteSheet data.</p>
                         <p>The dimensions of the frame are set on the sprite objects.</p>
 
-                        <SpriteSheetPreview 
-                            sheet={{ rows, cols, url: url || '', id }} 
+                        <SpriteSheetPreview
+                            sheet={{ rows, cols, imageId, id }}
                             canvasScale={canvasScale} />
                     </section>
                 </div>

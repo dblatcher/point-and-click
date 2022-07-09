@@ -1,8 +1,8 @@
 import { Service } from "./Service";
 
-export type ImageAssetCategory = 'background' | 'item'
+export type ImageAssetCategory = 'background' | 'item' | 'spriteSheet'
 
-export const imageAssetCategories: ImageAssetCategory[] = ['background','item']
+export const imageAssetCategories: ImageAssetCategory[] = ['background', 'item', 'spriteSheet']
 
 export type ImageAsset = {
     id: string;

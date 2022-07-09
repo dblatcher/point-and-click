@@ -3,26 +3,26 @@ import { SpriteData, SpriteSheet } from '../../src/definitions/SpriteSheet'
 export const sheets: SpriteSheet[] = [
     {
         id: 'skinner-1-l',
-        url: "./assets/characters/skinner-1-l.png",
+        imageId: "skinner-1-l.png",
         rows: 1,
         cols: 12
     },
     {
         id: 'skinner-1-r',
-        url: "./assets/characters/skinner-1-r.png",
+        imageId: "skinner-1-r.png",
         rows: 1,
         cols: 12
     },
     {
         id: 'skinner-2-l',
-        url: "./assets/characters/skinner-2-l.png",
+        imageId: "skinner-2-l.png",
         rows: 1,
         cols: 5,
         widthScale: 1.75
     },
     {
         id: 'skinner-2-r',
-        url: "./assets/characters/skinner-2-r.png",
+        imageId: "skinner-2-r.png",
         rows: 1,
         cols: 5,
         widthScale: 1.75

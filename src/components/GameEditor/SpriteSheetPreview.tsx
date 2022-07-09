@@ -1,6 +1,7 @@
 import { FunctionalComponent, h, JSX } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 import { SpriteSheet } from "../../definitions/SpriteSheet";
+import imageService from "../../services/imageService";
 import styles from './editorStyles.module.css';
 
 interface Props {
@@ -57,10 +58,11 @@ export const SpriteSheetPreview: FunctionalComponent<Props> = ({ sheet, canvasSc
         }
     }, [sheet, canvasScale, highlight])
 
+    const imageAsset = imageService.get(sheet.imageId)
 
     return (
         <figure className={styles.spriteSheetPreview} style={{ cursor: !!handleClick ? 'pointer' : undefined }}>
-            {sheet.url && <img src={sheet.url} />}
+            {imageAsset && <img src={imageAsset.href} />}
             <canvas ref={canvasRef}
                 onClick={handleClick}
                 height={canvasScale}
