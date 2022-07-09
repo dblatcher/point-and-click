@@ -16,8 +16,8 @@ import { GameCondition } from "../../definitions/Game";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { SelectInput } from "./formControls";
 import { RoomData } from "../../definitions/RoomData";
-import { ItemData } from "../../definitions/ItemData";
-import { CharacterData } from "../../definitions/CharacterData";
+
+import { startingGameCondition } from '../../../data/fullGame';
 
 
 populate()
@@ -30,6 +30,7 @@ type State = {
     roomId?: string;
     itemId?: string;
     characterId?: string;
+    spriteId?: string;
 };
 
 type Props = {
@@ -55,24 +56,36 @@ function addNewOrUpdate<T extends { id: string }>(newData: unknown, list: T[]): 
     return list
 }
 
+const usePrebuiltGame = true
+
 export class GameEditor extends Component<Props, State>{
 
     constructor(props: Props) {
         super(props)
-        const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
-        this.state = {
-            gameDesign: {
-                rooms: [blankRoom],
-                things: [],
-                characters: [],
-                interactions: [],
-                items: [],
-                conversations: [],
-                verbs: defaultVerbs1(),
-                currentRoomId: blankRoom.id,
-                sequences: {},
-            },
-            tabOpen: 2,
+        if (usePrebuiltGame) {
+            this.state = {
+                gameDesign: {
+                    ...startingGameCondition
+                },
+                tabOpen: 2,
+            }
+        } else {
+            const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
+            this.state = {
+                gameDesign: {
+                    rooms: [blankRoom],
+                    things: [],
+                    characters: [],
+                    interactions: [],
+                    items: [],
+                    conversations: [],
+                    verbs: defaultVerbs1(),
+                    currentRoomId: blankRoom.id,
+                    sequences: {},
+                    sprites:[]
+                },
+                tabOpen: 2,
+            }
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
         this.performUpdate = this.performUpdate.bind(this)
@@ -102,6 +115,9 @@ export class GameEditor extends Component<Props, State>{
     get currentCharacter() {
         return findById(this.state.characterId, this.state.gameDesign.characters)
     }
+    get currentSprite() {
+        return findById(this.state.spriteId, this.state.gameDesign.sprites)
+    }
 
     performUpdate(property: keyof GameDesign, data: unknown) {
         console.log(property, data)
@@ -121,16 +137,19 @@ export class GameEditor extends Component<Props, State>{
                     addNewOrUpdate(data, gameDesign[property])
                     break
                 }
+                case 'sprites': {
+                    addNewOrUpdate(data, gameDesign[property])
+                    break
+                }
             }
             return { gameDesign }
         })
     }
 
     render() {
-        const { gameDesign, tabOpen, roomId, itemId, characterId } = this.state
+        const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId } = this.state
         return <main>
             <h2>Game Editor</h2>
-
             <SelectInput
                 label="rooms"
                 value={roomId || ''}
@@ -170,6 +189,19 @@ export class GameEditor extends Component<Props, State>{
                 haveEmptyOption={true}
             />
 
+            <SelectInput
+                label="sprites"
+                value={spriteId || ''}
+                items={gameDesign.sprites.map(item => item.id)}
+                onSelect={(spriteId) => {
+                    this.setState({
+                        spriteId,
+                        tabOpen: 3,
+                    })
+                }}
+                haveEmptyOption={true}
+            />
+
             <TabMenu backgroundColor="none" defaultOpenIndex={tabOpen} tabs={[
                 {
                     label: 'Room Editor', content: <RoomEditor
@@ -188,7 +220,10 @@ export class GameEditor extends Component<Props, State>{
                         key={characterId} data={this.currentCharacter}
                     />
                 },
-                { label: 'Sprite Editor', content: <SpriteEditor /> },
+                { label: 'Sprite Editor', content: <SpriteEditor 
+                updateData={data => { this.performUpdate('sprites', data) }}
+                key={spriteId} data={this.currentSprite}
+                /> },
                 { label: 'Sprite Sheet Tool', content: <SpriteSheetTool /> },
                 { label: 'Image uploader', content: <ImageAssetTool /> },
             ]} />

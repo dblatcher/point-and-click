@@ -7,25 +7,26 @@ import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../..
 import { isSpriteData } from "../../../lib/typeguards";
 import { eventToString } from "../../../lib/util";
 import { CharacterData } from "../../../definitions/CharacterData"
-import { ServiceItemSelector } from "../ServiceItemSelector";
 import { DeleteButton, TextInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";
-import { ServiceItem } from "../../../services/Service";
 import spriteService from "../../../services/spriteService";
 import { FramePicker } from "./FramePicker";
 import styles from '../editorStyles.module.css';
+import { StorageMenu } from "../StorageMenu";
 
-type SpriteEditorState = SpriteData & {
+type ExtraState = {
     selectedAnimation?: string;
     selectedRow: number;
     selectedCol: number;
     selectedSheetId?: string;
-};
+}
+
+type SpriteEditorState = SpriteData & ExtraState;
 
 type SpriteEditorProps = {
     data?: SpriteData;
-    assetList?: string[];
+    updateData?: { (data: SpriteData): void };
 }
 
 function getBlankSprite(): SpriteData {
@@ -53,15 +54,24 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             selectedCol: 0,
             selectedRow: 0,
         }
-        this.addSpriteToService = this.addSpriteToService.bind(this)
         this.handleNewButton = this.handleNewButton.bind(this)
         this.handleSaveButton = this.handleSaveButton.bind(this)
         this.handleLoadButton = this.handleLoadButton.bind(this)
-        this.openSpriteFromService = this.openSpriteFromService.bind(this)
+        this.handleResetButton = this.handleResetButton.bind(this)
+        this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.addAnimation = this.addAnimation.bind(this)
         this.editCycle = this.editCycle.bind(this)
         this.buildCharacterData = this.buildCharacterData.bind(this)
         this.pickFrame = this.pickFrame.bind(this)
+    }
+
+    get currentData(): SpriteData {
+        const data = cloneData(this.state as SpriteData & Partial<ExtraState>);
+        delete data.selectedAnimation;
+        delete data.selectedRow;
+        delete data.selectedCol;
+        delete data.selectedSheetId;
+        return data
     }
 
     pickFrame(selectedRow: number, selectedCol: number, selectedSheetId?: string) {
@@ -120,24 +130,15 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         })
     }
 
-    addSpriteToService() {
-        const spriteObject = new Sprite(this.state)
-        spriteService.add(spriteObject)
-    }
-
     handleNewButton() {
         const newSprite = getBlankSprite()
         this.setState(newSprite)
     }
     handleSaveButton() {
-        const data = cloneData(this.state as Partial<SpriteEditorState>);
-        delete data.selectedAnimation;
-        delete data.selectedRow;
-        delete data.selectedCol;
-        delete data.selectedSheetId;
-        const blob = dataToBlob(data)
+        const { currentData } = this;
+        const blob = dataToBlob(currentData)
         if (blob) {
-            makeDownloadFile(`${data.id || 'UNNAMED'}.sprite.json`, blob)
+            makeDownloadFile(`${currentData.id || 'UNNAMED'}.sprite.json`, blob)
         }
     }
     handleLoadButton = async () => {
@@ -154,11 +155,21 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             console.warn("NOT SPRITE DATA", data)
         }
     }
-    openSpriteFromService(item: ServiceItem) {
-        if (!(item instanceof Sprite)) {
-            return
+
+    handleResetButton() {
+        const { props } = this
+        const initialState = props.data ? cloneData(props.data) : getBlankSprite()
+        this.setState({
+            ...initialState
+        })
+    }
+    handleUpdateButton() {
+        const { currentData } = this
+        const spriteObject = new Sprite(currentData)
+        spriteService.add(spriteObject)
+        if (this.props.updateData) {
+            this.props.updateData(currentData)
         }
-        this.setState(item.data)
     }
 
     buildSprite(): Sprite {
@@ -223,21 +234,15 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                         />
                     </fieldset>
 
-                    <fieldset className={styles.fieldset}>
-                        <legend>storage</legend>
-                        <button onClick={this.handleSaveButton}>Save to file</button>
-                        <button onClick={this.handleLoadButton}>load from file</button>
-                        <div>
-                            <button onClick={this.addSpriteToService}>
-                                {spriteService.list().includes(id) ? 'update in service' : 'Add to service'}
-                            </button>
-                            <ServiceItemSelector legend="open from service"
-                                format="select"
-                                selectedItemId={id}
-                                service={spriteService}
-                                select={this.openSpriteFromService} />
-                        </div>
-                    </fieldset>
+                    <StorageMenu
+                        data={this.props.data}
+                        currentId={id}
+                        type='spriteData'
+                        update={this.handleUpdateButton}
+                        reset={this.handleResetButton}
+                        save={this.handleSaveButton}
+                        load={this.handleLoadButton}
+                    />
                 </section>
 
                 <section>

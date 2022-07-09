@@ -7,6 +7,7 @@ import { ThingData } from "./ThingData"
 import { CharacterData } from "./CharacterData"
 import { Verb } from "./Verb"
 import { Conversation } from "./Conversation"
+import { SpriteData } from "./SpriteSheet"
 
 type GameData = {
     rooms: RoomData[];
@@ -25,6 +26,7 @@ type GameData = {
 type FixedGameInfo = {
     verbs: Verb[];
     sequences: Record<string, Sequence>;
+    sprites: SpriteData[];
 }
 
 type GameCondition = GameData & FixedGameInfo;
