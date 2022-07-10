@@ -1,7 +1,6 @@
 import { GameProps, GameState } from "."
 import { CommandTarget } from "../../definitions/Command"
 import { CharacterData } from "src/definitions/CharacterData"
-import { ThingData } from "src/definitions/ThingData"
 import { Consequence } from "../../definitions/Interaction"
 import { Order } from "../../definitions/Order"
 import { cloneData } from "../../lib/clone"
@@ -10,12 +9,10 @@ import { changeRoom } from "./changeRoom"
 
 export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
 
-    const { characters, items, things, rooms, currentRoomId, characterOrders, thingOrders } = state
+    const { characters, items, things, rooms, currentRoomId, characterOrders} = state
     const player = characters.find(_ => _.isPlayer)
     const getCharacter = (characterId?: string): (CharacterData | undefined) =>
         characterId ? characters.find(_ => _.id === characterId) : player;
-    const getThing = (thingId: string): ThingData | undefined =>
-        things.find(_ => _.id === thingId);
     const currentRoom = rooms.find(_ => _.id === currentRoomId)
 
     return (consequence: Consequence): void => {
@@ -33,22 +30,6 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                     characterOrders[character.id].push(...clonedOrders)
                 } else {
                     characterOrders[character.id] = clonedOrders
-                }
-
-                break;
-            }
-            case 'thingOrder': {
-                const { thingId, orders } = consequence
-                const thing = getThing(thingId)
-                if (!thing) { return }
-                const clonedOrders = cloneData(orders)
-
-                if (consequence.replaceCurrentOrders) {
-                    thingOrders[thing.id] = clonedOrders
-                } else if (thingOrders[thing.id]) {
-                    thingOrders[thing.id].push(...clonedOrders)
-                } else {
-                    thingOrders[thing.id] = clonedOrders
                 }
 
                 break;

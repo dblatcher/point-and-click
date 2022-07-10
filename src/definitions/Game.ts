@@ -17,7 +17,6 @@ export type GameData = {
     items: ItemData[];
     currentRoomId: string;
     characterOrders: Record<string, Order[]>;
-    thingOrders: Record<string, ThingOrder[]>;
     sequenceRunning?: Sequence;
     conversations: Conversation[];
     currentConversationId?: string;

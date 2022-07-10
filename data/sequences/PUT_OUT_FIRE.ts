@@ -34,7 +34,6 @@ export const PUT_OUT_FIRE: Sequence = [
                 }
             ]
         },
-        thingOrders:{},
         immediateConsequences: [
             {type:'changeStatus', targetId:'FIRE', status:'out', targetType:'character'}
         ]

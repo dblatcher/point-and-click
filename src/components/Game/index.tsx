@@ -93,7 +93,6 @@ export default class Game extends Component<GameProps, GameState> {
             items,
             sequenceRunning: props.sequenceRunning || undefined,
             characterOrders: props.characterOrders || {},
-            thingOrders: props.thingOrders || {},
             conversations,
             currentConversationId: props.currentConversationId,
         }
@@ -102,13 +101,13 @@ export default class Game extends Component<GameProps, GameState> {
     get saveData(): GameData {
         const {
             rooms, things, characters, interactions, items,
-            currentRoomId, characterOrders, thingOrders, sequenceRunning,
+            currentRoomId, characterOrders, sequenceRunning,
             conversations, currentConversationId,
         } = this.state
 
         return {
             rooms, things, characters, interactions, items,
-            currentRoomId, characterOrders, thingOrders, sequenceRunning,
+            currentRoomId, characterOrders, sequenceRunning,
             conversations, currentConversationId,
         }
     }
@@ -157,14 +156,12 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     makeCharactersAct() {
-        const { characters, characterOrders, thingOrders, sequenceRunning, things, cellMatrix = [] } = this.state
+        const { characters, characterOrders, sequenceRunning, cellMatrix = [] } = this.state
         if (sequenceRunning) {
             return this.setState(continueSequence(this.state, this.props))
         }
         characters.forEach(character => followOrder(character, cellMatrix, characterOrders[character.id]))
-        things.forEach(thing => followOrder(thing, cellMatrix, thingOrders[thing.id]))
         return this.setState({ characters, characterOrders })
-
     }
 
     centerViewOnPLayer() {
@@ -231,21 +228,20 @@ export default class Game extends Component<GameProps, GameState> {
     render() {
         const { verbs = [], save, reset, load } = this.props
         const { viewAngle, isPaused,
-            characters, things, currentVerbId, currentItemId, items,
-            characterOrders, sequenceRunning, thingOrders, hoverTarget,
+            characters, currentVerbId, currentItemId, items,
+            characterOrders, sequenceRunning, hoverTarget,
         } = this.state
         const { currentRoom, player, currentConversation } = this
 
         const characterOrderMap = sequenceRunning ? sequenceRunning[0].characterOrders || {} : characterOrders;
-        const thingOrderMap = sequenceRunning ? sequenceRunning[0].thingOrders || {} : thingOrders;
 
-        const charactersAndThings = [...characters, ...things]
+        const charactersAndThings = [...characters]
             .filter(_ => _.room === currentRoom?.id)
             .sort((a, b) => b.y - a.y)
 
         const contentList: RoomContentItem[] = charactersAndThings.map(data => ({
             data,
-            orders: data.type == 'character' ? characterOrderMap[data.id] : thingOrderMap[data.id],
+            orders: characterOrderMap[data.id],
             clickHandler: data.type == 'character' && data.isPlayer ? undefined : this.handleTargetClick
         }))
 

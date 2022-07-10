@@ -22,7 +22,7 @@ import { startingGameCondition } from '../../../data/fullGame';
 
 populate()
 
-type GameDesign = Omit<GameCondition, 'characterOrders' | 'thingOrders' | 'sequenceRunning'>
+type GameDesign = Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>
 
 type State = {
     gameDesign: GameDesign;

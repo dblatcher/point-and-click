@@ -21,7 +21,6 @@ export const startingGameCondition: GameData & FixedGameInfo = {
     verbs,
     sequences,
     characterOrders: {},
-    thingOrders: {},
     sequenceRunning: undefined,
     currentRoomId: startingRoom.id,
     conversations,

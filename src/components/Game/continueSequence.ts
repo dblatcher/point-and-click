@@ -38,12 +38,10 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     const [currentStage] = sequenceRunning
     if (!currentStage) { return {} }
 
-    const { characterOrders: stageCharacterOrders = {}, thingOrders: stageThingOrders = {} } = currentStage
+    const { characterOrders: stageCharacterOrders = {} } = currentStage
     validateOrderIdsAndClearEmpties(stageCharacterOrders, characters)
-    validateOrderIdsAndClearEmpties(stageThingOrders, things)
 
     characters.forEach(character => followOrder(character, cellMatrix, stageCharacterOrders[character.id]))
-    things.forEach(thing => followOrder(thing, cellMatrix, stageThingOrders[thing.id]))
 
     if (currentStage.immediateConsequences) {
         const consequenceExecutor = makeConsequenceExecutor(state, props)
@@ -54,7 +52,7 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
         delete currentStage.immediateConsequences
     }
 
-    const stageIsFinished = Object.keys(stageCharacterOrders).length === 0 && Object.keys(stageThingOrders).length === 0
+    const stageIsFinished = Object.keys(stageCharacterOrders).length === 0
     if (stageIsFinished) {
         sequenceRunning.shift()
         console.log(`stage finished, ${sequenceRunning.length} left.`)
