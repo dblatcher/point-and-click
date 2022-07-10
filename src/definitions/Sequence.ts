@@ -1,11 +1,12 @@
 import { ImmediateConsequence } from "./Interaction"
 import { Order } from "./Order"
 
-type Stage = {
+export type Stage = {
     characterOrders?: Record<string, Order[]>;
     immediateConsequences?: ImmediateConsequence[];
 }
 
-type Sequence = Stage[]
-
-export type { Stage, Sequence }
+export type Sequence = {
+    description?: string;
+    stages: Stage[];
+}

@@ -230,7 +230,7 @@ export default class Game extends Component<GameProps, GameState> {
         } = this.state
         const { currentRoom, player, currentConversation } = this
 
-        const characterOrderMap = sequenceRunning ? sequenceRunning[0].characterOrders || {} : characterOrders;
+        const characterOrderMap = sequenceRunning ? sequenceRunning.stages[0].characterOrders || {} : characterOrders;
 
         const charactersInOrder = characters
             .filter(_ => _.room === currentRoom?.id)

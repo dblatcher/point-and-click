@@ -34,7 +34,7 @@ function validateOrderIdsAndClearEmpties(
 export function continueSequence(state: GameState, props: GameProps): Partial<GameState> {
     const { characters, sequenceRunning, cellMatrix = [] } = state
     if (!sequenceRunning) { return {} }
-    const [currentStage] = sequenceRunning
+    const [currentStage] = sequenceRunning.stages
     if (!currentStage) { return {} }
 
     const { characterOrders: stageCharacterOrders = {} } = currentStage
@@ -53,12 +53,12 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
 
     const stageIsFinished = Object.keys(stageCharacterOrders).length === 0
     if (stageIsFinished) {
-        sequenceRunning.shift()
-        console.log(`stage finished, ${sequenceRunning.length} left.`)
+        sequenceRunning.stages.shift()
+        console.log(`stage finished, ${sequenceRunning.stages.length} left.`)
     }
 
     return {
         characters,
-        sequenceRunning: sequenceRunning.length === 0 ? undefined : sequenceRunning
+        sequenceRunning: sequenceRunning.stages.length === 0 ? undefined : sequenceRunning
     }
 }

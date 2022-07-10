@@ -84,9 +84,9 @@ export function handleConversationChoice(choice: ConversationChoice, sequences: 
         if (!originalSequence) {
             console.warn(`invalid sequenceId "${choice.sequence}" in conversation "${currentConversationId}"`)
         } else {
-            const sequenceCopy = originalSequence ? cloneData(originalSequence) : []
+            const sequenceCopy = originalSequence ? cloneData(originalSequence) : { stages: [] }
             if (choice.end) {
-                sequenceCopy.push({
+                sequenceCopy.stages.push({
                     immediateConsequences: [{ type: 'conversation', end: true, conversationId: currentConversationId }]
                 })
             }
