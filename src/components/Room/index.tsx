@@ -9,7 +9,7 @@ import ZoneSvg from "../ZoneSvg";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import BackgroundShape from "./BackgroundShape";
 import { HandleHoverFunction, RoomContentItem } from "../Game";
-import { CharacterOrThing } from "../CharacterOrThing";
+import { CharacterFigure } from "../CharacterFigure";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 interface Props {
@@ -139,7 +139,7 @@ export const Room: FunctionComponent<Props> = ({
                 )}
 
                 {contents.map(entry => (
-                    <CharacterOrThing key={entry.data.id}
+                    <CharacterFigure key={entry.data.id}
                         isPaused={isPaused}
                         data={entry.data}
                         orders={entry.orders || []}

@@ -10,7 +10,7 @@ import { useInterval } from "../lib/useInterval"
 
 import { SpriteShape } from "./SpriteShape";
 import { DialogueBubble } from "./DialogueBubble";
-import spriteService from "../../src/services/spriteService";
+import spriteService from "../services/spriteService";
 import { HandleClickFunction, HandleHoverFunction } from "./Game";
 
 interface Props {
@@ -33,7 +33,7 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
-export const CharacterOrThing: FunctionalComponent<Props> = ({
+export const CharacterFigure: FunctionalComponent<Props> = ({
     data, 
     roomData, 
     viewAngle,
