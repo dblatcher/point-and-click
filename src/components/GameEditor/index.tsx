@@ -14,10 +14,10 @@ import { populate } from "../../services/populateServices";
 import { ItemEditor } from "./itemEditor";
 import { GameCondition } from "../../definitions/Game";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
-import { SelectInput } from "./formControls";
 import { RoomData } from "../../definitions/RoomData";
 
 import { startingGameCondition } from '../../../data/fullGame';
+import { TreeMenu } from "./TreeMenu";
 
 
 populate()
@@ -37,6 +37,15 @@ type State = {
 type Props = {
 
 }
+
+const tabs: string[] = [
+    'rooms',
+    'items',
+    'characters',
+    'sprites',
+    'spriteSheets',
+    'images',
+]
 
 function findById<T extends { id: string }>(id: string | undefined, list: T[]): (T | undefined) {
     if (!id) { return undefined }
@@ -156,103 +165,89 @@ export class GameEditor extends Component<Props, State>{
 
     render() {
         const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId } = this.state
+
+        const makeFolder = (id: string, list: { id: string }[], entryId?: string) => ({
+            id, open: tabs[tabOpen] === id,
+            entries: list.map(item => ({ data: item, active: entryId === item.id }))
+        })
+
+        const folders = [
+            makeFolder('rooms', gameDesign.rooms, roomId),
+            makeFolder('items', gameDesign.items, itemId),
+            makeFolder('characters', gameDesign.characters, characterId),
+            makeFolder('sprites', gameDesign.sprites, spriteId),
+            makeFolder('spriteSheets', gameDesign.spriteSheets, spriteSheetId),
+            { id: 'images' },
+        ]
+
         return <main>
-            <h2>Game Editor</h2>
-            <SelectInput
-                label="rooms"
-                value={roomId || ''}
-                items={gameDesign.rooms.map(room => room.id)}
-                onSelect={(roomId) => {
-                    this.setState({
-                        roomId,
-                        tabOpen: 0
-                    })
-                }}
-                haveEmptyOption={true}
-            />
-
-            <SelectInput
-                label="items"
-                value={itemId || ''}
-                items={gameDesign.items.map(item => item.id)}
-                onSelect={(itemId) => {
-                    this.setState({
-                        itemId,
-                        tabOpen: 1,
-                    })
-                }}
-                haveEmptyOption={true}
-            />
-
-            <SelectInput
-                label="character"
-                value={characterId || ''}
-                items={gameDesign.characters.map(item => item.id)}
-                onSelect={(characterId) => {
-                    this.setState({
-                        characterId,
-                        tabOpen: 2,
-                    })
-                }}
-                haveEmptyOption={true}
-            />
-
-            <SelectInput
-                label="sprites"
-                value={spriteId || ''}
-                items={gameDesign.sprites.map(item => item.id)}
-                onSelect={(spriteId) => {
-                    this.setState({
-                        spriteId,
-                        tabOpen: 3,
-                    })
-                }}
-                haveEmptyOption={true}
-            />
-
-            <SelectInput
-                label="spriteSheets"
-                value={spriteSheetId || ''}
-                items={gameDesign.spriteSheets.map(item => item.id)}
-                onSelect={(spriteSheetId) => {
-                    this.setState({
-                        spriteSheetId,
-                        tabOpen: 4,
-                    })
-                }}
-                haveEmptyOption={true}
-            />
-
-            <TabMenu backgroundColor="none" defaultOpenIndex={tabOpen} tabs={[
-                {
-                    label: 'Room Editor', content: <RoomEditor
-                        updateData={data => { this.performUpdate('rooms', data) }}
-                        key={roomId} data={this.currentRoom} />
-                },
-                {
-                    label: 'Items', content: <ItemEditor
-                        updateData={data => { this.performUpdate('items', data) }}
-                        key={itemId} data={this.currentItem}
+            <div style={{ display: 'flex' }}>
+                <section>
+                    <TreeMenu folders={folders}
+                        folderClick={(folderId) => {
+                            const folderIndex = tabs.indexOf(folderId);
+                            this.setState({ tabOpen: folderIndex })
+                        }}
+                        entryClick={(folderId, data) => {
+                            const folderIndex = tabs.indexOf(folderId);
+                            const modification: Partial<State> = { tabOpen: folderIndex }
+                            switch (folderId) {
+                                case 'rooms':
+                                    modification.roomId = data.id
+                                    break;
+                                case 'items':
+                                    modification.itemId = data.id
+                                    break;
+                                case 'characters':
+                                    modification.characterId = data.id
+                                    break;
+                                case 'sprites':
+                                    modification.spriteId = data.id
+                                    break;
+                                case 'spriteSheets':
+                                    modification.spriteSheetId = data.id
+                                    break;
+                            }
+                            this.setState(modification)
+                        }}
                     />
-                },
-                {
-                    label: 'Character Editor', content: <CharacterEditor
-                        updateData={data => { this.performUpdate('characters', data) }}
-                        key={characterId} data={this.currentCharacter}
-                    />
-                },
-                {
-                    label: 'Sprite Editor', content: <SpriteEditor
-                        updateData={data => { this.performUpdate('sprites', data) }}
-                        key={spriteId} data={this.currentSprite}
-                    />
-                },
-                { label: 'Sprite Sheets', content: <SpriteSheetTool 
-                    updateData={data => { this.performUpdate('spriteSheets', data) }}
-                    key={spriteSheetId} data={this.currentSpriteSheet}
-                /> },
-                { label: 'Image uploader', content: <ImageAssetTool /> },
-            ]} />
+                </section>
+
+                <section>
+                    <TabMenu backgroundColor="none" noButtons defaultOpenIndex={tabOpen} tabs={[
+                        {
+                            label: 'Room Editor', content: <RoomEditor
+                                updateData={data => { this.performUpdate('rooms', data) }}
+                                key={roomId} data={this.currentRoom} />
+                        },
+                        {
+                            label: 'Items', content: <ItemEditor
+                                updateData={data => { this.performUpdate('items', data) }}
+                                key={itemId} data={this.currentItem}
+                            />
+                        },
+                        {
+                            label: 'Character Editor', content: <CharacterEditor
+                                updateData={data => { this.performUpdate('characters', data) }}
+                                key={characterId} data={this.currentCharacter}
+                            />
+                        },
+                        {
+                            label: 'Sprite Editor', content: <SpriteEditor
+                                updateData={data => { this.performUpdate('sprites', data) }}
+                                key={spriteId} data={this.currentSprite}
+                            />
+                        },
+                        {
+                            label: 'Sprite Sheets', content: <SpriteSheetTool
+                                updateData={data => { this.performUpdate('spriteSheets', data) }}
+                                key={spriteSheetId} data={this.currentSpriteSheet}
+                            />
+                        },
+                        { label: 'Image uploader', content: <ImageAssetTool /> },
+                    ]} />
+                </section>
+            </div>
         </main>
     }
 }
