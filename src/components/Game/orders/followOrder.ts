@@ -1,7 +1,6 @@
 import { cellSize } from "..";
 import { CharacterData } from "../../../definitions/CharacterData";
 import { MoveOrder, Order } from "../../../definitions/Order";
-import { ThingData } from "../../../definitions/ThingData";
 import { CellMatrix } from "../../../lib/pathfinding/cells";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { findPath } from "../../../lib/pathfinding/pathfind";
@@ -10,7 +9,7 @@ import { executeMove } from "./executeMove";
 import { exectuteTalk } from "./executeTalk";
 
 
-function findPathBetweenSteps(subject: CharacterData | ThingData, cellMatrix: CellMatrix, order: MoveOrder) {
+function findPathBetweenSteps(subject: CharacterData, cellMatrix: CellMatrix, order: MoveOrder) {
 
     const { steps: oldSteps } = order
     let pointReached: Point = { x: subject.x, y: subject.y }
@@ -35,7 +34,7 @@ function findPathBetweenSteps(subject: CharacterData | ThingData, cellMatrix: Ce
     order.steps = newSteps
 }
 
-export function followOrder(subject: CharacterData | ThingData, cellMatrix: CellMatrix, orders?: Order[]) {
+export function followOrder(subject: CharacterData, cellMatrix: CellMatrix, orders?: Order[]) {
     if (!orders || orders.length === 0) { return }
     const [nextOrder] = orders
 

@@ -49,7 +49,7 @@ function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): Game
     const player = state.characters.find(_=>_.isPlayer)
 
     if (currentRoom) {
-        if (hoverTarget.type === 'character' || hoverTarget.type === 'thing') {
+        if (hoverTarget.type === 'character') {
             if (hoverTarget.room !== currentRoom.id) {
                 state.hoverTarget = undefined
             }

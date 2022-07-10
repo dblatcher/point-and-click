@@ -1,5 +1,4 @@
 import { initialCharacters as characters } from "./characters";
-import { initialThings as things } from "./things";
 import { initialRooms as rooms } from './rooms';
 import { items } from './items';
 import { verbs } from './verbs';
@@ -14,7 +13,6 @@ const startingRoom = rooms.find(room => room.id === player?.room) || rooms[0]
 
 export const startingGameCondition: GameData & FixedGameInfo = {
     rooms,
-    things,
     characters,
     interactions,
     items,

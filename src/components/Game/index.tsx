@@ -17,7 +17,6 @@ import { CommandLine } from "../CommandLine";
 import { cloneData } from "../../lib/clone";
 import { continueSequence } from "./continueSequence";
 import { GameData, GameCondition } from "../../definitions/Game";
-import { ThingData } from "src/definitions/ThingData";
 import { Order } from "src/definitions/Order";
 import { Sprite } from "src/lib/Sprite";
 import { Conversation, ConversationChoice } from "src/definitions/Conversation";
@@ -44,9 +43,9 @@ export type GameState = GameData & {
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
 export type HandleClickFunction<T extends CommandTarget> = { (target: T): void };
 export type RoomContentItem = {
-    data: CharacterData | ThingData;
+    data: CharacterData;
     orders?: Order[];
-    clickHandler?: HandleClickFunction<CharacterData | ThingData>;
+    clickHandler?: HandleClickFunction<CharacterData>;
     overrideSprite?: Sprite;
 }
 
@@ -76,7 +75,6 @@ export default class Game extends Component<GameProps, GameState> {
     getInitialGameState(props: GameProps): GameState {
         const rooms = props.rooms.map(cloneData);
         const characters = props.characters.map(cloneData);
-        const things = props.things.map(cloneData);
         const items = props.items.map(cloneData);
         const conversations = props.conversations.map(cloneData);
 
@@ -85,7 +83,6 @@ export default class Game extends Component<GameProps, GameState> {
             isPaused: false,
             currentRoomId: props.currentRoomId,
             characters,
-            things,
             rooms,
 
             currentVerbId: props.verbs[0].id,
@@ -100,13 +97,13 @@ export default class Game extends Component<GameProps, GameState> {
 
     get saveData(): GameData {
         const {
-            rooms, things, characters, interactions, items,
+            rooms, characters, interactions, items,
             currentRoomId, characterOrders, sequenceRunning,
             conversations, currentConversationId,
         } = this.state
 
         return {
-            rooms, things, characters, interactions, items,
+            rooms, characters, interactions, items,
             currentRoomId, characterOrders, sequenceRunning,
             conversations, currentConversationId,
         }
@@ -235,11 +232,11 @@ export default class Game extends Component<GameProps, GameState> {
 
         const characterOrderMap = sequenceRunning ? sequenceRunning[0].characterOrders || {} : characterOrders;
 
-        const charactersAndThings = [...characters]
+        const charactersInOrder = characters
             .filter(_ => _.room === currentRoom?.id)
             .sort((a, b) => b.y - a.y)
 
-        const contentList: RoomContentItem[] = charactersAndThings.map(data => ({
+        const contentList: RoomContentItem[] = charactersInOrder.map(data => ({
             data,
             orders: characterOrderMap[data.id],
             clickHandler: data.type == 'character' && data.isPlayer ? undefined : this.handleTargetClick

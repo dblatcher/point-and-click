@@ -4,7 +4,6 @@ import { placeOnScreen } from "../lib/util";
 import { Direction } from "../definitions/SpriteSheet";
 import { Sprite } from "../../src/lib/Sprite";
 import { HandleHoverFunction } from "./Game";
-import { ThingData } from "../definitions/ThingData";
 import { CharacterData } from "../definitions/CharacterData";
 
 interface Props {
@@ -21,7 +20,7 @@ interface Props {
     filter?: string;
     clickHandler?: JSX.MouseEventHandler<SVGElement>;
     handleHover?: HandleHoverFunction;
-    hoverData?: ThingData | CharacterData;
+    hoverData?: CharacterData;
 }
 
 

@@ -1,9 +1,8 @@
 import { Interaction } from "./Interaction"
 import { ItemData } from "./ItemData"
-import { Order, ThingOrder } from "./Order"
+import { Order } from "./Order"
 import { RoomData } from "./RoomData"
 import { Sequence } from "./Sequence"
-import { ThingData } from "./ThingData"
 import { CharacterData } from "./CharacterData"
 import { Verb } from "./Verb"
 import { Conversation } from "./Conversation"
@@ -11,7 +10,6 @@ import { SpriteData, SpriteSheet } from "./SpriteSheet"
 
 export type GameData = {
     rooms: RoomData[];
-    things: ThingData[];
     characters: CharacterData[];
     interactions: Interaction[];
     items: ItemData[];

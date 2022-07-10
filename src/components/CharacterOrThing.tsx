@@ -2,7 +2,6 @@ import { h, Fragment, FunctionalComponent, JSX } from "preact";
 import { useLayoutEffect, useState } from "preact/hooks";
 import { RoomData } from "../definitions/RoomData"
 import { Order } from "../definitions/Order";
-import { ThingData } from "../definitions/ThingData";
 import { CharacterData } from "../definitions/CharacterData";
 import { placeOnScreen } from "../lib/util";
 import { getScale } from "../lib/getScale";
@@ -17,9 +16,9 @@ import { HandleClickFunction, HandleHoverFunction } from "./Game";
 interface Props {
     roomData: RoomData;
     viewAngle: number;
-    data: CharacterData | ThingData;
+    data: CharacterData;
     animationRate?: number;
-    clickHandler?: HandleClickFunction<CharacterData | ThingData>;
+    clickHandler?: HandleClickFunction<CharacterData>;
     handleHover?: HandleHoverFunction;
     orders?: Order[];
     isPaused: boolean;
@@ -46,7 +45,7 @@ export const CharacterOrThing: FunctionalComponent<Props> = ({
     const [frameIndex, setFrameIndex] = useState<number>(0)
     const {
         x, y,
-        height = 50, width = 50, sprite: spriteId, filter
+        height = 50, width = 50, sprite: spriteId, filter, dialogueColor=''
     } = data
     const spriteObject = overrideSprite || spriteService.get(spriteId)
     const [currentOrder] = orders
@@ -87,8 +86,6 @@ export const CharacterOrThing: FunctionalComponent<Props> = ({
             clickHandler(data)
         }
         : undefined
-
-    const dialogueColor = data.type == 'character' ? data.dialogueColor : '';
 
     if (!spriteObject) {
         return null

@@ -1,5 +1,5 @@
 import { Point } from "../lib/pathfinding/geometry"
-import { Order, ThingOrder } from "./Order"
+import { Order } from "./Order"
 
 interface OrderConsequence {
     type: 'order';
@@ -8,12 +8,6 @@ interface OrderConsequence {
     replaceCurrentOrders?: boolean;
 }
 
-interface ThingOrderConsequence {
-    type: 'thingOrder';
-    thingId: string;
-    orders: ThingOrder[];
-    replaceCurrentOrders?: boolean;
-}
 
 interface TalkConsequence {
     type: 'talk';
@@ -44,7 +38,7 @@ interface RemoveCharacterConsequence {
 interface ChangeStatusConsequence {
     type: 'changeStatus';
     targetId: string;
-    targetType: 'character' | 'item' | 'hotspot' | 'thing';
+    targetType: 'character' | 'item' | 'hotspot';
     status: string;
 }
 
@@ -59,12 +53,21 @@ interface ConversationConsequence {
     end?: boolean;
 }
 
-type Consequence = OrderConsequence | ChangeRoomConsequence
-    | TalkConsequence | InventoryConsequence | RemoveCharacterConsequence
-    | ChangeStatusConsequence | SequenceConsequence | ThingOrderConsequence | ConversationConsequence;
-type ImmediateConsequence = RemoveCharacterConsequence | ChangeStatusConsequence | InventoryConsequence | ConversationConsequence;
+export type Consequence = OrderConsequence |
+    ChangeRoomConsequence |
+    TalkConsequence |
+    InventoryConsequence |
+    RemoveCharacterConsequence |
+    ChangeStatusConsequence |
+    SequenceConsequence |
+    ConversationConsequence;
 
-interface Interaction {
+export type ImmediateConsequence = RemoveCharacterConsequence |
+    ChangeStatusConsequence |
+    InventoryConsequence |
+    ConversationConsequence;
+
+export interface Interaction {
     verbId: string;
     targetId: string;
     targetType?: string; // to do -implement
@@ -73,5 +76,3 @@ interface Interaction {
     targetStatus?: string;
     consequences: Consequence[];
 }
-
-export type { Interaction, Consequence, ImmediateConsequence }

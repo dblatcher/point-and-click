@@ -1,6 +1,6 @@
 import { Point } from "../lib/pathfinding/geometry"
 
-interface MoveOrder {
+export interface MoveOrder {
     type: 'move';
     pathIsSet?: boolean;
     steps: (Point & { animation?: string; speed?: number })[];
@@ -12,7 +12,7 @@ interface DialogueLine {
     animation?: string;
 }
 
-interface TalkOrder {
+export interface TalkOrder {
     type: 'talk';
     steps: DialogueLine[];
 }
@@ -24,12 +24,9 @@ interface ActionStep {
     reverse?: boolean;
 }
 
-interface ActOrder {
+export interface ActOrder {
     type: 'act';
     steps: ActionStep[];
 }
 
-type Order = MoveOrder | TalkOrder | ActOrder
-type ThingOrder = ActOrder
-
-export type { Order, ThingOrder, MoveOrder, TalkOrder, ActOrder }
+export type Order = MoveOrder | TalkOrder | ActOrder

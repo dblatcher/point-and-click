@@ -75,7 +75,6 @@ export class GameEditor extends Component<Props, State>{
             this.state = {
                 gameDesign: {
                     rooms: [blankRoom],
-                    things: [],
                     characters: [],
                     interactions: [],
                     items: [],

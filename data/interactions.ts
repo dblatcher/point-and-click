@@ -210,18 +210,4 @@ export const interactions: Interaction[] = [
             { type: 'sequence', sequence: 'LIGHT_FIRE' }
         ]
     },
-    {
-        verbId: 'TAKE',
-        targetId: 'FIRE',
-        consequences: [
-            {
-                type: 'thingOrder', thingId: 'FIRE', orders: [{
-                    type: 'act',
-                    steps: [
-                        { duration: 150, animation: 'fade' }
-                    ]
-                }]
-            }
-        ]
-    },
 ]
