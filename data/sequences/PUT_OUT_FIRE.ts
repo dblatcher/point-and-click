@@ -25,9 +25,7 @@ export const PUT_OUT_FIRE: Sequence = [
                         text: 'ok...', time: 100,
                     }]
                 }
-            ]
-        },
-        thingOrders:{
+            ],
             FIRE:[
                 {
                     type:'act',steps:[{
@@ -36,8 +34,9 @@ export const PUT_OUT_FIRE: Sequence = [
                 }
             ]
         },
+        thingOrders:{},
         immediateConsequences: [
-            {type:'changeStatus', targetId:'FIRE', status:'out', targetType:'thing'}
+            {type:'changeStatus', targetId:'FIRE', status:'out', targetType:'character'}
         ]
     },
     {

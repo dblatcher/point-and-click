@@ -87,11 +87,11 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 }
                 break;
             }
-            case 'removeThing': {
-                const { thingId } = consequence
-                const thing = things.find(_ => _.id === thingId)
-                if (!thing) { return }
-                thing.room = undefined;
+            case 'removeCharacter': {
+                const { characterId } = consequence
+                const character = characters.find(_ => _.id === characterId)
+                if (!character) { return }
+                character.room = undefined;
                 break;
             }
             case 'changeStatus': {

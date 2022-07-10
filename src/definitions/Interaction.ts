@@ -36,9 +36,9 @@ interface InventoryConsequence {
     addOrRemove: 'ADD' | 'REMOVE';
 }
 
-interface RemoveThingConsequence {
-    type: 'removeThing';
-    thingId: string;
+interface RemoveCharacterConsequence {
+    type: 'removeCharacter';
+    characterId: string;
 }
 
 interface ChangeStatusConsequence {
@@ -60,9 +60,9 @@ interface ConversationConsequence {
 }
 
 type Consequence = OrderConsequence | ChangeRoomConsequence
-    | TalkConsequence | InventoryConsequence | RemoveThingConsequence
+    | TalkConsequence | InventoryConsequence | RemoveCharacterConsequence
     | ChangeStatusConsequence | SequenceConsequence | ThingOrderConsequence | ConversationConsequence;
-type ImmediateConsequence = RemoveThingConsequence | ChangeStatusConsequence | InventoryConsequence | ConversationConsequence;
+type ImmediateConsequence = RemoveCharacterConsequence | ChangeStatusConsequence | InventoryConsequence | ConversationConsequence;
 
 interface Interaction {
     verbId: string;

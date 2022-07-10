@@ -25,17 +25,16 @@ export const LIGHT_FIRE: Sequence = [
                         text: 'here goes...', time: 150,
                     }]
                 }
-            ]
-        },
-        thingOrders: {
+            ],
             FIRE: [
                 {
                     type: 'act', steps: [{
                         duration: 200, animation: 'fade', reverse: true
                     }]
-                }
+                },
             ]
         },
+        thingOrders: {},
     },
     {
         characterOrders: {
@@ -48,7 +47,7 @@ export const LIGHT_FIRE: Sequence = [
             ]
         },
         immediateConsequences: [
-            { type: 'changeStatus', targetId: 'FIRE', status: 'burning', targetType: 'thing' }
+            { type: 'changeStatus', targetId: 'FIRE', status: 'burning', targetType: 'character' }
         ]
     }
 ]

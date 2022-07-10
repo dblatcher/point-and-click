@@ -161,8 +161,8 @@ export const interactions: Interaction[] = [
         targetId: 'TUBE',
         consequences: [
             {
-                type: 'removeThing',
-                thingId: 'TUBE',
+                type: 'removeCharacter',
+                characterId: 'TUBE',
             },
             {
                 type: 'inventory',
