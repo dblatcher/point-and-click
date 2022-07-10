@@ -7,7 +7,6 @@ import { cloneData } from "../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "src/services/Service";
 import styles from '../editorStyles.module.css';
-import { SpriteSheetPreview } from "../SpriteSheetPreview";
 import imageService, { ImageAsset, ImageAssetCategory, imageAssetCategories } from "../../../services/imageService";
 
 type ExtraState = {
@@ -142,12 +141,11 @@ export class ImageAssetTool extends Component<{}, State> {
                         <ServiceItemSelector legend="open asset"
                             service={imageService} select={this.openFromService} />
                     </section>
-                    <section>
+                    <section >
                         <p>Resizing the preview does not effect the image data.</p>
-
-                        <SpriteSheetPreview
-                            sheet={{ rows: 1, cols: 1, url: href || '', id }}
-                            canvasScale={canvasScale} />
+                        <div className={styles.spriteSheetPreview}>
+                            <img src={href} />
+                        </div>
                     </section>
                 </div>
             </article>
