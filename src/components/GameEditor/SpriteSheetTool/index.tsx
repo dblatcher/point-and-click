@@ -10,31 +10,51 @@ import { ServiceItem } from "src/services/Service";
 import styles from '../editorStyles.module.css';
 import { SpriteSheetPreview } from "../SpriteSheetPreview";
 import imageService, { ImageAsset } from "../../../services/imageService";
+import { StorageMenu } from "../StorageMenu";
 
 type ExtraState = {
     urlIsObjectUrl: boolean;
     saveWarning?: string;
 }
 
-type State = Partial<SpriteSheet> & ExtraState
+type State = SpriteSheet & ExtraState
+
+type Props = {
+    data?: SpriteSheet;
+    updateData?: { (data: SpriteSheet): void };
+}
+
+const getNewBlankSheet: { (): SpriteSheet } = () => ({
+    cols: 1,
+    rows: 1,
+    id: "NEW_SHEET",
+    imageId: '',
+})
 
 const canvasScale = 1000
 
-export class SpriteSheetTool extends Component<{}, State> {
+export class SpriteSheetTool extends Component<Props, State> {
     canvasRef: RefObject<HTMLCanvasElement>
 
-    constructor(props: SpriteSheetTool['props']) {
+    constructor(props: Props) {
         super(props)
+
+        const initialData: SpriteSheet = props.data ? cloneData(props.data) : getNewBlankSheet()
+
         this.state = {
             urlIsObjectUrl: false,
-            cols: 1,
-            rows: 1,
-            id: "NEW_SHEET"
+            ...initialData,
         }
-        this.saveToService = this.saveToService.bind(this)
-        this.openFromService = this.openFromService.bind(this)
-
+        this.handleUpdateButton = this.handleUpdateButton.bind(this)
+        this.handleResetButton = this.handleResetButton.bind(this)
         this.canvasRef = createRef()
+    }
+
+    get currentData(): SpriteSheet {
+        const copy = cloneData(this.state) as SpriteSheet & Partial<ExtraState>;
+        delete copy.urlIsObjectUrl
+        delete copy.saveWarning
+        return copy
     }
 
     changeValue(propery: keyof SpriteSheet, newValue: string | number) {
@@ -64,37 +84,33 @@ export class SpriteSheetTool extends Component<{}, State> {
         this.setState(modification)
     }
 
-    saveToService() {
-        const { state } = this
-
-        if (!state.id) {
+    handleUpdateButton() {
+        const { currentData } = this
+        const { updateData } = this.props
+        if (!currentData.id) {
             this.setState({ saveWarning: 'NO ID' })
             return
         }
-        if (!state.imageId) {
+        if (!currentData.imageId) {
             this.setState({ saveWarning: 'NO ImageId' })
             return
         }
 
-        const copy = cloneData(state) as SpriteSheet & Partial<ExtraState>
-        delete copy.urlIsObjectUrl
-        delete copy.saveWarning
-
         this.setState({ saveWarning: undefined }, () => {
-            spriteSheetService.add(copy)
+            spriteSheetService.add(currentData)
+            if (updateData) {
+                updateData(currentData)
+            }
         })
     }
 
-    openFromService(sheet: ServiceItem) {
-        const copy = cloneData(sheet as SpriteSheet);
-        this.setState(state => {
-            const newState = {
-                ...state,
-                ...copy,
-            }
-            return newState
+    handleResetButton() {
+        const { data } = this.props
+        const initialData: SpriteSheet = data ? cloneData(data) : getNewBlankSheet()
+        this.setState({
+            urlIsObjectUrl: false,
+            ...initialData,
         })
-
     }
 
     render() {
@@ -152,14 +168,19 @@ export class SpriteSheetTool extends Component<{}, State> {
 
                         <fieldset className={styles.fieldset}>
                             <div className={styles.row}>
-                                <button onClick={this.saveToService}>Save to service</button>
                                 {saveWarning && (
                                     <Warning>{saveWarning}</Warning>
                                 )}
                             </div>
                         </fieldset>
-                        <ServiceItemSelector legend="open sheet"
-                            service={spriteSheetService} select={this.openFromService} />
+
+                        <StorageMenu
+                            data={this.props.data}
+                            currentId={id}
+                            type='spriteSheet'
+                            update={this.handleUpdateButton}
+                            reset={this.handleResetButton}
+                        />
                     </section>
                     <section>
                         <p>Resizing the preview does not effect the SpriteSheet data.</p>

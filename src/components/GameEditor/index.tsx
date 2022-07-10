@@ -120,6 +120,9 @@ export class GameEditor extends Component<Props, State>{
     get currentSprite() {
         return findById(this.state.spriteId, this.state.gameDesign.sprites)
     }
+    get currentSpriteSheet() {
+        return findById(this.state.spriteSheetId, this.state.gameDesign.spriteSheets)
+    }
 
     performUpdate(property: keyof GameDesign, data: unknown) {
         console.log(property, data)
@@ -140,6 +143,10 @@ export class GameEditor extends Component<Props, State>{
                     break
                 }
                 case 'sprites': {
+                    addNewOrUpdate(data, gameDesign[property])
+                    break
+                }
+                case 'spriteSheets': {
                     addNewOrUpdate(data, gameDesign[property])
                     break
                 }
@@ -241,7 +248,10 @@ export class GameEditor extends Component<Props, State>{
                         key={spriteId} data={this.currentSprite}
                     />
                 },
-                { label: 'Sprite Sheets', content: <SpriteSheetTool /> },
+                { label: 'Sprite Sheets', content: <SpriteSheetTool 
+                    updateData={data => { this.performUpdate('spriteSheets', data) }}
+                    key={spriteSheetId} data={this.currentSpriteSheet}
+                /> },
                 { label: 'Image uploader', content: <ImageAssetTool /> },
             ]} />
         </main>
