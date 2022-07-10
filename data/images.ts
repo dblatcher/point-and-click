@@ -41,17 +41,9 @@ const buildAssets = (filenames: string[], path: string, category: ImageAssetCate
     })
 )
 
-const bgAssets: ImageAsset[] = backgroundFileNames.map(fileName => {
-    return {
-        id: fileName,
-        href: backgroundPath + fileName,
-        category: 'background'
-    }
-})
-
 const itemAssets: ImageAsset[] = itemFileNames.map(fileName => {
     return {
-        id: fileName,
+        id: "ITEM_" + fileName,
         href: itemPath + fileName,
         category: 'item'
     }
@@ -59,7 +51,7 @@ const itemAssets: ImageAsset[] = itemFileNames.map(fileName => {
 
 
 export const assets: ImageAsset[] = [
-    ...bgAssets,
+    ...buildAssets(backgroundFileNames,backgroundPath,'background'),
     ...itemAssets,
     ...buildAssets(characterSpriteFileNames, characterSpritePath, 'spriteSheet'),
     ...buildAssets(thingSpriteFileNames, thingSpritePath, 'spriteSheet'),

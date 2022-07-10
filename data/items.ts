@@ -5,14 +5,14 @@ export const items: ItemData[] = [
         id: 'PASTA',
         name: 'big tube of pasta',
         type: 'item',
-        imageId: 'tube.png',
+        imageId: 'ITEM_tube.png',
     },
     {
         id: 'BUCKET',
         name: 'bucket',
         type: 'item',
         characterId: 'PLAYER',
-        imageId: 'bucket.png',
+        imageId: 'ITEM_bucket.png',
     },
     {
         id: 'MATCHES',
