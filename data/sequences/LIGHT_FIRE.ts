@@ -34,7 +34,6 @@ export const LIGHT_FIRE: Sequence = [
                 },
             ]
         },
-        thingOrders: {},
     },
     {
         characterOrders: {
