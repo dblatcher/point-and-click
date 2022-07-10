@@ -6,12 +6,12 @@ import { interactions } from './interactions';
 import { sequences } from './sequences';
 import { conversations } from './conversations';
 import { spriteInputs } from './sprites'
-import { GameData, FixedGameInfo } from "../src/definitions/Game";
+import { GameCondition } from "../src/definitions/Game";
 
 const player = characters.find(character => character.isPlayer)
 const startingRoom = rooms.find(room => room.id === player?.room) || rooms[0]
 
-export const startingGameCondition: GameData & FixedGameInfo = {
+export const startingGameCondition: GameCondition = {
     rooms,
     characters,
     interactions,

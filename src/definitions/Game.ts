@@ -11,12 +11,12 @@ import { SpriteData, SpriteSheet } from "./SpriteSheet"
 export type GameData = {
     rooms: RoomData[];
     characters: CharacterData[];
-    interactions: Interaction[];
     items: ItemData[];
-    currentRoomId: string;
-    characterOrders: Record<string, Order[]>;
-    sequenceRunning?: Sequence;
+    interactions: Interaction[];
     conversations: Conversation[];
+    characterOrders: Record<string, Order[]>;
+    currentRoomId: string;
+    sequenceRunning?: Sequence;
     currentConversationId?: string;
 }
 
