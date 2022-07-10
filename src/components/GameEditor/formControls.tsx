@@ -156,15 +156,16 @@ export const SelectInput: FunctionalComponent<{
     items: string[];
     descriptions?: string[];
     haveEmptyOption?: boolean;
+    emptyOptionLabel?: string;
 }> = (props) => {
 
-    const { descriptions, items, haveEmptyOption } = props
+    const { descriptions, items, haveEmptyOption, emptyOptionLabel } = props
 
     return <>
         <label>{props.label}:</label>
         <select value={props.value} readonly
             onChange={(event): void => { props.onSelect(eventToString(event)) }}>
-            {haveEmptyOption && <option value=''>(select)</option>}
+            {haveEmptyOption && <option value=''>{emptyOptionLabel || "(select)"}</option>}
             {items.map((item, index) =>
                 <option key={index} value={item}>
                     {descriptions && descriptions[index] ? descriptions[index] : item}

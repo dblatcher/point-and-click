@@ -23,6 +23,7 @@ type State = CharacterData & { sprite: string | undefined } & ExtraState;
 type Props = {
     data?: CharacterData;
     updateData?: { (data: CharacterData): void };
+    roomIds: string[];
 }
 
 const makeBlankCharacter = (): CharacterData => ({
@@ -75,6 +76,7 @@ export class CharacterEditor extends Component<Props, State> {
                 }
                 break;
             case 'name':
+            case 'room':
             case 'status':
             case 'filter':
             case 'dialogueColor':
@@ -207,7 +209,12 @@ export class CharacterEditor extends Component<Props, State> {
                         <NumberInput label="y" value={state.y} inputHandler={value => { this.changeValue('y', value) }} />
                     </div>
                     <div>
-                        <TextInput label="roomId" value={state.room || ''} onInput={event => { this.changeValue('room', eventToString(event)) }} />
+                        <SelectInput label="roomId"
+                            emptyOptionLabel="[no room]"
+                            items={this.props.roomIds}
+                            value={state.room || ''}
+                            haveEmptyOption={true}
+                            onSelect={roomId => { this.changeValue('room', roomId) }} />
                     </div>
                 </fieldset>
 

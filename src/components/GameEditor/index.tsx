@@ -65,6 +65,9 @@ function addNewOrUpdate<T extends { id: string }>(newData: unknown, list: T[]): 
     }
     return list
 }
+function listIds<T extends { id: string }>(list: T[]): string[] {
+    return list.map(_ => _.id)
+}
 
 const usePrebuiltGame = true
 
@@ -223,11 +226,13 @@ export class GameEditor extends Component<Props, State>{
                         {
                             label: 'Items', content: <ItemEditor
                                 updateData={data => { this.performUpdate('items', data) }}
+                                characterIds={listIds(gameDesign.characters)}
                                 key={itemId} data={this.currentItem}
                             />
                         },
                         {
                             label: 'Character Editor', content: <CharacterEditor
+                                roomIds={listIds(gameDesign.rooms)}
                                 updateData={data => { this.performUpdate('characters', data) }}
                                 key={characterId} data={this.currentCharacter}
                             />

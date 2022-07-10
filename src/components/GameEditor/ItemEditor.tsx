@@ -2,7 +2,7 @@
 import { h, Component } from "preact"
 import { ItemData } from "../../definitions/ItemData"
 import { eventToString } from "../../lib/util";
-import { IdentInput, TextInput } from "./formControls";
+import { IdentInput, SelectInput, TextInput } from "./formControls";
 import { ServiceItemSelector } from "./ServiceItemSelector";
 import imageService, { ImageAsset } from "../../services/imageService";
 import styles from "./editorStyles.module.css"
@@ -12,6 +12,7 @@ import { StorageMenu } from "./StorageMenu";
 
 interface Props {
     data?: ItemData;
+    characterIds: string[];
     updateData?: { (data: ItemData): void };
 }
 type State = ItemData & {
@@ -87,9 +88,12 @@ export class ItemEditor extends Component<Props, State> {
                         />
 
                         <div>
-                            <TextInput label="Characterid" value={characterId}
-                                onInput={(event) => this.changeValue('characterId', eventToString(event))}
-                            />
+                            <SelectInput label="characterID"
+                                emptyOptionLabel="[no Character]"
+                                items={this.props.characterIds}
+                                value={characterId}
+                                haveEmptyOption={true}
+                                onSelect={id => { this.changeValue('characterId', id) }} />
                         </div>
 
                         <ServiceItemSelector legend='picture'
