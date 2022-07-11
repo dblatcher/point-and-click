@@ -31,28 +31,20 @@ const thingSpriteFileNames = [
     'Fire.png',
 ]
 
-const buildAssets = (filenames: string[], path: string, category: ImageAssetCategory): ImageAsset[] => (
+const buildAssets = (filenames: string[], path: string, category: ImageAssetCategory, idPrefix?: string): ImageAsset[] => (
     filenames.map(fileName => {
         return {
-            id: fileName,
+            id: `${idPrefix || ''}${fileName}`,
             href: path + fileName,
             category,
         }
     })
 )
 
-const itemAssets: ImageAsset[] = itemFileNames.map(fileName => {
-    return {
-        id: "ITEM_" + fileName,
-        href: itemPath + fileName,
-        category: 'item'
-    }
-})
-
 
 export const assets: ImageAsset[] = [
-    ...buildAssets(backgroundFileNames,backgroundPath,'background'),
-    ...itemAssets,
+    ...buildAssets(backgroundFileNames, backgroundPath, 'background'),
+    ...buildAssets(itemFileNames, itemPath, 'spriteSheet', 'ITEM_'),
     ...buildAssets(characterSpriteFileNames, characterSpritePath, 'spriteSheet'),
     ...buildAssets(thingSpriteFileNames, thingSpritePath, 'spriteSheet'),
 ]
