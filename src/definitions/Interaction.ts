@@ -52,6 +52,8 @@ interface ConversationConsequence {
     end?: boolean;
 }
 
+export type ConsequenceType = 'conversation' | 'sequence' | 'changeStatus' | 'removeCharacter' | 'inventory' | 'changeRoom' | 'talk' | 'order'
+
 export type Consequence = OrderConsequence |
     ChangeRoomConsequence |
     TalkConsequence |

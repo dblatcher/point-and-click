@@ -2,19 +2,24 @@
 import { Component, h } from "preact";
 import { GameCondition } from "../../../definitions/Game";
 import { Interaction } from "../../../definitions/Interaction";
-import { SelectInput } from "../formControls";
+import { DeleteButton, SelectInput } from "../formControls";
 import styles from '../editorStyles.module.css';
+import { cloneData } from "../../../lib/clone";
+import { InteractionForm } from "./InteractionForm";
 
 interface Props {
     gameDesign: Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>;
+    changeInteraction: { (data: Interaction, index: number): void };
+    deleteInteraction: { (index: number): void };
 }
 
 interface State {
-    interaction?: Interaction;
     verbFilter?: string;
     itemFilter?: string;
     targetFilter?: string;
     roomFilter?: string;
+    interactionUnderConstruction?: Partial<Interaction>;
+    edittedIndex?: number;
 }
 
 function listIds<T extends { id: string }>(list: T[]): string[] {
@@ -26,12 +31,13 @@ export class InteractionEditor extends Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {
+            interactionUnderConstruction: {},
         }
     }
 
     get filteredInteractions(): Interaction[] {
         const { interactions } = this.props.gameDesign
-        const { verbFilter, itemFilter, targetFilter,roomFilter } = this.state
+        const { verbFilter, itemFilter, targetFilter, roomFilter } = this.state
 
         let list = [...interactions]
 
@@ -75,13 +81,13 @@ export class InteractionEditor extends Component<Props, State> {
     render() {
 
         const { interactions, verbs, items, rooms } = this.props.gameDesign
-        const { verbFilter = '', itemFilter = '', targetFilter = '', roomFilter = '' } = this.state
+        const { verbFilter = '', itemFilter = '', targetFilter = '', roomFilter = '', interactionUnderConstruction, edittedIndex } = this.state
         const { filteredInteractions, targetLists } = this
         return (
             <article>
                 <h2>Interactions</h2>
-                <p>{interactions.length} interactions</p>
-                <table className={styles.interactionTable}>
+                <table className={styles.interactionTable} style={{ display: interactionUnderConstruction ? 'none' : 'table' }}>
+                    <caption>{filteredInteractions.length}/{interactions.length} interactions</caption>
                     <thead>
                         <tr>
                             <td>verb</td>
@@ -138,12 +144,40 @@ export class InteractionEditor extends Component<Props, State> {
                                 <td>{interaction.itemId}</td>
                                 <td>{interaction.roomId}</td>
                                 <td>{interaction.consequences.length}x consequences</td>
+                                <td><DeleteButton label="delete" confirmationText="really?" onClick={() => { this.props.deleteInteraction(index) }} /></td>
+                                <td><button onClick={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}>edit</button></td>
                             </tr>
                         ))}
+                        <tr>
+                            <td colSpan={10}>
+                                <button onClick={() =>
+                                    this.setState({
+                                        edittedIndex: undefined,
+                                        interactionUnderConstruction: {}
+                                    })
+                                }>add new interaction</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 
+                <section style={{ display: interactionUnderConstruction ? 'block' : 'none' }}>
+                    <h3>edit</h3>
 
+                    {interactionUnderConstruction &&
+                        <InteractionForm key={edittedIndex}
+                            gameDesign={this.props.gameDesign}
+                            initialState={interactionUnderConstruction} />
+                    }
+
+                    <DeleteButton label="Cancel" confirmationText="really?"
+                        onClick={() => {
+                            this.setState({
+                                edittedIndex: undefined,
+                                interactionUnderConstruction: undefined
+                            })
+                        }} />
+                </section>
 
             </article >
         )

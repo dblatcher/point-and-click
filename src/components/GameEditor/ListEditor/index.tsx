@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 
 interface Props<T> {
     list: T[];
-    describeItem: { (item: T): ComponentChild };
+    describeItem: { (item: T, index: number): ComponentChild };
     deleteItem: { (index: number): void };
     insertItem: { (index: number): void };
 }
@@ -46,7 +46,7 @@ export class ListEditor<T extends {}> extends Component<Props<T>, State<T>> {
                                 <button className={styles.plusButton} onClick={() => { this.handleInsert(index) }}>+</button>
                             </div>
                             <div className={editorstyles.row}>
-                                {describeItem(item)}
+                                {describeItem(item, index)}
                                 <button className={styles.deleteButton} onClick={() => { this.handleDelete(index) }}>x</button>
                             </div>
                         </li>

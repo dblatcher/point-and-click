@@ -19,6 +19,7 @@ import { RoomData } from "../../definitions/RoomData";
 import { startingGameCondition } from '../../../data/fullGame';
 import { TreeMenu } from "./TreeMenu";
 import { InteractionEditor } from "./InteractionEditor";
+import { Interaction } from "src/definitions/Interaction";
 
 
 populate()
@@ -104,6 +105,8 @@ export class GameEditor extends Component<Props, State>{
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
         this.performUpdate = this.performUpdate.bind(this)
+        this.changeInteraction = this.changeInteraction.bind(this)
+        this.deleteArrayItem = this.deleteArrayItem.bind(this)
     }
 
     respondToServiceUpdate(payload: unknown) {
@@ -163,6 +166,31 @@ export class GameEditor extends Component<Props, State>{
                     addNewOrUpdate(data, gameDesign[property])
                     break
                 }
+            }
+            return { gameDesign }
+        })
+    }
+
+    deleteArrayItem(index: number, property: keyof GameDesign) {
+        this.setState(state => {
+            const { gameDesign } = state
+
+            switch (property) {
+                case 'interactions':
+                    gameDesign[property].splice(index, 1)
+                    break
+            }
+            return { gameDesign }
+        })
+    }
+    changeInteraction(data: Interaction, index?: number) {
+        this.setState(state => {
+            const { gameDesign } = state
+            const { interactions } = gameDesign
+            if (typeof index === 'undefined') {
+                interactions.push(data)
+            } else {
+                interactions.splice(index, 1, data)
             }
             return { gameDesign }
         })
@@ -252,6 +280,8 @@ export class GameEditor extends Component<Props, State>{
                         },
                         {
                             label: 'interactions', content: <InteractionEditor
+                                changeInteraction={this.changeInteraction}
+                                deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
                                 gameDesign={gameDesign} />
                         },
                         { label: 'Image uploader', content: <ImageAssetTool /> },
