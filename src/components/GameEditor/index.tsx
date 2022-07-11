@@ -18,6 +18,7 @@ import { RoomData } from "../../definitions/RoomData";
 
 import { startingGameCondition } from '../../../data/fullGame';
 import { TreeMenu } from "./TreeMenu";
+import { InteractionEditor } from "./InteractionEditor";
 
 
 populate()
@@ -44,6 +45,7 @@ const tabs: string[] = [
     'characters',
     'sprites',
     'spriteSheets',
+    'interactions',
     'images',
 ]
 
@@ -169,9 +171,9 @@ export class GameEditor extends Component<Props, State>{
     render() {
         const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId } = this.state
 
-        const makeFolder = (id: string, list: { id: string }[], entryId?: string) => ({
+        const makeFolder = (id: string, list?: { id: string }[], entryId?: string) => ({
             id, open: tabs[tabOpen] === id,
-            entries: list.map(item => ({ data: item, active: entryId === item.id }))
+            entries: list?.map(item => ({ data: item, active: entryId === item.id }))
         })
 
         const folders = [
@@ -180,7 +182,8 @@ export class GameEditor extends Component<Props, State>{
             makeFolder('characters', gameDesign.characters, characterId),
             makeFolder('sprites', gameDesign.sprites, spriteId),
             makeFolder('spriteSheets', gameDesign.spriteSheets, spriteSheetId),
-            { id: 'images', open:tabs[tabOpen]==='images' },
+            makeFolder('interactions'),
+            makeFolder('images'),
         ]
 
         return <main>
@@ -246,6 +249,10 @@ export class GameEditor extends Component<Props, State>{
                                 updateData={data => { this.performUpdate('spriteSheets', data) }}
                                 key={spriteSheetId} data={this.currentSpriteSheet}
                             />
+                        },
+                        {
+                            label: 'interactions', content: <InteractionEditor
+                                interactions={gameDesign.interactions} />
                         },
                         { label: 'Image uploader', content: <ImageAssetTool /> },
                     ]} />
