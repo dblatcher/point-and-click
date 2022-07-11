@@ -8,7 +8,6 @@ interface OrderConsequence {
     replaceCurrentOrders?: boolean;
 }
 
-
 interface TalkConsequence {
     type: 'talk';
     characterId?: string;
@@ -70,7 +69,6 @@ export type ImmediateConsequence = RemoveCharacterConsequence |
 export interface Interaction {
     verbId: string;
     targetId: string;
-    targetType?: string; // to do -implement
     roomId?: string;
     itemId?: string;
     targetStatus?: string;

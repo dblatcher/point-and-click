@@ -82,7 +82,7 @@ export class GameEditor extends Component<Props, State>{
                 gameDesign: {
                     ...startingGameCondition
                 },
-                tabOpen: 2,
+                tabOpen: tabs.indexOf('interactions'),
             }
         } else {
             const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
@@ -252,7 +252,7 @@ export class GameEditor extends Component<Props, State>{
                         },
                         {
                             label: 'interactions', content: <InteractionEditor
-                                interactions={gameDesign.interactions} />
+                                gameDesign={gameDesign} />
                         },
                         { label: 'Image uploader', content: <ImageAssetTool /> },
                     ]} />

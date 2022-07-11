@@ -150,7 +150,7 @@ export const DeleteButton: FunctionalComponent<{
 }
 
 export const SelectInput: FunctionalComponent<{
-    label: string;
+    label?: string;
     value: string;
     onSelect: { (item: string): void };
     items: string[];
@@ -162,7 +162,7 @@ export const SelectInput: FunctionalComponent<{
     const { descriptions, items, haveEmptyOption, emptyOptionLabel } = props
 
     return <>
-        <label>{props.label}:</label>
+        {props.label && <label>{props.label}:</label>}
         <select value={props.value} readonly
             onChange={(event): void => { props.onSelect(eventToString(event)) }}>
             {haveEmptyOption && <option value=''>{emptyOptionLabel || "(select)"}</option>}

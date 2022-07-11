@@ -52,7 +52,7 @@ export const TreeMenu: FunctionalComponent<Props> = ({ folders, folderClick, ent
                                 <b>❯</b>
                                 <span>{folder.label || folder.id}</span>
                             </button>
-                            {folder.open &&
+                            {(folder.open && folder.entries?.length) &&
                                 <ul className={styles.entryList}>
                                     {folder.entries?.map(entry => (
                                         <li key={folder.id + entry.data.id} className={styles.row}>
