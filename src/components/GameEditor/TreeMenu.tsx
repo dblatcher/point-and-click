@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, FunctionalComponent } from "preact";
+import styles from "./editorStyles.module.css"
 
 interface Props {
     folders: Folder[];
@@ -24,33 +25,42 @@ const folderStyle: h.JSX.CSSProperties = {
     listStyle: 'none',
     fontFamily: 'monospace',
 }
-const entryStyle: h.JSX.CSSProperties = {
-    listStyle: 'none',
-    fontFamily: 'monospace',
-    padding: '0 1rem',
-}
+
+
+const getFolderClass = (folder: Folder): string => (
+    folder.entries
+        ? folder.open ? [styles.button, styles.open].join(" ") : styles.button
+        : folder.open ? [styles.button, styles.active].join(" ") : styles.button
+)
+
+const getEntryClass = (entry: Entry): string => (
+    entry.active ? [styles.button, styles.active].join(" ") : styles.button
+)
+
 
 export const TreeMenu: FunctionalComponent<Props> = ({ folders, folderClick, entryClick }: Props) => {
 
     return (
-        <section>
+        <section className={styles.treeMenu}>
             <ul>
                 {folders.map(folder => (
                     <li key={folder.id} style={folderStyle}>
                         <div>
-                            <span>
-                                {folder.entries ? folder.open ? '🡆' : '🡇' : '🞓'}
-                            </span>
-                            <button onClick={() => { folderClick(folder.id) }}>{folder.label || folder.id}</button>
+                            <button
+                                className={getFolderClass(folder)}
+                                onClick={() => { folderClick(folder.id) }}>
+                                <b>❯</b>
+                                <span>{folder.label || folder.id}</span>
+                            </button>
                             {folder.open &&
-                                <ul style={entryStyle}>
+                                <ul className={styles.entryList}>
                                     {folder.entries?.map(entry => (
-                                        <li key={folder.id + entry.data.id}>
-                                            <span>
-                                                {entry.active ? '🞓🡆' : '🞑 '}
-                                            </span>
-                                            <button onClick={() => { entryClick(folder.id, entry.data) }}>
-                                                {entry.label || entry.data.id}
+                                        <li key={folder.id + entry.data.id} className={styles.row}>
+                                            <button
+                                                className={getEntryClass(entry)}
+                                                onClick={() => { entryClick(folder.id, entry.data) }}>
+                                                <b>❯</b>
+                                                <span>{entry.label || entry.data.id}</span>
                                             </button>
                                         </li>
                                     ))}

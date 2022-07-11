@@ -180,41 +180,39 @@ export class GameEditor extends Component<Props, State>{
             makeFolder('characters', gameDesign.characters, characterId),
             makeFolder('sprites', gameDesign.sprites, spriteId),
             makeFolder('spriteSheets', gameDesign.spriteSheets, spriteSheetId),
-            { id: 'images' },
+            { id: 'images', open:tabs[tabOpen]==='images' },
         ]
 
         return <main>
             <div style={{ display: 'flex' }}>
-                <section>
-                    <TreeMenu folders={folders}
-                        folderClick={(folderId) => {
-                            const folderIndex = tabs.indexOf(folderId);
-                            this.setState({ tabOpen: folderIndex })
-                        }}
-                        entryClick={(folderId, data) => {
-                            const folderIndex = tabs.indexOf(folderId);
-                            const modification: Partial<State> = { tabOpen: folderIndex }
-                            switch (folderId) {
-                                case 'rooms':
-                                    modification.roomId = data.id
-                                    break;
-                                case 'items':
-                                    modification.itemId = data.id
-                                    break;
-                                case 'characters':
-                                    modification.characterId = data.id
-                                    break;
-                                case 'sprites':
-                                    modification.spriteId = data.id
-                                    break;
-                                case 'spriteSheets':
-                                    modification.spriteSheetId = data.id
-                                    break;
-                            }
-                            this.setState(modification)
-                        }}
-                    />
-                </section>
+                <TreeMenu folders={folders}
+                    folderClick={(folderId) => {
+                        const folderIndex = tabs.indexOf(folderId);
+                        this.setState({ tabOpen: folderIndex })
+                    }}
+                    entryClick={(folderId, data) => {
+                        const folderIndex = tabs.indexOf(folderId);
+                        const modification: Partial<State> = { tabOpen: folderIndex }
+                        switch (folderId) {
+                            case 'rooms':
+                                modification.roomId = data.id
+                                break;
+                            case 'items':
+                                modification.itemId = data.id
+                                break;
+                            case 'characters':
+                                modification.characterId = data.id
+                                break;
+                            case 'sprites':
+                                modification.spriteId = data.id
+                                break;
+                            case 'spriteSheets':
+                                modification.spriteSheetId = data.id
+                                break;
+                        }
+                        this.setState(modification)
+                    }}
+                />
 
                 <section>
                     <TabMenu backgroundColor="none" noButtons defaultOpenIndex={tabOpen} tabs={[
