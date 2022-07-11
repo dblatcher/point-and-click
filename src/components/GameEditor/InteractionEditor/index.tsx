@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import Hotspot from "src/components/Room/Hotspot";
 import { GameCondition } from "../../../definitions/Game";
 import { Interaction } from "../../../definitions/Interaction";
-import { RoomData } from "../../../definitions/RoomData";
 import { SelectInput } from "../formControls";
-import { ListEditor } from "../ListEditor";
+import styles from '../editorStyles.module.css';
 
 interface Props {
-    gameDesign: Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>
+    gameDesign: Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>;
 }
 
 interface State {
@@ -83,13 +81,14 @@ export class InteractionEditor extends Component<Props, State> {
             <article>
                 <h2>Interactions</h2>
                 <p>{interactions.length} interactions</p>
-                <table>
+                <table className={styles.interactionTable}>
                     <thead>
                         <tr>
                             <td>verb</td>
                             <td>target</td>
                             <td>item</td>
                             <td>room</td>
+                            <td rowSpan={2}>consequences</td>
                         </tr>
                         <tr>
                             <td>
@@ -138,6 +137,7 @@ export class InteractionEditor extends Component<Props, State> {
                                 </td>
                                 <td>{interaction.itemId}</td>
                                 <td>{interaction.roomId}</td>
+                                <td>{interaction.consequences.length}x consequences</td>
                             </tr>
                         ))}
                     </tbody>

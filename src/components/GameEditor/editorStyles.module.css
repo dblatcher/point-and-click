@@ -95,3 +95,13 @@
 .treeMenu .button.active {
     font-weight: bold;
 }
+
+.interactionTable thead td {
+    background-color: black;
+    color: white;
+}
+
+.interactionTable tbody td {
+    background-color: lightgray;
+    color: black;
+}
