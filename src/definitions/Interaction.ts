@@ -53,6 +53,7 @@ interface ConversationConsequence {
 }
 
 export type ConsequenceType = 'conversation' | 'sequence' | 'changeStatus' | 'removeCharacter' | 'inventory' | 'changeRoom' | 'talk' | 'order'
+export const consequenceTypes = ['conversation' , 'sequence' , 'changeStatus' , 'removeCharacter' , 'inventory' , 'changeRoom' , 'talk' , 'order']
 
 export type Consequence = OrderConsequence |
     ChangeRoomConsequence |

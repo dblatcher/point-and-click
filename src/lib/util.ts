@@ -55,3 +55,7 @@ export function getViewAngleCenteredOn(xPosition: number, roomData: RoomData) {
     const offCenter = 2 * (xPosition - width / 2) / width
     return -offCenter * 2
 }
+
+export function listIds<T extends { id: string }>(list: T[]): string[] {
+    return list.map(_ => _.id)
+}
