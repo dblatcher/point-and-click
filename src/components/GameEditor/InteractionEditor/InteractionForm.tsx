@@ -2,7 +2,7 @@
 import { FunctionalComponent, h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { cloneData } from "../../../lib/clone";
-import { Consequence, Interaction, ConsequenceType } from "../../../definitions/Interaction";
+import { Consequence, Interaction, ConsequenceType, AnyConsequence } from "../../../definitions/Interaction";
 import { GameCondition } from "../../../definitions/Game";
 import { SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
@@ -73,6 +73,7 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
         if (property === 'type' && typeof value === 'string') {
             consequences.splice(index, 1, makeNewConsequence(value as ConsequenceType))
         } else {
+            const consequence = consequences[index] as AnyConsequence;
             switch (property) {
                 case 'conversationId':
                 case 'sequence':
@@ -84,35 +85,17 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                 case 'text':
                 case 'addOrRemove':
                 case 'targetType': {
-                    const consequence = consequences[index] as Consequence & {
-                        conversationId: string;
-                        sequence: string;
-                        targetId: string;
-                        itemId: string;
-                        status: string;
-                        characterId: string;
-                        roomId: string;
-                        text: string;
-                        targetType: string;
-                        addOrRemove: string;
-                    };
                     consequence[property] = value as string
-                    consequences.splice(index, 1, consequence)
                     break;
                 }
                 case 'end':
                 case 'takePlayer':
                 case 'replaceCurrentOrders': {
-                    const consequence = consequences[index] as Consequence & {
-                        end: boolean;
-                        takePlayer: boolean;
-                        replaceCurrentOrders: boolean;
-                    };
                     consequence[property] = value as boolean
-                    consequences.splice(index, 1, consequence)
                     break;
                 }
             }
+            consequences.splice(index, 1, consequence)
         }
 
         setInteraction(Object.assign({}, interaction, { consequences }))

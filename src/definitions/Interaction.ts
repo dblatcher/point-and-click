@@ -53,7 +53,9 @@ interface ConversationConsequence {
 }
 
 export type ConsequenceType = 'conversation' | 'sequence' | 'changeStatus' | 'removeCharacter' | 'inventory' | 'changeRoom' | 'talk' | 'order'
-export const consequenceTypes = ['conversation' , 'sequence' , 'changeStatus' , 'removeCharacter' , 'inventory' , 'changeRoom' , 'talk' , 'order']
+export const consequenceTypes = [
+    'conversation', 'sequence', 'changeStatus', 'removeCharacter', 'inventory', 'changeRoom', 'talk', 'order'
+]
 
 export type Consequence = OrderConsequence |
     ChangeRoomConsequence |
@@ -63,6 +65,25 @@ export type Consequence = OrderConsequence |
     ChangeStatusConsequence |
     SequenceConsequence |
     ConversationConsequence;
+
+export type AnyConsequence = Consequence & {
+    conversationId?: string;
+    sequence?: string;
+    targetId?: string;
+    itemId?: string;
+    status?: string;
+    characterId?: string;
+    roomId?: string;
+    text?: string;
+    targetType?: string;
+    addOrRemove?: string;
+    end?: boolean;
+    takePlayer?: boolean;
+    replaceCurrentOrders?: boolean;
+    time?: number;
+    point?: Point;
+    orders: Order[];
+}
 
 export type ImmediateConsequence = RemoveCharacterConsequence |
     ChangeStatusConsequence |
