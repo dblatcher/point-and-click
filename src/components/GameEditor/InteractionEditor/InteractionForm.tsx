@@ -2,40 +2,19 @@
 import { FunctionalComponent, h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { cloneData } from "../../../lib/clone";
-import { Consequence, Interaction, ConsequenceType, AnyConsequence } from "../../../definitions/Interaction";
+import { Interaction, ConsequenceType, AnyConsequence } from "../../../definitions/Interaction";
 import { GameCondition } from "../../../definitions/Game";
 import { SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
+import { makeNewConsequence } from "./makeNewConsequence";
 
 interface Props {
     initialState: Partial<Interaction>;
     gameDesign: Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>;
 }
 
-
-function makeNewConsequence(type: ConsequenceType): Consequence {
-    switch (type) {
-        case 'conversation':
-            return { type: 'conversation', conversationId: '' }
-        case 'sequence':
-            return { type: 'sequence', sequence: '' }
-        case 'changeStatus':
-            return { type: 'changeStatus', targetId: '', status: '', targetType: 'character' }
-        case 'removeCharacter':
-            return { type: 'removeCharacter', characterId: '' }
-        case 'inventory':
-            return { type: "inventory", itemId: '', addOrRemove: 'ADD' }
-        case 'changeRoom':
-            return { type: 'changeRoom', roomId: '', takePlayer: true, x: 0, y: 0 }
-        case 'talk':
-            return { type: 'talk', text: '', characterId: '', time: 100 }
-        case 'order':
-        default:
-            return { type: 'order', orders: [] }
-    }
-}
 
 export const InteractionForm: FunctionalComponent<Props> = ({ initialState, gameDesign }: Props) => {
 
