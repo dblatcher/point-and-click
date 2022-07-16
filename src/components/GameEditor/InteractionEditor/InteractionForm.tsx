@@ -9,7 +9,7 @@ import { eventToString, listIds } from "../../../lib/util";
 import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
 import { makeNewConsequence } from "./makeNewConsequence";
-import { getTargetLists } from "./getTargetLists";
+import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -108,7 +108,7 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                         onSelect={(itemId: string) => { setInteractionProperty('itemId', itemId) }}
                         emptyOptionLabel="(choose item)"
                         value={interaction.itemId || ''}
-                        items={listIds(gameDesign.items)} />
+                        items={listIds(gameDesign.items)} descriptions={getItemDescriptions(gameDesign)} />
                     <span> {verb?.preposition} </span>
                 </>}
 

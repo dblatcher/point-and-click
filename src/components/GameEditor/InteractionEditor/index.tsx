@@ -6,7 +6,7 @@ import { DeleteButton, SelectInput } from "../formControls";
 import styles from '../editorStyles.module.css';
 import { cloneData } from "../../../lib/clone";
 import { InteractionForm } from "./InteractionForm";
-import { getTargetLists } from "./getTargetLists";
+import { getTargetLists, getItemDescriptions } from "./getTargetLists";
 
 interface Props {
     gameDesign: GameDesign;
@@ -57,15 +57,14 @@ export class InteractionEditor extends Component<Props, State> {
         return list
     }
 
-    get targetLists(): { ids: string[]; descriptions: string[] } {
-        return getTargetLists(this.props.gameDesign)
-    }
-
     render() {
 
-        const { interactions, verbs, items, rooms } = this.props.gameDesign
+        const { gameDesign } = this.props
+        const { interactions, verbs, items, rooms } = gameDesign
         const { verbFilter = '', itemFilter = '', targetFilter = '', roomFilter = '', interactionUnderConstruction, edittedIndex } = this.state
-        const { filteredInteractions, targetLists } = this
+        const { filteredInteractions } = this
+        const targetLists = getTargetLists(gameDesign)
+
         return (
             <article>
                 <h2>Interactions</h2>
@@ -104,13 +103,14 @@ export class InteractionEditor extends Component<Props, State> {
                                     onSelect={itemFilter => { this.setState({ itemFilter }) }}
                                     emptyOptionLabel="[ANY ITEM]"
                                     value={itemFilter}
-                                    items={listIds(items)} />
+                                    items={listIds(items)}
+                                    descriptions={getItemDescriptions(gameDesign)} />
                             </td>
                             <td>
                                 <SelectInput
                                     haveEmptyOption={true}
                                     onSelect={roomFilter => { this.setState({ roomFilter }) }}
-                                    emptyOptionLabel="[ANY room]"
+                                    emptyOptionLabel="[ANY ROOM]"
                                     value={roomFilter}
                                     items={listIds(rooms)} />
                             </td>

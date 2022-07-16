@@ -5,7 +5,7 @@ import { GameDesign } from "../../../definitions/Game";
 import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { Order } from "../../../definitions/Order";
-import { getTargetLists } from "./getTargetLists";
+import { getTargetLists, getCharacterDescriptions, getItemDescriptions } from "./getTargetLists";
 
 interface Props {
     consequence: AnyConsequence;
@@ -32,6 +32,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
         targetId: targetDescriptions,
+        characterId: getCharacterDescriptions(gameDesign),
+        itemId: getItemDescriptions(gameDesign),
     }
 
     return <div>
