@@ -3,6 +3,7 @@ import { RoomData, ScaleLevel, BackgroundLayer } from "../definitions/RoomData";
 import { Ident } from "src/definitions/BaseTypes";
 import { SpriteData } from "src/definitions/SpriteSheet";
 import { CharacterData } from "src/definitions/CharacterData";
+import { Consequence, consequenceTypes, Interaction } from "../definitions/Interaction";
 
 interface Property {
     type: 'string' | 'number' | 'object' | 'boolean';
@@ -93,6 +94,11 @@ function isHotspotZoneArray(data: unknown): data is HotspotZone {
     return testArray(data as HotspotZone[], HotspotZoneDescription)
 }
 
+function isConsequenceArray(data: unknown): data is Consequence[] {
+    console.warn('testing union types not supported: consequences may not be valid')
+    return testArray(data as Consequence[], consequenceDescription)
+}
+
 const identDescription: Record<keyof Ident, Property> = {
     type: { type: 'string' },
     id: { type: 'string' },
@@ -101,7 +107,7 @@ const identDescription: Record<keyof Ident, Property> = {
 }
 
 const backgroundLayerDescription: Record<keyof BackgroundLayer, Property> = {
-    imageId: { type: 'string'},
+    imageId: { type: 'string' },
     parallax: { type: 'number' },
 }
 
@@ -133,6 +139,18 @@ const roomDataDescription: Record<keyof RoomData, Property> = {
     scaling: { type: 'object', optional: true, test: isNumberPairArray }
 }
 
+const interactionDescription: Record<keyof Interaction, Property> = {
+    verbId: { type: 'string' },
+    targetId: { type: 'string' },
+    roomId: { type: 'string', optional: true },
+    itemId: { type: 'string', optional: true },
+    targetStatus: { type: 'string', optional: true },
+    consequences: { type: 'object', test: isConsequenceArray }
+}
+
+const consequenceDescription: Record<keyof Consequence, Property> = {
+    type: { type: 'string', values: consequenceTypes }
+}
 
 export function isRoomData(data: unknown): data is RoomData {
     return testObject(data as RoomData, roomDataDescription)
@@ -147,3 +165,13 @@ export function isCharacterData(data: unknown): data is CharacterData {
     console.warn('no test in place')
     return true
 }
+
+export function isInteraction(data: unknown): data is Interaction {
+    return testObject(data as Interaction, interactionDescription)
+}
+
+export function isConsequence(data: unknown): data is Consequence {
+    console.warn('testing union types not supported: consequence may not be valid')
+    return testObject(data as Consequence, consequenceDescription)
+}
+

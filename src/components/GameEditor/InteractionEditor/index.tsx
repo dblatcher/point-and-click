@@ -10,7 +10,7 @@ import { getTargetLists, getItemDescriptions } from "./getTargetLists";
 
 interface Props {
     gameDesign: GameDesign;
-    changeInteraction: { (data: Interaction, index: number): void };
+    changeInteraction: { (data: Interaction, index?: number): void };
     deleteInteraction: { (index: number): void };
 }
 
@@ -32,8 +32,9 @@ export class InteractionEditor extends Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {
-            interactionUnderConstruction: {},
+            interactionUnderConstruction: undefined,
         }
+        this.saveInteraction = this.saveInteraction.bind(this)
     }
 
     get filteredInteractions(): Interaction[] {
@@ -57,8 +58,18 @@ export class InteractionEditor extends Component<Props, State> {
         return list
     }
 
-    render() {
+    saveInteraction(interaction: Interaction) {
+        const { edittedIndex } = this.state
+        const { changeInteraction } = this.props
 
+        changeInteraction(interaction, edittedIndex)
+        this.setState({
+            edittedIndex: undefined,
+            interactionUnderConstruction: undefined,
+        })
+    }
+
+    render() {
         const { gameDesign } = this.props
         const { interactions, verbs, items, rooms } = gameDesign
         const { verbFilter = '', itemFilter = '', targetFilter = '', roomFilter = '', interactionUnderConstruction, edittedIndex } = this.state
@@ -149,6 +160,7 @@ export class InteractionEditor extends Component<Props, State> {
 
                     {interactionUnderConstruction &&
                         <InteractionForm key={edittedIndex}
+                            confirm={this.saveInteraction}
                             gameDesign={this.props.gameDesign}
                             initialState={interactionUnderConstruction} />
                     }

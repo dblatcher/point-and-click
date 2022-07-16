@@ -10,16 +10,18 @@ import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
 import { makeNewConsequence } from "./makeNewConsequence";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { isInteraction } from "../../../lib/typeguards";
 
 interface Props {
     initialState: Partial<Interaction>;
     gameDesign: GameDesign;
+    confirm: { (interaction: Interaction): void };
 }
 
 
-export const InteractionForm: FunctionalComponent<Props> = ({ initialState, gameDesign }: Props) => {
+export const InteractionForm: FunctionalComponent<Props> = ({ initialState, gameDesign, confirm }: Props) => {
 
-    const [interaction, setInteraction] = useState(cloneData(initialState))
+    const [interaction, setInteraction] = useState<Partial<Interaction>>(Object.assign({ consequences: [] }, cloneData(initialState)))
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
 
     const setInteractionProperty = (property: keyof Interaction, value: unknown) => {
@@ -87,6 +89,14 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
         setInteraction(Object.assign({}, interaction, { consequences }))
     }
 
+    const handleConfirm = () => {
+        const valid = isInteraction(interaction)
+        console.log('confirm', interaction, { valid })
+        if (valid) {
+            confirm(interaction)
+        }
+    }
+
     const verb = gameDesign.verbs.find(_ => _.id === interaction.verbId);
     const showItemOption = verb?.preposition
     const { consequences = [] } = interaction
@@ -119,7 +129,6 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                     value={interaction.targetId || ''}
                     items={targetIds}
                     descriptions={targetDescriptions} />
-                {/* TO DO get the target list? */}
             </fieldset>
 
             <fieldset>
@@ -149,7 +158,7 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                     list={consequences}
                     describeItem={(consequence, index) => (
                         <ConsequenceForm
-                            consequence={consequence}
+                            consequence={consequence as AnyConsequence}
                             edit={(property, value) => { editConsequence(index, property, value) }}
                             gameDesign={gameDesign} />
                     )}
@@ -158,6 +167,9 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                 />
 
             </fieldset>
+            <div>
+                <button onClick={handleConfirm}>CONFIRM</button>
+            </div>
         </article>
     )
 }
