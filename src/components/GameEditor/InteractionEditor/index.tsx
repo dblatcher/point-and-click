@@ -6,6 +6,7 @@ import { DeleteButton, SelectInput } from "../formControls";
 import styles from '../editorStyles.module.css';
 import { cloneData } from "../../../lib/clone";
 import { InteractionForm } from "./InteractionForm";
+import { getTargetLists } from "./getTargetLists";
 
 interface Props {
     gameDesign: GameDesign;
@@ -57,25 +58,7 @@ export class InteractionEditor extends Component<Props, State> {
     }
 
     get targetLists(): { ids: string[]; descriptions: string[] } {
-        const { characters, items, rooms } = this.props.gameDesign
-        const ids: string[] = [];
-        const descriptions: string[] = [];
-
-        characters.forEach(character => {
-            ids.push(character.id)
-            descriptions.push(`🚶 ${character.id}`)
-        })
-        items.forEach(item => {
-            ids.push(item.id)
-            descriptions.push(`🎒 ${item.id}`)
-        })
-        rooms.forEach(room => {
-            room.hotspots?.forEach(hotspot => {
-                ids.push(hotspot.id)
-                descriptions.push(`⌘${hotspot.id} (${room.id})`)
-            })
-        })
-        return { ids, descriptions }
+        return getTargetLists(this.props.gameDesign)
     }
 
     render() {

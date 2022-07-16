@@ -9,6 +9,7 @@ import { eventToString, listIds } from "../../../lib/util";
 import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
 import { makeNewConsequence } from "./makeNewConsequence";
+import { getTargetLists } from "./getTargetLists";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -19,6 +20,7 @@ interface Props {
 export const InteractionForm: FunctionalComponent<Props> = ({ initialState, gameDesign }: Props) => {
 
     const [interaction, setInteraction] = useState(cloneData(initialState))
+    const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
 
     const setInteractionProperty = (property: keyof Interaction, value: unknown) => {
         const modification: Partial<Interaction> = {}
@@ -115,7 +117,8 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                     onSelect={(targetId: string) => { setInteractionProperty('targetId', targetId) }}
                     emptyOptionLabel="(choose target)"
                     value={interaction.targetId || ''}
-                    items={[...listIds(gameDesign.items), ...listIds(gameDesign.characters)]} />
+                    items={targetIds}
+                    descriptions={targetDescriptions} />
                 {/* TO DO get the target list? */}
             </fieldset>
 
@@ -126,7 +129,7 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                         label="Must be in"
                         haveEmptyOption={true}
                         onSelect={(roomId: string) => { setInteractionProperty('roomId', roomId) }}
-                        emptyOptionLabel="(choose item)"
+                        emptyOptionLabel="(choose room)"
                         value={interaction.roomId || ''}
                         items={listIds(gameDesign.rooms)} />
                 </div>

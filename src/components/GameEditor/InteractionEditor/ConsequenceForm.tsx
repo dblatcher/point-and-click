@@ -5,6 +5,7 @@ import { GameDesign } from "../../../definitions/Game";
 import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { Order } from "../../../definitions/Order";
+import { getTargetLists } from "./getTargetLists";
 
 interface Props {
     consequence: AnyConsequence;
@@ -17,15 +18,20 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
 
     const entries = Object.entries(consequence) as [keyof AnyConsequence, string | boolean | number | Order[]][]
 
-    const optionLists = {
+    const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
+
+    const optionListIds = {
         type: consequenceTypes,
         conversationId: listIds(gameDesign.conversations),
         characterId: listIds(gameDesign.characters),
         itemId: listIds(gameDesign.items),
         roomId: listIds(gameDesign.rooms),
-        targetId: [],
+        targetId: targetIds,
         targetType: ['character', 'item', 'hotspot'],
         addOrRemove: ['ADD', 'REMOVE'],
+    }
+    const optionListDescriptions: { [index: string]: string[] | undefined } = {
+        targetId: targetDescriptions,
     }
 
     return <div>
@@ -41,17 +47,18 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'roomId':
                 case 'targetType':
                 case 'addOrRemove':
+                case 'targetId':
                     return (
                         <div key={index}>
                             <SelectInput value={value as string}
                                 label={property}
-                                items={optionLists[property]}
+                                items={optionListIds[property]}
+                                descriptions={optionListDescriptions[property]}
                                 onSelect={(value) => { edit(property, value) }}
                             />
                         </div>
                     )
                 case 'sequence':
-                case 'targetId':
                 case 'status':
                 case 'text':
                     return (
