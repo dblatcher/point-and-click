@@ -20,6 +20,7 @@ import { startingGameCondition } from '../../../data/fullGame';
 import { TreeMenu } from "./TreeMenu";
 import { InteractionEditor } from "./InteractionEditor";
 import { Interaction } from "src/definitions/Interaction";
+import { Overview } from "./Overview";
 
 
 populate()
@@ -39,6 +40,7 @@ type Props = {
 }
 
 const tabs: string[] = [
+    'main',
     'rooms',
     'items',
     'characters',
@@ -81,7 +83,7 @@ export class GameEditor extends Component<Props, State>{
                 gameDesign: {
                     ...startingGameCondition
                 },
-                tabOpen: tabs.indexOf('interactions'),
+                tabOpen: tabs.indexOf('main'),
             }
         } else {
             const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
@@ -98,7 +100,7 @@ export class GameEditor extends Component<Props, State>{
                     sprites: [],
                     spriteSheets: []
                 },
-                tabOpen: 2,
+                tabOpen: tabs.indexOf('main'),
             }
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
@@ -164,6 +166,9 @@ export class GameEditor extends Component<Props, State>{
                     addNewOrUpdate(data, gameDesign[property])
                     break
                 }
+                case 'currentRoomId': {
+                    gameDesign[property] = data as string
+                }
             }
             return { gameDesign }
         })
@@ -203,6 +208,7 @@ export class GameEditor extends Component<Props, State>{
         })
 
         const folders = [
+            makeFolder('main'),
             makeFolder('rooms', gameDesign.rooms, roomId),
             makeFolder('items', gameDesign.items, itemId),
             makeFolder('characters', gameDesign.characters, characterId),
@@ -245,6 +251,11 @@ export class GameEditor extends Component<Props, State>{
 
                 <section>
                     <TabMenu backgroundColor="none" noButtons defaultOpenIndex={tabOpen} tabs={[
+                        {
+                            label: 'main', content: <Overview
+                                gameDesign={gameDesign}
+                                edit={(property, value) => { this.performUpdate(property, value) }} />
+                        },
                         {
                             label: 'Room Editor', content: <RoomEditor
                                 updateData={data => { this.performUpdate('rooms', data) }}
