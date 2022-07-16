@@ -12,7 +12,7 @@ import { CharacterEditor } from "./CharacterEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
 import { populate } from "../../services/populateServices";
 import { ItemEditor } from "./itemEditor";
-import { GameCondition } from "../../definitions/Game";
+import { GameDesign } from "../../definitions/Game";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { RoomData } from "../../definitions/RoomData";
 
@@ -23,8 +23,6 @@ import { Interaction } from "src/definitions/Interaction";
 
 
 populate()
-
-type GameDesign = Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>
 
 type State = {
     gameDesign: GameDesign;

@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
-import { AnyConsequence, Consequence, consequenceTypes } from "../../../definitions/Interaction";
-import { GameCondition } from "../../../definitions/Game";
+import { AnyConsequence, consequenceTypes } from "../../../definitions/Interaction";
+import { GameDesign } from "../../../definitions/Game";
 import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { Order } from "../../../definitions/Order";
 
 interface Props {
     consequence: AnyConsequence;
-    gameDesign: Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>;
+    gameDesign: GameDesign;
     edit: { (property: keyof AnyConsequence, value: unknown): void };
 }
 
@@ -23,6 +23,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         characterId: listIds(gameDesign.characters),
         itemId: listIds(gameDesign.items),
         roomId: listIds(gameDesign.rooms),
+        targetId: [],
         targetType: ['character', 'item', 'hotspot'],
         addOrRemove: ['ADD', 'REMOVE'],
     }

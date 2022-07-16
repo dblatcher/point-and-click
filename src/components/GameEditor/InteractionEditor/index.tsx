@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { GameCondition } from "../../../definitions/Game";
+import { GameDesign } from "../../../definitions/Game";
 import { Interaction } from "../../../definitions/Interaction";
 import { DeleteButton, SelectInput } from "../formControls";
 import styles from '../editorStyles.module.css';
@@ -8,7 +8,7 @@ import { cloneData } from "../../../lib/clone";
 import { InteractionForm } from "./InteractionForm";
 
 interface Props {
-    gameDesign: Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>;
+    gameDesign: GameDesign;
     changeInteraction: { (data: Interaction, index: number): void };
     deleteInteraction: { (index: number): void };
 }

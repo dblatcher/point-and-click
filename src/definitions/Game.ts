@@ -27,4 +27,6 @@ export type FixedGameInfo = {
     spriteSheets: SpriteSheet[];
 }
 
+export type GameDesign = Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>;
+
 export type GameCondition = GameData & FixedGameInfo;

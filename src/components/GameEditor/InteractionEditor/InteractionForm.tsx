@@ -3,7 +3,7 @@ import { FunctionalComponent, h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { cloneData } from "../../../lib/clone";
 import { Interaction, ConsequenceType, AnyConsequence } from "../../../definitions/Interaction";
-import { GameCondition } from "../../../definitions/Game";
+import { GameDesign } from "../../../definitions/Game";
 import { SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { ListEditor } from "../ListEditor";
@@ -12,7 +12,7 @@ import { makeNewConsequence } from "./makeNewConsequence";
 
 interface Props {
     initialState: Partial<Interaction>;
-    gameDesign: Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>;
+    gameDesign: GameDesign;
 }
 
 
