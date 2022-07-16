@@ -9,7 +9,7 @@ import { changeRoom } from "./changeRoom"
 
 export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
 
-    const { characters, items, rooms, currentRoomId, characterOrders} = state
+    const { characters, items, rooms, currentRoomId, characterOrders } = state
     const player = characters.find(_ => _.isPlayer)
     const getCharacter = (characterId?: string): (CharacterData | undefined) =>
         characterId ? characters.find(_ => _.id === characterId) : player;
@@ -49,7 +49,8 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 break;
             }
             case 'changeRoom': {
-                const { roomId, takePlayer, point } = consequence;
+                const { roomId, takePlayer, x, y } = consequence;
+                const point = typeof x === 'number' && typeof y === 'number' ? { x, y } : undefined
                 const modificationFunction = changeRoom(roomId, takePlayer, point)
                 Object.assign(state, modificationFunction(state))
                 break;

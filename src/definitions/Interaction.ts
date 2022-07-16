@@ -1,4 +1,3 @@
-import { Point } from "../lib/pathfinding/geometry"
 import { Order } from "./Order"
 
 interface OrderConsequence {
@@ -19,7 +18,8 @@ interface ChangeRoomConsequence {
     type: 'changeRoom';
     roomId: string;
     takePlayer: boolean;
-    point?: Point;
+    x?: number;
+    y?: number;
 }
 
 interface InventoryConsequence {
@@ -81,7 +81,8 @@ export type AnyConsequence = Consequence & {
     takePlayer?: boolean;
     replaceCurrentOrders?: boolean;
     time?: number;
-    point?: Point;
+    x?: number;
+    y?: number;
     orders: Order[];
 }
 

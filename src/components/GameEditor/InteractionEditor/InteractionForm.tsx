@@ -28,7 +28,7 @@ function makeNewConsequence(type: ConsequenceType): Consequence {
         case 'inventory':
             return { type: "inventory", itemId: '', addOrRemove: 'ADD' }
         case 'changeRoom':
-            return { type: 'changeRoom', roomId: '', takePlayer: true }
+            return { type: 'changeRoom', roomId: '', takePlayer: true, x: 0, y: 0 }
         case 'talk':
             return { type: 'talk', text: '', characterId: '', time: 100 }
         case 'order':
@@ -67,7 +67,7 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
         interaction.consequences = consequences
         setInteraction(Object.assign({}, interaction))
     }
-    const editConsequence = (index: number, property: string, value: unknown) => {
+    const editConsequence = (index: number, property: keyof AnyConsequence, value: unknown) => {
         const { consequences = [] } = interaction
 
         if (property === 'type' && typeof value === 'string') {
@@ -94,6 +94,11 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                     consequence[property] = value as boolean
                     break;
                 }
+                case 'time':
+                case 'x':
+                case 'y':
+                    consequence[property] = value as number
+                    break;
             }
             consequences.splice(index, 1, consequence)
         }

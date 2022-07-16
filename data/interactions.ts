@@ -111,7 +111,7 @@ export const interactions: Interaction[] = [
                 type: 'changeRoom',
                 roomId: 'INSIDE',
                 takePlayer: true,
-                point: { y: 5, x: 100 },
+                y: 5, x: 100,
             },
             {
                 type: 'order',
@@ -138,7 +138,7 @@ export const interactions: Interaction[] = [
                 type: 'changeRoom',
                 roomId: 'OUTSIDE',
                 takePlayer: true,
-                point: { y: 12, x: 230 },
+                y: 12, x: 230,
             },
             {
                 type: 'order',

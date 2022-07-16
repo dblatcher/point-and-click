@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
-import { Consequence, consequenceTypes } from "../../../definitions/Interaction";
+import { AnyConsequence, Consequence, consequenceTypes } from "../../../definitions/Interaction";
 import { GameCondition } from "../../../definitions/Game";
-import { CheckBoxInput, SelectInput, TextInput } from "../formControls";
+import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
+import { Order } from "../../../definitions/Order";
 
 interface Props {
-    consequence: Consequence;
+    consequence: AnyConsequence;
     gameDesign: Omit<GameCondition, 'characterOrders' | 'sequenceRunning'>;
-    edit: { (property: string, value: unknown): void };
+    edit: { (property: keyof AnyConsequence, value: unknown): void };
 }
 
 
 export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameDesign, edit }: Props) => {
 
-    const entries = Object.entries(consequence)
+    const entries = Object.entries(consequence) as [keyof AnyConsequence, string | boolean | number | Order[]][]
 
     const optionLists = {
         type: consequenceTypes,
@@ -41,7 +42,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'addOrRemove':
                     return (
                         <div key={index}>
-                            <SelectInput value={(consequence as unknown as Record<string, string>)[property]}
+                            <SelectInput value={value as string}
                                 label={property}
                                 items={optionLists[property]}
                                 onSelect={(value) => { edit(property, value) }}
@@ -54,7 +55,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'text':
                     return (
                         <div key={index}>
-                            <TextInput value={value}
+                            <TextInput value={value as string}
                                 label={property}
                                 onInput={e => { edit(property, eventToString(e)) }}
                             />
@@ -66,12 +67,25 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                     return (
                         <div key={index}>
                             <CheckBoxInput
-                                value={value}
+                                value={value as boolean}
                                 label={property}
                                 inputHandler={v => { edit(property, v) }}
                             />
                         </div>
                     )
+                case 'x':
+                case 'y':
+                case 'time':
+                    return (
+                        <div key={index}>
+                            <NumberInput
+                                value={value as number}
+                                label={property}
+                                inputHandler={v => { edit(property, v) }}
+                            />
+                        </div>
+                    )
+
                 default:
                     return (
                         <div key={index}>
