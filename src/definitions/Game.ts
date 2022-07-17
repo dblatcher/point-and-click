@@ -18,6 +18,8 @@ export type GameData = {
     currentRoomId: string;
     sequenceRunning?: Sequence;
     currentConversationId?: string;
+
+    id: string; // id is fixed, but putting under data so will be in the saved game data
 }
 
 export type FixedGameInfo = {

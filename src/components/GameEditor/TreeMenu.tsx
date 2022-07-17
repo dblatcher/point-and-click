@@ -3,6 +3,7 @@ import { h, FunctionalComponent } from "preact";
 import styles from "./editorStyles.module.css"
 
 interface Props {
+    title?: string;
     folders: Folder[];
     folderClick: { (folderId: string): void };
     entryClick: { (folderId: string, data: { id: string }, isForNew?: boolean): void };
@@ -39,10 +40,11 @@ const getEntryClass = (entry: Entry): string => (
 )
 
 
-export const TreeMenu: FunctionalComponent<Props> = ({ folders, folderClick, entryClick }: Props) => {
+export const TreeMenu: FunctionalComponent<Props> = ({ folders, folderClick, entryClick,title }: Props) => {
 
     return (
         <section className={styles.treeMenu}>
+            {title && <h2>{title}</h2>}
             <ul>
                 {folders.map(folder => (
                     <li key={folder.id} style={folderStyle}>

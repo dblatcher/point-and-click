@@ -12,6 +12,7 @@ const player = characters.find(character => character.isPlayer)
 const startingRoom = rooms.find(room => room.id === player?.room) || rooms[0]
 
 export const startingGameCondition: GameCondition = {
+    id:"THE_TEST_GAME",
     rooms,
     characters,
     interactions,

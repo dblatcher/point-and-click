@@ -96,6 +96,11 @@
     font-weight: bold;
 }
 
+.treeMenu h2 {
+    margin: 0;
+    font-size: 1em;
+}
+
 .interactionTable thead td {
     background-color: black;
     color: white;

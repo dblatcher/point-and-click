@@ -81,10 +81,10 @@ export default class Game extends Component<GameProps, GameState> {
         return {
             viewAngle: 0,
             isPaused: false,
+            id: props.id,
             currentRoomId: props.currentRoomId,
             characters,
             rooms,
-
             currentVerbId: props.verbs[0].id,
             interactions: [...props.interactions],
             items,
@@ -99,10 +99,11 @@ export default class Game extends Component<GameProps, GameState> {
         const {
             rooms, characters, interactions, items,
             currentRoomId, characterOrders, sequenceRunning,
-            conversations, currentConversationId,
+            conversations, currentConversationId, id,
         } = this.state
 
         return {
+            id,
             rooms, characters, interactions, items,
             currentRoomId, characterOrders, sequenceRunning,
             conversations, currentConversationId,

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
-import { listIds } from "../../lib/util";
+import { eventToString, listIds } from "../../lib/util";
 import { GameDesign } from "../../definitions/Game";
-import { SelectInput } from "./formControls";
+import { SelectInput, TextInput } from "./formControls";
+import { downloadJsonFile } from "../../lib/files";
 
 interface Props {
     gameDesign: GameDesign;
@@ -18,6 +19,12 @@ export const Overview: FunctionalComponent<Props> = ({ gameDesign, edit }: Props
 
         {/* this isn't impacting the Game route - because it has its own clone of starting conditions */}
         {/* Need to think about this! */}
+
+        <TextInput value={gameDesign.id}
+            label="Game ID"
+            onInput={event => { edit('id', eventToString(event)) }}
+        />
+
         <SelectInput value={gameDesign.currentRoomId}
             label={'Starting Room'}
             items={listIds(gameDesign.rooms)}
@@ -32,7 +39,7 @@ export const Overview: FunctionalComponent<Props> = ({ gameDesign, edit }: Props
         </ul>
 
         <div>
-            <button>Save to file</button>
+            <button onClick={() => { downloadJsonFile(gameDesign, 'game') }}>Save to file</button>
         </div>
     </article>
 }

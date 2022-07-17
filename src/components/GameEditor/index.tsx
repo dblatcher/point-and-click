@@ -80,6 +80,7 @@ export class GameEditor extends Component<Props, State>{
             const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
             this.state = {
                 gameDesign: {
+                    id: "NEW_GAME",
                     rooms: [blankRoom],
                     characters: [],
                     interactions: [],
@@ -163,6 +164,7 @@ export class GameEditor extends Component<Props, State>{
                     spriteSheetId = (data as GameDataItem).id
                     break
                 }
+                case 'id':
                 case 'currentRoomId': {
                     gameDesign[property] = data as string
                     break
@@ -231,6 +233,7 @@ export class GameEditor extends Component<Props, State>{
         return <main>
             <div style={{ display: 'flex' }}>
                 <TreeMenu folders={folders}
+                    title={gameDesign.id}
                     folderClick={(folderId) => {
                         const folderIndex = tabs.indexOf(folderId);
                         this.setState({ tabOpen: folderIndex, ...this.noOpenItemsState })
