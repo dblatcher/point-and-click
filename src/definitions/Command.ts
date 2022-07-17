@@ -3,12 +3,10 @@ import { ItemData } from './ItemData';
 import { Verb } from './Verb'
 import { HotspotZone } from './Zone'
 
-type CommandTarget = CharacterData | HotspotZone | ItemData;
+export type CommandTarget = CharacterData | HotspotZone | ItemData;
 
-interface Command {
+export type Command = {
     verb: Verb;
     target: CommandTarget;
     item?: ItemData;
 }
-
-export type { Command, CommandTarget }

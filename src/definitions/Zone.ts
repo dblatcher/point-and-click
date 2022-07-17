@@ -1,10 +1,9 @@
-import { Ident } from './BaseTypes'
+import { type Ident } from './BaseTypes'
 
-type SupportedZoneShape = 'rect' | 'circle' | 'polygon'
-type Polygon = [number, number][];
+export type SupportedZoneShape = 'rect' | 'circle' | 'polygon'
+export type Polygon = [number, number][];
 
-
-interface Zone {
+export interface Zone {
     type?: string;
     x: number;
     y: number;
@@ -14,9 +13,8 @@ interface Zone {
     rect?: [number, number];
 }
 
-type HotspotZone = Ident & Zone & {
+export type HotspotZone = Ident & Zone & {
     type: 'hotspot';
     parallax: number;
 }
 
-export type { Zone, HotspotZone, Polygon, SupportedZoneShape }
