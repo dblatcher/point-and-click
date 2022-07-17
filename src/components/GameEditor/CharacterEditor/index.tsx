@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
 import { eventToString } from "../../../lib/util";
-import { CharacterData } from "../../../definitions/CharacterData";
+import { CharacterData, CharacterDataSchema } from "../../../definitions/CharacterData";
 import { CheckBoxInput, IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import spriteService from "../../../services/spriteService";
@@ -10,7 +10,6 @@ import { SpritePreview } from "../SpritePreview";
 import styles from "../editorStyles.module.css"
 import { cloneData } from "../../../lib/clone";
 import { uploadFile, readJsonFile } from "../../../lib/files";
-import { isCharacterData } from "../../../lib/typeguards";
 import { StorageMenu } from "../StorageMenu";
 
 
@@ -115,10 +114,12 @@ export class CharacterEditor extends Component<Props, State> {
             console.warn(error)
         }
 
-        if (isCharacterData(data)) {
-            this.setState(data)
+        const result = CharacterDataSchema.safeParse(data)
+
+        if (result.success) {
+            this.setState(result.data)
         } else {
-            console.warn("NOT CHARACTER DATA", data)
+            console.warn("NOT CHARACTER DATA", result.error.issues)
         }
     }
     handleResetButton() {

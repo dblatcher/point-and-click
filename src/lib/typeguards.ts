@@ -1,10 +1,10 @@
 import { HotspotZone, Zone } from "../definitions/Zone";
 import { RoomData, BackgroundLayer } from "../definitions/RoomData";
-import { Ident } from "src/definitions/BaseTypes";
-import { SpriteData } from "src/definitions/SpriteSheet";
-import { CharacterData } from "src/definitions/CharacterData";
+import { Ident } from "../definitions/BaseTypes";
+import { SpriteData } from "../definitions/SpriteSheet";
+import { CharacterData, CharacterDataSchema } from "../definitions/CharacterData";
 import { Consequence, consequenceTypes, Interaction } from "../definitions/Interaction";
-import { GameDesign } from "src/definitions/Game";
+import { GameDesign } from "../definitions/Game";
 
 interface Property {
     type: 'string' | 'number' | 'object' | 'boolean';
@@ -158,11 +158,6 @@ export function isRoomData(data: unknown): data is RoomData {
 }
 
 export function isSpriteData(data: unknown): data is SpriteData {
-    console.warn('no test in place')
-    return true
-}
-
-export function isCharacterData(data: unknown): data is CharacterData {
     console.warn('no test in place')
     return true
 }

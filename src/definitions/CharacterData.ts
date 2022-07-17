@@ -1,10 +1,14 @@
-import { Ident, Position, SpriteParams } from "./BaseTypes"
+import {z} from "zod";
+import { IdentSchema,PositionSchema,SpriteParamsSchema } from "./BaseTypes"
 
-type CharacterData  = Ident & SpriteParams & Position & {
-    type: 'character';
-    isPlayer?: boolean;
-    speed?: number;
-    dialogueColor?: string;
-}
+export const CharacterDataSchema = IdentSchema
+    .merge(PositionSchema)
+    .merge(SpriteParamsSchema)
+    .merge(z.object({
+        type: z.literal('character'),
+        isPlayer: z.optional(z.boolean()),
+        speed: z.optional(z.number()),
+        dialogueColor: z.optional(z.string()),
+    }))
 
-export type { CharacterData }
+export type CharacterData  = z.infer<typeof CharacterDataSchema>

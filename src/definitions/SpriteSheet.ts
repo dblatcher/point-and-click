@@ -1,4 +1,4 @@
-import { Direction, directions } from "./BaseTypes"
+import { type Direction, directions } from "./BaseTypes"
 
 export interface SpriteSheet {
     id: string;
@@ -9,14 +9,11 @@ export interface SpriteSheet {
     heightScale?: number;
 }
 
-
 export interface SpriteFrame {
     sheetId: string;
     row: number;
     col: number;
 }
-
-
 
 export interface SpriteData {
     id: string;
