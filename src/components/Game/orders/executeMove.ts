@@ -1,3 +1,4 @@
+import { Direction } from "src/definitions/BaseTypes";
 import { CharacterData } from "../../../definitions/CharacterData";
 import { MoveOrder } from "../../../definitions/Order";
 
@@ -10,7 +11,7 @@ export function executeMove(moveOrder: MoveOrder, character: CharacterData): voi
 
     let newX = x
     let newY = y
-    let newDirection = direction
+    let newDirection: Direction = direction
     if (x !== nextStep.x) {
         const distance = Math.min(speed, Math.abs(x - nextStep.x))
         const directionX = x < nextStep.x ? 1 : -1

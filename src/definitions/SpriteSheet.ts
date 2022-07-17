@@ -1,3 +1,5 @@
+import { Direction, directions } from "./BaseTypes"
+
 export interface SpriteSheet {
     id: string;
     imageId: string;
@@ -14,8 +16,7 @@ export interface SpriteFrame {
     col: number;
 }
 
-export type Direction = 'left' | 'right'
-export const directions: Direction[] = ['left', 'right']
+
 
 export interface SpriteData {
     id: string;
@@ -24,3 +25,4 @@ export interface SpriteData {
 }
 
 
+export {Direction, directions}

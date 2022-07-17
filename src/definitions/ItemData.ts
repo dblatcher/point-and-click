@@ -1,9 +1,10 @@
-import { Ident } from "./BaseTypes"
+import { z } from "zod"
+import { IdentSchema } from "./BaseTypes"
 
-type ItemData = Ident & {
-    type: 'item';
-    characterId?: string;
-    imageId?: string;
-}
+export const ItemSchema = IdentSchema.extend({
+    type: z.literal('item'),
+    characterId: z.optional(z.string()),
+    imageId: z.optional(z.string()),
+})
 
-export type { ItemData }
+export type ItemData = z.infer<typeof ItemSchema>

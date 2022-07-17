@@ -1,24 +1,32 @@
-import { Direction } from "./SpriteSheet"
+import { z } from "zod"
 
-type Ident = {
-    type: string;
-    id: string;
-    name?: string;
-    status?: string;
-}
+export type Direction = 'left' | 'right'
+export const directions: Direction[] = ['left', 'right']
 
-type SpriteParams = {
-    height: number;
-    width: number;
-    sprite: string;
-    direction?: Direction;
-    filter?: string;
-}
+export const IdentSchema = z.object({
+    type: z.string(),
+    id: z.string(),
+    name: z.optional(z.string()),
+    status: z.optional(z.string()),
+})
 
-interface Position {
-    room?: string;
-    x: number;
-    y: number;
-}
+export type Ident = z.infer<typeof IdentSchema>
 
-export type { Ident, SpriteParams, Position }
+export const SpriteParamsSchema = z.object({
+    height: z.number(),
+    width: z.number(),
+    sprite: z.string(),
+    direction: z.optional(z.enum(['left', 'right'])),
+    filter: z.optional(z.string()),
+})
+
+export type SpriteParams = z.infer<typeof SpriteParamsSchema>
+
+export const PositionSchema = z.object({
+    room: z.optional(z.string()),
+    x: z.number(),
+    y: z.number(),
+})
+
+export type Position = z.infer<typeof PositionSchema>
+
