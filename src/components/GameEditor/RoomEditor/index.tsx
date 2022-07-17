@@ -15,7 +15,7 @@ import { cloneData } from "../../../lib/clone";
 import { isRoomData } from "../../../lib/typeguards";
 import { eventToString, getShift, locateClickInWorld } from "../../../lib/util";
 import { TabMenu } from "../../TabMenu";
-import { downloadJsonFile, readJsonFile, uploadFile } from "../../../lib/files";
+import { readJsonFile, uploadFile } from "../../../lib/files";
 import styles from '../editorStyles.module.css';
 import imageService from "../../../services/imageService";
 import { getBlankRoom } from "../defaults";

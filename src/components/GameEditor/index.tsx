@@ -21,6 +21,7 @@ import { TreeMenu } from "./TreeMenu";
 import { InteractionEditor } from "./InteractionEditor";
 import { Interaction } from "src/definitions/Interaction";
 import { Overview } from "./Overview";
+import { listIds, findById, findIndexById } from "../../lib/util";
 
 
 populate()
@@ -50,14 +51,8 @@ const tabs: string[] = [
     'images',
 ]
 
-function findById<T extends { id: string }>(id: string | undefined, list: T[]): (T | undefined) {
-    if (!id) { return undefined }
-    return list.find(_ => _.id === id)
-}
-function findIndexById<T extends { id: string }>(id: string | undefined, list: T[]): (number) {
-    if (!id) { return -1 }
-    return list.findIndex(_ => _.id === id)
-}
+
+
 function addNewOrUpdate<T extends { id: string }>(newData: unknown, list: T[]): T[] {
     const newItem = newData as T;
     const matchIndex = findIndexById(newItem.id, list)
@@ -67,9 +62,6 @@ function addNewOrUpdate<T extends { id: string }>(newData: unknown, list: T[]): 
         list.push(newItem)
     }
     return list
-}
-function listIds<T extends { id: string }>(list: T[]): string[] {
-    return list.map(_ => _.id)
 }
 
 const usePrebuiltGame = true
@@ -168,6 +160,7 @@ export class GameEditor extends Component<Props, State>{
                 }
                 case 'currentRoomId': {
                     gameDesign[property] = data as string
+                    break
                 }
             }
             return { gameDesign }

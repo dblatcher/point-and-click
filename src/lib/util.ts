@@ -59,3 +59,13 @@ export function getViewAngleCenteredOn(xPosition: number, roomData: RoomData) {
 export function listIds<T extends { id: string }>(list: T[]): string[] {
     return list.map(_ => _.id)
 }
+
+export function findById<T extends { id: string }>(id: string | undefined, list: T[]): (T | undefined) {
+    if (!id) { return undefined }
+    return list.find(_ => _.id === id)
+}
+
+export function findIndexById<T extends { id: string }>(id: string | undefined, list: T[]): (number) {
+    if (!id) { return -1 }
+    return list.findIndex(_ => _.id === id)
+}
