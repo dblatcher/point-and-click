@@ -259,11 +259,13 @@ export class GameEditor extends Component<Props, State>{
                         {
                             label: 'Room Editor', content: <RoomEditor
                                 updateData={data => { this.performUpdate('rooms', data) }}
+                                existingRoomIds={listIds(gameDesign.rooms)}
                                 key={roomId} data={this.currentRoom} />
                         },
                         {
                             label: 'Items', content: <ItemEditor
                                 updateData={data => { this.performUpdate('items', data) }}
+                                itemIds={listIds(gameDesign.items)}
                                 characterIds={listIds(gameDesign.characters)}
                                 key={itemId} data={this.currentItem}
                             />
@@ -271,6 +273,7 @@ export class GameEditor extends Component<Props, State>{
                         {
                             label: 'Character Editor', content: <CharacterEditor
                                 roomIds={listIds(gameDesign.rooms)}
+                                characterIds={listIds(gameDesign.characters)}
                                 updateData={data => { this.performUpdate('characters', data) }}
                                 key={characterId} data={this.currentCharacter}
                             />
@@ -279,12 +282,14 @@ export class GameEditor extends Component<Props, State>{
                             label: 'Sprite Editor', content: <SpriteEditor
                                 updateData={data => { this.performUpdate('sprites', data) }}
                                 key={spriteId} data={this.currentSprite}
+                                spriteIds={listIds(gameDesign.sprites)}
                             />
                         },
                         {
                             label: 'Sprite Sheets', content: <SpriteSheetTool
                                 updateData={data => { this.performUpdate('spriteSheets', data) }}
                                 key={spriteSheetId} data={this.currentSpriteSheet}
+                                spriteSheetIds={listIds(gameDesign.spriteSheets)}
                             />
                         },
                         {

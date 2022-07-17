@@ -9,7 +9,7 @@ import { Direction, directions } from "../../../definitions/SpriteSheet";
 import { SpritePreview } from "../SpritePreview";
 import styles from "../editorStyles.module.css"
 import { cloneData } from "../../../lib/clone";
-import { dataToBlob, makeDownloadFile, uploadFile, readJsonFile } from "../../../lib/files";
+import { uploadFile, readJsonFile } from "../../../lib/files";
 import { isCharacterData } from "../../../lib/typeguards";
 import { StorageMenu } from "../StorageMenu";
 
@@ -24,6 +24,7 @@ type Props = {
     data?: CharacterData;
     updateData?: { (data: CharacterData): void };
     roomIds: string[];
+    characterIds: string[];
 }
 
 const makeBlankCharacter = (): CharacterData => ({
@@ -56,7 +57,6 @@ export class CharacterEditor extends Component<Props, State> {
             ...initialState
         }
 
-        this.handleSaveButton = this.handleSaveButton.bind(this)
         this.handleLoadButton = this.handleLoadButton.bind(this)
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
@@ -107,13 +107,6 @@ export class CharacterEditor extends Component<Props, State> {
         this.setState(modification)
     }
 
-    handleSaveButton() {
-        const { currentData } = this;
-        const blob = dataToBlob(currentData)
-        if (blob) {
-            makeDownloadFile(`${currentData.id || 'UNNAMED'}.character.json`, blob)
-        }
-    }
     handleLoadButton = async () => {
         const file = await uploadFile();
         const { data, error } = await readJsonFile(file)
@@ -159,6 +152,7 @@ export class CharacterEditor extends Component<Props, State> {
     render() {
         const { state } = this
         const { sprite: spriteId, width = 1, height = 1, } = state
+        const { characterIds } = this.props
 
         return (
             <article>
@@ -179,11 +173,12 @@ export class CharacterEditor extends Component<Props, State> {
 
                 <StorageMenu
                     type="characterData"
-                    data={this.props.data}
-                    currentId={state.id}
+                    data={this.currentData}
+                    originalId={this.props.data?.id}
+                    existingIds={characterIds}
                     reset={this.handleResetButton}
                     update={this.handleUpdateButton}
-                    save={this.handleSaveButton}
+                    saveButton={true}
                     load={this.handleLoadButton}
                 />
                 <fieldset>

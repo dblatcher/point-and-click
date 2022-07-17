@@ -1,38 +1,42 @@
 import { FunctionalComponent, h } from "preact";
 import styles from "./editorStyles.module.css"
 
+import { downloadJsonFile, } from "../../lib/files";
+
 interface Props {
     type: string;
     data?: { id: string };
-    currentId: string;
-    existingIds?: string[];
+    originalId?: string;
+    existingIds: string[];
     reset: { (): void };
     update: { (): void };
-    save?: { (): void };
+    saveButton?: boolean;
     load?: { (): void };
 }
 
 export const StorageMenu: FunctionalComponent<Props> = ({
-    type, data, currentId, existingIds = [], reset, update, save, load
+    type, data, originalId, existingIds, reset, update, saveButton, load
 }: Props) => {
 
-    const updateButtonText = currentId === data?.id
-        ? `Update ${currentId}`
+    const currentId = data?.id || '';
+
+    const updateButtonText = originalId === currentId
+        ? `Update ${originalId}`
         : existingIds.includes(currentId)
-            ? `Over write ${currentId}`
+            ? `Overwrite ${currentId}`
             : `Add new ${type} ${currentId}`
 
     return (
         <fieldset className={styles.fieldset}>
             <legend>storage</legend>
             <div>
-                {save && <button onClick={save}>Save to file</button>}
+                {(saveButton && data) && <button onClick={(): void => { downloadJsonFile(data, type) }}>Save to file</button>}
                 {load && <button onClick={load}>Load from file</button>}
             </div>
             <div>
                 {data && <button onClick={reset}>Reset</button>}
 
-                {currentId && <button onClick={update}>
+                {data?.id && <button onClick={update}>
                     {updateButtonText}
                 </button>}
             </div>

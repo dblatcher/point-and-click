@@ -2,7 +2,7 @@
 import { h, Component } from "preact"
 import { ItemData } from "../../definitions/ItemData"
 import { eventToString } from "../../lib/util";
-import { IdentInput, SelectInput, TextInput } from "./formControls";
+import { IdentInput, SelectInput } from "./formControls";
 import { ServiceItemSelector } from "./ServiceItemSelector";
 import imageService, { ImageAsset } from "../../services/imageService";
 import styles from "./editorStyles.module.css"
@@ -14,6 +14,7 @@ interface Props {
     data?: ItemData;
     characterIds: string[];
     updateData?: { (data: ItemData): void };
+    itemIds: string[];
 }
 type State = ItemData & {
 
@@ -75,6 +76,7 @@ export class ItemEditor extends Component<Props, State> {
 
     render() {
         const { characterId = '', id } = this.state
+        const { itemIds } = this.props
 
         return (
             <article>
@@ -108,16 +110,19 @@ export class ItemEditor extends Component<Props, State> {
                         <legend>Button Preview</legend>
                         <div className={styles.row}>
                             <span>Selected:</span>
-                            <ItemMenu items={[this.state]} currentItemId={id} select={() => { }} />
+                            <ItemMenu items={[this.state]} currentItemId={id} select={() => true} />
                         </div>
                         <div className={styles.row}>
                             <span>Not Selected:</span>
-                            <ItemMenu items={[this.state]} currentItemId={''} select={() => { }} />
+                            <ItemMenu items={[this.state]} currentItemId={''} select={() => true} />
                         </div>
                     </fieldset>
                 </div>
                 <div>
-                    <StorageMenu data={this.props.data} type='ItemData' currentId={this.state.id}
+                    <StorageMenu
+                        data={this.state} type='ItemData'
+                        originalId={this.props.data?.id}
+                        existingIds={itemIds}
                         reset={this.handleResetButton}
                         update={this.handleUpdateButton} />
                 </div>

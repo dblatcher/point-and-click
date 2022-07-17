@@ -3,7 +3,7 @@ import { Component, h } from "preact";
 import { Direction, directions, SpriteData, SpriteFrame } from "../../../definitions/SpriteSheet";
 import { cloneData } from "../../../lib/clone";
 import { Sprite } from "../../../lib/Sprite";
-import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../../lib/files";
+import { readJsonFile, uploadFile } from "../../../lib/files";
 import { isSpriteData } from "../../../lib/typeguards";
 import { eventToString } from "../../../lib/util";
 import { CharacterData } from "../../../definitions/CharacterData"
@@ -27,6 +27,7 @@ type SpriteEditorState = SpriteData & ExtraState;
 type SpriteEditorProps = {
     data?: SpriteData;
     updateData?: { (data: SpriteData): void };
+    spriteIds: string[];
 }
 
 function getBlankSprite(): SpriteData {
@@ -55,7 +56,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             selectedRow: 0,
         }
         this.handleNewButton = this.handleNewButton.bind(this)
-        this.handleSaveButton = this.handleSaveButton.bind(this)
         this.handleLoadButton = this.handleLoadButton.bind(this)
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
@@ -134,13 +134,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         const newSprite = getBlankSprite()
         this.setState(newSprite)
     }
-    handleSaveButton() {
-        const { currentData } = this;
-        const blob = dataToBlob(currentData)
-        if (blob) {
-            makeDownloadFile(`${currentData.id || 'UNNAMED'}.sprite.json`, blob)
-        }
-    }
     handleLoadButton = async () => {
         const file = await uploadFile();
         const { data, error } = await readJsonFile(file)
@@ -196,6 +189,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
     render() {
         const { id, defaultDirection, animations, selectedAnimation, selectedCol, selectedRow, selectedSheetId } = this.state
+        const { spriteIds } = this.props
         const overrideSprite = this.buildSprite()
         return <article>
             <h2>Sprite Editor</h2>
@@ -235,12 +229,13 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     </fieldset>
 
                     <StorageMenu
-                        data={this.props.data}
-                        currentId={id}
-                        type='spriteData'
+                        data={this.currentData}
+                        originalId={this.props.data?.id}
+                        existingIds={spriteIds}
+                        type='sprite'
                         update={this.handleUpdateButton}
                         reset={this.handleResetButton}
-                        save={this.handleSaveButton}
+                        saveButton={true}
                         load={this.handleLoadButton}
                     />
                 </section>

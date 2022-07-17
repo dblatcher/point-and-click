@@ -30,5 +30,9 @@ export const Overview: FunctionalComponent<Props> = ({ gameDesign, edit }: Props
             <li>characters: {gameDesign.characters.length}</li>
             <li>interactions: {gameDesign.interactions.length}</li>
         </ul>
+
+        <div>
+            <button>Save to file</button>
+        </div>
     </article>
 }

@@ -1,4 +1,4 @@
-export function dataToBlob(data: unknown) {
+function dataToBlob(data: unknown): Blob | null {
 
     try {
         const dataString = JSON.stringify(data)
@@ -9,7 +9,7 @@ export function dataToBlob(data: unknown) {
     }
 }
 
-export const makeDownloadFile = (fileName: string, blob: Blob): void => {
+const makeDownloadFile = (fileName: string, blob: Blob): void => {
     if (typeof window !== 'undefined') {
         const { URL, document } = window
         const url = URL.createObjectURL(blob);
@@ -21,6 +21,14 @@ export const makeDownloadFile = (fileName: string, blob: Blob): void => {
         a.click();
         URL.revokeObjectURL(url);
         document.body.removeChild(a);
+    }
+}
+
+
+export function downloadJsonFile(data: { id: string }, fileType: string): void {
+    const blob = dataToBlob(data)
+    if (blob) {
+        makeDownloadFile(`${data.id || 'UNNAMED'}.${fileType}.json`, blob)
     }
 }
 

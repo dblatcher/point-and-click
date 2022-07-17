@@ -15,7 +15,7 @@ import { cloneData } from "../../../lib/clone";
 import { isRoomData } from "../../../lib/typeguards";
 import { eventToString, getShift, locateClickInWorld } from "../../../lib/util";
 import { TabMenu } from "../../TabMenu";
-import { dataToBlob, makeDownloadFile, readJsonFile, uploadFile } from "../../../lib/files";
+import { downloadJsonFile, readJsonFile, uploadFile } from "../../../lib/files";
 import styles from '../editorStyles.module.css';
 import imageService from "../../../services/imageService";
 import { getBlankRoom } from "../defaults";
@@ -29,6 +29,7 @@ type RoomEditorState = RoomData & {
 type RoomEditorProps = {
     data?: RoomData;
     updateData?: { (data: RoomData): void };
+    existingRoomIds?: string[];
 }
 
 const defaultParallax = 1;
@@ -65,7 +66,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.changeZone = this.changeZone.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.setClickEffect = this.setClickEffect.bind(this)
-        this.handleSaveButton = this.handleSaveButton.bind(this)
         this.handleLoadButton = this.handleLoadButton.bind(this)
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
@@ -246,14 +246,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         background.splice(direction === 'DOWN' ? index + 1 : index - 1, 0, layer)
         this.setState({ background })
     }
-    handleSaveButton() {
-        const { currentData } = this
-
-        const blob = dataToBlob(currentData)
-        if (blob) {
-            makeDownloadFile(`${currentData.id || 'UNNAMED'}.room.json`, blob)
-        }
-    }
     handleLoadButton = async () => {
         const file = await uploadFile();
         const { data, error } = await readJsonFile(file)
@@ -288,9 +280,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             clickEffect
         } = this.state
 
-        const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
+        const { existingRoomIds = [] } = this.props
 
-        const updateButtonText = this.state.id === this.props.data?.id ? `update ${this.state.id}` : 'add new room'
+        const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
 
         return <article>
             <h2>Room Editor</h2>
@@ -303,12 +295,13 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     </fieldset>
 
                     <StorageMenu
-                        type="roomData"
-                        data={this.props.data}
-                        currentId={id}
+                        type="room"
+                        data={this.currentData}
+                        originalId={this.props.data?.id}
+                        existingIds={existingRoomIds}
                         reset={this.handleResetButton}
                         update={this.handleUpdateButton}
-                        save={this.handleSaveButton}
+                        saveButton={true}
                         load={this.handleLoadButton}
                     />
 

@@ -6,7 +6,6 @@ import { eventToString } from "../../../lib/util";
 import { NumberInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import { ServiceItem } from "src/services/Service";
 import styles from '../editorStyles.module.css';
 import { SpriteSheetPreview } from "../SpriteSheetPreview";
 import imageService, { ImageAsset } from "../../../services/imageService";
@@ -22,6 +21,7 @@ type State = SpriteSheet & ExtraState
 type Props = {
     data?: SpriteSheet;
     updateData?: { (data: SpriteSheet): void };
+    spriteSheetIds: string[];
 }
 
 const getNewBlankSheet: { (): SpriteSheet } = () => ({
@@ -118,6 +118,10 @@ export class SpriteSheetTool extends Component<Props, State> {
             imageId = "", rows = 1, cols = 1, widthScale = 1, heightScale = 1, id = "", saveWarning
         } = this.state
 
+        const {
+            spriteSheetIds
+        } = this.props
+
         return (
             <article>
                 <h2>SpriteSheetTool</h2>
@@ -176,7 +180,8 @@ export class SpriteSheetTool extends Component<Props, State> {
 
                         <StorageMenu
                             data={this.props.data}
-                            currentId={id}
+                            originalId={this.props.data?.id}
+                            existingIds={spriteSheetIds}
                             type='spriteSheet'
                             update={this.handleUpdateButton}
                             reset={this.handleResetButton}
