@@ -179,7 +179,7 @@ export class SpriteSheetTool extends Component<Props, State> {
                         </fieldset>
 
                         <StorageMenu
-                            data={this.props.data}
+                            data={this.currentData}
                             originalId={this.props.data?.id}
                             existingIds={spriteSheetIds}
                             type='spriteSheet'

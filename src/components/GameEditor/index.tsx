@@ -12,16 +12,17 @@ import { CharacterEditor } from "./CharacterEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
 import { populate } from "../../services/populateServices";
 import { ItemEditor } from "./itemEditor";
-import { GameDesign } from "../../definitions/Game";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { RoomData } from "../../definitions/RoomData";
 
 import { startingGameCondition } from '../../../data/fullGame';
 import { TreeMenu } from "./TreeMenu";
 import { InteractionEditor } from "./InteractionEditor";
-import { Interaction } from "src/definitions/Interaction";
 import { Overview } from "./Overview";
 import { listIds, findById, findIndexById } from "../../lib/util";
+
+import { GameDesign, GameDataItem } from "../../definitions/Game";
+import { Interaction } from "src/definitions/Interaction";
 
 
 populate()
@@ -53,7 +54,7 @@ const tabs: string[] = [
 
 
 
-function addNewOrUpdate<T extends { id: string }>(newData: unknown, list: T[]): T[] {
+function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[] {
     const newItem = newData as T;
     const matchIndex = findIndexById(newItem.id, list)
     if (matchIndex !== -1) {
@@ -137,25 +138,31 @@ export class GameEditor extends Component<Props, State>{
 
         this.setState(state => {
             const { gameDesign } = state
+            let { roomId, itemId, characterId, spriteId, spriteSheetId } = state
             switch (property) {
                 case 'rooms': {
                     addNewOrUpdate(data, gameDesign[property])
+                    roomId = (data as GameDataItem).id
                     break
                 }
                 case 'items': {
                     addNewOrUpdate(data, gameDesign[property])
+                    itemId = (data as GameDataItem).id
                     break
                 }
                 case 'characters': {
                     addNewOrUpdate(data, gameDesign[property])
+                    characterId = (data as GameDataItem).id
                     break
                 }
                 case 'sprites': {
                     addNewOrUpdate(data, gameDesign[property])
+                    spriteId = (data as GameDataItem).id
                     break
                 }
                 case 'spriteSheets': {
                     addNewOrUpdate(data, gameDesign[property])
+                    spriteSheetId = (data as GameDataItem).id
                     break
                 }
                 case 'currentRoomId': {
@@ -163,7 +170,7 @@ export class GameEditor extends Component<Props, State>{
                     break
                 }
             }
-            return { gameDesign }
+            return { gameDesign, roomId, itemId, characterId, spriteId, spriteSheetId }
         })
     }
 
