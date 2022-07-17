@@ -63,7 +63,7 @@ function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[
     return list
 }
 
-const usePrebuiltGame = true
+const usePrebuiltGame = false
 
 export class GameEditor extends Component<Props, State>{
 
@@ -99,6 +99,7 @@ export class GameEditor extends Component<Props, State>{
         this.performUpdate = this.performUpdate.bind(this)
         this.changeInteraction = this.changeInteraction.bind(this)
         this.deleteArrayItem = this.deleteArrayItem.bind(this)
+        this.loadNewGame = this.loadNewGame.bind(this)
     }
 
     respondToServiceUpdate(payload: unknown) {
@@ -198,6 +199,10 @@ export class GameEditor extends Component<Props, State>{
             return { gameDesign }
         })
     }
+    loadNewGame(gameDesign: GameDesign) {
+        console.log(gameDesign)
+        this.setState({ gameDesign })
+    }
 
     get noOpenItemsState(): Partial<State> {
         return {
@@ -269,6 +274,7 @@ export class GameEditor extends Component<Props, State>{
                         {
                             label: 'main', content: <Overview
                                 gameDesign={gameDesign}
+                                loadNewGame={this.loadNewGame}
                                 edit={(property, value) => { this.performUpdate(property, value) }} />
                         },
                         {

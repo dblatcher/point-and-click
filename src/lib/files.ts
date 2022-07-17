@@ -77,3 +77,17 @@ export const fileToImageUrl = (file: File): string | undefined => {
     }
     return
 }
+
+export async function uploadJsonData<T>(verify: { (data: unknown): data is T }): Promise<{ data?: T; error?: string }> {
+    const file = await uploadFile();
+    const { data, error } = await readJsonFile(file)
+
+    if (error) {
+        return { error }
+    }
+
+    if (verify(data)) {
+        return { data }
+    }
+    return { error: 'failed verification' }
+}
