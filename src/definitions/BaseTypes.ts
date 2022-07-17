@@ -1,7 +1,8 @@
 import { z } from "zod"
 
-export type Direction = 'left' | 'right'
-export const directions: Direction[] = ['left', 'right']
+const DirectionEnum = z.enum(['left', 'right'])
+export type Direction = z.infer<typeof DirectionEnum>
+export const directions: Direction[] = DirectionEnum.options
 
 export const IdentSchema = z.object({
     type: z.string(),
@@ -16,7 +17,7 @@ export const SpriteParamsSchema = z.object({
     height: z.number(),
     width: z.number(),
     sprite: z.string(),
-    direction: z.optional(z.enum(['left', 'right'])),
+    direction: z.optional(DirectionEnum),
     filter: z.optional(z.string()),
 })
 
