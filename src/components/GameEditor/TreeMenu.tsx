@@ -5,16 +5,17 @@ import styles from "./editorStyles.module.css"
 interface Props {
     folders: Folder[];
     folderClick: { (folderId: string): void };
-    entryClick: { (folderId: string, data: { id: string }): void };
+    entryClick: { (folderId: string, data: { id: string }, isForNew?: boolean): void };
 }
 
-interface Entry {
+export interface Entry {
     label?: string;
     data: { id: string };
     active?: boolean;
+    isForNew?: boolean;
 }
 
-interface Folder {
+export interface Folder {
     id: string;
     label?: string;
     open?: boolean;
@@ -58,7 +59,7 @@ export const TreeMenu: FunctionalComponent<Props> = ({ folders, folderClick, ent
                                         <li key={folder.id + entry.data.id} className={styles.row}>
                                             <button
                                                 className={getEntryClass(entry)}
-                                                onClick={() => { entryClick(folder.id, entry.data) }}>
+                                                onClick={() => { entryClick(folder.id, entry.data, entry.isForNew) }}>
                                                 <b>❯</b>
                                                 <span>{entry.label || entry.data.id}</span>
                                             </button>

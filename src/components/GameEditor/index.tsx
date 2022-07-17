@@ -16,7 +16,7 @@ import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { RoomData } from "../../definitions/RoomData";
 
 import { startingGameCondition } from '../../../data/fullGame';
-import { TreeMenu } from "./TreeMenu";
+import { TreeMenu, Folder, Entry } from "./TreeMenu";
 import { InteractionEditor } from "./InteractionEditor";
 import { Overview } from "./Overview";
 import { listIds, findById, findIndexById } from "../../lib/util";
@@ -51,8 +51,6 @@ const tabs: string[] = [
     'interactions',
     'images',
 ]
-
-
 
 function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[] {
     const newItem = newData as T;
@@ -199,13 +197,25 @@ export class GameEditor extends Component<Props, State>{
         })
     }
 
+    get noOpenItemsState(): Partial<State> {
+        return {
+            roomId: undefined, itemId: undefined, characterId: undefined, spriteId: undefined, spriteSheetId: undefined
+        }
+    }
+
     render() {
         const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId } = this.state
 
-        const makeFolder = (id: string, list?: { id: string }[], entryId?: string) => ({
-            id, open: tabs[tabOpen] === id,
-            entries: list?.map(item => ({ data: item, active: entryId === item.id }))
-        })
+        const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
+            const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
+            if (entries && !entryId) {
+                entries.push({ data: { id: '' }, active: true, label: '*new*', isForNew: true })
+            }
+            return {
+                id, open: tabs[tabOpen] === id,
+                entries
+            }
+        }
 
         const folders = [
             makeFolder('main'),
@@ -223,27 +233,29 @@ export class GameEditor extends Component<Props, State>{
                 <TreeMenu folders={folders}
                     folderClick={(folderId) => {
                         const folderIndex = tabs.indexOf(folderId);
-                        this.setState({ tabOpen: folderIndex })
+                        this.setState({ tabOpen: folderIndex, ...this.noOpenItemsState })
                     }}
-                    entryClick={(folderId, data) => {
+                    entryClick={(folderId, data, isForNew) => {
                         const folderIndex = tabs.indexOf(folderId);
                         const modification: Partial<State> = { tabOpen: folderIndex }
-                        switch (folderId) {
-                            case 'rooms':
-                                modification.roomId = data.id
-                                break;
-                            case 'items':
-                                modification.itemId = data.id
-                                break;
-                            case 'characters':
-                                modification.characterId = data.id
-                                break;
-                            case 'sprites':
-                                modification.spriteId = data.id
-                                break;
-                            case 'spriteSheets':
-                                modification.spriteSheetId = data.id
-                                break;
+                        if (!isForNew) {
+                            switch (folderId) {
+                                case 'rooms':
+                                    modification.roomId = data.id
+                                    break;
+                                case 'items':
+                                    modification.itemId = data.id
+                                    break;
+                                case 'characters':
+                                    modification.characterId = data.id
+                                    break;
+                                case 'sprites':
+                                    modification.spriteId = data.id
+                                    break;
+                                case 'spriteSheets':
+                                    modification.spriteSheetId = data.id
+                                    break;
+                            }
                         }
                         this.setState(modification)
                     }}
