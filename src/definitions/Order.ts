@@ -1,32 +1,37 @@
-import { Point } from "../lib/pathfinding/geometry"
+import { z } from "zod"
 
-export interface MoveOrder {
-    type: 'move';
-    pathIsSet?: boolean;
-    steps: (Point & { animation?: string; speed?: number })[];
-}
+const MoveOrderSchema = z.object({
+    type: z.literal('move'),
+    pathIsSet: z.optional(z.boolean()),
+    steps: z.array(z.object({
+        animation: z.optional(z.string()),
+        x: z.number(),
+        y: z.number(),
+        speed: z.optional(z.number()),
+    }))
+})
+export type MoveOrder = z.infer<typeof MoveOrderSchema>
 
-interface DialogueLine {
-    text: string;
-    time: number;
-    animation?: string;
-}
+const TalkOrderSchema = z.object({
+    type: z.literal('talk'),
+    steps: z.array(z.object({
+        animation: z.optional(z.string()),
+        text: z.string(),
+        time: z.number(),
+    }))
+})
+export type TalkOrder = z.infer<typeof TalkOrderSchema>
 
-export interface TalkOrder {
-    type: 'talk';
-    steps: DialogueLine[];
-}
+const ActOrderSchema = z.object({
+    type: z.literal('act'),
+    steps: z.array(z.object({
+        animation: z.optional(z.string()),
+        duration: z.string(),
+        timeElapsed: z.optional(z.number()),
+        reverse: z.optional(z.boolean()),
+    }))
+})
+export type ActOrder = z.infer<typeof ActOrderSchema>
 
-interface ActionStep {
-    animation?: string;
-    duration: number;
-    timeElapsed?: number;
-    reverse?: boolean;
-}
-
-export interface ActOrder {
-    type: 'act';
-    steps: ActionStep[];
-}
-
+export const orderSchema = z.union([MoveOrderSchema, ActOrderSchema, TalkOrderSchema])
 export type Order = MoveOrder | TalkOrder | ActOrder
