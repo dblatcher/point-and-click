@@ -1,26 +1,33 @@
-import { Order } from "./Order"
+import { z } from "zod"
+import { Order, orderSchema } from "./Order"
 
-interface OrderConsequence {
-    type: 'order';
-    characterId?: string;
-    orders: Order[];
-    replaceCurrentOrders?: boolean;
-}
+const OrderConsequenceSchema = z.object({
+    type: z.literal('order'),
+    characterId: z.optional(z.string()),
+    orders: z.array(orderSchema),
+    replaceCurrentOrders: z.optional(z.boolean()),
+})
 
-interface TalkConsequence {
-    type: 'talk';
-    characterId?: string;
-    text: string;
-    time?: number;
-}
+type OrderConsequence = z.infer<typeof OrderConsequenceSchema>
 
-interface ChangeRoomConsequence {
-    type: 'changeRoom';
-    roomId: string;
-    takePlayer: boolean;
-    x?: number;
-    y?: number;
-}
+const TalkConsequenceSchema = z.object({
+    type: z.literal('talk'),
+    characterId: z.optional(z.string()),
+    text: z.string(),
+    time: z.optional(z.number()),
+
+})
+type TalkConsequence = z.infer<typeof TalkConsequenceSchema>
+
+const ChangeRoomConsequenceSchema = z.object({
+    type: z.literal('changeRoom'),
+    roomId: z.string(),
+    takePlayer: z.boolean(),
+    x: z.optional(z.number()),
+    y: z.optional(z.number()),
+})
+type ChangeRoomConsequence = z.infer<typeof ChangeRoomConsequenceSchema>
+
 
 interface InventoryConsequence {
     type: 'inventory';

@@ -26,7 +26,7 @@ const ActOrderSchema = z.object({
     type: z.literal('act'),
     steps: z.array(z.object({
         animation: z.optional(z.string()),
-        duration: z.string(),
+        duration: z.number(),
         timeElapsed: z.optional(z.number()),
         reverse: z.optional(z.boolean()),
     }))
