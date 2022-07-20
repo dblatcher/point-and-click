@@ -2,7 +2,7 @@
 import { FunctionalComponent, h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { cloneData } from "../../../lib/clone";
-import { Interaction, ConsequenceType, AnyConsequence } from "../../../definitions/Interaction";
+import { Interaction, ConsequenceType, AnyConsequence, InteractionSchema } from "../../../definitions/Interaction";
 import { GameDesign } from "../../../definitions/Game";
 import { SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
@@ -10,7 +10,6 @@ import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
 import { makeNewConsequence } from "./makeNewConsequence";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
-import { isInteraction } from "../../../lib/typeguards";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -90,10 +89,9 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
     }
 
     const handleConfirm = () => {
-        const valid = isInteraction(interaction)
-        console.log('confirm', interaction, { valid })
-        if (valid) {
-            confirm(interaction)
+        const result = InteractionSchema.safeParse(interaction)
+        if (result.success) {
+            confirm(result.data)
         }
     }
 
