@@ -1,21 +1,23 @@
-import { HotspotZone, Zone } from "./Zone"
+import { z } from "zod"
+import { HotspotZoneSchema, ZoneSchema } from "./Zone"
 
-type BackgroundLayer = {
-    parallax: number;
-    imageId: string;
-}
+const BackgroundLayerSchema = z.object({
+    parallax: z.number(),
+    imageId: z.string(),
+})
+export type BackgroundLayer = z.infer<typeof BackgroundLayerSchema>
 
-type ScaleLevel = [number, number][]
+const ScaleLevelSchema = z.array(z.tuple([z.number(), z.number()]))
+export type ScaleLevel = z.infer<typeof ScaleLevelSchema>
 
-type RoomData = {
-    id: string;
-    frameWidth: number;
-    width: number;
-    height: number;
-    background: BackgroundLayer[];
-    hotspots?: HotspotZone[];
-    obstacleAreas?: Zone[];
-    scaling?: ScaleLevel;
-}
-
-export type { RoomData, BackgroundLayer, ScaleLevel }
+export const RoomDataSchema = z.object({
+    id: z.string(),
+    frameWidth: z.number(),
+    width: z.number(),
+    height: z.number(),
+    background: BackgroundLayerSchema.array(),
+    hotspots: HotspotZoneSchema.array().optional(),
+    obstacleAreas: z.optional(ZoneSchema.array()),
+    scaling: z.optional(ScaleLevelSchema),
+})
+export type RoomData = z.infer<typeof RoomDataSchema>

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { BackgroundLayer, RoomData, ScaleLevel } from "../../../definitions/RoomData";
+import { BackgroundLayer, RoomData, ScaleLevel, RoomDataSchema } from "../../../definitions/RoomData";
 import { HotspotZone, Zone } from "../../../definitions/Zone";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
@@ -12,7 +12,6 @@ import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect"
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../../lib/clone";
-import { isRoomData } from "../../../lib/typeguards";
 import { eventToString, getShift, locateClickInWorld } from "../../../lib/util";
 import { TabMenu } from "../../TabMenu";
 import { readJsonFile, uploadFile } from "../../../lib/files";
@@ -254,10 +253,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             console.warn(error)
         }
 
-        if (isRoomData(data)) {
-            this.setState(data)
+        const result = RoomDataSchema.safeParse(data)
+        if (result.success) {
+            this.setState(result.data)
         } else {
-            console.warn("NOT ROOM DATA", data)
+            console.warn("NOT ROOM DATA", data, result.error)
         }
     }
     handleResetButton() {

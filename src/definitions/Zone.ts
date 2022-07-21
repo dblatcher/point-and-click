@@ -7,7 +7,7 @@ export type SupportedZoneShape = z.infer<typeof SupportedZoneShapeEnum>
 const PolygonSchema = z.array(z.tuple([z.number(), z.number()]))
 export type Polygon = z.infer<typeof PolygonSchema>
 
-const ZoneSchema = z.object({
+export const ZoneSchema = z.object({
     type: z.optional(z.string()),
     x: z.number(),
     y: z.number(),
