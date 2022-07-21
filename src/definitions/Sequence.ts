@@ -1,12 +1,15 @@
-import { ImmediateConsequence } from "./Interaction"
-import { Order } from "./Order"
+import { z } from "zod"
+import { ImmediateConsequenceSchema } from "./Interaction"
+import { orderSchema } from "./Order"
 
-export type Stage = {
-    characterOrders?: Record<string, Order[]>;
-    immediateConsequences?: ImmediateConsequence[];
-}
+export const StageSchema = z.object({
+    characterOrders: z.optional(z.record(z.string(), orderSchema)),
+    immediateConsequences: ImmediateConsequenceSchema.array()
+})
+export type Stage = z.infer<typeof StageSchema>
 
-export type Sequence = {
-    description?: string;
-    stages: Stage[];
-}
+export const SequenceSchema = z.object({
+    description: z.string().optional(),
+    stages: StageSchema.array(),
+})
+export type Sequence = z.infer<typeof SequenceSchema>

@@ -101,6 +101,12 @@ export type AnyConsequence = Consequence & {
     orders: Order[];
 }
 
+export const ImmediateConsequenceSchema = z.union([
+    RemoveCharacterConsequenceSchema,
+    ChangeStatusConsequenceSchema,
+    InventoryConsequenceSchema,
+    ConversationConsequenceSchema,
+])
 export type ImmediateConsequence = RemoveCharacterConsequence |
     ChangeStatusConsequence |
     InventoryConsequence |
