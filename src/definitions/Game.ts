@@ -13,6 +13,7 @@ import { SpriteData, SpriteSheet, SpriteDataSchema, SpriteSheetSchema } from "./
 const GameHappeningsSchema = z.object({
     sequenceRunning: SequenceSchema.optional(),
     characterOrders: z.record(z.string(), orderSchema.array()),
+    currentConversationId: z.string().optional(),
 })
 
 const GameContentsDataSchema =  z.object({
@@ -21,7 +22,6 @@ const GameContentsDataSchema =  z.object({
     characters: CharacterDataSchema.array(),
     interactions: InteractionSchema.array(),
     conversations: ConversationSchema.array(),
-    characterOrders: z.record(z.string(), orderSchema.array()),
     currentRoomId: z.string(),
     id: z.string(),
 })
@@ -40,6 +40,6 @@ export const GameDesignSchema = GameContentsDataSchema.and(FixedGameInfoSchema)
 export type GameData = z.infer<typeof GameDataSchema>
 export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>
-export type GameDesign = z.infer<typeof GameDataSchema>
+export type GameDesign = z.infer<typeof GameDesignSchema>
 
 export type GameDataItem = CharacterData | ItemData | Conversation | RoomData | SpriteData | SpriteSheet
