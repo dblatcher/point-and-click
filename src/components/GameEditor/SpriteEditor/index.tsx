@@ -3,7 +3,7 @@ import { Component, h } from "preact";
 import { Direction, directions, SpriteData, SpriteFrame, SpriteDataSchema } from "../../../definitions/SpriteSheet";
 import { cloneData } from "../../../lib/clone";
 import { Sprite } from "../../../lib/Sprite";
-import { readJsonFile, uploadFile } from "../../../lib/files";
+import { uploadJsonData } from "../../../lib/files";
 import { eventToString } from "../../../lib/util";
 import { CharacterData } from "../../../definitions/CharacterData"
 import { DeleteButton, TextInput } from "../formControls";
@@ -134,18 +134,11 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.setState(newSprite)
     }
     handleLoadButton = async () => {
-        const file = await uploadFile();
-        const { data, error } = await readJsonFile(file)
-
-        if (error) {
-            console.warn(error)
-        }
-
-        const result = SpriteDataSchema.safeParse(data)
-        if (result.success) {
-            this.setState(result.data)
+        const { data, error } = await uploadJsonData(SpriteDataSchema)
+        if (data) {
+            this.setState(data)
         } else {
-            console.warn("NOT SPRITE DATA", result.error)
+            console.warn("NOT SPRITE DATA", error)
         }
     }
 

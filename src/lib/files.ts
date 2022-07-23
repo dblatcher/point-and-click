@@ -55,7 +55,7 @@ export const uploadFile = async (): Promise<undefined | File> => {
     return undefined
 }
 
-export const readJsonFile = async (file?: File): Promise<{ data?: unknown; error?: string }> => {
+const readJsonFile = async (file?: File): Promise<{ data?: unknown; error?: string }> => {
     if (!file) {
         return { error: 'no file!' }
     }

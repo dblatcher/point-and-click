@@ -14,7 +14,7 @@ import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../../lib/clone";
 import { eventToString, getShift, locateClickInWorld } from "../../../lib/util";
 import { TabMenu } from "../../TabMenu";
-import { readJsonFile, uploadFile } from "../../../lib/files";
+import { uploadJsonData } from "../../../lib/files";
 import styles from '../editorStyles.module.css';
 import imageService from "../../../services/imageService";
 import { getBlankRoom } from "../defaults";
@@ -246,18 +246,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.setState({ background })
     }
     handleLoadButton = async () => {
-        const file = await uploadFile();
-        const { data, error } = await readJsonFile(file)
-
-        if (error) {
-            console.warn(error)
-        }
-
-        const result = RoomDataSchema.safeParse(data)
-        if (result.success) {
-            this.setState(result.data)
+        const { data, error } = await uploadJsonData(RoomDataSchema)
+        if (data) {
+            this.setState(data)
         } else {
-            console.warn("NOT ROOM DATA", data, result.error)
+            console.warn("NOT ROOM DATA", error)
         }
     }
     handleResetButton() {

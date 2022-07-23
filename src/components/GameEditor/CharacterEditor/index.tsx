@@ -9,7 +9,7 @@ import { Direction, directions } from "../../../definitions/SpriteSheet";
 import { SpritePreview } from "../SpritePreview";
 import styles from "../editorStyles.module.css"
 import { cloneData } from "../../../lib/clone";
-import { uploadFile, readJsonFile } from "../../../lib/files";
+import { uploadJsonData } from "../../../lib/files";
 import { StorageMenu } from "../StorageMenu";
 
 
@@ -105,21 +105,12 @@ export class CharacterEditor extends Component<Props, State> {
         }
         this.setState(modification)
     }
-
     handleLoadButton = async () => {
-        const file = await uploadFile();
-        const { data, error } = await readJsonFile(file)
-
-        if (error) {
-            console.warn(error)
-        }
-
-        const result = CharacterDataSchema.safeParse(data)
-
-        if (result.success) {
-            this.setState(result.data)
+        const { data, error } = await uploadJsonData(CharacterDataSchema)
+        if (data) {
+            this.setState(data)
         } else {
-            console.warn("NOT CHARACTER DATA", result.error.issues)
+            console.warn("NOT CHARACTER DATA", error)
         }
     }
     handleResetButton() {
