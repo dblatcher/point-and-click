@@ -290,7 +290,7 @@ export class GameEditor extends Component<Props, State>{
                     }}
                 />
 
-                <section>
+                <section style={{ flex: 1 }}>
                     <TabMenu backgroundColor="none" noButtons defaultOpenIndex={tabOpen} tabs={[
                         {
                             label: 'main', content: <Overview

@@ -27,6 +27,12 @@
     justify-content: space-between;
 }
 
+.rowTopLeft {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
 .spriteSheetPreview {
     width: 300px;
     border: 2px solid red;

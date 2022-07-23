@@ -7,11 +7,13 @@ import { SelectInput, TextInput } from "../formControls";
 import { cloneData } from "../../../lib/clone";
 import { uploadJsonData } from "../../../lib/files";
 import { StorageMenu } from "../StorageMenu";
-import { Conversation, ConversationSchema } from "../../../definitions/Conversation";
-
+import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema } from "../../../definitions/Conversation";
+import { Folder, TreeMenu } from "../TreeMenu";
+import styles from "../editorStyles.module.css"
 
 type ExtraState = {
-
+    openBranchId?: string;
+    activeChoiceIndex?: number;
 }
 
 type State = Conversation & ExtraState;
@@ -26,7 +28,14 @@ const makeBlankConversation = (): Conversation => ({
     id: 'NEW_CONVERSATION',
     defaultBranch: 'start',
     branches: {
-        start: { choices: [] }
+        start: {
+            choices: [
+                {
+                    text: "ENTER CHOICE TEXT",
+                    sequence: '',
+                }
+            ]
+        }
     }
 })
 
@@ -50,6 +59,7 @@ export class ConversationEditor extends Component<Props, State> {
 
     get currentData(): Conversation {
         const conversation = cloneData(this.state) as State;
+        delete conversation.openBranchId
         return conversation
     }
 
@@ -57,10 +67,14 @@ export class ConversationEditor extends Component<Props, State> {
         const modification: Partial<State> = {}
         switch (propery) {
             case 'id':
+                if (typeof newValue === 'string') {
+                    modification[propery] = newValue.toUpperCase()
+                }
+                break;
             case 'currentBranch':
             case 'defaultBranch':
                 if (typeof newValue === 'string') {
-                    modification[propery] = newValue.toUpperCase()
+                    modification[propery] = newValue
                 }
                 break;
         }
@@ -87,43 +101,45 @@ export class ConversationEditor extends Component<Props, State> {
         }
     }
 
+    get conversationTree(): Folder[] {
+        const { branches, openBranchId, activeChoiceIndex } = this.state
+        return Object.entries(branches).map(([id, branch]) => {
+            return {
+                id,
+                open: openBranchId === id,
+                entries: branch?.choices.map((choice, index) => ({
+                    label: choice.text || "[no text]",
+                    active: openBranchId === id && activeChoiceIndex === index,
+                    data: {
+                        id: index.toString(),
+                    }
+                }))
+            }
+        })
+    }
+
+    get branchAndChoice(): { branch?: ConversationBranch; choice?: ConversationChoice } {
+        const { activeChoiceIndex, openBranchId, branches } = this.state
+        const result: { branch?: ConversationBranch; choice?: ConversationChoice } = {}
+        if (openBranchId) {
+            result.branch = branches[openBranchId]
+            if (result.branch && typeof activeChoiceIndex === 'number') {
+                result.choice = result.branch.choices[activeChoiceIndex]
+            }
+        }
+        return result
+    }
 
     render() {
         const { state } = this
-        const { branches, defaultBranch, currentBranch } = this.state
+        const { branches, defaultBranch, currentBranch, openBranchId } = this.state
         const { conversationIds: characterIds } = this.props
+
+        const { branch, choice } = this.branchAndChoice
 
         return (
             <article>
                 <h2>Conversation Editor</h2>
-
-                <fieldset>
-                    <legend>Id</legend>
-                    <div>
-                        <TextInput label="id" value={state.id || ''} onInput={event => { this.changeValue('id', eventToString(event)) }} />
-                    </div>
-
-                    <div>
-                        <SelectInput label="defaultBranch" value={defaultBranch} items={Object.keys(branches)}
-                            onSelect={(item: string) => { this.changeValue('defaultBranch', item) }} />
-                    </div>
-
-                    <div>
-                        <SelectInput label="currentBranch" value={currentBranch || ''} items={Object.keys(branches)}
-                            haveEmptyOption={true} emptyOptionLabel="(choose branch)"
-                            onSelect={(item: string) => { this.changeValue('currentBranch', item) }} />
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Branches</legend>
-                    <ul>
-                        {Object.entries(state.branches).map(([id, branch]) => (
-                            <li key={id}>{id}</li>
-                        ))}
-                    </ul>
-                </fieldset>
-
                 <StorageMenu
                     type="conversation"
                     data={this.currentData}
@@ -134,8 +150,58 @@ export class ConversationEditor extends Component<Props, State> {
                     saveButton={true}
                     load={this.handleLoadButton}
                 />
+                <fieldset>
+                    <legend>Conversation</legend>
+                    <div>
+                        <TextInput label="id" 
+                            value={state.id || ''} 
+                            onInput={event => { this.changeValue('id', eventToString(event)) }} />
+                    </div>
 
+                    <div>
+                        <SelectInput label="defaultBranch" 
+                            value={defaultBranch} 
+                            items={Object.keys(branches)}
+                            onSelect={(item: string) => { this.changeValue('defaultBranch', item) }} />
+                    </div>
 
+                    <div>
+                        <SelectInput label="currentBranch" value={currentBranch || ''} items={Object.keys(branches)}
+                            haveEmptyOption={true} emptyOptionLabel="(choose branch)"
+                            onSelect={(item: string) => { this.changeValue('currentBranch', item) }} />
+                    </div>
+                </fieldset>
+
+                <fieldset className={styles.rowTopLeft}>
+
+                    <TreeMenu title="Branches"
+                        folders={this.conversationTree}
+                        folderClick={(folderId) => {
+                            this.setState({
+                                openBranchId: folderId,
+                                activeChoiceIndex: undefined,
+                            })
+                        }}
+                        entryClick={(folderId, data) => {
+                            this.setState({
+                                openBranchId: folderId,
+                                activeChoiceIndex: Number(data.id),
+                            })
+                        }} />
+
+                    <div>
+                        <p>{openBranchId}</p>
+                        <hr />
+                        {choice && (
+                            <div>
+                                <p>TEXT: {choice.text}</p>
+                                <p>SEQ: {choice.sequence}</p>
+                                <p>next branch: {choice.nextBranch}</p>
+                            </div>
+                        )}
+                    </div>
+
+                </fieldset>
             </article>
         )
     }
