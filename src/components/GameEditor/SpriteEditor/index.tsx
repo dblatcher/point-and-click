@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { Direction, directions, SpriteData, SpriteFrame } from "../../../definitions/SpriteSheet";
+import { Direction, directions, SpriteData, SpriteFrame, SpriteDataSchema } from "../../../definitions/SpriteSheet";
 import { cloneData } from "../../../lib/clone";
 import { Sprite } from "../../../lib/Sprite";
 import { readJsonFile, uploadFile } from "../../../lib/files";
-import { isSpriteData } from "../../../lib/typeguards";
 import { eventToString } from "../../../lib/util";
 import { CharacterData } from "../../../definitions/CharacterData"
 import { DeleteButton, TextInput } from "../formControls";
@@ -142,10 +141,11 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             console.warn(error)
         }
 
-        if (isSpriteData(data)) {
-            this.setState(data)
+        const result = SpriteDataSchema.safeParse(data)
+        if (result.success) {
+            this.setState(result.data)
         } else {
-            console.warn("NOT SPRITE DATA", data)
+            console.warn("NOT SPRITE DATA", result.error)
         }
     }
 

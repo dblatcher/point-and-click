@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
 import { eventToString, listIds } from "../../lib/util";
-import { GameDesign } from "../../definitions/Game";
+import { GameDesign, GameDesignSchema } from "../../definitions/Game";
 import { SelectInput, TextInput } from "./formControls";
 import { downloadJsonFile, uploadJsonData } from "../../lib/files";
-import { isGameDesign } from "../../lib/typeguards";
 import { useState } from "preact/hooks";
 
 interface Props {
@@ -20,9 +19,10 @@ export const Overview: FunctionalComponent<Props> = ({ gameDesign, edit, loadNew
 
     const handleLoad = async () => {
         setLoadError(undefined)
-        const { data, error } = await uploadJsonData(isGameDesign)
+        const { data, error, errorDetails } = await uploadJsonData(GameDesignSchema)
         if (error) {
             setLoadError(error)
+            console.warn(errorDetails)
         }
         if (data) {
             loadNewGame(data)

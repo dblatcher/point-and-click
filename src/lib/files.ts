@@ -1,3 +1,5 @@
+import { z } from "zod"
+
 function dataToBlob(data: unknown): Blob | null {
 
     try {
@@ -78,7 +80,7 @@ export const fileToImageUrl = (file: File): string | undefined => {
     return
 }
 
-export async function uploadJsonData<T>(verify: { (data: unknown): data is T }): Promise<{ data?: T; error?: string }> {
+export async function uploadJsonData<T>(schema: z.ZodType<T>): Promise<{ data?: T; error?: string; errorDetails?: z.ZodError }> {
     const file = await uploadFile();
     const { data, error } = await readJsonFile(file)
 
@@ -86,8 +88,12 @@ export async function uploadJsonData<T>(verify: { (data: unknown): data is T }):
         return { error }
     }
 
-    if (verify(data)) {
-        return { data }
+    const result = schema.safeParse(data)
+    if (result.success) {
+        return { data: result.data }
     }
-    return { error: 'failed verification' }
+    return {
+        error: result.error.message,
+        errorDetails: result.error
+    }
 }
