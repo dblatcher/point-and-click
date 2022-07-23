@@ -24,7 +24,7 @@ export const ConversationSchema = z.object({
     id: z.string(),
     branches: z.record(z.string(), z.optional(ConversationBranchSchema)),
     currentBranch: z.optional(z.string()),
-    defaultBrach: z.string(),
+    defaultBranch: z.string(),
 })
 
 export type Conversation = z.infer<typeof ConversationSchema>

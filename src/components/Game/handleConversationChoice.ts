@@ -19,7 +19,7 @@ function findChoiceFromRefSet(
         conversationId = currentConversation.id
     }
     if (!branchId) {
-        branchId = currentConversation.currentBranch || currentConversation.defaultBrach
+        branchId = currentConversation.currentBranch || currentConversation.defaultBranch
     }
 
     const conversation = conversations.find(_ => _.id === conversationId);

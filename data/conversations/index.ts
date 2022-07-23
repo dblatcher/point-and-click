@@ -2,7 +2,7 @@ import { Conversation } from '../../src/definitions/Conversation'
 
 const chat: Conversation = {
     id: 'CHAT',
-    defaultBrach: 'hello',
+    defaultBranch: 'hello',
     branches: {
         hello: {
             choices: [

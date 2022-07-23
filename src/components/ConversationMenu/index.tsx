@@ -11,7 +11,7 @@ interface Props {
 
 export function ConversationMenu({ conversation, select, }: Props) {
 
-    const branch = conversation.branches[conversation.currentBranch || conversation.defaultBrach]
+    const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
 
     return (
         <nav className={styles.menu}>

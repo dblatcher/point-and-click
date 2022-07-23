@@ -1,28 +1,30 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
 
+import { TreeMenu, Folder, Entry } from "./TreeMenu";
+import { Overview } from "./Overview";
 import { SpriteSheetTool } from "./SpriteSheetTool";
 import { RoomEditor } from "./RoomEditor";
 import { SpriteEditor } from "./SpriteEditor";
-import imageService from "../../services/imageService";
-import spriteService from "../../services/spriteService";
-
 import { TabMenu } from "../TabMenu";
 import { CharacterEditor } from "./CharacterEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
-import { populate } from "../../services/populateServices";
 import { ItemEditor } from "./itemEditor";
+import { InteractionEditor } from "./InteractionEditor";
+import { ConversationEditor } from "./ConversationEditor";
+
 import { defaultVerbs1, getBlankRoom } from "./defaults";
-import { RoomData } from "../../definitions/RoomData";
 
 import { startingGameCondition } from '../../../data/fullGame';
-import { TreeMenu, Folder, Entry } from "./TreeMenu";
-import { InteractionEditor } from "./InteractionEditor";
-import { Overview } from "./Overview";
 import { listIds, findById, findIndexById } from "../../lib/util";
 
+import { RoomData } from "../../definitions/RoomData";
 import { GameDesign, GameDataItem } from "../../definitions/Game";
 import { Interaction } from "src/definitions/Interaction";
+
+import { populate } from "../../services/populateServices";
+import imageService from "../../services/imageService";
+import spriteService from "../../services/spriteService";
 
 
 populate()
@@ -33,6 +35,7 @@ type State = {
     roomId?: string;
     itemId?: string;
     characterId?: string;
+    conversationId?: string;
     spriteId?: string;
     spriteSheetId?: string;
 };
@@ -46,6 +49,7 @@ const tabs: string[] = [
     'rooms',
     'items',
     'characters',
+    'conversations',
     'sprites',
     'spriteSheets',
     'interactions',
@@ -63,7 +67,7 @@ function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[
     return list
 }
 
-const usePrebuiltGame = false
+const usePrebuiltGame = true
 
 export class GameEditor extends Component<Props, State>{
 
@@ -126,6 +130,9 @@ export class GameEditor extends Component<Props, State>{
     get currentCharacter() {
         return findById(this.state.characterId, this.state.gameDesign.characters)
     }
+    get currentConversation() {
+        return findById(this.state.conversationId, this.state.gameDesign.conversations)
+    }
     get currentSprite() {
         return findById(this.state.spriteId, this.state.gameDesign.sprites)
     }
@@ -151,6 +158,11 @@ export class GameEditor extends Component<Props, State>{
                     break
                 }
                 case 'characters': {
+                    addNewOrUpdate(data, gameDesign[property])
+                    characterId = (data as GameDataItem).id
+                    break
+                }
+                case 'conversations': {
                     addNewOrUpdate(data, gameDesign[property])
                     characterId = (data as GameDataItem).id
                     break
@@ -206,12 +218,17 @@ export class GameEditor extends Component<Props, State>{
 
     get noOpenItemsState(): Partial<State> {
         return {
-            roomId: undefined, itemId: undefined, characterId: undefined, spriteId: undefined, spriteSheetId: undefined
+            roomId: undefined,
+            itemId: undefined,
+            characterId: undefined,
+            spriteId: undefined,
+            spriteSheetId: undefined,
+            conversationId: undefined,
         }
     }
 
     render() {
-        const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId } = this.state
+        const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId, conversationId } = this.state
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
@@ -229,6 +246,7 @@ export class GameEditor extends Component<Props, State>{
             makeFolder('rooms', gameDesign.rooms, roomId),
             makeFolder('items', gameDesign.items, itemId),
             makeFolder('characters', gameDesign.characters, characterId),
+            makeFolder('conversations', gameDesign.conversations, conversationId),
             makeFolder('sprites', gameDesign.sprites, spriteId),
             makeFolder('spriteSheets', gameDesign.spriteSheets, spriteSheetId),
             makeFolder('interactions'),
@@ -256,6 +274,9 @@ export class GameEditor extends Component<Props, State>{
                                     break;
                                 case 'characters':
                                     modification.characterId = data.id
+                                    break;
+                                case 'conversations':
+                                    modification.conversationId = data.id
                                     break;
                                 case 'sprites':
                                     modification.spriteId = data.id
@@ -297,6 +318,13 @@ export class GameEditor extends Component<Props, State>{
                                 characterIds={listIds(gameDesign.characters)}
                                 updateData={data => { this.performUpdate('characters', data) }}
                                 key={characterId} data={this.currentCharacter}
+                            />
+                        },
+                        {
+                            label: 'Conversation Editor', content: <ConversationEditor
+                                conversationIds={listIds(gameDesign.conversations)}
+                                updateData={data => { this.performUpdate('conversations', data) }}
+                                key={conversationId} data={this.currentConversation}
                             />
                         },
                         {
