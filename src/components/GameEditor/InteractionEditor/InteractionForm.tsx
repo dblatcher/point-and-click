@@ -95,13 +95,14 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
         }
     }
 
-    const handleReset =() => {
+    const handleReset = () => {
         setInteraction(Object.assign({ consequences: [] }, cloneData(initialState)))
     }
 
     const verb = gameDesign.verbs.find(_ => _.id === interaction.verbId);
     const showItemOption = verb?.preposition
     const { consequences = [] } = interaction
+    const parseResult = InteractionSchema.safeParse(interaction)
 
     return (
         <article>
@@ -170,7 +171,13 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
 
             </fieldset>
             <div>
-                <button onClick={handleConfirm}>SAVE CHANGES</button>
+                <button 
+                    onClick={handleConfirm} 
+                    disabled={!parseResult.success}
+                    title={(!parseResult.success && parseResult.error.message) || ''}
+                >SAVE CHANGES</button>
+            </div>
+            <div>
                 <button onClick={handleReset}>RESET CHANGES</button>
             </div>
         </article>
