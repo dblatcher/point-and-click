@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { z } from "zod"
-import { h, FunctionalComponent, VNode } from "preact";
+import { h, VNode } from "preact";
 import { CheckBoxInput, SelectInput, TextInput, TriStateInput } from "./formControls";
 import { eventToString } from "../../lib/util";
 
@@ -25,12 +25,13 @@ interface SchemaFieldProps<T> {
     noTriState?: boolean;
     change: { (value: FieldValue, field: FieldDef): void };
     options?: string[];
+    showUnsupported?: boolean;
 }
 
-export function SchemaField<T extends z.ZodRawShape>({ field, change, noTriState, options }: SchemaFieldProps<T>): VNode {
-
+export function SchemaField<T extends z.ZodRawShape>({
+    field, change, noTriState, options, showUnsupported = false
+}: SchemaFieldProps<T>): VNode | null {
     const { key, optional, type, value } = field;
-
     let safeValue: FieldValue
     switch (typeof value) {
         case 'string':
@@ -43,7 +44,7 @@ export function SchemaField<T extends z.ZodRawShape>({ field, change, noTriState
         if (options) {
             return <div>
                 <SelectInput label={key}
-                    value={value||''}
+                    value={value || ''}
                     onSelect={value => change(value, field)}
                     items={options}
                     haveEmptyOption={optional}
@@ -79,20 +80,27 @@ export function SchemaField<T extends z.ZodRawShape>({ field, change, noTriState
         </div>
     }
 
+    if (showUnsupported) {
+        return (
+            <section key={key}>
+                <b>UNSUPPORTED | </b>
+                <span>{key} | </span>
+                {optional && <span>(optional) | </span>}
+                <span>{type}</span>
+                <b>{safeValue?.toString()}</b>
+            </section>
+        )
+    }
 
-    return (
-        <section key={key}>
-            <b>UNSUPPORTED | </b>
-            <span>{key} | </span>
-            {optional && <span>(optional) | </span>}
-            <span>{type}</span>
-            <b>{safeValue?.toString()}</b>
-        </section>
-    )
+    return null
 }
 
-
-export function SchemaForm<T extends z.ZodRawShape>({ schema, data, changeValue, options = {} }: Props<T>): VNode {
+/**
+ * Creates a form for the schema, Supports only primitives and optional primitives
+ */
+export function SchemaForm<T extends z.ZodRawShape>({
+    schema, data, changeValue, options = {}
+}: Props<T>): VNode {
 
     const fields: FieldDef[] = []
     for (const key in schema.shape) {
@@ -113,17 +121,14 @@ export function SchemaForm<T extends z.ZodRawShape>({ schema, data, changeValue,
         })
     }
 
-
-
     return <article>
-        Schema form
         {fields.map(field =>
             <SchemaField key={field.key}
                 noTriState
                 options={options[field.key]}
                 change={changeValue}
-                field={field} />
+                field={field}
+            />
         )}
-
     </article>
 }
