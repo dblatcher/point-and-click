@@ -323,6 +323,7 @@ export class GameEditor extends Component<Props, State>{
                         },
                         {
                             label: 'Conversation Editor', content: <ConversationEditor
+                                sequenceIds={Object.keys(gameDesign.sequences)}
                                 conversationIds={listIds(gameDesign.conversations)}
                                 updateData={data => { this.performUpdate('conversations', data) }}
                                 key={conversationId} data={this.currentConversation}

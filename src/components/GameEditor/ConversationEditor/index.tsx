@@ -22,6 +22,7 @@ type Props = {
     data?: Conversation;
     updateData?: { (data: Conversation): void };
     conversationIds: string[];
+    sequenceIds: string[];
 }
 
 const makeBlankConversation = (): Conversation => ({
@@ -117,9 +118,9 @@ export class ConversationEditor extends Component<Props, State> {
             const { branches, openBranchId, activeChoiceIndex } = state
             if (!openBranchId || typeof activeChoiceIndex !== 'number') { return {} }
             const choices = branches[openBranchId]?.choices
-            if (!choices) {return {}}
+            if (!choices) { return {} }
             const choice = choices[activeChoiceIndex]
-            if (!choice) {return {}}
+            if (!choice) { return {} }
 
             const castKey = field.key as keyof ConversationChoice;
             switch (castKey) {
@@ -146,7 +147,7 @@ export class ConversationEditor extends Component<Props, State> {
                     console.warn('unsupported:')
             }
 
-            return {branches}
+            return { branches }
         })
     }
 
@@ -182,7 +183,7 @@ export class ConversationEditor extends Component<Props, State> {
     render() {
         const { state } = this
         const { branches, defaultBranch, currentBranch, openBranchId } = this.state
-        const { conversationIds: characterIds } = this.props
+        const { conversationIds, sequenceIds } = this.props
 
         const { branch, choice } = this.branchAndChoice
 
@@ -193,7 +194,7 @@ export class ConversationEditor extends Component<Props, State> {
                     type="conversation"
                     data={this.currentData}
                     originalId={this.props.data?.id}
-                    existingIds={characterIds}
+                    existingIds={conversationIds}
                     reset={this.handleResetButton}
                     update={this.handleUpdateButton}
                     saveButton={true}
@@ -251,6 +252,10 @@ export class ConversationEditor extends Component<Props, State> {
                                     schema={ConversationChoiceSchema}
                                     data={choice}
                                     changeValue={this.handleChoiceChange}
+                                    options={{
+                                        sequence: sequenceIds,
+                                        nextBranch: Object.keys(this.state.branches),
+                                    }}
                                 />
                             </div>
                         )}
