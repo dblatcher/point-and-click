@@ -115,6 +115,40 @@ export const CheckBoxInput: FunctionalComponent<{
     </>
 }
 
+export const TriStateInput: FunctionalComponent<{
+    label: string;
+    name?: string;
+    value: boolean | undefined;
+    inputHandler: { (value: boolean | undefined): void };
+}> = (props) => {
+
+
+    return <>
+        <div>
+            <label><b>{props.label}:</b></label>
+            <label>undefined</label>
+            <input type='radio'
+                name={props.name || props.label}
+                checked={props.value === undefined}
+                onInput={(): void => props.inputHandler(undefined)}
+            />|
+            <label>true</label>
+            <input type='radio'
+                name={props.name || props.label}
+                checked={props.value === true}
+                onInput={(): void => props.inputHandler(true)}
+            />|
+            <label>false</label>
+            <input type='radio'
+                name={props.name || props.label}
+                checked={props.value === false}
+                onInput={(): void => props.inputHandler(false)}
+            />
+
+        </div>
+    </>
+}
+
 export const DeleteButton: FunctionalComponent<{
     label: string;
     onClick: JSX.EventHandler<JSX.TargetedEvent>;

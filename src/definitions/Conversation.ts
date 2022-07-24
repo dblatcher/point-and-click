@@ -1,7 +1,7 @@
 import { z } from "zod"
 
-const ConversationChoiceSchema = z.object({
-    ref: z.optional(z.string()),
+export const ConversationChoiceSchema = z.object({
+    ref: z.string().optional(),
     text: z.string(),
     sequence: z.string(),
     nextBranch: z.optional(z.string()),
@@ -14,7 +14,7 @@ const ConversationChoiceSchema = z.object({
 
 export type ConversationChoice = z.infer <typeof ConversationChoiceSchema>
 
-const ConversationBranchSchema = z.object({
+export const ConversationBranchSchema = z.object({
     choices: z.array(ConversationChoiceSchema)
 })
 

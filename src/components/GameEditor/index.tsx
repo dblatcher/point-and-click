@@ -78,7 +78,8 @@ export class GameEditor extends Component<Props, State>{
                 gameDesign: {
                     ...startingGameCondition
                 },
-                tabOpen: tabs.indexOf('main'),
+                tabOpen: tabs.indexOf('conversations'),
+                conversationId:'CHAT',
             }
         } else {
             const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
