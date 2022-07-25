@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { eventToString, findById } from "../../../lib/util";
+import { eventToString, listIds } from "../../../lib/util";
 import { SelectInput, TextInput } from "../formControls";
 
 import { cloneData } from "../../../lib/clone";
@@ -10,6 +10,7 @@ import { Conversation, ConversationBranch, ConversationChoice, ConversationSchem
 import { Folder, TreeMenu } from "../TreeMenu";
 import styles from "../editorStyles.module.css"
 import { SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
+import { ChoiceSelector } from "./ChoiceSelector";
 
 type ExtraState = {
     openBranchId?: string;
@@ -21,7 +22,7 @@ type State = Conversation & ExtraState;
 type Props = {
     data?: Conversation;
     updateData?: { (data: Conversation): void };
-    conversationIds: string[];
+    conversations: Conversation[];
     sequenceIds: string[];
 }
 
@@ -64,6 +65,8 @@ export class ConversationEditor extends Component<Props, State> {
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.handleChoiceChange = this.handleChoiceChange.bind(this)
+        this.updateChoiceListItem = this.updateChoiceListItem.bind(this)
+        this.addChoiceListItem = this.addChoiceListItem.bind(this)
     }
 
     get currentData(): Conversation {
@@ -109,6 +112,35 @@ export class ConversationEditor extends Component<Props, State> {
             this.props.updateData(this.currentData)
         }
     }
+
+    updateChoiceListItem(
+        property: 'enablesChoices' | 'disablesChoices',
+        indexOfSet: number,
+        newRefSet: (string | undefined)[],
+    ) {
+        this.setState(state => {
+            const { branches } = state
+            const { choice } = this.getBranchAndChoice(state)
+            if (!choice) { return {} }
+            if (!choice[property]) { choice[property] = [] }
+            choice[property]?.splice(indexOfSet, 1, newRefSet)
+            return { branches }
+        })
+    }
+
+    addChoiceListItem(
+        property: 'enablesChoices' | 'disablesChoices'
+    ) {
+        this.setState(state => {
+            const { branches } = state
+            const { choice } = this.getBranchAndChoice(state)
+            if (!choice) { return {} }
+            if (!choice[property]) { choice[property] = [] }
+            choice[property]?.push([undefined, undefined, undefined])
+            return { branches }
+        })
+    }
+
     handleChoiceChange(value: FieldValue, field: FieldDef) {
         const { openBranchId, activeChoiceIndex } = this.state
         console.log(value, field, 'index')
@@ -168,8 +200,8 @@ export class ConversationEditor extends Component<Props, State> {
         })
     }
 
-    get branchAndChoice(): { branch?: ConversationBranch; choice?: ConversationChoice } {
-        const { activeChoiceIndex, openBranchId, branches } = this.state
+    getBranchAndChoice(state: State): { branch?: ConversationBranch; choice?: ConversationChoice } {
+        const { activeChoiceIndex, openBranchId, branches } = state
         const result: { branch?: ConversationBranch; choice?: ConversationChoice } = {}
         if (openBranchId) {
             result.branch = branches[openBranchId]
@@ -182,10 +214,9 @@ export class ConversationEditor extends Component<Props, State> {
 
     render() {
         const { state } = this
-        const { branches, defaultBranch, currentBranch, openBranchId } = this.state
-        const { conversationIds, sequenceIds } = this.props
-
-        const { branch, choice } = this.branchAndChoice
+        const { branches, defaultBranch, currentBranch, openBranchId, id } = this.state
+        const { conversations, sequenceIds } = this.props
+        const { branch, choice } = this.getBranchAndChoice(state)
 
         return (
             <article>
@@ -194,7 +225,7 @@ export class ConversationEditor extends Component<Props, State> {
                     type="conversation"
                     data={this.currentData}
                     originalId={this.props.data?.id}
-                    existingIds={conversationIds}
+                    existingIds={listIds(conversations)}
                     reset={this.handleResetButton}
                     update={this.handleUpdateButton}
                     saveButton={true}
@@ -257,6 +288,22 @@ export class ConversationEditor extends Component<Props, State> {
                                         nextBranch: Object.keys(this.state.branches),
                                     }}
                                 />
+
+                                <p>enablesChoices</p>
+                                {choice.enablesChoices?.map((refSet, index) => (
+                                    <ChoiceSelector refSet={refSet} key={index}
+                                        conversations={conversations}
+                                        currentConversationId={id}
+                                        openBranchId={openBranchId || ''}
+                                        change={(newRefSet) => {
+                                            this.updateChoiceListItem('enablesChoices', index, newRefSet)
+                                        }}
+                                        remove={() => { console.log('to do - remove ') }}
+                                    />
+                                ))}
+                                <div>
+                                    <button onClick={() => { this.addChoiceListItem('enablesChoices') }}>+</button>
+                                </div>
                             </div>
                         )}
                     </div>
