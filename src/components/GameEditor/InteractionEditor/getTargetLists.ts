@@ -2,8 +2,10 @@ import { GameDesign } from "../../../definitions/Game";
 
 const emoji = {
     CHARACTER: '🚶',
-    ITEM: '🎒',
-    HOTSPOT: '⌘',
+    ITEM: '📦',
+    HOTSPOT: '🎯',
+    CONVERSATION: '💬',
+    SEQUENCE:'📜',
 }
 
 export function getTargetLists(gameDesign: GameDesign): { ids: string[]; descriptions: string[] } {
@@ -36,4 +38,14 @@ export function getCharacterDescriptions(gameDesign: GameDesign): string[] {
 export function getItemDescriptions(gameDesign: GameDesign): string[] {
     const { items } = gameDesign
     return items.map(item => `${emoji.ITEM} ${item.id}`)
+}
+
+export function getConversationsDescriptions(gameDesign: GameDesign): string[] {
+    const { conversations=[] } = gameDesign
+    return conversations.map(item => `${emoji.CONVERSATION} ${item.id}`)
+}
+
+export function getSequenceDescriptions(gameDesign: GameDesign): string[] {
+    const { sequences } = gameDesign
+    return Object.keys(sequences).map(key=> `${emoji.SEQUENCE} ${key}`)
 }
