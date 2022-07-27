@@ -62,6 +62,7 @@
     padding-right: 1em;
     font-size: 120%;
     min-width: 15rem;
+    align-self: stretch;
 }
 
 .treeMenu > ul {

@@ -3,9 +3,6 @@ import { FunctionalComponent, h } from "preact";
 import { Conversation } from "../../../definitions/Conversation";
 import { ChoiceSelector } from "./ChoiceSelector";
 
-
-
-
 interface Props {
     property: 'enablesChoices' | 'disablesChoices';
     choices: (string | undefined)[][];
@@ -23,7 +20,7 @@ export const ChoiceListControl: FunctionalComponent<Props> = ({
 }: Props) => {
 
     return (
-        <section style={{
+        <article style={{
             borderBottom: '1px dotted black',
             borderTop: '1px dotted black',
         }}>
@@ -43,6 +40,6 @@ export const ChoiceListControl: FunctionalComponent<Props> = ({
                 <span>Add choice</span>
                 <button onClick={() => { add(property) }}>+</button>
             </div>
-        </section>
+        </article>
     )
 }

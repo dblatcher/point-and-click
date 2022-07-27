@@ -3,7 +3,7 @@ import { z } from "zod"
 import { h, VNode } from "preact";
 import { CheckBoxInput, SelectInput, TextInput, TriStateInput } from "./formControls";
 import { eventToString } from "../../lib/util";
-
+import styles from './editorStyles.module.css';
 
 export interface FieldDef {
     key: string;
@@ -42,7 +42,7 @@ export function SchemaField<T extends z.ZodRawShape>({
 
     if (type === 'ZodString' && (typeof value === 'string' || typeof value === 'undefined')) {
         if (options) {
-            return <div>
+            return <div className={styles.row}>
                 <SelectInput label={key}
                     value={value || ''}
                     onSelect={value => change(value, field)}
@@ -53,7 +53,7 @@ export function SchemaField<T extends z.ZodRawShape>({
             </div>
         }
 
-        return <div>
+        return <div className={styles.row}>
             <TextInput label={key}
                 value={value || ''}
                 onInput={(event): void => { change(eventToString(event), field) }}
@@ -64,14 +64,14 @@ export function SchemaField<T extends z.ZodRawShape>({
 
     if (type === 'ZodBoolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {
         if (noTriState || !optional) {
-            return <div>
+            return <div className={styles.row}>
                 <CheckBoxInput label={key}
                     value={value}
                     inputHandler={(value): void => { change(value, field) }}
                 />
             </div>
         }
-        return <div>
+        return <div className={styles.row}>
             <TriStateInput label={key}
                 value={value}
                 inputHandler={(value): void => { change(value, field) }}
