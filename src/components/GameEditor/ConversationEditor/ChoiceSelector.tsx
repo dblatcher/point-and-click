@@ -42,8 +42,6 @@ export const ChoiceSelector: FunctionalComponent<Props> = ({
 
     return (
         <div>
-
-
             <SelectInput value={conversationId || ''}
                 items={listIds(conversations)}
                 haveEmptyOption={true}

@@ -6,11 +6,11 @@ import { SelectInput, TextInput } from "../formControls";
 import { cloneData } from "../../../lib/clone";
 import { uploadJsonData } from "../../../lib/files";
 import { StorageMenu } from "../StorageMenu";
-import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationBranchSchema, ConversationChoiceSchema } from "../../../definitions/Conversation";
+import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationChoiceSchema } from "../../../definitions/Conversation";
 import { Folder, TreeMenu } from "../TreeMenu";
 import styles from "../editorStyles.module.css"
 import { SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
-import { ChoiceSelector } from "./ChoiceSelector";
+import { ChoiceListControl } from "./ChoiceListControl";
 
 type ExtraState = {
     openBranchId?: string;
@@ -67,6 +67,7 @@ export class ConversationEditor extends Component<Props, State> {
         this.handleChoiceChange = this.handleChoiceChange.bind(this)
         this.updateChoiceListItem = this.updateChoiceListItem.bind(this)
         this.addChoiceListItem = this.addChoiceListItem.bind(this)
+        this.removeChoiceListItem = this.removeChoiceListItem.bind(this)
     }
 
     get currentData(): Conversation {
@@ -137,6 +138,19 @@ export class ConversationEditor extends Component<Props, State> {
             if (!choice) { return {} }
             if (!choice[property]) { choice[property] = [] }
             choice[property]?.push([undefined, undefined, undefined])
+            return { branches }
+        })
+    }
+
+    removeChoiceListItem(
+        property: 'enablesChoices' | 'disablesChoices',
+        index: number
+    ) {
+        this.setState(state => {
+            const { branches } = state
+            const { choice } = this.getBranchAndChoice(state)
+            if (!choice || !choice[property]) { return {} }
+            choice[property]?.splice(index, 1)
             return { branches }
         })
     }
@@ -270,15 +284,8 @@ export class ConversationEditor extends Component<Props, State> {
                             })
                         }} />
 
-                    <div>
-                        {branch && (
-                            <div>
-                                <p>{openBranchId}</p>
-                                <hr />
-                            </div>
-                        )}
                         {choice && (
-                            <div>
+                            <section style={{paddingLeft:'1em'}}>
                                 <SchemaForm
                                     schema={ConversationChoiceSchema}
                                     data={choice}
@@ -289,24 +296,29 @@ export class ConversationEditor extends Component<Props, State> {
                                     }}
                                 />
 
-                                <p>enablesChoices</p>
-                                {choice.enablesChoices?.map((refSet, index) => (
-                                    <ChoiceSelector refSet={refSet} key={index}
-                                        conversations={conversations}
-                                        currentConversationId={id}
-                                        openBranchId={openBranchId || ''}
-                                        change={(newRefSet) => {
-                                            this.updateChoiceListItem('enablesChoices', index, newRefSet)
-                                        }}
-                                        remove={() => { console.log('to do - remove ') }}
-                                    />
-                                ))}
-                                <div>
-                                    <button onClick={() => { this.addChoiceListItem('enablesChoices') }}>+</button>
-                                </div>
-                            </div>
+                                <ChoiceListControl
+                                    choices={choice.disablesChoices || []}
+                                    property="disablesChoices"
+                                    conversations={conversations}
+                                    currentConversationId={id}
+                                    openBranchId={openBranchId || ''}
+                                    add={this.addChoiceListItem}
+                                    change={this.updateChoiceListItem}
+                                    remove={this.removeChoiceListItem}
+                                />
+                                <ChoiceListControl
+                                    choices={choice.enablesChoices || []}
+                                    property="enablesChoices"
+                                    conversations={conversations}
+                                    currentConversationId={id}
+                                    openBranchId={openBranchId || ''}
+                                    add={this.addChoiceListItem}
+                                    change={this.updateChoiceListItem}
+                                    remove={this.removeChoiceListItem}
+                                />
+                            </section>
                         )}
-                    </div>
+
 
                 </fieldset>
             </article>
