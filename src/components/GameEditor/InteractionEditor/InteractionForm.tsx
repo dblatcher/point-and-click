@@ -10,6 +10,7 @@ import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
 import { makeNewConsequence } from "./makeNewConsequence";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { Order } from "src/definitions/Order";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -51,7 +52,6 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
     }
     const editConsequence = (index: number, property: keyof AnyConsequence, value: unknown) => {
         const { consequences = [] } = interaction
-
         if (property === 'type' && typeof value === 'string') {
             consequences.splice(index, 1, makeNewConsequence(value as ConsequenceType))
         } else {
@@ -81,6 +81,8 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                 case 'y':
                     consequence[property] = value as number
                     break;
+                case 'orders':
+                    consequence[property] = value as Order[]
             }
             consequences.splice(index, 1, consequence)
         }

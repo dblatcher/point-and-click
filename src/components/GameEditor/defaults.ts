@@ -1,3 +1,4 @@
+import { Order, OrderType } from "src/definitions/Order";
 import { RoomData } from "../../definitions/RoomData";
 import { Verb } from "../../definitions/Verb";
 
@@ -23,3 +24,10 @@ export const getBlankRoom: { (): RoomData } = () => ({
         [0, 1],
     ]
 })
+
+export const getDefaultOrder = (type: OrderType): Order => {
+    return {
+        type,
+        steps: []
+    }
+}

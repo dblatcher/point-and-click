@@ -6,6 +6,9 @@ import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formContr
 import { eventToString, listIds } from "../../../lib/util";
 import { Order } from "../../../definitions/Order";
 import { getTargetLists, getCharacterDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions } from "./getTargetLists";
+import { OrderForm } from "../OrderForm";
+import { ListEditor } from "../ListEditor";
+import { getDefaultOrder } from "../defaults";
 
 interface Props {
     consequence: AnyConsequence;
@@ -37,6 +40,22 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         itemId: getItemDescriptions(gameDesign),
         conversationId: getConversationsDescriptions(gameDesign),
         sequence: getSequenceDescriptions(gameDesign,)
+    }
+
+    const insertOrder = (index: number): void => {
+        const ordersCopy = [...consequence.orders]
+        ordersCopy.splice(index, 0, getDefaultOrder('talk'))
+        edit('orders', ordersCopy)
+    }
+    const deleteOrder = (index: number): void => {
+        const ordersCopy = [...consequence.orders]
+        ordersCopy.splice(index, 1)
+        edit('orders', ordersCopy)
+    }
+    const editOrder = (newOrder: Order, index: number): void => {
+        const ordersCopy = [...consequence.orders]
+        ordersCopy.splice(index, 1, newOrder)
+        edit('orders', ordersCopy)
     }
 
     return <div>
@@ -99,6 +118,23 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                         </div>
                     )
 
+                case 'orders': {
+                    const orders = value as Order[]
+                    return (
+                        <div key={index}>
+                            <ListEditor
+                                list={orders}
+                                describeItem={(order, index) =>
+                                    <OrderForm
+                                        updateData={(newOrder) => { editOrder(newOrder, index) }}
+                                        data={order} key={index} />
+                                }
+                                deleteItem={deleteOrder}
+                                insertItem={insertOrder}
+                            />
+                        </div>
+                    )
+                }
                 default:
                     return (
                         <div key={index}>
