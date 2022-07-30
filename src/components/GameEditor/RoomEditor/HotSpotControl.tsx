@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact";
 import { ClickEffect } from "./ClickEffect";
-import { HotspotZone } from "../../../definitions/Zone";
+import { HotspotZone } from "src";
 import { IdentInput, ParallaxInput } from "../formControls";
 import { ZoneControl } from "./ZoneControl";
 import { eventToNumber, eventToString } from "../../../lib/util";

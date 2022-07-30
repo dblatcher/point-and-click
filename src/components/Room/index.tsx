@@ -1,7 +1,7 @@
 import { h, ComponentChildren, FunctionComponent } from "preact";
 import { CellMatrix } from "../../lib/pathfinding/cells";
-import { RoomData } from "../../definitions/RoomData";
-import { HotspotZone } from "../../definitions/Zone";
+import { RoomData } from "src";
+import { HotspotZone } from "src";
 import { getShift } from "../../lib/util";
 import styles from './styles.module.css';
 import Hotspot from "./Hotspot";

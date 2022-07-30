@@ -2,7 +2,7 @@
 import { h } from "preact";
 import { useState } from "preact/hooks"
 import { ImageAsset } from "../../../services/imageService";
-import { BackgroundLayer } from "../../../definitions/RoomData";
+import { BackgroundLayer } from "src";
 import { clamp, eventToNumber } from "../../../lib/util";
 import { ParallaxInput } from "../formControls";
 

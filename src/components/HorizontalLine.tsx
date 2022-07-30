@@ -1,5 +1,5 @@
 import { h, Fragment, FunctionalComponent } from "preact";
-import { RoomData } from "../definitions/RoomData"
+import { RoomData } from "src"
 
 interface Props {
     roomData: RoomData;

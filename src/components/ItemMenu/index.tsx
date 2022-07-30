@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact";
 import imageService from "../../services/imageService";
-import { ItemData } from "../../definitions/ItemData"
+import { ItemData } from "src"
 import styles from './styles.module.css';
 import { HandleHoverFunction } from "../Game";
 

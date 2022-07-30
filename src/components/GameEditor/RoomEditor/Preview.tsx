@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment, JSX } from "preact";
-import { RoomData } from "../../../definitions/RoomData";
+import { RoomData, CharacterData } from "src";
 import { Point } from "../../../lib/pathfinding/geometry";
 import MarkerShape from "../../MarkerShape";
 import { Room } from "../../Room";
 import { ClickEffect } from "./ClickEffect";
-import { CharacterData } from "../../../definitions/CharacterData";
 import { eventToBoolean, eventToNumber } from "../../../lib/util";
 import HorizontalLine from "../../HorizontalLine";
 import { makeTestCharacter } from "./testSprite";

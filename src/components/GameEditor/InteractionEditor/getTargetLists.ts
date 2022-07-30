@@ -1,4 +1,4 @@
-import { GameDesign } from "../../../definitions/Game";
+import { GameDesign } from "src";
 
 const emoji = {
     CHARACTER: '🚶',

@@ -1,7 +1,7 @@
-import { ActOrder } from "../../../definitions/Order";
+import { ActOrder } from "src";
 
 
-export function executeAction(actOrder: ActOrder) {
+export function executeAction(actOrder: ActOrder): void {
     const [nextAction] = actOrder.steps
     if (nextAction) {
         if (typeof nextAction.timeElapsed === 'undefined') {

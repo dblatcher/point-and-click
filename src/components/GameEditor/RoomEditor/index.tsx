@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { BackgroundLayer, RoomData, ScaleLevel, RoomDataSchema } from "../../../definitions/RoomData";
-import { HotspotZone, Zone } from "../../../definitions/Zone";
+import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone  } from "src";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
@@ -19,6 +18,7 @@ import styles from '../editorStyles.module.css';
 import imageService from "../../../services/imageService";
 import { getBlankRoom } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
+import { RoomDataSchema } from "../../../definitions/RoomData";
 
 
 type RoomEditorState = RoomData & {

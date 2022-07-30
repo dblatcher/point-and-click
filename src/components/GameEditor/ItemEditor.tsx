@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, Component } from "preact"
-import { ItemData } from "../../definitions/ItemData"
+import { ItemData } from "src"
 import { eventToString } from "../../lib/util";
 import { IdentInput, SelectInput } from "./formControls";
 import { ServiceItemSelector } from "./ServiceItemSelector";

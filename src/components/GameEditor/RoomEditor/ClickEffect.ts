@@ -1,13 +1,13 @@
-import { SupportedZoneShape } from "../../../definitions/Zone"
+import { SupportedZoneShape } from "src"
 
 export type NewObstableEffect = {
-    type: 'OBSTACLE',
-    shape: SupportedZoneShape
+    type: 'OBSTACLE';
+    shape: SupportedZoneShape;
 }
 
 export type NewHotspotEffect = {
-    type: 'HOTSPOT',
-    shape: SupportedZoneShape
+    type: 'HOTSPOT';
+    shape: SupportedZoneShape;
 }
 
 export type NewObstaclePolygonPointEffect = {

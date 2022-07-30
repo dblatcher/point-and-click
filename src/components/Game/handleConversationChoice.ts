@@ -1,7 +1,7 @@
-import { Conversation, ConversationChoice } from "../../definitions/Conversation";
+import { Conversation, ConversationChoice, Sequence } from "src";
 import { cloneData } from "../../lib/clone";
 import { GameState } from ".";
-import { Sequence } from "src/definitions/Sequence";
+
 
 function findChoiceFromRefSet(
     choiceRefSet: (string | undefined)[],

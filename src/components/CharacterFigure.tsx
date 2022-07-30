@@ -1,8 +1,6 @@
 import { h, Fragment, FunctionalComponent, JSX } from "preact";
 import { useLayoutEffect, useState } from "preact/hooks";
-import { RoomData } from "../definitions/RoomData"
-import { Order } from "../definitions/Order";
-import { CharacterData } from "../definitions/CharacterData";
+import { RoomData,Order,CharacterData } from "src"
 import { placeOnScreen } from "../lib/util";
 import { getScale } from "../lib/getScale";
 import { Sprite } from "../lib/Sprite";

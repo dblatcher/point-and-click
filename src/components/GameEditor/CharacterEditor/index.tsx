@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { eventToString } from "../../../lib/util";
-import { CharacterData, CharacterDataSchema } from "../../../definitions/CharacterData";
+import { CharacterData, Direction } from "src";
+import { CharacterDataSchema } from "../../../definitions/CharacterData";
+import { directions } from "../../../definitions/SpriteSheet";
 import { CheckBoxInput, IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import spriteService from "../../../services/spriteService";
-import { Direction, directions } from "../../../definitions/SpriteSheet";
 import { SpritePreview } from "../SpritePreview";
-import styles from "../editorStyles.module.css"
-import { cloneData } from "../../../lib/clone";
-import { uploadJsonData } from "../../../lib/files";
 import { StorageMenu } from "../StorageMenu";
+import { cloneData } from "../../../lib/clone";
+import { eventToString } from "../../../lib/util";
+import { uploadJsonData } from "../../../lib/files";
 
 
 type ExtraState = {

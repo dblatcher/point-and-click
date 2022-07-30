@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact"
-import { Verb } from "../../definitions/Verb"
+import { Verb } from "src"
 
 interface Props {
     verbs: Verb[];

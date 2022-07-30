@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
 import { findById, listIds } from "../../../lib/util";
-import { Conversation } from "../../../definitions/Conversation";
+import { Conversation } from "src";
 import { SelectInput } from "../formControls";
 
 

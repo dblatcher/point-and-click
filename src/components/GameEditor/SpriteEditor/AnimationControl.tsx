@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h, Fragment } from "preact";
 import { Sprite } from "../../../lib/Sprite";
-import { Direction, directions, SpriteFrame } from "../../../definitions/SpriteSheet";
-import { CharacterData } from "src/definitions/CharacterData";
+import { directions } from "../../../definitions/SpriteSheet";
+import { CharacterData, Direction, SpriteFrame } from "src";
 import { SpritePreview } from "../SpritePreview";
 import { DeleteButton } from "../formControls";
 import { ListEditor } from "../ListEditor";

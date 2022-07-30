@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
-import { Conversation } from "../../../definitions/Conversation";
+import { Conversation } from "src";
 import { ChoiceSelector } from "./ChoiceSelector";
 
 interface Props {

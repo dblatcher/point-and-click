@@ -2,15 +2,14 @@
 import { FunctionalComponent, h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { cloneData } from "../../../lib/clone";
-import { Interaction, ConsequenceType, AnyConsequence, InteractionSchema } from "../../../definitions/Interaction";
-import { GameDesign } from "../../../definitions/Game";
+import { InteractionSchema } from "../../../definitions/Interaction";
+import { GameDesign, Interaction, ConsequenceType, AnyConsequence, Order } from "src";
 import { SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
 import { makeNewConsequence } from "./makeNewConsequence";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
-import { Order } from "src/definitions/Order";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -173,8 +172,8 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
 
             </fieldset>
             <div>
-                <button 
-                    onClick={handleConfirm} 
+                <button
+                    onClick={handleConfirm}
                     disabled={!parseResult.success}
                     title={(!parseResult.success && parseResult.error.message) || ''}
                 >SAVE CHANGES</button>

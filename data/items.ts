@@ -1,4 +1,5 @@
-import type { ItemData } from "../src/definitions/ItemData";
+import { ItemData } from "src";
+
 
 export const items: ItemData[] = [
     {

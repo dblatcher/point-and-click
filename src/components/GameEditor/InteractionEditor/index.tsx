@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { GameDesign } from "../../../definitions/Game";
-import { Interaction } from "../../../definitions/Interaction";
+import { GameDesign, Interaction } from "src";
 import { DeleteButton, SelectInput } from "../formControls";
 import styles from '../editorStyles.module.css';
 import { cloneData } from "../../../lib/clone";

@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
-import { AnyConsequence, consequenceTypes } from "../../../definitions/Interaction";
-import { GameDesign } from "../../../definitions/Game";
+import { consequenceTypes } from "../../../definitions/Interaction";
+import { GameDesign,AnyConsequence,Order } from "src";
 import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
-import { Order } from "../../../definitions/Order";
 import { getTargetLists, getCharacterDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";

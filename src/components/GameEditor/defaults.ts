@@ -1,6 +1,6 @@
 import { Order, OrderType } from "src/definitions/Order";
-import { RoomData } from "../../definitions/RoomData";
-import { Verb } from "../../definitions/Verb";
+import { RoomData } from "src";
+import { Verb } from "src";
 
 export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'LOOK', label: 'Look at' },

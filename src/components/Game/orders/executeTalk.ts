@@ -1,7 +1,7 @@
-import { TalkOrder } from "../../../definitions/Order";
+import { TalkOrder } from "src";
 
 
-export function exectuteTalk(talkOrder: TalkOrder) {
+export function exectuteTalk(talkOrder: TalkOrder): void {
     const [nextLine] = talkOrder.steps
     if (nextLine) {
         nextLine.time--

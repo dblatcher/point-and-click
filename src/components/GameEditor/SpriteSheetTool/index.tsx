@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, createRef, h, RefObject } from "preact";
-import { SpriteSheet } from "../../../definitions/SpriteSheet";
+import { SpriteSheet } from "src";
 import spriteSheetService from "../../../services/spriteSheetService";
 import { eventToString } from "../../../lib/util";
 import { NumberInput, TextInput, Warning } from "../formControls";

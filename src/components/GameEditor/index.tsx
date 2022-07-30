@@ -17,10 +17,8 @@ import { defaultVerbs1, getBlankRoom } from "./defaults";
 
 import { startingGameCondition } from '../../../data/fullGame';
 import { listIds, findById, findIndexById } from "../../lib/util";
+import { RoomData, GameDesign, GameDataItem, Interaction } from "src";
 
-import { RoomData } from "../../definitions/RoomData";
-import { GameDesign, GameDataItem } from "../../definitions/Game";
-import { Interaction } from "src/definitions/Interaction";
 
 import { populate } from "../../services/populateServices";
 import imageService from "../../services/imageService";
@@ -79,7 +77,7 @@ export class GameEditor extends Component<Props, State>{
                     ...startingGameCondition
                 },
                 tabOpen: tabs.indexOf('interactions'),
-                conversationId:'CHAT',
+                conversationId: 'CHAT',
             }
         } else {
             const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })

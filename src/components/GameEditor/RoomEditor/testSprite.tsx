@@ -1,5 +1,4 @@
-import { SpriteData, SpriteSheet } from "../../../definitions/SpriteSheet";
-import { CharacterData } from "../../../definitions/CharacterData"
+import { CharacterData, SpriteData, SpriteSheet  } from "src"
 import { Point } from "../../../lib/pathfinding/geometry";
 import { Sprite } from "../../../lib/Sprite";
 import spriteService from "../../../services/spriteService";

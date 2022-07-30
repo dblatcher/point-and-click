@@ -1,7 +1,5 @@
 import { GameProps, GameState } from ".";
-import { Command } from "../../definitions/Command";
-import { Interaction } from "../../definitions/Interaction";
-import { RoomData } from "../../definitions/RoomData";
+import { Command, Interaction, RoomData } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
 
 function matchInteraction(
@@ -46,7 +44,7 @@ function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): Game
     if (!hoverTarget) {
         return state
     }
-    const player = state.characters.find(_=>_.isPlayer)
+    const player = state.characters.find(_ => _.isPlayer)
 
     if (currentRoom) {
         if (hoverTarget.type === 'character') {

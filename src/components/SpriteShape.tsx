@@ -1,10 +1,9 @@
 import { h, JSX, FunctionalComponent } from "preact";
-import { RoomData } from "../definitions/RoomData"
+import { RoomData,CharacterData,Direction } from "src"
 import { placeOnScreen } from "../lib/util";
-import { Direction } from "../definitions/SpriteSheet";
 import { Sprite } from "../../src/lib/Sprite";
 import { HandleHoverFunction } from "./Game";
-import { CharacterData } from "../definitions/CharacterData";
+
 
 interface Props {
     spriteObject: Sprite;

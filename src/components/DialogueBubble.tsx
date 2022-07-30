@@ -1,5 +1,5 @@
 import { h, FunctionalComponent } from "preact"
-import { RoomData } from "../definitions/RoomData"
+import { RoomData } from "src"
 import { clamp } from "../lib/util"
 
 export const DialogueBubble: FunctionalComponent<{

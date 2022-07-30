@@ -1,6 +1,4 @@
-import { Direction } from "src/definitions/BaseTypes";
-import { CharacterData } from "../../../definitions/CharacterData";
-import { MoveOrder } from "../../../definitions/Order";
+import { Direction, CharacterData, MoveOrder } from "src";
 
 export function executeMove(moveOrder: MoveOrder, character: CharacterData): void {
     const { x, y, speed: characterSpeed = 1, direction = 'left' } = character

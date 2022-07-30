@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact";
-
-import { Conversation, ConversationChoice } from "../../definitions/Conversation"
+import { Conversation, ConversationChoice } from "src"
 import styles from './styles.module.css';
 
 interface Props {

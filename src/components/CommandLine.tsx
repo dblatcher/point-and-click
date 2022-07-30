@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact";
-import { CommandTarget } from "../definitions/Command";
-import { ItemData } from "../definitions/ItemData";
-import { Verb } from "../definitions/Verb";
+import { ItemData, CommandTarget, Verb } from "src";
+
 
 interface Props {
     verb?: Verb;

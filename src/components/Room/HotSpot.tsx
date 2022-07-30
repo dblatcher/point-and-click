@@ -1,6 +1,6 @@
 import { h, FunctionalComponent } from "preact";
-import { RoomData } from "../../definitions/RoomData"
-import { HotspotZone } from "../../definitions/Zone"
+import { RoomData } from "src"
+import { HotspotZone } from "src"
 import { getShift } from "../../lib/util";
 import { HandleHoverFunction } from "../Game";
 import ZoneSvg from "../ZoneSvg";

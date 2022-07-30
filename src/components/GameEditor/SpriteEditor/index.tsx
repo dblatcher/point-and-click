@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { Direction, directions, SpriteData, SpriteFrame, SpriteDataSchema } from "../../../definitions/SpriteSheet";
+import { directions,  SpriteDataSchema } from "../../../definitions/SpriteSheet";
 import { cloneData } from "../../../lib/clone";
 import { Sprite } from "../../../lib/Sprite";
 import { uploadJsonData } from "../../../lib/files";
 import { eventToString } from "../../../lib/util";
-import { CharacterData } from "../../../definitions/CharacterData"
+import { CharacterData, Direction,SpriteData, SpriteFrame } from "src"
 import { DeleteButton, TextInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";

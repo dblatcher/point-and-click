@@ -1,6 +1,6 @@
 import { FunctionalComponent, h, Fragment } from "preact";
 import { polygonToPathD } from "../lib/polygonToPathD";
-import { Zone, HotspotZone } from "../definitions/Zone"
+import { Zone, HotspotZone } from "src"
 import { JSXInternal } from "preact/src/jsx";
 import { HandleHoverFunction } from "./Game";
 

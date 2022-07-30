@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact";
 import { ImageAsset } from "../../../services/imageService";
-import { BackgroundLayer } from "../../../definitions/RoomData";
+import { BackgroundLayer } from "src";
 import { clamp, eventToNumber } from "../../../lib/util";
 import { ParallaxInput } from "../formControls";
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment } from "preact";
-import { GameCondition, GameData } from "../../definitions/Game";
+import { GameCondition, GameData } from "src";
 import { startingGameCondition } from '../../../data/fullGame';
 import Game from "../Game";
 import { cloneData } from "../../lib/clone";

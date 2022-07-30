@@ -63,5 +63,5 @@
           "react-dom": ["./node_modules/preact/compat/"]
         }
     },
-    "include": ["src/**/*", "tests/**/*"]
+    "include": ["src/**/*", "tests/**/*", "index.d.ts"]
 }

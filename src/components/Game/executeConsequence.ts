@@ -1,8 +1,5 @@
 import { GameProps, GameState } from "."
-import { CommandTarget } from "../../definitions/Command"
-import { CharacterData } from "src/definitions/CharacterData"
-import { Consequence } from "../../definitions/Interaction"
-import { Order } from "../../definitions/Order"
+import { CommandTarget, CharacterData, Consequence, Order } from "src"
 import { cloneData } from "../../lib/clone"
 import { changeRoom } from "./changeRoom"
 

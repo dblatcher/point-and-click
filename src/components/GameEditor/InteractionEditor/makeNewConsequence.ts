@@ -1,4 +1,4 @@
-import { Consequence, Interaction, ConsequenceType, AnyConsequence } from "../../../definitions/Interaction";
+import { Consequence, ConsequenceType } from "src";
 
 export function makeNewConsequence(type: ConsequenceType): Consequence {
     switch (type) {

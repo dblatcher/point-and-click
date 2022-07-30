@@ -1,6 +1,6 @@
 import { h, FunctionalComponent, JSX } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { clamp } from "../../src/lib/util";
+import { clamp } from "../lib/util";
 
 interface Tab {
     label: string;

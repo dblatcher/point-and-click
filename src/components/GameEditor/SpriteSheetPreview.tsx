@@ -1,6 +1,6 @@
 import { FunctionalComponent, h, JSX } from "preact";
 import { useEffect, useRef } from "preact/hooks";
-import { SpriteSheet } from "../../definitions/SpriteSheet";
+import { SpriteSheet } from "src";
 import imageService from "../../services/imageService";
 import styles from './editorStyles.module.css';
 

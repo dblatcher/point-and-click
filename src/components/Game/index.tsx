@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment } from "preact";
-import { RoomData } from "../../definitions/RoomData";
-import { CharacterData } from "../../definitions/CharacterData"
-import { Verb } from "../../definitions/Verb";
-import { CommandTarget } from "../../definitions/Command";
+import { GameData, GameCondition, RoomData, CharacterData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice } from "src";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { followOrder } from "./orders/followOrder";
@@ -11,15 +8,11 @@ import { issueMoveOrder } from "./issueMoveOrder";
 import { handleCommand } from "./handleCommand";
 import { Room } from "../Room";
 import { VerbMenu } from "../VerbMenu";
-import { ItemData } from "../../definitions/ItemData";
 import { ItemMenu } from "../ItemMenu";
 import { CommandLine } from "../CommandLine";
 import { cloneData } from "../../lib/clone";
 import { continueSequence } from "./continueSequence";
-import { GameData, GameCondition } from "../../definitions/Game";
-import { Order } from "src/definitions/Order";
 import { Sprite } from "src/lib/Sprite";
-import { Conversation, ConversationChoice } from "src/definitions/Conversation";
 import { ConversationMenu } from "../ConversationMenu";
 import { handleConversationChoice } from "./handleConversationChoice";
 

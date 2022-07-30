@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, FunctionalComponent } from "preact";
-import { ScaleLevel } from "../../../definitions/RoomData";
+import { ScaleLevel } from "src";
 import { NumberInput } from "../formControls";
 import { cloneData } from "../../../lib/clone"
 

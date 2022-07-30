@@ -1,6 +1,5 @@
 import { GameProps, GameState } from ".";
-import { Order } from "../../definitions/Order";
-import { CharacterData } from "../../definitions/CharacterData";
+import { Order, CharacterData } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 

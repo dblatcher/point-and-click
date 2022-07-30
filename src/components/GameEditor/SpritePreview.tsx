@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { RoomData } from "../../definitions/RoomData";
-import { CharacterData } from "../../definitions/CharacterData";
+import { RoomData, CharacterData } from "src";
 import { Room } from "../Room";
 
 import { Sprite } from "../../lib/Sprite";
