@@ -6,22 +6,26 @@ import styles from './styles.module.css';
 interface Props<T> {
     list: T[];
     describeItem: { (item: T, index: number): ComponentChild };
-    insertItem: { (index: number): void };
     mutateList: { (newList: T[]): void };
+    createItem: { (): T | undefined };
 }
 
 export class ListEditor<T extends {}> extends Component<Props<T>> {
 
     handleDelete(index: number) {
-        const {list, mutateList} = this.props
+        const { list, mutateList } = this.props
         const listCopy = [...list]
         listCopy.splice(index, 1)
         mutateList(listCopy)
     }
 
     handleInsert(index: number) {
-        const { insertItem } = this.props
-        insertItem(index)
+        const { list, mutateList, createItem } = this.props
+        const listCopy = [...list]
+        const newItem = createItem()
+        if (!newItem) { return }
+        listCopy.splice(index, 0, newItem)
+        mutateList(listCopy)
     }
 
     render() {

@@ -40,12 +40,6 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         conversationId: getConversationsDescriptions(gameDesign),
         sequence: getSequenceDescriptions(gameDesign,)
     }
-
-    const insertOrder = (index: number): void => {
-        const ordersCopy = [...consequence.orders]
-        ordersCopy.splice(index, 0, getDefaultOrder('talk'))
-        edit('orders', ordersCopy)
-    }
     const editOrder = (newOrder: Order, index: number): void => {
         const ordersCopy = [...consequence.orders]
         ordersCopy.splice(index, 1, newOrder)
@@ -123,7 +117,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                                         updateData={(newOrder) => { editOrder(newOrder, index) }}
                                         data={order} key={index} />
                                 }
-                                insertItem={insertOrder}
+                                createItem={() => getDefaultOrder('talk')}
                                 mutateList={newList => { edit('orders', newList) }}
                             />
                         </div>

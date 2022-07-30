@@ -37,12 +37,6 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
         }
         setInteraction(Object.assign({}, interaction, modification))
     }
-    const addConsequence = (index: number) => {
-        const { consequences = [] } = interaction
-        consequences.splice(index, 0, makeNewConsequence('talk'))
-        interaction.consequences = consequences
-        setInteraction(Object.assign({}, interaction))
-    }
     const editConsequence = (index: number, property: keyof AnyConsequence, value: unknown) => {
         const { consequences = [] } = interaction
         if (property === 'type' && typeof value === 'string') {
@@ -164,7 +158,7 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                         interaction.consequences = newConsequences
                         setInteraction(Object.assign({}, interaction))
                     }}
-                    insertItem={addConsequence}
+                    createItem={() => makeNewConsequence('talk')}
                 />
 
             </fieldset>

@@ -84,7 +84,7 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                                             </div>
                                         </div>
                                     )}
-                                    insertItem={(frameIndex: number) => insertFrame(dirKey, frameIndex)}
+                                    createItem={() => selectedFrame ? {...selectedFrame} : undefined}
                                 />
                             </div>
                         </div>
