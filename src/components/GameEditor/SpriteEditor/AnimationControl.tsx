@@ -35,14 +35,6 @@ export const AnimationControl: FunctionalComponent<Props> = ({
         return editCycle(animKey, direction, [])
     }
 
-    const deleteFrame = (direction: Direction, index: number) => {
-        const originalList = animation[direction]
-        if (!originalList) { return }
-        const copyOfList = cloneData(originalList)
-        copyOfList.splice(index, 1)
-        return editCycle(animKey, direction, copyOfList)
-    }
-
     const insertFrame = (direction: Direction, index: number) => {
         const originalList = animation[direction]
         if (!originalList || !selectedFrame) { return }
@@ -76,7 +68,9 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                             <div style={{ minWidth: '14rem' }}>
                                 <ListEditor
                                     list={animation[dirKey] as SpriteFrame[]}
-                                    deleteItem={(frameIndex: number) => deleteFrame(dirKey, frameIndex)}
+                                    mutateList={newlist => {
+                                        return editCycle(animKey, dirKey, newlist)
+                                    }}
                                     describeItem={(frame) => (
                                         <div className={styles.frameBlock}>
                                             <FramePreview

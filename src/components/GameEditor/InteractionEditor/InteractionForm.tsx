@@ -37,12 +37,6 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
         }
         setInteraction(Object.assign({}, interaction, modification))
     }
-    const deleteConsequence = (index: number) => {
-        const { consequences = [] } = interaction
-        consequences.splice(index, 1)
-        interaction.consequences = consequences
-        setInteraction(Object.assign({}, interaction))
-    }
     const addConsequence = (index: number) => {
         const { consequences = [] } = interaction
         consequences.splice(index, 0, makeNewConsequence('talk'))
@@ -166,7 +160,10 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                             edit={(property, value) => { editConsequence(index, property, value) }}
                             gameDesign={gameDesign} />
                     )}
-                    deleteItem={deleteConsequence}
+                    mutateList={newConsequences => {
+                        interaction.consequences = newConsequences
+                        setInteraction(Object.assign({}, interaction))
+                    }}
                     insertItem={addConsequence}
                 />
 

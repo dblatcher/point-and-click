@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
 import { consequenceTypes } from "../../../definitions/Interaction";
-import { GameDesign,AnyConsequence,Order } from "src";
+import { GameDesign, AnyConsequence, Order } from "src";
 import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { getTargetLists, getCharacterDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions } from "./getTargetLists";
@@ -44,11 +44,6 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
     const insertOrder = (index: number): void => {
         const ordersCopy = [...consequence.orders]
         ordersCopy.splice(index, 0, getDefaultOrder('talk'))
-        edit('orders', ordersCopy)
-    }
-    const deleteOrder = (index: number): void => {
-        const ordersCopy = [...consequence.orders]
-        ordersCopy.splice(index, 1)
         edit('orders', ordersCopy)
     }
     const editOrder = (newOrder: Order, index: number): void => {
@@ -128,8 +123,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                                         updateData={(newOrder) => { editOrder(newOrder, index) }}
                                         data={order} key={index} />
                                 }
-                                deleteItem={deleteOrder}
                                 insertItem={insertOrder}
+                                mutateList={newList => { edit('orders', newList) }}
                             />
                         </div>
                     )

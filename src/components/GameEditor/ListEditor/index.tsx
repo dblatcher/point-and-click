@@ -6,28 +6,17 @@ import styles from './styles.module.css';
 interface Props<T> {
     list: T[];
     describeItem: { (item: T, index: number): ComponentChild };
-    deleteItem: { (index: number): void };
     insertItem: { (index: number): void };
+    mutateList: { (newList: T[]): void };
 }
 
-interface State<T> {
-    insertingAt?: number;
-    newItem?: Partial<T>;
-}
-
-export class ListEditor<T extends {}> extends Component<Props<T>, State<T>> {
-
-    constructor(props: Props<T>) {
-        super(props)
-
-        this.state = {
-            insertingAt: undefined,
-        }
-    }
+export class ListEditor<T extends {}> extends Component<Props<T>> {
 
     handleDelete(index: number) {
-        const { deleteItem } = this.props
-        deleteItem(index)
+        const {list, mutateList} = this.props
+        const listCopy = [...list]
+        listCopy.splice(index, 1)
+        mutateList(listCopy)
     }
 
     handleInsert(index: number) {
