@@ -158,7 +158,7 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                         interaction.consequences = newConsequences
                         setInteraction(Object.assign({}, interaction))
                     }}
-                    createItem={() => makeNewConsequence('talk')}
+                    createItem={() => makeNewConsequence('order')}
                 />
 
             </fieldset>

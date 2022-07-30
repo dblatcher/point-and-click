@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { z } from "zod"
 import { h, VNode } from "preact";
-import { CheckBoxInput, SelectInput, TextInput, TriStateInput } from "./formControls";
+import { CheckBoxInput, NumberInput, SelectInput, TextInput, TriStateInput } from "./formControls";
 import { eventToString } from "../../lib/util";
 import styles from './editorStyles.module.css';
 
@@ -29,7 +29,7 @@ interface SchemaFieldProps<T> {
 }
 
 export function SchemaField<T extends z.ZodRawShape>({
-    field, change, noTriState, options, showUnsupported = false
+    field, change, noTriState, options, showUnsupported = true
 }: SchemaFieldProps<T>): VNode | null {
     const { key, optional, type, value } = field;
     let safeValue: FieldValue
@@ -77,6 +77,16 @@ export function SchemaField<T extends z.ZodRawShape>({
                 inputHandler={(value): void => { change(value, field) }}
             />
             <span>(optional)</span>
+        </div>
+    }
+
+    if (type === 'ZodNumber' && (typeof value === 'number' || typeof value === 'undefined')) {
+        return <div className={styles.row}>
+            <NumberInput label={key}
+                value={value || 0}
+                inputHandler={(value) => { change(value, field) }}
+            />
+            {field.optional && <span>(optional)</span>}
         </div>
     }
 

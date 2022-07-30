@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-const MoveOrderSchema = z.object({
+export const MoveOrderSchema = z.object({
     type: z.literal('move'),
     pathIsSet: z.optional(z.boolean()),
     steps: z.array(z.object({
@@ -12,7 +12,7 @@ const MoveOrderSchema = z.object({
 })
 export type MoveOrder = z.infer<typeof MoveOrderSchema>
 
-const TalkOrderSchema = z.object({
+export const TalkOrderSchema = z.object({
     type: z.literal('talk'),
     steps: z.array(z.object({
         animation: z.optional(z.string()),
@@ -22,7 +22,7 @@ const TalkOrderSchema = z.object({
 })
 export type TalkOrder = z.infer<typeof TalkOrderSchema>
 
-const ActOrderSchema = z.object({
+export const ActOrderSchema = z.object({
     type: z.literal('act'),
     steps: z.array(z.object({
         animation: z.optional(z.string()),
