@@ -28,6 +28,18 @@ export class ListEditor<T extends {}> extends Component<Props<T>> {
         mutateList(listCopy)
     }
 
+    handleMove(index: number, direction: 'UP' | 'DOWN') {
+        const { list, mutateList } = this.props
+        const reinsertIndex = direction === 'UP' ? index - 1 : index + 1
+        if (reinsertIndex < 0 || reinsertIndex >= list.length) { return }
+        const listCopy = [...list]
+        const [itemToMove] = listCopy.splice(index, 1)
+
+
+        listCopy.splice(reinsertIndex, 0, itemToMove)
+        mutateList(listCopy)
+    }
+
     render() {
         const { list, describeItem } = this.props
         return (
@@ -36,17 +48,30 @@ export class ListEditor<T extends {}> extends Component<Props<T>> {
                     {list.map((item, index) => (
                         <li key={index}>
                             <div className={editorstyles.row}>
-                                <button className={styles.plusButton} onClick={() => { this.handleInsert(index) }}>+</button>
+                                <button className={styles.plusButton} onClick={() => { this.handleInsert(index) }}>INSERT NEW ➕</button>
                             </div>
                             <div className={editorstyles.row}>
                                 {describeItem(item, index)}
-                                <button className={styles.deleteButton} onClick={() => { this.handleDelete(index) }}>x</button>
+                                <div className={styles.buttonSet}>
+                                    <button className={styles.deleteButton}
+                                        onClick={() => { this.handleDelete(index) }}>
+                                        ❌
+                                    </button>
+                                    <button className={styles.moveButton}
+                                        onClick={() => { this.handleMove(index, 'UP') }}>
+                                        🔼
+                                    </button>
+                                    <button className={styles.moveButton}
+                                        onClick={() => { this.handleMove(index, 'DOWN') }}>
+                                        🔽
+                                    </button>
+                                </div>
                             </div>
                         </li>
                     ))}
                     <li>
                         <div className={editorstyles.row}>
-                            <button className={styles.plusButton} onClick={() => { this.handleInsert(list.length) }}>+</button>
+                            <button className={styles.plusButton} onClick={() => { this.handleInsert(list.length) }}>INSERT NEW ➕</button>
                         </div>
                     </li>
                 </ul>

@@ -10,9 +10,13 @@
     margin-bottom: 5px;
 }
 
+.buttonSet {
+    display: flex;
+}
+
 .plusButton {
     margin-left: auto;
-    background-color: green;
+    background-color: seagreen;
 }
 
 .plusButton:hover {
@@ -25,4 +29,12 @@
 
 .deleteButton:hover {
     background-color: pink;
+}
+
+.moveButton {
+    background-color: skyblue;
+}
+
+.moveButton:hover {
+    background-color: lightblue;
 }
