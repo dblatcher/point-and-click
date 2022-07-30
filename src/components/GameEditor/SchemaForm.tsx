@@ -29,7 +29,7 @@ interface SchemaFieldProps<T> {
 }
 
 export function SchemaField<T extends z.ZodRawShape>({
-    field, change, noTriState, options, showUnsupported = true
+    field, change, noTriState, options, showUnsupported = false
 }: SchemaFieldProps<T>): VNode | null {
     const { key, optional, type, value } = field;
     let safeValue: FieldValue
@@ -58,7 +58,7 @@ export function SchemaField<T extends z.ZodRawShape>({
                 value={value || ''}
                 onInput={(event): void => { change(eventToString(event), field) }}
             />
-            {field.optional && <span>(optional)</span>}
+            <span>{field.optional ? '(opt)' : '(req)'}</span>
         </div>
     }
 
@@ -76,7 +76,7 @@ export function SchemaField<T extends z.ZodRawShape>({
                 value={value}
                 inputHandler={(value): void => { change(value, field) }}
             />
-            <span>(optional)</span>
+            <span>{field.optional ? '(opt)' : '(req)'}</span>
         </div>
     }
 
@@ -86,7 +86,7 @@ export function SchemaField<T extends z.ZodRawShape>({
                 value={value || 0}
                 inputHandler={(value) => { change(value, field) }}
             />
-            {field.optional && <span>(optional)</span>}
+            <span>{field.optional ? '(opt)' : '(req)'}</span>
         </div>
     }
 

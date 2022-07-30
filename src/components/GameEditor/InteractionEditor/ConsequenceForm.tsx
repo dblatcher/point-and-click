@@ -64,7 +64,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                     return (
                         <div key={index}>
                             <SelectInput value={value as string}
-                                label={property}
+                                label={property === 'type' ? 'Consequnce Type' : property}
                                 items={optionListIds[property]}
                                 descriptions={optionListDescriptions[property]}
                                 onSelect={(value) => { edit(property, value) }}
