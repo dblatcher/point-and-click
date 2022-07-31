@@ -2,8 +2,8 @@
 import { FunctionalComponent, h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { cloneData } from "../../../lib/clone";
-import { InteractionSchema } from "../../../definitions/Interaction";
-import { GameDesign, Interaction, ConsequenceType, AnyConsequence, Order } from "src";
+import { Consequence, InteractionSchema } from "../../../definitions/Interaction";
+import { GameDesign, Interaction, AnyConsequence } from "src";
 import { SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { ListEditor } from "../ListEditor";
@@ -37,43 +37,10 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
         }
         setInteraction(Object.assign({}, interaction, modification))
     }
-    const editConsequence = (index: number, property: keyof AnyConsequence, value: unknown) => {
-        const { consequences = [] } = interaction
-        if (property === 'type' && typeof value === 'string') {
-            consequences.splice(index, 1, makeNewConsequence(value as ConsequenceType))
-        } else {
-            const consequence = consequences[index] as AnyConsequence;
-            switch (property) {
-                case 'conversationId':
-                case 'sequence':
-                case 'targetId':
-                case 'status':
-                case 'characterId':
-                case 'itemId':
-                case 'roomId':
-                case 'text':
-                case 'addOrRemove':
-                case 'targetType': {
-                    consequence[property] = value as string
-                    break;
-                }
-                case 'end':
-                case 'takePlayer':
-                case 'replaceCurrentOrders': {
-                    consequence[property] = value as boolean
-                    break;
-                }
-                case 'time':
-                case 'x':
-                case 'y':
-                    consequence[property] = value as number
-                    break;
-                case 'orders':
-                    consequence[property] = value as Order[]
-            }
-            consequences.splice(index, 1, consequence)
-        }
 
+    const updateConsequence = (consequence: Consequence, index: number) => {
+        const { consequences = [] } = interaction
+        consequences.splice(index, 1, consequence)
         setInteraction(Object.assign({}, interaction, { consequences }))
     }
 
@@ -151,7 +118,7 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                     describeItem={(consequence, index) => (
                         <ConsequenceForm
                             consequence={consequence as AnyConsequence}
-                            edit={(property, value) => { editConsequence(index, property, value) }}
+                            update={(consequence) => { updateConsequence(consequence, index) }}
                             gameDesign={gameDesign} />
                     )}
                     mutateList={newConsequences => {

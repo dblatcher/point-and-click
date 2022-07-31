@@ -1,22 +1,24 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
 import { consequenceTypes } from "../../../definitions/Interaction";
-import { GameDesign, AnyConsequence, Order } from "src";
+import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
 import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { getTargetLists, getCharacterDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
 import { getDefaultOrder } from "../defaults";
+import { cloneData } from "../../../lib/clone";
+import { makeNewConsequence } from "./makeNewConsequence";
 
 interface Props {
     consequence: AnyConsequence;
     gameDesign: GameDesign;
-    edit: { (property: keyof AnyConsequence, value: unknown): void };
+    update: { (consequence: Consequence): void }
 }
 
 
-export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameDesign, edit }: Props) => {
+export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameDesign, update }: Props) => {
 
     const entries = Object.entries(consequence) as [keyof AnyConsequence, string | boolean | number | Order[]][]
 
@@ -43,7 +45,46 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
     const editOrder = (newOrder: Order, index: number): void => {
         const ordersCopy = [...consequence.orders]
         ordersCopy.splice(index, 1, newOrder)
-        edit('orders', ordersCopy)
+        updateProperty('orders', ordersCopy)
+    }
+
+    const updateProperty = (property: keyof AnyConsequence, value: unknown): void => {
+        const copy = cloneData(consequence)
+        switch (property) {
+            case 'type': {
+                if (consequenceTypes.includes(value as ConsequenceType)) {
+                    update(makeNewConsequence(value as ConsequenceType))
+                }
+                return;
+            }
+            case 'conversationId':
+            case 'sequence':
+            case 'targetId':
+            case 'status':
+            case 'characterId':
+            case 'itemId':
+            case 'roomId':
+            case 'text':
+            case 'addOrRemove':
+            case 'targetType': {
+                copy[property] = value as string
+                break;
+            }
+            case 'end':
+            case 'takePlayer':
+            case 'replaceCurrentOrders': {
+                copy[property] = value as boolean
+                break;
+            }
+            case 'time':
+            case 'x':
+            case 'y':
+                copy[property] = value as number
+                break;
+            case 'orders':
+                copy[property] = value as Order[]
+        }
+        update(copy)
     }
 
     return <div>
@@ -64,10 +105,10 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                     return (
                         <div key={index}>
                             <SelectInput value={value as string}
-                                label={property === 'type' ? 'Consequnce Type' : property}
+                                label={property === 'type' ? 'consequence type' : property}
                                 items={optionListIds[property]}
                                 descriptions={optionListDescriptions[property]}
-                                onSelect={(value) => { edit(property, value) }}
+                                onSelect={(value) => { updateProperty(property, value) }}
                             />
                         </div>
                     )
@@ -77,7 +118,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                         <div key={index}>
                             <TextInput value={value as string}
                                 label={property}
-                                onInput={e => { edit(property, eventToString(e)) }}
+                                onInput={e => { updateProperty(property, eventToString(e)) }}
                             />
                         </div>
                     )
@@ -89,7 +130,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                             <CheckBoxInput
                                 value={value as boolean}
                                 label={property}
-                                inputHandler={v => { edit(property, v) }}
+                                inputHandler={v => { updateProperty(property, v) }}
                             />
                         </div>
                     )
@@ -101,7 +142,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                             <NumberInput
                                 value={value as number}
                                 label={property}
-                                inputHandler={v => { edit(property, v) }}
+                                inputHandler={v => { updateProperty(property, v) }}
                             />
                         </div>
                     )
@@ -118,7 +159,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                                         data={order} key={index} />
                                 }
                                 createItem={() => getDefaultOrder('talk')}
-                                mutateList={newList => { edit('orders', newList) }}
+                                mutateList={newList => { updateProperty('orders', newList) }}
                             />
                         </div>
                     )
