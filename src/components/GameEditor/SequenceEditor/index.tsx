@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
 import { AnyConsequence, Consequence, GameDesign, Order, Sequence } from "src";
+import { cloneData } from "../../../lib/clone";
 import { makeBlankSequence } from "../defaults";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { OrderForm } from "../OrderForm";
+import { StorageMenu } from "../StorageMenu";
 
 interface Props {
     gameDesign: GameDesign;
@@ -23,15 +25,21 @@ export class SequenceEditor extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        const initialState = props.data ? {
-            ...props.data
-        } : makeBlankSequence()
-
-        this.state = {
-            ...initialState
-        }
+        this.state = this.initialState
         this.changeOrder = this.changeOrder.bind(this)
         this.changeConsequence = this.changeConsequence.bind(this)
+    }
+
+    get initialState(): Sequence {
+        const { data } = this.props
+        return data ? {
+            ...data
+        } : makeBlankSequence()
+    }
+
+    get currentData(): Sequence {
+        const characterData = cloneData(this.state) as State;
+        return characterData
     }
 
     changeOrder(newOrder: Order, stageIndex: number, characterId: string, orderIndex: number) {
@@ -51,6 +59,15 @@ export class SequenceEditor extends Component<Props, State> {
             <article>
                 <h2>Sequence {sequenceId}</h2>
                 <p>description: {description}</p>
+
+                <StorageMenu
+                    type='sequence'
+                    data={sequenceId ? { id: sequenceId } : undefined}
+                    originalId={sequenceId}
+                    existingIds={Object.keys(gameDesign.sequences)}
+                    reset={() => this.setState(this.initialState)}
+                    update={() => { }}
+                />
                 <p>stages: {stages.length}</p>
 
                 {stages.map((stage, stageIndex) => (
