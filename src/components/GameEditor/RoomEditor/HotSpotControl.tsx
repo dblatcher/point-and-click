@@ -14,11 +14,10 @@ interface Props {
     index: number;
     change: { (index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type?: string): void };
     remove: { (index: number, type?: string): void };
-    move: { (index: number, x: number, y: number, type?: string): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export function HotspotControl({ hotspot, index, change, move, remove, setClickEffect }: Props) {
+export function HotspotControl({ hotspot, index, change, remove, setClickEffect }: Props) {
     const { parallax, type } = hotspot
 
     return (
@@ -37,7 +36,6 @@ export function HotspotControl({ hotspot, index, change, move, remove, setClickE
             <ZoneControl
                 zone={hotspot} index={index}
                 setClickEffect={setClickEffect}
-                move={move}
                 change={change}
                 remove={remove} />
         </div>

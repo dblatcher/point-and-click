@@ -1,68 +1,46 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h, FunctionalComponent, JSX } from "preact";
+import { h, FunctionalComponent } from "preact";
 import { ClickEffect } from "./ClickEffect";
-import { HotspotZone, SupportedZoneShape, Zone } from "src";
+import { HotspotZone, Zone } from "src";
 import { ListEditor } from "../ListEditor";
+import { NumberInput } from "../formControls";
 
 interface Props {
     zone: Zone | HotspotZone;
     index: number;
     remove: { (index: number, type?: string): void };
-    move: { (index: number, x: number, y: number, type?: string): void };
-    change: { (index: number, propery: SupportedZoneShape, newValue: unknown, type?: string): void };
+    change: { (index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type?: string): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, move, change, setClickEffect }: Props) => {
+export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, change, setClickEffect }: Props) => {
     const { x, y, circle, rect, polygon, type } = zone
 
-    function moveZone(event: JSX.TargetedEvent<HTMLInputElement, Event>, coor: 'x' | 'y'): void {
-        const value = Number((event.target as HTMLInputElement).value)
-        if (isNaN(value)) { return }
-        const newX = coor === 'x' ? value : x;
-        const newY = coor === 'y' ? value : y;
-        return move(index, newX, newY, type)
-    }
-
-    function changeRadius(event: JSX.TargetedEvent<HTMLInputElement, Event>): void {
-        const value = Number((event.target as HTMLInputElement).value)
-        if (isNaN(value)) { return }
-        change(index, 'circle', value, type)
-    }
-    function changeRect(event: JSX.TargetedEvent<HTMLInputElement, Event>, coor: 'x' | 'y'): void {
+    function changeRect(value: number, coor: 'x' | 'y'): void {
         if (!rect) { return }
-        const value = Number((event.target as HTMLInputElement).value)
-        if (isNaN(value)) { return }
-
         const newRect = [
             coor === 'x' ? value : rect[0],
             coor === 'y' ? value : rect[1],
         ]
-
         change(index, 'rect', newRect, type)
     }
 
     return (
         <div>
             <span>
-                <label>X: </label>
-                <input type="number" value={x} onChange={(event) => { moveZone(event, 'x') }} />
-                <label>Y: </label>
-                <input type="number" value={y} onChange={(event) => { moveZone(event, 'y') }} />
+                <NumberInput label="X" value={x} inputHandler={value => { change(index, 'x', value, type) }} />
+                <NumberInput label="Y" value={y} inputHandler={value => { change(index, 'y', value, type) }} />
                 <button onClick={() => { remove(index, type) }}>delete</button>
             </span>
             {circle && (
                 <div>
-                    <label>Radius: </label>
-                    <input type="number" value={circle} onChange={changeRadius} />
+                    <NumberInput label="Radius" value={circle} inputHandler={value => { change(index, 'circle', value, type) }} />
                 </div>
             )}
             {rect && (
                 <div>
-                    <label>Width: </label>
-                    <input type="number" value={rect[0]} onChange={event => { changeRect(event, 'x') }} />
-                    <label>Height: </label>
-                    <input type="number" value={rect[1]} onChange={event => { changeRect(event, 'y') }} />
+                    <NumberInput label="width" value={rect[0]} inputHandler={value => { changeRect(value, 'x') }} />
+                    <NumberInput label="height" value={rect[1]} inputHandler={value => { changeRect(value, 'y') }} />
                 </div>
             )}
             {polygon && (
@@ -85,5 +63,4 @@ export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, m
             )}
         </div>
     )
-
 }

@@ -61,7 +61,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.addBackground = this.addBackground.bind(this)
         this.changeBackground = this.changeBackground.bind(this)
         this.removeZone = this.removeZone.bind(this)
-        this.moveZone = this.moveZone.bind(this)
         this.changeZone = this.changeZone.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.setClickEffect = this.setClickEffect.bind(this)
@@ -150,13 +149,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             default:
                 obstacleAreas.splice(index, 1)
         }
-        this.setState({ obstacleAreas, hotspots })
-    }
-    moveZone(index: number, x: number, y: number, type?: string) {
-        const { obstacleAreas = [], hotspots = [] } = this.state
-        const zone = type === 'hotspot' ? hotspots[index] : obstacleAreas[index]
-        zone.x = x
-        zone.y = y
         this.setState({ obstacleAreas, hotspots })
     }
     changeZone(index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type?: string) {
@@ -372,7 +364,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                                     <ZoneControl
                                                         zone={obstacle} index={index}
                                                         setClickEffect={this.setClickEffect}
-                                                        move={this.moveZone}
                                                         change={this.changeZone}
                                                         remove={this.removeZone} />
                                                 )
@@ -400,7 +391,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                             label: hotspot.id, content: (
                                                 <HotspotControl hotspot={hotspot} index={index}
                                                     setClickEffect={this.setClickEffect}
-                                                    move={this.moveZone}
                                                     change={this.changeZone}
                                                     remove={this.removeZone} />
                                             )
