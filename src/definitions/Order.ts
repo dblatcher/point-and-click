@@ -37,3 +37,13 @@ export const orderSchema = z.union([MoveOrderSchema, ActOrderSchema, TalkOrderSc
 export type Order = MoveOrder | TalkOrder | ActOrder
 export type OrderType = 'move' | 'talk' | 'act'
 export const orderTypes: OrderType[] = ['move', 'talk', 'act']
+
+export const stepSchama = {
+    talk: TalkOrderSchema.shape.steps.element,
+    act: ActOrderSchema.shape.steps.element,
+    move: MoveOrderSchema.shape.steps.element,
+}
+
+export type TalkStep = z.infer<typeof stepSchama.talk>
+export type ActStep = z.infer<typeof stepSchama.act>
+export type MoveStep = z.infer<typeof stepSchama.move>

@@ -1,27 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h, Component, Fragment } from "preact"
+import { h, Component } from "preact"
 import styles from "../editorStyles.module.css"
-import { ActOrder, ActOrderSchema, MoveOrder, MoveOrderSchema, Order, OrderType, orderTypes, TalkOrder, TalkOrderSchema } from "../../../definitions/Order";
+import { ActOrder, ActStep, MoveOrder, MoveStep, Order, OrderType, orderTypes, stepSchama, TalkOrder, TalkStep } from "../../../definitions/Order";
 import { SelectInput } from "../formControls";
 import { getDefaultOrder } from "../defaults";
 import { ListEditor } from "../ListEditor";
 import { FieldDef, SchemaForm } from "../SchemaForm";
-import { z } from "zod";
 
 interface Props {
     data: Order;
     updateData: { (data: Order): void };
 }
-
-const stepSchama = {
-    talk: TalkOrderSchema.shape.steps.element,
-    act: ActOrderSchema.shape.steps.element,
-    move: MoveOrderSchema.shape.steps.element,
-}
-
-type TalkStep = z.infer<typeof stepSchama.talk>
-type ActStep = z.infer<typeof stepSchama.act>
-type MoveStep = z.infer<typeof stepSchama.move>
 
 const makeNewStep = {
     talk: (): TalkStep => ({ time: 100, text: "", animation: undefined }),
