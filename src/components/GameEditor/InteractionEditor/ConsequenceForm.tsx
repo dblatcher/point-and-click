@@ -9,7 +9,7 @@ import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
 import { getDefaultOrder } from "../defaults";
 import { cloneData } from "../../../lib/clone";
-import { makeNewConsequence } from "./makeNewConsequence";
+import { makeNewConsequence } from "../defaults";
 
 interface Props {
     consequence: AnyConsequence;

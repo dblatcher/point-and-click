@@ -8,7 +8,7 @@ import { SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
-import { makeNewConsequence } from "./makeNewConsequence";
+import { makeNewConsequence } from "../defaults";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 
 interface Props {
