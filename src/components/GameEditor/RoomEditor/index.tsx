@@ -287,8 +287,26 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             <div className={styles.container}>
                 <section style={{ flexBasis: '20rem' }}>
                     <fieldset className={styles.fieldset}>
-                        <legend>ID</legend>
-                        <input type="text" value={id} onInput={event => this.setState({ id: eventToString(event) })} />
+                        <legend>Room</legend>
+                        <div className={styles.row}>
+                            <label >ID</label>
+                            <input type="text" value={id} onInput={event => this.setState({ id: eventToString(event) })} />
+                        </div>
+                        <div className={styles.row}>
+                            <NumberInput label="height" value={height}
+                                inputHandler={height => this.setState({ height })} />
+                        </div>
+                        <div className={styles.row}>
+                            <NumberInput label="width" value={width}
+                                inputHandler={width => this.setState({ width })} />
+                        </div>
+                        <div className={styles.row}>
+                            <NumberInput label="Frame Width" value={frameWidth}
+                                inputHandler={frameWidth => this.setState({ frameWidth })} />
+                        </div>
+                        {frameWidth > width && (
+                            <Warning>frame width is bigger than room width</Warning>
+                        )}
                     </fieldset>
 
                     <StorageMenu
@@ -303,28 +321,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     />
 
                     <TabMenu tabs={[
-                        {
-                            label: 'Dimensions', content: (
-                                <fieldset className={styles.fieldset}>
-                                    <legend>Dimensions</legend>
-                                    <div className={styles.row}>
-                                        <NumberInput label="height" value={height}
-                                            inputHandler={height => this.setState({ height })} />
-                                    </div>
-                                    <div className={styles.row}>
-                                        <NumberInput label="width" value={width}
-                                            inputHandler={width => this.setState({ width })} />
-                                    </div>
-                                    <div className={styles.row}>
-                                        <NumberInput label="Frame Width" value={frameWidth}
-                                            inputHandler={frameWidth => this.setState({ frameWidth })} />
-                                        {frameWidth > width && (
-                                            <Warning>frame width is bigger than room width</Warning>
-                                        )}
-                                    </div>
-                                </fieldset>
-                            )
-                        },
                         {
                             label: 'Scaling', content: (
                                 <fieldset className={styles.fieldset}>
@@ -352,7 +348,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                         )}
                                     />
 
-                                    <hr/>
+                                    <hr />
                                     <BackgroundLayerForm
                                         imageAssets={imageAssets}
                                         addNewLayer={this.addBackground} />

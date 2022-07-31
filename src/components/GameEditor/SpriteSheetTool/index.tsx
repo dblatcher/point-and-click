@@ -170,14 +170,6 @@ export class SpriteSheetTool extends Component<Props, State> {
                             </div>
                         </fieldset>
 
-                        <fieldset className={styles.fieldset}>
-                            <div className={styles.row}>
-                                {saveWarning && (
-                                    <Warning>{saveWarning}</Warning>
-                                )}
-                            </div>
-                        </fieldset>
-
                         <StorageMenu
                             data={this.currentData}
                             originalId={this.props.data?.id}
@@ -186,6 +178,13 @@ export class SpriteSheetTool extends Component<Props, State> {
                             update={this.handleUpdateButton}
                             reset={this.handleResetButton}
                         />
+                        <fieldset>
+                            <div className={styles.row}>
+                                {saveWarning && (
+                                    <Warning>{saveWarning}</Warning>
+                                )}
+                            </div>
+                        </fieldset>
                     </section>
                     <section>
                         <p>Resizing the preview does not effect the SpriteSheet data.</p>
