@@ -343,7 +343,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
                                     <ListEditor
                                         list={background}
-                                        mutateList={(newList) => this.changeProperty('background', newList)}
+                                        mutateList={(background) => { this.setState({ background }) }}
                                         describeItem={(layer, index) => (
                                             <BackgroundLayerControl index={index}
                                                 imageAssets={imageAssets}

@@ -3,6 +3,8 @@ import { h, FunctionalComponent } from "preact";
 import { ScaleLevel } from "src";
 import { NumberInput } from "../formControls";
 import { cloneData } from "../../../lib/clone"
+import { ListEditor } from "../ListEditor";
+import { clamp } from "../../../lib/util";
 
 interface Props {
     scaling: ScaleLevel;
@@ -21,24 +23,15 @@ export const ScalingControl: FunctionalComponent<Props> = ({ scaling, height, ch
         change(newScaling)
     }
 
-    const handleDelete = (
-        index: number
-    ) => {
-        const newScaling = cloneData(scaling)
-        newScaling.splice(index, 1)
-        change(newScaling)
-    }
-
-    const addNew = () => {
-        const newScaling = cloneData(scaling)
-        const last = newScaling[newScaling.length - 1]
-        newScaling.push(last ? [last[0] + 5, last[1]] : [0, 1])
-        change(newScaling)
+    const addNew = (): [number, number] => {
+        const last = scaling[scaling.length - 1]
+        return last ? [last[0] + 15, clamp(last[1] - .1, height)] : [0, 1]
     }
 
     return (
-        <section>
-            {scaling.map((level, index) => {
+        <ListEditor
+            list={scaling}
+            describeItem={(level, index) => {
                 const [y, scale] = level
                 return <div key={index}>
                     <NumberInput label="Y" value={y}
@@ -47,10 +40,11 @@ export const ScalingControl: FunctionalComponent<Props> = ({ scaling, height, ch
                     <NumberInput label="scale" value={scale}
                         inputHandler={(value) => handleAdjustment(index, value, 'scale')}
                         max={5} min={0} step={.1} />
-                    <button onClick={() => handleDelete(index)}>delete</button>
                 </div>
-            })}
-            <div><button onClick={addNew}>Add New</button></div>
-        </section>
+            }}
+            mutateList={change}
+            createItem={addNew}
+            createButton="END"
+        />
     )
 }

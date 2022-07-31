@@ -8,6 +8,7 @@ interface Props<T> {
     describeItem: { (item: T, index: number): ComponentChild };
     mutateList: { (newList: T[]): void };
     createItem?: { (): T | undefined };
+    createButton?: 'END';
 }
 
 export class ListEditor<T extends {}> extends Component<Props<T>> {
@@ -42,14 +43,14 @@ export class ListEditor<T extends {}> extends Component<Props<T>> {
     }
 
     render() {
-        const { list, describeItem, createItem } = this.props
+        const { list, describeItem, createItem, createButton } = this.props
         return (
             <article>
                 <ul className={styles.mainList}>
                     {list.map((item, index) => (
                         <li key={index}>
 
-                            {!!createItem && (
+                            {(!!createItem && createButton !== 'END') && (
                                 <div className={editorstyles.row}>
                                     <button className={styles.plusButton} onClick={() => { this.handleInsert(index) }}>INSERT NEW ➕</button>
                                 </div>

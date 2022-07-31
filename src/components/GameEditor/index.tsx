@@ -76,7 +76,7 @@ export class GameEditor extends Component<Props, State>{
                 gameDesign: {
                     ...startingGameCondition
                 },
-                tabOpen: tabs.indexOf('interactions'),
+                tabOpen: tabs.indexOf('rooms'),
                 conversationId: 'CHAT',
             }
         } else {
@@ -95,7 +95,7 @@ export class GameEditor extends Component<Props, State>{
                     sprites: [],
                     spriteSheets: []
                 },
-                tabOpen: tabs.indexOf('interactions'),
+                tabOpen: tabs.indexOf('rooms'),
             }
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
