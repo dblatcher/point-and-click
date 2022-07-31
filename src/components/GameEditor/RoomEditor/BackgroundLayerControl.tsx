@@ -10,12 +10,10 @@ interface Props {
     index: number;
     layer: BackgroundLayer;
     imageAssets: Readonly<ImageAsset>[];
-    remove: { (index: number): void };
     change: { (index: number, propery: keyof BackgroundLayer, newValue: string | number): void };
-    move: { (index: number, direction: 'UP' | 'DOWN'): void };
 }
 
-export function BackgroundLayerControl({ layer, remove, index, imageAssets, change, move }: Props) {
+export function BackgroundLayerControl({ layer,  index, imageAssets, change }: Props) {
     const { parallax } = layer
     const assetIndex = imageAssets.findIndex(_ => _.id === layer.imageId)
 
@@ -27,9 +25,5 @@ export function BackgroundLayerControl({ layer, remove, index, imageAssets, chan
         <ParallaxInput value={parallax}
             onChange={(event) => { change(index, 'parallax', clamp(eventToNumber(event), 1, 0)) }}
         />
-
-        <button onClick={() => remove(index)}>delete</button>
-        <button onClick={() => move(index, 'UP')}>up</button>
-        <button onClick={() => move(index, 'DOWN')}>down</button>
     </div>
 }

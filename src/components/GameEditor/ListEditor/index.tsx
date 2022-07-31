@@ -7,7 +7,7 @@ interface Props<T> {
     list: T[];
     describeItem: { (item: T, index: number): ComponentChild };
     mutateList: { (newList: T[]): void };
-    createItem: { (): T | undefined };
+    createItem?: { (): T | undefined };
 }
 
 export class ListEditor<T extends {}> extends Component<Props<T>> {
@@ -21,6 +21,7 @@ export class ListEditor<T extends {}> extends Component<Props<T>> {
 
     handleInsert(index: number) {
         const { list, mutateList, createItem } = this.props
+        if (!createItem) { return }
         const listCopy = [...list]
         const newItem = createItem()
         if (!newItem) { return }
@@ -41,15 +42,18 @@ export class ListEditor<T extends {}> extends Component<Props<T>> {
     }
 
     render() {
-        const { list, describeItem } = this.props
+        const { list, describeItem, createItem } = this.props
         return (
             <article>
                 <ul className={styles.mainList}>
                     {list.map((item, index) => (
                         <li key={index}>
-                            <div className={editorstyles.row}>
-                                <button className={styles.plusButton} onClick={() => { this.handleInsert(index) }}>INSERT NEW ➕</button>
-                            </div>
+
+                            {!!createItem && (
+                                <div className={editorstyles.row}>
+                                    <button className={styles.plusButton} onClick={() => { this.handleInsert(index) }}>INSERT NEW ➕</button>
+                                </div>
+                            )}
                             <div className={editorstyles.row}>
                                 {describeItem(item, index)}
                                 <div className={styles.buttonSet}>
@@ -69,11 +73,13 @@ export class ListEditor<T extends {}> extends Component<Props<T>> {
                             </div>
                         </li>
                     ))}
-                    <li>
-                        <div className={editorstyles.row}>
-                            <button className={styles.plusButton} onClick={() => { this.handleInsert(list.length) }}>INSERT NEW ➕</button>
-                        </div>
-                    </li>
+                    {!!createItem && (
+                        <li>
+                            <div className={editorstyles.row}>
+                                <button className={styles.plusButton} onClick={() => { this.handleInsert(list.length) }}>INSERT NEW ➕</button>
+                            </div>
+                        </li>
+                    )}
                 </ul>
             </article>
         )

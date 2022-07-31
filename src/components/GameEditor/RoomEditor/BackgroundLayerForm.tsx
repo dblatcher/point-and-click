@@ -18,7 +18,6 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
 
     return <div>
 
-        <label>ImageAsset:</label>
         <select value={imageIndex} readonly onChange={event => { setImageIndex(eventToNumber(event)) }}>
             {imageAssets.map((asset, index) => <option key={index} value={index}>{asset.id}</option>)}
         </select>
@@ -31,6 +30,6 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
             addNewLayer({ imageId: imageAssets[imageIndex].id, parallax })
             setParallax(0)
             setImageIndex(0)
-        }}>ADD</button>
+        }}>INSERT NEW ➕</button>
     </div>
 }

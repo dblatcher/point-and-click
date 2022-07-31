@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone  } from "src";
+import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone } from "src";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
@@ -19,6 +19,7 @@ import imageService from "../../../services/imageService";
 import { getBlankRoom } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
 import { RoomDataSchema } from "../../../definitions/RoomData";
+import { ListEditor } from "../ListEditor";
 
 
 type RoomEditorState = RoomData & {
@@ -56,10 +57,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             ...initialState,
         }
 
-        this.removeBackground = this.removeBackground.bind(this)
+        this.changeProperty = this.changeProperty.bind(this)
         this.addBackground = this.addBackground.bind(this)
         this.changeBackground = this.changeBackground.bind(this)
-        this.moveBackground = this.moveBackground.bind(this)
         this.removeZone = this.removeZone.bind(this)
         this.moveZone = this.moveZone.bind(this)
         this.changeZone = this.changeZone.bind(this)
@@ -208,11 +208,23 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
         this.setState({ obstacleAreas, hotspots })
     }
-    removeBackground(index: number) {
-        const { background } = this.state
-        background.splice(index, 1)
-        this.setState({ background })
+
+    changeProperty(propery: keyof RoomData, value: unknown): void {
+        console.log('change', propery, value)
+        const mod: Partial<RoomEditorState> = {}
+
+        switch (propery) {
+            case 'background': {
+                const result = RoomDataSchema.shape.background.safeParse(value)
+                if (result.success) {
+                    mod.background = result.data
+                }
+            }
+        }
+
+        this.setState(mod)
     }
+
     changeBackground(index: number, propery: keyof BackgroundLayer, newValue: string | number) {
         const { background } = this.state
         const layer = background[index]
@@ -235,14 +247,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     addBackground(newLayer: BackgroundLayer) {
         const { background } = this.state
         background.push(newLayer)
-        this.setState({ background })
-    }
-    moveBackground(index: number, direction: 'UP' | 'DOWN') {
-        const { background } = this.state
-        if (direction === 'UP' && index === 0) { return }
-        if (direction === 'DOWN' && index === background.length - 1) { return }
-        const [layer] = background.splice(index, 1)
-        background.splice(direction === 'DOWN' ? index + 1 : index - 1, 0, layer)
         this.setState({ background })
     }
     handleLoadButton = async () => {
@@ -336,17 +340,19 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                             label: 'Background', content: (
                                 <fieldset className={styles.fieldset}>
                                     <legend>Background</legend>
-                                    {background.map(
-                                        (layer, index) =>
+
+                                    <ListEditor
+                                        list={background}
+                                        mutateList={(newList) => this.changeProperty('background', newList)}
+                                        describeItem={(layer, index) => (
                                             <BackgroundLayerControl index={index}
                                                 imageAssets={imageAssets}
                                                 layer={layer}
-                                                remove={this.removeBackground}
-                                                change={this.changeBackground}
-                                                move={this.moveBackground}
-                                            />
-                                    )}
+                                                change={this.changeBackground} />
+                                        )}
+                                    />
 
+                                    <hr/>
                                     <BackgroundLayerForm
                                         imageAssets={imageAssets}
                                         addNewLayer={this.addBackground} />
