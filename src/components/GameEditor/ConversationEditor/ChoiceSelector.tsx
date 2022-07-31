@@ -24,9 +24,11 @@ export const ChoiceSelector: FunctionalComponent<Props> = ({
     const branches = conversation?.branches || {};
     const branch = branches[branchId || openBranchId]
 
-    const choiceRefs: string[] = branch?.choices
+    const choiceRefs: string[] = branch 
+    ? branch.choices
         .map(choice => choice.ref)
         .filter(ref => typeof ref === 'string') as string[]
+    : []
 
     const updateSet = (value: string, index: number) => {
         if (refSet[index] === value) {
