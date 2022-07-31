@@ -2,6 +2,7 @@
 import { h, FunctionalComponent, JSX } from "preact";
 import { ClickEffect } from "./ClickEffect";
 import { HotspotZone, SupportedZoneShape, Zone } from "src";
+import { ListEditor } from "../ListEditor";
 
 interface Props {
     zone: Zone | HotspotZone;
@@ -15,7 +16,7 @@ interface Props {
 export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, move, change, setClickEffect }: Props) => {
     const { x, y, circle, rect, polygon, type } = zone
 
-    function moveZone(event: JSX.TargetedEvent<HTMLInputElement,Event>, coor: 'x' | 'y'): void {
+    function moveZone(event: JSX.TargetedEvent<HTMLInputElement, Event>, coor: 'x' | 'y'): void {
         const value = Number((event.target as HTMLInputElement).value)
         if (isNaN(value)) { return }
         const newX = coor === 'x' ? value : x;
@@ -23,12 +24,12 @@ export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, m
         return move(index, newX, newY, type)
     }
 
-    function changeRadius(event: JSX.TargetedEvent<HTMLInputElement,Event>): void {
+    function changeRadius(event: JSX.TargetedEvent<HTMLInputElement, Event>): void {
         const value = Number((event.target as HTMLInputElement).value)
         if (isNaN(value)) { return }
         change(index, 'circle', value, type)
     }
-    function changeRect(event: JSX.TargetedEvent<HTMLInputElement,Event>, coor: 'x' | 'y'): void {
+    function changeRect(event: JSX.TargetedEvent<HTMLInputElement, Event>, coor: 'x' | 'y'): void {
         if (!rect) { return }
         const value = Number((event.target as HTMLInputElement).value)
         if (isNaN(value)) { return }
@@ -67,11 +68,13 @@ export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, m
             {polygon && (
                 <div>
                     <label>points: </label>
-                    <ol>
-                        {polygon.map((point, index) => (
+                    <ListEditor
+                        list={polygon}
+                        mutateList={polygon => change(index, 'polygon', polygon, type)}
+                        describeItem={(point, index) => (
                             <li key={index}>[ {point[0]}, {point[1]} ]</li>
-                        ))}
-                    </ol>
+                        )}
+                    />
                     <button onClick={() => {
                         setClickEffect({
                             type: type === 'hotspot' ? 'POLYGON_POINT_HOTSPOT' : 'POLYGON_POINT_OBSTACLE',
