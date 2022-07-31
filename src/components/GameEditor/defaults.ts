@@ -1,6 +1,6 @@
 import { Order, OrderType } from "src/definitions/Order";
-import { RoomData } from "src";
-import { Verb } from "src";
+import { Conversation, RoomData, Verb, Sequence } from "src";
+
 
 export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'LOOK', label: 'Look at' },
@@ -31,3 +31,28 @@ export const getDefaultOrder = (type: OrderType): Order => {
         steps: []
     }
 }
+
+export const makeBlankConversation = (): Conversation => ({
+    id: 'NEW_CONVERSATION',
+    defaultBranch: 'start',
+    branches: {
+        start: {
+            choices: [
+                {
+                    text: "ENTER CHOICE TEXT",
+                    sequence: '',
+                }
+            ]
+        }
+    }
+})
+
+export const makeBlankSequence = (): Sequence => ({
+    description: "",
+    stages: [
+        {
+            characterOrders: {},
+            immediateConsequences: [],
+        }
+    ]
+})

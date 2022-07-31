@@ -23,6 +23,7 @@ import { RoomData, GameDesign, GameDataItem, Interaction } from "src";
 import { populate } from "../../services/populateServices";
 import imageService from "../../services/imageService";
 import spriteService from "../../services/spriteService";
+import { SequenceEditor } from "./SequenceEditor";
 
 
 populate()
@@ -36,6 +37,7 @@ type State = {
     conversationId?: string;
     spriteId?: string;
     spriteSheetId?: string;
+    sequenceId?: string;
 };
 
 type Props = {
@@ -51,6 +53,7 @@ const tabs: string[] = [
     'sprites',
     'spriteSheets',
     'interactions',
+    'sequences',
     'images',
 ]
 
@@ -227,7 +230,7 @@ export class GameEditor extends Component<Props, State>{
     }
 
     render() {
-        const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId, conversationId } = this.state
+        const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId, conversationId, sequenceId } = this.state
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
@@ -249,6 +252,9 @@ export class GameEditor extends Component<Props, State>{
             makeFolder('sprites', gameDesign.sprites, spriteId),
             makeFolder('spriteSheets', gameDesign.spriteSheets, spriteSheetId),
             makeFolder('interactions'),
+            makeFolder('sequences', Object.entries(gameDesign.sequences).map(
+                ([key, sequence]) => ({ id: key, sequence })
+            ), sequenceId),
             makeFolder('images'),
         ]
 
@@ -282,6 +288,9 @@ export class GameEditor extends Component<Props, State>{
                                     break;
                                 case 'spriteSheets':
                                     modification.spriteSheetId = data.id
+                                    break;
+                                case 'sequences':
+                                    modification.sequenceId = data.id
                                     break;
                             }
                         }
@@ -347,6 +356,11 @@ export class GameEditor extends Component<Props, State>{
                                 deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
                                 gameDesign={gameDesign} />
                         },
+                        { label: 'Sequences', content: <SequenceEditor 
+                            key={sequenceId}
+                            gameDesign={gameDesign} 
+                            data={sequenceId ? gameDesign.sequences[sequenceId] : undefined}
+                            sequenceId={sequenceId} />},
                         { label: 'Image uploader', content: <ImageAssetTool /> },
                     ]} />
                 </section>

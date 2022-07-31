@@ -11,6 +11,7 @@ import { Folder, TreeMenu } from "../TreeMenu";
 import styles from "../editorStyles.module.css"
 import { SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
 import { ChoiceListControl } from "./ChoiceListControl";
+import { makeBlankConversation } from "../defaults";
 
 type ExtraState = {
     openBranchId?: string;
@@ -26,20 +27,6 @@ type Props = {
     sequenceIds: string[];
 }
 
-const makeBlankConversation = (): Conversation => ({
-    id: 'NEW_CONVERSATION',
-    defaultBranch: 'start',
-    branches: {
-        start: {
-            choices: [
-                {
-                    text: "ENTER CHOICE TEXT",
-                    sequence: '',
-                }
-            ]
-        }
-    }
-})
 
 function truncateLine(text: string, length: number) {
     if (text.length <= length) {
