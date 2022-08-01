@@ -11,6 +11,7 @@ export const StageSchema = z.object({
 export type Stage = z.infer<typeof StageSchema>
 
 export const SequenceSchema = z.object({
+    id: z.string(),
     description: z.string().optional(),
     stages: StageSchema.array(),
 })

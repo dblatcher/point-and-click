@@ -1,6 +1,7 @@
 import { Sequence } from "../../src/definitions/Sequence";
 
 export const PUT_OUT_FIRE: Sequence = {
+    id: "PUT_OUT_FIRE",
     stages: [
         {
             characterOrders: {

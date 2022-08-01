@@ -3,7 +3,7 @@ import { InteractionSchema } from "./Interaction"
 import { ItemData, ItemDataSchema } from "./ItemData"
 import { orderSchema } from "./Order"
 import { RoomData, RoomDataSchema } from "./RoomData"
-import { SequenceSchema } from "./Sequence"
+import { Sequence, SequenceSchema } from "./Sequence"
 import { CharacterData, CharacterDataSchema } from "./CharacterData"
 import { VerbSchema } from "./Verb"
 import { Conversation, ConversationSchema } from "./Conversation"
@@ -28,7 +28,7 @@ const GameContentsDataSchema =  z.object({
 
 export const FixedGameInfoSchema = z.object({
     verbs: VerbSchema.array(),
-    sequences: z.record(z.string(), SequenceSchema),
+    sequences: SequenceSchema.array(),
     sprites: SpriteDataSchema.array(),
     spriteSheets: SpriteSheetSchema.array(),
 })
@@ -42,4 +42,4 @@ export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>
 export type GameDesign = z.infer<typeof GameDesignSchema>
 
-export type GameDataItem = CharacterData | ItemData | Conversation | RoomData | SpriteData | SpriteSheet
+export type GameDataItem = CharacterData | ItemData | Conversation | RoomData | SpriteData | SpriteSheet | Sequence

@@ -94,7 +94,7 @@ export class GameEditor extends Component<Props, State>{
                     conversations: [],
                     verbs: defaultVerbs1(),
                     currentRoomId: blankRoom.id,
-                    sequences: {},
+                    sequences: [],
                     sprites: [],
                     spriteSheets: []
                 },
@@ -147,7 +147,7 @@ export class GameEditor extends Component<Props, State>{
 
         this.setState(state => {
             const { gameDesign } = state
-            let { roomId, itemId, characterId, spriteId, spriteSheetId } = state
+            let { roomId, itemId, characterId, spriteId, spriteSheetId, sequenceId } = state
             switch (property) {
                 case 'rooms': {
                     addNewOrUpdate(data, gameDesign[property])
@@ -179,13 +179,18 @@ export class GameEditor extends Component<Props, State>{
                     spriteSheetId = (data as GameDataItem).id
                     break
                 }
+                case 'sequences': {
+                    addNewOrUpdate(data, gameDesign[property])
+                    sequenceId = (data as GameDataItem).id
+                    break
+                }
                 case 'id':
                 case 'currentRoomId': {
                     gameDesign[property] = data as string
                     break
                 }
             }
-            return { gameDesign, roomId, itemId, characterId, spriteId, spriteSheetId }
+            return { gameDesign, roomId, itemId, characterId, spriteId, spriteSheetId, sequenceId }
         })
     }
 
@@ -252,9 +257,7 @@ export class GameEditor extends Component<Props, State>{
             makeFolder('sprites', gameDesign.sprites, spriteId),
             makeFolder('spriteSheets', gameDesign.spriteSheets, spriteSheetId),
             makeFolder('interactions'),
-            makeFolder('sequences', Object.entries(gameDesign.sequences).map(
-                ([key, sequence]) => ({ id: key, sequence })
-            ), sequenceId),
+            makeFolder('sequences', gameDesign.sequences, sequenceId),
             makeFolder('images'),
         ]
 
@@ -359,7 +362,8 @@ export class GameEditor extends Component<Props, State>{
                         { label: 'Sequences', content: <SequenceEditor 
                             key={sequenceId}
                             gameDesign={gameDesign} 
-                            data={sequenceId ? gameDesign.sequences[sequenceId] : undefined}
+                            data={findById(sequenceId, gameDesign.sequences)}
+                            updateData={data => { this.performUpdate('sequences', data) }}
                             sequenceId={sequenceId} />},
                         { label: 'Image uploader', content: <ImageAssetTool /> },
                     ]} />

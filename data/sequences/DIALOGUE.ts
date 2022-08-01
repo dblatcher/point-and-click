@@ -1,6 +1,8 @@
 import { Sequence } from "../../src/definitions/Sequence";
 
 export const DIALOGUE: Sequence = {
+    id:"DIALOGUE",
+    description:"Skinner talks to his doppleganger.",
     stages: [
         {
             characterOrders: {

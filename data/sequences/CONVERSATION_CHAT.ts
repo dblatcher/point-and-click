@@ -1,6 +1,7 @@
 import { Sequence } from "../../src/definitions/Sequence";
 
 const CHAT_HELLO_0: Sequence = {
+    id: "CHAT_HELLO_0",
     stages: [
         {
             characterOrders: {
@@ -29,6 +30,7 @@ const CHAT_HELLO_0: Sequence = {
 }
 
 const CHAT_HELLO_1: Sequence = {
+    id: "CHAT_HELLO_1",
     stages: [
         {
             characterOrders: {
@@ -45,6 +47,7 @@ const CHAT_HELLO_1: Sequence = {
 }
 
 const CHAT_TOOLS_0: Sequence = {
+    id: "CHAT_TOOLS_0",
     stages: [
         {
             characterOrders: {
@@ -65,6 +68,7 @@ const CHAT_TOOLS_0: Sequence = {
 }
 
 const CHAT_TOOLS_1: Sequence = {
+    id: "CHAT_TOOLS_1",
     stages: [
         {
             characterOrders: {
@@ -89,6 +93,7 @@ const CHAT_TOOLS_1: Sequence = {
 }
 
 const CHAT_TOOLS_2: Sequence = {
+    id: "CHAT_TOOLS_2",
     stages: [
         {
             characterOrders: {
@@ -109,6 +114,7 @@ const CHAT_TOOLS_2: Sequence = {
 }
 
 const CHAT_TOOLS_3: Sequence = {
+    id: "CHAT_TOOLS_3",
     stages: [
         {
             characterOrders: {

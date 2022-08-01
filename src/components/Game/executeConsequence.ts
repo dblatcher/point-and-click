@@ -2,6 +2,7 @@ import { GameProps, GameState } from "."
 import { CommandTarget, CharacterData, Consequence, Order } from "src"
 import { cloneData } from "../../lib/clone"
 import { changeRoom } from "./changeRoom"
+import { findById } from "../../lib/util"
 
 
 export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
@@ -95,8 +96,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
             }
             case 'sequence': {
                 const { sequence: sequenceKey } = consequence
-                const sequenceRecordEntry = Object.entries(props.sequences).find(_ => _[0] === sequenceKey) || [];
-                const [, originalSequence] = sequenceRecordEntry;
+                const originalSequence = findById(sequenceKey, props.sequences)
                 if (originalSequence) {
                     state.sequenceRunning = cloneData(originalSequence)
                 } else {

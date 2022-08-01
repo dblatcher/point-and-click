@@ -47,7 +47,8 @@ export const makeBlankConversation = (): Conversation => ({
     }
 })
 
-export const makeBlankSequence = (): Sequence => ({
+export const makeBlankSequence = (id="NEW_SEQEUNCE"): Sequence => ({
+    id,
     description: "",
     stages: [
         {

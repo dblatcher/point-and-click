@@ -1,6 +1,7 @@
 import { Sequence } from "../../src/definitions/Sequence";
 
 export const LIGHT_FIRE: Sequence = {
+    id:"LIGHT_FIRE",
     description:"player lights the fire with the matches",
     stages: [
         {

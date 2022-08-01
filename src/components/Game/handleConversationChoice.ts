@@ -1,6 +1,7 @@
 import { Conversation, ConversationChoice, Sequence } from "src";
 import { cloneData } from "../../lib/clone";
 import { GameState } from ".";
+import { findById } from "../../lib/util";
 
 
 function findChoiceFromRefSet(
@@ -59,7 +60,7 @@ function setChoicesDisabled(
     return conversations
 }
 
-export function handleConversationChoice(choice: ConversationChoice, sequences: Record<string, Sequence | undefined>): { (state: GameState): Partial<GameState> } {
+export function handleConversationChoice(choice: ConversationChoice, sequences: Sequence[]): { (state: GameState): Partial<GameState> } {
 
     return (state): GameState => {
 
@@ -80,11 +81,12 @@ export function handleConversationChoice(choice: ConversationChoice, sequences: 
         if (choice.nextBranch && currentConversation?.branches[choice.nextBranch]) {
             currentConversation.currentBranch = choice.nextBranch
         }
-        const originalSequence = sequences[choice.sequence]
+
+        const originalSequence = findById(choice.sequence, sequences)
         if (!originalSequence) {
             console.warn(`invalid sequenceId "${choice.sequence}" in conversation "${currentConversationId}"`)
         } else {
-            const sequenceCopy = originalSequence ? cloneData(originalSequence) : { stages: [] }
+            const sequenceCopy = originalSequence ? cloneData(originalSequence) : { id: "", stages: [] }
             if (choice.end) {
                 sequenceCopy.stages.push({
                     immediateConsequences: [{ type: 'conversation', end: true, conversationId: currentConversationId }]
