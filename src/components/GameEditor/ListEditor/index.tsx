@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, ComponentChild, h } from "preact";
+import { Component, ComponentChild, h, Fragment } from "preact";
 import editorstyles from '../editorStyles.module.css';
 import styles from './styles.module.css';
 
@@ -9,6 +9,7 @@ interface Props<T> {
     mutateList: { (newList: T[]): void };
     createItem?: { (): T | undefined };
     createButton?: 'END';
+    noMoveButtons?: boolean;
 }
 
 export class ListEditor<T extends {}> extends Component<Props<T>> {
@@ -43,7 +44,7 @@ export class ListEditor<T extends {}> extends Component<Props<T>> {
     }
 
     render() {
-        const { list, describeItem, createItem, createButton } = this.props
+        const { list, describeItem, createItem, createButton, noMoveButtons } = this.props
         return (
             <article>
                 <ul className={styles.mainList}>
@@ -58,17 +59,19 @@ export class ListEditor<T extends {}> extends Component<Props<T>> {
                             <div className={editorstyles.row}>
                                 {describeItem(item, index)}
                                 <div className={styles.buttonSet}>
+                                    {!noMoveButtons && <>
+                                        <button className={styles.moveButton}
+                                            onClick={() => { this.handleMove(index, 'UP') }}>
+                                            🔼
+                                        </button>
+                                        <button className={styles.moveButton}
+                                            onClick={() => { this.handleMove(index, 'DOWN') }}>
+                                            🔽
+                                        </button>
+                                    </>}
                                     <button className={styles.deleteButton}
                                         onClick={() => { this.handleDelete(index) }}>
                                         ❌
-                                    </button>
-                                    <button className={styles.moveButton}
-                                        onClick={() => { this.handleMove(index, 'UP') }}>
-                                        🔼
-                                    </button>
-                                    <button className={styles.moveButton}
-                                        onClick={() => { this.handleMove(index, 'DOWN') }}>
-                                        🔽
                                     </button>
                                 </div>
                             </div>

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
 import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage } from "src";
-import { ImmediateConsequenceSchema } from "../../../definitions/Interaction";
+import { ImmediateConsequence, ImmediateConsequenceSchema } from "../../../definitions/Interaction";
 import { cloneData } from "../../../lib/clone";
-import { makeBlankSequence, makeBlankStage } from "../defaults";
+import { makeBlankSequence, makeBlankStage, makeNewConsequence } from "../defaults";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { ListEditor } from "../ListEditor";
 import { OrderForm } from "../OrderForm";
@@ -32,6 +32,7 @@ export class SequenceEditor extends Component<Props, State> {
         this.state = this.initialState
         this.changeOrder = this.changeOrder.bind(this)
         this.changeConsequence = this.changeConsequence.bind(this)
+        this.changeConsequenceList = this.changeConsequenceList.bind(this)
         this.renderStage = this.renderStage.bind(this)
     }
 
@@ -75,8 +76,19 @@ export class SequenceEditor extends Component<Props, State> {
         })
     }
 
+    changeConsequenceList(newList: ImmediateConsequence[], stageIndex: number) {
+        this.setState(state => {
+            const { stages } = state
+            const stage = stages[stageIndex]
+            if (!stage) { return {} }
+            stage.immediateConsequences = newList
+            return { stages }
+        })
+    }
+
     renderStage(stage: Stage, stageIndex: number) {
         const { gameDesign } = this.props
+        const { immediateConsequences = [] } = stage
         return (
             <section key={stageIndex}>
                 <hr />
@@ -93,14 +105,21 @@ export class SequenceEditor extends Component<Props, State> {
                     </div>
                 ))}
                 <h4>immediateConsequences: {stage.immediateConsequences?.length}</h4>
-                {stage.immediateConsequences?.map((consequence, consequenceIndex) => (
-                    <ConsequenceForm immediateOnly={true}
-                        key={consequenceIndex}
-                        consequence={consequence as AnyConsequence}
-                        gameDesign={gameDesign}
-                        update={(consequence) => { this.changeConsequence(consequence, stageIndex, consequenceIndex) }}
-                    />
-                ))}
+
+                <ListEditor list={immediateConsequences}
+                    mutateList={(newList) => { this.changeConsequenceList(newList, stageIndex) }}
+                    describeItem={(consequence, consequenceIndex) => (
+                        <ConsequenceForm immediateOnly={true}
+                            key={consequenceIndex}
+                            consequence={consequence as AnyConsequence}
+                            gameDesign={gameDesign}
+                            update={(consequence) => { this.changeConsequence(consequence, stageIndex, consequenceIndex) }}
+                        />
+                    )}
+                    createButton="END"
+                    noMoveButtons
+                    createItem={()=>makeNewConsequence('changeStatus')}
+                />
             </section>
         )
     }
