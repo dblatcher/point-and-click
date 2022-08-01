@@ -9,6 +9,7 @@ import { ListEditor } from "../ListEditor";
 import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
 import styles from "../editorStyles.module.css"
+import { StringInput } from "../formControls";
 
 interface Props {
     gameDesign: GameDesign;
@@ -115,8 +116,12 @@ export class SequenceEditor extends Component<Props, State> {
                 <div className={styles.rowTopLeft}>
                     <fieldset className={styles.fieldset}>
                         <legend>details</legend>
-                        <p>id: {id}</p>
-                        <p>description: {description}</p>
+                        <StringInput label="id" value={id}
+                            inputHandler={(id) => { this.setState({ id }) }}
+                        />
+                        <StringInput label="description" value={description || ''}
+                            inputHandler={(description) => { this.setState({ description }) }}
+                        />
                     </fieldset>
 
                     <StorageMenu
