@@ -33,6 +33,7 @@ export class SequenceEditor extends Component<Props, State> {
         super(props)
         this.state = this.initialState
         this.changeOrder = this.changeOrder.bind(this)
+        this.changeOrderList = this.changeOrderList.bind(this)
         this.changeConsequence = this.changeConsequence.bind(this)
         this.changeConsequenceList = this.changeConsequenceList.bind(this)
         this.renderStage = this.renderStage.bind(this)
@@ -62,13 +63,13 @@ export class SequenceEditor extends Component<Props, State> {
         })
     }
 
-    addOrderList(characterId: string, stageIndex: number) {
+    changeOrderList(newList: Order[], stageIndex: number, characterId: string) {
         this.setState(state => {
             const { stages } = state
             const stage = stages[stageIndex]
             if (!stage) { return {} }
             if (!stage.characterOrders) { stage.characterOrders = {} }
-            stage.characterOrders[characterId] = [getDefaultOrder('talk')]
+            stage.characterOrders[characterId] = newList
             return { stages }
         })
     }
@@ -101,14 +102,17 @@ export class SequenceEditor extends Component<Props, State> {
 
     renderCharacterOrderList(characterId: string, orders: Order[], stageIndex: number) {
         return (
-            <div key={characterId}>
-                {orders.map((order, orderIndex) => (
+            <ListEditor
+                list={orders}
+                describeItem={(order, orderIndex) => (
                     <OrderForm key={orderIndex}
                         data={order}
                         updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, characterId, orderIndex) }}
                     />
-                ))}
-            </div>
+                )}
+                mutateList={newList => { this.changeOrderList(newList, stageIndex, characterId) }}
+                createItem={() => getDefaultOrder('act')}
+            />
         )
     }
 
@@ -121,7 +125,7 @@ export class SequenceEditor extends Component<Props, State> {
                 <SelectAndConfirmInput
                     label="add orders for:"
                     items={listIds(gameDesign.characters).filter(id => !Object.keys(characterOrders).includes(id))}
-                    onSelect={value => {this.addOrderList(value, stageIndex)}}
+                    onSelect={value => { this.changeOrderList( [getDefaultOrder('talk')], stageIndex, value) }}
                 />
 
                 <TabMenu backgroundColor="none"
@@ -190,7 +194,6 @@ export class SequenceEditor extends Component<Props, State> {
                     mutateList={stages => { this.setState({ stages }) }}
                     createItem={makeBlankStage}
                 />
-
             </article>
         )
     }
