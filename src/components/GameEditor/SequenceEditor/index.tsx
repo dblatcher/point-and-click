@@ -10,6 +10,7 @@ import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
 import styles from "../editorStyles.module.css"
 import { StringInput } from "../formControls";
+import { TabMenu } from "../../TabMenu";
 
 interface Props {
     gameDesign: GameDesign;
@@ -86,39 +87,52 @@ export class SequenceEditor extends Component<Props, State> {
         })
     }
 
+    renderCharacterOrderList(characterId: string, orders: Order[], stageIndex: number) {
+
+        return (
+            <div key={characterId}>
+                {orders.map((order, orderIndex) => (
+                    <OrderForm key={orderIndex}
+                        data={order}
+                        updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, characterId, orderIndex) }}
+                    />
+                ))}
+            </div>
+        )
+    }
+
     renderStage(stage: Stage, stageIndex: number) {
         const { gameDesign } = this.props
         const { immediateConsequences = [] } = stage
         return (
             <section key={stageIndex}>
-                <hr />
                 <h3>stage {stageIndex + 1}</h3>
-                {Object.entries(stage.characterOrders || {}).map(([characterId, orders]) => (
-                    <div key={characterId}>
-                        <h4>{characterId}, {orders.length} orders</h4>
-                        {orders.map((order, orderIndex) => (
-                            <OrderForm key={orderIndex}
-                                data={order}
-                                updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, characterId, orderIndex) }}
-                            />
-                        ))}
-                    </div>
-                ))}
-                <h4>immediateConsequences: {stage.immediateConsequences?.length}</h4>
-
-                <ListEditor list={immediateConsequences}
-                    mutateList={(newList) => { this.changeConsequenceList(newList, stageIndex) }}
-                    describeItem={(consequence, consequenceIndex) => (
-                        <ConsequenceForm immediateOnly={true}
-                            key={consequenceIndex}
-                            consequence={consequence as AnyConsequence}
-                            gameDesign={gameDesign}
-                            update={(consequence) => { this.changeConsequence(consequence, stageIndex, consequenceIndex) }}
-                        />
-                    )}
-                    createButton="END"
-                    noMoveButtons
-                    createItem={()=>makeNewConsequence('changeStatus')}
+                <TabMenu backgroundColor="none"
+                    tabs={
+                        [
+                            ...Object.entries(stage.characterOrders || {}).map(([characterId, orders]) => ({
+                                content: this.renderCharacterOrderList(characterId, orders, stageIndex),
+                                label: `${characterId}[${orders.length}]`
+                            })),
+                            {
+                                label: `consequences [${immediateConsequences.length}]`,
+                                content: <ListEditor list={immediateConsequences}
+                                    mutateList={(newList) => { this.changeConsequenceList(newList, stageIndex) }}
+                                    describeItem={(consequence, consequenceIndex) => (
+                                        <ConsequenceForm immediateOnly={true}
+                                            key={consequenceIndex}
+                                            consequence={consequence as AnyConsequence}
+                                            gameDesign={gameDesign}
+                                            update={(consequence) => { this.changeConsequence(consequence, stageIndex, consequenceIndex) }}
+                                        />
+                                    )}
+                                    createButton="END"
+                                    noMoveButtons
+                                    createItem={() => makeNewConsequence('changeStatus')}
+                                />
+                            }
+                        ]
+                    }
                 />
             </section>
         )
@@ -130,7 +144,7 @@ export class SequenceEditor extends Component<Props, State> {
 
         return (
             <article>
-                <h2>Sequences {id}</h2>
+                <h2>Sequence Editor</h2>
 
                 <div className={styles.rowTopLeft}>
                     <fieldset className={styles.fieldset}>
