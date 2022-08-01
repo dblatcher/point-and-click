@@ -112,6 +112,10 @@ export type ImmediateConsequence = RemoveCharacterConsequence |
     InventoryConsequence |
     ConversationConsequence;
 
+export const immediateConsequenceTypes: ConsequenceType[] = [
+    'removeCharacter', 'changeStatus', 'inventory', 'conversation'
+]
+
 export const InteractionSchema = z.object({
     verbId: z.string(),
     targetId: z.string(),

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
-import { consequenceTypes } from "../../../definitions/Interaction";
+import { consequenceTypes, immediateConsequenceTypes } from "../../../definitions/Interaction";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
 import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
@@ -15,17 +15,18 @@ interface Props {
     consequence: AnyConsequence;
     gameDesign: GameDesign;
     update: { (consequence: Consequence): void }
+    immediateOnly?: boolean
 }
 
 
-export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameDesign, update }: Props) => {
+export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameDesign, update, immediateOnly }: Props) => {
 
     const entries = Object.entries(consequence) as [keyof AnyConsequence, string | boolean | number | Order[]][]
 
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
 
     const optionListIds = {
-        type: consequenceTypes,
+        type: immediateOnly ? immediateConsequenceTypes : consequenceTypes,
         conversationId: listIds(gameDesign.conversations),
         characterId: listIds(gameDesign.characters),
         itemId: listIds(gameDesign.items),

@@ -359,12 +359,14 @@ export class GameEditor extends Component<Props, State>{
                                 deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
                                 gameDesign={gameDesign} />
                         },
-                        { label: 'Sequences', content: <SequenceEditor 
+                        { 
+                            label: 'Sequences', content: <SequenceEditor 
                             key={sequenceId}
                             gameDesign={gameDesign} 
                             data={findById(sequenceId, gameDesign.sequences)}
                             updateData={data => { this.performUpdate('sequences', data) }}
-                            sequenceId={sequenceId} />},
+                            sequenceId={sequenceId} />
+                        },
                         { label: 'Image uploader', content: <ImageAssetTool /> },
                     ]} />
                 </section>

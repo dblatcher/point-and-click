@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { AnyConsequence, Consequence, GameDesign, Order, Sequence } from "src";
+import { AnyConsequence, Consequence, GameDesign, Order, Sequence, } from "src";
+import { ImmediateConsequenceSchema, ImmediateConsequence } from "../../../definitions/Interaction";
 import { cloneData } from "../../../lib/clone";
 import { makeBlankSequence } from "../defaults";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
@@ -11,7 +12,7 @@ interface Props {
     gameDesign: GameDesign;
     sequenceId?: string;
     data?: Sequence;
-    updateData?: { (data: Sequence): void };
+    updateData: { (data: Sequence): void };
 }
 
 type ExtraState = {
@@ -33,7 +34,7 @@ export class SequenceEditor extends Component<Props, State> {
     get initialState(): Sequence {
         const { data } = this.props
         return data ? {
-            ...data
+            ...cloneData(data)
         } : makeBlankSequence()
     }
 
@@ -42,17 +43,37 @@ export class SequenceEditor extends Component<Props, State> {
         return characterData
     }
 
-    changeOrder(newOrder: Order, stageIndex: number, characterId: string, orderIndex: number) {
-        throw new Error("Method not implemented.");
+    changeOrder(order: Order, stageIndex: number, characterId: string, orderIndex: number) {
+        this.setState(state => {
+            const { stages } = state
+            const characterOrders = stages[stageIndex]?.characterOrders
+            if (!characterOrders) { return {} }
+            const ordersForCharacter = characterOrders[characterId]
+            if (!ordersForCharacter) { return {} }
+            ordersForCharacter.splice(orderIndex, 1, order)
+            return { stages }
+        })
     }
 
     changeConsequence(consequence: Consequence, stageIndex: number, consequenceIndex: number) {
-        throw new Error("Method not implemented.");
+        const isImmediateConsequence = ImmediateConsequenceSchema.safeParse(consequence)
+        if (!isImmediateConsequence.success) {
+            console.warn('not immediate', consequence)
+            return
+        }
+
+        this.setState(state => {
+            const { stages } = state
+            const immediateConsequences = stages[stageIndex]?.immediateConsequences
+            if (!immediateConsequences) { return {} }
+            immediateConsequences.splice(consequenceIndex, 1, isImmediateConsequence.data)
+            return { stages }
+        })
     }
 
 
     render() {
-        const { gameDesign, sequenceId } = this.props
+        const { gameDesign, sequenceId, updateData } = this.props
         const { description, stages } = this.state
 
         return (
@@ -62,11 +83,11 @@ export class SequenceEditor extends Component<Props, State> {
 
                 <StorageMenu
                     type='sequence'
-                    data={sequenceId ? { id: sequenceId } : undefined}
+                    data={this.currentData}
                     originalId={sequenceId}
                     existingIds={Object.keys(gameDesign.sequences)}
                     reset={() => this.setState(this.initialState)}
-                    update={() => { }}
+                    update={() => { updateData(this.currentData) }}
                 />
                 <p>stages: {stages.length}</p>
 
@@ -87,7 +108,7 @@ export class SequenceEditor extends Component<Props, State> {
                         ))}
                         <h4>immediateConsequences: {stage.immediateConsequences?.length}</h4>
                         {stage.immediateConsequences?.map((consequence, consequenceIndex) => (
-                            <ConsequenceForm
+                            <ConsequenceForm immediateOnly={true}
                                 key={consequenceIndex}
                                 consequence={consequence as AnyConsequence}
                                 gameDesign={gameDesign}
