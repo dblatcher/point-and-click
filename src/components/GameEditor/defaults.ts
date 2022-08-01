@@ -1,5 +1,6 @@
 import { Order, OrderType } from "src/definitions/Order";
-import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType } from "src";
+import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage } from "src";
+import { ImmediateConsequence } from "src/definitions/Interaction";
 
 
 export const defaultVerbs1: { (): Verb[] } = () => [
@@ -47,14 +48,16 @@ export const makeBlankConversation = (): Conversation => ({
     }
 })
 
-export const makeBlankSequence = (id="NEW_SEQEUNCE"): Sequence => ({
+export const makeBlankStage = (): Stage => ({
+    characterOrders: {},
+    immediateConsequences: [],
+})
+
+export const makeBlankSequence = (id = "NEW_SEQEUNCE"): Sequence => ({
     id,
     description: "",
     stages: [
-        {
-            characterOrders: {},
-            immediateConsequences: [],
-        }
+        makeBlankStage()
     ]
 })
 

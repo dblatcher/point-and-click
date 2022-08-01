@@ -17,3 +17,5 @@ export type { Sequence } from "./definitions/Sequence";
 export type { SpriteSheet, SpriteData, SpriteFrame, } from "./definitions/SpriteSheet";
 
 export type { Direction, Ident, SpriteParams, Position } from "./definitions/BaseTypes"
+
+export type Stage = { characterOrders?: Record<string, Order[]>; immediateConsequences?: ImmediateConsequence[] }

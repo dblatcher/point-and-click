@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { AnyConsequence, Consequence, GameDesign, Order, Sequence, } from "src";
-import { ImmediateConsequenceSchema, ImmediateConsequence } from "../../../definitions/Interaction";
+import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage } from "src";
+import { ImmediateConsequenceSchema } from "../../../definitions/Interaction";
 import { cloneData } from "../../../lib/clone";
-import { makeBlankSequence } from "../defaults";
+import { makeBlankSequence, makeBlankStage } from "../defaults";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
+import { ListEditor } from "../ListEditor";
 import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
 
@@ -29,6 +30,7 @@ export class SequenceEditor extends Component<Props, State> {
         this.state = this.initialState
         this.changeOrder = this.changeOrder.bind(this)
         this.changeConsequence = this.changeConsequence.bind(this)
+        this.renderStage = this.renderStage.bind(this)
     }
 
     get initialState(): Sequence {
@@ -71,14 +73,43 @@ export class SequenceEditor extends Component<Props, State> {
         })
     }
 
+    renderStage(stage: Stage, stageIndex: number) {
+        const { gameDesign } = this.props
+        return (
+            <section key={stageIndex}>
+                <hr />
+                <h3>stage {stageIndex + 1}</h3>
+                {Object.entries(stage.characterOrders || {}).map(([characterId, orders]) => (
+                    <div key={characterId}>
+                        <h4>{characterId}, {orders.length} orders</h4>
+                        {orders.map((order, orderIndex) => (
+                            <OrderForm key={orderIndex}
+                                data={order}
+                                updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, characterId, orderIndex) }}
+                            />
+                        ))}
+                    </div>
+                ))}
+                <h4>immediateConsequences: {stage.immediateConsequences?.length}</h4>
+                {stage.immediateConsequences?.map((consequence, consequenceIndex) => (
+                    <ConsequenceForm immediateOnly={true}
+                        key={consequenceIndex}
+                        consequence={consequence as AnyConsequence}
+                        gameDesign={gameDesign}
+                        update={(consequence) => { this.changeConsequence(consequence, stageIndex, consequenceIndex) }}
+                    />
+                ))}
+            </section>
+        )
+    }
 
     render() {
         const { gameDesign, sequenceId, updateData } = this.props
-        const { description, stages } = this.state
+        const { description, stages = [],  id} = this.state
 
         return (
             <article>
-                <h2>Sequence {sequenceId}</h2>
+                <h2>Sequence {id}</h2>
                 <p>description: {description}</p>
 
                 <StorageMenu
@@ -91,33 +122,14 @@ export class SequenceEditor extends Component<Props, State> {
                 />
                 <p>stages: {stages.length}</p>
 
-                {stages.map((stage, stageIndex) => (
-                    <section key={stageIndex}>
-                        <hr />
-                        <h3>stage {stageIndex + 1}</h3>
-                        {Object.entries(stage.characterOrders || {}).map(([characterId, orders]) => (
-                            <div key={characterId}>
-                                <h4>{characterId}, {orders.length} orders</h4>
-                                {orders.map((order, orderIndex) => (
-                                    <OrderForm key={orderIndex}
-                                        data={order}
-                                        updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, characterId, orderIndex) }}
-                                    />
-                                ))}
-                            </div>
-                        ))}
-                        <h4>immediateConsequences: {stage.immediateConsequences?.length}</h4>
-                        {stage.immediateConsequences?.map((consequence, consequenceIndex) => (
-                            <ConsequenceForm immediateOnly={true}
-                                key={consequenceIndex}
-                                consequence={consequence as AnyConsequence}
-                                gameDesign={gameDesign}
-                                update={(consequence) => { this.changeConsequence(consequence, stageIndex, consequenceIndex) }}
-                            />
-                        ))}
-                    </section>
-                ))}
-            </article >
+                <ListEditor
+                    list={stages}
+                    describeItem={this.renderStage}
+                    mutateList={stages => {this.setState({stages})}}
+                    createItem={makeBlankStage}
+                />
+
+            </article>
         )
     }
 }
