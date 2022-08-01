@@ -46,6 +46,6 @@ export function getConversationsDescriptions(gameDesign: GameDesign): string[] {
 }
 
 export function getSequenceDescriptions(gameDesign: GameDesign): string[] {
-    const { sequences } = gameDesign
-    return Object.keys(sequences).map(key=> `${emoji.SEQUENCE} ${key}`)
+    const { sequences = [] } = gameDesign
+    return sequences.map(item=> `${emoji.SEQUENCE} ${item.id}`)
 }

@@ -34,14 +34,14 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         targetId: targetIds,
         targetType: ['character', 'item', 'hotspot'],
         addOrRemove: ['ADD', 'REMOVE'],
-        sequence: Object.keys(gameDesign.sequences),
+        sequence: listIds(gameDesign.sequences),
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
         targetId: targetDescriptions,
         characterId: getCharacterDescriptions(gameDesign),
         itemId: getItemDescriptions(gameDesign),
         conversationId: getConversationsDescriptions(gameDesign),
-        sequence: getSequenceDescriptions(gameDesign,)
+        sequence: getSequenceDescriptions(gameDesign)
     }
     const editOrder = (newOrder: Order, index: number): void => {
         const ordersCopy = [...consequence.orders]

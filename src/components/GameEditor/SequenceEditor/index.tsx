@@ -3,14 +3,15 @@ import { Component, h } from "preact";
 import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage } from "src";
 import { ImmediateConsequence, ImmediateConsequenceSchema } from "../../../definitions/Interaction";
 import { cloneData } from "../../../lib/clone";
-import { makeBlankSequence, makeBlankStage, makeNewConsequence } from "../defaults";
+import { getDefaultOrder, makeBlankSequence, makeBlankStage, makeNewConsequence } from "../defaults";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { ListEditor } from "../ListEditor";
 import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
 import styles from "../editorStyles.module.css"
-import { StringInput } from "../formControls";
+import { SelectAndConfirmInput, StringInput } from "../formControls";
 import { TabMenu } from "../../TabMenu";
+import { listIds } from "../../../lib/util";
 
 interface Props {
     gameDesign: GameDesign;
@@ -61,6 +62,17 @@ export class SequenceEditor extends Component<Props, State> {
         })
     }
 
+    addOrderList(characterId: string, stageIndex: number) {
+        this.setState(state => {
+            const { stages } = state
+            const stage = stages[stageIndex]
+            if (!stage) { return {} }
+            if (!stage.characterOrders) { stage.characterOrders = {} }
+            stage.characterOrders[characterId] = [getDefaultOrder('talk')]
+            return { stages }
+        })
+    }
+
     changeConsequence(consequence: Consequence, stageIndex: number, consequenceIndex: number) {
         const isImmediateConsequence = ImmediateConsequenceSchema.safeParse(consequence)
         if (!isImmediateConsequence.success) {
@@ -88,7 +100,6 @@ export class SequenceEditor extends Component<Props, State> {
     }
 
     renderCharacterOrderList(characterId: string, orders: Order[], stageIndex: number) {
-
         return (
             <div key={characterId}>
                 {orders.map((order, orderIndex) => (
@@ -103,14 +114,20 @@ export class SequenceEditor extends Component<Props, State> {
 
     renderStage(stage: Stage, stageIndex: number) {
         const { gameDesign } = this.props
-        const { immediateConsequences = [] } = stage
+        const { immediateConsequences = [], characterOrders = {} } = stage
         return (
             <section key={stageIndex}>
                 <h3>stage {stageIndex + 1}</h3>
+                <SelectAndConfirmInput
+                    label="add orders for:"
+                    items={listIds(gameDesign.characters).filter(id => !Object.keys(characterOrders).includes(id))}
+                    onSelect={value => {this.addOrderList(value, stageIndex)}}
+                />
+
                 <TabMenu backgroundColor="none"
                     tabs={
                         [
-                            ...Object.entries(stage.characterOrders || {}).map(([characterId, orders]) => ({
+                            ...Object.entries(characterOrders).map(([characterId, orders]) => ({
                                 content: this.renderCharacterOrderList(characterId, orders, stageIndex),
                                 label: `${characterId}[${orders.length}]`
                             })),

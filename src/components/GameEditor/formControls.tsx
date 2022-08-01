@@ -1,5 +1,5 @@
 import { ComponentChild, FunctionalComponent, Fragment, h, JSX } from "preact"
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { eventToBoolean, eventToNumber, eventToString } from "../../lib/util";
 import { Ident } from "src"
 import styles from './editorStyles.module.css';
@@ -224,6 +224,27 @@ export const SelectInput: FunctionalComponent<{
             )}
         </select>
     </>
+}
+
+export const SelectAndConfirmInput: FunctionalComponent<{
+    label?: string;
+    onSelect: { (item: string): void };
+    items: string[];
+    descriptions?: string[];
+}> = (props) => {
+    const { descriptions, items, label, onSelect } = props
+    const [value, setValue] = useState(items[0])
+    useEffect(() => {
+        setValue(items[0])
+    }, [items])
+
+    return (
+        <>
+            {label && <label>{label}:</label>}
+            <SelectInput items={items} descriptions={descriptions} value={value} onSelect={setValue} />
+            <button onClick={() => onSelect(value)}>{value}</button>
+        </>
+    )
 }
 
 export const Warning: FunctionalComponent<{
