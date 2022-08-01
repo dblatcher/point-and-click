@@ -8,6 +8,7 @@ import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { ListEditor } from "../ListEditor";
 import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
+import styles from "../editorStyles.module.css"
 
 interface Props {
     gameDesign: GameDesign;
@@ -105,27 +106,33 @@ export class SequenceEditor extends Component<Props, State> {
 
     render() {
         const { gameDesign, sequenceId, updateData } = this.props
-        const { description, stages = [],  id} = this.state
+        const { description, stages = [], id } = this.state
 
         return (
             <article>
-                <h2>Sequence {id}</h2>
-                <p>description: {description}</p>
+                <h2>Sequences {id}</h2>
 
-                <StorageMenu
-                    type='sequence'
-                    data={this.currentData}
-                    originalId={sequenceId}
-                    existingIds={Object.keys(gameDesign.sequences)}
-                    reset={() => this.setState(this.initialState)}
-                    update={() => { updateData(this.currentData) }}
-                />
-                <p>stages: {stages.length}</p>
+                <div className={styles.rowTopLeft}>
+                    <fieldset className={styles.fieldset}>
+                        <legend>details</legend>
+                        <p>id: {id}</p>
+                        <p>description: {description}</p>
+                    </fieldset>
+
+                    <StorageMenu
+                        type='sequence'
+                        data={this.currentData}
+                        originalId={sequenceId}
+                        existingIds={Object.keys(gameDesign.sequences)}
+                        reset={() => this.setState(this.initialState)}
+                        update={() => { updateData(this.currentData) }}
+                    />
+                </div>
 
                 <ListEditor
                     list={stages}
                     describeItem={this.renderStage}
-                    mutateList={stages => {this.setState({stages})}}
+                    mutateList={stages => { this.setState({ stages }) }}
                     createItem={makeBlankStage}
                 />
 
