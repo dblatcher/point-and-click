@@ -97,6 +97,23 @@ export const TextInput: FunctionalComponent<{
     </>
 }
 
+export const StringInput: FunctionalComponent<{
+    label?: string;
+    value: string;
+    type?: string;
+    inputHandler: { (value: string): void };
+}> = (props) => {
+    const { label, type = 'text', value, inputHandler } = props
+    return <>
+        {label && <label>{label}</label>}
+        <input value={value} type={type} onInput={
+            (event): void => {
+                inputHandler(eventToString(event))
+            }
+        } />
+    </>
+}
+
 export const CheckBoxInput: FunctionalComponent<{
     label: string;
     value?: boolean;
