@@ -56,60 +56,6 @@
     left: 0;
 }
 
-.treeMenu {
-    flex-shrink: 0;
-    border-right: 3px solid black;
-    padding: 5px 0;
-    font-size: 120%;
-    min-width: 15rem;
-    align-self: stretch;
-    overflow-y: auto;
-}
-
-.treeMenu > ul {
-    margin: 0;
-    padding: 0 1em;
-}
-
-.treeMenu .entryList {
-    list-style: none;
-    font-family: monospace;
-    margin-left: .5em;
-    border-left: 1px solid gray;
-    padding-left: .5em;
-    margin-bottom: .5em;
-}
-
-.treeMenu .button {
-    cursor: pointer;
-    background-color: unset;
-    text-decoration: underline;
-    border: none;
-    font-family: monospace;
-    font-size: inherit;
-    padding: 0;
-}
-
-.treeMenu .button b {
-    display: inline-block;
-    padding-right: .5em;
-    transition: transform .5s;
-    transform-origin: center;
-}
-
-.treeMenu .button.open b {
-    transform: rotate(90deg);
-}
-
-.treeMenu .button.active {
-    font-weight: bold;
-}
-
-.treeMenu h2 {
-    margin: 0;
-    font-size: 1em;
-}
-
 .interactionTable thead td {
     background-color: black;
     color: white;

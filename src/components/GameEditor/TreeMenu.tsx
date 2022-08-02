@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, FunctionalComponent } from "preact";
-import styles from "./editorStyles.module.css"
+import styles from "./editorLayoutStyles.module.css"
 
 interface Props {
     title?: string;
