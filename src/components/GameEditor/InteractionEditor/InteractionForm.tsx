@@ -115,6 +115,9 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
 
                 <ListEditor
                     list={consequences}
+                    heavyBorders={true}
+                    createButton="END"
+                    noMoveButtons={true}
                     describeItem={(consequence, index) => (
                         <ConsequenceForm
                             consequence={consequence as AnyConsequence}
@@ -127,8 +130,8 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                     }}
                     createItem={() => makeNewConsequence('order')}
                 />
-
             </fieldset>
+
             <div>
                 <button
                     onClick={handleConfirm}

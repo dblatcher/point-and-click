@@ -9,6 +9,7 @@ interface Props<T> {
     createItem?: { (): T | undefined };
     createButton?: 'END';
     noMoveButtons?: boolean;
+    heavyBorders?: boolean;
 }
 
 const icons = {
@@ -73,9 +74,11 @@ export class ListEditor<T extends {}> extends Component<Props<T>> {
     }
 
     render() {
-        const { list, describeItem, createItem, createButton, noMoveButtons } = this.props
+        const { list, describeItem, createItem, createButton, noMoveButtons, heavyBorders = false } = this.props
+        const listStyle = heavyBorders ? [styles.mainList, styles.heavyList].join(" ") : [styles.mainList].join(" ")
+
         return (
-            <ul className={styles.mainList}>
+            <ul className={listStyle}>
                 {list.map((item, index) => (
                     <Fragment key={index}>
                         {(!!createItem && createButton !== 'END') && (

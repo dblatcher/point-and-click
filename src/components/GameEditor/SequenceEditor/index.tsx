@@ -193,6 +193,7 @@ export class SequenceEditor extends Component<Props, State> {
                     describeItem={this.renderStage}
                     mutateList={stages => { this.setState({ stages }) }}
                     createItem={makeBlankStage}
+                    heavyBorders={true}
                 />
             </article>
         )
