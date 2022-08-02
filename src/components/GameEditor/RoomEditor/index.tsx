@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment } from "preact";
 import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone } from "src";
 import { Point } from "../../../lib/pathfinding/geometry";

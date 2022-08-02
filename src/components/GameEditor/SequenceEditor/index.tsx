@@ -120,7 +120,7 @@ export class SequenceEditor extends Component<Props, State> {
         const { gameDesign } = this.props
         const { immediateConsequences = [], characterOrders = {} } = stage
         return (
-            <section key={stageIndex}>
+            <section key={stageIndex} style={{width:'100%'}}>
                 <h3>stage {stageIndex + 1}</h3>
                 <SelectAndConfirmInput
                     label="add orders for:"

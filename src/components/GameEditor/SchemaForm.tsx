@@ -42,7 +42,7 @@ export function SchemaField<T extends z.ZodRawShape>({
 
     if (type === 'ZodString' && (typeof value === 'string' || typeof value === 'undefined')) {
         if (options) {
-            return <div className={styles.row}>
+            return <div className={styles.formRow}>
                 <SelectInput label={key}
                     value={value || ''}
                     onSelect={value => change(value, field)}
@@ -53,7 +53,7 @@ export function SchemaField<T extends z.ZodRawShape>({
             </div>
         }
 
-        return <div className={styles.row}>
+        return <div className={styles.formRow}>
             <TextInput label={key}
                 value={value || ''}
                 onInput={(event): void => { change(eventToString(event), field) }}
@@ -64,14 +64,15 @@ export function SchemaField<T extends z.ZodRawShape>({
 
     if (type === 'ZodBoolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {
         if (noTriState || !optional) {
-            return <div className={styles.row}>
+            return <div className={styles.formRow}>
                 <CheckBoxInput label={key}
                     value={value}
                     inputHandler={(value): void => { change(value, field) }}
                 />
+                <span>{field.optional ? '(opt)' : '(req)'}</span>
             </div>
         }
-        return <div className={styles.row}>
+        return <div className={styles.formRow}>
             <TriStateInput label={key}
                 value={value}
                 inputHandler={(value): void => { change(value, field) }}
@@ -81,7 +82,7 @@ export function SchemaField<T extends z.ZodRawShape>({
     }
 
     if (type === 'ZodNumber' && (typeof value === 'number' || typeof value === 'undefined')) {
-        return <div className={styles.row}>
+        return <div className={styles.formRow}>
             <NumberInput label={key}
                 value={value || 0}
                 inputHandler={(value) => { change(value, field) }}
