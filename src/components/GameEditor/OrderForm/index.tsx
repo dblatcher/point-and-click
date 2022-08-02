@@ -76,54 +76,55 @@ export class OrderForm extends Component<Props> {
         const { type, steps } = this.props.data
 
         return (
-            <article>
-                <div class={styles.container} style={{alignItems:'flex-start'}}>
+            <article style={{ flex: 1 }}>
+
+                <div style={{ borderBottom: '3px double black' }}>
                     <SelectInput label="order type"
                         value={type}
                         items={orderTypes}
                         onSelect={newValue => this.changeValue('type', newValue)}
                     />
-
-                    {type === 'talk' && (
-                        <ListEditor
-                            list={steps}
-                            describeItem={(step, index) => (
-                                <SchemaForm key={index}
-                                    changeValue={(value, field) => { this.changeStep(value, field, index) }}
-                                    data={step}
-                                    schema={stepSchama[type]} />
-                            )}
-                            mutateList={(newList) => this.changeValue('steps', newList)}
-                            createItem={makeNewStep[type]}
-                        />
-                    )}
-                    {type === 'act' && (
-                        <ListEditor
-                            list={steps}
-                            describeItem={(step, index) => (
-                                <SchemaForm key={index}
-                                    changeValue={(value, field) => { this.changeStep(value, field, index) }}
-                                    data={step}
-                                    schema={stepSchama[type]} />
-                            )}
-                            mutateList={(newList) => this.changeValue('steps', newList)}
-                            createItem={makeNewStep[type]}
-                        />
-                    )}
-                    {type === 'move' && (
-                        <ListEditor
-                            list={steps}
-                            describeItem={(step, index) => (
-                                <SchemaForm key={index}
-                                    changeValue={(value, field) => { this.changeStep(value, field, index) }}
-                                    data={step}
-                                    schema={stepSchama[type]} />
-                            )}
-                            mutateList={(newList) => this.changeValue('steps', newList)}
-                            createItem={makeNewStep[type]}
-                        />
-                    )}
                 </div>
+
+                {type === 'talk' && (
+                    <ListEditor
+                        list={steps}
+                        describeItem={(step, index) => (
+                            <SchemaForm key={index}
+                                changeValue={(value, field) => { this.changeStep(value, field, index) }}
+                                data={step}
+                                schema={stepSchama[type]} />
+                        )}
+                        mutateList={(newList) => this.changeValue('steps', newList)}
+                        createItem={makeNewStep[type]}
+                    />
+                )}
+                {type === 'act' && (
+                    <ListEditor
+                        list={steps}
+                        describeItem={(step, index) => (
+                            <SchemaForm key={index}
+                                changeValue={(value, field) => { this.changeStep(value, field, index) }}
+                                data={step}
+                                schema={stepSchama[type]} />
+                        )}
+                        mutateList={(newList) => this.changeValue('steps', newList)}
+                        createItem={makeNewStep[type]}
+                    />
+                )}
+                {type === 'move' && (
+                    <ListEditor
+                        list={steps}
+                        describeItem={(step, index) => (
+                            <SchemaForm key={index}
+                                changeValue={(value, field) => { this.changeStep(value, field, index) }}
+                                data={step}
+                                schema={stepSchama[type]} />
+                        )}
+                        mutateList={(newList) => this.changeValue('steps', newList)}
+                        createItem={makeNewStep[type]}
+                    />
+                )}
             </article>
         )
     }
