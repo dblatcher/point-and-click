@@ -73,7 +73,8 @@ export const NumberInput: FunctionalComponent<{
 
     return <>
         <label>{props.label}</label>
-        <input type='number'
+        <input type='number' 
+            style={{width:'3rem'}}
             value={props.value}
             max={props.max}
             min={props.min}

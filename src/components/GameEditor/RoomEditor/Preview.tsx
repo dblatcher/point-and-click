@@ -32,7 +32,7 @@ type Props = {
 
 
 function getClickCaption(clickEffect?: ClickEffect): string {
-    if (!clickEffect) return '_'
+    if (!clickEffect) return ''
     switch (clickEffect.type) {
         case 'OBSTACLE':
             return `Click to add new ${clickEffect.shape} obstable`
@@ -124,14 +124,12 @@ export class Preview extends Component<Props, State>{
 
         return (
             <>
-                <section>
-                    <p>{getClickCaption(clickEffect)}</p>
+                <section style={{ position: 'relative' }}>
                     <Room data={roomData} noResize
                         showObstacleAreas={showObstacleAreas}
                         maxWidth={maxWidth} maxHeight={1000}
                         viewAngle={viewAngle}
                         highlightHotspots={highlightHotspots}
-                        // eslint-disable-next-line @typescript-eslint/no-empty-function
                         handleRoomClick={processClick}
                         markHotspotVertices={this.hotspotsToMark}
                         markObstacleVertices={this.obstaclesToMark}
@@ -157,9 +155,10 @@ export class Preview extends Component<Props, State>{
                                 roomData={roomData} />
                         ))}
                     </Room>
+                    <p style={{ position: 'absolute', right: 0, top:0, margin:"0 1em" }}>{getClickCaption(clickEffect)}</p>
                 </section>
                 <section style={{
-                    display:'flex',
+                    display: 'flex',
                 }}>
                     <fieldset>
                         <div>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h } from "preact";
+import { Component, h, Fragment } from "preact";
 import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone } from "src";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
@@ -276,110 +276,97 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         return <article>
             <h2>Room Editor</h2>
 
+            <div className={styles.rowTopLeft}>
+                <fieldset className={styles.fieldset}>
+                    <legend>Room</legend>
+                    <div className={styles.row}>
+                        <label >ID</label>
+                        <input type="text" value={id} onInput={event => this.setState({ id: eventToString(event) })} />
+                    </div>
+                    <div className={styles.row}>
+                        <NumberInput label="height" value={height}
+                            inputHandler={height => this.setState({ height })} />
+                    </div>
+                    <div className={styles.row}>
+                        <NumberInput label="width" value={width}
+                            inputHandler={width => this.setState({ width })} />
+                    </div>
+                    <div className={styles.row}>
+                        <NumberInput label="Frame Width" value={frameWidth}
+                            inputHandler={frameWidth => this.setState({ frameWidth })} />
+                    </div>
+                    {frameWidth > width && (
+                        <Warning>frame width is bigger than room width</Warning>
+                    )}
+                </fieldset>
+                <StorageMenu
+                    type="room"
+                    data={this.currentData}
+                    originalId={this.props.data?.id}
+                    existingIds={existingRoomIds}
+                    reset={this.handleResetButton}
+                    update={this.handleUpdateButton}
+                    saveButton={true}
+                    load={this.handleLoadButton}
+                />
+            </div>
+
             <div className={styles.container}>
                 <section style={{ flexBasis: '20rem' }}>
-                    <fieldset className={styles.fieldset}>
-                        <legend>Room</legend>
-                        <div className={styles.row}>
-                            <label >ID</label>
-                            <input type="text" value={id} onInput={event => this.setState({ id: eventToString(event) })} />
-                        </div>
-                        <div className={styles.row}>
-                            <NumberInput label="height" value={height}
-                                inputHandler={height => this.setState({ height })} />
-                        </div>
-                        <div className={styles.row}>
-                            <NumberInput label="width" value={width}
-                                inputHandler={width => this.setState({ width })} />
-                        </div>
-                        <div className={styles.row}>
-                            <NumberInput label="Frame Width" value={frameWidth}
-                                inputHandler={frameWidth => this.setState({ frameWidth })} />
-                        </div>
-                        {frameWidth > width && (
-                            <Warning>frame width is bigger than room width</Warning>
-                        )}
-                    </fieldset>
-
-                    <StorageMenu
-                        type="room"
-                        data={this.currentData}
-                        originalId={this.props.data?.id}
-                        existingIds={existingRoomIds}
-                        reset={this.handleResetButton}
-                        update={this.handleUpdateButton}
-                        saveButton={true}
-                        load={this.handleLoadButton}
-                    />
-
                     <TabMenu tabs={[
                         {
                             label: 'Scaling', content: (
-                                <fieldset className={styles.fieldset}>
-                                    <legend>Scaling</legend>
-                                    <ScalingControl
-                                        change={(scaling: ScaleLevel) => { this.setState({ scaling }) }}
-                                        scaling={scaling}
-                                        height={this.state.height} />
-                                </fieldset>
+                                <ScalingControl
+                                    change={(scaling: ScaleLevel) => { this.setState({ scaling }) }}
+                                    scaling={scaling}
+                                    height={this.state.height} />
                             )
                         },
                         {
-                            label: 'Background', content: (
-                                <fieldset className={styles.fieldset}>
-                                    <legend>Background</legend>
-
-                                    <ListEditor
-                                        list={background}
-                                        mutateList={(background) => { this.setState({ background }) }}
-                                        describeItem={(layer, index) => (
-                                            <BackgroundLayerControl index={index}
-                                                imageAssets={imageAssets}
-                                                layer={layer}
-                                                change={this.changeBackground} />
-                                        )}
-                                    />
-
-                                    <hr />
-                                    <BackgroundLayerForm
-                                        imageAssets={imageAssets}
-                                        addNewLayer={this.addBackground} />
-                                </fieldset>
-                            )
+                            label: 'Background', content: (<>
+                                <ListEditor
+                                    list={background}
+                                    mutateList={(background) => { this.setState({ background }) }}
+                                    describeItem={(layer, index) => (
+                                        <BackgroundLayerControl index={index}
+                                            imageAssets={imageAssets}
+                                            layer={layer}
+                                            change={this.changeBackground} />
+                                    )}
+                                />
+                                <hr />
+                                <BackgroundLayerForm
+                                    imageAssets={imageAssets}
+                                    addNewLayer={this.addBackground} />
+                            </>)
                         },
                         {
-                            label: 'Obstacles', content: (
-                                <fieldset className={styles.fieldset}>
-                                    <legend>Obstacles</legend>
-                                    <div>
-                                        <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'circle' })}>New circle</button>
-                                        <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'rect' })}>New rect</button>
-                                        <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'polygon' })}>New polygon</button>
-                                    </div>
-                                    <hr />
-                                    <TabMenu defaultOpenIndex={obstacleAreas.length - 1} tabs={
-                                        obstacleAreas.map((obstacle, index) => {
-                                            return {
-                                                label: `obstacle #${index}`, content: (
-                                                    <ZoneControl
-                                                        zone={obstacle} index={index}
-                                                        setClickEffect={this.setClickEffect}
-                                                        change={this.changeZone}
-                                                        remove={this.removeZone} />
-                                                )
-                                            }
-                                        })
-                                    }
-                                    />
-
-
-                                </fieldset>
-                            )
+                            label: 'Obstacles', content: (<>
+                                <div>
+                                    <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'circle' })}>New circle</button>
+                                    <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'rect' })}>New rect</button>
+                                    <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'polygon' })}>New polygon</button>
+                                </div>
+                                <hr />
+                                <TabMenu defaultOpenIndex={obstacleAreas.length - 1} tabs={
+                                    obstacleAreas.map((obstacle, index) => {
+                                        return {
+                                            label: `obstacle #${index}`, content: (
+                                                <ZoneControl
+                                                    zone={obstacle} index={index}
+                                                    setClickEffect={this.setClickEffect}
+                                                    change={this.changeZone}
+                                                    remove={this.removeZone} />
+                                            )
+                                        }
+                                    })
+                                }
+                                />
+                            </>)
                         },
                         {
                             label: 'Hotspots', content: (
-                                <fieldset className={styles.fieldset}>
-                                    <legend>Hotspots</legend>
+                                <>
                                     <div>
                                         <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'circle' })}>New circle</button>
                                         <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'rect' })}>New rect</button>
@@ -396,7 +383,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                             )
                                         }
                                     })} />
-                                </fieldset>
+                                </>
                             )
                         }
                     ]} />
@@ -406,9 +393,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     roomData={this.state}
                     clickEffect={clickEffect}
                     handleRoomClick={this.handleRoomClick} />
-
             </div>
-
         </article>
     }
 }
