@@ -25,6 +25,8 @@ import imageService from "../../services/imageService";
 import spriteService from "../../services/spriteService";
 import { SequenceEditor } from "./SequenceEditor";
 
+import layoutStyles from "./editorLayoutStyles.module.css";
+
 
 populate()
 
@@ -261,116 +263,116 @@ export class GameEditor extends Component<Props, State>{
             makeFolder('images'),
         ]
 
-        return <main>
-            <div style={{ display: 'flex' }}>
-                <TreeMenu folders={folders}
-                    title={gameDesign.id}
-                    folderClick={(folderId) => {
-                        const folderIndex = tabs.indexOf(folderId);
-                        this.setState({ tabOpen: folderIndex, ...this.noOpenItemsState })
-                    }}
-                    entryClick={(folderId, data, isForNew) => {
-                        const folderIndex = tabs.indexOf(folderId);
-                        const modification: Partial<State> = { tabOpen: folderIndex }
-                        if (!isForNew) {
-                            switch (folderId) {
-                                case 'rooms':
-                                    modification.roomId = data.id
-                                    break;
-                                case 'items':
-                                    modification.itemId = data.id
-                                    break;
-                                case 'characters':
-                                    modification.characterId = data.id
-                                    break;
-                                case 'conversations':
-                                    modification.conversationId = data.id
-                                    break;
-                                case 'sprites':
-                                    modification.spriteId = data.id
-                                    break;
-                                case 'spriteSheets':
-                                    modification.spriteSheetId = data.id
-                                    break;
-                                case 'sequences':
-                                    modification.sequenceId = data.id
-                                    break;
-                            }
-                        }
-                        this.setState(modification)
-                    }}
-                />
+        return <main className={layoutStyles.main}>
 
-                <section style={{ flex: 1 }}>
-                    <TabMenu backgroundColor="none" noButtons defaultOpenIndex={tabOpen} tabs={[
-                        {
-                            label: 'main', content: <Overview
-                                gameDesign={gameDesign}
-                                loadNewGame={this.loadNewGame}
-                                edit={(property, value) => { this.performUpdate(property, value) }} />
-                        },
-                        {
-                            label: 'Room Editor', content: <RoomEditor
-                                updateData={data => { this.performUpdate('rooms', data) }}
-                                existingRoomIds={listIds(gameDesign.rooms)}
-                                key={roomId} data={this.currentRoom} />
-                        },
-                        {
-                            label: 'Items', content: <ItemEditor
-                                updateData={data => { this.performUpdate('items', data) }}
-                                itemIds={listIds(gameDesign.items)}
-                                characterIds={listIds(gameDesign.characters)}
-                                key={itemId} data={this.currentItem}
-                            />
-                        },
-                        {
-                            label: 'Character Editor', content: <CharacterEditor
-                                roomIds={listIds(gameDesign.rooms)}
-                                characterIds={listIds(gameDesign.characters)}
-                                updateData={data => { this.performUpdate('characters', data) }}
-                                key={characterId} data={this.currentCharacter}
-                            />
-                        },
-                        {
-                            label: 'Conversation Editor', content: <ConversationEditor
-                                sequenceIds={Object.keys(gameDesign.sequences)}
-                                conversations={gameDesign.conversations}
-                                updateData={data => { this.performUpdate('conversations', data) }}
-                                key={conversationId} data={this.currentConversation}
-                            />
-                        },
-                        {
-                            label: 'Sprite Editor', content: <SpriteEditor
-                                updateData={data => { this.performUpdate('sprites', data) }}
-                                key={spriteId} data={this.currentSprite}
-                                spriteIds={listIds(gameDesign.sprites)}
-                            />
-                        },
-                        {
-                            label: 'Sprite Sheets', content: <SpriteSheetTool
-                                updateData={data => { this.performUpdate('spriteSheets', data) }}
-                                key={spriteSheetId} data={this.currentSpriteSheet}
-                                spriteSheetIds={listIds(gameDesign.spriteSheets)}
-                            />
-                        },
-                        {
-                            label: 'interactions', content: <InteractionEditor
-                                changeInteraction={this.changeInteraction}
-                                deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
-                                gameDesign={gameDesign} />
-                        },
-                        { 
-                            label: 'Sequences', content: <SequenceEditor 
+            <TreeMenu folders={folders}
+                title={gameDesign.id}
+                folderClick={(folderId) => {
+                    const folderIndex = tabs.indexOf(folderId);
+                    this.setState({ tabOpen: folderIndex, ...this.noOpenItemsState })
+                }}
+                entryClick={(folderId, data, isForNew) => {
+                    const folderIndex = tabs.indexOf(folderId);
+                    const modification: Partial<State> = { tabOpen: folderIndex }
+                    if (!isForNew) {
+                        switch (folderId) {
+                            case 'rooms':
+                                modification.roomId = data.id
+                                break;
+                            case 'items':
+                                modification.itemId = data.id
+                                break;
+                            case 'characters':
+                                modification.characterId = data.id
+                                break;
+                            case 'conversations':
+                                modification.conversationId = data.id
+                                break;
+                            case 'sprites':
+                                modification.spriteId = data.id
+                                break;
+                            case 'spriteSheets':
+                                modification.spriteSheetId = data.id
+                                break;
+                            case 'sequences':
+                                modification.sequenceId = data.id
+                                break;
+                        }
+                    }
+                    this.setState(modification)
+                }}
+            />
+
+            <section className={layoutStyles.tabMenuHolder}>
+                <TabMenu backgroundColor="none" noButtons defaultOpenIndex={tabOpen} tabs={[
+                    {
+                        label: 'main', content: <Overview
+                            gameDesign={gameDesign}
+                            loadNewGame={this.loadNewGame}
+                            edit={(property, value) => { this.performUpdate(property, value) }} />
+                    },
+                    {
+                        label: 'Room Editor', content: <RoomEditor
+                            updateData={data => { this.performUpdate('rooms', data) }}
+                            existingRoomIds={listIds(gameDesign.rooms)}
+                            key={roomId} data={this.currentRoom} />
+                    },
+                    {
+                        label: 'Items', content: <ItemEditor
+                            updateData={data => { this.performUpdate('items', data) }}
+                            itemIds={listIds(gameDesign.items)}
+                            characterIds={listIds(gameDesign.characters)}
+                            key={itemId} data={this.currentItem}
+                        />
+                    },
+                    {
+                        label: 'Character Editor', content: <CharacterEditor
+                            roomIds={listIds(gameDesign.rooms)}
+                            characterIds={listIds(gameDesign.characters)}
+                            updateData={data => { this.performUpdate('characters', data) }}
+                            key={characterId} data={this.currentCharacter}
+                        />
+                    },
+                    {
+                        label: 'Conversation Editor', content: <ConversationEditor
+                            sequenceIds={Object.keys(gameDesign.sequences)}
+                            conversations={gameDesign.conversations}
+                            updateData={data => { this.performUpdate('conversations', data) }}
+                            key={conversationId} data={this.currentConversation}
+                        />
+                    },
+                    {
+                        label: 'Sprite Editor', content: <SpriteEditor
+                            updateData={data => { this.performUpdate('sprites', data) }}
+                            key={spriteId} data={this.currentSprite}
+                            spriteIds={listIds(gameDesign.sprites)}
+                        />
+                    },
+                    {
+                        label: 'Sprite Sheets', content: <SpriteSheetTool
+                            updateData={data => { this.performUpdate('spriteSheets', data) }}
+                            key={spriteSheetId} data={this.currentSpriteSheet}
+                            spriteSheetIds={listIds(gameDesign.spriteSheets)}
+                        />
+                    },
+                    {
+                        label: 'interactions', content: <InteractionEditor
+                            changeInteraction={this.changeInteraction}
+                            deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
+                            gameDesign={gameDesign} />
+                    },
+                    {
+                        label: 'Sequences', content: <SequenceEditor
                             key={sequenceId}
-                            gameDesign={gameDesign} 
+                            gameDesign={gameDesign}
                             data={findById(sequenceId, gameDesign.sequences)}
                             updateData={data => { this.performUpdate('sequences', data) }}
                             sequenceId={sequenceId} />
-                        },
-                        { label: 'Image uploader', content: <ImageAssetTool /> },
-                    ]} />
-                </section>
-            </div>
+                    },
+                    { label: 'Image uploader', content: <ImageAssetTool /> },
+                ]} />
+            </section>
+
         </main>
     }
 }

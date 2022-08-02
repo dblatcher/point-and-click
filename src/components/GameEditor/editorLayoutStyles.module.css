@@ -1,0 +1,10 @@
+.main {
+    display: flex;
+    flex:1;
+    overflow: hidden;
+}
+
+.tabMenuHolder {
+    flex: 1;
+    overflow-y: auto;
+}

@@ -1,8 +1,9 @@
 import { h, FunctionComponent } from 'preact';
+import style from './style.css';
 import { GameEditor } from '../../components/GameEditor';
 
 const Editor: FunctionComponent = () => (
-	<div style={{ paddingTop: 56 }}>
+	<div className={style.editor}>
 		<GameEditor />
 	</div>
 );
