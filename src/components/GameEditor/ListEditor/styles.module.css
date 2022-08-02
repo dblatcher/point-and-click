@@ -1,13 +1,19 @@
 
 .mainList {
     list-style: none;
-    padding: 0 5px;
-    border: 1px solid aqua;
+    padding: 0;
+    border-left: 3px double black;
 }
 
-.mainList li > div {
-    border-bottom: 1px solid aqua;
-    margin-bottom: 5px;
+.mainList li {
+    border-bottom: 1px dashed black;
+    padding: 2px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
 .buttonSet {
@@ -15,12 +21,11 @@
 }
 
 .plusButton {
-    margin-left: auto;
-    background-color: seagreen;
+    background-color: lightgreen;
 }
 
 .plusButton:hover {
-    background-color: lightgreen;
+    background-color: palegreen;
 }
 
 .deleteButton {
