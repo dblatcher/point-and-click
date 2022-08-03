@@ -6,6 +6,7 @@ import { interactions } from './interactions';
 import { sequences } from './sequences';
 import { conversations } from './conversations';
 import { spriteInputs } from './sprites'
+import { endings } from './endings'
 import { GameCondition } from "../src/definitions/Game";
 
 const player = characters.find(character => character.isPlayer)
@@ -23,6 +24,7 @@ export const startingGameCondition: GameCondition = {
     sequenceRunning: undefined,
     currentRoomId: startingRoom.id,
     conversations,
+    endings,
     sprites: spriteInputs.map(input=>input.data),
     spriteSheets: spriteInputs.flatMap(input => input.sheets),
 }

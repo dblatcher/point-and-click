@@ -8,12 +8,14 @@ import { CharacterData, CharacterDataSchema } from "./CharacterData"
 import { VerbSchema } from "./Verb"
 import { Conversation, ConversationSchema } from "./Conversation"
 import { SpriteData, SpriteSheet, SpriteDataSchema, SpriteSheetSchema } from "./SpriteSheet"
+import { EndingSchema } from "./Ending"
 
 
 const GameHappeningsSchema = z.object({
     sequenceRunning: SequenceSchema.optional(),
     characterOrders: z.record(z.string(), orderSchema.array()),
     currentConversationId: z.string().optional(),
+    endingId: z.string().optional(),
 })
 
 const GameContentsDataSchema =  z.object({
@@ -31,6 +33,7 @@ export const FixedGameInfoSchema = z.object({
     sequences: SequenceSchema.array(),
     sprites: SpriteDataSchema.array(),
     spriteSheets: SpriteSheetSchema.array(),
+    endings: EndingSchema.array(),
 })
 export const GameDataSchema = GameContentsDataSchema.and(GameHappeningsSchema)
 const GameConditionSchema = GameContentsDataSchema.and(GameHappeningsSchema).and(FixedGameInfoSchema)

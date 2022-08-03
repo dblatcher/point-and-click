@@ -98,7 +98,8 @@ export class GameEditor extends Component<Props, State>{
                     currentRoomId: blankRoom.id,
                     sequences: [],
                     sprites: [],
-                    spriteSheets: []
+                    spriteSheets: [],
+                    endings: [],
                 },
                 tabOpen: tabs.indexOf('rooms'),
             }

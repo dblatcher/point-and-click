@@ -15,6 +15,7 @@ export type { Conversation, ConversationChoice, ConversationBranch } from "./def
 export type { Consequence, Interaction, ConsequenceType, AnyConsequence } from "./definitions/Interaction"
 export type { Sequence } from "./definitions/Sequence";
 export type { SpriteSheet, SpriteData, SpriteFrame, } from "./definitions/SpriteSheet";
+export type { Ending } from "./definitions/Ending"
 
 export type { Direction, Ident, SpriteParams, Position } from "./definitions/BaseTypes"
 
