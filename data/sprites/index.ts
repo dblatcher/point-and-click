@@ -2,6 +2,7 @@ import * as skinnerSprite from "./skinnerSprite";
 import * as marioSprite from "./marioSprite";
 import * as fireSprite from "./fireSprite";
 import * as tubeSprite from "./tubeSprite";
+import * as boySprite from "./boySprite";
 import { SpriteData, SpriteSheet } from "src/definitions/SpriteSheet";
 
 export const spriteInputs: { data: SpriteData; sheets: SpriteSheet[] }[] = [
@@ -9,4 +10,5 @@ export const spriteInputs: { data: SpriteData; sheets: SpriteSheet[] }[] = [
     marioSprite,
     fireSprite,
     tubeSprite,
+    boySprite,
 ]

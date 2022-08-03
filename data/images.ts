@@ -22,6 +22,7 @@ const characterSpriteFileNames = [
     "skinner-2-l.png",
     "skinner-1-r.png",
     "skinner-2-r.png",
+    "boy.png",
 ]
 
 const thingSpritePath = "./assets/things/"

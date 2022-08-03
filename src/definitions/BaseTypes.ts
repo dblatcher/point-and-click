@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const DirectionEnum = z.enum(['left', 'right'])
+export const DirectionEnum = z.enum(['left', 'right', 'up', 'down'])
 export type Direction = z.infer<typeof DirectionEnum>
 export const directions: Direction[] = DirectionEnum.options
 

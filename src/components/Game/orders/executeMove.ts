@@ -1,7 +1,33 @@
 import { Direction, CharacterData, MoveOrder } from "src";
+import { Point } from "../../../lib/pathfinding/geometry";
+import spriteService from "../../../services/spriteService";
+
+function getAvailableDirections(character: CharacterData, animationName?: string): Direction[] {
+    const sprite = spriteService.get(character.sprite);
+    const animation = sprite?.getAnimation(animationName, 'move') || {}
+    return Object.keys(animation) as Direction[]
+}
+
+function determineDirection(postion: Point, desination: Point, availableDirections: Direction[]): Direction {
+
+    const dx = desination.x - postion.x
+    const dy = desination.y - postion.y
+ 
+    const horizontal = dx < 0 ? 'left' : 'right'
+    const vertical = dy < 0 ? 'down' : 'up';
+    const moreVertical = Math.abs(dx) < Math.abs(dy);
+
+    const ideal = moreVertical ? vertical : horizontal
+    if (availableDirections.includes(ideal)) { return ideal }
+
+    if (moreVertical) {
+        return horizontal
+    }
+    return vertical
+}
 
 export function executeMove(moveOrder: MoveOrder, character: CharacterData): void {
-    const { x, y, speed: characterSpeed = 1, direction = 'left' } = character
+    const { x, y, speed: characterSpeed = 1 } = character
     const [nextStep] = moveOrder.steps;
     if (!nextStep) { return }
     const { speed: stepSpeed = 1 } = nextStep
@@ -9,12 +35,11 @@ export function executeMove(moveOrder: MoveOrder, character: CharacterData): voi
 
     let newX = x
     let newY = y
-    let newDirection: Direction = direction
+
     if (x !== nextStep.x) {
         const distance = Math.min(speed, Math.abs(x - nextStep.x))
         const directionX = x < nextStep.x ? 1 : -1
         newX = x + (distance * directionX)
-        newDirection = directionX < 0 ? 'left' : 'right'
     }
     if (y !== nextStep.y) {
         const distance = Math.min(speed, Math.abs(y - nextStep.y))
@@ -26,7 +51,8 @@ export function executeMove(moveOrder: MoveOrder, character: CharacterData): voi
         moveOrder.steps.shift()
     }
 
+    const availableDirections = getAvailableDirections(character, nextStep.animation)
     character.x = newX
     character.y = newY
-    character.direction = newDirection
+    character.direction = determineDirection({ x, y }, { x: newX, y: newY }, availableDirections)
 }

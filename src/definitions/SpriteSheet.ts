@@ -23,6 +23,8 @@ export type SpriteFrame = z.infer<typeof SpriteFrameSchema>
 const animationsSchema = z.object({
     left: SpriteFrameSchema.array().optional(),
     right: SpriteFrameSchema.array().optional(),
+    up: SpriteFrameSchema.array().optional(),
+    down: SpriteFrameSchema.array().optional(),
 })
 
 export const SpriteDataSchema = z.object({

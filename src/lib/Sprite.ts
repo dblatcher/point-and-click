@@ -32,6 +32,13 @@ export class Sprite {
         return !!animations[animationName]
     }
 
+    public getAnimation(animationName?: string, type?: 'talk' | 'move' | 'wait' | 'act') {
+        const { animations } = this.data
+        if (animationName && this.hasAnimation(animationName)) {return animations[animationName]}
+        if (type && this.hasAnimation(this.DEFAULT_ANIMATIONS[type])) {return animations[this.DEFAULT_ANIMATIONS[type]]}
+        return {}
+    }
+
     public getFrames(animationName: string, direction: Direction = this.data.defaultDirection): SpriteFrame[] | undefined {
         const animationObject = this.data.animations[animationName]
         if (!animationObject) { return undefined }
