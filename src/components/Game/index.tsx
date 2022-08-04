@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment } from "preact";
-import { GameData, GameCondition, RoomData, CharacterData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice } from "src";
-import { getViewAngleCenteredOn, clamp, locateClickInWorld } from "../../lib/util";
+import { GameData, GameCondition, RoomData, CharacterData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "src";
+import { getViewAngleCenteredOn, clamp, locateClickInWorld, findById } from "../../lib/util";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";
@@ -15,6 +15,7 @@ import { continueSequence } from "./continueSequence";
 import { Sprite } from "src/lib/Sprite";
 import { ConversationMenu } from "../ConversationMenu";
 import { handleConversationChoice } from "./handleConversationChoice";
+import { EndingScreen } from "../EndingScreen";
 
 
 export type GameProps = Readonly<{
@@ -127,6 +128,10 @@ export default class Game extends Component<GameProps, GameState> {
         return this.state.items.find(_ => _.id == this.state.currentItemId)
     }
 
+    get ending(): Ending | undefined {
+        return findById(this.state.endingId, this.props.endings)
+    }
+
     componentWillMount(): void {
         if (typeof window !== 'undefined') {
             const timer = window.setInterval(() => { this.tick() }, TIMER_SPEED)
@@ -220,7 +225,7 @@ export default class Game extends Component<GameProps, GameState> {
         const { verbs = [], save, reset, load } = this.props
         const { viewAngle, isPaused,
             characters, currentVerbId, currentItemId, items,
-            characterOrders, sequenceRunning, hoverTarget,
+            characterOrders, sequenceRunning, hoverTarget
         } = this.state
         const { currentRoom, player, currentConversation } = this
 
@@ -271,7 +276,9 @@ export default class Game extends Component<GameProps, GameState> {
                     />
                 )}
 
-                {(!sequenceRunning && !currentConversation) && <>
+                {this.ending && <EndingScreen ending={this.ending} />}
+
+                {(!sequenceRunning && !currentConversation && !this.ending) && <>
                     <CommandLine
                         verb={this.currentVerb}
                         item={this.currentItem}
