@@ -210,4 +210,12 @@ export const interactions: Interaction[] = [
             { type: 'sequence', sequence: 'LIGHT_FIRE' }
         ]
     },
+    {
+        verbId: 'TALK',
+        targetId: 'FIRE',
+        consequences: [
+            { type: 'talk', text: 'this will end the game' },
+            { type: 'ending', endingId: 'WIN' },
+        ]
+    },
 ]

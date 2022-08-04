@@ -132,6 +132,10 @@ export default class Game extends Component<GameProps, GameState> {
         return findById(this.state.endingId, this.props.endings)
     }
 
+    get isActive(): boolean {
+        return !this.ending && !this.state.isPaused && !this.state.sequenceRunning
+    }
+
     componentWillMount(): void {
         if (typeof window !== 'undefined') {
             const timer = window.setInterval(() => { this.tick() }, TIMER_SPEED)
@@ -169,8 +173,8 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     handleTargetClick(target: CommandTarget) {
-        const { currentVerbId, currentItemId, items, sequenceRunning } = this.state
-        if (sequenceRunning) { return }
+        if (!this.isActive || this.currentConversation) { return }
+        const { currentVerbId, currentItemId, items } = this.state
         const { verbs } = this.props
         const verb = verbs.find(_ => _.id == currentVerbId);
         if (!verb) { return }
@@ -194,16 +198,12 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     handleConversationClick(choice: ConversationChoice) {
-        const { sequenceRunning } = this.state
-
-        if (sequenceRunning) {
-            console.log('sequence already running', sequenceRunning)
-            return
-        }
+        if (!this.isActive) { return }
         this.setState(handleConversationChoice(choice, this.props.sequences))
     }
 
     handleRoomClick(x: number, y: number) {
+        if (!this.isActive || this.currentConversation) { return }
         const { sequenceRunning } = this.state
         if (sequenceRunning) { return }
         const { player, currentRoom } = this

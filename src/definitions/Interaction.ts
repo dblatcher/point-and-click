@@ -61,9 +61,16 @@ const ConversationConsequenceSchema = z.object({
 })
 type ConversationConsequence = z.infer<typeof ConversationConsequenceSchema>;
 
+const EndingConsequenceSchema = z.object({
+    type: z.literal('ending'),
+    endingId: z.string(),
+})
+type EndingConsequence = z.infer<typeof EndingConsequenceSchema>;
+
+
 
 const ConsequenceTypeEnum = z.enum([
-    'conversation', 'sequence', 'changeStatus', 'removeCharacter', 'inventory', 'changeRoom', 'talk', 'order'
+    'conversation', 'sequence', 'changeStatus', 'removeCharacter', 'inventory', 'changeRoom', 'talk', 'order', 'ending'
 ])
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
 export const consequenceTypes: ConsequenceType[] = ConsequenceTypeEnum.options
@@ -76,7 +83,8 @@ export const ConsequenceSchema = z.union([
     RemoveCharacterConsequenceSchema,
     ChangeStatusConsequenceSchema,
     SequenceConsequenceSchema,
-    ConversationConsequenceSchema
+    ConversationConsequenceSchema,
+    EndingConsequenceSchema,
 ])
 
 export type Consequence = z.infer<typeof ConsequenceSchema>
@@ -88,6 +96,7 @@ export type AnyConsequence = Consequence & {
     itemId?: string;
     status?: string;
     characterId?: string;
+    endingId?: string;
     roomId?: string;
     text?: string;
     targetType?: string;
@@ -106,14 +115,16 @@ export const ImmediateConsequenceSchema = z.union([
     ChangeStatusConsequenceSchema,
     InventoryConsequenceSchema,
     ConversationConsequenceSchema,
+    EndingConsequenceSchema,
 ])
 export type ImmediateConsequence = RemoveCharacterConsequence |
     ChangeStatusConsequence |
     InventoryConsequence |
-    ConversationConsequence;
+    ConversationConsequence |
+    EndingConsequence;
 
 export const immediateConsequenceTypes: ConsequenceType[] = [
-    'removeCharacter', 'changeStatus', 'inventory', 'conversation'
+    'removeCharacter', 'changeStatus', 'inventory', 'conversation', 'ending'
 ]
 
 export const InteractionSchema = z.object({

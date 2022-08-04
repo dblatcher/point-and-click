@@ -116,6 +116,15 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 }
                 break;
             }
+            case 'ending': {
+                const { endingId } = consequence
+                const ending = findById(endingId, props.endings)
+                if (!ending) {
+                    console.warn(`no such ending "${endingId}"`)
+                } else {
+                    state.endingId = endingId
+                }
+            }
         }
     }
 }
