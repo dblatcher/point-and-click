@@ -7,11 +7,11 @@ import { cloneData } from "../../../lib/clone";
 import { uploadJsonData } from "../../../lib/files";
 import { StorageMenu } from "../StorageMenu";
 import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationChoiceSchema } from "../../../definitions/Conversation";
-import { Folder, TreeMenu } from "../TreeMenu";
+import { Entry, Folder, TreeMenu } from "../TreeMenu";
 import styles from "../editorStyles.module.css"
 import { SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
 import { ChoiceListControl } from "./ChoiceListControl";
-import { makeBlankConversation } from "../defaults";
+import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
 
 type ExtraState = {
     openBranchId?: string;
@@ -55,6 +55,8 @@ export class ConversationEditor extends Component<Props, State> {
         this.updateChoiceListItem = this.updateChoiceListItem.bind(this)
         this.addChoiceListItem = this.addChoiceListItem.bind(this)
         this.removeChoiceListItem = this.removeChoiceListItem.bind(this)
+        this.addNewBranch = this.addNewBranch.bind(this)
+        this.addNewChoice = this.addNewChoice.bind(this)
     }
 
     get currentData(): Conversation {
@@ -184,21 +186,65 @@ export class ConversationEditor extends Component<Props, State> {
         })
     }
 
+    addNewBranch() {
+        this.setState(state => {
+            const { branches = {} } = state
+            const numberOfBranches = Object.keys(branches).length
+            const branchKey = `BRANCH_${numberOfBranches + 1}`
+            branches[branchKey] = {
+                choices: [
+                    makeBlankConversationChoice()
+                ]
+            }
+            return { branches, openBranchId: branchKey }
+        })
+    }
+
+    addNewChoice(folderId: string): void {
+        this.setState(state => {
+            const { branches = {} } = state
+            const branch = branches[folderId]
+            if (!branch) { return {} }
+            branch.choices.push(makeBlankConversationChoice())
+            return { branches }
+        })
+    }
+
     get conversationTree(): Folder[] {
         const { branches, openBranchId, activeChoiceIndex } = this.state
-        return Object.entries(branches).map(([id, branch]) => {
+        const branchFolders = Object.entries(branches).map(([id, branch]) => {
+
+            const entries: Entry[] = branch?.choices.map((choice, index) => ({
+                label: choice.text ? truncateLine(choice.text, 25) : "[no text]",
+                active: openBranchId === id && activeChoiceIndex === index,
+                data: {
+                    id: index.toString(),
+                }
+            })) || []
+
+            entries?.push({
+                label: "+ [new choice]",
+                active: false,
+                isForNew: true,
+                data: {
+                    id: '',
+                }
+            })
+
             return {
                 id,
                 open: openBranchId === id,
-                entries: branch?.choices.map((choice, index) => ({
-                    label: choice.text ? truncateLine(choice.text, 25) : "[no text]",
-                    active: openBranchId === id && activeChoiceIndex === index,
-                    data: {
-                        id: index.toString(),
-                    }
-                }))
+                entries,
             }
         })
+
+        const newBranchFolder: Folder = {
+            id: '',
+            label: '+ [NEW BRANCH]',
+            open: false,
+        }
+
+        return [...branchFolders, newBranchFolder]
     }
 
     getBranchAndChoice(state: State): { branch?: ConversationBranch; choice?: ConversationChoice } {
@@ -259,52 +305,58 @@ export class ConversationEditor extends Component<Props, State> {
                     <TreeMenu
                         folders={this.conversationTree}
                         folderClick={(folderId) => {
+                            if (!folderId) {
+                                return this.addNewBranch()
+                            }
                             this.setState({
                                 openBranchId: folderId,
                                 activeChoiceIndex: undefined,
                             })
                         }}
-                        entryClick={(folderId, data) => {
+                        entryClick={(folderId, data, isForNew) => {
+                            if (isForNew) {
+                                return this.addNewChoice(folderId)
+                            }
                             this.setState({
                                 openBranchId: folderId,
                                 activeChoiceIndex: Number(data.id),
                             })
                         }} />
 
-                        {choice && (
-                            <section style={{paddingLeft:'1em'}}>
-                                <SchemaForm
-                                    schema={ConversationChoiceSchema}
-                                    data={choice}
-                                    changeValue={this.handleChoiceChange}
-                                    options={{
-                                        sequence: sequenceIds,
-                                        nextBranch: Object.keys(this.state.branches),
-                                    }}
-                                />
+                    {choice && (
+                        <section style={{ paddingLeft: '1em' }}>
+                            <SchemaForm
+                                schema={ConversationChoiceSchema}
+                                data={choice}
+                                changeValue={this.handleChoiceChange}
+                                options={{
+                                    sequence: sequenceIds,
+                                    nextBranch: Object.keys(this.state.branches),
+                                }}
+                            />
 
-                                <ChoiceListControl
-                                    choices={choice.disablesChoices || []}
-                                    property="disablesChoices"
-                                    conversations={conversations}
-                                    currentConversationId={id}
-                                    openBranchId={openBranchId || ''}
-                                    add={this.addChoiceListItem}
-                                    change={this.updateChoiceListItem}
-                                    remove={this.removeChoiceListItem}
-                                />
-                                <ChoiceListControl
-                                    choices={choice.enablesChoices || []}
-                                    property="enablesChoices"
-                                    conversations={conversations}
-                                    currentConversationId={id}
-                                    openBranchId={openBranchId || ''}
-                                    add={this.addChoiceListItem}
-                                    change={this.updateChoiceListItem}
-                                    remove={this.removeChoiceListItem}
-                                />
-                            </section>
-                        )}
+                            <ChoiceListControl
+                                choices={choice.disablesChoices || []}
+                                property="disablesChoices"
+                                conversations={conversations}
+                                currentConversationId={id}
+                                openBranchId={openBranchId || ''}
+                                add={this.addChoiceListItem}
+                                change={this.updateChoiceListItem}
+                                remove={this.removeChoiceListItem}
+                            />
+                            <ChoiceListControl
+                                choices={choice.enablesChoices || []}
+                                property="enablesChoices"
+                                conversations={conversations}
+                                currentConversationId={id}
+                                openBranchId={openBranchId || ''}
+                                add={this.addChoiceListItem}
+                                change={this.updateChoiceListItem}
+                                remove={this.removeChoiceListItem}
+                            />
+                        </section>
+                    )}
 
 
                 </fieldset>

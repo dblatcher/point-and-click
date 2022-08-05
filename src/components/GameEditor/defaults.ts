@@ -1,5 +1,5 @@
 import { Order, OrderType } from "src/definitions/Order";
-import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage } from "src";
+import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, ConversationBranch } from "src";
 import { ImmediateConsequence } from "src/definitions/Interaction";
 
 
@@ -33,16 +33,18 @@ export const getDefaultOrder = (type: OrderType): Order => {
     }
 }
 
+
+export const makeBlankConversationChoice = (text = "ENTER CHOICE TEXT"): ConversationChoice => ({
+    text,
+    sequence: '',
+})
 export const makeBlankConversation = (): Conversation => ({
     id: 'NEW_CONVERSATION',
     defaultBranch: 'start',
     branches: {
         start: {
             choices: [
-                {
-                    text: "ENTER CHOICE TEXT",
-                    sequence: '',
-                }
+                makeBlankConversationChoice()
             ]
         }
     }
