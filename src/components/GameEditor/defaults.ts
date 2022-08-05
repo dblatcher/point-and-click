@@ -77,6 +77,8 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type: 'changeRoom', roomId: '', takePlayer: true, x: 0, y: 0 }
         case 'talk':
             return { type: 'talk', text: '', characterId: '', time: 100 }
+        case 'ending':
+            return { type: 'ending', endingId: '' }
         case 'order':
         default:
             return { type: 'order', orders: [] }

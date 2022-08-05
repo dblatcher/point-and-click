@@ -35,6 +35,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         targetType: ['character', 'item', 'hotspot'],
         addOrRemove: ['ADD', 'REMOVE'],
         sequence: listIds(gameDesign.sequences),
+        endingId: listIds(gameDesign.endings),
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
         targetId: targetDescriptions,
@@ -65,6 +66,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
             case 'characterId':
             case 'itemId':
             case 'roomId':
+            case 'endingId':
             case 'text':
             case 'addOrRemove':
             case 'targetType': {
@@ -102,6 +104,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'targetType':
                 case 'addOrRemove':
                 case 'targetId':
+                case 'endingId':
                 case 'sequence':
                     return (
                         <div key={index}>
