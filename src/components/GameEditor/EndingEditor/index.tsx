@@ -7,6 +7,9 @@ import { StorageMenu } from "../StorageMenu";
 import { listIds } from "../../../lib/util";
 import { FieldDef, SchemaForm, FieldValue, fieldValueIsRightType } from "../SchemaForm";
 import { EndingSchema } from "../../../definitions/Ending";
+import imageService from "../../../services/imageService";
+import { EndingScreen } from "../../EndingScreen";
+
 
 interface Props {
     gameDesign: GameDesign;
@@ -56,6 +59,9 @@ export class EndingEditor extends Component<Props, State> {
             case 'imageId':
                 mod[property] = value as string | undefined
                 break;
+            case 'imageWidth':
+                mod[property] = value as number | undefined
+                break;
         }
         return this.setState(mod)
     }
@@ -77,12 +83,20 @@ export class EndingEditor extends Component<Props, State> {
                     reset={() => this.setState(this.initialState)}
                 />
 
-                <fieldset style={{maxWidth:'25rem'}}>
+                <fieldset style={{ maxWidth: '25rem' }}>
                     <SchemaForm
                         data={this.currentData}
                         schema={EndingSchema}
                         changeValue={(value, field) => { this.handleUpdate(value, field) }}
+                        options={{
+                            imageId: imageService.list()
+                        }}
                     />
+                </fieldset>
+
+                <fieldset style={{ position: 'relative', maxWidth: '100%' }}>
+                    <legend>Preview</legend>
+                    <EndingScreen ending={this.currentData} inline={true} />
                 </fieldset>
 
             </article>

@@ -60,6 +60,7 @@ export function SchemaField<T extends z.ZodRawShape>({
                     haveEmptyOption={optional}
                     emptyOptionLabel={`[no ${key}]`}
                 />
+                <span>{field.optional ? '(opt)' : '(req)'}</span>
             </div>
         }
 
