@@ -8,15 +8,19 @@ interface Props {
 }
 
 const baseArticleStyle = {
-    backgroundColor: 'black',
-    color: 'red',
-    padding: '20px',
     maxWidth: '100%',
 }
 
-export const EndingScreen: FunctionalComponent<Props> = ({ ending, inline }) => {
+const baseFrameStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems:'center',
+    backgroundColor: 'black',
+    color: 'red',
+    padding: '20px',
+}
 
-    const imageAsset = ending.imageId ? imageService.get(ending.imageId) : undefined;
+export const EndingScreen: FunctionalComponent<Props> = ({ ending, inline }) => {
 
     const articleStyle = inline ? {
         ...baseArticleStyle,
@@ -29,17 +33,20 @@ export const EndingScreen: FunctionalComponent<Props> = ({ ending, inline }) => 
         transform: 'translateX(-50%)',
     }
 
+    const imageAsset = ending.imageId ? imageService.get(ending.imageId) : undefined;
     const imageStyle = {
         width: typeof ending.imageWidth === 'number' ? ending.imageWidth : undefined
     }
 
     return (
         <article style={articleStyle}>
-            <p>{ending.message}</p>
+            <div style={baseFrameStyle}>
+                <p>{ending.message}</p>
 
-            {imageAsset && (
-                <img src={imageAsset.href} alt={ending.message} style={imageStyle} />
-            )}
+                {imageAsset && (
+                    <img src={imageAsset.href} alt={ending.message} style={imageStyle} />
+                )}
+            </div>
         </article>
     )
 }
