@@ -30,6 +30,7 @@ export class ImageAssetTool extends Component<{}, State> {
         this.loadFile = this.loadFile.bind(this)
         this.saveToService = this.saveToService.bind(this)
         this.openFromService = this.openFromService.bind(this)
+        this.zipImages = this.zipImages.bind(this)
 
         this.canvasRef = createRef()
     }
@@ -44,7 +45,12 @@ export class ImageAssetTool extends Component<{}, State> {
             window.URL.revokeObjectURL(oldHref)
         }
 
-        this.setState({ href: newUrl, urlIsObjectUrl: true, saveWarning: undefined })
+        this.setState({ 
+            href: newUrl, 
+            urlIsObjectUrl: true, 
+            saveWarning: undefined, 
+            originalFileName: file.name,
+        })
     }
 
     changeValue(propery: keyof ImageAsset, newValue: string | number) {
@@ -91,6 +97,18 @@ export class ImageAssetTool extends Component<{}, State> {
         })
     }
 
+    zipImages = async () => {
+        const assets = imageService.getAll()
+        const files = await Promise.all(assets.map(asset => imageService.getFile(asset.id)))
+
+        if (files.includes(undefined)) {
+            console.warn('at least one file failed', files)
+            return
+        }
+
+        console.log(files)
+    }
+
     openFromService(asset: ServiceItem) {
         const copy = cloneData(asset as ImageAsset);
         this.setState(state => {
@@ -98,6 +116,7 @@ export class ImageAssetTool extends Component<{}, State> {
                 ...state,
                 ...copy,
             }
+            newState.originalFileName = copy.originalFileName
             return newState
         })
 
@@ -111,7 +130,6 @@ export class ImageAssetTool extends Component<{}, State> {
         return (
             <article>
                 <h2>Image asset tool</h2>
-
                 <div className={styles.container}>
                     <section>
                         <fieldset className={styles.fieldset}>
@@ -136,6 +154,10 @@ export class ImageAssetTool extends Component<{}, State> {
                                 {saveWarning && (
                                     <Warning>{saveWarning}</Warning>
                                 )}
+                            </div>
+
+                            <div className={styles.row}>
+                                <button onClick={this.zipImages}>zip images</button>
                             </div>
                         </fieldset>
                         <ServiceItemSelector legend="open asset"
