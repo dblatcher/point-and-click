@@ -8,7 +8,7 @@ import { CharacterData, CharacterDataSchema } from "./CharacterData"
 import { VerbSchema } from "./Verb"
 import { Conversation, ConversationSchema } from "./Conversation"
 import { SpriteData, SpriteSheet, SpriteDataSchema, SpriteSheetSchema } from "./SpriteSheet"
-import { EndingSchema } from "./Ending"
+import { Ending, EndingSchema } from "./Ending"
 
 
 const GameHappeningsSchema = z.object({
@@ -18,7 +18,7 @@ const GameHappeningsSchema = z.object({
     endingId: z.string().optional(),
 })
 
-const GameContentsDataSchema =  z.object({
+const GameContentsDataSchema = z.object({
     rooms: RoomDataSchema.array(),
     items: ItemDataSchema.array(),
     characters: CharacterDataSchema.array(),
@@ -45,4 +45,4 @@ export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>
 export type GameDesign = z.infer<typeof GameDesignSchema>
 
-export type GameDataItem = CharacterData | ItemData | Conversation | RoomData | SpriteData | SpriteSheet | Sequence
+export type GameDataItem = CharacterData | ItemData | Conversation | RoomData | SpriteData | SpriteSheet | Sequence | Ending

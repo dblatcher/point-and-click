@@ -1,5 +1,5 @@
 import { Order, OrderType } from "src/definitions/Order";
-import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, ConversationBranch } from "src";
+import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, ConversationBranch, Ending } from "src";
 import { ImmediateConsequence } from "src/definitions/Interaction";
 
 
@@ -86,3 +86,5 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type: 'order', orders: [] }
     }
 }
+
+export const makeBlankEnding = (id = "NEW_ENDING", message="game over"): Ending => ({ id, message,})

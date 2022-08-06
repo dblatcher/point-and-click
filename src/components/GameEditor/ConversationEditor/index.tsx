@@ -263,7 +263,7 @@ export class ConversationEditor extends Component<Props, State> {
         const { state } = this
         const { branches, defaultBranch, currentBranch, openBranchId, id } = this.state
         const { conversations, sequenceIds } = this.props
-        const { branch, choice } = this.getBranchAndChoice(state)
+        const { choice } = this.getBranchAndChoice(state)
 
         return (
             <article>

@@ -17,7 +17,7 @@ import { defaultVerbs1, getBlankRoom } from "./defaults";
 
 import { startingGameCondition } from '../../../data/fullGame';
 import { listIds, findById, findIndexById } from "../../lib/util";
-import { RoomData, GameDesign, GameDataItem, Interaction } from "src";
+import { RoomData, GameDesign, GameDataItem, Interaction, Ending } from "src";
 
 
 import { populate } from "../../services/populateServices";
@@ -26,6 +26,7 @@ import spriteService from "../../services/spriteService";
 import { SequenceEditor } from "./SequenceEditor";
 
 import layoutStyles from "./editorLayoutStyles.module.css";
+import { EndingEditor } from "./EndingEditor";
 
 
 populate()
@@ -40,6 +41,7 @@ type State = {
     spriteId?: string;
     spriteSheetId?: string;
     sequenceId?: string;
+    endingId?: string;
 };
 
 type Props = {
@@ -56,6 +58,7 @@ const tabs: string[] = [
     'spriteSheets',
     'interactions',
     'sequences',
+    'endings',
     'images',
 ]
 
@@ -81,8 +84,7 @@ export class GameEditor extends Component<Props, State>{
                 gameDesign: {
                     ...startingGameCondition
                 },
-                tabOpen: tabs.indexOf('rooms'),
-                conversationId: 'CHAT',
+                tabOpen: tabs.indexOf('endings'),
             }
         } else {
             const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
@@ -101,7 +103,7 @@ export class GameEditor extends Component<Props, State>{
                     spriteSheets: [],
                     endings: [],
                 },
-                tabOpen: tabs.indexOf('rooms'),
+                tabOpen: tabs.indexOf('endings'),
             }
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
@@ -150,7 +152,7 @@ export class GameEditor extends Component<Props, State>{
 
         this.setState(state => {
             const { gameDesign } = state
-            let { roomId, itemId, characterId, spriteId, spriteSheetId, sequenceId } = state
+            let { roomId, itemId, characterId, spriteId, spriteSheetId, sequenceId, endingId } = state
             switch (property) {
                 case 'rooms': {
                     addNewOrUpdate(data, gameDesign[property])
@@ -187,13 +189,18 @@ export class GameEditor extends Component<Props, State>{
                     sequenceId = (data as GameDataItem).id
                     break
                 }
+                case 'endings': {
+                    addNewOrUpdate(data, gameDesign[property])
+                    endingId = (data as Ending).id
+                    break
+                }
                 case 'id':
                 case 'currentRoomId': {
                     gameDesign[property] = data as string
                     break
                 }
             }
-            return { gameDesign, roomId, itemId, characterId, spriteId, spriteSheetId, sequenceId }
+            return { gameDesign, roomId, itemId, characterId, spriteId, spriteSheetId, sequenceId, endingId }
         })
     }
 
@@ -234,11 +241,13 @@ export class GameEditor extends Component<Props, State>{
             spriteId: undefined,
             spriteSheetId: undefined,
             conversationId: undefined,
+            sequenceId: undefined,
+            endingId: undefined,
         }
     }
 
     render() {
-        const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId, conversationId, sequenceId } = this.state
+        const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId, conversationId, sequenceId, endingId } = this.state
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
@@ -261,6 +270,7 @@ export class GameEditor extends Component<Props, State>{
             makeFolder('spriteSheets', gameDesign.spriteSheets, spriteSheetId),
             makeFolder('interactions'),
             makeFolder('sequences', gameDesign.sequences, sequenceId),
+            makeFolder('endings', gameDesign.endings, endingId),
             makeFolder('images'),
         ]
 
@@ -297,6 +307,9 @@ export class GameEditor extends Component<Props, State>{
                                 break;
                             case 'sequences':
                                 modification.sequenceId = data.id
+                                break;
+                            case 'endings':
+                                modification.endingId = data.id
                                 break;
                         }
                     }
@@ -369,6 +382,14 @@ export class GameEditor extends Component<Props, State>{
                             data={findById(sequenceId, gameDesign.sequences)}
                             updateData={data => { this.performUpdate('sequences', data) }}
                             sequenceId={sequenceId} />
+                    },
+                    {
+                        label: 'endings', content: <EndingEditor
+                            key={endingId}
+                            gameDesign={gameDesign}
+                            data={findById(endingId, gameDesign.endings)}
+                            updateData={data => { this.performUpdate('endings', data) }}
+                        />
                     },
                     { label: 'Image uploader', content: <ImageAssetTool /> },
                 ]} />

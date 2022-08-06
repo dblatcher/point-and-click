@@ -20,6 +20,16 @@ interface Props<T extends z.ZodRawShape> {
     options?: Partial<Record<keyof T, string[]>>;
 }
 
+export function fieldValueIsRightType(value: FieldValue, field: FieldDef): boolean {
+    switch (typeof value) {
+        case 'undefined': return field.optional;
+        case 'string': return field.type === 'ZodString';
+        case 'number': return field.type === 'ZodNumber';
+        case 'boolean': return field.type === 'ZodBoolean';
+        default: return false;
+    }
+}
+
 interface SchemaFieldProps<T> {
     field: FieldDef;
     noTriState?: boolean;
