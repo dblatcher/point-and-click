@@ -50,55 +50,44 @@ export function SchemaField<T extends z.ZodRawShape>({
             safeValue = value;
     }
 
-    if (type === 'ZodString' && (typeof value === 'string' || typeof value === 'undefined')) {
-        if (options) {
-            return <div className={styles.formRow}>
-                <SelectInput label={key}
+    function buildInput(): VNode | null {
+
+        if (type === 'ZodString' && (typeof value === 'string' || typeof value === 'undefined')) {
+            if (options) {
+                return <SelectInput label={key}
                     value={value || ''}
                     onSelect={value => change(value, field)}
                     items={options}
                     haveEmptyOption={optional}
                     emptyOptionLabel={`[no ${key}]`}
                 />
-                <span>{field.optional ? '(opt)' : '(req)'}</span>
-            </div>
-        }
+            }
 
-        return <div className={styles.formRow}>
-            <TextInput label={key}
+            return <TextInput label={key}
                 value={value || ''}
                 onInput={(event): void => { change(eventToString(event), field) }}
             />
-            <span>{field.optional ? '(opt)' : '(req)'}</span>
-        </div>
-    }
 
-    if (type === 'ZodBoolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {
-        if (noTriState || !optional) {
-            return <div className={styles.formRow}>
-                <CheckBoxInput label={key}
+        }
+
+        if (type === 'ZodBoolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {
+            if (noTriState || !optional) {
+                return <CheckBoxInput label={key}
                     value={value}
                     inputHandler={(value): void => { change(value, field) }}
                 />
-                <span>{field.optional ? '(opt)' : '(req)'}</span>
-            </div>
-        }
-        return <div className={styles.formRow}>
-            <TriStateInput label={key}
+
+            }
+            return <TriStateInput label={key}
                 value={value}
                 inputHandler={(value): void => { change(value, field) }}
             />
-            <span>{field.optional ? '(opt)' : '(req)'}</span>
-        </div>
-    }
+        }
 
-    if (type === 'ZodNumber') {
+        if (type === 'ZodNumber') {
 
-
-        if (typeof value === 'number' || typeof value === 'undefined') {
-            return <div className={styles.formRow}>
-
-                {field.optional ? (
+            if (typeof value === 'number' || typeof value === 'undefined') {
+                return field.optional ? (
                     <OptionalNumberInput label={key}
                         value={value}
                         inputHandler={(value) => { change(value, field) }}
@@ -108,25 +97,29 @@ export function SchemaField<T extends z.ZodRawShape>({
                         value={value || 0}
                         inputHandler={(value) => { change(value, field) }}
                     />
-                )}
-                <span>{field.optional ? '(opt)' : '(req)'}</span>
-            </div>
+                )
+            }
         }
+
+        if (showUnsupported) {
+            return (
+                <div key={key}>
+                    <b>UNSUPPORTED | </b>
+                    {key} |{type}
+                    <b>{safeValue?.toString()}</b>
+                </div>
+            )
+        }
+
+        return null
     }
 
-    if (showUnsupported) {
-        return (
-            <section key={key}>
-                <b>UNSUPPORTED | </b>
-                <span>{key} | </span>
-                {optional && <span>(optional) | </span>}
-                <span>{type}</span>
-                <b>{safeValue?.toString()}</b>
-            </section>
-        )
-    }
-
-    return null
+    return (
+        <div className={styles.formRow}>
+            {buildInput()}
+            <span>{field.optional ? '(opt)' : '(req)'}</span>
+        </div>
+    )
 }
 
 /**
