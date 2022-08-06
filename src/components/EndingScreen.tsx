@@ -29,13 +29,16 @@ export const EndingScreen: FunctionalComponent<Props> = ({ ending, inline }) => 
         transform: 'translateX(-50%)',
     }
 
+    const imageStyle = {
+        width: typeof ending.imageWidth === 'number' ? ending.imageWidth : undefined
+    }
 
     return (
         <article style={articleStyle}>
             <p>{ending.message}</p>
 
             {imageAsset && (
-                <img src={imageAsset.href} alt={ending.message} width={ending.imageWidth && ending.imageWidth} />
+                <img src={imageAsset.href} alt={ending.message} style={imageStyle} />
             )}
         </article>
     )

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { z } from "zod"
 import { h, VNode } from "preact";
-import { CheckBoxInput, NumberInput, SelectInput, TextInput, TriStateInput } from "./formControls";
+import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, TextInput, TriStateInput } from "./formControls";
 import { eventToString } from "../../lib/util";
 import styles from './editorStyles.module.css';
 
@@ -92,14 +92,26 @@ export function SchemaField<T extends z.ZodRawShape>({
         </div>
     }
 
-    if (type === 'ZodNumber' && (typeof value === 'number' || typeof value === 'undefined')) {
-        return <div className={styles.formRow}>
-            <NumberInput label={key}
-                value={value || 0}
-                inputHandler={(value) => { change(value, field) }}
-            />
-            <span>{field.optional ? '(opt)' : '(req)'}</span>
-        </div>
+    if (type === 'ZodNumber') {
+
+
+        if (typeof value === 'number' || typeof value === 'undefined') {
+            return <div className={styles.formRow}>
+
+                {field.optional ? (
+                    <OptionalNumberInput label={key}
+                        value={value}
+                        inputHandler={(value) => { change(value, field) }}
+                    />
+                ) : (
+                    <NumberInput label={key}
+                        value={value || 0}
+                        inputHandler={(value) => { change(value, field) }}
+                    />
+                )}
+                <span>{field.optional ? '(opt)' : '(req)'}</span>
+            </div>
+        }
     }
 
     if (showUnsupported) {

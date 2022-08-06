@@ -1,5 +1,5 @@
 import { ComponentChild, FunctionalComponent, Fragment, h, JSX } from "preact"
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { eventToBoolean, eventToNumber, eventToString } from "../../lib/util";
 import { Ident } from "src"
 import styles from './editorStyles.module.css';
@@ -73,13 +73,65 @@ export const NumberInput: FunctionalComponent<{
 
     return <>
         <label>{props.label}</label>
-        <input type='number' 
-            style={{width:'3rem'}}
+        <input type='number'
+            style={{ width: '3rem' }}
             value={props.value}
             max={props.max}
             min={props.min}
             step={props.step}
             onInput={sendValue}
+        />
+    </>
+}
+
+
+export const OptionalNumberInput: FunctionalComponent<{
+    label: string;
+    value: number | undefined;
+    inputHandler: { (value: number | undefined): void };
+    max?: number;
+    min?: number;
+    step?: number;
+}> = (props) => {
+
+    const numberFieldRef = useRef<HTMLInputElement>(null)
+
+    const sendNumberValue: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
+        props.inputHandler(eventToNumber(event))
+    }
+
+    const toggleUndefined: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
+        const { checked } = event.target as HTMLInputElement;
+        if (checked) {
+            return props.inputHandler(undefined)
+        }
+
+        const numberInputValue = Number(numberFieldRef.current?.value)
+
+        if (!isNaN(numberInputValue)) {
+            return props.inputHandler(numberInputValue)
+        }
+
+        props.inputHandler(props.min || 0)
+
+    }
+
+    return <>
+        <label>{props.label}</label>
+
+        <span>
+            <label>undefined:</label>
+            <input type="checkbox" checked={typeof props.value === 'undefined'} onChange={toggleUndefined} />
+        </span>
+
+        <input type='number' disabled={typeof props.value === 'undefined'}
+            style={{ width: '3rem' }}
+            value={props.value}
+            max={props.max}
+            min={props.min}
+            step={props.step}
+            onInput={sendNumberValue}
+            ref={numberFieldRef}
         />
     </>
 }

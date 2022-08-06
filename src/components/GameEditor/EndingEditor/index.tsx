@@ -98,7 +98,6 @@ export class EndingEditor extends Component<Props, State> {
                     <legend>Preview</legend>
                     <EndingScreen ending={this.currentData} inline={true} />
                 </fieldset>
-
             </article>
         )
     }
