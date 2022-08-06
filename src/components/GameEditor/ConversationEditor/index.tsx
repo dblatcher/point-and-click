@@ -39,11 +39,7 @@ export class ConversationEditor extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-
-        const initialState = props.data ? {
-            ...props.data
-        } : makeBlankConversation()
-
+        const initialState = props.data ? cloneData(props.data) : makeBlankConversation()
         this.state = {
             ...initialState
         }
@@ -93,9 +89,7 @@ export class ConversationEditor extends Component<Props, State> {
     handleResetButton() {
         const { props } = this
         const initialState = props.data ? cloneData(props.data) : makeBlankConversation()
-        this.setState({
-            ...initialState
-        })
+        this.setState(initialState)
     }
     handleUpdateButton() {
         if (this.props.updateData) {
