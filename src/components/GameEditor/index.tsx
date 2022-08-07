@@ -27,9 +27,11 @@ import { SequenceEditor } from "./SequenceEditor";
 
 import layoutStyles from "./editorLayoutStyles.module.css";
 import { EndingEditor } from "./EndingEditor";
+import spriteSheetService from "../../services/spriteSheetService";
 
 
-populate()
+// populate()
+const usePrebuiltGame = false
 
 type State = {
     gameDesign: GameDesign;
@@ -73,8 +75,6 @@ function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[
     return list
 }
 
-const usePrebuiltGame = true
-
 export class GameEditor extends Component<Props, State>{
 
     constructor(props: Props) {
@@ -84,7 +84,7 @@ export class GameEditor extends Component<Props, State>{
                 gameDesign: {
                     ...startingGameCondition
                 },
-                tabOpen: tabs.indexOf('images'),
+                tabOpen: tabs.indexOf('main'),
             }
         } else {
             const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
@@ -103,7 +103,7 @@ export class GameEditor extends Component<Props, State>{
                     spriteSheets: [],
                     endings: [],
                 },
-                tabOpen: tabs.indexOf('images'),
+                tabOpen: tabs.indexOf('main'),
             }
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
@@ -229,8 +229,8 @@ export class GameEditor extends Component<Props, State>{
         })
     }
     loadNewGame(gameDesign: GameDesign) {
-        console.log(gameDesign)
         this.setState({ gameDesign })
+        spriteSheetService.add(gameDesign.spriteSheets)
     }
 
     get noOpenItemsState(): Partial<State> {

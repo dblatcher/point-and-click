@@ -3,9 +3,14 @@ import { FunctionalComponent, h } from "preact";
 import { eventToString, listIds } from "../../lib/util";
 import { GameDesign, GameDesignSchema } from "../../definitions/Game";
 import { SelectInput, TextInput, Warning } from "./formControls";
-import { downloadJsonFile, makeDownloadFile, uploadJsonData } from "../../lib/files";
+import {
+  downloadJsonFile,
+  makeDownloadFile,
+  uploadFile,
+  uploadJsonData,
+} from "../../lib/files";
 import { useState } from "preact/hooks";
-import { buildGameZipBlob } from "../../lib/zipFiles";
+import { buildGameZipBlob, readGameFromZipFile } from "../../lib/zipFiles";
 import imageService from "../../services/imageService";
 
 interface Props {
@@ -21,6 +26,9 @@ export const Overview: FunctionalComponent<Props> = ({
 }: Props) => {
   const [loadError, setLoadError] = useState<string | undefined>(undefined);
   const [downloadAllError, setDownloadAllError] = useState<string | undefined>(
+    undefined
+  );
+  const [uploadAllError, setUploadAllError] = useState<string | undefined>(
     undefined
   );
 
@@ -39,13 +47,31 @@ export const Overview: FunctionalComponent<Props> = ({
   };
 
   const downloadAll = async () => {
-    setDownloadAllError(undefined)
+    setDownloadAllError(undefined);
     const result = await buildGameZipBlob(gameDesign, imageService);
     if (!result.success) {
       setDownloadAllError(result.error);
-      return
+      return;
     }
     makeDownloadFile(`${gameDesign.id}.game.zip`, result.blob);
+  };
+
+  const uploadAll = async () => {
+    setUploadAllError(undefined);
+
+    const file = await uploadFile();
+    if (!file) {
+      return;
+    }
+
+    const result = await readGameFromZipFile(file);
+    if (!result.success) {
+      setUploadAllError(result.error);
+      return;
+    }
+
+    loadNewGame(result.data.gameDesign)
+    imageService.add(result.data.imageAssets)
   };
 
   return (
@@ -107,7 +133,8 @@ export const Overview: FunctionalComponent<Props> = ({
         {downloadAllError && <Warning>{downloadAllError}</Warning>}
       </div>
       <div>
-        <button>Load game data(including assets) from zip file</button>
+        <button onClick={uploadAll}>Load game data(including assets) from zip file</button>
+        {uploadAllError && <Warning>{uploadAllError}</Warning>}
       </div>
     </article>
   );

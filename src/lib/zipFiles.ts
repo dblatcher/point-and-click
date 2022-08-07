@@ -1,4 +1,5 @@
 import JSZip from "jszip";
+import { GameDesignSchema } from "../../src/definitions/Game";
 import { GameDesign } from "../../src";
 import {
   ImageAsset,
@@ -25,6 +26,38 @@ type ZipReadSucess<T> = {
 type ZipBuildResult = ZipActionFailure | ZipBuildSucess;
 type ZipReadResult<T> = ZipActionFailure | ZipReadSucess<T>;
 
+const FILENAMES = {
+  game: "game.json",
+  imageAssets: "imageAssets.json",
+};
+
+const blobToZip = async (blob: Blob): Promise<JSZip | undefined> => {
+  return await new JSZip().loadAsync(blob).catch((error) => {
+    console.warn(error);
+    return undefined;
+  });
+};
+
+const extractJsonFile = async (
+  fileName: string,
+  zip: JSZip
+): Promise<unknown> => {
+  const dataBlob = await zip.file(fileName)?.async("blob");
+  const dataString = await dataBlob?.text();
+
+  if (!dataString) {
+    throw `could not get data from ${fileName}`;
+  }
+
+  try {
+    const data = JSON.parse(dataString);
+    return data;
+  } catch (error) {
+    console.warn(error);
+    throw `${fileName} was not valid json`;
+  }
+};
+
 const prepareImageAssetZip = async (
   imageService: ImageService
 ): Promise<JSZip> => {
@@ -39,7 +72,7 @@ const prepareImageAssetZip = async (
     throw "failed to build assets file";
   }
 
-  zip.file("imageAssets.json", assetsBlob);
+  zip.file(FILENAMES.imageAssets, assetsBlob);
 
   const files = await Promise.all(
     assets.map((asset) => imageService.getFile(asset.id))
@@ -77,10 +110,7 @@ export const buildImageAssetZipBlob = async (
 export const readImageAssetFromZipFile = async (
   file: File
 ): Promise<ZipReadResult<ImageAsset[]>> => {
-  const zip = await new JSZip().loadAsync(file).catch((error) => {
-    console.warn(error);
-    return undefined;
-  });
+  const zip = await blobToZip(file);
 
   if (!zip) {
     return {
@@ -89,22 +119,14 @@ export const readImageAssetFromZipFile = async (
     };
   }
 
-  const dataBlob = await zip.file("imageAssets.json")?.async("blob");
-  const dataString = await dataBlob?.text();
-
-  if (!dataString) {
-    return {
-      success: false,
-      error: `could not get data from imagesAssets.json`,
-    };
-  }
-
   let data: unknown;
   try {
-    data = JSON.parse(dataString);
+    data = await extractJsonFile(FILENAMES.imageAssets, zip);
   } catch (error) {
-    console.warn(error);
-    return { success: false, error: `imagesAssets.json was not valid json` };
+    return {
+      success: false,
+      error: error as string,
+    };
   }
 
   const results = ImageAssetSchema.array().safeParse(data);
@@ -113,7 +135,7 @@ export const readImageAssetFromZipFile = async (
     console.warn(results.error);
     return {
       success: false,
-      error: `data in imagesAssets.json was not a valid array of imageAssets`,
+      error: `data in ${FILENAMES.imageAssets} was not a valid array of imageAssets`,
     };
   }
 
@@ -150,7 +172,7 @@ export const buildGameZipBlob = async (
     if (!gameDesignBlob) {
       throw "failed to make gameDesignBlob";
     }
-    zip.file("game.json", gameDesignBlob);
+    zip.file(FILENAMES.game, gameDesignBlob);
     const blob = await zip.generateAsync({ type: "blob" });
     return {
       success: true,
@@ -162,4 +184,57 @@ export const buildGameZipBlob = async (
       error: error as string,
     };
   }
+};
+
+export const readGameFromZipFile = async (
+  file: File
+): Promise<
+  ZipReadResult<{ imageAssets: ImageAsset[]; gameDesign: GameDesign }>
+> => {
+  const readImageResult = await readImageAssetFromZipFile(file);
+
+  if (!readImageResult.success) {
+    return {
+        success: false,
+        error: readImageResult.error,
+      };
+  }
+
+  const zip = await blobToZip(file);
+  if (!zip) {
+    return {
+      success: false,
+      error: `failed to make zip from ${file.name}`,
+    };
+  }
+
+  let data: unknown;
+  try {
+    data = await extractJsonFile(FILENAMES.game, zip);
+  } catch (error) {
+    return {
+      success: false,
+      error: error as string,
+    };
+  }
+
+  const results = GameDesignSchema.safeParse(data);
+
+  if (!results.success) {
+    console.warn(results.error);
+    return {
+      success: false,
+      error: `data in ${FILENAMES.game} was not a GameDesign`,
+    };
+  }
+
+  console.log(results);
+
+  return {
+    success: true,
+    data : {
+        gameDesign: results.data,
+        imageAssets: readImageResult.data,
+    }
+  };
 };
