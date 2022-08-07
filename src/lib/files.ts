@@ -73,7 +73,7 @@ const readJsonFile = async (file?: File): Promise<{ data?: unknown; error?: stri
     }
 }
 
-export const fileToImageUrl = (file: File): string | undefined => {
+export const fileToImageUrl = (file: File | Blob): string | undefined => {
     if (typeof window !== 'undefined') {
         return window.URL.createObjectURL(file)
     }

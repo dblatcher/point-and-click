@@ -16,12 +16,14 @@ import imageService, {
   ImageAsset,
   ImageAssetCategory,
   imageAssetCategories,
+  ImageAssetSchema,
 } from "../../../services/imageService";
 import JSZip from "jszip";
 
 type ExtraState = {
   urlIsObjectUrl: boolean;
   saveWarning?: string;
+  uploadWarning?: string;
 };
 
 type State = Partial<ImageAsset> & ExtraState;
@@ -58,6 +60,7 @@ export class ImageAssetTool extends Component<{}, State> {
     this.setState({
       href: newUrl,
       urlIsObjectUrl: true,
+      id: file.name,
       saveWarning: undefined,
       originalFileName: file.name,
     });
@@ -104,6 +107,7 @@ export class ImageAssetTool extends Component<{}, State> {
     const copy = cloneData(state) as ImageAsset & Partial<ExtraState>;
     delete copy.urlIsObjectUrl;
     delete copy.saveWarning;
+    delete copy.uploadWarning;
 
     this.setState({ saveWarning: undefined }, () => {
       imageService.add(copy);
@@ -139,6 +143,68 @@ export class ImageAssetTool extends Component<{}, State> {
     makeDownloadFile("images.zip", zipFile);
   };
 
+  loadFromZipFile = async () => {
+    this.setState({ uploadWarning: undefined });
+    const file = await uploadFile();
+    if (!file) {
+      return;
+    }
+
+    const zip = await new JSZip().loadAsync(file).catch((error) => {
+      console.warn(error);
+      this.setState({ uploadWarning: `failed to read ${file.name}` });
+      return
+    });
+
+    if (!zip) {
+        this.setState({ uploadWarning: `failed to get contents data from  ${file.name}` });
+        return
+    }
+
+    const dataBlob = await zip.file("imageAssets.json")?.async('blob');
+    const dataString = await dataBlob?.text()
+
+    if (!dataString) {
+        this.setState({ uploadWarning: `could not get data from imagesAssets.json` });
+        return
+    }
+
+    let data: unknown;
+    try {
+        data = JSON.parse(dataString)
+    } catch (error) {
+        console.warn(error)
+        this.setState({ uploadWarning: `imagesAssets.json was not valid json` });
+        return
+    }
+
+    const results = ImageAssetSchema.array().safeParse(data);
+
+    if (!results.success) {
+        console.warn(results.error)
+        this.setState({ uploadWarning: `data in imagesAssets.json was not a valid array of imageAssets` });
+        return
+    }
+
+    async function populateHref (asset: ImageAsset): Promise<ImageAsset> {
+        const imageBlob = await zip?.file(`images/${asset.id}`)?.async('blob');
+        if (!imageBlob) {
+            console.warn('MISSING FILE',`images/${asset.id}`)
+            return asset
+        }
+        const imageUrl = fileToImageUrl(imageBlob);
+        if (!imageUrl) {
+            console.warn('image url failed',`images/${asset.id}`)
+            return asset
+        }
+        asset.href = imageUrl
+        return asset
+    }
+
+    const populatedAssets = await Promise.all(results.data.map(populateHref))
+    imageService.add(populatedAssets)
+  };
+
   openFromService(asset: ServiceItem) {
     const copy = cloneData(asset as ImageAsset);
     this.setState((state) => {
@@ -152,7 +218,13 @@ export class ImageAssetTool extends Component<{}, State> {
   }
 
   render() {
-    const { href, id = "", saveWarning, category = "" } = this.state;
+    const {
+      href,
+      id = "",
+      saveWarning,
+      category = "",
+      uploadWarning,
+    } = this.state;
 
     return (
       <article>
@@ -192,7 +264,13 @@ export class ImageAssetTool extends Component<{}, State> {
               </div>
 
               <div className={styles.row}>
-                <button onClick={this.zipImages}>zip images</button>
+                <button onClick={this.zipImages}>zip assets</button>
+              </div>
+              <div className={styles.row}>
+                <button onClick={this.loadFromZipFile}>
+                  load assets from zip file
+                </button>
+                {uploadWarning && <Warning>{uploadWarning}</Warning>}
               </div>
             </fieldset>
             <ServiceItemSelector
