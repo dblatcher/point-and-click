@@ -19,6 +19,7 @@ import imageService, {
   ImageAssetSchema,
 } from "../../../services/imageService";
 import JSZip from "jszip";
+import { buildImageAssetZip } from "../../../lib/zipFiles";
 
 type ExtraState = {
   urlIsObjectUrl: boolean;
@@ -115,32 +116,11 @@ export class ImageAssetTool extends Component<{}, State> {
   }
 
   zipImages = async () => {
-    const zip = new JSZip();
-
-    const assets = imageService.getAll();
-    const assetsBlob = await dataToBlob(
-      assets.map((asset) => ({ ...asset, href: "" }))
-    );
-
-    if (assetsBlob) {
-      zip.file("imageAssets.json", assetsBlob);
+    const result = await buildImageAssetZip(imageService)
+    if (result.success === false) {
+        return this.setState({saveWarning:result.error})
     }
-
-    const files = await Promise.all(
-      assets.map((asset) => imageService.getFile(asset.id))
-    );
-
-    files.forEach((file) => {
-      if (!file) {
-        console.warn("file failed");
-        return;
-      }
-      zip.file(`images/${file.name}`, file);
-    });
-
-    const zipFile = await zip.generateAsync({ type: "blob" });
-
-    makeDownloadFile("images.zip", zipFile);
+    makeDownloadFile("images.zip", result.blob);
   };
 
   loadFromZipFile = async () => {

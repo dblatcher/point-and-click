@@ -28,19 +28,9 @@ function getMimeType(asset: ImageAsset): string | undefined {
     const fileExtension = getFileExtension(asset)
     return fileExtension ? `image/${fileExtension}` : undefined
 }
-function getFileName(asset: ImageAsset): string {
-    const { id } = asset
-    const fileExtension = getFileExtension(asset)
-    if (!fileExtension) { return id }
-    const fileExtensionWithDot = `.${fileExtension}`
 
-    if (id.endsWith(fileExtensionWithDot)) {
-        return id
-    }
-    return id + fileExtensionWithDot
-}
 
-class ImageService extends Service<ImageAsset> {
+export class ImageService extends Service<ImageAsset> {
 
     listHref(): string[] {
         return Object.values(this.data)
