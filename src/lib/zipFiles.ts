@@ -1,4 +1,5 @@
 import JSZip from "jszip";
+import { GameDesign } from "../../src";
 import {
   ImageAsset,
   ImageAssetSchema,
@@ -24,53 +25,53 @@ type ZipReadSucess<T> = {
 type ZipBuildResult = ZipActionFailure | ZipBuildSucess;
 type ZipReadResult<T> = ZipActionFailure | ZipReadSucess<T>;
 
-const prepareImageAssetZip =async (imageService: ImageService):Promise<JSZip> => {
-    const zip = new JSZip();
+const prepareImageAssetZip = async (
+  imageService: ImageService
+): Promise<JSZip> => {
+  const zip = new JSZip();
 
-    const assets = imageService.getAll();
-    const assetsBlob = await dataToBlob(
-      assets.map((asset) => ({ ...asset, href: "" }))
-    );
-  
-    if (!assetsBlob) {
-      throw "failed to build assets file"
-    }
-  
-    zip.file("imageAssets.json", assetsBlob);
-  
-    const files = await Promise.all(
-      assets.map((asset) => imageService.getFile(asset.id))
-    );
-  
-    if (files.includes(undefined)) {
-      throw "failed to build all image files"
-    }
-  
-    (files as File[]).forEach((file) => {
-      zip.file(`images/${file.name}`, file);
-    });
+  const assets = imageService.getAll();
+  const assetsBlob = await dataToBlob(
+    assets.map((asset) => ({ ...asset, href: "" }))
+  );
 
-    return zip;
-}
+  if (!assetsBlob) {
+    throw "failed to build assets file";
+  }
+
+  zip.file("imageAssets.json", assetsBlob);
+
+  const files = await Promise.all(
+    assets.map((asset) => imageService.getFile(asset.id))
+  );
+
+  if (files.includes(undefined)) {
+    throw "failed to build all image files";
+  }
+
+  (files as File[]).forEach((file) => {
+    zip.file(`images/${file.name}`, file);
+  });
+
+  return zip;
+};
 
 export const buildImageAssetZipBlob = async (
   imageService: ImageService
 ): Promise<ZipBuildResult> => {
-
-    try {
-        const zip = await prepareImageAssetZip(imageService)
-        const blob = await zip.generateAsync({ type: "blob" });
-        return {
-          success: true,
-          blob,
-        };
-
-    } catch (error) {
-        return {
-            success: false,
-            error: error as string,
-          };
-    }
+  try {
+    const zip = await prepareImageAssetZip(imageService);
+    const blob = await zip.generateAsync({ type: "blob" });
+    return {
+      success: true,
+      blob,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error as string,
+    };
+  }
 };
 
 export const readImageAssetFromZipFile = async (
@@ -92,7 +93,10 @@ export const readImageAssetFromZipFile = async (
   const dataString = await dataBlob?.text();
 
   if (!dataString) {
-    return { success: false, error: `could not get data from imagesAssets.json` };
+    return {
+      success: false,
+      error: `could not get data from imagesAssets.json`,
+    };
   }
 
   let data: unknown;
@@ -107,7 +111,10 @@ export const readImageAssetFromZipFile = async (
 
   if (!results.success) {
     console.warn(results.error);
-    return { success: false, error: `data in imagesAssets.json was not a valid array of imageAssets` };
+    return {
+      success: false,
+      error: `data in imagesAssets.json was not a valid array of imageAssets`,
+    };
   }
 
   async function populateHref(asset: ImageAsset): Promise<ImageAsset> {
@@ -131,4 +138,28 @@ export const readImageAssetFromZipFile = async (
     success: true,
     data: populatedAssets,
   };
+};
+
+export const buildGameZipBlob = async (
+  gameDesign: GameDesign,
+  imageService: ImageService
+): Promise<ZipBuildResult> => {
+  try {
+    const zip = await prepareImageAssetZip(imageService);
+    const gameDesignBlob = dataToBlob(gameDesign);
+    if (!gameDesignBlob) {
+      throw "failed to make gameDesignBlob";
+    }
+    zip.file("game.json", gameDesignBlob);
+    const blob = await zip.generateAsync({ type: "blob" });
+    return {
+      success: true,
+      blob,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error as string,
+    };
+  }
 };

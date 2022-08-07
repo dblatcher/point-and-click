@@ -29,7 +29,7 @@ import layoutStyles from "./editorLayoutStyles.module.css";
 import { EndingEditor } from "./EndingEditor";
 
 
-// populate()
+populate()
 
 type State = {
     gameDesign: GameDesign;
@@ -73,7 +73,7 @@ function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[
     return list
 }
 
-const usePrebuiltGame = false
+const usePrebuiltGame = true
 
 export class GameEditor extends Component<Props, State>{
 
