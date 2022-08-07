@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, createRef, h, RefObject } from "preact";
 import {
-  dataToBlob,
   fileToImageUrl,
   makeDownloadFile,
   uploadFile,
@@ -16,10 +15,9 @@ import imageService, {
   ImageAsset,
   ImageAssetCategory,
   imageAssetCategories,
-  ImageAssetSchema,
+
 } from "../../../services/imageService";
-import JSZip from "jszip";
-import { buildImageAssetZip } from "../../../lib/zipFiles";
+import { buildImageAssetZip, readImageAssetZip } from "../../../lib/zipFiles";
 
 type ExtraState = {
   urlIsObjectUrl: boolean;
@@ -116,9 +114,9 @@ export class ImageAssetTool extends Component<{}, State> {
   }
 
   zipImages = async () => {
-    const result = await buildImageAssetZip(imageService)
+    const result = await buildImageAssetZip(imageService);
     if (result.success === false) {
-        return this.setState({saveWarning:result.error})
+      return this.setState({ saveWarning: result.error });
     }
     makeDownloadFile("images.zip", result.blob);
   };
@@ -130,59 +128,11 @@ export class ImageAssetTool extends Component<{}, State> {
       return;
     }
 
-    const zip = await new JSZip().loadAsync(file).catch((error) => {
-      console.warn(error);
-      this.setState({ uploadWarning: `failed to read ${file.name}` });
-      return
-    });
-
-    if (!zip) {
-        this.setState({ uploadWarning: `failed to get contents data from  ${file.name}` });
-        return
+    const result = await readImageAssetZip(file);
+    if (result.success === false) {
+      return this.setState({ uploadWarning: result.error });
     }
-
-    const dataBlob = await zip.file("imageAssets.json")?.async('blob');
-    const dataString = await dataBlob?.text()
-
-    if (!dataString) {
-        this.setState({ uploadWarning: `could not get data from imagesAssets.json` });
-        return
-    }
-
-    let data: unknown;
-    try {
-        data = JSON.parse(dataString)
-    } catch (error) {
-        console.warn(error)
-        this.setState({ uploadWarning: `imagesAssets.json was not valid json` });
-        return
-    }
-
-    const results = ImageAssetSchema.array().safeParse(data);
-
-    if (!results.success) {
-        console.warn(results.error)
-        this.setState({ uploadWarning: `data in imagesAssets.json was not a valid array of imageAssets` });
-        return
-    }
-
-    async function populateHref (asset: ImageAsset): Promise<ImageAsset> {
-        const imageBlob = await zip?.file(`images/${asset.id}`)?.async('blob');
-        if (!imageBlob) {
-            console.warn('MISSING FILE',`images/${asset.id}`)
-            return asset
-        }
-        const imageUrl = fileToImageUrl(imageBlob);
-        if (!imageUrl) {
-            console.warn('image url failed',`images/${asset.id}`)
-            return asset
-        }
-        asset.href = imageUrl
-        return asset
-    }
-
-    const populatedAssets = await Promise.all(results.data.map(populateHref))
-    imageService.add(populatedAssets)
+    imageService.add(result.data);
   };
 
   openFromService(asset: ServiceItem) {

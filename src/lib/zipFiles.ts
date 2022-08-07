@@ -1,8 +1,12 @@
 import JSZip from "jszip";
-import { ImageService } from "src/services/imageService";
-import { dataToBlob } from "./files";
+import {
+  ImageAsset,
+  ImageAssetSchema,
+  ImageService,
+} from "../services/imageService";
+import { dataToBlob, fileToImageUrl } from "./files";
 
-type ZipBuildFailure = {
+type ZipActionFailure = {
   success: false;
   error: string;
 };
@@ -12,7 +16,13 @@ type ZipBuildSucess = {
   blob: Blob;
 };
 
-type ZipBuildResult = ZipBuildFailure | ZipBuildSucess
+type ZipReadSucess<T> = {
+  success: true;
+  data: T;
+};
+
+type ZipBuildResult = ZipActionFailure | ZipBuildSucess;
+type ZipReadResult<T> = ZipActionFailure | ZipReadSucess<T>;
 
 export const buildImageAssetZip = async (
   imageService: ImageService
@@ -53,5 +63,65 @@ export const buildImageAssetZip = async (
   return {
     success: true,
     blob,
+  };
+};
+
+export const readImageAssetZip = async (
+  file: File
+): Promise<ZipReadResult<ImageAsset[]>> => {
+  const zip = await new JSZip().loadAsync(file).catch((error) => {
+    console.warn(error);
+    return undefined;
+  });
+
+  if (!zip) {
+    return {
+      success: false,
+      error: `failed to get contents data from  ${file.name}`,
+    };
+  }
+
+  const dataBlob = await zip.file("imageAssets.json")?.async("blob");
+  const dataString = await dataBlob?.text();
+
+  if (!dataString) {
+    return { success: false, error: `could not get data from imagesAssets.json` };
+  }
+
+  let data: unknown;
+  try {
+    data = JSON.parse(dataString);
+  } catch (error) {
+    console.warn(error);
+    return { success: false, error: `imagesAssets.json was not valid json` };
+  }
+
+  const results = ImageAssetSchema.array().safeParse(data);
+
+  if (!results.success) {
+    console.warn(results.error);
+    return { success: false, error: `data in imagesAssets.json was not a valid array of imageAssets` };
+  }
+
+  async function populateHref(asset: ImageAsset): Promise<ImageAsset> {
+    const imageBlob = await zip?.file(`images/${asset.id}`)?.async("blob");
+    if (!imageBlob) {
+      console.warn("MISSING FILE", `images/${asset.id}`);
+      return asset;
+    }
+    const imageUrl = fileToImageUrl(imageBlob);
+    if (!imageUrl) {
+      console.warn("image url failed", `images/${asset.id}`);
+      return asset;
+    }
+    asset.href = imageUrl;
+    return asset;
+  }
+
+  const populatedAssets = await Promise.all(results.data.map(populateHref));
+
+  return {
+    success: true,
+    data: populatedAssets,
   };
 };

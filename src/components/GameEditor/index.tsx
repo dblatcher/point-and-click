@@ -29,7 +29,7 @@ import layoutStyles from "./editorLayoutStyles.module.css";
 import { EndingEditor } from "./EndingEditor";
 
 
-populate()
+// populate()
 
 type State = {
     gameDesign: GameDesign;
@@ -73,7 +73,7 @@ function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[
     return list
 }
 
-const usePrebuiltGame = true
+const usePrebuiltGame = false
 
 export class GameEditor extends Component<Props, State>{
 
@@ -84,7 +84,7 @@ export class GameEditor extends Component<Props, State>{
                 gameDesign: {
                     ...startingGameCondition
                 },
-                tabOpen: tabs.indexOf('endings'),
+                tabOpen: tabs.indexOf('images'),
             }
         } else {
             const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
@@ -103,7 +103,7 @@ export class GameEditor extends Component<Props, State>{
                     spriteSheets: [],
                     endings: [],
                 },
-                tabOpen: tabs.indexOf('endings'),
+                tabOpen: tabs.indexOf('images'),
             }
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
