@@ -24,49 +24,56 @@ type ZipReadSucess<T> = {
 type ZipBuildResult = ZipActionFailure | ZipBuildSucess;
 type ZipReadResult<T> = ZipActionFailure | ZipReadSucess<T>;
 
-export const buildImageAssetZip = async (
+const prepareImageAssetZip =async (imageService: ImageService):Promise<JSZip> => {
+    const zip = new JSZip();
+
+    const assets = imageService.getAll();
+    const assetsBlob = await dataToBlob(
+      assets.map((asset) => ({ ...asset, href: "" }))
+    );
+  
+    if (!assetsBlob) {
+      throw "failed to build assets file"
+    }
+  
+    zip.file("imageAssets.json", assetsBlob);
+  
+    const files = await Promise.all(
+      assets.map((asset) => imageService.getFile(asset.id))
+    );
+  
+    if (files.includes(undefined)) {
+      throw "failed to build all image files"
+    }
+  
+    (files as File[]).forEach((file) => {
+      zip.file(`images/${file.name}`, file);
+    });
+
+    return zip;
+}
+
+export const buildImageAssetZipBlob = async (
   imageService: ImageService
 ): Promise<ZipBuildResult> => {
-  const zip = new JSZip();
 
-  const assets = imageService.getAll();
-  const assetsBlob = await dataToBlob(
-    assets.map((asset) => ({ ...asset, href: "" }))
-  );
+    try {
+        const zip = await prepareImageAssetZip(imageService)
+        const blob = await zip.generateAsync({ type: "blob" });
+        return {
+          success: true,
+          blob,
+        };
 
-  if (!assetsBlob) {
-    return {
-      success: false,
-      error: "failed to build assets file",
-    };
-  }
-
-  zip.file("imageAssets.json", assetsBlob);
-
-  const files = await Promise.all(
-    assets.map((asset) => imageService.getFile(asset.id))
-  );
-
-  if (files.includes(undefined)) {
-    return {
-      success: false,
-      error: "failed to build all image files",
-    };
-  }
-
-  (files as File[]).forEach((file) => {
-    zip.file(`images/${file.name}`, file);
-  });
-
-  const blob = await zip.generateAsync({ type: "blob" });
-
-  return {
-    success: true,
-    blob,
-  };
+    } catch (error) {
+        return {
+            success: false,
+            error: error as string,
+          };
+    }
 };
 
-export const readImageAssetZip = async (
+export const readImageAssetFromZipFile = async (
   file: File
 ): Promise<ZipReadResult<ImageAsset[]>> => {
   const zip = await new JSZip().loadAsync(file).catch((error) => {

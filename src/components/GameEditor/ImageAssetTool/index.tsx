@@ -17,7 +17,7 @@ import imageService, {
   imageAssetCategories,
 
 } from "../../../services/imageService";
-import { buildImageAssetZip, readImageAssetZip } from "../../../lib/zipFiles";
+import { buildImageAssetZipBlob, readImageAssetFromZipFile } from "../../../lib/zipFiles";
 
 type ExtraState = {
   urlIsObjectUrl: boolean;
@@ -114,7 +114,7 @@ export class ImageAssetTool extends Component<{}, State> {
   }
 
   zipImages = async () => {
-    const result = await buildImageAssetZip(imageService);
+    const result = await buildImageAssetZipBlob(imageService);
     if (result.success === false) {
       return this.setState({ saveWarning: result.error });
     }
@@ -128,7 +128,7 @@ export class ImageAssetTool extends Component<{}, State> {
       return;
     }
 
-    const result = await readImageAssetZip(file);
+    const result = await readImageAssetFromZipFile(file);
     if (result.success === false) {
       return this.setState({ uploadWarning: result.error });
     }
