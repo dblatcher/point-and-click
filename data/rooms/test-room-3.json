@@ -23,7 +23,7 @@
     {
       "id": "window-r",
       "name": "window-r",
-      "type": "hotspoot",
+      "type": "hotspot",
       "x": 220,
       "y": 70,
       "rect": [10, 60],
