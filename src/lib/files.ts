@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-function dataToBlob(data: unknown): Blob | null {
+export function dataToBlob(data: unknown): Blob | null {
 
     try {
         const dataString = JSON.stringify(data)
@@ -11,7 +11,7 @@ function dataToBlob(data: unknown): Blob | null {
     }
 }
 
-const makeDownloadFile = (fileName: string, blob: Blob): void => {
+export const makeDownloadFile = (fileName: string, blob: Blob): void => {
     if (typeof window !== 'undefined') {
         const { URL, document } = window
         const url = URL.createObjectURL(blob);

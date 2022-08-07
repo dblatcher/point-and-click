@@ -52,7 +52,7 @@ class ImageService extends Service<ImageAsset> {
         try {
             const response = await fetch(asset.href)
             const blob = await response.blob()
-            return new File([blob], getFileName(asset), { type: getMimeType(asset) })
+            return new File([blob], asset.id, { type: getMimeType(asset) })
         } catch (err) {
             console.warn(err)
             return undefined
