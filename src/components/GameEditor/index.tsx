@@ -20,7 +20,7 @@ import { listIds, findById, findIndexById } from "../../lib/util";
 import { RoomData, GameDesign, GameDataItem, Interaction, Ending } from "src";
 
 
-import { populate } from "../../services/populateServices";
+import { populateServicesForPreBuiltGame } from "../../services/populateServices";
 import imageService from "../../services/imageService";
 import spriteService from "../../services/spriteService";
 import { SequenceEditor } from "./SequenceEditor";
@@ -32,7 +32,7 @@ import spriteSheetService from "../../services/spriteSheetService";
 
 const usePrebuiltGame = false
 if (usePrebuiltGame) {
-    populate()
+    populateServicesForPreBuiltGame()
 }
 
 type State = {

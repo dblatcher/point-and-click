@@ -5,7 +5,7 @@ import { verbs } from './verbs';
 import { interactions } from './interactions';
 import { sequences } from './sequences';
 import { conversations } from './conversations';
-import { spriteInputs } from './sprites'
+import { spriteDataList, spriteSheets } from './sprites'
 import { endings } from './endings'
 import { GameDesign } from "../src/definitions/Game";
 
@@ -23,6 +23,6 @@ export const prebuiltGameDesign: GameDesign = {
     currentRoomId: startingRoom.id,
     conversations,
     endings,
-    sprites: spriteInputs.map(input=>input.data),
-    spriteSheets: spriteInputs.flatMap(input => input.sheets),
+    sprites: spriteDataList,
+    spriteSheets,
 }

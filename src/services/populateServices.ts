@@ -2,16 +2,14 @@ import imageService from "./imageService";
 import spriteService from "./spriteService";
 import spriteSheetService from "./spriteSheetService";
 import { Sprite } from "../lib/Sprite";
-import { spriteInputs } from "../../data/sprites";
 import { assets } from "../../data/images";
+import { prebuiltGameDesign } from "../../data/fullGame";
 
-//TO DO - should be using startingGameCondition instead of spriteInputs?
 
-export function populate(): void {
-    const sprites = spriteInputs.map(input => new Sprite(input.data))
-    const spriteSheets = spriteInputs.flatMap(input => input.sheets)
-    spriteService.add(sprites)
-    spriteSheetService.add(spriteSheets)
-    imageService.add(assets)
+export function populateServicesForPreBuiltGame(): void {
+    const sprites = prebuiltGameDesign.sprites.map(data => new Sprite(data))
     console.log('populating services')
+    spriteService.add(sprites)
+    spriteSheetService.add(prebuiltGameDesign.spriteSheets)
+    imageService.add(assets)
 }

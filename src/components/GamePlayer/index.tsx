@@ -4,7 +4,7 @@ import { GameCondition, GameData, GameDesign } from "src";
 import { prebuiltGameDesign } from "../../../data/fullGame";
 import Game from "../Game";
 import { cloneData } from "../../lib/clone";
-import { populate } from "../../services/populateServices";
+import { populateServicesForPreBuiltGame } from "../../services/populateServices";
 import { uploadFile } from "../../lib/files";
 import { readGameFromZipFile } from "../../lib/zipFiles";
 import imageService from "../../services/imageService";
@@ -14,9 +14,9 @@ import { Sprite } from "../../lib/Sprite";
 
 const storageKey = "POINT_AND_CLICK";
 
-const usePrebuiltGame = false;
+const usePrebuiltGame = true;
 if (usePrebuiltGame) {
-  populate();
+  populateServicesForPreBuiltGame();
 }
 
 export default class GamePlayer extends Component<
