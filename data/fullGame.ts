@@ -7,12 +7,12 @@ import { sequences } from './sequences';
 import { conversations } from './conversations';
 import { spriteInputs } from './sprites'
 import { endings } from './endings'
-import { GameCondition } from "../src/definitions/Game";
+import { GameDesign } from "../src/definitions/Game";
 
 const player = characters.find(character => character.isPlayer)
 const startingRoom = rooms.find(room => room.id === player?.room) || rooms[0]
 
-export const startingGameCondition: GameCondition = {
+export const prebuiltGameDesign: GameDesign = {
     id:"THE_TEST_GAME",
     rooms,
     characters,
@@ -20,8 +20,6 @@ export const startingGameCondition: GameCondition = {
     items,
     verbs,
     sequences,
-    characterOrders: {},
-    sequenceRunning: undefined,
     currentRoomId: startingRoom.id,
     conversations,
     endings,

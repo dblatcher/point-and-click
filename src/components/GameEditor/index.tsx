@@ -15,7 +15,7 @@ import { ConversationEditor } from "./ConversationEditor";
 
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 
-import { startingGameCondition } from '../../../data/fullGame';
+import { prebuiltGameDesign } from '../../../data/fullGame';
 import { listIds, findById, findIndexById } from "../../lib/util";
 import { RoomData, GameDesign, GameDataItem, Interaction, Ending } from "src";
 
@@ -30,8 +30,10 @@ import { EndingEditor } from "./EndingEditor";
 import spriteSheetService from "../../services/spriteSheetService";
 
 
-// populate()
 const usePrebuiltGame = false
+if (usePrebuiltGame) {
+    populate()
+}
 
 type State = {
     gameDesign: GameDesign;
@@ -82,7 +84,7 @@ export class GameEditor extends Component<Props, State>{
         if (usePrebuiltGame) {
             this.state = {
                 gameDesign: {
-                    ...startingGameCondition
+                    ...prebuiltGameDesign
                 },
                 tabOpen: tabs.indexOf('main'),
             }
