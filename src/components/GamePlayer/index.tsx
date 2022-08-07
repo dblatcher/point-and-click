@@ -14,25 +14,31 @@ import { Sprite } from "../../lib/Sprite";
 
 const storageKey = "POINT_AND_CLICK";
 
-const usePrebuiltGame = true;
-if (usePrebuiltGame) {
-  populateServicesForPreBuiltGame();
+interface Props {
+  usePrebuiltGame?: boolean;
 }
 
+
+
 export default class GamePlayer extends Component<
-  {},
+  Props,
   {
     gameCondition?: GameCondition;
     gameDesign?: GameDesign;
     timestamp: number;
   }
 > {
-  constructor(props: GamePlayer["props"]) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       gameCondition: this.getInitialGameCondtions(),
       timestamp: Date.now(),
     };
+
+    if (props.usePrebuiltGame) {
+        populateServicesForPreBuiltGame()
+    }
+
     this.save = this.save.bind(this);
     this.reset = this.reset.bind(this);
     this.load = this.load.bind(this);
@@ -75,6 +81,7 @@ export default class GamePlayer extends Component<
 
   getInitialGameCondtions(): GameCondition | undefined {
     const gameDesign = this.state?.gameDesign;
+    const { usePrebuiltGame } = this.props;
     if (gameDesign) {
       return {
         ...cloneData(gameDesign),
@@ -118,6 +125,7 @@ export default class GamePlayer extends Component<
 
   render() {
     const { gameCondition, timestamp } = this.state;
+    const { usePrebuiltGame } = this.props;
     return (
       <>
         {!usePrebuiltGame && (

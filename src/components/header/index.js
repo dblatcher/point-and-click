@@ -6,7 +6,8 @@ const Header = () => (
 	<header class={style.header}>
 		<h1>Point and Click</h1>
 		<nav>
-			<Link activeClassName={style.active} href="/">Home</Link>
+			<Link activeClassName={style.active} href="/">Game</Link>
+			<Link activeClassName={style.active} href="/prebuilt">Prebuilt Game</Link>
 			<Link activeClassName={style.active} href="/editor">editor</Link>
 		</nav>
 	</header>
