@@ -12,6 +12,7 @@ import {
 import { useState } from "preact/hooks";
 import { buildGameZipBlob, readGameFromZipFile } from "../../lib/zipFiles";
 import imageService from "../../services/imageService";
+import { populateServices } from "../../services/populateServices";
 
 interface Props {
   gameDesign: GameDesign;
@@ -71,7 +72,7 @@ export const Overview: FunctionalComponent<Props> = ({
     }
 
     loadNewGame(result.data.gameDesign)
-    imageService.add(result.data.imageAssets)
+    populateServices(result.data.gameDesign, result.data.imageAssets)
   };
 
   return (
