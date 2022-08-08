@@ -5,7 +5,7 @@ import GamePlayer from "../../components/GamePlayer";
 
 const Game: FunctionalComponent = () => (
   <div className={style.home}>
-    <GamePlayer usePrebuiltGame={false} />
+    <GamePlayer />
   </div>
 );
 

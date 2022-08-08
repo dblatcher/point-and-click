@@ -1,42 +1,37 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment } from "preact";
 import { GameCondition, GameData, GameDesign } from "src";
-import { prebuiltGameDesign } from "../../../data/fullGame";
 import Game from "../Game";
 import { cloneData } from "../../lib/clone";
-import { populateServicesForPreBuiltGame } from "../../services/populateServices";
+import { populateServices } from "../../services/populateServices";
 import { uploadFile } from "../../lib/files";
 import { readGameFromZipFile } from "../../lib/zipFiles";
-import imageService from "../../services/imageService";
-import spriteSheetService from "../../services/spriteSheetService";
-import spriteService from "../../services/spriteService";
-import { Sprite } from "../../lib/Sprite";
+import { ImageAsset } from "../../services/imageService";
 
 const storageKey = "POINT_AND_CLICK";
 
 interface Props {
-  usePrebuiltGame?: boolean;
+  prebuiltGame?: GameDesign;
+  prebuiltAssets?: ImageAsset[];
 }
-
-
 
 export default class GamePlayer extends Component<
   Props,
   {
     gameCondition?: GameCondition;
-    gameDesign?: GameDesign;
+    loadedGameDesign?: GameDesign;
     timestamp: number;
   }
 > {
   constructor(props: Props) {
     super(props);
     this.state = {
-      gameCondition: this.getInitialGameCondtions(),
+      gameCondition: this.getInitialGameCondition(),
       timestamp: Date.now(),
     };
 
-    if (props.usePrebuiltGame) {
-        populateServicesForPreBuiltGame()
+    if (props.prebuiltGame) {
+      populateServices(props.prebuiltGame, props.prebuiltAssets || []);
     }
 
     this.save = this.save.bind(this);
@@ -74,23 +69,23 @@ export default class GamePlayer extends Component<
 
   reset() {
     this.setState({
-      gameCondition: this.getInitialGameCondtions(),
+      gameCondition: this.getInitialGameCondition(),
       timestamp: Date.now(),
     });
   }
 
-  getInitialGameCondtions(): GameCondition | undefined {
-    const gameDesign = this.state?.gameDesign;
-    const { usePrebuiltGame } = this.props;
-    if (gameDesign) {
+  getInitialGameCondition(): GameCondition | undefined {
+    const loadedGameDesign = this.state?.loadedGameDesign;
+    const { prebuiltGame } = this.props;
+    if (loadedGameDesign) {
       return {
-        ...cloneData(gameDesign),
+        ...cloneData(loadedGameDesign),
         characterOrders: {},
       };
     }
-    if (usePrebuiltGame) {
+    if (prebuiltGame) {
       return {
-        ...cloneData(prebuiltGameDesign),
+        ...cloneData(prebuiltGame),
         characterOrders: {},
       };
     }
@@ -110,25 +105,19 @@ export default class GamePlayer extends Component<
     }
 
     const { gameDesign, imageAssets } = result.data;
-    const sprites = gameDesign.sprites.map((spriteData) => {
-      return new Sprite(spriteData);
-    });
+    populateServices(gameDesign, imageAssets)
 
-    spriteSheetService.add(gameDesign.spriteSheets);
-    imageService.add(imageAssets);
-    spriteService.add(sprites);
-
-    this.setState({ gameDesign }, () => {
+    this.setState({ loadedGameDesign: gameDesign }, () => {
       this.reset();
     });
   };
 
   render() {
     const { gameCondition, timestamp } = this.state;
-    const { usePrebuiltGame } = this.props;
+    const { prebuiltGame } = this.props;
     return (
       <>
-        {!usePrebuiltGame && (
+        {!prebuiltGame && (
           <div>
             <button onClick={this.uploadAll}>Load Game Design</button>
           </div>
