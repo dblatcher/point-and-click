@@ -8,21 +8,18 @@ import { uploadFile } from "../../lib/files";
 import { readGameFromZipFile } from "../../lib/zipFiles";
 import { ImageAsset } from "../../services/imageService";
 
-const storageKey = "POINT_AND_CLICK";
-
 interface Props {
   prebuiltGame?: GameDesign;
   prebuiltAssets?: ImageAsset[];
 }
 
-export default class GamePlayer extends Component<
-  Props,
-  {
-    gameCondition?: GameCondition;
-    loadedGameDesign?: GameDesign;
-    timestamp: number;
-  }
-> {
+interface State {
+  gameCondition?: GameCondition;
+  loadedGameDesign?: GameDesign;
+  timestamp: number;
+}
+
+export default class GamePlayer extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -40,17 +37,25 @@ export default class GamePlayer extends Component<
   }
 
   save(data: GameData) {
-    localStorage.setItem(storageKey, JSON.stringify(data));
+    if (!this.storageKey) {
+      return;
+    }
+    localStorage.setItem(this.storageKey, JSON.stringify(data));
   }
 
   load() {
-    const jsonString = localStorage.getItem(storageKey);
+    if (!this.storageKey) {
+      return;
+    }
+    const jsonString = localStorage.getItem(this.storageKey);
     if (!jsonString) {
-      console.error("NO SAVE FILE", storageKey);
+      console.error("NO SAVE FILE", this.storageKey);
       return;
     }
 
     try {
+      // TO DO - PARSE WITH SCHEMA!!
+      // CHECK GAME ID!!
       const data = JSON.parse(jsonString) as GameData;
       const loadedConditions = Object.assign(
         {},
@@ -105,12 +110,17 @@ export default class GamePlayer extends Component<
     }
 
     const { gameDesign, imageAssets } = result.data;
-    populateServices(gameDesign, imageAssets)
+    populateServices(gameDesign, imageAssets);
 
     this.setState({ loadedGameDesign: gameDesign }, () => {
       this.reset();
     });
   };
+
+  get storageKey(): string | undefined {
+    const { gameCondition } = this.state;
+    return gameCondition ? `POINT_AND_CLICK_${gameCondition.id}` : undefined;
+  }
 
   render() {
     const { gameCondition, timestamp } = this.state;
