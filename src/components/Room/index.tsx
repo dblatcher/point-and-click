@@ -30,6 +30,7 @@ interface Props {
     isPaused?: boolean;
     contents?: RoomContentItem[];
     children?: ComponentChildren;
+    forPreview?: boolean;
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -44,11 +45,12 @@ export const Room: FunctionComponent<Props> = ({
     showObstacleAreas,
     highlightHotspots,
     obstacleCells,
-    markHotspotVertices =[],
-    markObstacleVertices =[],
+    markHotspotVertices = [],
+    markObstacleVertices = [],
     showCaption = false,
     isPaused = false,
-    contents =[],
+    contents = [],
+    forPreview = false,
     children,
 }: Props) => {
     const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [] } = data;
@@ -85,14 +87,17 @@ export const Room: FunctionComponent<Props> = ({
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
     }
 
+    const figureInlineStyle = {
+        width: `${frameWidth * scale}px`,
+        height: `${height * scale}px`,
+        position: 'relative',
+        margin: forPreview ? 0 : undefined,
+    }
+
     return (
         <figure ref={figureRef}
             className={styles.roomFigure}
-            style={{
-                width: `${frameWidth * scale}px`,
-                height: `${height * scale}px`,
-                position: 'relative',
-            }}
+            style={figureInlineStyle}
             onClick={processRoomClick}
         >
 

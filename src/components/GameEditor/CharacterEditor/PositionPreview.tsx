@@ -15,7 +15,13 @@ export const PositionPreview: FunctionComponent<Props> = ({ characterData, roomD
     const viewAngle = roomData ? clamp(getViewAngleCenteredOn(characterData.x, roomData), 1, -1) : 0
 
     return (
-        <section>
+        <section style={{
+            display:'inline-block',
+            border: "1px solid black",
+            padding: '.5em',
+            cursor: 'crosshair',
+            minHeight:300,
+        }}>
             {roomData && (
                 <Room
                     data={roomData}
@@ -27,6 +33,9 @@ export const PositionPreview: FunctionComponent<Props> = ({ characterData, roomD
                         const point = locateClickInWorld(x, y, viewAngle, roomData)
                         reportClick({ x: Math.round(point.x), y: Math.round(point.y) })
                     }}
+                    maxWidth={1000}
+                    maxHeight={300}
+                    forPreview={true}
                 />
             )}
         </section>
