@@ -30,7 +30,7 @@ import { EndingEditor } from "./EndingEditor";
 import spriteSheetService from "../../services/spriteSheetService";
 
 
-const usePrebuiltGame = false
+const usePrebuiltGame = true
 if (usePrebuiltGame) {
     populateServicesForPreBuiltGame()
 }
@@ -343,7 +343,7 @@ export class GameEditor extends Component<Props, State>{
                     },
                     {
                         label: 'Character Editor', content: <CharacterEditor
-                            roomIds={listIds(gameDesign.rooms)}
+                            rooms={gameDesign.rooms}
                             characterIds={listIds(gameDesign.characters)}
                             updateData={data => { this.performUpdate('characters', data) }}
                             key={characterId} data={this.currentCharacter}

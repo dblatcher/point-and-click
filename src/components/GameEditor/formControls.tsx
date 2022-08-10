@@ -65,7 +65,11 @@ export const NumberInput: FunctionalComponent<{
     max?: number;
     min?: number;
     step?: number;
+    type?: 'number' | 'range';
 }> = (props) => {
+
+    const { type = 'number' } = props
+    const width = type === 'range' ? '5rem' : '3rem';
 
     const sendValue: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
         props.inputHandler(eventToNumber(event))
@@ -73,8 +77,8 @@ export const NumberInput: FunctionalComponent<{
 
     return <>
         <label>{props.label}</label>
-        <input type='number'
-            style={{ width: '3rem' }}
+        <input type={type}
+            style={{ width }}
             value={props.value}
             max={props.max}
             min={props.min}

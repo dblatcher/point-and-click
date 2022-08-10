@@ -1,6 +1,6 @@
 
 
-
+export type Point = { x: number; y: number }
 
 export type { GameData, GameCondition, GameDataItem, GameDesign } from "./definitions/Game";
 export type { ItemData } from "./definitions/ItemData"

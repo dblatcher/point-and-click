@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { CharacterData, Direction } from "src";
+import { CharacterData, Direction, RoomData, Point } from "src";
 import { CharacterDataSchema } from "../../../definitions/CharacterData";
 import { directions } from "../../../definitions/SpriteSheet";
 import { CheckBoxInput, IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
@@ -9,9 +9,10 @@ import spriteService from "../../../services/spriteService";
 import { SpritePreview } from "../SpritePreview";
 import { StorageMenu } from "../StorageMenu";
 import { cloneData } from "../../../lib/clone";
-import { eventToString } from "../../../lib/util";
+import { eventToString, findById, listIds } from "../../../lib/util";
 import { uploadJsonData } from "../../../lib/files";
-
+import styles from "../editorStyles.module.css"
+import { PositionPreview } from "./PositionPreview";
 
 type ExtraState = {
 
@@ -22,7 +23,7 @@ type State = CharacterData & { sprite: string | undefined } & ExtraState;
 type Props = {
     data?: CharacterData;
     updateData?: { (data: CharacterData): void };
-    roomIds: string[];
+    rooms: RoomData[];
     characterIds: string[];
 }
 
@@ -59,6 +60,7 @@ export class CharacterEditor extends Component<Props, State> {
         this.handleLoadButton = this.handleLoadButton.bind(this)
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
+        this.handlePreviewClick = this.handlePreviewClick.bind(this)
     }
 
     get currentData(): CharacterData {
@@ -125,7 +127,9 @@ export class CharacterEditor extends Component<Props, State> {
             this.props.updateData(this.currentData)
         }
     }
-
+    handlePreviewClick(point: Point) {
+        this.setState(point)
+    }
 
     get previewData(): CharacterData {
         return {
@@ -150,86 +154,90 @@ export class CharacterEditor extends Component<Props, State> {
             <article>
                 <h2>Character Editor</h2>
 
-                <fieldset>
-                    <legend>Ident</legend>
-                    <IdentInput showType value={state}
-                        onChangeId={(event) => this.changeValue('id', eventToString(event))}
-                        onChangeName={(event) => this.changeValue('name', eventToString(event))}
-                        onChangeStatus={(event) => this.changeValue('status', eventToString(event))}
-                    />
-
-                    <SelectInput label="status" value={state.status || ''} items={this.spriteAnimations}
-                        onSelect={(item: string) => { this.changeValue('status', item) }} />
-
-                </fieldset>
-
-                <StorageMenu
-                    type="characterData"
-                    data={this.currentData}
-                    originalId={this.props.data?.id}
-                    existingIds={characterIds}
-                    reset={this.handleResetButton}
-                    update={this.handleUpdateButton}
-                    saveButton={true}
-                    load={this.handleLoadButton}
-                />
-                <fieldset>
-                    <legend>Character details</legend>
-                    <div>
-                        <NumberInput label="movement speed" value={state.speed || 1} inputHandler={value => { this.changeValue('speed', value) }} />
-                    </div>
-                    <div>
-                        <CheckBoxInput label="Is player character" value={state.isPlayer} inputHandler={value => { this.changeValue('isPlayer', value) }} />
-                    </div>
-                    <div>
-                        <TextInput type="color" label="dialogue color" value={state.dialogueColor || ''} onInput={event => { this.changeValue('dialogueColor', eventToString(event)) }} />
-                        <span>{state.dialogueColor}</span>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend>Disposition</legend>
-                    <SelectInput label="direction" value={state.direction || 'left'} items={directions}
-                        onSelect={(item: string) => { this.changeValue('direction', item) }} />
-
-                    <div>
-                        <NumberInput label="x" value={state.x} inputHandler={value => { this.changeValue('x', value) }} />
-                        <NumberInput label="y" value={state.y} inputHandler={value => { this.changeValue('y', value) }} />
-                    </div>
-                    <div>
-                        <SelectInput label="roomId"
-                            emptyOptionLabel="[no room]"
-                            items={this.props.roomIds}
-                            value={state.room || ''}
-                            haveEmptyOption={true}
-                            onSelect={roomId => { this.changeValue('room', roomId) }} />
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Sprite</legend>
-
-                    <ServiceItemSelector legend="choose sprite"
-                        selectedItemId={spriteId}
-                        format='select'
-                        service={spriteService}
-                        select={
-                            item => this.setState({ sprite: item.id })
-                        } />
-
-                    <div>
-                        <NumberInput label="width" value={width}
-                            inputHandler={(value) => this.changeValue('width', value)} />
-                        <NumberInput label="height" value={height}
-                            inputHandler={(value) => this.changeValue('height', value)} />
-                    </div>
-
-
-
-                    <TextInput label="filter" value={state.filter || ''}
-                        onInput={(event) => this.changeValue('filter', eventToString(event))} />
+                <div className={styles.rowTopLeft}>
+                    <fieldset>
+                        <legend>Ident</legend>
+                        <IdentInput showType value={state}
+                            onChangeId={(event) => this.changeValue('id', eventToString(event))}
+                            onChangeName={(event) => this.changeValue('name', eventToString(event))}
+                            onChangeStatus={(event) => this.changeValue('status', eventToString(event))}
+                        />
+                        <SelectInput label="status" value={state.status || ''} items={this.spriteAnimations}
+                            onSelect={(item: string) => { this.changeValue('status', item) }} />
+                    </fieldset>
 
                     <SpritePreview data={this.previewData} />
-                </fieldset>
+
+                    <StorageMenu
+                        type="characterData"
+                        data={this.currentData}
+                        originalId={this.props.data?.id}
+                        existingIds={characterIds}
+                        reset={this.handleResetButton}
+                        update={this.handleUpdateButton}
+                        saveButton={true}
+                        load={this.handleLoadButton}
+                    />
+                </div>
+                <div className={styles.rowTopLeft}>
+                    <fieldset>
+                        <legend>Character details</legend>
+                        <div>
+                            <NumberInput label="movement speed" value={state.speed || 1} inputHandler={value => { this.changeValue('speed', value) }} />
+                        </div>
+                        <div>
+                            <CheckBoxInput label="Is player character" value={state.isPlayer} inputHandler={value => { this.changeValue('isPlayer', value) }} />
+                        </div>
+                        <div>
+                            <TextInput type="color" label="dialogue color" value={state.dialogueColor || ''} onInput={event => { this.changeValue('dialogueColor', eventToString(event)) }} />
+                            <span>{state.dialogueColor}</span>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Disposition</legend>
+                        <SelectInput label="direction" value={state.direction || 'left'} items={directions}
+                            onSelect={(item: string) => { this.changeValue('direction', item) }} />
+
+                        <div>
+                            <NumberInput label="x" value={state.x} inputHandler={value => { this.changeValue('x', value) }} />
+                            <NumberInput label="y" value={state.y} inputHandler={value => { this.changeValue('y', value) }} />
+                        </div>
+                        <div>
+                            <SelectInput label="roomId"
+                                emptyOptionLabel="[no room]"
+                                items={listIds(this.props.rooms)}
+                                value={state.room || ''}
+                                haveEmptyOption={true}
+                                onSelect={roomId => { this.changeValue('room', roomId) }} />
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Sprite</legend>
+
+                        <ServiceItemSelector legend="choose sprite"
+                            selectedItemId={spriteId}
+                            format='select'
+                            service={spriteService}
+                            select={
+                                item => this.setState({ sprite: item.id })
+                            } />
+
+                        <div>
+                            <NumberInput label="width" value={width}
+                                inputHandler={(value) => this.changeValue('width', value)} />
+                            <NumberInput label="height" value={height}
+                                inputHandler={(value) => this.changeValue('height', value)} />
+                        </div>
+                        <TextInput label="filter" value={state.filter || ''}
+                            onInput={(event) => this.changeValue('filter', eventToString(event))} />
+                    </fieldset>
+                </div>
+
+                <PositionPreview
+                    characterData={this.state}
+                    roomData={this.state.room ? findById(this.state.room, this.props.rooms) : undefined}
+                    reportClick={this.handlePreviewClick}
+                />
 
             </article>
         )
