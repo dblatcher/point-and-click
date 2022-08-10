@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
 import { eventToString, listIds } from "../../lib/util";
-import { GameDesign, GameDesignSchema } from "../../definitions/Game";
+import { GameDesign } from "../../definitions/Game";
 import { SelectInput, TextInput, Warning } from "./formControls";
 import {
-  downloadJsonFile,
   makeDownloadFile,
   uploadFile,
-  uploadJsonData,
 } from "../../lib/files";
 import { useState } from "preact/hooks";
 import { buildGameZipBlob, readGameFromZipFile } from "../../lib/zipFiles";
@@ -25,7 +23,7 @@ export const Overview: FunctionalComponent<Props> = ({
   edit,
   loadNewGame,
 }: Props) => {
-  const [loadError, setLoadError] = useState<string | undefined>(undefined);
+
   const [downloadAllError, setDownloadAllError] = useState<string | undefined>(
     undefined
   );
@@ -33,19 +31,6 @@ export const Overview: FunctionalComponent<Props> = ({
     undefined
   );
 
-  const handleLoad = async () => {
-    setLoadError(undefined);
-    const { data, error, errorDetails } = await uploadJsonData(
-      GameDesignSchema
-    );
-    if (error) {
-      setLoadError(error);
-      console.warn(errorDetails);
-    }
-    if (data) {
-      loadNewGame(data);
-    }
-  };
 
   const downloadAll = async () => {
     setDownloadAllError(undefined);
@@ -113,28 +98,13 @@ export const Overview: FunctionalComponent<Props> = ({
       </ul>
 
       <div>
-        <button
-          onClick={() => {
-            downloadJsonFile(gameDesign, "game");
-          }}
-        >
-          Save game data to file
-        </button>
-      </div>
-      <div>
-        <button onClick={handleLoad}>Load game data from file</button>
-        <span>{loadError}</span>
-      </div>
-
-      <hr />
-      <div>
         <button onClick={downloadAll}>
-          Save full game to file (including assets)
+          Save game to zip file
         </button>
         {downloadAllError && <Warning>{downloadAllError}</Warning>}
       </div>
       <div>
-        <button onClick={uploadAll}>Load game data(including assets) from zip file</button>
+        <button onClick={uploadAll}>Load game from zip file</button>
         {uploadAllError && <Warning>{uploadAllError}</Warning>}
       </div>
     </article>
