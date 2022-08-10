@@ -1,5 +1,5 @@
 import { h, JSX, FunctionalComponent } from "preact";
-import { RoomData,CharacterData,Direction } from "src"
+import { RoomData, CharacterData, Direction } from "src"
 import { placeOnScreen } from "../lib/util";
 import { Sprite } from "../../src/lib/Sprite";
 import { HandleHoverFunction } from "./Game";
@@ -20,12 +20,13 @@ interface Props {
     clickHandler?: JSX.MouseEventHandler<SVGElement>;
     handleHover?: HandleHoverFunction;
     hoverData?: CharacterData;
+    status?: string;
 }
 
 
 export const SpriteShape: FunctionalComponent<Props> = ({
     roomData, viewAngle, x, y, height = 50, width = 50, animationName, frameIndex, spriteObject, direction, filter,
-    clickHandler, handleHover, hoverData,
+    clickHandler, handleHover, hoverData, status,
 }: Props) => {
     const [widthScale, heightScale] = spriteObject.getFrameScale(animationName, frameIndex, direction);
     const divStyle = Object.assign(spriteObject.getStyle(animationName, frameIndex, direction), { filter });
@@ -40,7 +41,7 @@ export const SpriteShape: FunctionalComponent<Props> = ({
     const onMouseLeave = shouldReportHover ? (): void => { handleHover(hoverData, 'leave') } : undefined
 
     return (
-        <svg
+        <svg data-status={status}
             onClick={clickHandler}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}

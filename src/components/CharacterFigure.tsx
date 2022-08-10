@@ -103,6 +103,7 @@ export const CharacterFigure: FunctionalComponent<Props> = ({
                 x={x} y={y}
                 height={height * spriteScale} width={width * spriteScale}
                 filter={filter}
+                status={data.status}
             />
             {text &&
                 <DialogueBubble text={text}
