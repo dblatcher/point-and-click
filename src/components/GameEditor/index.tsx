@@ -344,6 +344,7 @@ export class GameEditor extends Component<Props, State>{
                     {
                         label: 'Character Editor', content: <CharacterEditor
                             rooms={gameDesign.rooms}
+                            characters={gameDesign.characters}
                             characterIds={listIds(gameDesign.characters)}
                             updateData={data => { this.performUpdate('characters', data) }}
                             key={characterId} data={this.currentCharacter}

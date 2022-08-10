@@ -25,6 +25,7 @@ type Props = {
     updateData?: { (data: CharacterData): void };
     rooms: RoomData[];
     characterIds: string[];
+    characters: CharacterData[];
 }
 
 const makeBlankCharacter = (): CharacterData => ({
@@ -145,6 +146,18 @@ export class CharacterEditor extends Component<Props, State> {
         return Object.keys(sprite.data.animations)
     }
 
+    get otherCharactersInRoom(): CharacterData[] {
+        const { characters } = this.props
+        const { id, room } = this.state
+        const originalId = this.props.data?.id
+
+        return characters.filter(character => 
+                character.id !== id && 
+                character.id !== originalId &&
+                character.room === room
+        )
+    }
+
     render() {
         const { state } = this
         const { sprite: spriteId, width = 1, height = 1, } = state
@@ -235,6 +248,7 @@ export class CharacterEditor extends Component<Props, State> {
 
                 <PositionPreview
                     characterData={this.state}
+                    otherCharacters={this.otherCharactersInRoom}
                     roomData={this.state.room ? findById(this.state.room, this.props.rooms) : undefined}
                     reportClick={this.handlePreviewClick}
                 />
