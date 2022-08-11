@@ -63,11 +63,6 @@ export const Overview: FunctionalComponent<Props> = ({
   return (
     <article>
       <h2>Main</h2>
-      <p>starting room = {gameDesign.currentRoomId}</p>
-
-      {/* this isn't impacting the Game route - because it has its own clone of starting conditions */}
-      {/* Need to think about this! */}
-
       <TextInput
         value={gameDesign.id}
         label="Game ID"

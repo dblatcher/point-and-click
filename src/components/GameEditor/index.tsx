@@ -284,9 +284,10 @@ export class GameEditor extends Component<Props, State>{
 
         return <main className={layoutStyles.main}>
 
-            <nav>
+            <nav className={layoutStyles.leftNav}>
+                <h2>{gameDesign.id}</h2>
                 <TreeMenu folders={folders}
-                    title={gameDesign.id}
+                    
                     folderClick={(folderId) => {
                         const folderIndex = tabs.indexOf(folderId);
                         this.setState({ tabOpen: folderIndex, ...this.noOpenItemsState })
