@@ -47,7 +47,7 @@ export const CharacterFigure: FunctionalComponent<Props> = ({
     } = data
     const spriteObject = overrideSprite || spriteService.get(spriteId)
     const [currentOrder] = orders
-    const text = currentOrder?.type === 'talk' ? currentOrder.steps[0].text : undefined;
+    const text = currentOrder?.type === 'talk' ? currentOrder.steps[0]?.text : undefined;
     const animationName = getAnimationName(currentOrder, data.status, spriteObject)
     const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
     const frames = spriteObject?.getFrames(animationName, direction) || []

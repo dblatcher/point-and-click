@@ -28,9 +28,10 @@ import { SequenceEditor } from "./SequenceEditor";
 import layoutStyles from "./editorLayoutStyles.module.css";
 import { EndingEditor } from "./EndingEditor";
 import spriteSheetService from "../../services/spriteSheetService";
+import Game from "../Game";
 
 
-const usePrebuiltGame = true
+const usePrebuiltGame = false
 if (usePrebuiltGame) {
     populateServicesForPreBuiltGame()
 }
@@ -46,6 +47,8 @@ type State = {
     spriteSheetId?: string;
     sequenceId?: string;
     endingId?: string;
+
+    resetTimeStamp: number;
 };
 
 type Props = {
@@ -64,6 +67,7 @@ const tabs: string[] = [
     'sequences',
     'endings',
     'images',
+    'test',
 ]
 
 function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[] {
@@ -87,6 +91,7 @@ export class GameEditor extends Component<Props, State>{
                     ...prebuiltGameDesign
                 },
                 tabOpen: tabs.indexOf('main'),
+                resetTimeStamp: 0,
             }
         } else {
             const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
@@ -106,6 +111,7 @@ export class GameEditor extends Component<Props, State>{
                     endings: [],
                 },
                 tabOpen: tabs.indexOf('main'),
+                resetTimeStamp: 0,
             }
         }
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
@@ -278,47 +284,52 @@ export class GameEditor extends Component<Props, State>{
 
         return <main className={layoutStyles.main}>
 
-            <TreeMenu folders={folders}
-                title={gameDesign.id}
-                folderClick={(folderId) => {
-                    const folderIndex = tabs.indexOf(folderId);
-                    this.setState({ tabOpen: folderIndex, ...this.noOpenItemsState })
-                }}
-                entryClick={(folderId, data, isForNew) => {
-                    const folderIndex = tabs.indexOf(folderId);
-                    const modification: Partial<State> = { tabOpen: folderIndex }
-                    if (!isForNew) {
-                        switch (folderId) {
-                            case 'rooms':
-                                modification.roomId = data.id
-                                break;
-                            case 'items':
-                                modification.itemId = data.id
-                                break;
-                            case 'characters':
-                                modification.characterId = data.id
-                                break;
-                            case 'conversations':
-                                modification.conversationId = data.id
-                                break;
-                            case 'sprites':
-                                modification.spriteId = data.id
-                                break;
-                            case 'spriteSheets':
-                                modification.spriteSheetId = data.id
-                                break;
-                            case 'sequences':
-                                modification.sequenceId = data.id
-                                break;
-                            case 'endings':
-                                modification.endingId = data.id
-                                break;
+            <nav>
+                <TreeMenu folders={folders}
+                    title={gameDesign.id}
+                    folderClick={(folderId) => {
+                        const folderIndex = tabs.indexOf(folderId);
+                        this.setState({ tabOpen: folderIndex, ...this.noOpenItemsState })
+                    }}
+                    entryClick={(folderId, data, isForNew) => {
+                        const folderIndex = tabs.indexOf(folderId);
+                        const modification: Partial<State> = { tabOpen: folderIndex }
+                        if (!isForNew) {
+                            switch (folderId) {
+                                case 'rooms':
+                                    modification.roomId = data.id
+                                    break;
+                                case 'items':
+                                    modification.itemId = data.id
+                                    break;
+                                case 'characters':
+                                    modification.characterId = data.id
+                                    break;
+                                case 'conversations':
+                                    modification.conversationId = data.id
+                                    break;
+                                case 'sprites':
+                                    modification.spriteId = data.id
+                                    break;
+                                case 'spriteSheets':
+                                    modification.spriteSheetId = data.id
+                                    break;
+                                case 'sequences':
+                                    modification.sequenceId = data.id
+                                    break;
+                                case 'endings':
+                                    modification.endingId = data.id
+                                    break;
+                            }
                         }
-                    }
-                    this.setState(modification)
-                }}
-            />
+                        this.setState(modification)
+                    }}
+                />
 
+                <div>
+                    <button onClick={() => this.setState({ tabOpen: tabs.indexOf("test") })}>Test Game</button>
+                </div>
+            </nav>
             <section className={layoutStyles.tabMenuHolder}>
                 <TabMenu backgroundColor="none" noButtons defaultOpenIndex={tabOpen} tabs={[
                     {
@@ -395,6 +406,15 @@ export class GameEditor extends Component<Props, State>{
                         />
                     },
                     { label: 'Image uploader', content: <ImageAssetTool /> },
+                    {
+                        label: 'Test', content: (
+                            <div>
+                                <h2>TEST GAME</h2>
+                                <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset</button>
+                                <Game {...gameDesign} characterOrders={{}} key={this.state.resetTimeStamp} />
+                            </div>
+                        )
+                    }
                 ]} />
             </section>
 
