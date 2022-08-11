@@ -29,6 +29,7 @@ import layoutStyles from "./editorLayoutStyles.module.css";
 import { EndingEditor } from "./EndingEditor";
 import spriteSheetService from "../../services/spriteSheetService";
 import Game from "../Game";
+import { GameDesignSaveAndLoad } from "./GameDesignSaveAndLoad";
 
 
 const usePrebuiltGame = false
@@ -286,8 +287,15 @@ export class GameEditor extends Component<Props, State>{
 
             <nav className={layoutStyles.leftNav}>
                 <h2>{gameDesign.id}</h2>
+
+                <GameDesignSaveAndLoad
+                    gameDesign={gameDesign}
+                    loadNewGame={this.loadNewGame}
+                />
+
+                <hr />
+
                 <TreeMenu folders={folders}
-                    
                     folderClick={(folderId) => {
                         const folderIndex = tabs.indexOf(folderId);
                         this.setState({ tabOpen: folderIndex, ...this.noOpenItemsState })
@@ -326,6 +334,8 @@ export class GameEditor extends Component<Props, State>{
                         this.setState(modification)
                     }}
                 />
+
+                <hr />
 
                 <div>
                     <button onClick={() => this.setState({ tabOpen: tabs.indexOf("test") })}>Test Game</button>
