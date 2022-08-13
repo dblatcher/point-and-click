@@ -247,6 +247,18 @@ export default class Game extends Component<GameProps, GameState> {
         }))
 
         return (<>
+            {showDebugLog && (
+                <DebugLog
+                    condition={{
+                        verbs,
+                        sequences: this.props.sequences,
+                        sprites: this.props.sprites,
+                        spriteSheets: this.props.spriteSheets,
+                        endings: this.props.endings,
+                        ...this.state,
+                    }}
+                    log={this.state.debugLog} />
+            )}
             <main>
                 {!!save &&
                     <button onClick={() => { save(this.saveData) }}>SAVE</button>
@@ -304,18 +316,6 @@ export default class Game extends Component<GameProps, GameState> {
                     />
                 </>}
             </main>
-            {showDebugLog && (
-                <DebugLog
-                    condition={{
-                        verbs,
-                        sequences: this.props.sequences,
-                        sprites: this.props.sprites,
-                        spriteSheets: this.props.spriteSheets,
-                        endings: this.props.endings,
-                        ...this.state,
-                    }}
-                    log={this.state.debugLog} />
-            )}
         </>
         )
     }

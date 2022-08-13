@@ -32,7 +32,7 @@ import Game from "../Game";
 import { GameDesignSaveAndLoad } from "./GameDesignSaveAndLoad";
 
 
-const usePrebuiltGame = false
+const usePrebuiltGame = true
 if (usePrebuiltGame) {
     populateServicesForPreBuiltGame()
 }
@@ -419,8 +419,8 @@ export class GameEditor extends Component<Props, State>{
                     {
                         label: 'Test', content: (
                             <div>
-                                <h2>TEST GAME</h2>
-                                <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset</button>
+                                <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset game test</button>
+                                <hr />
                                 <Game key={this.state.resetTimeStamp}
                                     {...gameDesign} characterOrders={{}}
                                     showDebugLog={true} />
@@ -430,6 +430,6 @@ export class GameEditor extends Component<Props, State>{
                 ]} />
             </section>
 
-        </main>
+        </main >
     }
 }
