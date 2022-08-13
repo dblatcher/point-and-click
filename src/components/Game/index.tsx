@@ -16,12 +16,14 @@ import { Sprite } from "src/lib/Sprite";
 import { ConversationMenu } from "../ConversationMenu";
 import { handleConversationChoice } from "./handleConversationChoice";
 import { EndingScreen } from "../EndingScreen";
+import { DebugLog, makeDebugEntry, type LogEntry } from "../DebugLog";
 
 
 export type GameProps = Readonly<{
     save?: { (saveDate: GameData): void };
     reset?: { (): void };
     load?: { (): void };
+    showDebugLog?: boolean;
 } & GameCondition>
 
 export type GameState = GameData & {
@@ -32,6 +34,8 @@ export type GameState = GameData & {
     currentVerbId: string;
     currentItemId?: string;
     hoverTarget?: CommandTarget;
+
+    debugLog: LogEntry[];
 }
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
@@ -86,6 +90,7 @@ export default class Game extends Component<GameProps, GameState> {
             characterOrders: props.characterOrders || {},
             conversations,
             currentConversationId: props.currentConversationId,
+            debugLog: [makeDebugEntry("Running!")]
         }
     }
 
@@ -222,7 +227,7 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     render() {
-        const { verbs = [], save, reset, load } = this.props
+        const { verbs = [], save, reset, load, showDebugLog } = this.props
         const { viewAngle, isPaused,
             characters, currentVerbId, currentItemId, items,
             characterOrders, sequenceRunning, hoverTarget
@@ -241,7 +246,7 @@ export default class Game extends Component<GameProps, GameState> {
             clickHandler: data.type == 'character' && data.isPlayer ? undefined : this.handleTargetClick
         }))
 
-        return (
+        return (<>
             <main>
                 {!!save &&
                     <button onClick={() => { save(this.saveData) }}>SAVE</button>
@@ -299,6 +304,19 @@ export default class Game extends Component<GameProps, GameState> {
                     />
                 </>}
             </main>
+            {showDebugLog && (
+                <DebugLog
+                    condition={{
+                        verbs,
+                        sequences: this.props.sequences,
+                        sprites: this.props.sprites,
+                        spriteSheets: this.props.spriteSheets,
+                        endings: this.props.endings,
+                        ...this.state,
+                    }}
+                    log={this.state.debugLog} />
+            )}
+        </>
         )
     }
 }

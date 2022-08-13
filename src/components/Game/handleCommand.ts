@@ -1,6 +1,7 @@
 import { GameProps, GameState } from ".";
 import { Command, Interaction, RoomData } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
+import { makeDebugEntry } from "../DebugLog";
 
 function matchInteraction(
     command: Command,
@@ -39,6 +40,9 @@ function doDefaultResponse(command: Command, state: GameState): GameState {
     return state
 }
 
+const describeCommand = (command: Command): string => `COMMAND: ${command.verb.id}, ${command.target.id} [${command.item?.id}]`
+const describeConsequences = (interaction: Interaction): string => `CONSEQUENCES: ${interaction.consequences?.map(_=>_.type).join()}]`
+
 function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): GameState {
     const { hoverTarget } = state
     if (!hoverTarget) {
@@ -64,15 +68,17 @@ function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): Game
 export function handleCommand(command: Command, props: GameProps): { (state: GameState): Partial<GameState> } {
 
     return (state): GameState => {
+        const { currentRoomId, rooms, debugLog } = state
 
-        const { currentRoomId, rooms } = state
         const currentRoom = rooms.find(_ => _.id === currentRoomId)
         const matchingInteraction = matchInteraction(command, currentRoom, state.interactions)
 
         if (matchingInteraction) {
+            debugLog.push(makeDebugEntry(`${describeCommand(command)}: ${describeConsequences(matchingInteraction)}`))
             const execute = makeConsequenceExecutor(state, props)
             matchingInteraction.consequences.forEach(execute)
         } else {
+            debugLog.push(makeDebugEntry(`${describeCommand(command)}: No match`))
             doDefaultResponse(command, state)
         }
 

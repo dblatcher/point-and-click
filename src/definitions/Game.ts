@@ -39,6 +39,10 @@ export const GameDataSchema = GameContentsDataSchema.and(GameHappeningsSchema)
 const GameConditionSchema = GameContentsDataSchema.and(GameHappeningsSchema).and(FixedGameInfoSchema)
 export const GameDesignSchema = GameContentsDataSchema.and(FixedGameInfoSchema)
 
+//                  GameData GameCondition GameDesign
+// GameHappenings  |   x    |   x        |  
+// GameContentsData|   x    |   x        |  x
+// FixedGameInfo   |        |   x        |  x
 
 export type GameData = z.infer<typeof GameDataSchema>
 export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>

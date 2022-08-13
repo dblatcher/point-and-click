@@ -346,7 +346,6 @@ export class GameEditor extends Component<Props, State>{
                     {
                         label: 'main', content: <Overview
                             gameDesign={gameDesign}
-                            loadNewGame={this.loadNewGame}
                             edit={(property, value) => { this.performUpdate(property, value) }} />
                     },
                     {
@@ -422,7 +421,9 @@ export class GameEditor extends Component<Props, State>{
                             <div>
                                 <h2>TEST GAME</h2>
                                 <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset</button>
-                                <Game {...gameDesign} characterOrders={{}} key={this.state.resetTimeStamp} />
+                                <Game key={this.state.resetTimeStamp}
+                                    {...gameDesign} characterOrders={{}}
+                                    showDebugLog={true} />
                             </div>
                         )
                     }
