@@ -34,9 +34,9 @@ export const DebugLog: FunctionalComponent<Props> = ({
     const charactersInRoom = condition.characters.filter(_ => _.room === condition.currentRoomId)
 
     const describeOrder = (order?: Order): [string, string] => {
-        if (!order) { return ["[no order]", ""] }
+        if (!order) { return ["", ""] }
         const [currentStep] = order.steps
-        return [order.type, currentStep?.animation || '[no animation]']
+        return [order.type, currentStep?.animation || ""]
     }
     const getOrderDescrition = (characterId: string): [string, string] => {
         const { sequenceRunning, characterOrders } = condition
@@ -64,7 +64,7 @@ export const DebugLog: FunctionalComponent<Props> = ({
                     <p>room:{condition.currentRoomId}</p>
                     <p>sequence:{condition.sequenceRunning?.id}</p>
 
-                    <table>
+                    <table className={styles.characterTable}>
                         <thead>
                             <tr>
                                 <th />
