@@ -6,7 +6,7 @@
 }
 
 .loglist {
-    flex: 3;
+    flex: 2;
     margin: 0;
     resize: vertical;
     overflow-y: scroll;
