@@ -113,6 +113,14 @@ export class Preview extends Component<Props, State>{
         return [];
     }
 
+    get walkablesToMark(): number[] {
+        const { clickEffect } = this.props
+        if (clickEffect?.type === 'POLYGON_POINT_WALKABLE') {
+            return [clickEffect.index]
+        }
+        return [];
+    }
+
     render() {
         const {
             viewAngle, maxWidth, showObstacleAreas, highlightHotspots,
@@ -137,6 +145,7 @@ export class Preview extends Component<Props, State>{
                         handleRoomClick={processClick}
                         markHotspotVertices={this.hotspotsToMark}
                         markObstacleVertices={this.obstaclesToMark}
+                        markWalkableVertices={this.walkablesToMark}
                         contents={showCharacter ? [
                             {
                                 data: testCharacter,

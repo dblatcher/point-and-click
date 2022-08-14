@@ -26,6 +26,7 @@ interface Props {
     obstacleCells?: CellMatrix;
     markHotspotVertices?: number[];
     markObstacleVertices?: number[];
+    markWalkableVertices?: number[];
     showCaption?: boolean;
     isPaused?: boolean;
     contents?: RoomContentItem[];
@@ -47,6 +48,7 @@ export const Room: FunctionComponent<Props> = ({
     obstacleCells,
     markHotspotVertices = [],
     markObstacleVertices = [],
+    markWalkableVertices = [],
     showCaption = false,
     isPaused = false,
     contents = [],
@@ -122,7 +124,7 @@ export const Room: FunctionComponent<Props> = ({
                         zone={zone}
                         x={zone.x + left}
                         y={data.height - zone.y}
-                    // markVertices={markObstacleVertices.includes(index)}
+                        markVertices={markWalkableVertices.includes(index)}
                     />
                 })}
 
