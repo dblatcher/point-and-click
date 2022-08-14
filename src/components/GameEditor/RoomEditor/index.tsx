@@ -411,8 +411,14 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 />
             </div>
 
-            <div className={styles.container}>
+            <div className={styles.rowTopLeft}>
+                <Preview
+                    roomData={this.state}
+                    clickEffect={clickEffect}
+                    handleRoomClick={this.handleRoomClick} />
+            </div>
 
+            <div className={styles.container}>
                 <section style={{ flexBasis: '10rem' }}>
                     <TreeMenu
                         folders={this.menuFolders}
@@ -509,10 +515,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         ]} />
                 </section>
 
-                <Preview
-                    roomData={this.state}
-                    clickEffect={clickEffect}
-                    handleRoomClick={this.handleRoomClick} />
             </div>
         </article>
     }

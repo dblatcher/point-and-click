@@ -19,7 +19,7 @@ type BooleanState = {
 
 type State = BooleanState & {
     viewAngle: number;
-    maxWidth: number;
+    maxHeight: number;
     markerPosition: Point;
     testCharacter: CharacterData;
 };
@@ -57,7 +57,7 @@ export class Preview extends Component<Props, State>{
         super(props)
         this.state = {
             viewAngle: 0,
-            maxWidth: 400,
+            maxHeight: 400,
             showObstacleAreas: true,
             highlightHotspots: true,
             showScaleLines: true,
@@ -123,7 +123,7 @@ export class Preview extends Component<Props, State>{
 
     render() {
         const {
-            viewAngle, maxWidth, showObstacleAreas, highlightHotspots,
+            viewAngle, maxHeight, showObstacleAreas, highlightHotspots,
             showMarker, markerPosition, testCharacter, showCharacter,
             showScaleLines,
         } = this.state
@@ -136,49 +136,16 @@ export class Preview extends Component<Props, State>{
 
         return (
             <>
-                <section style={{ position: 'relative' }}>
-                    <Room data={roomData} noResize
-                        showObstacleAreas={showObstacleAreas}
-                        maxWidth={maxWidth} maxHeight={1000}
-                        viewAngle={viewAngle}
-                        highlightHotspots={highlightHotspots}
-                        handleRoomClick={processClick}
-                        markHotspotVertices={this.hotspotsToMark}
-                        markObstacleVertices={this.obstaclesToMark}
-                        markWalkableVertices={this.walkablesToMark}
-                        contents={showCharacter ? [
-                            {
-                                data: testCharacter,
-                                orders: [],
-                            }
-                        ] : undefined}
-                    >
-                        {showMarker && (
-                            <MarkerShape roomData={roomData}
-                                height={50}
-                                viewAngle={viewAngle}
-                                {...markerPosition}
-                                color={'red'} />
-                        )}
-
-                        {showScaleLines && scaling.map((yAndScale, index) => (
-                            <HorizontalLine key={index}
-                                y={yAndScale[0]}
-                                text={`scale: ${yAndScale[1]}`}
-                                roomData={roomData} />
-                        ))}
-                    </Room>
-                    <p style={{ position: 'absolute', right: 0, top:0, margin:"0 1em" }}>{getClickCaption(clickEffect)}</p>
-                </section>
                 <section style={{
                     display: 'flex',
+                    flexDirection: 'column',
                 }}>
                     <fieldset>
                         <div>
-                            <label>View width</label>
-                            <input type='range' value={maxWidth} max={1000} min={100} step={50}
-                                onChange={(event) => this.setState({ maxWidth: eventToNumber(event) })} />
-                            <span>{maxWidth}</span>
+                            <label>View height</label>
+                            <input type='range' value={maxHeight} max={1000} min={100} step={50}
+                                onChange={(event) => this.setState({ maxHeight: eventToNumber(event) })} />
+                            <span>{maxHeight}</span>
                         </div>
 
                         <div>
@@ -255,7 +222,40 @@ export class Preview extends Component<Props, State>{
 
                     </fieldset>
                 </section>
+                <section style={{ position: 'relative' }}>
+                    <Room data={roomData} noResize
+                        showObstacleAreas={showObstacleAreas}
+                        maxWidth={1000} maxHeight={maxHeight}
+                        viewAngle={viewAngle}
+                        highlightHotspots={highlightHotspots}
+                        handleRoomClick={processClick}
+                        markHotspotVertices={this.hotspotsToMark}
+                        markObstacleVertices={this.obstaclesToMark}
+                        markWalkableVertices={this.walkablesToMark}
+                        contents={showCharacter ? [
+                            {
+                                data: testCharacter,
+                                orders: [],
+                            }
+                        ] : undefined}
+                    >
+                        {showMarker && (
+                            <MarkerShape roomData={roomData}
+                                height={50}
+                                viewAngle={viewAngle}
+                                {...markerPosition}
+                                color={'red'} />
+                        )}
 
+                        {showScaleLines && scaling.map((yAndScale, index) => (
+                            <HorizontalLine key={index}
+                                y={yAndScale[0]}
+                                text={`scale: ${yAndScale[1]}`}
+                                roomData={roomData} />
+                        ))}
+                    </Room>
+                    <p style={{ position: 'absolute', right: 0, top: 0, margin: "0 1em" }}>{getClickCaption(clickEffect)}</p>
+                </section>
             </>
         )
     }
