@@ -8,12 +8,13 @@ import { eventToNumber, eventToString } from "../../../lib/util";
 import styles from '../editorStyles.module.css';
 
 
+type ValidType = 'hotspot' | 'obstacle' | 'walkable';
 
 interface Props {
     hotspot: HotspotZone;
     index: number;
-    change: { (index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type?: string): void };
-    remove: { (index: number, type?: string): void };
+    change: { (index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type: ValidType): void };
+    remove: { (index: number, type: ValidType): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
@@ -36,6 +37,7 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
             <ZoneControl
                 zone={hotspot} index={index}
                 setClickEffect={setClickEffect}
+                type='hotspot'
                 change={change}
                 remove={remove} />
         </div>

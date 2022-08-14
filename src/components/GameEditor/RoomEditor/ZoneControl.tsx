@@ -5,16 +5,19 @@ import { HotspotZone, Zone } from "src";
 import { ListEditor } from "../ListEditor";
 import { NumberInput } from "../formControls";
 
+type ValidType = 'hotspot' | 'obstacle' | 'walkable';
+
 interface Props {
     zone: Zone | HotspotZone;
     index: number;
-    remove: { (index: number, type?: string): void };
-    change: { (index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type?: string): void };
+    type: ValidType;
+    remove: { (index: number, type: ValidType): void };
+    change: { (index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type: ValidType): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, change, setClickEffect }: Props) => {
-    const { x, y, circle, rect, polygon, type } = zone
+export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, change, setClickEffect,type }: Props) => {
+    const { x, y, circle, rect, polygon } = zone
 
     function changeRect(value: number, coor: 'x' | 'y'): void {
         if (!rect) { return }

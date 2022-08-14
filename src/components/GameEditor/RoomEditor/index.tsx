@@ -10,7 +10,7 @@ import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect"
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../../lib/clone";
-import { eventToString, getShift, locateClickInWorld } from "../../../lib/util";
+import { eventToString, getShift, listIds, locateClickInWorld } from "../../../lib/util";
 import { TabMenu } from "../../TabMenu";
 import { uploadJsonData } from "../../../lib/files";
 import styles from '../editorStyles.module.css';
@@ -19,10 +19,11 @@ import { getBlankRoom } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
 import { RoomDataSchema } from "../../../definitions/RoomData";
 import { ListEditor } from "../ListEditor";
-
+import { Folder, TreeMenu } from "../TreeMenu";
 
 type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
+    mainTab: number;
 };
 
 type RoomEditorProps = {
@@ -54,6 +55,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const initialState = props.data ? cloneData(props.data) : getBlankRoom()
         this.state = {
             ...initialState,
+            mainTab: 0,
         }
 
         this.changeProperty = this.changeProperty.bind(this)
@@ -69,8 +71,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     get currentData(): RoomData {
-        const roomData = cloneData(this.state) as RoomEditorState;
+        const roomData = cloneData(this.state) as RoomData & Partial<RoomEditorState>;
         delete roomData.clickEffect
+        delete roomData.mainTab
         return roomData
     }
 
@@ -139,19 +142,21 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         return zone
     }
 
-    removeZone(index: number, type?: string) {
-        const { obstacleAreas = [], hotspots = [] } = this.state
+    removeZone(index: number, type?: 'hotspot' | 'obstacle' | 'walkable') {
+        const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = this.state
         switch (type) {
             case 'hotspot':
                 hotspots.splice(index, 1)
                 break;
-            default:
+            case 'obstacle':
                 obstacleAreas.splice(index, 1)
+            case 'walkable':
+                walkableAreas.splice(index, 1)
         }
-        this.setState({ obstacleAreas, hotspots })
+        this.setState({ obstacleAreas, hotspots, walkableAreas })
     }
-    changeZone(index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type?: string) {
-        const { obstacleAreas = [], hotspots = [] } = this.state
+    changeZone(index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type: 'hotspot' | 'obstacle' | 'walkable') {
+        const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = this.state
 
         function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
             switch (propery) {
@@ -194,10 +199,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     break;
             }
         } else {
-            const zone = obstacleAreas[index]
+            const zone = type == 'obstacle' ? obstacleAreas[index] : walkableAreas[index]
             handleCommonValues(zone)
         }
-        this.setState({ obstacleAreas, hotspots })
+        this.setState({ obstacleAreas, hotspots, walkableAreas })
     }
 
     changeProperty(propery: keyof RoomData, value: unknown): void {
@@ -261,11 +266,63 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
     }
 
+    get menuFolders(): Folder[] {
+        const { obstacleAreas = [], walkableAreas = [], hotspots = [], background = [], mainTab } = this.state
+
+        const getShape = (zone: Zone): string => zone.polygon ? 'polygon' : zone.circle ? 'circle' : zone.rect ? 'rect' : '??';
+        const obstacleEntries = obstacleAreas.map((obstacle, index) => ({
+            label: `#${index} ${getShape(obstacle)}`,
+            data: {
+                id: index.toString()
+            }
+        }))
+        const walkableEntries = walkableAreas.map((walkable, index) => ({
+            label: `#${index} ${getShape(walkable)}`,
+            data: {
+                id: index.toString()
+            }
+        }))
+        const hotspotEntries = hotspots.map((hotspot) => ({
+            label: hotspot.id,
+            data: hotspot
+        }))
+
+        return [
+            {
+                id: 'scaling',
+                open: mainTab === 0,
+            },
+            {
+                id: 'backgrounds',
+                label: `backgrounds [${background.length}]`,
+                open: mainTab === 1,
+            },
+            {
+                id: 'obstacles',
+                label: `obstacles [${obstacleAreas.length}]`,
+                open: mainTab === 2,
+                entries: obstacleEntries
+            },
+            {
+                id: 'walkables',
+                label: `walkables [${walkableAreas.length}]`,
+                open: mainTab === 3,
+                entries: walkableEntries
+            },
+            {
+                id: 'hotspots',
+                label: `hotspots [${hotspots.length}]`,
+                open: mainTab === 4,
+                entries: hotspotEntries
+            },
+        ]
+    }
+
     render() {
         const {
-            id, background, height, width, frameWidth, obstacleAreas = [], hotspots = [],
+            id, background, height, width, frameWidth, obstacleAreas = [], hotspots = [], walkableAreas = [],
             scaling = [],
-            clickEffect
+            clickEffect, mainTab
         } = this.state
 
         const { existingRoomIds = [] } = this.props
@@ -311,81 +368,121 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             </div>
 
             <div className={styles.container}>
+
+                <section style={{ flexBasis: '10rem' }}>
+                    <TreeMenu
+                        folders={this.menuFolders}
+                        folderClick={(folderId) => {
+                            this.setState({ mainTab: listIds(this.menuFolders).indexOf(folderId) })
+                        }}
+                        entryClick={(folderId, data) => { console.log(folderId, data) }}
+                    />
+                </section>
+
                 <section style={{ flexBasis: '20rem' }}>
-                    <TabMenu tabs={[
-                        {
-                            label: 'Scaling', content: (
-                                <ScalingControl
-                                    change={(scaling: ScaleLevel) => { this.setState({ scaling }) }}
-                                    scaling={scaling}
-                                    height={this.state.height} />
-                            )
-                        },
-                        {
-                            label: 'Background', content: (<>
-                                <ListEditor
-                                    list={background}
-                                    mutateList={(background) => { this.setState({ background }) }}
-                                    describeItem={(layer, index) => (
-                                        <BackgroundLayerControl index={index}
-                                            imageAssets={imageAssets}
-                                            layer={layer}
-                                            change={this.changeBackground} />
-                                    )}
-                                />
-                                <hr />
-                                <BackgroundLayerForm
-                                    imageAssets={imageAssets}
-                                    addNewLayer={this.addBackground} />
-                            </>)
-                        },
-                        {
-                            label: 'Obstacles', content: (<>
-                                <div>
-                                    <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'circle' })}>New circle</button>
-                                    <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'rect' })}>New rect</button>
-                                    <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'polygon' })}>New polygon</button>
-                                </div>
-                                <hr />
-                                <TabMenu defaultOpenIndex={obstacleAreas.length - 1} tabs={
-                                    obstacleAreas.map((obstacle, index) => {
-                                        return {
-                                            label: `obstacle #${index}`, content: (
-                                                <ZoneControl
-                                                    zone={obstacle} index={index}
-                                                    setClickEffect={this.setClickEffect}
-                                                    change={this.changeZone}
-                                                    remove={this.removeZone} />
-                                            )
-                                        }
-                                    })
-                                }
-                                />
-                            </>)
-                        },
-                        {
-                            label: 'Hotspots', content: (
-                                <>
+                    <TabMenu
+                        noButtons={true}
+                        defaultOpenIndex={mainTab}
+                        tabs={[
+                            {
+                                label: 'Scaling', content: (
+                                    <ScalingControl
+                                        change={(scaling: ScaleLevel) => { this.setState({ scaling }) }}
+                                        scaling={scaling}
+                                        height={this.state.height} />
+                                )
+                            },
+                            {
+                                label: 'Background', content: (<>
+                                    <ListEditor
+                                        list={background}
+                                        mutateList={(background) => { this.setState({ background }) }}
+                                        describeItem={(layer, index) => (
+                                            <BackgroundLayerControl index={index}
+                                                imageAssets={imageAssets}
+                                                layer={layer}
+                                                change={this.changeBackground} />
+                                        )}
+                                    />
+                                    <hr />
+                                    <BackgroundLayerForm
+                                        imageAssets={imageAssets}
+                                        addNewLayer={this.addBackground} />
+                                </>)
+                            },
+                            {
+                                label: 'Obstacles', content: (<>
                                     <div>
-                                        <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'circle' })}>New circle</button>
-                                        <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'rect' })}>New rect</button>
-                                        <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'polygon' })}>New polygon</button>
+                                        <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'circle' })}>New circle</button>
+                                        <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'rect' })}>New rect</button>
+                                        <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'polygon' })}>New polygon</button>
                                     </div>
                                     <hr />
-                                    <TabMenu defaultOpenIndex={hotspots.length - 1} tabs={hotspots.map((hotspot, index) => {
-                                        return {
-                                            label: hotspot.id, content: (
-                                                <HotspotControl hotspot={hotspot} index={index}
-                                                    setClickEffect={this.setClickEffect}
-                                                    change={this.changeZone}
-                                                    remove={this.removeZone} />
-                                            )
-                                        }
-                                    })} />
-                                </>
-                            )
-                        }
-                    ]} />
+                                    <TabMenu defaultOpenIndex={obstacleAreas.length - 1} tabs={
+                                        obstacleAreas.map((obstacle, index) => {
+                                            return {
+                                                label: `obstacle #${index}`, content: (
+                                                    <ZoneControl
+                                                        zone={obstacle} index={index}
+                                                        type='obstacle'
+                                                        setClickEffect={this.setClickEffect}
+                                                        change={this.changeZone}
+                                                        remove={this.removeZone} />
+                                                )
+                                            }
+                                        })
+                                    }
+                                    />
+                                </>)
+                            },
+                            {
+                                label: 'Walkables', content: (<>
+                                    <div>
+                                        {/* <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'circle' })}>New circle</button> */}
+                                        {/* <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'rect' })}>New rect</button> */}
+                                        {/* <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'polygon' })}>New polygon</button> */}
+                                    </div>
+                                    <hr />
+                                    <TabMenu defaultOpenIndex={walkableAreas.length - 1} tabs={
+                                        walkableAreas.map((walkable, index) => {
+                                            return {
+                                                label: `walkable #${index}`, content: (
+                                                    <ZoneControl
+                                                        zone={walkable} index={index}
+                                                        setClickEffect={this.setClickEffect}
+                                                        type='walkable'
+                                                        change={this.changeZone}
+                                                        remove={this.removeZone} />
+                                                )
+                                            }
+                                        })
+                                    }
+                                    />
+                                </>)
+                            },
+                            {
+                                label: 'Hotspots', content: (
+                                    <>
+                                        <div>
+                                            <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'circle' })}>New circle</button>
+                                            <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'rect' })}>New rect</button>
+                                            <button onClick={() => this.setClickEffect({ type: 'HOTSPOT', shape: 'polygon' })}>New polygon</button>
+                                        </div>
+                                        <hr />
+                                        <TabMenu defaultOpenIndex={hotspots.length - 1} tabs={hotspots.map((hotspot, index) => {
+                                            return {
+                                                label: hotspot.id, content: (
+                                                    <HotspotControl hotspot={hotspot} index={index}
+                                                        setClickEffect={this.setClickEffect}
+                                                        change={this.changeZone}
+                                                        remove={this.removeZone} />
+                                                )
+                                            }
+                                        })} />
+                                    </>
+                                )
+                            }
+                        ]} />
                 </section>
 
                 <Preview
