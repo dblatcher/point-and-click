@@ -17,22 +17,26 @@
 }
 
 .hotspot {
-    fill: rgba(0, 243, 8, 0);
+    fill: rgba(0, 8, 245, 0);
     transition: fill .5s;
     pointer-events: all;
 }
 
 .hotspot:hover {
-    fill: rgba(0, 243, 8, 0.25);
+    fill: rgba(0, 8, 245, 0.25);
     stroke: white;
     stroke-dasharray: 1,1;
 }
 
 .highlightedHotspot {
     stroke: white;
-    fill: rgba(0, 243, 8, 0.5);
+    fill: rgba(0, 8, 245, 0.5);
 }
 
 .obstacleArea {
-    fill: rgba(255, 100, 255, .8);
+    fill: rgba(255, 100, 100, .8);
+}
+
+.walkableArea {
+    fill: rgba(100, 255, 100, .8);
 }

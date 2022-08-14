@@ -53,7 +53,7 @@ export const Room: FunctionComponent<Props> = ({
     forPreview = false,
     children,
 }: Props) => {
-    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [] } = data;
+    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [] } = data;
     const figureRef = useRef<HTMLElement>(null)
     const [parentWidth, setParentWidth] = useState(Infinity)
     const [parentHeight, setParentHeight] = useState(Infinity)
@@ -112,6 +112,19 @@ export const Room: FunctionComponent<Props> = ({
                         roomData={data}
                     />
                 )}
+
+                {showObstacleAreas && walkableAreas.map((zone, index) => {
+                    const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
+                    const left = center - data.width / 2
+                    return <ZoneSvg key={index}
+                        className={styles.walkableArea}
+                        stopPropagation={false}
+                        zone={zone}
+                        x={zone.x + left}
+                        y={data.height - zone.y}
+                    // markVertices={markObstacleVertices.includes(index)}
+                    />
+                })}
 
                 {showObstacleAreas && obstacleAreas.map((zone, index) => {
                     const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
