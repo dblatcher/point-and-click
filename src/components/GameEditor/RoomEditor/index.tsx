@@ -97,52 +97,56 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 y: this.state.height - roundedPoint.y
             }
 
+        const getNextClickEffect = (clickEffect: ClickEffect): ClickEffect | undefined => {
+            switch (clickEffect.type) {
+                case 'OBSTACLE':
+                    return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined
+                case 'WALKABLE':
+                    return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_WALKABLE', index: walkableAreas.length - 1 } : undefined
+                case 'HOTSPOT':
+                    return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: walkableAreas.length - 1 } : undefined
+                default:
+                    return clickEffect
+            }
+        }
+
         switch (clickEffect.type) {
             case 'OBSTACLE':
                 obstacleAreas.push(makeNewZone(targetPoint, clickEffect))
-                return this.setState({
-                    obstacleAreas,
-                    clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined
-                })
-
+                break;
             case 'WALKABLE':
                 walkableAreas.push(makeNewZone(targetPoint, clickEffect))
-                return this.setState({
-                    walkableAreas,
-                    clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_WALKABLE', index: walkableAreas.length - 1 } : undefined
-                })
-
+                break;
             case 'HOTSPOT':
                 hotspots.push(this.makeNewHotspot(targetPoint, clickEffect, hotspots.length + 1, viewAngle))
-                return this.setState({
-                    hotspots,
-                    clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1 } : undefined
-                })
-
+                break;
             case 'POLYGON_POINT_OBSTACLE':
                 const obstacle = obstacleAreas[clickEffect.index]
                 if (!obstacle?.polygon) { return }
                 obstacle.polygon.push([
                     targetPoint.x - obstacle.x, targetPoint.y - obstacle.y
                 ])
-                return this.setState({ obstacleAreas })
-
+                break;
             case 'POLYGON_POINT_WALKABLE':
                 const walkable = walkableAreas[clickEffect.index]
                 if (!walkable?.polygon) { return }
                 walkable.polygon.push([
                     targetPoint.x - walkable.x, targetPoint.y - walkable.y
                 ])
-                return this.setState({ walkableAreas })
-
+                break;
             case 'POLYGON_POINT_HOTSPOT':
                 const hotspot = hotspots[clickEffect.index]
                 if (!hotspot?.polygon) { return }
                 hotspot.polygon.push([
                     targetPoint.x - hotspot.x, targetPoint.y - hotspot.y
                 ])
-                return this.setState({ hotspots })
+                break;
         }
+
+        this.setState({
+            hotspots, obstacleAreas, walkableAreas,
+            clickEffect: getNextClickEffect(clickEffect),
+        })
     }
 
     makeNewHotspot(point: Point, effect: NewHotspotEffect, idNumber: number, viewAngle: number): HotspotZone {
