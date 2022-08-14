@@ -2,6 +2,7 @@ import { cellSize, GameState } from ".";
 import { MoveOrder } from "src";
 import { Point } from "../../lib/pathfinding/geometry";
 import { findPath } from "../../lib/pathfinding/pathfind";
+import { makeDebugEntry } from "../DebugLog";
 
 export function issueMoveOrder(
     destination: Point,
@@ -12,12 +13,13 @@ export function issueMoveOrder(
 
     return (state: GameState): Partial<GameState> => {
 
-        const { cellMatrix, characters } = state
+        const { cellMatrix, characters, debugLog } = state
         const character = characters.find(_ => _.id === characterId)
         if (!character || !cellMatrix) { return {} }
 
         const steps = ignoreObstacles ? [destination] : findPath({ x: character.x, y: character.y }, destination, cellMatrix, cellSize)
         const newOrder: MoveOrder = { type: 'move', steps, pathIsSet: true }
+        debugLog.push(makeDebugEntry(`move: [${destination.x},${destination.y}], steps:${steps.length}`))
 
         if (!state.characterOrders[character.id]) {
             state.characterOrders[character.id] = []
@@ -28,6 +30,6 @@ export function issueMoveOrder(
             state.characterOrders[character.id] = [newOrder] // clears any existing orders, even if the point was unreachable
         }
 
-        return { characters }
+        return { characters, debugLog }
     }
 }

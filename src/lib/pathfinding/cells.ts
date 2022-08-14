@@ -29,7 +29,7 @@ function isCellBlocked(
         const isInWalkable = isPointInsideAny(cellCenter, walkableZones)
             && isPointInsideAny(higherPoint, walkableZones)
 
-        return !isInWalkable || isInObstable
+        return isInObstable || !isInWalkable
     }
 
     return isInObstable
@@ -80,7 +80,6 @@ function getObstacleCircles(obstacleAreas: Zone[]): Circle[] {
 
 export function generateCellMatrix(roomData: RoomData, cellSize: number) {
     const { width, height, obstacleAreas = [], walkableAreas = [] } = roomData
-
     const walkable = walkableAreas.length > 0 ? {
         polygons: getObstaclePolygons(walkableAreas),
         rectangles: getObstacleRectangle(walkableAreas),
