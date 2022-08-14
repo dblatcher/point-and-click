@@ -5,6 +5,11 @@ export type NewObstableEffect = {
     shape: SupportedZoneShape;
 }
 
+export type NewWalkableEffect = {
+    type: 'WALKABLE';
+    shape: SupportedZoneShape;
+}
+
 export type NewHotspotEffect = {
     type: 'HOTSPOT';
     shape: SupportedZoneShape;
@@ -15,9 +20,19 @@ export type NewObstaclePolygonPointEffect = {
     index: number;
 }
 
+export type NewWalkablePolygonPointEffect = {
+    type: 'POLYGON_POINT_WALKABLE';
+    index: number;
+}
+
 export type NewHotspotPolygonPointEffect = {
     type: 'POLYGON_POINT_HOTSPOT';
     index: number;
 }
 
-export type ClickEffect = NewObstableEffect | NewObstaclePolygonPointEffect | NewHotspotEffect | NewHotspotPolygonPointEffect
+export type ClickEffect = NewObstableEffect |
+    NewObstaclePolygonPointEffect |
+    NewHotspotEffect |
+    NewHotspotPolygonPointEffect |
+    NewWalkableEffect |
+    NewWalkablePolygonPointEffect

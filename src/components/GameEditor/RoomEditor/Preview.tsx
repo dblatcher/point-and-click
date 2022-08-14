@@ -38,6 +38,10 @@ function getClickCaption(clickEffect?: ClickEffect): string {
             return `Click to add new ${clickEffect.shape} obstable`
         case 'POLYGON_POINT_OBSTACLE':
             return `Click to add new point`
+        case 'WALKABLE':
+            return `Click to add new ${clickEffect.shape} walkable`
+        case 'POLYGON_POINT_WALKABLE':
+            return `Click to add new point`
         case 'HOTSPOT':
             return `Click to add new ${clickEffect.shape} hotspot`
         case 'POLYGON_POINT_HOTSPOT':

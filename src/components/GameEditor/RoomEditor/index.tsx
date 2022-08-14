@@ -6,7 +6,7 @@ import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ZoneControl } from "./ZoneControl";
 import { HotspotControl } from "./HotspotControl";
 import { NumberInput, Warning } from "../formControls";
-import { ClickEffect, NewHotspotEffect, NewObstableEffect } from "./ClickEffect";
+import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../../lib/clone";
@@ -34,7 +34,7 @@ type RoomEditorProps = {
 
 const defaultParallax = 1;
 
-function makeNewZone(point: Point, effect: NewObstableEffect): Zone {
+function makeNewZone(point: Point, effect: NewObstableEffect | NewWalkableEffect): Zone {
 
     const zone: Zone = { x: point.x, y: point.y }
     switch (effect.shape) {
@@ -82,14 +82,14 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     handleRoomClick(pointClicked: { x: number; y: number }, viewAngle: number) {
-        const { clickEffect, obstacleAreas = [], hotspots = [] } = this.state
+        const { clickEffect, obstacleAreas = [], hotspots = [], walkableAreas = [] } = this.state
         if (!clickEffect) { return }
         const roundedPoint = {
             x: Math.round(pointClicked.x),
             y: Math.round(pointClicked.y),
         }
 
-        const targetPoint = clickEffect.type === 'OBSTACLE' || clickEffect.type === 'POLYGON_POINT_OBSTACLE'
+        const targetPoint = ['OBSTACLE', 'POLYGON_POINT_OBSTACLE', 'WALKABLE', 'POLYGON_POINT_WALKABLE'].includes(clickEffect.type)
             ? locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngle, this.state)
             : {
                 x: roundedPoint.x - getShift(viewAngle, defaultParallax, this.state),
@@ -102,6 +102,13 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 return this.setState({
                     obstacleAreas,
                     clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined
+                })
+
+            case 'WALKABLE':
+                walkableAreas.push(makeNewZone(targetPoint, clickEffect))
+                return this.setState({
+                    walkableAreas,
+                    clickEffect: clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_WALKABLE', index: walkableAreas.length - 1 } : undefined
                 })
 
             case 'HOTSPOT':
@@ -118,6 +125,14 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     targetPoint.x - obstacle.x, targetPoint.y - obstacle.y
                 ])
                 return this.setState({ obstacleAreas })
+
+            case 'POLYGON_POINT_WALKABLE':
+                const walkable = walkableAreas[clickEffect.index]
+                if (!walkable?.polygon) { return }
+                walkable.polygon.push([
+                    targetPoint.x - walkable.x, targetPoint.y - walkable.y
+                ])
+                return this.setState({ walkableAreas })
 
             case 'POLYGON_POINT_HOTSPOT':
                 const hotspot = hotspots[clickEffect.index]
@@ -438,9 +453,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                             {
                                 label: 'Walkables', content: (<>
                                     <div>
-                                        {/* <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'circle' })}>New circle</button> */}
-                                        {/* <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'rect' })}>New rect</button> */}
-                                        {/* <button onClick={() => this.setClickEffect({ type: 'OBSTACLE', shape: 'polygon' })}>New polygon</button> */}
+                                        <button onClick={() => this.setClickEffect({ type: 'WALKABLE', shape: 'circle' })}>New circle</button>
+                                        <button onClick={() => this.setClickEffect({ type: 'WALKABLE', shape: 'rect' })}>New rect</button>
+                                        <button onClick={() => this.setClickEffect({ type: 'WALKABLE', shape: 'polygon' })}>New polygon</button>
                                     </div>
                                     <hr />
                                     <TabMenu defaultOpenIndex={walkableAreas.length - 1} tabs={
