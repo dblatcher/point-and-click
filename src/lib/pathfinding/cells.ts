@@ -79,9 +79,9 @@ function getObstacleCircles(obstacleAreas: Zone[]): Circle[] {
 }
 
 export function generateCellMatrix(roomData: RoomData, cellSize: number) {
-    const { width, height, obstacleAreas = [], walkableAreas } = roomData
+    const { width, height, obstacleAreas = [], walkableAreas = [] } = roomData
 
-    const walkable = walkableAreas ? {
+    const walkable = walkableAreas.length > 0 ? {
         polygons: getObstaclePolygons(walkableAreas),
         rectangles: getObstacleRectangle(walkableAreas),
         circles: getObstacleCircles(walkableAreas),
