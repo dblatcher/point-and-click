@@ -1,5 +1,5 @@
-import { RoomData } from "../../definitions/RoomData"
-import { Zone } from "../../definitions/Zone"
+import { type RoomData } from "../../definitions/RoomData"
+import { type Zone } from "../../definitions/Zone"
 import { Circle, isPointInsideCircle, isPointInsidePolygon, isPointInsideRectangle, Point, Rectangle } from "./geometry"
 
 type CellMatrix = (0 | 1)[][]
@@ -7,11 +7,10 @@ type CellMatrix = (0 | 1)[][]
 
 export type { CellMatrix }
 
-function isCellObstacle(
+function isCellBlocked(
     rowIndex: number, cellIndex: number, cellSize: number,
-    obstaclePolygons: Point[][],
-    obstacleRectangles: Rectangle[],
-    obstacleCircles: Circle[]
+    obstacleZones: { polygons: Point[][]; rectangles: Rectangle[]; circles: Circle[] },
+    walkableZones: { polygons: Point[][]; rectangles: Rectangle[]; circles: Circle[] } | null,
 ): boolean {
     const cellCenter: Point = {
         x: (cellIndex + .5) * cellSize,
@@ -23,14 +22,24 @@ function isCellObstacle(
         y: cellCenter.y + (cellSize / 10)
     }
 
-    return isPointObstacle(cellCenter, obstaclePolygons, obstacleRectangles, obstacleCircles)
-        && isPointObstacle(higherPoint, obstaclePolygons, obstacleRectangles, obstacleCircles)
+    const isInObstable = isPointInsideAny(cellCenter, obstacleZones)
+        && isPointInsideAny(higherPoint, obstacleZones)
+
+    if (walkableZones) {
+        const isInWalkable = isPointInsideAny(cellCenter, walkableZones)
+            && isPointInsideAny(higherPoint, walkableZones)
+
+        return !isInWalkable || isInObstable
+    }
+
+    return isInObstable
 }
 
-export function isPointObstacle(point: Point, obstaclePolygons: Point[][], obstacleRectangles: Rectangle[], obstacleCircles: Circle[]): boolean {
-    return obstaclePolygons.some(polygon => isPointInsidePolygon(point, polygon))
-        || obstacleRectangles.some(rectangle => isPointInsideRectangle(point, rectangle))
-        || obstacleCircles.some(circle => isPointInsideCircle(point, circle))
+export function isPointInsideAny(point: Point, zones: { polygons: Point[][]; rectangles: Rectangle[]; circles: Circle[] }): boolean {
+    const { polygons, rectangles, circles } = zones;
+    return polygons.some(polygon => isPointInsidePolygon(point, polygon))
+        || rectangles.some(rectangle => isPointInsideRectangle(point, rectangle))
+        || circles.some(circle => isPointInsideCircle(point, circle))
 }
 
 
@@ -70,10 +79,20 @@ function getObstacleCircles(obstacleAreas: Zone[]): Circle[] {
 }
 
 export function generateCellMatrix(roomData: RoomData, cellSize: number) {
-    const { width, height, obstacleAreas = [] } = roomData
-    const obstaclePolygons = getObstaclePolygons(obstacleAreas)
-    const obstacleRectangles = getObstacleRectangle(obstacleAreas)
-    const obstacleCircles = getObstacleCircles(obstacleAreas)
+    const { width, height, obstacleAreas = [], walkableAreas } = roomData
+
+    const walkable = walkableAreas ? {
+        polygons: getObstaclePolygons(walkableAreas),
+        rectangles: getObstacleRectangle(walkableAreas),
+        circles: getObstacleCircles(walkableAreas),
+    } : null
+
+    const obstable = {
+        polygons: getObstaclePolygons(obstacleAreas),
+        rectangles: getObstacleRectangle(obstacleAreas),
+        circles: getObstacleCircles(obstacleAreas),
+    }
+
     const matrixHeight = Math.ceil(height / cellSize)
     const matrixWidth = Math.ceil(width / cellSize)
     const matrix: CellMatrix = [];
@@ -82,7 +101,7 @@ export function generateCellMatrix(roomData: RoomData, cellSize: number) {
         const row: (0 | 1)[] = []
         for (let j = 0; j < matrixWidth; j++) {
             row.push(
-                isCellObstacle(matrixHeight - i, j, cellSize, obstaclePolygons, obstacleRectangles, obstacleCircles) ? 1 : 0
+                isCellBlocked(matrixHeight - i, j, cellSize, obstable, walkable) ? 1 : 0
             )
         }
         matrix.push(row)

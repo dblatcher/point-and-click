@@ -137,6 +137,7 @@ const roomDataDescription: Record<keyof RoomData, Property> = {
     background: { type: 'object', test: isBackgroundlayerArray },
     hotspots: { type: 'object', optional: true, test: isHotspotZoneArray },
     obstacleAreas: { type: 'object', optional: true, test: isZoneArray },
+    walkableAreas: { type: 'object', optional: true, test: isZoneArray },
     scaling: { type: 'object', optional: true, test: isNumberPairArray }
 }
 

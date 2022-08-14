@@ -18,6 +18,7 @@ export const RoomDataSchema = z.object({
     background: BackgroundLayerSchema.array(),
     hotspots: HotspotZoneSchema.array().optional(),
     obstacleAreas: z.optional(ZoneSchema.array()),
+    walkableAreas: z.optional(ZoneSchema.array()),
     scaling: z.optional(ScaleLevelSchema),
 })
 export type RoomData = z.infer<typeof RoomDataSchema>
