@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment, JSX } from "preact";
 import { RoomData, CharacterData } from "src";
-import { Point } from "../../../lib/pathfinding/geometry";
-import MarkerShape from "../../MarkerShape";
 import { Room } from "../../Room";
 import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "../../../lib/util";
@@ -13,14 +11,12 @@ type BooleanState = {
     showObstacleAreas: boolean;
     highlightHotspots: boolean;
     showScaleLines: boolean;
-    showMarker: boolean;
     showCharacter: boolean;
 }
 
 type State = BooleanState & {
     viewAngle: number;
     maxHeight: number;
-    markerPosition: Point;
     testCharacter: CharacterData;
 };
 
@@ -61,8 +57,6 @@ export class Preview extends Component<Props, State>{
             showObstacleAreas: true,
             highlightHotspots: true,
             showScaleLines: true,
-            showMarker: false,
-            markerPosition: { x: props.roomData.width / 2, y: 20 },
             showCharacter: true,
             testCharacter: makeTestCharacter({ x: props.roomData.width / 2, y: 20 }),
         }
@@ -124,7 +118,7 @@ export class Preview extends Component<Props, State>{
     render() {
         const {
             viewAngle, maxHeight, showObstacleAreas, highlightHotspots,
-            showMarker, markerPosition, testCharacter, showCharacter,
+            testCharacter, showCharacter,
             showScaleLines,
         } = this.state
         const { roomData, handleRoomClick, clickEffect } = this.props
@@ -196,31 +190,6 @@ export class Preview extends Component<Props, State>{
                             <span>{testCharacter.width}</span>
                         </div>
                     </fieldset>
-
-                    <fieldset>
-                        {this.renderCheckBox('Show Marker', 'showMarker')}
-                        <div>
-                            <label>X</label>
-                            <input type='range'
-                                value={markerPosition.x}
-                                min={0}
-                                max={roomData.width}
-                                step={10}
-                                onChange={(event) => this.setState({ markerPosition: { x: eventToNumber(event), y: markerPosition.y } })} />
-                            <span>{markerPosition.x}</span>
-                        </div>
-                        <div>
-                            <label>Y</label>
-                            <input type='range'
-                                value={markerPosition.y}
-                                min={0}
-                                max={roomData.height}
-                                step={10}
-                                onChange={(event) => this.setState({ markerPosition: { y: eventToNumber(event), x: markerPosition.x } })} />
-                            <span>{markerPosition.y}</span>
-                        </div>
-
-                    </fieldset>
                 </section>
                 <section style={{ position: 'relative' }}>
                     <Room data={roomData} noResize
@@ -239,14 +208,6 @@ export class Preview extends Component<Props, State>{
                             }
                         ] : undefined}
                     >
-                        {showMarker && (
-                            <MarkerShape roomData={roomData}
-                                height={50}
-                                viewAngle={viewAngle}
-                                {...markerPosition}
-                                color={'red'} />
-                        )}
-
                         {showScaleLines && scaling.map((yAndScale, index) => (
                             <HorizontalLine key={index}
                                 y={yAndScale[0]}
