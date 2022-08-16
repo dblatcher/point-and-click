@@ -4,7 +4,7 @@ import { useState } from "preact/hooks";
 import { cloneData } from "../../../lib/clone";
 import { Consequence, InteractionSchema } from "../../../definitions/Interaction";
 import { GameDesign, Interaction, AnyConsequence } from "src";
-import { SelectInput, TextInput } from "../formControls";
+import { CheckBoxInput, SelectInput, StringInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
 import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
@@ -102,10 +102,17 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                         items={listIds(gameDesign.rooms)} />
                 </div>
                 <div>
-                    <TextInput
+                    <StringInput
                         label="Target status must be"
-                        onInput={(event) => { setInteractionProperty('targetStatus', eventToString(event)) }}
+                        inputHandler={(value) => { setInteractionProperty('targetStatus', value) }}
                         value={interaction.targetStatus || ''}
+                    />
+                </div>
+                <div>
+                    <CheckBoxInput
+                        label="Must reach target first?"
+                        inputHandler={(value) => { setInteractionProperty('mustReachFirst', value) }}
+                        value={interaction.mustReachFirst}
                     />
                 </div>
             </fieldset>

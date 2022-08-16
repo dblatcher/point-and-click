@@ -147,6 +147,7 @@ const interactionDescription: Record<keyof Interaction, Property> = {
     roomId: { type: 'string', optional: true },
     itemId: { type: 'string', optional: true },
     targetStatus: { type: 'string', optional: true },
+    mustReachFirst: { type: 'boolean', optional: true },
     consequences: { type: 'object', test: isConsequenceArray }
 }
 

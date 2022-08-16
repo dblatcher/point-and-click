@@ -67,7 +67,7 @@ export const interactions: Interaction[] = [
                 time: 100,
             },
             {
-                type:'conversation',
+                type: 'conversation',
                 conversationId: 'CHAT'
             }
         ]
@@ -159,6 +159,7 @@ export const interactions: Interaction[] = [
     {
         verbId: 'TAKE',
         targetId: 'TUBE',
+        mustReachFirst: true,
         consequences: [
             {
                 type: 'removeCharacter',

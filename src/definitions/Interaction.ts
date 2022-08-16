@@ -3,7 +3,7 @@ import { Order, orderSchema } from "./Order"
 
 const OrderConsequenceSchema = z.object({
     type: z.literal('order'),
-    characterId: z.optional(z.string()),
+    characterId: z.string().optional(),
     orders: z.array(orderSchema),
     replaceCurrentOrders: z.optional(z.boolean()),
 })
@@ -11,7 +11,7 @@ type OrderConsequence = z.infer<typeof OrderConsequenceSchema>
 
 const TalkConsequenceSchema = z.object({
     type: z.literal('talk'),
-    characterId: z.optional(z.string()),
+    characterId: z.string().optional(),
     text: z.string(),
     time: z.optional(z.number()),
 })
@@ -29,7 +29,7 @@ type ChangeRoomConsequence = z.infer<typeof ChangeRoomConsequenceSchema>
 const InventoryConsequenceSchema = z.object({
     type: z.literal('inventory'),
     itemId: z.string(),
-    characterId: z.optional(z.string()),
+    characterId: z.string().optional(),
     addOrRemove: z.enum(['ADD', 'REMOVE']),
 })
 type InventoryConsequence = z.infer<typeof InventoryConsequenceSchema>
@@ -130,9 +130,10 @@ export const immediateConsequenceTypes: ConsequenceType[] = [
 export const InteractionSchema = z.object({
     verbId: z.string(),
     targetId: z.string(),
-    roomId: z.optional(z.string()),
-    itemId: z.optional(z.string()),
-    targetStatus: z.optional(z.string()),
+    roomId: z.string().optional(),
+    itemId: z.string().optional(),
+    targetStatus: z.string().optional(),
+    mustReachFirst: z.boolean().optional(),
     consequences: z.array(ConsequenceSchema),
 })
 
