@@ -6,8 +6,9 @@ const OrderConsequenceSchema = z.object({
     characterId: z.string().optional(),
     orders: z.array(orderSchema),
     replaceCurrentOrders: z.optional(z.boolean()),
+    executePendingInteractionWhenComplete: z.optional(z.boolean()),
 })
-type OrderConsequence = z.infer<typeof OrderConsequenceSchema>
+export type OrderConsequence = z.infer<typeof OrderConsequenceSchema>
 
 const TalkConsequenceSchema = z.object({
     type: z.literal('talk'),
@@ -66,7 +67,6 @@ const EndingConsequenceSchema = z.object({
     endingId: z.string(),
 })
 type EndingConsequence = z.infer<typeof EndingConsequenceSchema>;
-
 
 
 const ConsequenceTypeEnum = z.enum([

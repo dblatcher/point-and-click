@@ -158,6 +158,17 @@ export const interactions: Interaction[] = [
     },
     {
         verbId: 'TAKE',
+        targetId: 'sun',
+        mustReachFirst: true,
+        consequences: [
+            {
+                type: 'talk',
+                text: 'I took the sun. Really...[SHOULD NOt BE SEEN]',
+            }
+        ]
+    },
+    {
+        verbId: 'TAKE',
         targetId: 'TUBE',
         mustReachFirst: true,
         consequences: [

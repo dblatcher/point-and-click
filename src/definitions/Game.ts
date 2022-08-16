@@ -16,6 +16,7 @@ const GameHappeningsSchema = z.object({
     characterOrders: z.record(z.string(), orderSchema.array()),
     currentConversationId: z.string().optional(),
     endingId: z.string().optional(),
+    pendingInteraction: InteractionSchema.optional()
 })
 
 const GameContentsDataSchema = z.object({

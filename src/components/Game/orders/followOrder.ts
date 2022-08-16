@@ -37,7 +37,7 @@ export function followOrder(subject: CharacterData, cellMatrix: CellMatrix, orde
     if (!orders || orders.length === 0) { return }
     const [nextOrder] = orders
 
-    if (nextOrder.type === 'move' && subject.type === 'character') {
+    if (nextOrder.type === 'move') {
         if (!nextOrder.pathIsSet) {
             findPathBetweenSteps(subject, cellMatrix, nextOrder)
         }

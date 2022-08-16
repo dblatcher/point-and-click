@@ -1,7 +1,9 @@
-import { GameProps, GameState } from ".";
+import { GameProps, GameState, cellSize } from ".";
 import { Command, Interaction, RoomData } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
+import { OrderConsequence } from "../../definitions/Interaction";
+import { findPath } from "../../lib/pathfinding/pathfind";
 
 function matchInteraction(
     command: Command,
@@ -18,15 +20,17 @@ function matchInteraction(
     })
 }
 
-function doDefaultResponse(command: Command, state: GameState): GameState {
+function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
     const { characters } = state
     const { verb, item, target } = command
     const player = characters.find(_ => _.isPlayer)
     if (!player) { return state }
 
-    const text = item
-        ? `I can't ${verb.label} the ${item.name || item.id} ${verb.preposition} the ${target.name || target.id}`
-        : `Nothing happens when I ${verb.label} the ${target.name || target.id}`;
+    const text = unreachable
+        ? `I can't reach the ${target.name || target.id}`
+        : item
+            ? `I can't ${verb.label} the ${item.name || item.id} ${verb.preposition} the ${target.name || target.id}`
+            : `Nothing happens when I ${verb.label} the ${target.name || target.id}`;
 
     if (!state.characterOrders[player.id]) {
         state.characterOrders[player.id] = []
@@ -41,7 +45,7 @@ function doDefaultResponse(command: Command, state: GameState): GameState {
 }
 
 const describeCommand = (command: Command): string => `COMMAND: ${command.verb.id}, ${command.target.id} [${command.item?.id}]`
-const describeConsequences = (interaction: Interaction): string => `CONSEQUENCES: ${interaction.consequences?.map(_=>_.type).join()}]`
+const describeConsequences = (interaction: Interaction): string => `CONSEQUENCES: ${interaction.consequences?.map(_ => _.type).join()}]`
 
 function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): GameState {
     const { hoverTarget } = state
@@ -68,15 +72,54 @@ function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): Game
 export function handleCommand(command: Command, props: GameProps): { (state: GameState): Partial<GameState> } {
 
     return (state): GameState => {
-        const { currentRoomId, rooms, debugLog } = state
+        const { currentRoomId, rooms, debugLog, characters, cellMatrix = [] } = state
 
         const currentRoom = rooms.find(_ => _.id === currentRoomId)
-        const matchingInteraction = matchInteraction(command, currentRoom, state.interactions)
+        const player = characters.find(_ => _.isPlayer)
+        const interaction = matchInteraction(command, currentRoom, state.interactions)
 
-        if (matchingInteraction) {
-            debugLog.push(makeDebugEntry(`${describeCommand(command)}: ${describeConsequences(matchingInteraction)}`))
+        if (interaction && interaction.mustReachFirst && command.target.type !== 'item') {
+            debugLog.push(makeDebugEntry(`${describeCommand(command)}: ${describeConsequences(interaction)} (pending)`))
+
+            if (player) {
+                const isReachable = findPath(player, command.target, cellMatrix, cellSize).length > 0;
+                if (isReachable) {
+                    state.pendingInteraction = interaction
+                    const moveConsequence: OrderConsequence = {
+                        type: 'order',
+                        characterId: player.id,
+                        replaceCurrentOrders: true,
+                        executePendingInteractionWhenComplete: true,
+                        orders: [
+                            {
+                                type: 'move',
+                                steps: [
+                                    {
+                                        x: command.target.x,
+                                        y: command.target.y,
+                                    }
+                                ]
+                            },
+                            {
+                                type: 'talk',
+                                steps: [
+                                    { text: `I should do the ${interaction.verbId} interaction now, but executePendingInteractionWhenComplete is not implemented`, time: 200 }
+                                ]
+                            }
+                        ]
+                    }
+                    const execute = makeConsequenceExecutor(state, props)
+                    execute(moveConsequence)
+                } else {
+                    doDefaultResponse(command, state, true)
+                }
+            }
+
+
+        } else if (interaction) {
+            debugLog.push(makeDebugEntry(`${describeCommand(command)}: ${describeConsequences(interaction)}`))
             const execute = makeConsequenceExecutor(state, props)
-            matchingInteraction.consequences.forEach(execute)
+            interaction.consequences.forEach(execute)
         } else {
             debugLog.push(makeDebugEntry(`${describeCommand(command)}: No match`))
             doDefaultResponse(command, state)

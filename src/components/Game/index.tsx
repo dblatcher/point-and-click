@@ -34,7 +34,6 @@ export type GameState = GameData & {
     currentVerbId: string;
     currentItemId?: string;
     hoverTarget?: CommandTarget;
-
     debugLog: LogEntry[];
 }
 
