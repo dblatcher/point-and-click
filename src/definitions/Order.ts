@@ -3,6 +3,7 @@ import { z } from "zod"
 export const MoveOrderSchema = z.object({
     type: z.literal('move'),
     pathIsSet: z.optional(z.boolean()),
+    doPendingInteractionWhenFinished: z.optional(z.boolean()),
     steps: z.array(z.object({
         animation: z.optional(z.string()),
         x: z.number(),

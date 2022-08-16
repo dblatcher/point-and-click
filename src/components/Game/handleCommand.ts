@@ -89,10 +89,10 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                         type: 'order',
                         characterId: player.id,
                         replaceCurrentOrders: true,
-                        executePendingInteractionWhenComplete: true,
                         orders: [
                             {
                                 type: 'move',
+                                doPendingInteractionWhenFinished: true,
                                 steps: [
                                     {
                                         x: command.target.x,
@@ -100,12 +100,7 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                                     }
                                 ]
                             },
-                            {
-                                type: 'talk',
-                                steps: [
-                                    { text: `I should do the ${interaction.verbId} interaction now, but executePendingInteractionWhenComplete is not implemented`, time: 200 }
-                                ]
-                            }
+
                         ]
                     }
                     const execute = makeConsequenceExecutor(state, props)

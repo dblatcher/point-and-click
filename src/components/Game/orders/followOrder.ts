@@ -33,8 +33,15 @@ function findPathBetweenSteps(subject: CharacterData, cellMatrix: CellMatrix, or
     order.steps = newSteps
 }
 
-export function followOrder(subject: CharacterData, cellMatrix: CellMatrix, orders?: Order[]): void {
-    if (!orders || orders.length === 0) { return }
+/**
+ * make a character follow their next order
+ * @param subject 
+ * @param cellMatrix 
+ * @param orders 
+ * @returns whether they just finished an order that triggers the pendingInteraction
+ */
+export function followOrder(subject: CharacterData, cellMatrix: CellMatrix, orders?: Order[]): boolean {
+    if (!orders || orders.length === 0) { return false }
     const [nextOrder] = orders
 
     if (nextOrder.type === 'move') {
@@ -50,5 +57,9 @@ export function followOrder(subject: CharacterData, cellMatrix: CellMatrix, orde
 
     if (nextOrder.steps.length === 0) {
         orders.shift()
+        if (nextOrder.type === 'move' && nextOrder.doPendingInteractionWhenFinished) {
+            return true
+        }
     }
+    return false
 }

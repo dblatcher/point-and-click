@@ -160,11 +160,23 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     makeCharactersAct() {
-        const { characters, characterOrders, sequenceRunning, cellMatrix = [] } = this.state
+        const { characters, characterOrders, sequenceRunning, cellMatrix = [], pendingInteraction } = this.state
         if (sequenceRunning) {
             return this.setState(continueSequence(this.state, this.props))
         }
-        characters.forEach(character => followOrder(character, cellMatrix, characterOrders[character.id]))
+
+        let pendingInteractionShouldBeDone = false;
+        characters.forEach(character => {
+            const triggersPendingInteraction = followOrder(character, cellMatrix, characterOrders[character.id])
+            if (triggersPendingInteraction) {
+                pendingInteractionShouldBeDone = true
+            }
+        })
+        
+
+        if (pendingInteractionShouldBeDone) {
+            console.log({pendingInteractionShouldBeDone})
+        }
         return this.setState({ characters, characterOrders })
     }
 

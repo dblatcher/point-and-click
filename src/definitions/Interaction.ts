@@ -6,7 +6,6 @@ const OrderConsequenceSchema = z.object({
     characterId: z.string().optional(),
     orders: z.array(orderSchema),
     replaceCurrentOrders: z.optional(z.boolean()),
-    executePendingInteractionWhenComplete: z.optional(z.boolean()),
 })
 export type OrderConsequence = z.infer<typeof OrderConsequenceSchema>
 
