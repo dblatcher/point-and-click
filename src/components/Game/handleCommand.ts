@@ -109,8 +109,6 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                     doDefaultResponse(command, state, true)
                 }
             }
-
-
         } else if (interaction) {
             debugLog.push(makeDebugEntry(`${describeCommand(command)}: ${describeConsequences(interaction)}`))
             const execute = makeConsequenceExecutor(state, props)
@@ -124,4 +122,12 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
 
         return state
     }
+}
+
+export function doPendingInteraction(state: GameState, props: GameProps): GameState {
+    const { pendingInteraction } = state
+    const execute = makeConsequenceExecutor(state, props)
+    pendingInteraction?.consequences.forEach(execute)
+    state.pendingInteraction = undefined
+    return state
 }

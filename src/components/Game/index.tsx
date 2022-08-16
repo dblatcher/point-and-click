@@ -5,7 +5,7 @@ import { getViewAngleCenteredOn, clamp, locateClickInWorld, findById } from "../
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";
-import { handleCommand } from "./handleCommand";
+import { doPendingInteraction, handleCommand } from "./handleCommand";
 import { Room } from "../Room";
 import { VerbMenu } from "../VerbMenu";
 import { ItemMenu } from "../ItemMenu";
@@ -160,24 +160,24 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     makeCharactersAct() {
-        const { characters, characterOrders, sequenceRunning, cellMatrix = [], pendingInteraction } = this.state
-        if (sequenceRunning) {
+        if (this.state.sequenceRunning) {
             return this.setState(continueSequence(this.state, this.props))
         }
 
-        let pendingInteractionShouldBeDone = false;
-        characters.forEach(character => {
-            const triggersPendingInteraction = followOrder(character, cellMatrix, characterOrders[character.id])
-            if (triggersPendingInteraction) {
-                pendingInteractionShouldBeDone = true
+        return this.setState(state => {
+            const { cellMatrix = [] } = state
+            let pendingInteractionShouldBeDone = false;
+            state.characters.forEach(character => {
+                const triggersPendingInteraction = followOrder(character, cellMatrix, state.characterOrders[character.id])
+                if (triggersPendingInteraction) {
+                    pendingInteractionShouldBeDone = true
+                }
+            })
+            if (pendingInteractionShouldBeDone) {
+                doPendingInteraction(state, this.props)
             }
+            return state
         })
-        
-
-        if (pendingInteractionShouldBeDone) {
-            console.log({pendingInteractionShouldBeDone})
-        }
-        return this.setState({ characters, characterOrders })
     }
 
     centerViewOnPLayer() {
