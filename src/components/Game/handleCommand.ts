@@ -1,5 +1,5 @@
 import { GameProps, GameState, cellSize } from ".";
-import { Command, Interaction, RoomData } from "src";
+import { Command, Interaction, RoomData, CharacterData, HotspotZone } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
 import { OrderConsequence } from "../../definitions/Interaction";
@@ -69,6 +69,26 @@ function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): Game
     return state
 }
 
+function makeGoToOrder(player: CharacterData, target: CharacterData | HotspotZone): OrderConsequence {
+    return {
+        type: 'order',
+        characterId: player.id,
+        replaceCurrentOrders: true,
+        orders: [
+            {
+                type: 'move',
+                doPendingInteractionWhenFinished: true,
+                steps: [
+                    {
+                        x: target.x,
+                        y: target.y,
+                    }
+                ]
+            },
+        ]
+    }
+}
+
 export function handleCommand(command: Command, props: GameProps): { (state: GameState): Partial<GameState> } {
 
     return (state): GameState => {
@@ -85,26 +105,8 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                 const isReachable = findPath(player, command.target, cellMatrix, cellSize).length > 0;
                 if (isReachable) {
                     state.pendingInteraction = interaction
-                    const moveConsequence: OrderConsequence = {
-                        type: 'order',
-                        characterId: player.id,
-                        replaceCurrentOrders: true,
-                        orders: [
-                            {
-                                type: 'move',
-                                doPendingInteractionWhenFinished: true,
-                                steps: [
-                                    {
-                                        x: command.target.x,
-                                        y: command.target.y,
-                                    }
-                                ]
-                            },
-
-                        ]
-                    }
                     const execute = makeConsequenceExecutor(state, props)
-                    execute(moveConsequence)
+                    execute(makeGoToOrder(player, command.target))
                 } else {
                     doDefaultResponse(command, state, true)
                 }
@@ -125,9 +127,8 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
 }
 
 export function doPendingInteraction(state: GameState, props: GameProps): GameState {
-    const { pendingInteraction } = state
     const execute = makeConsequenceExecutor(state, props)
-    pendingInteraction?.consequences.forEach(execute)
+    state.pendingInteraction?.consequences.forEach(execute)
     state.pendingInteraction = undefined
     return state
 }
