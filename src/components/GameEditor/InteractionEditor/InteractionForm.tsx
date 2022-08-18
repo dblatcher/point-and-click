@@ -33,6 +33,12 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
             case 'roomId':
                 {
                     modification[property] = value as string;
+                    break;
+                }
+            case 'mustReachFirst':
+                {
+                    modification[property] = value as boolean;
+                    break;
                 }
         }
         setInteraction(Object.assign({}, interaction, modification))
