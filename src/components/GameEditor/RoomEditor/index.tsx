@@ -3,7 +3,7 @@ import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone } from "src";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
-import { ZoneControl } from "./ZoneControl";
+import { ShapeControl } from "./ShapeControl";
 import { HotspotControl } from "./HotspotControl";
 import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
@@ -470,8 +470,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                         obstacleAreas.map((obstacle, index) => {
                                             return {
                                                 label: `obstacle #${index}`, content: (
-                                                    <ZoneControl
-                                                        zone={obstacle} index={index}
+                                                    <ShapeControl
+                                                        shape={obstacle} index={index}
                                                         type='obstacle'
                                                         setClickEffect={this.setClickEffect}
                                                         change={this.changeZone}
@@ -489,8 +489,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                         walkableAreas.map((walkable, index) => {
                                             return {
                                                 label: `walkable #${index}`, content: (
-                                                    <ZoneControl
-                                                        zone={walkable} index={index}
+                                                    <ShapeControl
+                                                        shape={walkable} index={index}
                                                         setClickEffect={this.setClickEffect}
                                                         type='walkable'
                                                         change={this.changeZone}

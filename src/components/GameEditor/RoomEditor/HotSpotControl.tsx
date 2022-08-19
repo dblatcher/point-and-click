@@ -3,7 +3,7 @@ import { h } from "preact";
 import { ClickEffect } from "./ClickEffect";
 import { HotspotZone } from "src";
 import { IdentInput, ParallaxInput } from "../formControls";
-import { ZoneControl } from "./ZoneControl";
+import { ShapeControl } from "./ShapeControl";
 import { eventToNumber, eventToString } from "../../../lib/util";
 import styles from '../editorStyles.module.css';
 
@@ -34,8 +34,8 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
                     onChange={event => { change(index, 'parallax', eventToNumber(event), type) }} />
             </div>
 
-            <ZoneControl
-                zone={hotspot} index={index}
+            <ShapeControl
+                shape={hotspot} index={index}
                 setClickEffect={setClickEffect}
                 type='hotspot'
                 change={change}

@@ -10,7 +10,7 @@ export type { RoomData, BackgroundLayer, ScaleLevel } from "./definitions/RoomDa
 export type { Order, MoveOrder, TalkOrder, ActOrder } from "./definitions/Order";
 export type { CharacterData } from "./definitions/CharacterData";
 export type { Direction } from "./definitions/SpriteSheet";
-export type { Zone, HotspotZone, SupportedZoneShape } from "./definitions/Zone"
+export type { Zone, HotspotZone, SupportedZoneShape, Shape } from "./definitions/Zone"
 export type { Conversation, ConversationChoice, ConversationBranch } from "./definitions/Conversation"
 export type { Consequence, Interaction, ConsequenceType, AnyConsequence } from "./definitions/Interaction"
 export type { Sequence } from "./definitions/Sequence";

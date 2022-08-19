@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, FunctionalComponent } from "preact";
 import { ClickEffect } from "./ClickEffect";
-import { HotspotZone, Zone } from "src";
+import { Shape } from "src";
 import { ListEditor } from "../ListEditor";
 import { NumberInput } from "../formControls";
 
 type ValidType = 'hotspot' | 'obstacle' | 'walkable';
 
 interface Props {
-    zone: Zone | HotspotZone;
+    shape: Shape;
     index: number;
     type: ValidType;
     remove: { (index: number, type: ValidType): void };
-    change: { (index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type: ValidType): void };
+    change: { (index: number, propery: Exclude<keyof Shape, 'type'>, newValue: unknown, type: ValidType): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export const ZoneControl: FunctionalComponent<Props> = ({ zone, remove, index, change, setClickEffect,type }: Props) => {
-    const { x, y, circle, rect, polygon } = zone
+export const ShapeControl: FunctionalComponent<Props> = ({ shape, remove, index, change, setClickEffect,type }: Props) => {
+    const { x, y, circle, rect, polygon } = shape
 
     function changeRect(value: number, coor: 'x' | 'y'): void {
         if (!rect) { return }

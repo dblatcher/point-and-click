@@ -7,8 +7,8 @@ export type SupportedZoneShape = z.infer<typeof SupportedZoneShapeEnum>
 const PolygonSchema = z.array(z.tuple([z.number(), z.number()]))
 export type Polygon = z.infer<typeof PolygonSchema>
 
-export const ZoneSchema = z.object({
-    type: z.optional(z.string()),
+const ShapeSchema = z.object({
+    type: z.string().optional(),
     x: z.number(),
     y: z.number(),
     path: z.optional(z.string()),
@@ -17,10 +17,18 @@ export const ZoneSchema = z.object({
     rect: z.optional(z.tuple([z.number(), z.number()])),
 })
 
+export type Shape = z.infer<typeof ShapeSchema>
+
+export const ZoneSchema = ShapeSchema
+    .merge(z.object({
+        ref: z.string().optional(),
+        disabled: z.boolean().optional()
+    }))
+
 export type Zone = z.infer<typeof ZoneSchema>
 
-export const HotspotZoneSchema = IdentSchema
-    .merge(ZoneSchema)
+export const HotspotZoneSchema = ShapeSchema
+    .merge(IdentSchema)
     .merge(z.object({
         type: z.literal('hotspot'),
         parallax: z.number(),

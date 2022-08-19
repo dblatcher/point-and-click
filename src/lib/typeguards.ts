@@ -114,6 +114,8 @@ const backgroundLayerDescription: Record<keyof BackgroundLayer, Property> = {
 
 const zoneDescription: Record<keyof Zone, Property> = {
     type: { type: 'string', optional: true },
+    ref: { type: 'string', optional: true },
+    disabled: { type: 'boolean', optional: true },
     x: { type: 'number' },
     y: { type: 'number' },
     path: { type: 'string', optional: true },
