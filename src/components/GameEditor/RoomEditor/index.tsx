@@ -1,9 +1,9 @@
 import { Component, h, Fragment } from "preact";
-import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone } from "src";
+import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, SupportedZoneShape } from "src";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
-import { ShapeChangeFunction, ShapeControl } from "./ShapeControl";
+import { ShapeChangeFunction } from "./ShapeControl";
 import { HotspotControl } from "./HotspotControl";
 import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
@@ -20,7 +20,7 @@ import { StorageMenu } from "../StorageMenu";
 import { RoomDataSchema } from "../../../definitions/RoomData";
 import { ListEditor } from "../ListEditor";
 import { Entry, Folder, TreeMenu } from "../TreeMenu";
-import { ZoneControl } from "./ZoneControl";
+import { ZoneSetEditor } from "./ZoneSetEditor";
 
 type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -171,8 +171,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 break;
             case 'obstacle':
                 obstacleAreas.splice(index, 1)
+                break;
             case 'walkable':
                 walkableAreas.splice(index, 1)
+                break;
         }
         this.setState({ obstacleAreas, hotspots, walkableAreas })
     }
@@ -316,34 +318,39 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     get menuFolders(): Folder[] {
-        const { obstacleAreas = [], walkableAreas = [], hotspots = [], background = [], mainTab } = this.state
+        const { obstacleAreas = [], walkableAreas = [], hotspots = [], background = [], mainTab, clickEffect } = this.state
         const getShape = (zone: Zone): string => zone.polygon ? 'polygon' : zone.circle ? 'circle' : zone.rect ? 'rect' : '??';
-        const makeNewZoneEntries = () => ([
-            { label: 'new circle', isForNew: true, data: { id: 'circle' } },
-            { label: 'new rect', isForNew: true, data: { id: 'rect' } },
-            { label: 'new polygon', isForNew: true, data: { id: 'polygon' } },
+
+        const newZoneEntryisActive = (clickEffectType: ClickEffect["type"], shape: SupportedZoneShape): boolean => {
+            return clickEffect?.type === clickEffectType && 'shape' in clickEffect && clickEffect.shape === shape
+        }
+
+        const makeNewZoneEntries = (clickEffectType: ClickEffect["type"]) => ([
+            { label: 'new circle', isForNew: true, data: { id: 'circle' }, active: newZoneEntryisActive(clickEffectType, 'circle') },
+            { label: 'new rect', isForNew: true, data: { id: 'rect' }, active: newZoneEntryisActive(clickEffectType, 'rect') },
+            { label: 'new polygon', isForNew: true, data: { id: 'polygon' }, active: newZoneEntryisActive(clickEffectType, 'polygon') },
         ])
 
         const obstacleEntries: Entry[] = obstacleAreas.map((obstacle, index) => ({
-            label: `#${index} ${getShape(obstacle)}`,
+            label: obstacle.ref || `#${index} ${getShape(obstacle)}`,
             data: {
                 id: index.toString()
             }
-        })).concat(makeNewZoneEntries())
+        })).concat(makeNewZoneEntries('OBSTACLE'))
 
         const walkableEntries: Entry[] = walkableAreas.map((walkable, index) => ({
-            label: `#${index} ${getShape(walkable)}`,
+            label: walkable.ref || `#${index} ${getShape(walkable)}`,
             data: {
                 id: index.toString()
             }
-        })).concat(makeNewZoneEntries())
+        })).concat(makeNewZoneEntries('WALKABLE'))
 
         const hotspotEntries: Entry[] = hotspots.map((hotspot) => ({
             label: hotspot.id,
             data: hotspot
         }))
 
-        hotspotEntries.push(...makeNewZoneEntries())
+        hotspotEntries.push(...makeNewZoneEntries('HOTSPOT'))
 
         return [
             {
@@ -476,40 +483,23 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                             },
                             {
                                 label: 'Obstacles', content: (
-                                    <TabMenu defaultOpenIndex={obstacleAreas.length - 1} tabs={
-                                        obstacleAreas.map((obstacle, index) => {
-                                            return {
-                                                label: `obstacle #${index}`, content: (
-                                                    <ZoneControl
-                                                        zone={obstacle}
-                                                        index={index}
-                                                        type='obstacle'
-                                                        setClickEffect={this.setClickEffect}
-                                                        change={this.changeZone}
-                                                        remove={this.removeZone} />
-                                                )
-                                            }
-                                        })
-                                    }
+                                    <ZoneSetEditor
+                                        zones={obstacleAreas}
+                                        type='obstacle'
+                                        setClickEffect={this.setClickEffect}
+                                        change={this.changeZone}
+                                        remove={this.removeZone}
                                     />
                                 )
                             },
                             {
                                 label: 'Walkables', content: (
-                                    <TabMenu defaultOpenIndex={walkableAreas.length - 1} tabs={
-                                        walkableAreas.map((walkable, index) => {
-                                            return {
-                                                label: `walkable #${index}`, content: (
-                                                    <ShapeControl
-                                                        shape={walkable} index={index}
-                                                        setClickEffect={this.setClickEffect}
-                                                        type='walkable'
-                                                        change={this.changeZone}
-                                                        remove={this.removeZone} />
-                                                )
-                                            }
-                                        })
-                                    }
+                                    <ZoneSetEditor
+                                        zones={walkableAreas}
+                                        type='walkable'
+                                        setClickEffect={this.setClickEffect}
+                                        change={this.changeZone}
+                                        remove={this.removeZone}
                                     />
                                 )
                             },
