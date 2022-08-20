@@ -74,6 +74,15 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 actor.room = undefined;
                 break;
             }
+            case 'teleportActor': {
+                const { actorId, roomId, x, y } = consequence
+                const actor = actors.find(_ => _.id === actorId)
+                if (!actor) { return }
+                actor.room = roomId || actor.room
+                actor.x = x
+                actor.y = y
+                break;
+            }
             case 'changeStatus': {
                 const { targetId, targetType, status } = consequence
                 let target: CommandTarget | undefined;

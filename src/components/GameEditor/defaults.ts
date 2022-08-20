@@ -81,10 +81,12 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type: 'talk', text: '', actorId: '', time: 100 }
         case 'ending':
             return { type: 'ending', endingId: '' }
+        case 'teleportActor':
+            return { type: 'teleportActor', actorId: '', x: 0, y: 0, roomId: '' }
         case 'order':
         default:
             return { type: 'order', orders: [] }
     }
 }
 
-export const makeBlankEnding = (id = "NEW_ENDING", message="game over"): Ending => ({ id, message,})
+export const makeBlankEnding = (id = "NEW_ENDING", message = "game over"): Ending => ({ id, message, })

@@ -67,12 +67,15 @@ const EndingConsequenceSchema = z.object({
 })
 type EndingConsequence = z.infer<typeof EndingConsequenceSchema>;
 
+const TeleportActorConsequenceSchema = z.object({
+    type: z.literal('teleportActor'),
+    actorId: z.string(),
+    roomId: z.optional(z.string()),
+    x: z.number(),
+    y: z.number(),
+})
+type TeleportActorConsequence = z.infer<typeof TeleportActorConsequenceSchema>;
 
-const ConsequenceTypeEnum = z.enum([
-    'conversation', 'sequence', 'changeStatus', 'removeActor', 'inventory', 'changeRoom', 'talk', 'order', 'ending'
-])
-export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
-export const consequenceTypes: ConsequenceType[] = ConsequenceTypeEnum.options
 
 export const ConsequenceSchema = z.union([
     OrderConsequenceSchema,
@@ -84,7 +87,19 @@ export const ConsequenceSchema = z.union([
     SequenceConsequenceSchema,
     ConversationConsequenceSchema,
     EndingConsequenceSchema,
+    TeleportActorConsequenceSchema,
 ])
+
+const ConsequenceTypeEnum = z.enum([
+    'conversation', 'sequence', 'changeStatus',
+    'removeActor', 'inventory', 'changeRoom', 'talk', 'order', 'ending',
+    'teleportActor'
+])
+export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
+export const consequenceTypes: ConsequenceType[] = ConsequenceTypeEnum.options
+
+
+
 
 export type Consequence = z.infer<typeof ConsequenceSchema>
 
@@ -115,15 +130,16 @@ export const ImmediateConsequenceSchema = z.union([
     InventoryConsequenceSchema,
     ConversationConsequenceSchema,
     EndingConsequenceSchema,
+    TeleportActorConsequenceSchema
 ])
 export type ImmediateConsequence = RemoveActorConsequence |
     ChangeStatusConsequence |
     InventoryConsequence |
     ConversationConsequence |
-    EndingConsequence;
+    EndingConsequence | TeleportActorConsequence;
 
 export const immediateConsequenceTypes: ConsequenceType[] = [
-    'removeActor', 'changeStatus', 'inventory', 'conversation', 'ending'
+    'removeActor', 'changeStatus', 'inventory', 'conversation', 'ending', 'teleportActor'
 ]
 
 export const InteractionSchema = z.object({
