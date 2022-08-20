@@ -231,6 +231,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                             zone[propery] = newValue
                         }
                         break;
+                    case 'disabled':
+                        if (typeof newValue === 'boolean' || typeof newValue === 'undefined') {
+                            zone[propery] = newValue
+                        }
+                        break;
                 }
             }
             return { obstacleAreas, hotspots, walkableAreas }
