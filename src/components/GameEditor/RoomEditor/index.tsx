@@ -3,7 +3,7 @@ import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone } from "src";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
-import { ShapeControl } from "./ShapeControl";
+import { ShapeChangeFunction, ShapeControl } from "./ShapeControl";
 import { HotspotControl } from "./HotspotControl";
 import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
@@ -20,6 +20,7 @@ import { StorageMenu } from "../StorageMenu";
 import { RoomDataSchema } from "../../../definitions/RoomData";
 import { ListEditor } from "../ListEditor";
 import { Entry, Folder, TreeMenu } from "../TreeMenu";
+import { ZoneControl } from "./ZoneControl";
 
 type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -175,54 +176,63 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
         this.setState({ obstacleAreas, hotspots, walkableAreas })
     }
-    changeZone(index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type: 'hotspot' | 'obstacle' | 'walkable') {
-        const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = this.state
+    changeZone: ShapeChangeFunction = (index, propery, newValue, type) => {
 
-        function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
-            switch (propery) {
-                case 'x':
-                case 'y':
-                case 'circle':
-                    if (typeof newValue === 'number') {
-                        zoneOrHotspot[propery] = newValue
-                    }
-                    break;
-                case 'path':
-                    if (typeof newValue === 'string') {
-                        zoneOrHotspot[propery] = newValue
-                    }
-                    break;
-                case 'rect':
-                    zoneOrHotspot[propery] = newValue as [number, number]
-                    break;
-                case 'polygon':
-                    zoneOrHotspot[propery] = newValue as [number, number][]
-                    break;
+        this.setState(state => {
+            const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = state
+            function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
+                switch (propery) {
+                    case 'x':
+                    case 'y':
+                    case 'circle':
+                        if (typeof newValue === 'number') {
+                            zoneOrHotspot[propery] = newValue
+                        }
+                        break;
+                    case 'path':
+                        if (typeof newValue === 'string') {
+                            zoneOrHotspot[propery] = newValue
+                        }
+                        break;
+                    case 'rect':
+                        zoneOrHotspot[propery] = newValue as [number, number]
+                        break;
+                    case 'polygon':
+                        zoneOrHotspot[propery] = newValue as [number, number][]
+                        break;
+                }
             }
-        }
 
-        if (type === 'hotspot') {
-            const hotspot = hotspots[index]
-            handleCommonValues(hotspot)
-            switch (propery) {
-                case 'parallax':
-                    if (typeof newValue === 'number') {
-                        hotspot[propery] = newValue
-                    }
-                    break;
-                case 'id':
-                case 'name':
-                case 'status':
-                    if (typeof newValue === 'string') {
-                        hotspot[propery] = newValue
-                    }
-                    break;
+            if (type === 'hotspot') {
+                const hotspot = hotspots[index]
+                handleCommonValues(hotspot)
+                switch (propery) {
+                    case 'parallax':
+                        if (typeof newValue === 'number') {
+                            hotspot[propery] = newValue
+                        }
+                        break;
+                    case 'id':
+                    case 'name':
+                    case 'status':
+                        if (typeof newValue === 'string') {
+                            hotspot[propery] = newValue
+                        }
+                        break;
+                }
+            } else {
+                const zone = type == 'obstacle' ? obstacleAreas[index] : walkableAreas[index]
+                handleCommonValues(zone)
+                switch (propery) {
+                    case 'ref':
+                        if (typeof newValue === 'string' || typeof newValue === 'undefined') {
+                            zone[propery] = newValue
+                        }
+                        break;
+                }
             }
-        } else {
-            const zone = type == 'obstacle' ? obstacleAreas[index] : walkableAreas[index]
-            handleCommonValues(zone)
-        }
-        this.setState({ obstacleAreas, hotspots, walkableAreas })
+            return { obstacleAreas, hotspots, walkableAreas }
+        })
     }
 
     changeProperty(propery: keyof RoomData, value: unknown): void {
@@ -470,8 +480,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                         obstacleAreas.map((obstacle, index) => {
                                             return {
                                                 label: `obstacle #${index}`, content: (
-                                                    <ShapeControl
-                                                        shape={obstacle} index={index}
+                                                    <ZoneControl
+                                                        zone={obstacle}
+                                                        index={index}
                                                         type='obstacle'
                                                         setClickEffect={this.setClickEffect}
                                                         change={this.changeZone}

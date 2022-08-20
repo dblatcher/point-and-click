@@ -109,15 +109,11 @@ export const OptionalNumberInput: FunctionalComponent<{
         if (checked) {
             return props.inputHandler(undefined)
         }
-
         const numberInputValue = Number(numberFieldRef.current?.value)
-
         if (!isNaN(numberInputValue)) {
             return props.inputHandler(numberInputValue)
         }
-
         props.inputHandler(props.min || 0)
-
     }
 
     return <>
@@ -169,6 +165,45 @@ export const StringInput: FunctionalComponent<{
             }
         } />
     </>
+}
+
+export const OptionalStringInput: FunctionalComponent<{
+    label?: string;
+    value: string | undefined;
+    type?: string;
+    inputHandler: { (value: string | undefined): void };
+}> = (props) => {
+    const { label, type = 'text', value, inputHandler } = props
+
+    const textFieldRef = useRef<HTMLInputElement>(null)
+
+    const sendStringValue: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
+        props.inputHandler(eventToString(event))
+    }
+
+    const toggleUndefined: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
+        const { checked } = event.target as HTMLInputElement;
+        if (checked) {
+            return props.inputHandler(undefined)
+        }
+        const textInputValue = textFieldRef.current?.value
+        props.inputHandler(textInputValue || '')
+    }
+
+    return <>
+        {label && <label>{label}</label>}
+        <span>
+            <label>undefined:</label>
+            <input type="checkbox" checked={typeof props.value === 'undefined'} onChange={toggleUndefined} />
+        </span>
+
+        <input type={type} disabled={typeof props.value === 'undefined'}
+            value={props.value}
+            onInput={sendStringValue}
+            ref={textFieldRef}
+        />
+    </>
+
 }
 
 export const CheckBoxInput: FunctionalComponent<{

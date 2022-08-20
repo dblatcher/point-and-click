@@ -3,18 +3,16 @@ import { h } from "preact";
 import { ClickEffect } from "./ClickEffect";
 import { HotspotZone } from "src";
 import { IdentInput, ParallaxInput } from "../formControls";
-import { ShapeControl } from "./ShapeControl";
+import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
 import { eventToNumber, eventToString } from "../../../lib/util";
 import styles from '../editorStyles.module.css';
 
 
-type ValidType = 'hotspot' | 'obstacle' | 'walkable';
-
 interface Props {
     hotspot: HotspotZone;
     index: number;
-    change: { (index: number, propery: Exclude<keyof HotspotZone, 'type'>, newValue: unknown, type: ValidType): void };
-    remove: { (index: number, type: ValidType): void };
+    change: ShapeChangeFunction;
+    remove: { (index: number, type: ValidShapeType): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
