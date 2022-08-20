@@ -3,7 +3,7 @@ import { IdentSchema } from "./BaseTypes"
 
 export const ItemDataSchema = IdentSchema.extend({
     type: z.literal('item'),
-    characterId: z.optional(z.string()),
+    actorId: z.optional(z.string()),
     imageId: z.optional(z.string()),
 })
 

@@ -51,7 +51,7 @@ export const makeBlankConversation = (): Conversation => ({
 })
 
 export const makeBlankStage = (): Stage => ({
-    characterOrders: {},
+    actorOrders: {},
     immediateConsequences: [],
 })
 
@@ -70,15 +70,15 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
         case 'sequence':
             return { type: 'sequence', sequence: '' }
         case 'changeStatus':
-            return { type: 'changeStatus', targetId: '', status: '', targetType: 'character' }
-        case 'removeCharacter':
-            return { type: 'removeCharacter', characterId: '' }
+            return { type: 'changeStatus', targetId: '', status: '', targetType: 'actor' }
+        case 'removeActor':
+            return { type: 'removeActor', actorId: '' }
         case 'inventory':
             return { type: "inventory", itemId: '', addOrRemove: 'ADD' }
         case 'changeRoom':
             return { type: 'changeRoom', roomId: '', takePlayer: true, x: 0, y: 0 }
         case 'talk':
-            return { type: 'talk', text: '', characterId: '', time: 100 }
+            return { type: 'talk', text: '', actorId: '', time: 100 }
         case 'ending':
             return { type: 'ending', endingId: '' }
         case 'order':

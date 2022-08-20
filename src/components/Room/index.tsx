@@ -1,7 +1,6 @@
 import { h, ComponentChildren, FunctionComponent } from "preact";
 import { CellMatrix } from "../../lib/pathfinding/cells";
-import { RoomData } from "src";
-import { HotspotZone } from "src";
+import { RoomData, HotspotZone } from "src";
 import { getShift } from "../../lib/util";
 import styles from './styles.module.css';
 import Hotspot from "./Hotspot";
@@ -9,7 +8,7 @@ import ZoneSvg from "../ZoneSvg";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import BackgroundShape from "./BackgroundShape";
 import { HandleHoverFunction, RoomContentItem } from "../Game";
-import { CharacterFigure } from "../CharacterFigure";
+import { ActorFigure } from "../ActorFigure";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 interface Props {
@@ -161,7 +160,7 @@ export const Room: FunctionComponent<Props> = ({
                 )}
 
                 {contents.map(entry => (
-                    <CharacterFigure key={entry.data.id}
+                    <ActorFigure key={entry.data.id}
                         isPaused={isPaused}
                         data={entry.data}
                         orders={entry.orders || []}

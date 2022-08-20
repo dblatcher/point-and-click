@@ -2,7 +2,6 @@ import { HotspotZone, Zone } from "../definitions/Zone";
 import { RoomData, BackgroundLayer } from "../definitions/RoomData";
 import { Ident } from "../definitions/BaseTypes";
 import { SpriteData } from "../definitions/SpriteSheet";
-import { CharacterData, CharacterDataSchema } from "../definitions/CharacterData";
 import { Consequence, consequenceTypes, Interaction } from "../definitions/Interaction";
 import { GameDesign } from "../definitions/Game";
 

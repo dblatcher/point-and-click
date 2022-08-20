@@ -1,5 +1,5 @@
 import { GameProps, GameState, cellSize } from ".";
-import { Command, Interaction, RoomData, CharacterData, HotspotZone } from "src";
+import { Command, Interaction, RoomData, ActorData, HotspotZone } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
 import { OrderConsequence } from "../../definitions/Interaction";
@@ -21,9 +21,9 @@ function matchInteraction(
 }
 
 function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
-    const { characters } = state
+    const { actors } = state
     const { verb, item, target } = command
-    const player = characters.find(_ => _.isPlayer)
+    const player = actors.find(_ => _.isPlayer)
     if (!player) { return state }
 
     const text = unreachable
@@ -32,11 +32,11 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
             ? `I can't ${verb.label} the ${item.name || item.id} ${verb.preposition} the ${target.name || target.id}`
             : `Nothing happens when I ${verb.label} the ${target.name || target.id}`;
 
-    if (!state.characterOrders[player.id]) {
-        state.characterOrders[player.id] = []
+    if (!state.actorOrders[player.id]) {
+        state.actorOrders[player.id] = []
     }
 
-    state.characterOrders[player.id].push({
+    state.actorOrders[player.id].push({
         type: 'talk',
         steps: [{ text, time: 100 }]
     })
@@ -52,27 +52,27 @@ function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): Game
     if (!hoverTarget) {
         return state
     }
-    const player = state.characters.find(_ => _.isPlayer)
+    const player = state.actors.find(_ => _.isPlayer)
 
     if (currentRoom) {
-        if (hoverTarget.type === 'character') {
+        if (hoverTarget.type === 'actor') {
             if (hoverTarget.room !== currentRoom.id) {
                 state.hoverTarget = undefined
             }
         }
     }
     if (player) {
-        if (hoverTarget.type === 'item' && hoverTarget.characterId !== player.id) {
+        if (hoverTarget.type === 'item' && hoverTarget.actorId !== player.id) {
             state.hoverTarget = undefined
         }
     }
     return state
 }
 
-function makeGoToOrder(player: CharacterData, target: CharacterData | HotspotZone): OrderConsequence {
+function makeGoToOrder(player: ActorData, target: ActorData | HotspotZone): OrderConsequence {
     return {
         type: 'order',
-        characterId: player.id,
+        actorId: player.id,
         replaceCurrentOrders: true,
         orders: [
             {
@@ -92,10 +92,10 @@ function makeGoToOrder(player: CharacterData, target: CharacterData | HotspotZon
 export function handleCommand(command: Command, props: GameProps): { (state: GameState): Partial<GameState> } {
 
     return (state): GameState => {
-        const { currentRoomId, rooms, debugLog, characters, cellMatrix = [] } = state
+        const { currentRoomId, rooms, debugLog, actors, cellMatrix = [] } = state
 
         const currentRoom = rooms.find(_ => _.id === currentRoomId)
-        const player = characters.find(_ => _.isPlayer)
+        const player = actors.find(_ => _.isPlayer)
         const interaction = matchInteraction(command, currentRoom, state.interactions)
 
         if (interaction && interaction.mustReachFirst && command.target.type !== 'item') {

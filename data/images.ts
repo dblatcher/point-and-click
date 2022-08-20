@@ -15,8 +15,8 @@ const itemFileNames = [
     'tube.png',
 ]
 
-const characterSpritePath = "./assets/characters/"
-const characterSpriteFileNames = [
+const actorSpritePath = "./assets/characters/"
+const actorSpriteFileNames = [
     "mario.png",
     "skinner-1-l.png",
     "skinner-2-l.png",
@@ -46,6 +46,6 @@ const buildAssets = (filenames: string[], path: string, category: ImageAssetCate
 export const assets: ImageAsset[] = [
     ...buildAssets(backgroundFileNames, backgroundPath, 'background'),
     ...buildAssets(itemFileNames, itemPath, 'spriteSheet', 'ITEM_'),
-    ...buildAssets(characterSpriteFileNames, characterSpritePath, 'spriteSheet'),
+    ...buildAssets(actorSpriteFileNames, actorSpritePath, 'spriteSheet'),
     ...buildAssets(thingSpriteFileNames, thingSpritePath, 'spriteSheet'),
 ]

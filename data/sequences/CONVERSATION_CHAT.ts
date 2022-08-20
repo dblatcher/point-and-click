@@ -4,7 +4,7 @@ const CHAT_HELLO_0: Sequence = {
     id: "CHAT_HELLO_0",
     stages: [
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     {
                         type: 'talk', steps: [
@@ -16,7 +16,7 @@ const CHAT_HELLO_0: Sequence = {
             }
         },
         {
-            characterOrders: {
+            actorOrders: {
                 MARIO: [
                     {
                         type: 'talk', steps: [
@@ -33,7 +33,7 @@ const CHAT_HELLO_1: Sequence = {
     id: "CHAT_HELLO_1",
     stages: [
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     {
                         type: 'talk', steps: [
@@ -50,7 +50,7 @@ const CHAT_TOOLS_0: Sequence = {
     id: "CHAT_TOOLS_0",
     stages: [
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
                     { type: 'talk', steps: [{ text: 'Do you have a hammer?', time: 100 }] },
@@ -58,7 +58,7 @@ const CHAT_TOOLS_0: Sequence = {
             }
         },
         {
-            characterOrders: {
+            actorOrders: {
                 MARIO: [
                     { type: 'talk', steps: [{ text: 'Yes.', time: 100 }] },
                 ]
@@ -71,7 +71,7 @@ const CHAT_TOOLS_1: Sequence = {
     id: "CHAT_TOOLS_1",
     stages: [
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     { type: 'talk', steps: [{ text: 'Can I have the hammer?', time: 100 }] },
 
@@ -79,7 +79,7 @@ const CHAT_TOOLS_1: Sequence = {
             }
         },
         {
-            characterOrders: {
+            actorOrders: {
                 MARIO: [
                     { type: 'talk', steps: [{ text: 'Here you go.', time: 100 }] },
                     { type: 'act', steps: [{ animation: 'walk', duration: 150 }] },
@@ -96,7 +96,7 @@ const CHAT_TOOLS_2: Sequence = {
     id: "CHAT_TOOLS_2",
     stages: [
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
                     { type: 'talk', steps: [{ text: 'Do you have a screwdriver?', time: 100 }] },
@@ -104,7 +104,7 @@ const CHAT_TOOLS_2: Sequence = {
             }
         },
         {
-            characterOrders: {
+            actorOrders: {
                 MARIO: [
                     { type: 'talk', steps: [{ text: 'No.', time: 100 }] },
                 ]
@@ -117,7 +117,7 @@ const CHAT_TOOLS_3: Sequence = {
     id: "CHAT_TOOLS_3",
     stages: [
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     { type: 'talk', steps: [{ text: 'Never mind.', time: 100 }] },
                 ]

@@ -1,7 +1,7 @@
 import { GameDesign } from "src";
 
 const emoji = {
-    CHARACTER: '🚶',
+    ACTOR: '🚶',
     ITEM: '📦',
     HOTSPOT: '🎯',
     CONVERSATION: '💬',
@@ -9,13 +9,13 @@ const emoji = {
 }
 
 export function getTargetLists(gameDesign: GameDesign): { ids: string[]; descriptions: string[] } {
-    const { characters, items, rooms } = gameDesign
+    const { actors: actors, items, rooms } = gameDesign
     const ids: string[] = [];
     const descriptions: string[] = [];
 
-    characters.forEach(character => {
-        ids.push(character.id)
-        descriptions.push(`${emoji.CHARACTER} ${character.id}`)
+    actors.forEach(actor => {
+        ids.push(actor.id)
+        descriptions.push(`${emoji.ACTOR} ${actor.id}`)
     })
     items.forEach(item => {
         ids.push(item.id)
@@ -30,9 +30,9 @@ export function getTargetLists(gameDesign: GameDesign): { ids: string[]; descrip
     return { ids, descriptions }
 }
 
-export function getCharacterDescriptions(gameDesign: GameDesign): string[] {
-    const { characters } = gameDesign
-    return characters.map(character => `${emoji.CHARACTER} ${character.id}`)
+export function getActorDescriptions(gameDesign: GameDesign): string[] {
+    const { actors: actors } = gameDesign
+    return actors.map(actor => `${emoji.ACTOR} ${actor.id}`)
 }
 
 export function getItemDescriptions(gameDesign: GameDesign): string[] {

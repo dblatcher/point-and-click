@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { CharacterData, Direction, RoomData, Point } from "src";
-import { CharacterDataSchema } from "../../../definitions/CharacterData";
+import { ActorData, Direction, RoomData, Point } from "src";
+import { ActorDataSchema } from "../../../definitions/ActorData";
 import { directions } from "../../../definitions/SpriteSheet";
 import { CheckBoxInput, IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
@@ -18,19 +18,19 @@ type ExtraState = {
 
 }
 
-type State = CharacterData & { sprite: string | undefined } & ExtraState;
+type State = ActorData & { sprite: string | undefined } & ExtraState;
 
 type Props = {
-    data?: CharacterData;
-    updateData?: { (data: CharacterData): void };
+    data?: ActorData;
+    updateData?: { (data: ActorData): void };
     rooms: RoomData[];
-    characterIds: string[];
-    characters: CharacterData[];
+    actorIds: string[];
+    actors: ActorData[];
 }
 
-const makeBlankCharacter = (): CharacterData => ({
-    id: 'NEW_CHARACTER',
-    type: 'character',
+const makeBlankActor = (): ActorData => ({
+    id: 'NEW_ACTOR',
+    type: 'actor',
     name: undefined,
     status: undefined,
 
@@ -45,14 +45,14 @@ const makeBlankCharacter = (): CharacterData => ({
 
 })
 
-export class CharacterEditor extends Component<Props, State> {
+export class ActorEditor extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
 
         const initialState = props.data ? {
             ...props.data
-        } : makeBlankCharacter()
+        } : makeBlankActor()
 
         this.state = {
             ...initialState
@@ -64,12 +64,12 @@ export class CharacterEditor extends Component<Props, State> {
         this.handlePreviewClick = this.handlePreviewClick.bind(this)
     }
 
-    get currentData(): CharacterData {
-        const characterData = cloneData(this.state) as State;
-        return characterData
+    get currentData(): ActorData {
+        const actorData = cloneData(this.state) as State;
+        return actorData
     }
 
-    changeValue(propery: keyof CharacterData, newValue: string | number | boolean) {
+    changeValue(propery: keyof ActorData, newValue: string | number | boolean) {
         const modification: Partial<State> = {}
         switch (propery) {
             case 'id':
@@ -109,16 +109,16 @@ export class CharacterEditor extends Component<Props, State> {
         this.setState(modification)
     }
     handleLoadButton = async () => {
-        const { data, error } = await uploadJsonData(CharacterDataSchema)
+        const { data, error } = await uploadJsonData(ActorDataSchema)
         if (data) {
             this.setState(data)
         } else {
-            console.warn("NOT CHARACTER DATA", error)
+            console.warn("NOT ACTOR DATA", error)
         }
     }
     handleResetButton() {
         const { props } = this
-        const initialState = props.data ? cloneData(props.data) : makeBlankCharacter()
+        const initialState = props.data ? cloneData(props.data) : makeBlankActor()
         this.setState({
             ...initialState
         })
@@ -132,7 +132,7 @@ export class CharacterEditor extends Component<Props, State> {
         this.setState(point)
     }
 
-    get previewData(): CharacterData {
+    get previewData(): ActorData {
         return {
             ...this.state,
             x: this.state.width / 2, y: 0
@@ -146,26 +146,26 @@ export class CharacterEditor extends Component<Props, State> {
         return Object.keys(sprite.data.animations)
     }
 
-    get otherCharactersInRoom(): CharacterData[] {
-        const { characters } = this.props
+    get otherActorsInRoom(): ActorData[] {
+        const { actors } = this.props
         const { id, room } = this.state
         const originalId = this.props.data?.id
 
-        return characters.filter(character => 
-                character.id !== id && 
-                character.id !== originalId &&
-                character.room === room
+        return actors.filter(actor => 
+                actor.id !== id && 
+                actor.id !== originalId &&
+                actor.room === room
         )
     }
 
     render() {
         const { state } = this
         const { sprite: spriteId, width = 1, height = 1, } = state
-        const { characterIds } = this.props
+        const { actorIds } = this.props
 
         return (
             <article>
-                <h2>Character Editor</h2>
+                <h2>Actor Editor</h2>
 
                 <div className={styles.rowTopLeft}>
                     <fieldset>
@@ -182,10 +182,10 @@ export class CharacterEditor extends Component<Props, State> {
                     <SpritePreview data={this.previewData} />
 
                     <StorageMenu
-                        type="characterData"
+                        type="actorData"
                         data={this.currentData}
                         originalId={this.props.data?.id}
-                        existingIds={characterIds}
+                        existingIds={actorIds}
                         reset={this.handleResetButton}
                         update={this.handleUpdateButton}
                         saveButton={true}
@@ -194,12 +194,12 @@ export class CharacterEditor extends Component<Props, State> {
                 </div>
                 <div className={styles.rowTopLeft}>
                     <fieldset>
-                        <legend>Character details</legend>
+                        <legend>Actor details</legend>
                         <div>
                             <NumberInput label="movement speed" value={state.speed || 1} inputHandler={value => { this.changeValue('speed', value) }} />
                         </div>
                         <div>
-                            <CheckBoxInput label="Is player character" value={state.isPlayer} inputHandler={value => { this.changeValue('isPlayer', value) }} />
+                            <CheckBoxInput label="Is player actor" value={state.isPlayer} inputHandler={value => { this.changeValue('isPlayer', value) }} />
                         </div>
                         <div>
                             <TextInput type="color" label="dialogue color" value={state.dialogueColor || ''} onInput={event => { this.changeValue('dialogueColor', eventToString(event)) }} />
@@ -247,8 +247,8 @@ export class CharacterEditor extends Component<Props, State> {
                 </div>
 
                 <PositionPreview
-                    characterData={this.state}
-                    otherCharacters={this.otherCharactersInRoom}
+                    actorData={this.state}
+                    otherActors={this.otherActorsInRoom}
                     roomData={this.state.room ? findById(this.state.room, this.props.rooms) : undefined}
                     reportClick={this.handlePreviewClick}
                 />

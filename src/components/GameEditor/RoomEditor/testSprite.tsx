@@ -1,4 +1,4 @@
-import { CharacterData, SpriteData, SpriteSheet  } from "src"
+import { ActorData, SpriteData, SpriteSheet  } from "src"
 import { Point } from "../../../lib/pathfinding/geometry";
 import { Sprite } from "../../../lib/Sprite";
 import spriteService from "../../../services/spriteService";
@@ -38,7 +38,7 @@ const data: SpriteData = {
 const testSprite = new Sprite(data)
 
 
-const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
+const makeTestActor: { (point: Point): ActorData } = (point) => {
 
     spriteService.add(testSprite)
     spriteSheetService.add(testSpriteSheets)
@@ -47,7 +47,7 @@ const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
         id: 'TEST',
         name: 'Test Sprite',
         status: 'default',
-        type: 'character',
+        type: 'actor',
         room: 'NA',
         x: point.x,
         y: point.y,
@@ -59,4 +59,4 @@ const makeTestCharacter: { (point: Point): CharacterData } = (point) => {
     }
 }
 
-export { makeTestCharacter }
+export { makeTestActor }

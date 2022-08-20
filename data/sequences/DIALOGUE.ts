@@ -5,7 +5,7 @@ export const DIALOGUE: Sequence = {
     description:"Skinner talks to his doppleganger.",
     stages: [
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     {
                         type: 'move',
@@ -19,7 +19,7 @@ export const DIALOGUE: Sequence = {
             }
         },
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     {
                         type: 'talk',
@@ -43,7 +43,7 @@ export const DIALOGUE: Sequence = {
             }
         },
         {
-            characterOrders: {
+            actorOrders: {
                 EVIL_SKINNER: [
                     {
                         type: 'talk',
@@ -55,7 +55,7 @@ export const DIALOGUE: Sequence = {
             }
         },
         {
-            characterOrders: {
+            actorOrders: {
                 EVIL_SKINNER: [
                     {
                         type: 'talk',

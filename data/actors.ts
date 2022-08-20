@@ -1,10 +1,10 @@
-import { CharacterData } from "../src/definitions/CharacterData"
+import { ActorData } from "../src/definitions/ActorData"
 
-export const initialCharacters: CharacterData[] = [
+export const initialActors: ActorData[] = [
     {
         id: 'PLAYER',
         name: 'Seymour Skinner',
-        type: 'character',
+        type: 'actor',
         isPlayer: true,
         room: 'OUTSIDE',
         x: (200),
@@ -18,7 +18,7 @@ export const initialCharacters: CharacterData[] = [
     {
         id: 'EVIL_SKINNER',
         name: 'Evil Skinner',
-        type: 'character',
+        type: 'actor',
         room: 'INSIDE',
         x: (640 * 2 / 5),
         y: 10,
@@ -32,7 +32,7 @@ export const initialCharacters: CharacterData[] = [
     {
         id: 'MARIO',
         name: 'Mario',
-        type: 'character',
+        type: 'actor',
         room: 'OUTSIDE',
         x: (640 * 1 / 5),
         y: 10,
@@ -43,7 +43,7 @@ export const initialCharacters: CharacterData[] = [
     },
     {
         id: 'FIRE',
-        type:'character',
+        type:'actor',
         room: 'OUTSIDE',
         x: 200,
         y: 10,
@@ -54,7 +54,7 @@ export const initialCharacters: CharacterData[] = [
     },
     {
         id: 'TUBE',
-        type:'character',
+        type:'actor',
         room: 'OUTSIDE',
         x: 240,
         y: 10,

@@ -62,7 +62,7 @@ export const interactions: Interaction[] = [
             },
             {
                 type: 'talk',
-                characterId: 'MARIO',
+                actorId: 'MARIO',
                 text: 'Itsa me, Mario.',
                 time: 100,
             },
@@ -173,8 +173,8 @@ export const interactions: Interaction[] = [
         mustReachFirst: true,
         consequences: [
             {
-                type: 'removeCharacter',
-                characterId: 'TUBE',
+                type: 'removeActor',
+                actorId: 'TUBE',
             },
             {
                 type: 'inventory',

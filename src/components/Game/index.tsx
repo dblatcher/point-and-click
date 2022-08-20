@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment } from "preact";
-import { GameData, GameCondition, RoomData, CharacterData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "src";
+import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "src";
 import { getViewAngleCenteredOn, clamp, locateClickInWorld, findById } from "../../lib/util";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { followOrder } from "./orders/followOrder";
@@ -40,9 +40,9 @@ export type GameState = GameData & {
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
 export type HandleClickFunction<T extends CommandTarget> = { (target: T): void };
 export type RoomContentItem = {
-    data: CharacterData;
+    data: ActorData;
     orders?: Order[];
-    clickHandler?: HandleClickFunction<CharacterData>;
+    clickHandler?: HandleClickFunction<ActorData>;
     overrideSprite?: Sprite;
 }
 
@@ -64,14 +64,14 @@ export default class Game extends Component<GameProps, GameState> {
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.handleConversationClick = this.handleConversationClick.bind(this)
         this.handleTargetClick = this.handleTargetClick.bind(this)
-        this.makeCharactersAct = this.makeCharactersAct.bind(this)
+        this.makeActorsAct = this.makeActorsAct.bind(this)
         this.centerViewOnPLayer = this.centerViewOnPLayer.bind(this)
         this.handleHover = this.handleHover.bind(this)
     }
 
     getInitialGameState(props: GameProps): GameState {
         const rooms = props.rooms.map(cloneData);
-        const characters = props.characters.map(cloneData);
+        const actors = props.actors.map(cloneData);
         const items = props.items.map(cloneData);
         const conversations = props.conversations.map(cloneData);
 
@@ -80,13 +80,13 @@ export default class Game extends Component<GameProps, GameState> {
             isPaused: false,
             id: props.id,
             currentRoomId: props.currentRoomId,
-            characters,
+            actors,
             rooms,
             currentVerbId: props.verbs[0].id,
             interactions: [...props.interactions],
             items,
             sequenceRunning: props.sequenceRunning || undefined,
-            characterOrders: props.characterOrders || {},
+            actorOrders: props.actorOrders || {},
             conversations,
             currentConversationId: props.currentConversationId,
             debugLog: [makeDebugEntry("Running!")]
@@ -95,21 +95,21 @@ export default class Game extends Component<GameProps, GameState> {
 
     get saveData(): GameData {
         const {
-            rooms, characters, interactions, items,
-            currentRoomId, characterOrders, sequenceRunning,
+            rooms, actors, interactions, items,
+            currentRoomId, actorOrders, sequenceRunning,
             conversations, currentConversationId, id,
         } = this.state
 
         return {
             id,
-            rooms, characters, interactions, items,
-            currentRoomId, characterOrders, sequenceRunning,
+            rooms, actors, interactions, items,
+            currentRoomId, actorOrders, sequenceRunning,
             conversations, currentConversationId,
         }
     }
 
-    get player(): (CharacterData | undefined) {
-        return this.state.characters.find(character => character.isPlayer)
+    get player(): (ActorData | undefined) {
+        return this.state.actors.find(actor => actor.isPlayer)
     }
 
     get currentConversation(): (Conversation | undefined) {
@@ -155,11 +155,11 @@ export default class Game extends Component<GameProps, GameState> {
     tick() {
         const { isPaused } = this.state
         if (isPaused) { return }
-        this.makeCharactersAct()
+        this.makeActorsAct()
         this.centerViewOnPLayer()
     }
 
-    makeCharactersAct() {
+    makeActorsAct() {
         if (this.state.sequenceRunning) {
             return this.setState(continueSequence(this.state, this.props))
         }
@@ -167,8 +167,8 @@ export default class Game extends Component<GameProps, GameState> {
         return this.setState(state => {
             const { cellMatrix = [] } = state
             let pendingInteractionShouldBeDone = false;
-            state.characters.forEach(character => {
-                const triggersPendingInteraction = followOrder(character, cellMatrix, state.characterOrders[character.id])
+            state.actors.forEach(actor => {
+                const triggersPendingInteraction = followOrder(actor, cellMatrix, state.actorOrders[actor.id])
                 if (triggersPendingInteraction) {
                     pendingInteractionShouldBeDone = true
                 }
@@ -240,21 +240,21 @@ export default class Game extends Component<GameProps, GameState> {
     render() {
         const { verbs = [], save, reset, load, showDebugLog } = this.props
         const { viewAngle, isPaused,
-            characters, currentVerbId, currentItemId, items,
-            characterOrders, sequenceRunning, hoverTarget
+            actors, currentVerbId, currentItemId, items,
+            actorOrders, sequenceRunning, hoverTarget
         } = this.state
         const { currentRoom, player, currentConversation } = this
 
-        const characterOrderMap = sequenceRunning ? sequenceRunning.stages[0].characterOrders || {} : characterOrders;
+        const actorOrderMap = sequenceRunning ? sequenceRunning.stages[0].actorOrders || {} : actorOrders;
 
-        const charactersInOrder = characters
+        const actorsInOrder = actors
             .filter(_ => _.room === currentRoom?.id)
             .sort((a, b) => b.y - a.y)
 
-        const contentList: RoomContentItem[] = charactersInOrder.map(data => ({
+        const contentList: RoomContentItem[] = actorsInOrder.map(data => ({
             data,
-            orders: characterOrderMap[data.id],
-            clickHandler: data.type == 'character' && data.isPlayer ? undefined : this.handleTargetClick
+            orders: actorOrderMap[data.id],
+            clickHandler: data.isPlayer ? undefined : this.handleTargetClick
         }))
 
         return (<>
@@ -320,7 +320,7 @@ export default class Game extends Component<GameProps, GameState> {
                     />
 
                     <ItemMenu
-                        items={items.filter(_ => _.characterId === player?.id)}
+                        items={items.filter(_ => _.actorId === player?.id)}
                         currentItemId={currentItemId}
                         select={(item: ItemData) => { this.handleTargetClick(item) }}
                         handleHover={this.handleHover}

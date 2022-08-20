@@ -85,13 +85,13 @@ export default class GamePlayer extends Component<Props, State> {
     if (loadedGameDesign) {
       return {
         ...cloneData(loadedGameDesign),
-        characterOrders: {},
+        actorOrders: {},
       };
     }
     if (prebuiltGame) {
       return {
         ...cloneData(prebuiltGame),
-        characterOrders: {},
+        actorOrders: {},
       };
     }
     return undefined;

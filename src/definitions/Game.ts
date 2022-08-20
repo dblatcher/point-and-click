@@ -4,7 +4,7 @@ import { ItemData, ItemDataSchema } from "./ItemData"
 import { orderSchema } from "./Order"
 import { RoomData, RoomDataSchema } from "./RoomData"
 import { Sequence, SequenceSchema } from "./Sequence"
-import { CharacterData, CharacterDataSchema } from "./CharacterData"
+import { ActorData, ActorDataSchema } from "./ActorData"
 import { VerbSchema } from "./Verb"
 import { Conversation, ConversationSchema } from "./Conversation"
 import { SpriteData, SpriteSheet, SpriteDataSchema, SpriteSheetSchema } from "./SpriteSheet"
@@ -13,7 +13,7 @@ import { Ending, EndingSchema } from "./Ending"
 
 const GameHappeningsSchema = z.object({
     sequenceRunning: SequenceSchema.optional(),
-    characterOrders: z.record(z.string(), orderSchema.array()),
+    actorOrders: z.record(z.string(), orderSchema.array()),
     currentConversationId: z.string().optional(),
     endingId: z.string().optional(),
     pendingInteraction: InteractionSchema.optional()
@@ -22,7 +22,7 @@ const GameHappeningsSchema = z.object({
 const GameContentsDataSchema = z.object({
     rooms: RoomDataSchema.array(),
     items: ItemDataSchema.array(),
-    characters: CharacterDataSchema.array(),
+    actors: ActorDataSchema.array(),
     interactions: InteractionSchema.array(),
     conversations: ConversationSchema.array(),
     currentRoomId: z.string(),
@@ -50,4 +50,4 @@ export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>
 export type GameDesign = z.infer<typeof GameDesignSchema>
 
-export type GameDataItem = CharacterData | ItemData | Conversation | RoomData | SpriteData | SpriteSheet | Sequence | Ending
+export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | SpriteSheet | Sequence | Ending

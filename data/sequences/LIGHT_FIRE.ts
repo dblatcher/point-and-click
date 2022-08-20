@@ -5,7 +5,7 @@ export const LIGHT_FIRE: Sequence = {
     description:"player lights the fire with the matches",
     stages: [
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     {
                         type: 'move', steps: [{
@@ -21,7 +21,7 @@ export const LIGHT_FIRE: Sequence = {
             }
         },
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     {
                         type: 'talk', steps: [{
@@ -39,7 +39,7 @@ export const LIGHT_FIRE: Sequence = {
             },
         },
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     {
                         type: 'talk', steps: [{
@@ -49,7 +49,7 @@ export const LIGHT_FIRE: Sequence = {
                 ]
             },
             immediateConsequences: [
-                { type: 'changeStatus', targetId: 'FIRE', status: 'burning', targetType: 'character' }
+                { type: 'changeStatus', targetId: 'FIRE', status: 'burning', targetType: 'actor' }
             ]
         }
     ]

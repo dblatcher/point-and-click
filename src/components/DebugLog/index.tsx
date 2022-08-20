@@ -31,25 +31,25 @@ export const DebugLog: FunctionalComponent<Props> = ({
         listElement.scrollTo({ left: 0, top: 10000 })
     }, [log.length])
 
-    const charactersInRoom = condition.characters.filter(_ => _.room === condition.currentRoomId)
+    const actorsInRoom = condition.actors.filter(_ => _.room === condition.currentRoomId)
 
     const describeOrder = (order?: Order): [string, string] => {
         if (!order) { return ["", ""] }
         const [currentStep] = order.steps
         return [order.type, currentStep?.animation || ""]
     }
-    const getOrderDescrition = (characterId: string): [string, string] => {
-        const { sequenceRunning, characterOrders } = condition
+    const getOrderDescrition = (actorId: string): [string, string] => {
+        const { sequenceRunning, actorOrders } = condition
         if (sequenceRunning && sequenceRunning.stages.length > 0) {
             const [currentStage] = sequenceRunning.stages;
 
-            if (currentStage.characterOrders && currentStage.characterOrders[characterId]) {
-                const [currentStageOrder] = currentStage.characterOrders[characterId];
+            if (currentStage.actorOrders && currentStage.actorOrders[actorId]) {
+                const [currentStageOrder] = currentStage.actorOrders[actorId];
                 return describeOrder(currentStageOrder)
             }
         }
 
-        const orders = characterOrders[characterId]
+        const orders = actorOrders[actorId]
         if (orders && orders.length > 0) {
             const [currentOrder] = orders
             return describeOrder(currentOrder)
@@ -64,7 +64,7 @@ export const DebugLog: FunctionalComponent<Props> = ({
                     <p>room:{condition.currentRoomId}</p>
                     <p>sequence:{condition.sequenceRunning?.id}</p>
 
-                    <table className={styles.characterTable}>
+                    <table className={styles.actorTable}>
                         <thead>
                             <tr>
                                 <th />
@@ -74,11 +74,11 @@ export const DebugLog: FunctionalComponent<Props> = ({
                             </tr>
                         </thead>
                         <tbody>
-                            {charactersInRoom.map((character, index) => (
+                            {actorsInRoom.map((actor, index) => (
                                 <tr key={index}>
-                                    <th>{character.id}</th>
-                                    <td>{character.status}</td>
-                                    {getOrderDescrition(character.id).map((text, index2) => (
+                                    <th>{actor.id}</th>
+                                    <td>{actor.status}</td>
+                                    {getOrderDescrition(actor.id).map((text, index2) => (
                                         <td key={index2}>{text}</td>
                                     ))}
                                 </tr>

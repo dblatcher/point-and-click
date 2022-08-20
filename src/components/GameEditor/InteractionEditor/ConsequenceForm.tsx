@@ -4,7 +4,7 @@ import { consequenceTypes, immediateConsequenceTypes } from "../../../definition
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
 import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
-import { getTargetLists, getCharacterDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions } from "./getTargetLists";
+import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
 import { getDefaultOrder } from "../defaults";
@@ -28,18 +28,18 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
     const optionListIds = {
         type: immediateOnly ? immediateConsequenceTypes : consequenceTypes,
         conversationId: listIds(gameDesign.conversations),
-        characterId: listIds(gameDesign.characters),
+        actorId: listIds(gameDesign.actors),
         itemId: listIds(gameDesign.items),
         roomId: listIds(gameDesign.rooms),
         targetId: targetIds,
-        targetType: ['character', 'item', 'hotspot'],
+        targetType: ['actor', 'item', 'hotspot'],
         addOrRemove: ['ADD', 'REMOVE'],
         sequence: listIds(gameDesign.sequences),
         endingId: listIds(gameDesign.endings),
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
         targetId: targetDescriptions,
-        characterId: getCharacterDescriptions(gameDesign),
+        actorId: getActorDescriptions(gameDesign),
         itemId: getItemDescriptions(gameDesign),
         conversationId: getConversationsDescriptions(gameDesign),
         sequence: getSequenceDescriptions(gameDesign)
@@ -63,7 +63,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
             case 'sequence':
             case 'targetId':
             case 'status':
-            case 'characterId':
+            case 'actorId':
             case 'itemId':
             case 'roomId':
             case 'endingId':
@@ -98,7 +98,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
             switch (property) {
                 case 'type':
                 case 'conversationId':
-                case 'characterId':
+                case 'actorId':
                 case 'itemId':
                 case 'roomId':
                 case 'targetType':

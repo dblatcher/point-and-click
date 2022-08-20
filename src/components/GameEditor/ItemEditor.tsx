@@ -12,7 +12,7 @@ import { StorageMenu } from "./StorageMenu";
 
 interface Props {
     data?: ItemData;
-    characterIds: string[];
+    actorIds: string[];
     updateData?: { (data: ItemData): void };
     itemIds: string[];
 }
@@ -64,7 +64,7 @@ export class ItemEditor extends Component<Props, State> {
                 }
                 break;
             case 'name':
-            case 'characterId':
+            case 'actorId':
             case 'imageId':
                 if (typeof newValue === 'string' || typeof newValue === 'undefined') {
                     modification[propery] = newValue
@@ -75,7 +75,7 @@ export class ItemEditor extends Component<Props, State> {
     }
 
     render() {
-        const { characterId = '', id } = this.state
+        const { actorId = '', id } = this.state
         const { itemIds } = this.props
 
         return (
@@ -90,12 +90,12 @@ export class ItemEditor extends Component<Props, State> {
                         />
 
                         <div>
-                            <SelectInput label="characterID"
-                                emptyOptionLabel="[no Character]"
-                                items={this.props.characterIds}
-                                value={characterId}
+                            <SelectInput label="actorId"
+                                emptyOptionLabel="[no Actor]"
+                                items={this.props.actorIds}
+                                value={actorId}
                                 haveEmptyOption={true}
-                                onSelect={id => { this.changeValue('characterId', id) }} />
+                                onSelect={id => { this.changeValue('actorId', id) }} />
                         </div>
 
                         <ServiceItemSelector legend='picture'

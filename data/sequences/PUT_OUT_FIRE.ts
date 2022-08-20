@@ -4,7 +4,7 @@ export const PUT_OUT_FIRE: Sequence = {
     id: "PUT_OUT_FIRE",
     stages: [
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     {
                         type: 'move', steps: [{
@@ -20,7 +20,7 @@ export const PUT_OUT_FIRE: Sequence = {
             }
         },
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     {
                         type: 'talk', steps: [{
@@ -37,11 +37,11 @@ export const PUT_OUT_FIRE: Sequence = {
                 ]
             },
             immediateConsequences: [
-                { type: 'changeStatus', targetId: 'FIRE', status: 'out', targetType: 'character' }
+                { type: 'changeStatus', targetId: 'FIRE', status: 'out', targetType: 'actor' }
             ]
         },
         {
-            characterOrders: {
+            actorOrders: {
                 PLAYER: [
                     {
                         type: 'talk', steps: [{

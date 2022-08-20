@@ -47,29 +47,29 @@ export class SequenceEditor extends Component<Props, State> {
     }
 
     get currentData(): Sequence {
-        const characterData = cloneData(this.state) as State;
-        return characterData
+        const actorData = cloneData(this.state) as State;
+        return actorData
     }
 
-    changeOrder(order: Order, stageIndex: number, characterId: string, orderIndex: number) {
+    changeOrder(order: Order, stageIndex: number, actorId: string, orderIndex: number) {
         this.setState(state => {
             const { stages } = state
-            const characterOrders = stages[stageIndex]?.characterOrders
-            if (!characterOrders) { return {} }
-            const ordersForCharacter = characterOrders[characterId]
-            if (!ordersForCharacter) { return {} }
-            ordersForCharacter.splice(orderIndex, 1, order)
+            const actorOrders = stages[stageIndex]?.actorOrders
+            if (!actorOrders) { return {} }
+            const ordersForActor = actorOrders[actorId]
+            if (!ordersForActor) { return {} }
+            ordersForActor.splice(orderIndex, 1, order)
             return { stages }
         })
     }
 
-    changeOrderList(newList: Order[], stageIndex: number, characterId: string) {
+    changeOrderList(newList: Order[], stageIndex: number, actorId: string) {
         this.setState(state => {
             const { stages } = state
             const stage = stages[stageIndex]
             if (!stage) { return {} }
-            if (!stage.characterOrders) { stage.characterOrders = {} }
-            stage.characterOrders[characterId] = newList
+            if (!stage.actorOrders) { stage.actorOrders = {} }
+            stage.actorOrders[actorId] = newList
             return { stages }
         })
     }
@@ -100,17 +100,17 @@ export class SequenceEditor extends Component<Props, State> {
         })
     }
 
-    renderCharacterOrderList(characterId: string, orders: Order[], stageIndex: number) {
+    renderActorOrderList(actorId: string, orders: Order[], stageIndex: number) {
         return (
             <ListEditor
                 list={orders}
                 describeItem={(order, orderIndex) => (
                     <OrderForm key={orderIndex}
                         data={order}
-                        updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, characterId, orderIndex) }}
+                        updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, actorId, orderIndex) }}
                     />
                 )}
-                mutateList={newList => { this.changeOrderList(newList, stageIndex, characterId) }}
+                mutateList={newList => { this.changeOrderList(newList, stageIndex, actorId) }}
                 createItem={() => getDefaultOrder('act')}
             />
         )
@@ -118,22 +118,22 @@ export class SequenceEditor extends Component<Props, State> {
 
     renderStage(stage: Stage, stageIndex: number) {
         const { gameDesign } = this.props
-        const { immediateConsequences = [], characterOrders = {} } = stage
+        const { immediateConsequences = [], actorOrders = {} } = stage
         return (
             <section key={stageIndex} style={{width:'100%'}}>
                 <h3>stage {stageIndex + 1}</h3>
                 <SelectAndConfirmInput
                     label="add orders for:"
-                    items={listIds(gameDesign.characters).filter(id => !Object.keys(characterOrders).includes(id))}
+                    items={listIds(gameDesign.actors).filter(id => !Object.keys(actorOrders).includes(id))}
                     onSelect={value => { this.changeOrderList( [getDefaultOrder('talk')], stageIndex, value) }}
                 />
 
                 <TabMenu backgroundColor="none"
                     tabs={
                         [
-                            ...Object.entries(characterOrders).map(([characterId, orders]) => ({
-                                content: this.renderCharacterOrderList(characterId, orders, stageIndex),
-                                label: `${characterId}[${orders.length}]`
+                            ...Object.entries(actorOrders).map(([actorId, orders]) => ({
+                                content: this.renderActorOrderList(actorId, orders, stageIndex),
+                                label: `${actorId}[${orders.length}]`
                             })),
                             {
                                 label: `consequences [${immediateConsequences.length}]`,

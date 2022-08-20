@@ -83,7 +83,7 @@ export class ConversationEditor extends Component<Props, State> {
         if (data) {
             this.setState(data)
         } else {
-            console.warn("NOT CHARACTER DATA", error)
+            console.warn("NOT ACTOR DATA", error)
         }
     }
     handleResetButton() {

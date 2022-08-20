@@ -1,12 +1,12 @@
 import { GameProps, GameState } from ".";
-import { Order, CharacterData } from "src";
+import { Order, ActorData } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 
 
 function validateOrderIdsAndClearEmpties(
     orders: Record<string, Order[]>,
-    targets: CharacterData[]
+    targets: ActorData[]
 ): void {
     const validIds = targets.map(_ => _.id)
     const invalidIds = Object.keys(orders).filter(_ => !validIds.includes(_))
@@ -31,15 +31,15 @@ function validateOrderIdsAndClearEmpties(
  * @returns a partial state
  */
 export function continueSequence(state: GameState, props: GameProps): Partial<GameState> {
-    const { characters, sequenceRunning, cellMatrix = [] } = state
+    const { actors, sequenceRunning, cellMatrix = [] } = state
     if (!sequenceRunning) { return {} }
     const [currentStage] = sequenceRunning.stages
     if (!currentStage) { return {} }
 
-    const { characterOrders: stageCharacterOrders = {} } = currentStage
-    validateOrderIdsAndClearEmpties(stageCharacterOrders, characters)
+    const { actorOrders: stageActorOrders = {} } = currentStage
+    validateOrderIdsAndClearEmpties(stageActorOrders, actors)
 
-    characters.forEach(character => followOrder(character, cellMatrix, stageCharacterOrders[character.id]))
+    actors.forEach(actor => followOrder(actor, cellMatrix, stageActorOrders[actor.id]))
 
     if (currentStage.immediateConsequences) {
         const consequenceExecutor = makeConsequenceExecutor(state, props)
@@ -50,14 +50,14 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
         delete currentStage.immediateConsequences
     }
 
-    const stageIsFinished = Object.keys(stageCharacterOrders).length === 0
+    const stageIsFinished = Object.keys(stageActorOrders).length === 0
     if (stageIsFinished) {
         sequenceRunning.stages.shift()
         console.log(`stage finished, ${sequenceRunning.stages.length} left.`)
     }
 
     return {
-        characters,
+        actors,
         sequenceRunning: sequenceRunning.stages.length === 0 ? undefined : sequenceRunning
     }
 }

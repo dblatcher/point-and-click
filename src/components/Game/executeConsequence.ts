@@ -1,5 +1,5 @@
 import { GameProps, GameState } from "."
-import { CommandTarget, CharacterData, Consequence, Order } from "src"
+import { CommandTarget, ActorData, Consequence, Order } from "src"
 import { cloneData } from "../../lib/clone"
 import { changeRoom } from "./changeRoom"
 import { findById } from "../../lib/util"
@@ -7,40 +7,40 @@ import { findById } from "../../lib/util"
 
 export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
 
-    const { characters, items, rooms, currentRoomId, characterOrders } = state
-    const player = characters.find(_ => _.isPlayer)
-    const getCharacter = (characterId?: string): (CharacterData | undefined) =>
-        characterId ? characters.find(_ => _.id === characterId) : player;
+    const { actors, items, rooms, currentRoomId, actorOrders } = state
+    const player = actors.find(_ => _.isPlayer)
+    const getActor = (actorId?: string): (ActorData | undefined) =>
+        actorId ? actors.find(_ => _.id === actorId) : player;
     const currentRoom = rooms.find(_ => _.id === currentRoomId)
 
     return (consequence: Consequence): void => {
 
         switch (consequence.type) {
             case 'order': {
-                const { characterId, orders } = consequence
-                const character = getCharacter(characterId)
-                if (!character) { return }
+                const { actorId, orders } = consequence
+                const actor = getActor(actorId)
+                if (!actor) { return }
                 const clonedOrders = JSON.parse(JSON.stringify(orders)) as Order[]
 
                 if (consequence.replaceCurrentOrders) {
-                    characterOrders[character.id] = clonedOrders
-                } else if (characterOrders[character.id]) {
-                    characterOrders[character.id].push(...clonedOrders)
+                    actorOrders[actor.id] = clonedOrders
+                } else if (actorOrders[actor.id]) {
+                    actorOrders[actor.id].push(...clonedOrders)
                 } else {
-                    characterOrders[character.id] = clonedOrders
+                    actorOrders[actor.id] = clonedOrders
                 }
 
                 break;
             }
             case 'talk': {
-                const { characterId, text, time = 100 } = consequence
-                const character = getCharacter(characterId)
-                if (!character) { return }
+                const { actorId, text, time = 100 } = consequence
+                const actor = getActor(actorId)
+                if (!actor) { return }
 
-                if (!characterOrders[character.id]) {
-                    characterOrders[character.id] = []
+                if (!actorOrders[actor.id]) {
+                    actorOrders[actor.id] = []
                 }
-                characterOrders[character.id].push({
+                actorOrders[actor.id].push({
                     type: 'talk',
                     steps: [{ text, time }]
                 })
@@ -54,32 +54,32 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 break;
             }
             case 'inventory': {
-                const { characterId, itemId, addOrRemove } = consequence
-                const character = getCharacter(characterId)
+                const { actorId, itemId, addOrRemove } = consequence
+                const actor = getActor(actorId)
                 const item = items.find(_ => _.id === itemId)
-                if (!character || !item) { return }
+                if (!actor || !item) { return }
 
                 if (addOrRemove === 'ADD') {
-                    item.characterId = character.id
+                    item.actorId = actor.id
 
-                } else if (item.characterId === character.id) {
-                    item.characterId = undefined
+                } else if (item.actorId === actor.id) {
+                    item.actorId = undefined
                 }
                 break;
             }
-            case 'removeCharacter': {
-                const { characterId } = consequence
-                const character = characters.find(_ => _.id === characterId)
-                if (!character) { return }
-                character.room = undefined;
+            case 'removeActor': {
+                const { actorId } = consequence
+                const actor = actors.find(_ => _.id === actorId)
+                if (!actor) { return }
+                actor.room = undefined;
                 break;
             }
             case 'changeStatus': {
                 const { targetId, targetType, status } = consequence
                 let target: CommandTarget | undefined;
                 switch (targetType) {
-                    case 'character':
-                        target = characters.find(_ => _.id === targetId);
+                    case 'actor':
+                        target = actors.find(_ => _.id === targetId);
                         break;
                     case 'item':
                         target = items.find(_ => _.id === targetId);

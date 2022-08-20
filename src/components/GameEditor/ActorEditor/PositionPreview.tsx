@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionComponent, h } from "preact";
 import { Room } from "../../Room";
-import { CharacterData, RoomData } from "../../../."
+import { ActorData, RoomData } from "../../.."
 import { clamp, getViewAngleCenteredOn, locateClickInWorld } from "../../../lib/util";
 
 interface Props {
-    characterData: CharacterData;
-    otherCharacters: CharacterData[];
+    actorData: ActorData;
+    otherActors: ActorData[];
     roomData?: RoomData;
     reportClick: { (point: { x: number; y: number }): void };
 }
 
-export const PositionPreview: FunctionComponent<Props> = ({ characterData, roomData, reportClick, otherCharacters }) => {
+export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData, reportClick, otherActors }) => {
 
-    const viewAngle = roomData ? clamp(getViewAngleCenteredOn(characterData.x, roomData), 1, -1) : 0
+    const viewAngle = roomData ? clamp(getViewAngleCenteredOn(actorData.x, roomData), 1, -1) : 0
 
 
     const contents = [
-        ...otherCharacters.map(data => ({ data })),
-        { data: characterData }
+        ...otherActors.map(data => ({ data })),
+        { data: actorData }
     ].sort((a, b) => b.data.y - a.data.y)
 
 

@@ -9,13 +9,13 @@ export function changeRoom(
     newPosition?: Point
 ): { (state: GameState): Partial<GameState> } {
 
-    return (state: GameState) => {
+    return (state: GameState): Partial<GameState> => {
 
-        const { rooms, characters } = state
+        const { rooms, actors } = state
         const room = rooms.find(room => room.id === roomId)
         if (!room) { return {} }
 
-        const player = characters.find(_ => _.isPlayer)
+        const player = actors.find(_ => _.isPlayer)
         const cellMatrix = generateCellMatrix(room, cellSize)
 
         if (takePlayer && player) {
@@ -27,7 +27,7 @@ export function changeRoom(
         }
 
         return {
-            currentRoomId: room.id, cellMatrix, characters
+            currentRoomId: room.id, cellMatrix, actors
         }
     }
 }

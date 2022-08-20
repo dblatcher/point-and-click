@@ -2,7 +2,7 @@
 import { FunctionalComponent, h, Fragment } from "preact";
 import { Sprite } from "../../../lib/Sprite";
 import { directions } from "../../../definitions/SpriteSheet";
-import { CharacterData, Direction, SpriteFrame } from "src";
+import { ActorData, Direction, SpriteFrame } from "src";
 import { SpritePreview } from "../SpritePreview";
 import { DeleteButton } from "../formControls";
 import { ListEditor } from "../ListEditor";
@@ -17,14 +17,14 @@ interface Props {
     defaultDirection: Direction;
     animation: Partial<Record<Direction, SpriteFrame[]>>;
     overrideSprite: Sprite;
-    buildCharacterData: { (animkey: string, dirKey: Direction): CharacterData };
+    buildActorData: { (animkey: string, dirKey: Direction): ActorData };
     deleteAll: { (): void };
     editCycle: { (animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined): void };
     selectedFrame?: SpriteFrame;
 }
 
 export const AnimationControl: FunctionalComponent<Props> = ({
-    animKey, animation, defaultDirection, overrideSprite, buildCharacterData, deleteAll, editCycle, selectedFrame,
+    animKey, animation, defaultDirection, overrideSprite, buildActorData, deleteAll, editCycle, selectedFrame,
 }: Props) => {
 
     const deleteDirection = (direction: Direction) => {
@@ -62,7 +62,7 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                         </div>
                         <SpritePreview
                             overrideSprite={overrideSprite}
-                            data={buildCharacterData(animKey, dirKey)}
+                            data={buildActorData(animKey, dirKey)}
                         />
                         <div className={editorStyles.row} style={{ alignItems: 'flex-end', minWidth: '14rem' }}>
                             <div style={{ minWidth: '14rem' }}>

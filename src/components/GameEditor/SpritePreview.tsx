@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { RoomData, CharacterData } from "src";
+import { RoomData, ActorData } from "src";
 import { Room } from "../Room";
 
 import { Sprite } from "../../lib/Sprite";
 
-const makeRoomData: { (characterData: CharacterData): RoomData } = (characterData) => ({
-    height: characterData.height + 10,
-    width: characterData.width + 10,
-    frameWidth: characterData.width + 10,
+const makeRoomData: { (actorData: ActorData): RoomData } = (actorData) => ({
+    height: actorData.height + 10,
+    width: actorData.width + 10,
+    frameWidth: actorData.width + 10,
     id: '',
     background: []
 })
@@ -19,7 +19,7 @@ type State = {
 };
 
 type Props = {
-    data: CharacterData;
+    data: ActorData;
     overrideSprite?: Sprite;
 }
 

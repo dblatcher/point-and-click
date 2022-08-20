@@ -3,7 +3,7 @@ import { ImmediateConsequenceSchema } from "./Interaction"
 import { orderSchema } from "./Order"
 
 export const StageSchema = z.object({
-    characterOrders: z.optional(
+    actorOrders: z.optional(
         z.record(z.string(), orderSchema.array())
     ),
     immediateConsequences: z.optional(ImmediateConsequenceSchema.array())

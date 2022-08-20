@@ -1,10 +1,10 @@
 import { z } from "zod"
-import { CharacterDataSchema } from './CharacterData'
+import { ActorDataSchema } from './ActorData'
 import { ItemDataSchema } from './ItemData';
 import { HotspotZoneSchema } from './Zone'
 import { VerbSchema } from './Verb'
 
-export const CommandTargetSchema = z.union([CharacterDataSchema, ItemDataSchema, HotspotZoneSchema])
+export const CommandTargetSchema = z.union([ActorDataSchema, ItemDataSchema, HotspotZoneSchema])
 export type CommandTarget = z.infer<typeof CommandTargetSchema>
 
 export const CommandSchema = z.object({

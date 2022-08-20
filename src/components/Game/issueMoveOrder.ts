@@ -6,30 +6,30 @@ import { makeDebugEntry } from "../DebugLog";
 
 export function issueMoveOrder(
     destination: Point,
-    characterId: string,
+    actorId: string,
     appendToExisting?: boolean,
     ignoreObstacles?: boolean
 ): { (state: GameState): Partial<GameState> } {
 
     return (state: GameState): Partial<GameState> => {
 
-        const { cellMatrix, characters, debugLog } = state
-        const character = characters.find(_ => _.id === characterId)
-        if (!character || !cellMatrix) { return {} }
+        const { cellMatrix, actors, debugLog } = state
+        const actor = actors.find(_ => _.id === actorId)
+        if (!actor || !cellMatrix) { return {} }
 
-        const steps = ignoreObstacles ? [destination] : findPath({ x: character.x, y: character.y }, destination, cellMatrix, cellSize)
+        const steps = ignoreObstacles ? [destination] : findPath({ x: actor.x, y: actor.y }, destination, cellMatrix, cellSize)
         const newOrder: MoveOrder = { type: 'move', steps, pathIsSet: true }
         debugLog.push(makeDebugEntry(`move: [${destination.x},${destination.y}], steps:${steps.length}`))
 
-        if (!state.characterOrders[character.id]) {
-            state.characterOrders[character.id] = []
+        if (!state.actorOrders[actor.id]) {
+            state.actorOrders[actor.id] = []
         }
         if (appendToExisting) {
-            state.characterOrders[character.id].push(newOrder)
+            state.actorOrders[actor.id].push(newOrder)
         } else {
-            state.characterOrders[character.id] = [newOrder] // clears any existing orders, even if the point was unreachable
+            state.actorOrders[actor.id] = [newOrder] // clears any existing orders, even if the point was unreachable
         }
 
-        return { characters, debugLog }
+        return { actors, debugLog }
     }
 }

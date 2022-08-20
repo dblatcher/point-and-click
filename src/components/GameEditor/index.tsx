@@ -7,7 +7,7 @@ import { SpriteSheetTool } from "./SpriteSheetTool";
 import { RoomEditor } from "./RoomEditor";
 import { SpriteEditor } from "./SpriteEditor";
 import { TabMenu } from "../TabMenu";
-import { CharacterEditor } from "./CharacterEditor";
+import { ActorEditor } from "./ActorEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
 import { ItemEditor } from "./itemEditor";
 import { InteractionEditor } from "./InteractionEditor";
@@ -42,7 +42,7 @@ type State = {
     tabOpen: number;
     roomId?: string;
     itemId?: string;
-    characterId?: string;
+    actorId?: string;
     conversationId?: string;
     spriteId?: string;
     spriteSheetId?: string;
@@ -60,7 +60,7 @@ const tabs: string[] = [
     'main',
     'rooms',
     'items',
-    'characters',
+    'actors',
     'conversations',
     'sprites',
     'spriteSheets',
@@ -100,7 +100,7 @@ export class GameEditor extends Component<Props, State>{
                 gameDesign: {
                     id: "NEW_GAME",
                     rooms: [blankRoom],
-                    characters: [],
+                    actors: [],
                     interactions: [],
                     items: [],
                     conversations: [],
@@ -143,8 +143,8 @@ export class GameEditor extends Component<Props, State>{
     get currentItem() {
         return findById(this.state.itemId, this.state.gameDesign.items)
     }
-    get currentCharacter() {
-        return findById(this.state.characterId, this.state.gameDesign.characters)
+    get currentActor() {
+        return findById(this.state.actorId, this.state.gameDesign.actors)
     }
     get currentConversation() {
         return findById(this.state.conversationId, this.state.gameDesign.conversations)
@@ -161,7 +161,7 @@ export class GameEditor extends Component<Props, State>{
 
         this.setState(state => {
             const { gameDesign } = state
-            let { roomId, itemId, characterId, spriteId, spriteSheetId, sequenceId, endingId } = state
+            let { roomId, itemId, actorId, spriteId, spriteSheetId, sequenceId, endingId } = state
             switch (property) {
                 case 'rooms': {
                     addNewOrUpdate(data, gameDesign[property])
@@ -173,14 +173,14 @@ export class GameEditor extends Component<Props, State>{
                     itemId = (data as GameDataItem).id
                     break
                 }
-                case 'characters': {
+                case 'actors': {
                     addNewOrUpdate(data, gameDesign[property])
-                    characterId = (data as GameDataItem).id
+                    actorId = (data as GameDataItem).id
                     break
                 }
                 case 'conversations': {
                     addNewOrUpdate(data, gameDesign[property])
-                    characterId = (data as GameDataItem).id
+                    actorId = (data as GameDataItem).id
                     break
                 }
                 case 'sprites': {
@@ -209,7 +209,7 @@ export class GameEditor extends Component<Props, State>{
                     break
                 }
             }
-            return { gameDesign, roomId, itemId, characterId, spriteId, spriteSheetId, sequenceId, endingId }
+            return { gameDesign, roomId, itemId, actorId, spriteId, spriteSheetId, sequenceId, endingId }
         })
     }
 
@@ -246,7 +246,7 @@ export class GameEditor extends Component<Props, State>{
         return {
             roomId: undefined,
             itemId: undefined,
-            characterId: undefined,
+            actorId: undefined,
             spriteId: undefined,
             spriteSheetId: undefined,
             conversationId: undefined,
@@ -256,7 +256,7 @@ export class GameEditor extends Component<Props, State>{
     }
 
     render() {
-        const { gameDesign, tabOpen, roomId, itemId, characterId, spriteId, spriteSheetId, conversationId, sequenceId, endingId } = this.state
+        const { gameDesign, tabOpen, roomId, itemId, actorId, spriteId, spriteSheetId, conversationId, sequenceId, endingId } = this.state
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
@@ -273,7 +273,7 @@ export class GameEditor extends Component<Props, State>{
             makeFolder('main'),
             makeFolder('rooms', gameDesign.rooms, roomId),
             makeFolder('items', gameDesign.items, itemId),
-            makeFolder('characters', gameDesign.characters, characterId),
+            makeFolder('actors', gameDesign.actors, actorId),
             makeFolder('conversations', gameDesign.conversations, conversationId),
             makeFolder('sprites', gameDesign.sprites, spriteId),
             makeFolder('spriteSheets', gameDesign.spriteSheets, spriteSheetId),
@@ -311,8 +311,8 @@ export class GameEditor extends Component<Props, State>{
                                 case 'items':
                                     modification.itemId = data.id
                                     break;
-                                case 'characters':
-                                    modification.characterId = data.id
+                                case 'actors':
+                                    modification.actorId = data.id
                                     break;
                                 case 'conversations':
                                     modification.conversationId = data.id
@@ -358,17 +358,17 @@ export class GameEditor extends Component<Props, State>{
                         label: 'Items', content: <ItemEditor
                             updateData={data => { this.performUpdate('items', data) }}
                             itemIds={listIds(gameDesign.items)}
-                            characterIds={listIds(gameDesign.characters)}
+                            actorIds={listIds(gameDesign.actors)}
                             key={itemId} data={this.currentItem}
                         />
                     },
                     {
-                        label: 'Character Editor', content: <CharacterEditor
+                        label: 'Actor Editor', content: <ActorEditor
                             rooms={gameDesign.rooms}
-                            characters={gameDesign.characters}
-                            characterIds={listIds(gameDesign.characters)}
-                            updateData={data => { this.performUpdate('characters', data) }}
-                            key={characterId} data={this.currentCharacter}
+                            actors={gameDesign.actors}
+                            actorIds={listIds(gameDesign.actors)}
+                            updateData={data => { this.performUpdate('actors', data) }}
+                            key={actorId} data={this.currentActor}
                         />
                     },
                     {
@@ -422,7 +422,7 @@ export class GameEditor extends Component<Props, State>{
                                 <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset game test</button>
                                 <hr />
                                 <Game key={this.state.resetTimeStamp}
-                                    {...gameDesign} characterOrders={{}}
+                                    {...gameDesign} actorOrders={{}}
                                     showDebugLog={true} />
                             </div>
                         )

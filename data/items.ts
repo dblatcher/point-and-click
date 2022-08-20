@@ -12,19 +12,19 @@ export const items: ItemData[] = [
         id: 'BUCKET',
         name: 'bucket',
         type: 'item',
-        characterId: 'PLAYER',
+        actorId: 'PLAYER',
         imageId: 'ITEM_bucket.png',
     },
     {
         id: 'MATCHES',
         name: 'matches',
         type: 'item',
-        characterId: 'PLAYER',
+        actorId: 'PLAYER',
     },
     {
         id: 'HAMMER',
         name: 'hammer',
         type: 'item',
-        characterId: 'MARIO',
+        actorId: 'MARIO',
     },
 ]

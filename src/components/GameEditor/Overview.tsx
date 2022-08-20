@@ -37,7 +37,7 @@ export const Overview: FunctionalComponent<Props> = ({
       <ul>
         <li>rooms: {gameDesign.rooms.length}</li>
         <li>items: {gameDesign.items.length}</li>
-        <li>characters: {gameDesign.characters.length}</li>
+        <li>actors: {gameDesign.actors.length}</li>
         <li>conversations: {gameDesign.conversations.length}</li>
         <li>sprites: {gameDesign.sprites.length}</li>
         <li>sprite sheets: {gameDesign.spriteSheets.length}</li>

@@ -1,5 +1,5 @@
 import { cellSize } from "..";
-import { CharacterData, MoveOrder, Order } from "src";
+import { ActorData, MoveOrder, Order } from "src";
 import { CellMatrix } from "../../../lib/pathfinding/cells";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { findPath } from "../../../lib/pathfinding/pathfind";
@@ -8,7 +8,7 @@ import { executeMove } from "./executeMove";
 import { exectuteTalk } from "./executeTalk";
 
 
-function findPathBetweenSteps(subject: CharacterData, cellMatrix: CellMatrix, order: MoveOrder) {
+function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order: MoveOrder) {
 
     const { steps: oldSteps } = order
     let pointReached: Point = { x: subject.x, y: subject.y }
@@ -34,13 +34,13 @@ function findPathBetweenSteps(subject: CharacterData, cellMatrix: CellMatrix, or
 }
 
 /**
- * make a character follow their next order
+ * make a actor follow their next order
  * @param subject 
  * @param cellMatrix 
  * @param orders 
  * @returns whether they just finished an order that triggers the pendingInteraction
  */
-export function followOrder(subject: CharacterData, cellMatrix: CellMatrix, orders?: Order[]): boolean {
+export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders?: Order[]): boolean {
     if (!orders || orders.length === 0) { return false }
     const [nextOrder] = orders
 

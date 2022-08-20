@@ -1,6 +1,6 @@
 import { h, Fragment, FunctionalComponent, JSX } from "preact";
 import { useLayoutEffect, useState } from "preact/hooks";
-import { RoomData,Order,CharacterData } from "src"
+import { RoomData,Order,ActorData } from "src"
 import { placeOnScreen } from "../lib/util";
 import { getScale } from "../lib/getScale";
 import { Sprite } from "../lib/Sprite";
@@ -14,9 +14,9 @@ import { HandleClickFunction, HandleHoverFunction } from "./Game";
 interface Props {
     roomData: RoomData;
     viewAngle: number;
-    data: CharacterData;
+    data: ActorData;
     animationRate?: number;
-    clickHandler?: HandleClickFunction<CharacterData>;
+    clickHandler?: HandleClickFunction<ActorData>;
     handleHover?: HandleHoverFunction;
     orders?: Order[];
     isPaused: boolean;
@@ -31,7 +31,7 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
-export const CharacterFigure: FunctionalComponent<Props> = ({
+export const ActorFigure: FunctionalComponent<Props> = ({
     data, 
     roomData, 
     viewAngle,

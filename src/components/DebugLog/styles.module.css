@@ -27,7 +27,7 @@
     margin: 0;
 }
 
-.characterTable td, .characterTable th {
+.actorTable td, .actorTable th {
     font-size: small;
     min-width: 6em;
     background-color: greenyellow;

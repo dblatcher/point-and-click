@@ -1,5 +1,5 @@
 import { h, JSX, FunctionalComponent } from "preact";
-import { RoomData, CharacterData, Direction } from "src"
+import { RoomData, ActorData, Direction } from "src"
 import { placeOnScreen } from "../lib/util";
 import { Sprite } from "../../src/lib/Sprite";
 import { HandleHoverFunction } from "./Game";
@@ -19,7 +19,7 @@ interface Props {
     filter?: string;
     clickHandler?: JSX.MouseEventHandler<SVGElement>;
     handleHover?: HandleHoverFunction;
-    hoverData?: CharacterData;
+    hoverData?: ActorData;
     status?: string;
 }
 

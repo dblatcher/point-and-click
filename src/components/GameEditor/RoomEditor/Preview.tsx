@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment, JSX } from "preact";
-import { RoomData, CharacterData } from "src";
+import { RoomData, ActorData } from "src";
 import { Room } from "../../Room";
 import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "../../../lib/util";
 import HorizontalLine from "../../HorizontalLine";
-import { makeTestCharacter } from "./testSprite";
+import { makeTestActor } from "./testSprite";
 
 type BooleanState = {
     showObstacleAreas: boolean;
     highlightHotspots: boolean;
     showScaleLines: boolean;
-    showCharacter: boolean;
+    showActor: boolean;
 }
 
 type State = BooleanState & {
     viewAngle: number;
     maxHeight: number;
-    testCharacter: CharacterData;
+    testActor: ActorData;
 };
 
 type Props = {
@@ -57,11 +57,11 @@ export class Preview extends Component<Props, State>{
             showObstacleAreas: true,
             highlightHotspots: true,
             showScaleLines: true,
-            showCharacter: true,
-            testCharacter: makeTestCharacter({ x: props.roomData.width / 2, y: 20 }),
+            showActor: true,
+            testActor: makeTestActor({ x: props.roomData.width / 2, y: 20 }),
         }
 
-        this.changeCharacterNumberProperty = this.changeCharacterNumberProperty.bind(this)
+        this.changeActorNumberProperty = this.changeActorNumberProperty.bind(this)
     }
 
     renderCheckBox(label: string, propery: keyof BooleanState) {
@@ -81,12 +81,12 @@ export class Preview extends Component<Props, State>{
         )
     }
 
-    changeCharacterNumberProperty(value: number, property: 'x' | 'y' | 'height' | 'width') {
+    changeActorNumberProperty(value: number, property: 'x' | 'y' | 'height' | 'width') {
         this.setState(
             (state) => {
-                const { testCharacter } = state
-                testCharacter[property] = value
-                return { testCharacter }
+                const { testActor: testActor } = state
+                testActor[property] = value
+                return { testActor: testActor }
             }
         )
     }
@@ -118,7 +118,7 @@ export class Preview extends Component<Props, State>{
     render() {
         const {
             viewAngle, maxHeight, showObstacleAreas, highlightHotspots,
-            testCharacter, showCharacter,
+            testActor: testActor, showActor: showActor,
             showScaleLines,
         } = this.state
         const { roomData, handleRoomClick, clickEffect } = this.props
@@ -156,38 +156,38 @@ export class Preview extends Component<Props, State>{
                     </fieldset>
 
                     <fieldset>
-                        {this.renderCheckBox('Show Character', 'showCharacter')}
+                        {this.renderCheckBox('Show Actor', 'showActor')}
                         <div>
                             <label>X</label>
                             <input type='range'
-                                value={testCharacter.x}
+                                value={testActor.x}
                                 min={0} max={roomData.width} step={10}
-                                onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'x')} />
-                            <span>{testCharacter.x}</span>
+                                onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'x')} />
+                            <span>{testActor.x}</span>
                         </div>
                         <div>
                             <label>Y</label>
                             <input type='range'
-                                value={testCharacter.y}
+                                value={testActor.y}
                                 min={0} max={roomData.height} step={10}
-                                onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'y')} />
-                            <span>{testCharacter.y}</span>
+                                onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'y')} />
+                            <span>{testActor.y}</span>
                         </div>
                         <div>
                             <label>base height</label>
                             <input type='range'
-                                value={testCharacter.height}
+                                value={testActor.height}
                                 min={10} max={200} step={10}
-                                onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'height')} />
-                            <span>{testCharacter.height}</span>
+                                onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'height')} />
+                            <span>{testActor.height}</span>
                         </div>
                         <div>
                             <label>base width</label>
                             <input type='range'
-                                value={testCharacter.width}
+                                value={testActor.width}
                                 min={10} max={200} step={10}
-                                onChange={(event) => this.changeCharacterNumberProperty(eventToNumber(event), 'width')} />
-                            <span>{testCharacter.width}</span>
+                                onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'width')} />
+                            <span>{testActor.width}</span>
                         </div>
                     </fieldset>
                 </section>
@@ -201,9 +201,9 @@ export class Preview extends Component<Props, State>{
                         markHotspotVertices={this.hotspotsToMark}
                         markObstacleVertices={this.obstaclesToMark}
                         markWalkableVertices={this.walkablesToMark}
-                        contents={showCharacter ? [
+                        contents={showActor ? [
                             {
-                                data: testCharacter,
+                                data: testActor,
                                 orders: [],
                             }
                         ] : undefined}

@@ -39,7 +39,7 @@ export function findPath(start: Point, goal: Point, matrix: CellMatrix, cellSize
     }
 
     const pathPoints = (pathPairs as [number, number][]).map(toPoint)
-    // adding goal to the  can make the character go backwards at the end
+    // adding goal to the  can make the actor go backwards at the end
     // pathPoints.push(goal)
     return pathPoints
 }
