@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment } from "preact";
 import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "src";
-import { getViewAngleCenteredOn, clamp, locateClickInWorld, findById } from "../../lib/util";
+import { getViewAngleCenteredOn, locateClickInWorld } from "../../lib/roomFunctions";
+import { clamp, findById } from "../../lib/util";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";

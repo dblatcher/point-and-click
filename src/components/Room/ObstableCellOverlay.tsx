@@ -1,7 +1,7 @@
 import { h, FunctionalComponent } from "preact";
 import { CellMatrix } from "../../lib/pathfinding/cells";
 import { RoomData } from "src"
-import { getShift } from "../../lib/util";
+import { getShift } from "../../lib/roomFunctions";
 
 
 interface Props {

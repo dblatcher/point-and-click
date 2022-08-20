@@ -1,7 +1,7 @@
 import { h } from "preact";
 import imageService from "../../services/imageService";
 import { BackgroundLayer, RoomData } from "src"
-import { getLayerWidth, getShift } from "../../lib/util";
+import { getLayerWidth, getShift } from "../../lib/roomFunctions";
 
 
 

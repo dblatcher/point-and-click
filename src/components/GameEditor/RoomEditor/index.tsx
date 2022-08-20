@@ -10,7 +10,8 @@ import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } f
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { cloneData } from "../../../lib/clone";
-import { eventToString, getShift, listIds, locateClickInWorld } from "../../../lib/util";
+import { eventToString, listIds } from "../../../lib/util";
+import { getShift, locateClickInWorld } from "../../../lib/roomFunctions";
 import { TabMenu } from "../../TabMenu";
 import { uploadJsonData } from "../../../lib/files";
 import styles from '../editorStyles.module.css';

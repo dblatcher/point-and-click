@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { RoomData } from "src"
-import { placeOnScreen } from "../lib/util";
+import { placeOnScreen } from "../lib/roomFunctions";
 
 interface Props {
     roomData: RoomData

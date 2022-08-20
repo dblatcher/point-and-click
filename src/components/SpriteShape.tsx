@@ -1,6 +1,6 @@
 import { h, JSX, FunctionalComponent } from "preact";
 import { RoomData, ActorData, Direction } from "src"
-import { placeOnScreen } from "../lib/util";
+import { placeOnScreen } from "../lib/roomFunctions";
 import { Sprite } from "../../src/lib/Sprite";
 import { HandleHoverFunction } from "./Game";
 
