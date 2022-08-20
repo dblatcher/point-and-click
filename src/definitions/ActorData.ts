@@ -7,6 +7,7 @@ export const ActorDataSchema = IdentSchema
     .merge(z.object({
         type: z.literal('actor'),
         isPlayer: z.optional(z.boolean()),
+        noInteraction: z.optional(z.boolean()),
         speed: z.optional(z.number()),
         dialogueColor: z.optional(z.string()),
     }))

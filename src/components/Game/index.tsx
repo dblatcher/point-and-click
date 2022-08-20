@@ -254,7 +254,7 @@ export default class Game extends Component<GameProps, GameState> {
         const contentList: RoomContentItem[] = actorsInOrder.map(data => ({
             data,
             orders: actorOrderMap[data.id],
-            clickHandler: data.isPlayer ? undefined : this.handleTargetClick
+            clickHandler: (data.isPlayer || data.noInteraction) ? undefined : this.handleTargetClick
         }))
 
         return (<>

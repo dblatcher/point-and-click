@@ -101,8 +101,9 @@ export class ActorEditor extends Component<Props, State> {
                 }
                 break;
             case 'isPlayer':
-                if (typeof newValue === 'boolean') {
-                    modification[propery] = newValue
+            case 'noInteraction':
+                if (typeof newValue === 'boolean' || typeof newValue === 'undefined') {
+                    modification[propery] = newValue || undefined
                 }
                 break;
         }
@@ -200,6 +201,9 @@ export class ActorEditor extends Component<Props, State> {
                         </div>
                         <div>
                             <CheckBoxInput label="Is player actor" value={state.isPlayer} inputHandler={value => { this.changeValue('isPlayer', value) }} />
+                        </div>
+                        <div>
+                            <CheckBoxInput label="Cannot interact with" value={state.noInteraction} inputHandler={value => { this.changeValue('noInteraction', value) }} />
                         </div>
                         <div>
                             <TextInput type="color" label="dialogue color" value={state.dialogueColor || ''} onInput={event => { this.changeValue('dialogueColor', eventToString(event)) }} />
