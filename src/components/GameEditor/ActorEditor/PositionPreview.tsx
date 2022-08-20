@@ -3,7 +3,7 @@ import { FunctionComponent, h } from "preact";
 import { Room } from "../../Room";
 import { ActorData, RoomData } from "../../.."
 import { clamp } from "../../../lib/util";
-import { getViewAngleCenteredOn, locateClickInWorld } from "../../../lib/roomFunctions";
+import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "../../../lib/roomFunctions";
 
 interface Props {
     actorData: ActorData;
@@ -17,7 +17,7 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
     const viewAngle = roomData ? clamp(getViewAngleCenteredOn(actorData.x, roomData), 1, -1) : 0
 
     const contents = [...otherActors, actorData]
-        .sort((a, b) => b.y - a.y)
+        .sort(putActorsInDisplayOrder)
         .map(actor => ({ data: actor }))
 
     return (
@@ -43,6 +43,7 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
                     maxHeight={300}
                     forPreview={true}
                 />
+
             )}
         </section>
     )

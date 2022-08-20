@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment } from "preact";
 import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "src";
-import { getViewAngleCenteredOn, locateClickInWorld } from "../../lib/roomFunctions";
+import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "../../lib/roomFunctions";
 import { clamp, findById } from "../../lib/util";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
 import { followOrder } from "./orders/followOrder";
@@ -250,7 +250,7 @@ export default class Game extends Component<GameProps, GameState> {
 
         const actorsInOrder = actors
             .filter(_ => _.room === currentRoom?.id)
-            .sort((a, b) => b.y - a.y)
+            .sort(putActorsInDisplayOrder)
 
         const contentList: RoomContentItem[] = actorsInOrder.map(data => ({
             data,

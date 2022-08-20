@@ -2,7 +2,7 @@
 import { Component, h } from "preact";
 import { RoomData, ActorData } from "src";
 import { Room } from "../Room";
-
+import HorizontalLine from "../HorizontalLine";
 import { Sprite } from "../../lib/Sprite";
 
 const makeRoomData: { (actorData: ActorData): RoomData } = (actorData) => ({
@@ -49,7 +49,9 @@ export class SpritePreview extends Component<Props, State>{
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 handleRoomClick={() => { }}
                 contents={[{ overrideSprite, data, }]}
-            />
+            >
+                <HorizontalLine roomData={roomData} y={data.baseline || 0} />
+            </Room>
         )
     }
 }

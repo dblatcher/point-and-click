@@ -3,7 +3,7 @@ import { Component, h } from "preact";
 import { ActorData, Direction, RoomData, Point } from "src";
 import { ActorDataSchema } from "../../../definitions/ActorData";
 import { directions } from "../../../definitions/SpriteSheet";
-import { CheckBoxInput, IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
+import { CheckBoxInput, IdentInput, NumberInput, OptionalNumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import spriteService from "../../../services/spriteService";
 import { SpritePreview } from "../SpritePreview";
@@ -96,6 +96,7 @@ export class ActorEditor extends Component<Props, State> {
             case 'x':
             case 'y':
             case 'speed':
+            case 'baseline':
                 if (typeof newValue === 'number') {
                     modification[propery] = newValue
                 }
@@ -204,6 +205,9 @@ export class ActorEditor extends Component<Props, State> {
                         </div>
                         <div>
                             <CheckBoxInput label="Cannot interact with" value={state.noInteraction} inputHandler={value => { this.changeValue('noInteraction', value) }} />
+                        </div>
+                        <div>
+                            <NumberInput label="display baseline" value={state.baseline || 0} min={0} max={state.height} inputHandler={value => { this.changeValue('baseline', value) }} />
                         </div>
                         <div>
                             <TextInput type="color" label="dialogue color" value={state.dialogueColor || ''} onInput={event => { this.changeValue('dialogueColor', eventToString(event)) }} />

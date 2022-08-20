@@ -9,6 +9,7 @@ export const ActorDataSchema = IdentSchema
         isPlayer: z.optional(z.boolean()),
         noInteraction: z.optional(z.boolean()),
         speed: z.optional(z.number()),
+        baseline: z.optional(z.number()),
         dialogueColor: z.optional(z.string()),
     }))
 

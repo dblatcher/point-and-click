@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { RoomData } from "../definitions/RoomData";
+import { RoomData, ActorData } from "src";
+
+export const putActorsInDisplayOrder = (a: ActorData, b: ActorData) => (b.y + (b.baseline ? b.baseline : 0)) - (a.y + (a.baseline ? a.baseline : 0))
 
 export function getLayerWidth(parallax: number, roomData: RoomData) {
     const { frameWidth, width } = roomData
