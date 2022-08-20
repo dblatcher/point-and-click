@@ -352,6 +352,7 @@ export class GameEditor extends Component<Props, State>{
                         label: 'Room Editor', content: <RoomEditor
                             updateData={data => { this.performUpdate('rooms', data) }}
                             existingRoomIds={listIds(gameDesign.rooms)}
+                            actors={gameDesign.actors}
                             key={roomId} data={this.currentRoom} />
                     },
                     {

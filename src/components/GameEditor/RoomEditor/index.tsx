@@ -1,5 +1,5 @@
 import { Component, h, Fragment } from "preact";
-import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, SupportedZoneShape } from "src";
+import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, SupportedZoneShape, ActorData } from "src";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
@@ -32,6 +32,7 @@ type RoomEditorProps = {
     data?: RoomData;
     updateData?: { (data: RoomData): void };
     existingRoomIds?: string[];
+    actors?: ActorData[];
 }
 
 const defaultParallax = 1;
@@ -396,7 +397,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             clickEffect, mainTab
         } = this.state
 
-        const { existingRoomIds = [] } = this.props
+        const { existingRoomIds = [], actors = [] } = this.props
 
         const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
 
@@ -440,6 +441,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
             <div className={styles.rowTopLeft}>
                 <Preview
+                    actors={actors}
                     roomData={this.state}
                     clickEffect={clickEffect}
                     handleRoomClick={this.handleRoomClick} />

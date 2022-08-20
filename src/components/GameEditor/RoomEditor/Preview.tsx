@@ -4,6 +4,7 @@ import { RoomData, ActorData } from "src";
 import { Room } from "../../Room";
 import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "../../../lib/util";
+import { putActorsInDisplayOrder } from "../../../lib/roomFunctions";
 import HorizontalLine from "../../HorizontalLine";
 import { makeTestActor } from "./testSprite";
 
@@ -11,7 +12,8 @@ type BooleanState = {
     showObstacleAreas: boolean;
     highlightHotspots: boolean;
     showScaleLines: boolean;
-    showActor: boolean;
+    showTestActor: boolean;
+    showRealActors: boolean;
 }
 
 type State = BooleanState & {
@@ -22,6 +24,7 @@ type State = BooleanState & {
 
 type Props = {
     roomData: RoomData;
+    actors: ActorData[];
     clickEffect?: ClickEffect;
     handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number): void };
 }
@@ -57,7 +60,8 @@ export class Preview extends Component<Props, State>{
             showObstacleAreas: true,
             highlightHotspots: true,
             showScaleLines: true,
-            showActor: true,
+            showTestActor: false,
+            showRealActors: true,
             testActor: makeTestActor({ x: props.roomData.width / 2, y: 20 }),
         }
 
@@ -84,9 +88,9 @@ export class Preview extends Component<Props, State>{
     changeActorNumberProperty(value: number, property: 'x' | 'y' | 'height' | 'width') {
         this.setState(
             (state) => {
-                const { testActor: testActor } = state
+                const { testActor } = state
                 testActor[property] = value
-                return { testActor: testActor }
+                return { testActor }
             }
         )
     }
@@ -118,14 +122,25 @@ export class Preview extends Component<Props, State>{
     render() {
         const {
             viewAngle, maxHeight, showObstacleAreas, highlightHotspots,
-            testActor: testActor, showActor: showActor,
+            testActor, showTestActor, showRealActors,
             showScaleLines,
         } = this.state
-        const { roomData, handleRoomClick, clickEffect } = this.props
+        const { roomData, handleRoomClick, clickEffect, actors } = this.props
         const { scaling = [] } = roomData
 
         const processClick = (x: number, y: number) => {
             handleRoomClick({ x, y }, viewAngle)
+        }
+
+        const contents = showRealActors
+            ? actors
+                .filter(actor => actor.room === roomData.id)
+                .sort(putActorsInDisplayOrder)
+                .map(actor => ({ data: actor }))
+            : []
+
+        if (showTestActor) {
+            contents.push({ data: testActor })
         }
 
         return (
@@ -156,39 +171,43 @@ export class Preview extends Component<Props, State>{
                     </fieldset>
 
                     <fieldset>
-                        {this.renderCheckBox('Show Actor', 'showActor')}
-                        <div>
-                            <label>X</label>
-                            <input type='range'
-                                value={testActor.x}
-                                min={0} max={roomData.width} step={10}
-                                onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'x')} />
-                            <span>{testActor.x}</span>
-                        </div>
-                        <div>
-                            <label>Y</label>
-                            <input type='range'
-                                value={testActor.y}
-                                min={0} max={roomData.height} step={10}
-                                onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'y')} />
-                            <span>{testActor.y}</span>
-                        </div>
-                        <div>
-                            <label>base height</label>
-                            <input type='range'
-                                value={testActor.height}
-                                min={10} max={200} step={10}
-                                onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'height')} />
-                            <span>{testActor.height}</span>
-                        </div>
-                        <div>
-                            <label>base width</label>
-                            <input type='range'
-                                value={testActor.width}
-                                min={10} max={200} step={10}
-                                onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'width')} />
-                            <span>{testActor.width}</span>
-                        </div>
+                        {this.renderCheckBox('Show Actors in room', 'showRealActors')}
+                        {this.renderCheckBox('Show Test Actor', 'showTestActor')}
+                        {showTestActor && (<>
+                            <div>
+                                <label>X</label>
+                                <input type='range'
+                                    value={testActor.x}
+                                    min={0} max={roomData.width} step={10}
+                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'x')} />
+                                <span>{testActor.x}</span>
+                            </div>
+                            <div>
+                                <label>Y</label>
+                                <input type='range'
+                                    value={testActor.y}
+                                    min={0} max={roomData.height} step={10}
+                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'y')} />
+                                <span>{testActor.y}</span>
+                            </div>
+                            <div>
+                                <label>base height</label>
+                                <input type='range'
+                                    value={testActor.height}
+                                    min={10} max={200} step={10}
+                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'height')} />
+                                <span>{testActor.height}</span>
+                            </div>
+                            <div>
+                                <label>base width</label>
+                                <input type='range'
+                                    value={testActor.width}
+                                    min={10} max={200} step={10}
+                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'width')} />
+                                <span>{testActor.width}</span>
+                            </div>
+                        </>)}
+
                     </fieldset>
                 </section>
                 <section style={{ position: 'relative' }}>
@@ -201,12 +220,7 @@ export class Preview extends Component<Props, State>{
                         markHotspotVertices={this.hotspotsToMark}
                         markObstacleVertices={this.obstaclesToMark}
                         markWalkableVertices={this.walkablesToMark}
-                        contents={showActor ? [
-                            {
-                                data: testActor,
-                                orders: [],
-                            }
-                        ] : undefined}
+                        contents={contents}
                     >
                         {showScaleLines && scaling.map((yAndScale, index) => (
                             <HorizontalLine key={index}
