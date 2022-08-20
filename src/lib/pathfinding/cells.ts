@@ -81,15 +81,15 @@ function getObstacleCircles(obstacleAreas: Zone[]): Circle[] {
 export function generateCellMatrix(roomData: RoomData, cellSize: number) {
     const { width, height, obstacleAreas = [], walkableAreas = [] } = roomData
     const walkable = walkableAreas.length > 0 ? {
-        polygons: getObstaclePolygons(walkableAreas),
-        rectangles: getObstacleRectangle(walkableAreas),
-        circles: getObstacleCircles(walkableAreas),
+        polygons: getObstaclePolygons(walkableAreas.filter(zone=>!zone.disabled)),
+        rectangles: getObstacleRectangle(walkableAreas.filter(zone=>!zone.disabled)),
+        circles: getObstacleCircles(walkableAreas.filter(zone=>!zone.disabled)),
     } : null
 
     const obstable = {
-        polygons: getObstaclePolygons(obstacleAreas),
-        rectangles: getObstacleRectangle(obstacleAreas),
-        circles: getObstacleCircles(obstacleAreas),
+        polygons: getObstaclePolygons(obstacleAreas.filter(zone=>!zone.disabled)),
+        rectangles: getObstacleRectangle(obstacleAreas.filter(zone=>!zone.disabled)),
+        circles: getObstacleCircles(obstacleAreas.filter(zone=>!zone.disabled)),
     }
 
     const matrixHeight = Math.ceil(height / cellSize)
