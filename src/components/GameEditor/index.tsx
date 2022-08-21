@@ -260,8 +260,14 @@ export class GameEditor extends Component<Props, State>{
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
-            if (entries && !entryId) {
-                entries.push({ data: { id: '' }, active: true, label: '*new*', isForNew: true })
+            if (entries) {
+
+                entries.push({
+                    data: { id: '' },
+                    active: !entryId,
+                    label: `➕ NEW`,
+                    isForNew: true
+                })
             }
             return {
                 id, open: tabs[tabOpen] === id,
@@ -303,33 +309,33 @@ export class GameEditor extends Component<Props, State>{
                     entryClick={(folderId, data, isForNew) => {
                         const folderIndex = tabs.indexOf(folderId);
                         const modification: Partial<State> = { tabOpen: folderIndex }
-                        if (!isForNew) {
-                            switch (folderId) {
-                                case 'rooms':
-                                    modification.roomId = data.id
-                                    break;
-                                case 'items':
-                                    modification.itemId = data.id
-                                    break;
-                                case 'actors':
-                                    modification.actorId = data.id
-                                    break;
-                                case 'conversations':
-                                    modification.conversationId = data.id
-                                    break;
-                                case 'sprites':
-                                    modification.spriteId = data.id
-                                    break;
-                                case 'spriteSheets':
-                                    modification.spriteSheetId = data.id
-                                    break;
-                                case 'sequences':
-                                    modification.sequenceId = data.id
-                                    break;
-                                case 'endings':
-                                    modification.endingId = data.id
-                                    break;
-                            }
+                        const newId = isForNew ? undefined : data.id;
+
+                        switch (folderId) {
+                            case 'rooms':
+                                modification.roomId = newId
+                                break;
+                            case 'items':
+                                modification.itemId = newId
+                                break;
+                            case 'actors':
+                                modification.actorId = newId
+                                break;
+                            case 'conversations':
+                                modification.conversationId = newId
+                                break;
+                            case 'sprites':
+                                modification.spriteId = newId
+                                break;
+                            case 'spriteSheets':
+                                modification.spriteSheetId = newId
+                                break;
+                            case 'sequences':
+                                modification.sequenceId = newId
+                                break;
+                            case 'endings':
+                                modification.endingId = newId
+                                break;
                         }
                         this.setState(modification)
                     }}

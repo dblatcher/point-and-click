@@ -229,7 +229,14 @@ export class Preview extends Component<Props, State>{
                                 roomData={roomData} />
                         ))}
                     </Room>
-                    <p style={{ position: 'absolute', right: 0, top: 0, margin: "0 1em" }}>{getClickCaption(clickEffect)}</p>
+                    <p style={{ 
+                        position: 'absolute', 
+                        right: 0, top: 0, 
+                        margin: "0 1em", 
+                        padding: "0 .25em",
+                        color:'white',
+                        backgroundColor:'rgba(0,0,0,.5)' 
+                    }}>{getClickCaption(clickEffect)}</p>
                 </section>
             </>
         )

@@ -26,6 +26,9 @@ import { ZoneSetEditor } from "./ZoneSetEditor";
 type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
     mainTab: number;
+    walkableTab: number;
+    obstableTab: number;
+    hotspotTab: number;
 };
 
 type RoomEditorProps = {
@@ -59,6 +62,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.state = {
             ...initialState,
             mainTab: 0,
+            walkableTab: 0,
+            obstableTab: 0,
+            hotspotTab: 0,
         }
 
         this.changeProperty = this.changeProperty.bind(this)
@@ -78,6 +84,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const roomData = cloneData(this.state) as RoomData & Partial<RoomEditorState>;
         delete roomData.clickEffect
         delete roomData.mainTab
+        delete roomData.obstableTab
+        delete roomData.walkableTab
+        delete roomData.hotspotTab
         return roomData
     }
 
@@ -86,7 +95,13 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     handleRoomClick(pointClicked: { x: number; y: number }, viewAngle: number) {
-        const { clickEffect, obstacleAreas = [], hotspots = [], walkableAreas = [] } = this.state
+        const {
+            clickEffect,
+            obstacleAreas = [], hotspots = [], walkableAreas = []
+        } = this.state
+        let {
+            hotspotTab, obstableTab, walkableTab,
+        } = this.state
         if (!clickEffect) { return }
         const roundedPoint = {
             x: Math.round(pointClicked.x),
@@ -116,12 +131,15 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         switch (clickEffect.type) {
             case 'OBSTACLE':
                 obstacleAreas.push(makeNewZone(targetPoint, clickEffect))
+                obstableTab = obstacleAreas.length - 1;
                 break;
             case 'WALKABLE':
                 walkableAreas.push(makeNewZone(targetPoint, clickEffect))
+                walkableTab = walkableAreas.length - 1;
                 break;
             case 'HOTSPOT':
                 hotspots.push(this.makeNewHotspot(targetPoint, clickEffect, hotspots.length + 1, viewAngle))
+                hotspotTab = hotspots.length - 1;
                 break;
             case 'POLYGON_POINT_OBSTACLE':
                 const obstacle = obstacleAreas[clickEffect.index]
@@ -148,6 +166,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
         this.setState({
             hotspots, obstacleAreas, walkableAreas,
+            hotspotTab, obstableTab, walkableTab,
             clickEffect: getNextClickEffect(clickEffect),
         })
     }
@@ -321,11 +340,33 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     }
                     break;
             }
+        } else {
+            switch (folderId) {
+                case 'WALKABLE': {
+                    const zoneIndex = Number(data.id)
+                    if (isNaN(zoneIndex)) { return }
+                    this.setState({ 'walkableTab': zoneIndex })
+                    break;
+                }
+                case 'OBSTACLE': {
+                    const zoneIndex = Number(data.id)
+                    if (isNaN(zoneIndex)) { return }
+                    this.setState({ 'obstableTab': zoneIndex })
+                    break;
+                }
+                case 'HOTSPOT':
+                    const zoneIndex = this.state.hotspots?.indexOf(data as HotspotZone)
+                    this.setState({ 'hotspotTab': zoneIndex })
+                    break;
+            }
         }
     }
 
     get menuFolders(): Folder[] {
-        const { obstacleAreas = [], walkableAreas = [], hotspots = [], background = [], mainTab, clickEffect } = this.state
+        const {
+            obstacleAreas = [], walkableAreas = [], hotspots = [], background = [],
+            mainTab, clickEffect, walkableTab, obstableTab, hotspotTab
+        } = this.state
         const getShape = (zone: Zone): string => zone.polygon ? 'polygon' : zone.circle ? 'circle' : zone.rect ? 'rect' : '??';
 
         const newZoneEntryisActive = (clickEffectType: ClickEffect["type"], shape: SupportedZoneShape): boolean => {
@@ -333,28 +374,31 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
 
         const makeNewZoneEntries = (clickEffectType: ClickEffect["type"]) => ([
-            { label: 'new circle', isForNew: true, data: { id: 'circle' }, active: newZoneEntryisActive(clickEffectType, 'circle') },
-            { label: 'new rect', isForNew: true, data: { id: 'rect' }, active: newZoneEntryisActive(clickEffectType, 'rect') },
-            { label: 'new polygon', isForNew: true, data: { id: 'polygon' }, active: newZoneEntryisActive(clickEffectType, 'polygon') },
+            { label: '➕ circle', isForNew: true, data: { id: 'circle' }, active: newZoneEntryisActive(clickEffectType, 'circle') },
+            { label: '➕ rect', isForNew: true, data: { id: 'rect' }, active: newZoneEntryisActive(clickEffectType, 'rect') },
+            { label: '➕ polygon', isForNew: true, data: { id: 'polygon' }, active: newZoneEntryisActive(clickEffectType, 'polygon') },
         ])
 
         const obstacleEntries: Entry[] = obstacleAreas.map((obstacle, index) => ({
             label: obstacle.ref || `#${index} ${getShape(obstacle)}`,
             data: {
                 id: index.toString()
-            }
+            },
+            active: obstableTab === index,
         })).concat(makeNewZoneEntries('OBSTACLE'))
 
         const walkableEntries: Entry[] = walkableAreas.map((walkable, index) => ({
             label: walkable.ref || `#${index} ${getShape(walkable)}`,
             data: {
                 id: index.toString()
-            }
+            },
+            active: walkableTab === index,
         })).concat(makeNewZoneEntries('WALKABLE'))
 
-        const hotspotEntries: Entry[] = hotspots.map((hotspot) => ({
+        const hotspotEntries: Entry[] = hotspots.map((hotspot, index) => ({
             label: hotspot.id,
-            data: hotspot
+            data: hotspot,
+            active: hotspotTab === index
         }))
 
         hotspotEntries.push(...makeNewZoneEntries('HOTSPOT'))
@@ -497,6 +541,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                         setClickEffect={this.setClickEffect}
                                         change={this.changeZone}
                                         remove={this.removeZone}
+                                        openTab={this.state.obstableTab}
                                     />
                                 )
                             },
@@ -508,21 +553,24 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                         setClickEffect={this.setClickEffect}
                                         change={this.changeZone}
                                         remove={this.removeZone}
+                                        openTab={this.state.walkableTab}
                                     />
                                 )
                             },
                             {
                                 label: 'Hotspots', content: (
-                                    <TabMenu defaultOpenIndex={hotspots.length - 1} tabs={hotspots.map((hotspot, index) => {
-                                        return {
-                                            label: hotspot.id, content: (
-                                                <HotspotControl hotspot={hotspot} index={index}
-                                                    setClickEffect={this.setClickEffect}
-                                                    change={this.changeZone}
-                                                    remove={this.removeZone} />
-                                            )
-                                        }
-                                    })} />
+                                    <TabMenu noButtons
+                                        defaultOpenIndex={this.state.hotspotTab}
+                                        tabs={hotspots.map((hotspot, index) => {
+                                            return {
+                                                label: hotspot.id, content: (
+                                                    <HotspotControl hotspot={hotspot} index={index}
+                                                        setClickEffect={this.setClickEffect}
+                                                        change={this.changeZone}
+                                                        remove={this.removeZone} />
+                                                )
+                                            }
+                                        })} />
                                 )
                             }
                         ]} />

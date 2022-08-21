@@ -11,6 +11,7 @@ interface Props {
     change: ShapeChangeFunction;
     remove: { (index: number, type: ValidShapeType): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
+    openTab?: number;
 }
 
 export const ZoneSetEditor: FunctionComponent<Props> = ({
@@ -19,24 +20,27 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
     change,
     remove,
     setClickEffect,
+    openTab = 0,
 }: Props) => {
 
     return (
-        <TabMenu defaultOpenIndex={zones.length - 1} tabs={
-            zones.map((obstacle, index) => {
-                return {
-                    label: obstacle.ref || `${type} #${index}`, content: (
-                        <ZoneControl
-                            zone={obstacle}
-                            index={index}
-                            type={type}
-                            setClickEffect={setClickEffect}
-                            change={change}
-                            remove={remove} />
-                    )
-                }
-            })
-        }
+        <TabMenu noButtons
+            defaultOpenIndex={openTab}
+            tabs={
+                zones.map((obstacle, index) => {
+                    return {
+                        label: obstacle.ref || `${type} #${index}`, content: (
+                            <ZoneControl
+                                zone={obstacle}
+                                index={index}
+                                type={type}
+                                setClickEffect={setClickEffect}
+                                change={change}
+                                remove={remove} />
+                        )
+                    }
+                })
+            }
         />
     )
 }
