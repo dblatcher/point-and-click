@@ -76,6 +76,14 @@ const TeleportActorConsequenceSchema = z.object({
 })
 type TeleportActorConsequence = z.infer<typeof TeleportActorConsequenceSchema>;
 
+const ToggleZoneConsequenceSchema = z.object({
+    type: z.literal('toggleZone'),
+    roomId: z.optional(z.string()),
+    on: z.boolean(),
+    ref: z.string(),
+    zoneType: z.enum(['hotspot', 'obstacle', 'walkable']),
+})
+type ToggleZoneConsequence = z.infer<typeof ToggleZoneConsequenceSchema>;
 
 export const ConsequenceSchema = z.union([
     OrderConsequenceSchema,
@@ -88,12 +96,13 @@ export const ConsequenceSchema = z.union([
     ConversationConsequenceSchema,
     EndingConsequenceSchema,
     TeleportActorConsequenceSchema,
+    ToggleZoneConsequenceSchema,
 ])
 
 const ConsequenceTypeEnum = z.enum([
     'conversation', 'sequence', 'changeStatus',
     'removeActor', 'inventory', 'changeRoom', 'talk', 'order', 'ending',
-    'teleportActor'
+    'teleportActor', 'toggleZone'
 ])
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
 export const consequenceTypes: ConsequenceType[] = ConsequenceTypeEnum.options
@@ -122,6 +131,10 @@ export type AnyConsequence = Consequence & {
     x?: number;
     y?: number;
     orders: Order[];
+
+    on?: boolean;
+    ref?: string;
+    zoneType?: 'hotspot' | 'obstacle' | 'walkable';
 }
 
 export const ImmediateConsequenceSchema = z.union([
@@ -130,16 +143,19 @@ export const ImmediateConsequenceSchema = z.union([
     InventoryConsequenceSchema,
     ConversationConsequenceSchema,
     EndingConsequenceSchema,
-    TeleportActorConsequenceSchema
+    TeleportActorConsequenceSchema,
+    ToggleZoneConsequenceSchema,
 ])
 export type ImmediateConsequence = RemoveActorConsequence |
     ChangeStatusConsequence |
     InventoryConsequence |
     ConversationConsequence |
-    EndingConsequence | TeleportActorConsequence;
+    EndingConsequence |
+    TeleportActorConsequence |
+    ToggleZoneConsequence;
 
 export const immediateConsequenceTypes: ConsequenceType[] = [
-    'removeActor', 'changeStatus', 'inventory', 'conversation', 'ending', 'teleportActor'
+    'removeActor', 'changeStatus', 'inventory', 'conversation', 'ending', 'teleportActor', 'toggleZone'
 ]
 
 export const InteractionSchema = z.object({
