@@ -20,25 +20,28 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
     const { parallax, type } = hotspot
 
     return (
-        <div>
-            <IdentInput value={hotspot}
-                onChangeName={event => { change(index, 'name', eventToString(event), type) }}
-                onChangeStatus={event => { change(index, 'status', eventToString(event), type) }}
-                onChangeId={event => { change(index, 'id', eventToString(event).toUpperCase(), type) }}
-            />
+        <article>
+            <div className={styles.rowTopLeft}>
+                <div style={{ marginRight: '.5em' }}>
+                    <IdentInput value={hotspot}
+                        onChangeName={event => { change(index, 'name', eventToString(event), type) }}
+                        onChangeStatus={event => { change(index, 'status', eventToString(event), type) }}
+                        onChangeId={event => { change(index, 'id', eventToString(event).toUpperCase(), type) }}
+                    />
 
-            <div className={styles.row}>
-                <ParallaxInput value={parallax}
-                    onChange={event => { change(index, 'parallax', eventToNumber(event), type) }} />
+                    <div className={styles.row}>
+                        <ParallaxInput value={parallax}
+                            onChange={event => { change(index, 'parallax', eventToNumber(event), type) }} />
+                    </div>
+                </div>
+                <ShapeControl
+                    shape={hotspot} index={index}
+                    setClickEffect={setClickEffect}
+                    type='hotspot'
+                    change={change}
+                    remove={remove} />
             </div>
-
-            <ShapeControl
-                shape={hotspot} index={index}
-                setClickEffect={setClickEffect}
-                type='hotspot'
-                change={change}
-                remove={remove} />
-        </div>
+        </article>
     )
 
 }

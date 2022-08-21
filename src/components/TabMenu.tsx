@@ -11,7 +11,9 @@ interface Props {
     tabs: Tab[];
     defaultOpenIndex?: number;
     backgroundColor?: string;
+    flex?: number;
     noButtons?: boolean;
+    containerStyle?: JSX.CSSProperties;
 }
 
 const buttonStyle = (isOpen: boolean): JSX.CSSProperties => {
@@ -32,7 +34,7 @@ const navStyle = (backgroundColor: string): JSX.CSSProperties => {
     }
 }
 
-const containerStyle = (isOpen: boolean, backgroundColor: string): JSX.CSSProperties => {
+const tabStyle = (isOpen: boolean, backgroundColor: string): JSX.CSSProperties => {
     return {
         display: isOpen ? 'block' : 'none',
         backgroundColor,
@@ -45,6 +47,7 @@ export const TabMenu: FunctionalComponent<Props> = ({
     defaultOpenIndex = 0,
     backgroundColor = 'lightgrey',
     noButtons,
+    containerStyle,
 }: Props) => {
     const [selectedTabIndex, setSelectedTabIndex] = useState<number>(defaultOpenIndex)
     useEffect(() => {
@@ -52,7 +55,7 @@ export const TabMenu: FunctionalComponent<Props> = ({
     }, [defaultOpenIndex, tabs.length])
     setSelectedTabIndex(clamp(selectedTabIndex, tabs.length - 1))
 
-    return <div>
+    return <section style={containerStyle}>
         {!noButtons &&
             <nav style={navStyle(backgroundColor)}>
                 {tabs.map((tab, index) =>
@@ -64,10 +67,10 @@ export const TabMenu: FunctionalComponent<Props> = ({
             </nav>
         }
         {tabs.map((tab, index) => (
-            <div key={index} style={containerStyle(index === selectedTabIndex, backgroundColor)}>
+            <div key={index} style={tabStyle(index === selectedTabIndex, backgroundColor)}>
                 {tab.content}
             </div>
         ))}
-    </div>
+    </section>
 
 }
