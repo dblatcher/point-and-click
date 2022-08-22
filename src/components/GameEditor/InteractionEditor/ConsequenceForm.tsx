@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
-import { consequenceTypes, immediateConsequenceTypes } from "../../../definitions/Interaction";
+import { consequenceTypes, immediateConsequenceTypes, ZoneType, zoneTypes } from "../../../definitions/Interaction";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
 import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { eventToString, listIds } from "../../../lib/util";
-import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions } from "./getTargetLists";
+import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions, getZoneRefsOrIds } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
 import { getDefaultOrder } from "../defaults";
@@ -36,6 +36,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         addOrRemove: ['ADD', 'REMOVE'],
         sequence: listIds(gameDesign.sequences),
         endingId: listIds(gameDesign.endings),
+        zoneType: zoneTypes,
+        ref: getZoneRefsOrIds(gameDesign, consequence.roomId||'', consequence.zoneType)
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
         targetId: targetDescriptions,
@@ -59,6 +61,12 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 }
                 return;
             }
+            case 'zoneType': {
+                if (zoneTypes.includes(value as ZoneType)) {
+                    copy[property] = value as ZoneType
+                }
+                break;
+            }
             case 'conversationId':
             case 'sequence':
             case 'targetId':
@@ -69,12 +77,14 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
             case 'endingId':
             case 'text':
             case 'addOrRemove':
+            case 'ref':
             case 'targetType': {
                 copy[property] = value as string
                 break;
             }
             case 'end':
             case 'takePlayer':
+            case 'on':
             case 'replaceCurrentOrders': {
                 copy[property] = value as boolean
                 break;
@@ -106,6 +116,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'targetId':
                 case 'endingId':
                 case 'sequence':
+                case 'zoneType':
+                case 'ref':
                     return (
                         <div key={index}>
                             <SelectInput value={value as string}
@@ -129,6 +141,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'end':
                 case 'takePlayer':
                 case 'replaceCurrentOrders':
+                case 'on':
                     return (
                         <div key={index}>
                             <CheckBoxInput

@@ -1,15 +1,16 @@
-import { GameDesign } from "src";
+import { GameDesign, ZoneType, RoomData, Zone } from "src";
+import { findById } from "../../../lib/util";
 
 const emoji = {
     ACTOR: '🚶',
     ITEM: '📦',
     HOTSPOT: '🎯',
     CONVERSATION: '💬',
-    SEQUENCE:'📜',
+    SEQUENCE: '📜',
 }
 
 export function getTargetLists(gameDesign: GameDesign): { ids: string[]; descriptions: string[] } {
-    const { actors: actors, items, rooms } = gameDesign
+    const { actors, items, rooms } = gameDesign
     const ids: string[] = [];
     const descriptions: string[] = [];
 
@@ -31,7 +32,7 @@ export function getTargetLists(gameDesign: GameDesign): { ids: string[]; descrip
 }
 
 export function getActorDescriptions(gameDesign: GameDesign): string[] {
-    const { actors: actors } = gameDesign
+    const { actors } = gameDesign
     return actors.map(actor => `${emoji.ACTOR} ${actor.id}`)
 }
 
@@ -41,11 +42,40 @@ export function getItemDescriptions(gameDesign: GameDesign): string[] {
 }
 
 export function getConversationsDescriptions(gameDesign: GameDesign): string[] {
-    const { conversations=[] } = gameDesign
+    const { conversations = [] } = gameDesign
     return conversations.map(item => `${emoji.CONVERSATION} ${item.id}`)
 }
 
 export function getSequenceDescriptions(gameDesign: GameDesign): string[] {
     const { sequences = [] } = gameDesign
-    return sequences.map(item=> `${emoji.SEQUENCE} ${item.id}`)
+    return sequences.map(item => `${emoji.SEQUENCE} ${item.id}`)
+}
+
+const getZones = (room: RoomData, zoneType: ZoneType): Zone[] => {
+    switch (zoneType) {
+        case 'hotspot':
+            return room.hotspots || []
+        case 'walkable':
+            return room.walkableAreas || []
+        case 'obstacle':
+            return room.obstacleAreas || []
+    }
+}
+
+export function getZoneRefsOrIds(gameDesign: GameDesign, roomId?: string, zoneType?: ZoneType): string[] {
+    if (!roomId || !zoneType) {
+        return []
+    }
+    const { rooms = [] } = gameDesign
+    const room = findById(roomId, rooms)
+    if (!room) { return [] }
+
+    if (zoneType === 'hotspot') {
+        return room.hotspots?.map(hotspot => hotspot.id) || []
+    }
+    const refs = getZones(room, zoneType)
+        .map(zone => zone.ref)
+        .filter(ref => typeof ref === 'string' && ref.length > 0)
+
+    return refs as string[]
 }

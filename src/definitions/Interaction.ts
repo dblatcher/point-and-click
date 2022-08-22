@@ -84,6 +84,8 @@ const ToggleZoneConsequenceSchema = z.object({
     zoneType: z.enum(['hotspot', 'obstacle', 'walkable']),
 })
 type ToggleZoneConsequence = z.infer<typeof ToggleZoneConsequenceSchema>;
+export type ZoneType = z.infer<typeof ToggleZoneConsequenceSchema.shape.zoneType>
+export const zoneTypes: ZoneType[] = ToggleZoneConsequenceSchema.shape.zoneType.options
 
 export const ConsequenceSchema = z.union([
     OrderConsequenceSchema,
@@ -134,7 +136,7 @@ export type AnyConsequence = Consequence & {
 
     on?: boolean;
     ref?: string;
-    zoneType?: 'hotspot' | 'obstacle' | 'walkable';
+    zoneType?: ZoneType;
 }
 
 export const ImmediateConsequenceSchema = z.union([

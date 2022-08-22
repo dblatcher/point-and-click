@@ -12,7 +12,8 @@ export type { ActorData } from "./definitions/ActorData";
 export type { Direction } from "./definitions/SpriteSheet";
 export type { Zone, HotspotZone, SupportedZoneShape, Shape } from "./definitions/Zone"
 export type { Conversation, ConversationChoice, ConversationBranch } from "./definitions/Conversation"
-export type { Consequence, Interaction, ConsequenceType, AnyConsequence } from "./definitions/Interaction"
+export type { Consequence, Interaction, ConsequenceType, AnyConsequence, ZoneType } from "./definitions/Interaction"
+export { zoneTypes } from "./definitions/Interaction"
 export type { Sequence } from "./definitions/Sequence";
 export type { SpriteSheet, SpriteData, SpriteFrame, } from "./definitions/SpriteSheet";
 export type { Ending } from "./definitions/Ending"

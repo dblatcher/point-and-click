@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, FunctionalComponent } from "preact";
 import { ClickEffect } from "./ClickEffect";
-import { HotspotZone, Shape, Zone } from "src";
+import { HotspotZone, Shape, Zone, ZoneType } from "src";
 import { ListEditor } from "../ListEditor";
 import { NumberInput } from "../formControls";
 
-export type ValidShapeType = 'hotspot' | 'obstacle' | 'walkable';
+export type ValidShapeType = ZoneType;
 export type ShapeChangeFunction = { (index: number, propery: Exclude<keyof HotspotZone | keyof Zone, 'type'>, newValue: unknown, type: ValidShapeType): void }
 
 interface Props {
