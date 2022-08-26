@@ -1,8 +1,9 @@
-import { GameProps, GameState } from "."
+import { cellSize, GameProps, GameState } from "."
 import { CommandTarget, ActorData, Consequence, Order } from "src"
 import { cloneData } from "../../lib/clone"
 import { changeRoom } from "./changeRoom"
 import { findById } from "../../lib/util"
+import { generateCellMatrix } from "../../lib/pathfinding/cells"
 
 
 export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
@@ -133,6 +134,26 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 } else {
                     state.endingId = endingId
                 }
+                break;
+            }
+            case 'toggleZone': {
+                const { roomId, ref, on, zoneType } = consequence
+                const room = findById(roomId, state.rooms)
+                if (room) {
+                    const zoneList = zoneType === 'obstacle'
+                        ? room.obstacleAreas
+                        : zoneType === 'walkable'
+                            ? room.walkableAreas
+                            : undefined;
+                    if (zoneList) {
+                        const zone = zoneList.find(zone => zone.ref === ref)
+                        if (zone) {
+                            zone.disabled = !on
+                            state.cellMatrix = generateCellMatrix(room, cellSize)
+                        }
+                    }
+                }
+                break
             }
         }
     }
