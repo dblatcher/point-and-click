@@ -90,7 +90,7 @@ export default class Game extends Component<GameProps, GameState> {
             actorOrders: props.actorOrders || {},
             conversations,
             currentConversationId: props.currentConversationId,
-            debugLog: [makeDebugEntry("Running!")]
+            debugLog: [makeDebugEntry(`Running: ${props.id}`)]
         }
     }
 

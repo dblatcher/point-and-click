@@ -10,13 +10,15 @@ interface Props {
     log: LogEntry[];
 }
 
+type LogEntrySubject = "command" | "order";
 export type LogEntry = {
     content: string;
     time: Date;
+    subject?: LogEntrySubject
 };
 
-export const makeDebugEntry = (content: string): LogEntry => ({
-    content, time: new Date()
+export const makeDebugEntry = (content: string, subject?: LogEntrySubject): LogEntry => ({
+    content, time: new Date(), subject
 })
 
 export const DebugLog: FunctionalComponent<Props> = ({
@@ -26,9 +28,8 @@ export const DebugLog: FunctionalComponent<Props> = ({
     const listRef = useRef<HTMLUListElement>(null)
     useEffect(() => {
         const { current: listElement } = listRef
-        console.log('scrol', listElement)
         if (!listElement) { return }
-        listElement.scrollTo({ left: 0, top: 10000 })
+        listElement.scrollTo({ left: 0, top: listElement.scrollHeight })
     }, [log.length])
 
     const actorsInRoom = condition.actors.filter(_ => _.room === condition.currentRoomId)
@@ -88,11 +89,13 @@ export const DebugLog: FunctionalComponent<Props> = ({
                     </table>
 
                 </section>
-                <ul className={styles.loglist} ref={listRef}>
+                <ul className={styles.loglist} ref={listRef} style={{ height: '100px' }}>
                     {log.map((entry, index) => (
                         <li key={index}>
-                            {entry.time.toLocaleTimeString()}:
-                            <b>{entry.content}</b>
+                            <b>
+                                {entry.time.toLocaleTimeString()}:
+                            </b>
+                            {entry.content}
                         </li>
                     ))}
                 </ul>

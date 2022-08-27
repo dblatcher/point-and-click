@@ -44,8 +44,15 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
     return state
 }
 
-const describeCommand = (command: Command): string => `COMMAND: ${command.verb.id}, ${command.target.id} [${command.item?.id}]`
-const describeConsequences = (interaction: Interaction): string => `CONSEQUENCES: ${interaction.consequences?.map(_ => _.type).join()}]`
+const describeCommand = (command: Command): string => {
+    const { verb, target, item } = command
+    if (item) {
+        return `[${verb.id}  ${item.id} ${verb.preposition} ${target.id}]`
+    }
+    return `[${verb.id} ${target.id}]`
+
+}
+const describeConsequences = (interaction: Interaction): string => `(${interaction.consequences?.map(_ => _.type).join()})`
 
 function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): GameState {
     const { hoverTarget } = state
@@ -99,7 +106,7 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
         const interaction = matchInteraction(command, currentRoom, state.interactions)
 
         if (interaction && interaction.mustReachFirst && command.target.type !== 'item') {
-            debugLog.push(makeDebugEntry(`${describeCommand(command)}: ${describeConsequences(interaction)} (pending)`))
+            debugLog.push(makeDebugEntry(`${describeCommand(command)}: (pending interaction)`, 'command'))
 
             if (player) {
                 const isReachable = findPath(player, command.target, cellMatrix, cellSize).length > 0;
@@ -112,11 +119,11 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                 }
             }
         } else if (interaction) {
-            debugLog.push(makeDebugEntry(`${describeCommand(command)}: ${describeConsequences(interaction)}`))
+            debugLog.push(makeDebugEntry(`${describeCommand(command)}: ${describeConsequences(interaction)}`, 'command'))
             const execute = makeConsequenceExecutor(state, props)
             interaction.consequences.forEach(execute)
         } else {
-            debugLog.push(makeDebugEntry(`${describeCommand(command)}: No match`))
+            debugLog.push(makeDebugEntry(`${describeCommand(command)}: (no match)`, 'command'))
             doDefaultResponse(command, state)
         }
 
@@ -129,6 +136,14 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
 export function doPendingInteraction(state: GameState, props: GameProps): GameState {
     const execute = makeConsequenceExecutor(state, props)
     state.pendingInteraction?.consequences.forEach(execute)
+
+    if (state.pendingInteraction) {
+        state.debugLog.push(makeDebugEntry(
+            `Pending interaction: ${describeConsequences(state.pendingInteraction)}`,
+            'command'
+        ))
+    }
+
     state.pendingInteraction = undefined
     return state
 }

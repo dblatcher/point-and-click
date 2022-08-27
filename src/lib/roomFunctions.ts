@@ -29,7 +29,7 @@ export function locateClickInWorld(clickXPosition: number, clickYposition: numbe
     const centerOfScreenXPosition = (width / 2) - shift
     const x = offCenterInPoints + centerOfScreenXPosition
     const y = height - clickYposition
-    return { x, y }
+    return { x: Math.round(x), y: Math.round(y) }
 }
 
 export function getViewAngleCenteredOn(xPosition: number, roomData: RoomData) {

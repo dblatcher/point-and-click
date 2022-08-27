@@ -19,7 +19,7 @@ export function issueMoveOrder(
 
         const steps = ignoreObstacles ? [destination] : findPath({ x: actor.x, y: actor.y }, destination, cellMatrix, cellSize)
         const newOrder: MoveOrder = { type: 'move', steps, pathIsSet: true }
-        debugLog.push(makeDebugEntry(`move: [${destination.x},${destination.y}], steps:${steps.length}`))
+        debugLog.push(makeDebugEntry(`move: [${destination.x},${destination.y}], steps:${steps.length}`, 'order'))
 
         if (!state.actorOrders[actor.id]) {
             state.actorOrders[actor.id] = []
