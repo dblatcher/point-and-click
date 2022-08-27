@@ -21,10 +21,12 @@
 .statusSection {
     flex: 1;
     margin: 0;
+    display: flex;
 }
 
 .statusSection p {
     margin: 0;
+    flex: 1;
 }
 
 .actorTable td, .actorTable th {

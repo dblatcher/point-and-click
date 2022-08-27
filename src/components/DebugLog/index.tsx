@@ -64,31 +64,33 @@ export const DebugLog: FunctionalComponent<Props> = ({
                 <section className={styles.statusSection}>
                     <p>room:{condition.currentRoomId}</p>
                     <p>sequence:{condition.sequenceRunning?.id}</p>
-
-                    <table className={styles.actorTable}>
-                        <thead>
-                            <tr>
-                                <th />
-                                <th>status</th>
-                                <th>order type</th>
-                                <th>animation</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {actorsInRoom.map((actor, index) => (
-                                <tr key={index}>
-                                    <th>{actor.id}</th>
-                                    <td>{actor.status}</td>
-                                    {getOrderDescrition(actor.id).map((text, index2) => (
-                                        <td key={index2}>{text}</td>
-                                    ))}
-                                </tr>
-                            )
-                            )}
-                        </tbody>
-                    </table>
-
+                    <p>conversation:{condition.currentConversationId}</p>
                 </section>
+            </div>
+            <div className={styles.layout}>
+                <table className={styles.actorTable}>
+                    <thead>
+                        <tr>
+                            <th />
+                            <th>status</th>
+                            <th>order type</th>
+                            <th>animation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {actorsInRoom.map((actor, index) => (
+                            <tr key={index}>
+                                <th>{actor.id}</th>
+                                <td>{actor.status}</td>
+                                {getOrderDescrition(actor.id).map((text, index2) => (
+                                    <td key={index2}>{text}</td>
+                                ))}
+                            </tr>
+                        )
+                        )}
+                    </tbody>
+                </table>
+
                 <ul className={styles.loglist} ref={listRef} style={{ height: '100px' }}>
                     {log.map((entry, index) => (
                         <li key={index}>
