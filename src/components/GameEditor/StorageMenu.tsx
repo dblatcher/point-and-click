@@ -2,6 +2,7 @@ import { FunctionalComponent, h } from "preact";
 import styles from "./editorStyles.module.css"
 
 import { downloadJsonFile, } from "../../lib/files";
+import { DeleteButton } from "./formControls";
 
 interface Props {
     type: string;
@@ -12,10 +13,11 @@ interface Props {
     update: { (): void };
     saveButton?: boolean;
     load?: { (): void };
+    deleteItem?: { (id: string): void };
 }
 
 export const StorageMenu: FunctionalComponent<Props> = ({
-    type, data, originalId, existingIds, reset, update, saveButton, load
+    type, data, originalId, existingIds, reset, update, saveButton, load, deleteItem
 }: Props) => {
 
     const currentId = data?.id || '';
@@ -25,6 +27,10 @@ export const StorageMenu: FunctionalComponent<Props> = ({
         : existingIds.includes(currentId)
             ? `Overwrite ${currentId}`
             : `Add new ${type} ${currentId}`
+
+    const showDeleteButton = !!originalId && originalId === currentId && !!deleteItem
+    const deleteButtonText = `Delete ${type} ${currentId}`
+
 
     return (
         <fieldset className={styles.fieldset}>
@@ -40,6 +46,12 @@ export const StorageMenu: FunctionalComponent<Props> = ({
                     {updateButtonText}
                 </button>}
             </div>
+
+            {showDeleteButton &&
+                <DeleteButton label={deleteButtonText}
+                    onClick={(): void => { deleteItem(originalId) }}
+                />
+            }
         </fieldset>
     )
 }

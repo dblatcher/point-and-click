@@ -119,6 +119,7 @@ export class GameEditor extends Component<Props, State>{
         this.performUpdate = this.performUpdate.bind(this)
         this.changeInteraction = this.changeInteraction.bind(this)
         this.deleteArrayItem = this.deleteArrayItem.bind(this)
+        this.deleteArrayItemById = this.deleteArrayItemById.bind(this)
         this.loadNewGame = this.loadNewGame.bind(this)
     }
 
@@ -216,14 +217,25 @@ export class GameEditor extends Component<Props, State>{
     deleteArrayItem(index: number, property: keyof GameDesign) {
         this.setState(state => {
             const { gameDesign } = state
-
-            switch (property) {
-                case 'interactions':
-                    gameDesign[property].splice(index, 1)
-                    break
+            if (Array.isArray(gameDesign[property])) {
+                (gameDesign[property] as unknown[]).splice(index, 1)
             }
             return { gameDesign }
         })
+    }
+    deleteArrayItemById(id: string, property: keyof GameDesign) {
+        const { gameDesign } = this.state
+        let index = -1;
+        switch (property) {
+            case 'items':
+                index = findIndexById(id, gameDesign[property]);
+                break;
+            case 'actors':
+                index = findIndexById(id, gameDesign[property]);
+                break;
+        }
+        if (index == -1) { return }
+        return this.deleteArrayItem(index, property)
     }
     changeInteraction(data: Interaction, index?: number) {
         this.setState(state => {
@@ -364,6 +376,7 @@ export class GameEditor extends Component<Props, State>{
                     {
                         label: 'Items', content: <ItemEditor
                             updateData={data => { this.performUpdate('items', data) }}
+                            deleteData={id => { this.deleteArrayItemById(id, 'items') }}
                             itemIds={listIds(gameDesign.items)}
                             actorIds={listIds(gameDesign.actors)}
                             key={itemId} data={this.currentItem}
@@ -375,6 +388,7 @@ export class GameEditor extends Component<Props, State>{
                             actors={gameDesign.actors}
                             actorIds={listIds(gameDesign.actors)}
                             updateData={data => { this.performUpdate('actors', data) }}
+                            deleteData={id => { this.deleteArrayItemById(id, 'actors') }}
                             key={actorId} data={this.currentActor}
                         />
                     },

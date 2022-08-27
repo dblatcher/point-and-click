@@ -14,6 +14,7 @@ interface Props {
     data?: ItemData;
     actorIds: string[];
     updateData?: { (data: ItemData): void };
+    deleteData?: { (id: string): void };
     itemIds: string[];
 }
 type State = ItemData & {
@@ -118,14 +119,15 @@ export class ItemEditor extends Component<Props, State> {
                         </div>
                     </fieldset>
                 </div>
-                <div>
-                    <StorageMenu
-                        data={this.state} type='ItemData'
-                        originalId={this.props.data?.id}
-                        existingIds={itemIds}
-                        reset={this.handleResetButton}
-                        update={this.handleUpdateButton} />
-                </div>
+
+                <StorageMenu
+                    data={this.state} type='ItemData'
+                    originalId={this.props.data?.id}
+                    existingIds={itemIds}
+                    reset={this.handleResetButton}
+                    deleteItem={this.props.deleteData}
+                    update={this.handleUpdateButton} />
+
             </article>
         )
     }

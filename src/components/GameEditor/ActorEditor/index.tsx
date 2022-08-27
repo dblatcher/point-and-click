@@ -3,7 +3,7 @@ import { Component, h } from "preact";
 import { ActorData, Direction, RoomData, Point } from "src";
 import { ActorDataSchema } from "../../../definitions/ActorData";
 import { directions } from "../../../definitions/SpriteSheet";
-import { CheckBoxInput, IdentInput, NumberInput, OptionalNumberInput, SelectInput, TextInput } from "../formControls";
+import { CheckBoxInput, IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import spriteService from "../../../services/spriteService";
 import { SpritePreview } from "../SpritePreview";
@@ -23,6 +23,7 @@ type State = ActorData & { sprite: string | undefined } & ExtraState;
 type Props = {
     data?: ActorData;
     updateData?: { (data: ActorData): void };
+    deleteData?: { (id: string): void };
     rooms: RoomData[];
     actorIds: string[];
     actors: ActorData[];
@@ -190,6 +191,7 @@ export class ActorEditor extends Component<Props, State> {
                         existingIds={actorIds}
                         reset={this.handleResetButton}
                         update={this.handleUpdateButton}
+                        deleteItem={this.props.deleteData}
                         saveButton={true}
                         load={this.handleLoadButton}
                     />
