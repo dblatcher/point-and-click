@@ -20,17 +20,37 @@ function matchInteraction(
     })
 }
 
-function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
-    const { actors } = state
+function getDefaultResponseText(command: Command, unreachable: boolean): string {
     const { verb, item, target } = command
-    const player = actors.find(_ => _.isPlayer)
-    if (!player) { return state }
 
-    const text = unreachable
+    const { defaultResponseCannotReach, defaultResponseNoItem, defaultResponseWithItem } = verb
+    const template = unreachable
+        ? defaultResponseCannotReach
+        : item
+            ? defaultResponseWithItem
+            : defaultResponseNoItem
+
+    if (template) {
+        let output = template;
+        output = output.replace('$TARGET', target.name || target.id)
+        output = output.replace('$ITEM', item?.name || item?.id || '')
+        return output
+    }
+
+    const genericText = unreachable
         ? `I can't reach the ${target.name || target.id}`
         : item
             ? `I can't ${verb.label} the ${item.name || item.id} ${verb.preposition} the ${target.name || target.id}`
             : `Nothing happens when I ${verb.label} the ${target.name || target.id}`;
+
+    return genericText
+}
+
+function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
+    const { actors } = state
+    const player = actors.find(_ => _.isPlayer)
+    if (!player) { return state }
+    const text = getDefaultResponseText(command, unreachable)
 
     if (!state.actorOrders[player.id]) {
         state.actorOrders[player.id] = []
