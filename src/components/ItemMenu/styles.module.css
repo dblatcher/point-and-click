@@ -1,20 +1,10 @@
 .menu {
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    padding-bottom: .5em;
-    font-size: large;
 }
 
 .button {
-    font-size: inherit;
-    padding: .25em;
-    min-width: 5em;
-    cursor: pointer;
-    background-color: white;
-    color: black;
-    transition: background-color .5s, color .4s;
-
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
@@ -24,11 +14,6 @@
 .button span {
     background-color: rgba(255, 255,255,.5);
     color: inherit;
-}
-
-.current.button {
-    background-color: black;
-    color: white;
 }
 
 .current.button span {

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact";
 import { ItemData, CommandTarget, Verb } from "src";
-
+import uiStyles from './uiStyles.module.css';
 
 interface Props {
     verb?: Verb;
@@ -26,14 +26,16 @@ export function CommandLine({ verb, item, target, hoverTarget }: Props) {
         }
     }
 
-    const hoverText = hoverTarget ? hoverTarget.name || hoverTarget.id :'...';
+    const hoverText = hoverTarget ? hoverTarget.name || hoverTarget.id : '...';
 
     return (
-        <p>
-            <span>{text}</span>
-            {!target && (
-                <span style={{ color: 'red' }}>{' '}{hoverText}</span>
-            )}
-        </p>
+        <div className={uiStyles.frame}>
+            <p className={uiStyles.contents}>
+                <span>{text}</span>
+                {!target && (
+                    <span style={{ color: 'red' }}>{' '}{hoverText}</span>
+                )}
+            </p>
+        </div>
     )
 }

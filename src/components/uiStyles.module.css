@@ -1,0 +1,30 @@
+.frame {
+    display: flex;
+    justify-content: center;
+}
+
+.contents {
+    margin: 0 auto .25rem;
+    width: 30rem;
+    max-width: 100%;
+    font-size: large;
+}
+
+.button {
+    font-size: inherit;
+    padding: .25em;
+    min-width: 5em;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    transition: background-color .5s, color .4s;
+}
+
+.current.button {
+    background-color: black;
+    color: white;
+}
+
+.button:hover {
+    background-color: gray;
+}

@@ -2,6 +2,7 @@
 import { h } from "preact"
 import { Verb } from "src"
 import styles from './styles.module.css';
+import uiStyles from '../uiStyles.module.css';
 
 interface Props {
     verbs: Verb[];
@@ -12,12 +13,14 @@ interface Props {
 export function VerbMenu({ verbs, currentVerbId, select }: Props) {
 
     return (
-        <nav className={styles.menu}>
-            {verbs.map(verb => (
-                <button key={verb.id}
-                    className={currentVerbId === verb.id ? [styles.button, styles.current].join(" ") : styles.button}
-                    onClick={() => { select(verb) }}>{verb.label}</button>
-            ))}
-        </nav>
+        <div className={uiStyles.frame}>
+            <nav className={[uiStyles.contents, styles.menu].join(" ")}>
+                {verbs.map(verb => (
+                    <button key={verb.id}
+                        className={currentVerbId === verb.id ? [uiStyles.button, uiStyles.current].join(" ") : uiStyles.button}
+                        onClick={() => { select(verb) }}>{verb.label}</button>
+                ))}
+            </nav>
+        </div>
     )
 }
