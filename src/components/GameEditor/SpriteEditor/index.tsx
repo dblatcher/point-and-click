@@ -251,6 +251,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                             buildActorData={this.buildActorData}
                             deleteAll={() => this.deleteAnimation(selectedAnimation)}
                             editCycle={this.editCycle}
+                            pickFrame={this.pickFrame}
                             selectedFrame={selectedSheetId ? {
                                 row: selectedRow,
                                 col: selectedCol,

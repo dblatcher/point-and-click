@@ -23,6 +23,7 @@ export const SpriteSheetPreview: FunctionalComponent<Props> = ({ sheet, canvasSc
 
         ctx.clearRect(0, 0, canvasScale, canvasScale)
         ctx.lineWidth = 3;
+        ctx.setLineDash([])
         ctx.strokeStyle = 'red';
         for (let i = 1; i < rows; i++) {
             ctx.beginPath()
@@ -38,8 +39,9 @@ export const SpriteSheetPreview: FunctionalComponent<Props> = ({ sheet, canvasSc
         }
 
         if (highlight) {
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 6;
             ctx.strokeStyle = 'white';
+            ctx.setLineDash([2, 1])
             const squarePoints: [number, number][] = [
                 [canvasScale * (highlight.col + 0) / cols, canvasScale * (highlight.row + 0) / rows],
                 [canvasScale * (highlight.col + 1) / cols, canvasScale * (highlight.row + 0) / rows],
@@ -52,8 +54,8 @@ export const SpriteSheetPreview: FunctionalComponent<Props> = ({ sheet, canvasSc
             ctx.lineTo(...squarePoints[2])
             ctx.lineTo(...squarePoints[3])
             ctx.lineTo(...squarePoints[0])
-            ctx.fillStyle= "rgba(255,255,255,.25)"
-            ctx.fillRect(...squarePoints[0], canvasScale * (1/cols), canvasScale*(1/rows))
+            ctx.fillStyle = "rgba(255,255,255,.25)"
+            ctx.fillRect(...squarePoints[0], canvasScale * (1 / cols), canvasScale * (1 / rows))
             ctx.stroke()
         }
     }, [sheet, canvasScale, highlight])

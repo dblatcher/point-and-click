@@ -20,10 +20,11 @@ interface Props {
     deleteAll: { (): void };
     editCycle: { (animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined): void };
     selectedFrame?: SpriteFrame;
+    pickFrame: { (row: number, col: number, sheetId?: string): void };
 }
 
 export const AnimationControl: FunctionalComponent<Props> = ({
-    animKey, animation, defaultDirection, overrideSprite, buildActorData, deleteAll, editCycle, selectedFrame,
+    animKey, animation, defaultDirection, overrideSprite, buildActorData, deleteAll, editCycle, selectedFrame, pickFrame
 }: Props) => {
 
     const deleteDirection = (direction: Direction) => {
@@ -61,7 +62,9 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                                         return editCycle(animKey, dirKey, newlist)
                                     }}
                                     describeItem={(frame) => (
-                                        <div className={styles.frameBlock}>
+                                        <button
+                                            onClick={() => { pickFrame(frame.row, frame.col, frame.sheetId) }}
+                                            className={styles.frameBlock}>
                                             <FramePreview
                                                 height={50}
                                                 width={50}
@@ -71,9 +74,9 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                                                 <p>{frame.sheetId}</p>
                                                 <p>[{frame.col}, {frame.row}]</p>
                                             </div>
-                                        </div>
+                                        </button>
                                     )}
-                                    createItem={() => selectedFrame ? {...selectedFrame} : undefined}
+                                    createItem={() => selectedFrame ? { ...selectedFrame } : undefined}
                                 />
                             </div>
                         </div>
