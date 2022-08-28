@@ -106,13 +106,15 @@ export const Room: FunctionComponent<Props> = ({
                 className={styles.roomSvg}
                 viewBox={`0 0 ${frameWidth} ${height}`}>
 
-                {background.map((layer, index) =>
-                    <BackgroundShape key={index}
-                        layer={layer}
-                        viewAngle={viewAngle}
-                        roomData={data}
-                    />
-                )}
+                {background
+                    .filter(layer => layer.parallax <= 1)
+                    .map((layer, index) =>
+                        <BackgroundShape key={index}
+                            layer={layer}
+                            viewAngle={viewAngle}
+                            roomData={data}
+                        />
+                    )}
 
                 {showObstacleAreas && walkableAreas.map((zone, index) => {
                     const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
@@ -172,6 +174,16 @@ export const Room: FunctionComponent<Props> = ({
                         overrideSprite={entry.overrideSprite}
                     />
                 ))}
+
+                {background
+                    .filter(layer => layer.parallax > 1)
+                    .map((layer, index) =>
+                        <BackgroundShape key={index}
+                            layer={layer}
+                            viewAngle={viewAngle}
+                            roomData={data}
+                        />
+                    )}
 
                 {children}
             </svg>

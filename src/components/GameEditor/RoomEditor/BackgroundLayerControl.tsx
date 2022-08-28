@@ -23,7 +23,7 @@ export function BackgroundLayerControl({ layer,  index, imageAssets, change }: P
         </select>
 
         <ParallaxInput value={parallax}
-            onChange={(event) => { change(index, 'parallax', clamp(eventToNumber(event), 1, 0)) }}
+            onChange={(event) => { change(index, 'parallax', clamp(eventToNumber(event), 2, 0)) }}
         />
     </div>
 }

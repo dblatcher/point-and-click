@@ -23,7 +23,7 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
         </select>
 
         <ParallaxInput value={parallax}
-            onChange={(event) => { setParallax(clamp(eventToNumber(event), 1, 0)) }}
+            onChange={(event) => { setParallax(clamp(eventToNumber(event), 2, 0)) }}
         />
 
         <button onClick={() => {

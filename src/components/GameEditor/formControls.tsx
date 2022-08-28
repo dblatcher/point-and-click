@@ -12,7 +12,7 @@ export const ParallaxInput: FunctionalComponent<{
         <label>parallax:</label>
         <input type='number'
             value={props.value}
-            max={1} min={0} step={.05}
+            max={2} min={0} step={.05}
             onChange={props.onChange}
         />
     </>
