@@ -157,6 +157,20 @@ export const StringInput: FunctionalComponent<{
     inputHandler: { (value: string): void };
 }> = (props) => {
     const { label, type = 'text', value, inputHandler } = props
+
+    if (type === 'textArea') {
+
+        return <>
+            {label && <label>{label}</label>}
+            <textarea onInput={
+                (event): void => {
+                    console.log(event)
+                    inputHandler(eventToString(event))
+                }
+            } >{value}</textarea>
+        </>
+    }
+
     return <>
         {label && <label>{label}</label>}
         <input value={value} type={type} onInput={

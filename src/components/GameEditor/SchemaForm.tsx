@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { z } from "zod"
 import { h, VNode } from "preact";
-import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, TextInput, TriStateInput } from "./formControls";
-import { eventToString } from "../../lib/util";
+import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, StringInput, TriStateInput } from "./formControls";
 import styles from './editorStyles.module.css';
 
 export interface FieldDef {
@@ -35,11 +34,12 @@ interface SchemaFieldProps<T> {
     noTriState?: boolean;
     change: { (value: FieldValue, field: FieldDef): void };
     options?: string[];
+    stringInputType?: string;
     showUnsupported?: boolean;
 }
 
-export function SchemaField<T extends z.ZodRawShape>({
-    field, change, noTriState, options, showUnsupported = false
+function SchemaField<T extends z.ZodRawShape>({
+    field, change, noTriState, options, showUnsupported = false, stringInputType
 }: SchemaFieldProps<T>): VNode | null {
     const { key, optional, type, value } = field;
     let safeValue: FieldValue
@@ -63,9 +63,10 @@ export function SchemaField<T extends z.ZodRawShape>({
                 />
             }
 
-            return <TextInput label={key}
+            return <StringInput label={key}
                 value={value || ''}
-                onInput={(event): void => { change(eventToString(event), field) }}
+                type={stringInputType}
+                inputHandler={(value) => { change(value, field) }}
             />
 
         }
@@ -155,6 +156,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
                 options={options[field.key]}
                 change={changeValue}
                 field={field}
+                stringInputType={field.key === 'text' ? 'textArea' : undefined}
             />
         )}
     </article>

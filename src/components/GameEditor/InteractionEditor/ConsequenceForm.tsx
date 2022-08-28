@@ -2,8 +2,8 @@
 import { FunctionalComponent, h } from "preact";
 import { consequenceTypes, immediateConsequenceTypes, ZoneType, zoneTypes } from "../../../definitions/Interaction";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
-import { CheckBoxInput, NumberInput, SelectInput, TextInput } from "../formControls";
-import { eventToString, listIds } from "../../../lib/util";
+import { CheckBoxInput, NumberInput, SelectInput, StringInput } from "../formControls";
+import { listIds } from "../../../lib/util";
 import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions, getZoneRefsOrIds } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
@@ -37,7 +37,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         sequence: listIds(gameDesign.sequences),
         endingId: listIds(gameDesign.endings),
         zoneType: zoneTypes,
-        ref: getZoneRefsOrIds(gameDesign, consequence.roomId||'', consequence.zoneType)
+        ref: getZoneRefsOrIds(gameDesign, consequence.roomId || '', consequence.zoneType)
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
         targetId: targetDescriptions,
@@ -132,9 +132,10 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'text':
                     return (
                         <div key={index}>
-                            <TextInput value={value as string}
+                            <StringInput value={value as string}
+                                type={property === 'text' ? 'textArea' : undefined}
                                 label={property}
-                                onInput={e => { updateProperty(property, eventToString(e)) }}
+                                inputHandler={value => { updateProperty(property, value) }}
                             />
                         </div>
                     )
