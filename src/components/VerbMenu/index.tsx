@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact"
 import { Verb } from "src"
+import styles from './styles.module.css';
 
 interface Props {
     verbs: Verb[];
@@ -11,13 +12,11 @@ interface Props {
 export function VerbMenu({ verbs, currentVerbId, select }: Props) {
 
     return (
-        <nav>
+        <nav className={styles.menu}>
             {verbs.map(verb => (
                 <button key={verb.id}
-                style={{
-                    backgroundColor: currentVerbId === verb.id ? 'black' : 'white',
-                    color: currentVerbId === verb.id ? 'white' : 'black',
-                }} onClick={() => { select(verb) }}>{verb.label}</button>
+                    className={currentVerbId === verb.id ? [styles.button, styles.on].join(" ") : styles.button}
+                    onClick={() => { select(verb) }}>{verb.label}</button>
             ))}
         </nav>
     )

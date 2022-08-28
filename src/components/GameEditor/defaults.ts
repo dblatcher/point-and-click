@@ -4,11 +4,11 @@ import { ImmediateConsequence } from "src/definitions/Interaction";
 
 
 export const defaultVerbs1: { (): Verb[] } = () => [
-    { id: 'LOOK', label: 'Look at' },
-    { id: 'TAKE', label: 'Pick up' },
+    { id: 'LOOK', label: 'look at' },
+    { id: 'TAKE', label: 'pick up' },
     { id: 'USE', label: 'use', preposition: 'with' },
     { id: 'GIVE', label: 'give', preposition: 'to' },
-    { id: 'TALK', label: 'Talk to' },
+    { id: 'TALK', label: 'talk to' },
 ]
 
 export const getBlankRoom: { (): RoomData } = () => ({

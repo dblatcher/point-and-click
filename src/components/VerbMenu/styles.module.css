@@ -1,0 +1,26 @@
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: .5em;
+    font-size: larger;
+}
+
+.button {
+    font-size: inherit;
+    padding: .25em;
+    min-width: 5em;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    transition: background-color .5s, color .4s;
+}
+
+.button.on {
+    background-color: black;
+    color: white;
+}
+
+.button:hover {
+    background-color: gray;
+}
