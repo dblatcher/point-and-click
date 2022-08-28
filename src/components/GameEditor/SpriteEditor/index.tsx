@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { directions,  SpriteDataSchema } from "../../../definitions/SpriteSheet";
+import { directions, SpriteDataSchema } from "../../../definitions/SpriteSheet";
 import { cloneData } from "../../../lib/clone";
 import { Sprite } from "../../../lib/Sprite";
 import { uploadJsonData } from "../../../lib/files";
 import { eventToString } from "../../../lib/util";
-import { ActorData, Direction,SpriteData, SpriteFrame } from "src"
-import { DeleteButton, TextInput } from "../formControls";
+import { ActorData, Direction, SpriteData, SpriteFrame } from "src"
+import { StringInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";
 import spriteService from "../../../services/spriteService";
@@ -101,7 +101,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             const newAnimation: Partial<Record<Direction, SpriteFrame[] | undefined>> = {}
             newAnimation[defaultDirection] = []
             animations[animationKey] = newAnimation
-            return { animations }
+            return { animations, selectedAnimation: animationKey }
         })
     }
 
@@ -186,30 +186,51 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         return <article>
             <h2>Sprite Editor</h2>
             <div className={styles.container}>
+
+                <fieldset className={styles.fieldset}>
+                    <legend>Sprite</legend>
+                    <div className={styles.row}>
+                        <StringInput label="sprite ID"
+                            value={id}
+                            inputHandler={value => this.changeValue('id', value)} />
+                    </div>
+                    <div className={styles.row}>
+                        <label>Default Direction</label>
+                        <select value={defaultDirection} onChange={event => this.changeValue('defaultDirection', eventToString(event))}>
+                            {directions.map(direction => <option key={direction}>{direction}</option>)}
+                        </select>
+                    </div>
+                </fieldset>
+                <StorageMenu
+                    data={this.currentData}
+                    originalId={this.props.data?.id}
+                    existingIds={spriteIds}
+                    type='sprite'
+                    update={this.handleUpdateButton}
+                    reset={this.handleResetButton}
+                    saveButton={true}
+                    load={this.handleLoadButton}
+                />
+            </div>
+
+            <div className={styles.container}>
                 <section>
-
                     <fieldset className={styles.fieldset}>
-                        <div className={styles.row}>
-                            <TextInput label="sprite ID" value={id} onInput={event => this.changeValue('id', eventToString(event))} />
-                        </div>
-                        <DeleteButton label="New sprite"
-                            confirmationText="Are you sure you want to reset this form?"
-                            onClick={this.handleNewButton} />
-                    </fieldset>
+                        <legend>Pick Animation</legend>
 
-                    <fieldset className={styles.fieldset}>
-                        <legend>animations</legend>
                         <div className={styles.row}>
-                            <label>Default Direction</label>
-                            <select value={defaultDirection} onChange={event => this.changeValue('defaultDirection', eventToString(event))}>
-                                {directions.map(direction => <option key={direction}>{direction}</option>)}
+                            <label>Edit Animation:</label>
+                            <select value={selectedAnimation}
+                                onChange={
+                                    event => { this.setState({ selectedAnimation: eventToString(event) }) }
+                                }>
+                                {Object.keys(this.state.animations).map(animKey => (
+                                    <option key={animKey}>{animKey}</option>
+                                ))}
                             </select>
                         </div>
-
-
                         <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
                     </fieldset>
-
                     <fieldset className={styles.fieldset}>
                         <legend>Pick Frame</legend>
                         <FramePicker
@@ -219,33 +240,9 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                             col={selectedCol}
                         />
                     </fieldset>
-
-                    <StorageMenu
-                        data={this.currentData}
-                        originalId={this.props.data?.id}
-                        existingIds={spriteIds}
-                        type='sprite'
-                        update={this.handleUpdateButton}
-                        reset={this.handleResetButton}
-                        saveButton={true}
-                        load={this.handleLoadButton}
-                    />
                 </section>
 
                 <section>
-
-                    <div className={styles.row}>
-                        <label>Edit Animation:</label>
-                        <select value={selectedAnimation}
-                            onChange={
-                                event => { this.setState({ selectedAnimation: eventToString(event) }) }
-                            }>
-                            {Object.keys(this.state.animations).map(animKey => (
-                                <option key={animKey}>{animKey}</option>
-                            ))}
-                        </select>
-                    </div>
-
                     {(selectedAnimation && animations[selectedAnimation]) && (
                         <AnimationControl animKey={selectedAnimation}
                             defaultDirection={defaultDirection}

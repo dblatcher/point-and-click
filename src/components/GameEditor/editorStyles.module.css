@@ -76,3 +76,15 @@
     background-color: lightgray;
     color: black;
 }
+
+.plusButton {
+    background-color: lightgreen;
+}
+
+.plusButton:not(:disabled) {
+    cursor: pointer;
+}
+
+.plusButton:not(:disabled):hover {
+    background-color: palegreen;
+}

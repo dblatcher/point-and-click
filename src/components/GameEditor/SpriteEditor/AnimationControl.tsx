@@ -6,7 +6,6 @@ import { ActorData, Direction, SpriteFrame } from "src";
 import { SpritePreview } from "../SpritePreview";
 import { DeleteButton } from "../formControls";
 import { ListEditor } from "../ListEditor";
-import { cloneData } from "../../../lib/clone";
 import { FramePreview } from "./FramePreview";
 import editorStyles from '../editorStyles.module.css';
 import styles from './styles.module.css';
@@ -33,16 +32,6 @@ export const AnimationControl: FunctionalComponent<Props> = ({
 
     const addDirection = (direction: Direction) => {
         return editCycle(animKey, direction, [])
-    }
-
-    const insertFrame = (direction: Direction, index: number) => {
-        const originalList = animation[direction]
-        if (!originalList || !selectedFrame) { return }
-        const copyOfList = cloneData(originalList)
-        copyOfList.splice(index, 0, {
-            ...selectedFrame
-        })
-        return editCycle(animKey, direction, copyOfList)
     }
 
     const directionsUsed = Object.keys(animation) as Direction[]

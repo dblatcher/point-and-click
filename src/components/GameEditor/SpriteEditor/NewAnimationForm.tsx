@@ -2,7 +2,9 @@
 import { FunctionalComponent, h } from "preact";
 import { useState } from "preact/hooks";
 import { eventToString } from "../../../lib/util";
+import { icons } from "../dataEditors";
 import { TextInput, Warning } from "../formControls";
+import editorStyles from '../editorStyles.module.css';
 
 interface Props {
     existingKeys: string[];
@@ -22,8 +24,10 @@ export const NewAnimationForm: FunctionalComponent<Props> = ({ existingKeys, sub
     return (
         <div>
             <div>
-                <TextInput label="animation key" value={animationKey} onInput={event => setAnimationKey(eventToString(event))} />
-                <button onClick={handleSubmit} disabled={keyAlreadyUsed || animationKey === ''}>add animation</button>
+                <TextInput label="New animation:" value={animationKey} onInput={event => setAnimationKey(eventToString(event))} />
+                <button 
+                    className={editorStyles.plusButton}
+                    onClick={handleSubmit} disabled={keyAlreadyUsed || animationKey === ''}>{icons.INSERT}</button>
             </div>
             {warning && (
                 <Warning>{warning}</Warning>
