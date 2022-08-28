@@ -13,6 +13,7 @@ import spriteService from "../../../services/spriteService";
 import { FramePicker } from "./FramePicker";
 import styles from '../editorStyles.module.css';
 import { StorageMenu } from "../StorageMenu";
+import { DataItemEditorProps } from "../dataEditors";
 
 type ExtraState = {
     selectedAnimation?: string;
@@ -23,9 +24,7 @@ type ExtraState = {
 
 type SpriteEditorState = SpriteData & ExtraState;
 
-type SpriteEditorProps = {
-    data?: SpriteData;
-    updateData?: { (data: SpriteData): void };
+type SpriteEditorProps = DataItemEditorProps<SpriteData> & {
     spriteIds: string[];
 }
 

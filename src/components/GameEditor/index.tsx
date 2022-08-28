@@ -3,7 +3,7 @@ import { Component, h } from "preact";
 
 import { TreeMenu, Folder, Entry } from "./TreeMenu";
 import { Overview } from "./Overview";
-import { SpriteSheetTool } from "./SpriteSheetTool";
+import { SpriteSheetTool } from "./SpriteSheetEditor";
 import { RoomEditor } from "./RoomEditor";
 import { SpriteEditor } from "./SpriteEditor";
 import { TabMenu } from "../TabMenu";
@@ -214,10 +214,13 @@ export class GameEditor extends Component<Props, State>{
     }
 
     deleteArrayItem(index: number, property: keyof GameDesign) {
+        // TO DO - check for references to the ID of the deleted item?
+        // TO DELETE ITEMS FROM SERVICE?
         this.setState(state => {
             const { gameDesign } = state
             if (Array.isArray(gameDesign[property])) {
-                (gameDesign[property] as unknown[]).splice(index, 1)
+                const [deletedItem] = (gameDesign[property] as unknown[]).splice(index, 1)
+                console.log({ deletedItem })
             }
             return { gameDesign }
         })
@@ -354,6 +357,7 @@ export class GameEditor extends Component<Props, State>{
                     {
                         label: 'Room Editor', content: <RoomEditor
                             updateData={data => { this.performUpdate('rooms', data) }}
+                            deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
                             existingRoomIds={listIds(gameDesign.rooms)}
                             actors={gameDesign.actors}
                             key={roomId} data={this.currentRoom} />
@@ -382,12 +386,14 @@ export class GameEditor extends Component<Props, State>{
                             sequenceIds={listIds(gameDesign.sequences)}
                             conversations={gameDesign.conversations}
                             updateData={data => { this.performUpdate('conversations', data) }}
+                            deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
                             key={conversationId} data={this.currentConversation}
                         />
                     },
                     {
                         label: 'Sprite Editor', content: <SpriteEditor
                             updateData={data => { this.performUpdate('sprites', data) }}
+                            deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
                             key={spriteId} data={this.currentSprite}
                             spriteIds={listIds(gameDesign.sprites)}
                         />
@@ -395,6 +401,7 @@ export class GameEditor extends Component<Props, State>{
                     {
                         label: 'Sprite Sheets', content: <SpriteSheetTool
                             updateData={data => { this.performUpdate('spriteSheets', data) }}
+                            deleteData={index => { this.deleteArrayItem(index, 'spriteSheets') }}
                             key={spriteSheetId} data={this.currentSpriteSheet}
                             spriteSheetIds={listIds(gameDesign.spriteSheets)}
                         />
@@ -411,6 +418,7 @@ export class GameEditor extends Component<Props, State>{
                             gameDesign={gameDesign}
                             data={findById(sequenceId, gameDesign.sequences)}
                             updateData={data => { this.performUpdate('sequences', data) }}
+                            deleteData={index => { this.deleteArrayItem(index, 'sequences') }}
                             sequenceId={sequenceId} />
                     },
                     {
@@ -419,6 +427,7 @@ export class GameEditor extends Component<Props, State>{
                             gameDesign={gameDesign}
                             data={findById(endingId, gameDesign.endings)}
                             updateData={data => { this.performUpdate('endings', data) }}
+                            deleteData={index => { this.deleteArrayItem(index, 'endings') }}
                         />
                     },
                     { label: 'Image uploader', content: <ImageAssetTool /> },

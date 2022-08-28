@@ -13,6 +13,7 @@ import { eventToString, findById, listIds } from "../../../lib/util";
 import { uploadJsonData } from "../../../lib/files";
 import styles from "../editorStyles.module.css"
 import { PositionPreview } from "./PositionPreview";
+import { DataItemEditorProps } from "../dataEditors";
 
 type ExtraState = {
 
@@ -20,10 +21,7 @@ type ExtraState = {
 
 type State = ActorData & { sprite: string | undefined } & ExtraState;
 
-type Props = {
-    data?: ActorData;
-    updateData?: { (data: ActorData): void };
-    deleteData?: { (index: number): void };
+type Props = DataItemEditorProps<ActorData> & {
     rooms: RoomData[];
     actorIds: string[];
     actors: ActorData[];
@@ -154,10 +152,10 @@ export class ActorEditor extends Component<Props, State> {
         const { id, room } = this.state
         const originalId = this.props.data?.id
 
-        return actors.filter(actor => 
-                actor.id !== id && 
-                actor.id !== originalId &&
-                actor.room === room
+        return actors.filter(actor =>
+            actor.id !== id &&
+            actor.id !== originalId &&
+            actor.room === room
         )
     }
 

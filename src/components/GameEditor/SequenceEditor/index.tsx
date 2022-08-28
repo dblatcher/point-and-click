@@ -12,12 +12,11 @@ import styles from "../editorStyles.module.css"
 import { SelectAndConfirmInput, StringInput } from "../formControls";
 import { TabMenu } from "../../TabMenu";
 import { listIds } from "../../../lib/util";
+import { DataItemEditorProps } from "../dataEditors";
 
-interface Props {
+type Props = DataItemEditorProps<Sequence> & {
     gameDesign: GameDesign;
     sequenceId?: string;
-    data?: Sequence;
-    updateData: { (data: Sequence): void };
 }
 
 type ExtraState = {
@@ -120,12 +119,12 @@ export class SequenceEditor extends Component<Props, State> {
         const { gameDesign } = this.props
         const { immediateConsequences = [], actorOrders = {} } = stage
         return (
-            <section key={stageIndex} style={{width:'100%'}}>
+            <section key={stageIndex} style={{ width: '100%' }}>
                 <h3>stage {stageIndex + 1}</h3>
                 <SelectAndConfirmInput
                     label="add orders for:"
                     items={listIds(gameDesign.actors).filter(id => !Object.keys(actorOrders).includes(id))}
-                    onSelect={value => { this.changeOrderList( [getDefaultOrder('talk')], stageIndex, value) }}
+                    onSelect={value => { this.changeOrderList([getDefaultOrder('talk')], stageIndex, value) }}
                 />
 
                 <TabMenu backgroundColor="none"
@@ -185,6 +184,7 @@ export class SequenceEditor extends Component<Props, State> {
                         existingIds={Object.keys(gameDesign.sequences)}
                         reset={() => this.setState(this.initialState)}
                         update={() => { updateData(this.currentData) }}
+                        deleteItem={this.props.deleteData}
                     />
                 </div>
 

@@ -10,6 +10,7 @@ import styles from '../editorStyles.module.css';
 import { SpriteSheetPreview } from "../SpriteSheetPreview";
 import imageService, { ImageAsset } from "../../../services/imageService";
 import { StorageMenu } from "../StorageMenu";
+import { DataItemEditorProps } from "../dataEditors";
 
 type ExtraState = {
     urlIsObjectUrl: boolean;
@@ -18,9 +19,7 @@ type ExtraState = {
 
 type State = SpriteSheet & ExtraState
 
-type Props = {
-    data?: SpriteSheet;
-    updateData?: { (data: SpriteSheet): void };
+type Props = DataItemEditorProps<SpriteSheet> & {
     spriteSheetIds: string[];
 }
 
@@ -176,6 +175,7 @@ export class SpriteSheetTool extends Component<Props, State> {
                             existingIds={spriteSheetIds}
                             type='spriteSheet'
                             update={this.handleUpdateButton}
+                            deleteItem={this.props.deleteData}
                             reset={this.handleResetButton}
                         />
                         <fieldset>

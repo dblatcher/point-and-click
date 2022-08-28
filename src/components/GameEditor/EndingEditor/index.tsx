@@ -9,12 +9,11 @@ import { FieldDef, SchemaForm, FieldValue, fieldValueIsRightType } from "../Sche
 import { EndingSchema } from "../../../definitions/Ending";
 import imageService from "../../../services/imageService";
 import { EndingScreen } from "../../EndingScreen";
+import { DataItemEditorProps } from "../dataEditors";
 
 
-interface Props {
+type Props = DataItemEditorProps<Ending> & {
     gameDesign: GameDesign;
-    data?: Ending;
-    updateData: { (data: Ending): void };
 }
 
 type ExtraState = {
@@ -77,6 +76,7 @@ export class EndingEditor extends Component<Props, State> {
                 <StorageMenu
                     type="ending"
                     update={() => updateData(this.currentData)}
+                    deleteItem={this.props.deleteData}
                     existingIds={listIds(gameDesign.endings)}
                     data={this.currentData}
                     originalId={this.props.data?.id}

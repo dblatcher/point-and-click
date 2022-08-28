@@ -22,6 +22,7 @@ import { RoomDataSchema } from "../../../definitions/RoomData";
 import { ListEditor } from "../ListEditor";
 import { Entry, Folder, TreeMenu } from "../TreeMenu";
 import { ZoneSetEditor } from "./ZoneSetEditor";
+import { DataItemEditorProps } from "../dataEditors";
 
 type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -31,9 +32,7 @@ type RoomEditorState = RoomData & {
     hotspotTab: number;
 };
 
-type RoomEditorProps = {
-    data?: RoomData;
-    updateData?: { (data: RoomData): void };
+type RoomEditorProps = DataItemEditorProps<RoomData> & {
     existingRoomIds?: string[];
     actors?: ActorData[];
 }
@@ -478,6 +477,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     existingIds={existingRoomIds}
                     reset={this.handleResetButton}
                     update={this.handleUpdateButton}
+                    deleteItem={this.props.deleteData}
                     saveButton={true}
                     load={this.handleLoadButton}
                 />

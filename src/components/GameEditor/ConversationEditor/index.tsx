@@ -12,6 +12,7 @@ import styles from "../editorStyles.module.css"
 import { SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
 import { ChoiceListControl } from "./ChoiceListControl";
 import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
+import { DataItemEditorProps } from "../dataEditors"
 
 type ExtraState = {
     openBranchId?: string;
@@ -20,9 +21,7 @@ type ExtraState = {
 
 type State = Conversation & ExtraState;
 
-type Props = {
-    data?: Conversation;
-    updateData?: { (data: Conversation): void };
+type Props = DataItemEditorProps<Conversation> & {
     conversations: Conversation[];
     sequenceIds: string[];
 }
@@ -269,6 +268,7 @@ export class ConversationEditor extends Component<Props, State> {
                     existingIds={listIds(conversations)}
                     reset={this.handleResetButton}
                     update={this.handleUpdateButton}
+                    deleteItem={this.props.deleteData}
                     saveButton={true}
                     load={this.handleLoadButton}
                 />

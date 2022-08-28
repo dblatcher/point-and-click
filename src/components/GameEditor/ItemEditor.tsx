@@ -9,12 +9,10 @@ import styles from "./editorStyles.module.css"
 import { ItemMenu } from "../ItemMenu";
 import { cloneData } from "../../lib/clone";
 import { StorageMenu } from "./StorageMenu";
+import { DataItemEditorProps } from "./dataEditors";
 
-interface Props {
-    data?: ItemData;
+type Props = DataItemEditorProps<ItemData> & {
     actorIds: string[];
-    updateData?: { (data: ItemData): void };
-    deleteData?: { (index: number): void };
     itemIds: string[];
 }
 type State = ItemData & {
@@ -33,7 +31,7 @@ export class ItemEditor extends Component<Props, State> {
     constructor(props: Props) {
         super(props)
 
-        const initialData = props.data ? { ...props.data } : makeNewItem();
+        const initialData = props.data ? cloneData(props.data) : makeNewItem();
 
         this.state = {
             ...initialData
@@ -51,9 +49,7 @@ export class ItemEditor extends Component<Props, State> {
         })
     }
     handleUpdateButton() {
-        if (this.props.updateData) {
-            this.props.updateData(this.state)
-        }
+        this.props.updateData(this.state)
     }
 
     changeValue(propery: keyof ItemData, newValue: string | undefined) {
