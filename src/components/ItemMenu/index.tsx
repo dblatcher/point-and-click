@@ -15,7 +15,7 @@ interface Props {
 export function ItemMenu({ items, currentItemId, select, handleHover }: Props) {
 
     return (
-        <nav>
+        <nav className={styles.menu}>
             {items.map(item => {
 
                 const imageUrl = imageService.get(item.imageId || '')?.href;

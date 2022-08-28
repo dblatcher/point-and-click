@@ -15,7 +15,7 @@ export function VerbMenu({ verbs, currentVerbId, select }: Props) {
         <nav className={styles.menu}>
             {verbs.map(verb => (
                 <button key={verb.id}
-                    className={currentVerbId === verb.id ? [styles.button, styles.on].join(" ") : styles.button}
+                    className={currentVerbId === verb.id ? [styles.button, styles.current].join(" ") : styles.button}
                     onClick={() => { select(verb) }}>{verb.label}</button>
             ))}
         </nav>

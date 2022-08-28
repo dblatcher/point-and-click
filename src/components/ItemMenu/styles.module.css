@@ -1,25 +1,36 @@
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding-bottom: .5em;
+    font-size: large;
+}
 
 .button {
+    font-size: inherit;
+    padding: .25em;
+    min-width: 5em;
     cursor: pointer;
+    background-color: white;
+    color: black;
+    transition: background-color .5s, color .4s;
+
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
-
     min-height: 3rem;
-    min-width: 6rem;
-    background-color: white;
-}
-
-.current.button {
-    background-color: rgba(12, 12, 12, 1)
 }
 
 .button span {
     background-color: rgba(255, 255,255,.5);
-    color: black;
+    color: inherit;
+}
+
+.current.button {
+    background-color: black;
+    color: white;
 }
 
 .current.button span {
     background-color: rgba(12, 12, 12, 0.5);
-    color: white;
 }

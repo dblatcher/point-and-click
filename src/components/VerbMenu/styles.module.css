@@ -16,7 +16,7 @@
     transition: background-color .5s, color .4s;
 }
 
-.button.on {
+.current.button {
     background-color: black;
     color: white;
 }
