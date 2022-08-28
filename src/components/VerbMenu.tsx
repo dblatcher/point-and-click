@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact"
 import { Verb } from "src"
-import styles from './styles.module.css';
-import uiStyles from '../uiStyles.module.css';
+import uiStyles from './uiStyles.module.css';
 
 interface Props {
     verbs: Verb[];
@@ -14,7 +13,7 @@ export function VerbMenu({ verbs, currentVerbId, select }: Props) {
 
     return (
         <div className={uiStyles.frame}>
-            <nav className={[uiStyles.contents, styles.menu].join(" ")}>
+            <nav className={[uiStyles.contents, uiStyles.menu].join(" ")}>
                 {verbs.map(verb => (
                     <button key={verb.id}
                         className={currentVerbId === verb.id ? [uiStyles.button, uiStyles.current].join(" ") : uiStyles.button}

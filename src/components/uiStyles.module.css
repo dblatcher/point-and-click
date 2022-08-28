@@ -10,6 +10,12 @@
     font-size: large;
 }
 
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
 .button {
     font-size: inherit;
     padding: .25em;
@@ -17,6 +23,9 @@
     cursor: pointer;
     background-color: white;
     color: black;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
     transition: background-color .5s, color .4s;
 }
 
@@ -27,4 +36,13 @@
 
 .button:hover {
     background-color: gray;
+}
+
+.button span {
+    background-color: rgba(255, 255,255,.5);
+    color: inherit;
+}
+
+.current.button span {
+    background-color: rgba(12, 12, 12, 0.5);
 }
