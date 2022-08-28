@@ -23,7 +23,7 @@ type State = ActorData & { sprite: string | undefined } & ExtraState;
 type Props = {
     data?: ActorData;
     updateData?: { (data: ActorData): void };
-    deleteData?: { (id: string): void };
+    deleteData?: { (index: number): void };
     rooms: RoomData[];
     actorIds: string[];
     actors: ActorData[];

@@ -14,7 +14,7 @@ interface Props {
     data?: ItemData;
     actorIds: string[];
     updateData?: { (data: ItemData): void };
-    deleteData?: { (id: string): void };
+    deleteData?: { (index: number): void };
     itemIds: string[];
 }
 type State = ItemData & {

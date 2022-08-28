@@ -13,7 +13,7 @@ interface Props {
     update: { (): void };
     saveButton?: boolean;
     load?: { (): void };
-    deleteItem?: { (id: string): void };
+    deleteItem?: { (index: number): void };
 }
 
 export const StorageMenu: FunctionalComponent<Props> = ({
@@ -28,7 +28,8 @@ export const StorageMenu: FunctionalComponent<Props> = ({
             ? `Overwrite ${currentId}`
             : `Add new ${type} ${currentId}`
 
-    const showDeleteButton = !!originalId && originalId === currentId && !!deleteItem
+    const indexOfOriginalId = originalId ? existingIds.indexOf(originalId) : -1
+    const showDeleteButton = typeof originalId && originalId === currentId && indexOfOriginalId !== -1 && !!deleteItem
     const deleteButtonText = `Delete ${type} ${currentId}`
 
 
@@ -49,7 +50,7 @@ export const StorageMenu: FunctionalComponent<Props> = ({
 
             {showDeleteButton &&
                 <DeleteButton label={deleteButtonText}
-                    onClick={(): void => { deleteItem(originalId) }}
+                    onClick={(): void => { deleteItem(indexOfOriginalId) }}
                 />
             }
         </fieldset>
