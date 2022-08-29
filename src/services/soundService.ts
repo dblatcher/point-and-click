@@ -43,11 +43,13 @@ export class SoundService extends Service<SoundAsset> {
         Service.prototype.add.apply(this, [items])
 
         const itemArray = Array.isArray(items) ? items : [items];
-
-        itemArray.forEach(soundAsset => {
+        itemArray.forEach(soundAsset =>
             this.soundDeck.defineSampleBuffer(soundAsset.id, soundAsset.href)
-                .then(r => { console.log('sample buffer', r, soundAsset.id) })
-        })
+                .then(success => {
+                    console.log('soundService: load', soundAsset.id, success)
+                    this.emit('load', soundAsset.id, success)
+                })
+        )
     }
 
     play(soundId: string, playOptions?: {

@@ -2,6 +2,8 @@ import { TypedEmitter } from "tiny-typed-emitter";
 
 interface ServiceEvents {
     'update': (length: number) => void;
+    'ready': (isReady: boolean) => void;
+    'load': (id: string, success: boolean) => void;
 }
 
 export interface ServiceItem {
