@@ -40,6 +40,7 @@
     "@types/jszip": "^3.4.1",
     "astar-typescript": "^1.2.5",
     "jszip": "^3.10.1",
+    "physics-worlds": "^2.3.0",
     "preact": "^10.3.2",
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1",
