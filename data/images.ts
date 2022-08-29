@@ -43,7 +43,7 @@ const buildAssets = (filenames: string[], path: string, category: ImageAssetCate
 )
 
 
-export const assets: ImageAsset[] = [
+export const imageAssets: ImageAsset[] = [
     ...buildAssets(backgroundFileNames, backgroundPath, 'background'),
     ...buildAssets(itemFileNames, itemPath, 'spriteSheet', 'ITEM_'),
     ...buildAssets(actorSpriteFileNames, actorSpritePath, 'spriteSheet'),

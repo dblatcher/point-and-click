@@ -7,10 +7,12 @@ import { populateServices } from "../../services/populateServices";
 import { uploadFile } from "../../lib/files";
 import { readGameFromZipFile } from "../../lib/zipFiles";
 import { ImageAsset } from "../../services/imageService";
+import { SoundAsset } from "src/services/soundService";
 
 interface Props {
   prebuiltGame?: GameDesign;
-  prebuiltAssets?: ImageAsset[];
+  prebuiltImageAssets?: ImageAsset[];
+  prebuiltSoundAssets?: SoundAsset[];
 }
 
 interface State {
@@ -28,7 +30,10 @@ export default class GamePlayer extends Component<Props, State> {
     };
 
     if (props.prebuiltGame) {
-      populateServices(props.prebuiltGame, props.prebuiltAssets || []);
+      populateServices(
+        props.prebuiltGame, 
+        props.prebuiltImageAssets || [], 
+        props.prebuiltSoundAssets || []);
     }
 
     this.save = this.save.bind(this);
@@ -109,8 +114,8 @@ export default class GamePlayer extends Component<Props, State> {
       return;
     }
 
-    const { gameDesign, imageAssets } = result.data;
-    populateServices(gameDesign, imageAssets);
+    const { gameDesign, imageAssets, soundAssets } = result.data;
+    populateServices(gameDesign, imageAssets, soundAssets);
 
     this.setState({ loadedGameDesign: gameDesign }, () => {
       this.reset();

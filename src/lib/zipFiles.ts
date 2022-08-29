@@ -263,14 +263,25 @@ export const buildGameZipBlob = async (
 export const readGameFromZipFile = async (
   file: File
 ): Promise<
-  ZipReadResult<{ imageAssets: ImageAsset[]; gameDesign: GameDesign }>
+  ZipReadResult<{ 
+    gameDesign: GameDesign;
+    imageAssets: ImageAsset[]; 
+    soundAssets: SoundAsset[]; 
+  }>
 > => {
   const readImageResult = await readImageAssetFromZipFile(file);
-
   if (!readImageResult.success) {
     return {
       success: false,
       error: readImageResult.error,
+    };
+  }
+
+  const readSoundResult = await readSoundAssetFromZipFile(file);
+  if (!readSoundResult.success) {
+    return {
+      success: false,
+      error: readSoundResult.error,
     };
   }
 
@@ -309,6 +320,7 @@ export const readGameFromZipFile = async (
     data: {
       gameDesign: results.data,
       imageAssets: readImageResult.data,
+      soundAssets: readSoundResult.data,
     }
   };
 };

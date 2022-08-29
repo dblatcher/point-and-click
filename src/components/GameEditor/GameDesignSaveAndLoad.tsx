@@ -55,7 +55,7 @@ export const GameDesignSaveAndLoad: FunctionalComponent<Props> = ({
     }
 
     loadNewGame(result.data.gameDesign)
-    populateServices(result.data.gameDesign, result.data.imageAssets)
+    populateServices(result.data.gameDesign, result.data.imageAssets, result.data.soundAssets)
   };
 
   return (

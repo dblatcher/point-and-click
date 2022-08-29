@@ -3,11 +3,11 @@ import style from "./style.css";
 
 import GamePlayer from "../../components/GamePlayer";
 import { prebuiltGameDesign } from "../../../data/fullGame";
-import { assets } from "../../../data/images";
+import { imageAssets } from "../../../data/images";
 
 const PrebuiltGame: FunctionalComponent = () => (
   <div className={style.home}>
-    <GamePlayer prebuiltGame={prebuiltGameDesign} prebuiltAssets={assets} />
+    <GamePlayer prebuiltGame={prebuiltGameDesign} prebuiltImageAssets={imageAssets} />
   </div>
 );
 
