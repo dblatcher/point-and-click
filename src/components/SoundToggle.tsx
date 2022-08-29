@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h } from "preact"
-import { useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import soundService from "../services/soundService";
 
 
@@ -10,16 +10,18 @@ interface Props {
 
 export function SoundToggle({ }: Props) {
 
-    // const respondToServiceUpdate = (isReady: boolean) => {
-    //     console.log({ isEnabled: soundService.isEnabled, isReady })
-    // }
+    const [isOn, setIsOn] = useState(soundService.isEnabled)
 
-    // useEffect(() => {
-    //     soundService.on('ready', respondToServiceUpdate)
-    //     return () => {
-    //         soundService.off('ready', respondToServiceUpdate)
-    //     }
-    // })
+    const respondToServiceUpdate = (isReady: boolean) => {
+        setIsOn(isReady)
+    }
+
+    useEffect(() => {
+        soundService.on('ready', respondToServiceUpdate)
+        return () => {
+            soundService.off('ready', respondToServiceUpdate)
+        }
+    })
 
     const toggle = () => {
         if (soundService.isEnabled) {
@@ -31,7 +33,7 @@ export function SoundToggle({ }: Props) {
     return (
         <button onClick={toggle}>
             SOUND
-            {soundService.isEnabled ? '🔊' : '🔈'}
+            {isOn ? '🔊' : '🔈'}
         </button>
     )
 }

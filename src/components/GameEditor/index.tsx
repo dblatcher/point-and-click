@@ -30,6 +30,7 @@ import { EndingEditor } from "./EndingEditor";
 import spriteSheetService from "../../services/spriteSheetService";
 import Game from "../Game";
 import { GameDesignSaveAndLoad } from "./GameDesignSaveAndLoad";
+import { SoundAssetTool } from "./SoundAssetTool";
 
 
 const usePrebuiltGame = true
@@ -68,6 +69,7 @@ const tabs: string[] = [
     'sequences',
     'endings',
     'images',
+    'sounds',
     'test',
 ]
 
@@ -287,6 +289,7 @@ export class GameEditor extends Component<Props, State>{
             makeFolder('sequences', gameDesign.sequences, sequenceId),
             makeFolder('endings', gameDesign.endings, endingId),
             makeFolder('images'),
+            makeFolder('sounds'),
         ]
 
         return <main className={layoutStyles.main}>
@@ -431,6 +434,7 @@ export class GameEditor extends Component<Props, State>{
                         />
                     },
                     { label: 'Image uploader', content: <ImageAssetTool /> },
+                    { label: 'Sound uploader', content: <SoundAssetTool /> },
                     {
                         label: 'Test', content: (
                             <div>

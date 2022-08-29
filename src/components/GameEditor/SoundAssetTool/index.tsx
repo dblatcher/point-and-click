@@ -9,15 +9,17 @@ import { eventToString } from "../../../lib/util";
 import { SelectInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import { ServiceItem } from "src/services/Service";
+import { ServiceItem } from "../../../services/Service";
+import { SoundToggle } from "../../../components/SoundToggle";
 import styles from "../editorStyles.module.css";
-import imageService, {
-  ImageAsset,
-  ImageAssetCategory,
-  imageAssetCategories,
 
-} from "../../../services/imageService";
-import { buildAssetZipBlob, readImageAssetFromZipFile } from "../../../lib/zipFiles";
+import soundService, {
+  SoundAsset,
+  SoundAssetCategory,
+  soundAssetCategories,
+
+} from "../../../services/soundService";
+import { buildAssetZipBlob, readSoundAssetFromZipFile } from "../../../lib/zipFiles";
 
 type ExtraState = {
   urlIsObjectUrl: boolean;
@@ -25,21 +27,21 @@ type ExtraState = {
   uploadWarning?: string;
 };
 
-type State = Partial<ImageAsset> & ExtraState;
+type State = Partial<SoundAsset> & ExtraState;
 
-export class ImageAssetTool extends Component<{}, State> {
+export class SoundAssetTool extends Component<{}, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
 
-  constructor(props: ImageAssetTool["props"]) {
+  constructor(props: SoundAssetTool["props"]) {
     super(props);
     this.state = {
       urlIsObjectUrl: false,
-      id: "NEW_IMAGE",
+      id: "NEW_SOUND",
     };
     this.loadFile = this.loadFile.bind(this);
     this.saveToService = this.saveToService.bind(this);
     this.openFromService = this.openFromService.bind(this);
-    this.zipImages = this.zipImages.bind(this);
+    this.zipSounds = this.zipSounds.bind(this);
 
     this.canvasRef = createRef();
   }
@@ -65,7 +67,7 @@ export class ImageAssetTool extends Component<{}, State> {
     });
   };
 
-  changeValue(propery: keyof ImageAsset, newValue: string | number) {
+  changeValue(propery: keyof SoundAsset, newValue: string | number) {
     const modification: Partial<State> = {
       saveWarning: undefined,
     };
@@ -78,9 +80,9 @@ export class ImageAssetTool extends Component<{}, State> {
       case "category":
         if (
           typeof newValue === "string" &&
-          imageAssetCategories.includes(newValue as ImageAssetCategory)
+          soundAssetCategories.includes(newValue as SoundAssetCategory)
         ) {
-          modification[propery] = newValue as ImageAssetCategory;
+          modification[propery] = newValue as SoundAssetCategory;
         }
         break;
     }
@@ -103,22 +105,22 @@ export class ImageAssetTool extends Component<{}, State> {
       return;
     }
 
-    const copy = cloneData(state) as ImageAsset & Partial<ExtraState>;
+    const copy = cloneData(state) as SoundAsset & Partial<ExtraState>;
     delete copy.urlIsObjectUrl;
     delete copy.saveWarning;
     delete copy.uploadWarning;
 
     this.setState({ saveWarning: undefined }, () => {
-      imageService.add(copy);
+      soundService.add(copy);
     });
   }
 
-  zipImages = async () => {
-    const result = await buildAssetZipBlob('images', imageService);
+  zipSounds = async () => {
+    const result = await buildAssetZipBlob('sounds',soundService);
     if (result.success === false) {
       return this.setState({ saveWarning: result.error });
     }
-    makeDownloadFile("images.zip", result.blob);
+    makeDownloadFile("sounds.zip", result.blob);
   };
 
   loadFromZipFile = async () => {
@@ -128,15 +130,15 @@ export class ImageAssetTool extends Component<{}, State> {
       return;
     }
 
-    const result = await readImageAssetFromZipFile(file);
+    const result = await readSoundAssetFromZipFile(file);
     if (result.success === false) {
       return this.setState({ uploadWarning: result.error });
     }
-    imageService.add(result.data);
+    soundService.add(result.data);
   };
 
   openFromService(asset: ServiceItem) {
-    const copy = cloneData(asset as ImageAsset);
+    const copy = cloneData(asset as SoundAsset);
     this.setState((state) => {
       const newState = {
         ...state,
@@ -158,14 +160,14 @@ export class ImageAssetTool extends Component<{}, State> {
 
     return (
       <article>
-        <h2>Image asset tool</h2>
+        <h2>Sound asset tool</h2>
         <div className={styles.container}>
           <section>
             <fieldset className={styles.fieldset}>
-              <legend>image properties</legend>
+              <legend>sound properties</legend>
 
               <div className={styles.row}>
-                <button onClick={this.loadFile}>select image file</button>
+                <button onClick={this.loadFile}>select sound file</button>
               </div>
               <div className={styles.row}>
                 <TextInput
@@ -181,7 +183,7 @@ export class ImageAssetTool extends Component<{}, State> {
                   onSelect={(value) => this.changeValue("category", value)}
                   label="category"
                   value={category}
-                  items={imageAssetCategories}
+                  items={soundAssetCategories}
                   haveEmptyOption={true}
                 />
               </div>
@@ -194,7 +196,7 @@ export class ImageAssetTool extends Component<{}, State> {
               </div>
 
               <div className={styles.row}>
-                <button onClick={this.zipImages}>zip assets</button>
+                <button onClick={this.zipSounds}>zip assets</button>
               </div>
               <div className={styles.row}>
                 <button onClick={this.loadFromZipFile}>
@@ -205,15 +207,21 @@ export class ImageAssetTool extends Component<{}, State> {
             </fieldset>
             <ServiceItemSelector
               legend="open asset"
-              service={imageService}
+              service={soundService}
               select={this.openFromService}
             />
           </section>
+
           <section>
-            <p>Resizing the preview does not effect the image data.</p>
-            <div className={styles.spriteSheetPreview}>
-              <img src={href} />
-            </div>
+            {href && (
+              <p>{this.state.originalFileName} : {href}</p>
+
+            )}
+            <p>play</p>
+              <SoundToggle />
+            {(id && soundService.get(id)) && (
+              <button onClick={() => { soundService.play(id) }}>play {id}</button>
+            )}
           </section>
         </div>
       </article>

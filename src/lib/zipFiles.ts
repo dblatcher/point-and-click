@@ -6,7 +6,8 @@ import {
   ImageAssetSchema,
   ImageService,
 } from "../services/imageService";
-import { dataToBlob, fileToImageUrl } from "./files";
+import { dataToBlob, fileToObjectUrl } from "./files";
+import { SoundAsset, SoundAssetSchema, SoundService } from "../services/soundService";
 
 type ZipActionFailure = {
   success: false;
@@ -28,8 +29,9 @@ type ZipReadResult<T> = ZipActionFailure | ZipReadSucess<T>;
 
 const FILENAMES = {
   game: "game.json",
-  imageAssets: "imageAssets.json",
-};
+  images: "imageAssets.json",
+  sounds: "soundAssets.json",
+} as const;
 
 const blobToZip = async (blob: Blob): Promise<JSZip | undefined> => {
   return await new JSZip().loadAsync(blob).catch((error) => {
@@ -58,12 +60,13 @@ const extractJsonFile = async (
   }
 };
 
-const prepareImageAssetZip = async (
-  imageService: ImageService
+const prepareAssetZip = async (
+  type: 'images' | 'sounds',
+  service: ImageService | SoundService
 ): Promise<JSZip> => {
   const zip = new JSZip();
 
-  const assets = imageService.getAll();
+  const assets = service.getAll();
   const assetsBlob = await dataToBlob(
     assets.map((asset) => ({ ...asset, href: "" }))
   );
@@ -72,28 +75,29 @@ const prepareImageAssetZip = async (
     throw "failed to build assets file";
   }
 
-  zip.file(FILENAMES.imageAssets, assetsBlob);
+  zip.file(FILENAMES[type], assetsBlob);
 
   const files = await Promise.all(
-    assets.map((asset) => imageService.getFile(asset.id))
+    assets.map((asset) => service.getFile(asset.id))
   );
 
   if (files.includes(undefined)) {
-    throw "failed to build all image files";
+    throw `failed to build all asset(${type}) files`;
   }
 
   (files as File[]).forEach((file) => {
-    zip.file(`images/${file.name}`, file);
+    zip.file(`${type}/${file.name}`, file);
   });
 
   return zip;
 };
 
-export const buildImageAssetZipBlob = async (
-  imageService: ImageService
+export const buildAssetZipBlob = async (
+  type: 'images' | 'sounds',
+  service: ImageService | SoundService
 ): Promise<ZipBuildResult> => {
   try {
-    const zip = await prepareImageAssetZip(imageService);
+    const zip = await prepareAssetZip(type, service);
     const blob = await zip.generateAsync({ type: "blob" });
     return {
       success: true,
@@ -121,7 +125,7 @@ export const readImageAssetFromZipFile = async (
 
   let data: unknown;
   try {
-    data = await extractJsonFile(FILENAMES.imageAssets, zip);
+    data = await extractJsonFile(FILENAMES.images, zip);
   } catch (error) {
     return {
       success: false,
@@ -135,7 +139,7 @@ export const readImageAssetFromZipFile = async (
     console.warn(results.error);
     return {
       success: false,
-      error: `data in ${FILENAMES.imageAssets} was not a valid array of imageAssets`,
+      error: `data in ${FILENAMES.images} was not a valid array of imageAssets`,
     };
   }
 
@@ -145,7 +149,7 @@ export const readImageAssetFromZipFile = async (
       console.warn("MISSING FILE", `images/${asset.id}`);
       return asset;
     }
-    const imageUrl = fileToImageUrl(imageBlob);
+    const imageUrl = fileToObjectUrl(imageBlob);
     if (!imageUrl) {
       console.warn("image url failed", `images/${asset.id}`);
       return asset;
@@ -162,12 +166,67 @@ export const readImageAssetFromZipFile = async (
   };
 };
 
+export const readSoundAssetFromZipFile = async (
+  file: File
+): Promise<ZipReadResult<SoundAsset[]>> => {
+  const zip = await blobToZip(file);
+
+  if (!zip) {
+    return {
+      success: false,
+      error: `failed to get contents data from  ${file.name}`,
+    };
+  }
+
+  let data: unknown;
+  try {
+    data = await extractJsonFile(FILENAMES.sounds, zip);
+  } catch (error) {
+    return {
+      success: false,
+      error: error as string,
+    };
+  }
+
+  const results = SoundAssetSchema.array().safeParse(data);
+
+  if (!results.success) {
+    console.warn(results.error);
+    return {
+      success: false,
+      error: `data in ${FILENAMES.sounds} was not a valid array of soundAssets`,
+    };
+  }
+
+  async function populateHref(asset: SoundAsset): Promise<SoundAsset> {
+    const assetBlob = await zip?.file(`sounds/${asset.id}`)?.async("blob");
+    if (!assetBlob) {
+      console.warn("MISSING FILE", `sounds/${asset.id}`);
+      return asset;
+    }
+    const objectUrl = fileToObjectUrl(assetBlob);
+    if (!objectUrl) {
+      console.warn("object url failed", `sounds/${asset.id}`);
+      return asset;
+    }
+    asset.href = objectUrl;
+    return asset;
+  }
+
+  const populatedAssets = await Promise.all(results.data.map(populateHref));
+
+  return {
+    success: true,
+    data: populatedAssets,
+  };
+};
+
 export const buildGameZipBlob = async (
   gameDesign: GameDesign,
   imageService: ImageService
 ): Promise<ZipBuildResult> => {
   try {
-    const zip = await prepareImageAssetZip(imageService);
+    const zip = await prepareAssetZip('images',imageService);
     const gameDesignBlob = dataToBlob(gameDesign);
     if (!gameDesignBlob) {
       throw "failed to make gameDesignBlob";
@@ -195,9 +254,9 @@ export const readGameFromZipFile = async (
 
   if (!readImageResult.success) {
     return {
-        success: false,
-        error: readImageResult.error,
-      };
+      success: false,
+      error: readImageResult.error,
+    };
   }
 
   const zip = await blobToZip(file);
@@ -232,9 +291,9 @@ export const readGameFromZipFile = async (
 
   return {
     success: true,
-    data : {
-        gameDesign: results.data,
-        imageAssets: readImageResult.data,
+    data: {
+      gameDesign: results.data,
+      imageAssets: readImageResult.data,
     }
   };
 };
