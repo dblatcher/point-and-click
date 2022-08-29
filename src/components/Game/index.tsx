@@ -18,6 +18,7 @@ import { ConversationMenu } from "../ConversationMenu";
 import { handleConversationChoice } from "./handleConversationChoice";
 import { EndingScreen } from "../EndingScreen";
 import { DebugLog, makeDebugEntry, type LogEntry } from "../DebugLog";
+import { SoundToggle } from "../SoundToggle";
 
 
 export type GameProps = Readonly<{
@@ -283,6 +284,8 @@ export default class Game extends Component<GameProps, GameState> {
                 }
 
                 <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>
+                <SoundToggle />
+
                 {currentRoom &&
                     <Room
                         data={currentRoom}

@@ -63,10 +63,16 @@ export class SoundService extends Service<SoundAsset> {
 
     enable(): Promise<void> {
         return this.soundDeck.enable()
+            .then(() => {
+                this.emit('ready', this.isEnabled)
+            })
     }
 
     disable(): Promise<void> {
         return this.soundDeck.disable()
+            .then(() => {
+                this.emit('ready', this.isEnabled)
+            })
     }
 
     get isEnabled(): boolean {
