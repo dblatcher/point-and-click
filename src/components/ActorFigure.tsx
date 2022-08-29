@@ -1,6 +1,6 @@
 import { h, Fragment, FunctionalComponent, JSX } from "preact";
 import { useLayoutEffect, useState } from "preact/hooks";
-import { RoomData,Order,ActorData } from "src"
+import { RoomData, Order, ActorData } from "src"
 import { placeOnScreen } from "../lib/roomFunctions";
 import { getScale } from "../lib/getScale";
 import { Sprite } from "../lib/Sprite";
@@ -32,10 +32,10 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
 }
 
 export const ActorFigure: FunctionalComponent<Props> = ({
-    data, 
-    roomData, 
+    data,
+    roomData,
     viewAngle,
-    animationRate = 200, 
+    animationRate = 200,
     isPaused,
     clickHandler, handleHover,
     orders = [], roomScale = 1, overrideSprite
@@ -43,7 +43,7 @@ export const ActorFigure: FunctionalComponent<Props> = ({
     const [frameIndex, setFrameIndex] = useState<number>(0)
     const {
         x, y,
-        height = 50, width = 50, sprite: spriteId, filter, dialogueColor=''
+        height = 50, width = 50, sprite: spriteId, filter, dialogueColor = ''
     } = data
     const spriteObject = overrideSprite || spriteService.get(spriteId)
     const [currentOrder] = orders
@@ -108,7 +108,7 @@ export const ActorFigure: FunctionalComponent<Props> = ({
             {text &&
                 <DialogueBubble text={text}
                     x={placeOnScreen(x, viewAngle, roomData)}
-                    y={roomData.height - y - (height * spriteScale)}
+                    y={y + (height * spriteScale)}
                     dialogueColor={dialogueColor}
                     roomData={roomData} roomScale={roomScale} />
             }
