@@ -87,6 +87,8 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type: 'order', orders: [] }
         case 'toggleZone':
             return { type: 'toggleZone', roomId: '', ref: '', on: true, zoneType: 'obstacle' }
+        case 'soundEffect':
+            return { type: 'soundEffect', sound: '', volume: 1 }
     }
 }
 

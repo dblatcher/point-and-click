@@ -10,6 +10,7 @@ import { ListEditor } from "../ListEditor";
 import { getDefaultOrder } from "../defaults";
 import { cloneData } from "../../../lib/clone";
 import { makeNewConsequence } from "../defaults";
+import soundService from "../../../services/soundService";
 
 interface Props {
     consequence: AnyConsequence;
@@ -37,7 +38,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         sequence: listIds(gameDesign.sequences),
         endingId: listIds(gameDesign.endings),
         zoneType: zoneTypes,
-        ref: getZoneRefsOrIds(gameDesign, consequence.roomId || '', consequence.zoneType)
+        ref: getZoneRefsOrIds(gameDesign, consequence.roomId || '', consequence.zoneType),
+        sound: soundService.getAll().map(_=>_.id),
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
         targetId: targetDescriptions,
@@ -78,7 +80,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
             case 'text':
             case 'addOrRemove':
             case 'ref':
-            case 'targetType': {
+            case 'targetType':
+            case 'sound': {
                 copy[property] = value as string
                 break;
             }
@@ -90,6 +93,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 break;
             }
             case 'time':
+            case 'volume':
             case 'x':
             case 'y':
                 copy[property] = value as number
@@ -118,6 +122,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'sequence':
                 case 'zoneType':
                 case 'ref':
+                case 'sound':
                     return (
                         <div key={index}>
                             <SelectInput value={value as string}
@@ -155,6 +160,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'x':
                 case 'y':
                 case 'time':
+                case 'volume':
                     return (
                         <div key={index}>
                             <NumberInput

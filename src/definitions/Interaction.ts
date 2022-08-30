@@ -15,7 +15,6 @@ const TalkConsequenceSchema = z.object({
     text: z.string(),
     time: z.optional(z.number()),
 })
-type TalkConsequence = z.infer<typeof TalkConsequenceSchema>
 
 const ChangeRoomConsequenceSchema = z.object({
     type: z.literal('changeRoom'),
@@ -24,7 +23,6 @@ const ChangeRoomConsequenceSchema = z.object({
     x: z.optional(z.number()),
     y: z.optional(z.number()),
 })
-type ChangeRoomConsequence = z.infer<typeof ChangeRoomConsequenceSchema>
 
 const InventoryConsequenceSchema = z.object({
     type: z.literal('inventory'),
@@ -32,13 +30,11 @@ const InventoryConsequenceSchema = z.object({
     actorId: z.string().optional(),
     addOrRemove: z.enum(['ADD', 'REMOVE']),
 })
-type InventoryConsequence = z.infer<typeof InventoryConsequenceSchema>
 
 const RemoveActorConsequenceSchema = z.object({
     type: z.literal('removeActor'),
     actorId: z.string(),
 })
-type RemoveActorConsequence = z.infer<typeof RemoveActorConsequenceSchema>;
 
 const ChangeStatusConsequenceSchema = z.object({
     type: z.literal('changeStatus'),
@@ -46,26 +42,22 @@ const ChangeStatusConsequenceSchema = z.object({
     targetType: z.enum(['actor', 'item', 'hotspot']),
     status: z.string(),
 })
-type ChangeStatusConsequence = z.infer<typeof ChangeStatusConsequenceSchema>;
 
 const SequenceConsequenceSchema = z.object({
     type: z.literal('sequence'),
     sequence: z.string(),
 })
-type SequenceConsequence = z.infer<typeof SequenceConsequenceSchema>;
 
 const ConversationConsequenceSchema = z.object({
     type: z.literal('conversation'),
     conversationId: z.string(),
     end: z.optional(z.boolean()),
 })
-type ConversationConsequence = z.infer<typeof ConversationConsequenceSchema>;
 
 const EndingConsequenceSchema = z.object({
     type: z.literal('ending'),
     endingId: z.string(),
 })
-type EndingConsequence = z.infer<typeof EndingConsequenceSchema>;
 
 const TeleportActorConsequenceSchema = z.object({
     type: z.literal('teleportActor'),
@@ -74,7 +66,6 @@ const TeleportActorConsequenceSchema = z.object({
     x: z.number(),
     y: z.number(),
 })
-type TeleportActorConsequence = z.infer<typeof TeleportActorConsequenceSchema>;
 
 const ToggleZoneConsequenceSchema = z.object({
     type: z.literal('toggleZone'),
@@ -83,9 +74,14 @@ const ToggleZoneConsequenceSchema = z.object({
     ref: z.string(),
     zoneType: z.enum(['hotspot', 'obstacle', 'walkable']),
 })
-type ToggleZoneConsequence = z.infer<typeof ToggleZoneConsequenceSchema>;
 export type ZoneType = z.infer<typeof ToggleZoneConsequenceSchema.shape.zoneType>
 export const zoneTypes: ZoneType[] = ToggleZoneConsequenceSchema.shape.zoneType.options
+
+const SoundEffectConsequenceSchema = z.object({
+    type: z.literal('soundEffect'),
+    sound: z.string(),
+    volume: z.number().optional(),
+})
 
 export const ConsequenceSchema = z.union([
     OrderConsequenceSchema,
@@ -99,17 +95,16 @@ export const ConsequenceSchema = z.union([
     EndingConsequenceSchema,
     TeleportActorConsequenceSchema,
     ToggleZoneConsequenceSchema,
+    SoundEffectConsequenceSchema,
 ])
 
 const ConsequenceTypeEnum = z.enum([
     'conversation', 'sequence', 'changeStatus',
     'removeActor', 'inventory', 'changeRoom', 'talk', 'order', 'ending',
-    'teleportActor', 'toggleZone'
+    'teleportActor', 'toggleZone', 'soundEffect'
 ])
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
 export const consequenceTypes: ConsequenceType[] = ConsequenceTypeEnum.options
-
-
 
 
 export type Consequence = z.infer<typeof ConsequenceSchema>
@@ -137,6 +132,9 @@ export type AnyConsequence = Consequence & {
     on?: boolean;
     ref?: string;
     zoneType?: ZoneType;
+
+    sound?: string;
+    volume?: number;
 }
 
 export const ImmediateConsequenceSchema = z.union([
@@ -147,18 +145,10 @@ export const ImmediateConsequenceSchema = z.union([
     EndingConsequenceSchema,
     TeleportActorConsequenceSchema,
     ToggleZoneConsequenceSchema,
+    SoundEffectConsequenceSchema,
 ])
-export type ImmediateConsequence = RemoveActorConsequence |
-    ChangeStatusConsequence |
-    InventoryConsequence |
-    ConversationConsequence |
-    EndingConsequence |
-    TeleportActorConsequence |
-    ToggleZoneConsequence;
-
-export const immediateConsequenceTypes: ConsequenceType[] = [
-    'removeActor', 'changeStatus', 'inventory', 'conversation', 'ending', 'teleportActor', 'toggleZone'
-]
+export type ImmediateConsequence = z.infer<typeof ImmediateConsequenceSchema>
+export const immediateConsequenceTypes: ConsequenceType[] = ImmediateConsequenceSchema.options.map(member => member.shape.type.value)
 
 export const InteractionSchema = z.object({
     verbId: z.string(),
