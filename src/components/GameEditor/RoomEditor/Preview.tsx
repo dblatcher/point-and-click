@@ -211,7 +211,7 @@ export class Preview extends Component<Props, State>{
                     </fieldset>
                 </section>
                 <section style={{ position: 'relative' }}>
-                    <Room data={roomData} noResize
+                    <Room data={roomData} noResize forPreview
                         showObstacleAreas={showObstacleAreas}
                         maxWidth={1000} maxHeight={maxHeight}
                         viewAngle={viewAngle}

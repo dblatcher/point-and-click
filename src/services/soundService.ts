@@ -37,6 +37,7 @@ export class SoundService extends Service<SoundAsset> {
     constructor() {
         super()
         this.soundDeck = new SoundDeck()
+        this.setMaxListeners(20)
     }
 
     add(items: SoundAsset | SoundAsset[]): void {

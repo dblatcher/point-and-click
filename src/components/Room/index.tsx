@@ -164,6 +164,7 @@ export const Room: FunctionComponent<Props> = ({
                 {contents.map(entry => (
                     <ActorFigure key={entry.data.id}
                         isPaused={isPaused}
+                        forPreview={forPreview}
                         data={entry.data}
                         orders={entry.orders || []}
                         clickHandler={entry.clickHandler}

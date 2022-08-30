@@ -43,6 +43,7 @@ export class SpritePreview extends Component<Props, State>{
         return (
             <Room data={roomData}
                 showObstacleAreas={false}
+                forPreview
                 maxWidth={maxWidth}
                 viewAngle={0}
                 highlightHotspots={false}
