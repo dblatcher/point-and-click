@@ -1,11 +1,14 @@
 import type { SoundAsset } from "../src/services/soundService"
 
-const testSoundAsset: SoundAsset = {
-    id: 'beep',
-    href: './assets/beep.mp3',
-    category: 'sfx',
-}
-
 export const soundAssets: SoundAsset[] = [
-    testSoundAsset
+    {
+        id: 'beep',
+        href: './assets/sounds/beep.mp3',
+        category: 'sfx',
+    },
+    {
+        id: 'fire',
+        href: './assets/sounds/fire.mp3',
+        category: 'sfx',
+    },
 ]
