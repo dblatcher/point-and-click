@@ -1,6 +1,5 @@
 import { h, Fragment, FunctionalComponent, JSX } from "preact";
-import { SoundControl } from "physics-worlds";
-import { useEffect, useLayoutEffect, useState } from "preact/hooks";
+import { useLayoutEffect, useState } from "preact/hooks";
 import { RoomData, Order, ActorData } from "src"
 import { placeOnScreen } from "../lib/roomFunctions";
 import { getScale } from "../lib/getScale";
@@ -11,7 +10,7 @@ import { SpriteShape } from "./SpriteShape";
 import { DialogueBubble } from "./DialogueBubble";
 import spriteService from "../services/spriteService";
 import { HandleClickFunction, HandleHoverFunction } from "./Game";
-import soundService from "../services/soundService";
+import { PersistentSound } from "./PersistentSound";
 
 interface Props {
     roomData: RoomData;
@@ -34,7 +33,11 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
-const getSoundEffect = (currentOrder: Order, status: string | undefined, soundMap: Partial<Record<string, string>>): string | undefined => {
+const getSoundEffect = (
+    currentOrder: Order, 
+    status: string | undefined, 
+    soundMap: Partial<Record<string, string>>
+): string | undefined => {
     if (currentOrder?.type === 'act') {
         const [currentAction] = currentOrder.steps
         if (currentAction?.animation) {
@@ -62,8 +65,6 @@ export const ActorFigure: FunctionalComponent<Props> = ({
     forPreview
 }: Props) => {
     const [frameIndex, setFrameIndex] = useState<number>(0)
-    const [soundControl, setSoundControl] = useState<SoundControl | null>(null)
-    const [soundId, setSoundId] = useState<string | undefined>()
 
     const {
         x, y,
@@ -76,16 +77,6 @@ export const ActorFigure: FunctionalComponent<Props> = ({
     const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
     const frames = spriteObject?.getFrames(animationName, direction) || []
     const spriteScale = getScale(y, roomData.scaling)
-
-
-    const startSound = (newSoundId: string | undefined): void => {
-        if (newSoundId) {
-            setSoundControl(soundService.play(newSoundId, { loop: true }))
-        } else {
-            setSoundControl(null)
-        }
-        setSoundId(newSoundId)
-    }
 
     const updateFrame = (): void => {
         if (!frames || isPaused) { return }
@@ -103,22 +94,6 @@ export const ActorFigure: FunctionalComponent<Props> = ({
         }
     }
 
-    const reactToSoundBeingEnabled = (isEnabled: boolean): void => {
-        if (isEnabled && soundId && !soundControl) {
-            startSound(soundId)
-        }
-    }
-
-    const updateSound = (): void => {
-        if (forPreview) { return }
-        const newSoundId = getSoundEffect(currentOrder, data.status, fakeSoundObject);
-
-        if (soundId !== newSoundId) {
-            soundControl?.stop()
-            startSound(newSoundId)
-        }
-    }
-
     const processClick: JSX.MouseEventHandler<SVGElement> | undefined = clickHandler
         ? (event): void => {
             event.stopPropagation()
@@ -126,32 +101,13 @@ export const ActorFigure: FunctionalComponent<Props> = ({
         }
         : undefined
 
-
     // need to set frameIndex to zero when animation or direction changes
     // to avoid 'flash of missing frame' before next updateFrame
     useLayoutEffect(() => {
         setFrameIndex(0)
     }, [animationName, direction])
 
-    useEffect(() => {
-        soundService.on('ready', reactToSoundBeingEnabled)
-        return (): void => {
-            soundService.off('ready', reactToSoundBeingEnabled)
-        }
-    })
-
-    useEffect(() => {
-        if (isPaused && soundControl) {
-            soundControl.stop()
-            setSoundControl(null)
-        } else if (!isPaused && soundId && !soundControl) {
-            startSound(soundId)
-        }
-    }, [isPaused, soundControl, soundId])
-
     useInterval(updateFrame, animationRate)
-    useInterval(updateSound, animationRate)
-
 
     if (!spriteObject) {
         return null
@@ -179,6 +135,12 @@ export const ActorFigure: FunctionalComponent<Props> = ({
                     y={y + (height * spriteScale)}
                     dialogueColor={dialogueColor}
                     roomData={roomData} roomScale={roomScale} />
+            }
+            {!forPreview &&
+                <PersistentSound
+                    soundProp={getSoundEffect(currentOrder, data.status, fakeSoundObject)}
+                    animationRate={animationRate}
+                    isPaused={isPaused} />
             }
         </>
     )
