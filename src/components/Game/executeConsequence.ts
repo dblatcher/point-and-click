@@ -4,6 +4,7 @@ import { cloneData } from "../../lib/clone"
 import { changeRoom } from "./changeRoom"
 import { findById } from "../../lib/util"
 import { generateCellMatrix } from "../../lib/pathfinding/cells"
+import soundService from "../../services/soundService"
 
 
 export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
@@ -154,6 +155,10 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                     }
                 }
                 break
+            }
+            case 'soundEffect': {
+                const { sound, volume } = consequence
+                soundService.play(sound, { volume })
             }
         }
     }

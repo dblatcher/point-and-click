@@ -184,7 +184,12 @@ export const interactions: Interaction[] = [
             {
                 type: 'talk',
                 text: 'I took it.',
-            }
+            },
+            {
+                type: 'soundEffect',
+                sound: 'beep',
+                volume: 1,
+            },
         ]
     },
 
