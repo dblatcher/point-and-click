@@ -1,5 +1,5 @@
-import {z} from "zod";
-import { IdentSchema,PositionSchema,SpriteParamsSchema } from "./BaseTypes"
+import { z } from "zod";
+import { IdentSchema, PositionSchema, SpriteParamsSchema } from "./BaseTypes"
 
 export const ActorDataSchema = IdentSchema
     .merge(PositionSchema)
@@ -11,6 +11,7 @@ export const ActorDataSchema = IdentSchema
         speed: z.optional(z.number()),
         baseline: z.optional(z.number()),
         dialogueColor: z.optional(z.string()),
+        soundEffectMap: z.record(z.string().or(z.undefined())).optional()
     }))
 
-export type ActorData  = z.infer<typeof ActorDataSchema>
+export type ActorData = z.infer<typeof ActorDataSchema>

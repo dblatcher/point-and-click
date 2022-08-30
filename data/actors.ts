@@ -43,18 +43,21 @@ export const initialActors: ActorData[] = [
     },
     {
         id: 'FIRE',
-        type:'actor',
+        type: 'actor',
         room: 'OUTSIDE',
         x: 200,
         y: 10,
         height: 50,
         width: 50,
         sprite: 'fire',
-        status:'burning',
+        status: 'out',
+        soundEffectMap: {
+            burning: 'fire',
+        }
     },
     {
         id: 'TUBE',
-        type:'actor',
+        type: 'actor',
         room: 'OUTSIDE',
         x: 240,
         y: 10,

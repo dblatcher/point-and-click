@@ -34,8 +34,8 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
 }
 
 const getSoundEffect = (
-    currentOrder: Order, 
-    status: string | undefined, 
+    currentOrder: Order,
+    status: string | undefined,
     soundMap: Partial<Record<string, string>>
 ): string | undefined => {
     if (currentOrder?.type === 'act') {
@@ -47,10 +47,6 @@ const getSoundEffect = (
     return status ? soundMap[status] : undefined
 }
 
-const fakeSoundObject: Partial<Record<string, string>> = {
-    burning: 'fire',
-    fade: 'beep',
-}
 
 export const ActorFigure: FunctionalComponent<Props> = ({
     data,
@@ -138,7 +134,7 @@ export const ActorFigure: FunctionalComponent<Props> = ({
             }
             {!forPreview &&
                 <PersistentSound
-                    soundProp={getSoundEffect(currentOrder, data.status, fakeSoundObject)}
+                    soundProp={getSoundEffect(currentOrder, data.status, data.soundEffectMap || {})}
                     animationRate={animationRate}
                     isPaused={isPaused} />
             }
