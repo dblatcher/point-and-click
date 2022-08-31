@@ -38,17 +38,16 @@ const getSoundValue = (
     currentOrder: Order,
     status: string | undefined,
     soundMap: SoundEffectMap
-): string | undefined => {
-    let soundValue: SoundValue | undefined;
+): SoundValue | undefined => {
     if (currentOrder?.type === 'act') {
         const [currentAction] = currentOrder.steps
         if (currentAction?.animation) {
-            soundValue = soundMap[currentAction.animation]
+            return soundMap[currentAction.animation]
         }
     } else if (status) {
-        soundValue = soundMap[status]
+        return soundMap[status]
     }
-    return soundValue ? soundValue[0] : undefined
+    return undefined
 }
 
 
@@ -138,7 +137,7 @@ export const ActorFigure: FunctionalComponent<Props> = ({
             }
             {!forPreview &&
                 <PersistentSound
-                    soundProp={getSoundValue(currentOrder, data.status, data.soundEffectMap || {})}
+                    soundValue={getSoundValue(currentOrder, data.status, data.soundEffectMap || {})}
                     animationRate={animationRate}
                     isPaused={isPaused} />
             }

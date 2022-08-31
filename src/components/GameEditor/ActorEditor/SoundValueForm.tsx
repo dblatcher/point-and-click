@@ -11,9 +11,7 @@ interface Props {
 }
 
 export const SoundValueForm: FunctionComponent<Props> = ({ animation, data, updateData }) => {
-
     const [soundId] = data
-
     const handleUpdate = (value: string): void => {
         console.log(value)
         return updateData([value])

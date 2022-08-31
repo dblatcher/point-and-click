@@ -3,21 +3,22 @@ import { SoundControl } from "physics-worlds";
 import { useEffect, useState } from "preact/hooks";
 import { useInterval } from "../lib/useInterval"
 import soundService from "../services/soundService";
+import type { SoundValue } from "src";
 
 interface Props {
-    soundProp?: string;
+    soundValue?: SoundValue;
     animationRate?: number;
     isPaused: boolean;
 }
 
 export const PersistentSound: FunctionalComponent<Props> = ({
-    soundProp,
+    soundValue,
     animationRate = 200,
     isPaused,
 }: Props) => {
-
     const [soundControl, setSoundControl] = useState<SoundControl | null>(null)
     const [soundId, setSoundId] = useState<string | undefined>()
+    const [propSoundId] = soundValue || [];
 
     const startSound = (newSoundId: string | undefined): void => {
         if (newSoundId) {
@@ -35,9 +36,9 @@ export const PersistentSound: FunctionalComponent<Props> = ({
     }
 
     const updateSound = (): void => {
-        if (soundId !== soundProp) {
+        if (soundId !== propSoundId) {
             soundControl?.stop()
-            startSound(soundProp)
+            startSound(propSoundId)
         }
     }
 
