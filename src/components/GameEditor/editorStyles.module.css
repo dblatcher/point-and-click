@@ -81,6 +81,15 @@
     background-color: lightgreen;
 }
 
+.deleteButton {
+    background-color: red;
+}
+
+.deleteButton:hover {
+    background-color: pink;
+}
+
+
 .plusButton:not(:disabled) {
     cursor: pointer;
 }

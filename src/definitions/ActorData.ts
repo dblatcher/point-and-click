@@ -1,6 +1,12 @@
 import { z } from "zod";
 import { IdentSchema, PositionSchema, SpriteParamsSchema } from "./BaseTypes"
 
+const SoundValueSchema = z.tuple([z.string()])
+export type SoundValue = z.infer<typeof SoundValueSchema>;
+
+const SoundEffectMapSchema = z.record(z.string(), SoundValueSchema.or(z.undefined()));
+export type SoundEffectMap = z.infer<typeof SoundEffectMapSchema >;
+
 export const ActorDataSchema = IdentSchema
     .merge(PositionSchema)
     .merge(SpriteParamsSchema)
@@ -11,7 +17,7 @@ export const ActorDataSchema = IdentSchema
         speed: z.optional(z.number()),
         baseline: z.optional(z.number()),
         dialogueColor: z.optional(z.string()),
-        soundEffectMap: z.record(z.string().or(z.undefined())).optional()
+        soundEffectMap: SoundEffectMapSchema.optional(),
     }))
 
 export type ActorData = z.infer<typeof ActorDataSchema>

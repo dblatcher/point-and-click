@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
 import { ActorData, Direction, RoomData, Point } from "src";
-import { ActorDataSchema } from "../../../definitions/ActorData";
+import { ActorDataSchema, SoundValue } from "../../../definitions/ActorData";
 import { directions } from "../../../definitions/SpriteSheet";
 import { CheckBoxInput, IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
@@ -14,6 +14,8 @@ import { uploadJsonData } from "../../../lib/files";
 import styles from "../editorStyles.module.css"
 import { PositionPreview } from "./PositionPreview";
 import { DataItemEditorProps } from "../dataEditors";
+import { RecordEditor } from "../RecordEditor";
+import { SoundValueForm } from "./SoundValueForm";
 
 type ExtraState = {
 
@@ -44,6 +46,8 @@ const makeBlankActor = (): ActorData => ({
 
 })
 
+const newSound = (): SoundValue => ["beep"]
+
 export class ActorEditor extends Component<Props, State> {
 
     constructor(props: Props) {
@@ -61,6 +65,7 @@ export class ActorEditor extends Component<Props, State> {
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.handlePreviewClick = this.handlePreviewClick.bind(this)
+        this.changeSoundMap = this.changeSoundMap.bind(this)
     }
 
     get currentData(): ActorData {
@@ -108,6 +113,20 @@ export class ActorEditor extends Component<Props, State> {
                 break;
         }
         this.setState(modification)
+    }
+    changeSoundMap(key: string, value?: SoundValue): void {
+        console.log('chageSoundMap', key, value)
+        this.setState(state => {
+            const { soundEffectMap = {} } = state
+            if (typeof value === 'undefined') {
+                delete soundEffectMap[key]
+            } else {
+                console.log('updating')
+                soundEffectMap[key] = value
+                console.log(soundEffectMap)
+            }
+            return { soundEffectMap }
+        })
     }
     handleLoadButton = async () => {
         const { data, error } = await uploadJsonData(ActorDataSchema)
@@ -161,7 +180,7 @@ export class ActorEditor extends Component<Props, State> {
 
     render() {
         const { state } = this
-        const { sprite: spriteId, width = 1, height = 1, } = state
+        const { sprite: spriteId, width = 1, height = 1, soundEffectMap = {} } = state
         const { actorIds } = this.props
 
         return (
@@ -170,8 +189,8 @@ export class ActorEditor extends Component<Props, State> {
 
                 <div className={styles.rowTopLeft}>
                     <fieldset>
-                        <legend>Ident</legend>
-                        <IdentInput showType value={state}
+                        <legend>Actor</legend>
+                        <IdentInput value={state}
                             onChangeId={(event) => this.changeValue('id', eventToString(event))}
                             onChangeName={(event) => this.changeValue('name', eventToString(event))}
                             onChangeStatus={(event) => this.changeValue('status', eventToString(event))}
@@ -251,6 +270,23 @@ export class ActorEditor extends Component<Props, State> {
                         </div>
                         <TextInput label="filter" value={state.filter || ''}
                             onInput={(event) => this.changeValue('filter', eventToString(event))} />
+                    </fieldset>
+                    <fieldset>
+                        <legend>Sounds</legend>
+                        {soundEffectMap && (
+                            <RecordEditor
+                                record={soundEffectMap}
+                                describeValue={(key, value) =>
+                                    <SoundValueForm
+                                        animation={key}
+                                        data={value}
+                                        updateData={(data) => { this.changeSoundMap(key, data) }}
+                                    />
+                                }
+                                setEntry={(key, value) => { this.changeSoundMap(key, value) }}
+                                addEntry={(key) => { this.changeSoundMap(key, newSound()) }}
+                            />
+                        )}
                     </fieldset>
                 </div>
 

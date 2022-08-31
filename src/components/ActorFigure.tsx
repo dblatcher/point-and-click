@@ -11,6 +11,7 @@ import { DialogueBubble } from "./DialogueBubble";
 import spriteService from "../services/spriteService";
 import { HandleClickFunction, HandleHoverFunction } from "./Game";
 import { PersistentSound } from "./PersistentSound";
+import { SoundEffectMap, SoundValue } from "src/definitions/ActorData";
 
 interface Props {
     roomData: RoomData;
@@ -33,18 +34,21 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
-const getSoundEffect = (
+const getSoundValue = (
     currentOrder: Order,
     status: string | undefined,
-    soundMap: Partial<Record<string, string>>
+    soundMap: SoundEffectMap
 ): string | undefined => {
+    let soundValue: SoundValue | undefined;
     if (currentOrder?.type === 'act') {
         const [currentAction] = currentOrder.steps
         if (currentAction?.animation) {
-            return soundMap[currentAction.animation]
+            soundValue = soundMap[currentAction.animation]
         }
+    } else if (status) {
+        soundValue = soundMap[status]
     }
-    return status ? soundMap[status] : undefined
+    return soundValue ? soundValue[0] : undefined
 }
 
 
@@ -134,7 +138,7 @@ export const ActorFigure: FunctionalComponent<Props> = ({
             }
             {!forPreview &&
                 <PersistentSound
-                    soundProp={getSoundEffect(currentOrder, data.status, data.soundEffectMap || {})}
+                    soundProp={getSoundValue(currentOrder, data.status, data.soundEffectMap || {})}
                     animationRate={animationRate}
                     isPaused={isPaused} />
             }
