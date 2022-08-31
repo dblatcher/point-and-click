@@ -18,7 +18,7 @@ export const PersistentSound: FunctionalComponent<Props> = ({
 }: Props) => {
     const [soundControl, setSoundControl] = useState<SoundControl | null>(null)
     const [soundId, setSoundId] = useState<string | undefined>()
-    const [propSoundId] = soundValue || [];
+    const { soundId: propSoundId } = soundValue || {};
 
     const startSound = (newSoundId: string | undefined): void => {
         if (newSoundId) {
@@ -55,6 +55,9 @@ export const PersistentSound: FunctionalComponent<Props> = ({
             setSoundControl(null)
         } else if (!isPaused && soundId && !soundControl) {
             startSound(soundId)
+        }
+        return (): void => {
+            soundControl?.stop()
         }
     }, [isPaused, soundControl, soundId])
 

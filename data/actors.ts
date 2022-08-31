@@ -28,6 +28,12 @@ export const initialActors: ActorData[] = [
         status: 'think',
         direction: 'right',
         filter: 'hue-rotate(45deg)',
+        soundEffectMap: {
+            think: {
+                soundId: 'beep',
+                frameIndex: 0,
+            }
+        }
     },
     {
         id: 'MARIO',
@@ -52,7 +58,7 @@ export const initialActors: ActorData[] = [
         sprite: 'fire',
         status: 'out',
         soundEffectMap: {
-            burning: ['fire'],
+            burning: { soundId: 'fire' },
         }
     },
     {

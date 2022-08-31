@@ -12,6 +12,7 @@ import spriteService from "../services/spriteService";
 import { HandleClickFunction, HandleHoverFunction } from "./Game";
 import { PersistentSound } from "./PersistentSound";
 import { SoundEffectMap, SoundValue } from "src/definitions/ActorData";
+import { IntermitentSound } from "./IntermitentSound";
 
 interface Props {
     roomData: RoomData;
@@ -34,6 +35,8 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
+// TO DO - figure out when not to default to status
+// eg Evil Skinner talk order, but status is still 'think'
 const getSoundValue = (
     currentOrder: Order,
     status: string | undefined,
@@ -67,7 +70,8 @@ export const ActorFigure: FunctionalComponent<Props> = ({
 
     const {
         x, y,
-        height = 50, width = 50, sprite: spriteId, filter, dialogueColor = ''
+        height = 50, width = 50, sprite: spriteId, filter, dialogueColor = '',
+        status, soundEffectMap = {}
     } = data
     const spriteObject = overrideSprite || spriteService.get(spriteId)
     const [currentOrder] = orders
@@ -76,6 +80,8 @@ export const ActorFigure: FunctionalComponent<Props> = ({
     const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
     const frames = spriteObject?.getFrames(animationName, direction) || []
     const spriteScale = getScale(y, roomData.scaling)
+
+    const soundValue = getSoundValue(currentOrder, status, soundEffectMap)
 
     const updateFrame = (): void => {
         if (!frames || isPaused) { return }
@@ -135,10 +141,16 @@ export const ActorFigure: FunctionalComponent<Props> = ({
                     dialogueColor={dialogueColor}
                     roomData={roomData} roomScale={roomScale} />
             }
-            {!forPreview &&
+            {(!forPreview && typeof soundValue?.frameIndex === 'undefined') &&
                 <PersistentSound
-                    soundValue={getSoundValue(currentOrder, data.status, data.soundEffectMap || {})}
+                    soundValue={soundValue}
                     animationRate={animationRate}
+                    isPaused={isPaused} />
+            }
+            {(!forPreview && typeof soundValue?.frameIndex === 'number') &&
+                <IntermitentSound
+                    soundValue={soundValue}
+                    frameIndex={frameIndex}
                     isPaused={isPaused} />
             }
         </>

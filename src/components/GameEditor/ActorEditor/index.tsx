@@ -46,7 +46,7 @@ const makeBlankActor = (): ActorData => ({
 
 })
 
-const newSound = (): SoundValue => ["beep"]
+const newSound = (): SoundValue => ({ soundId: "beep" })
 
 export class ActorEditor extends Component<Props, State> {
 
