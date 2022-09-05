@@ -31,6 +31,7 @@ import spriteSheetService from "../../services/spriteSheetService";
 import Game from "../Game";
 import { GameDesignSaveAndLoad } from "./GameDesignSaveAndLoad";
 import { SoundAssetTool } from "./SoundAssetTool";
+import { FlagMap } from "src/definitions/Flag";
 
 
 const usePrebuiltGame = true
@@ -204,6 +205,11 @@ export class GameEditor extends Component<Props, State>{
                 case 'endings': {
                     addNewOrUpdate(data, gameDesign[property])
                     endingId = (data as Ending).id
+                    break
+                }
+                case 'flagMap': {
+                    console.log('FLAGMAP', data)
+                    gameDesign.flagMap = (data as FlagMap)
                     break
                 }
                 case 'id':

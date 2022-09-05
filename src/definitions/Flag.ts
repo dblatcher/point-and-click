@@ -3,7 +3,7 @@ import { object, boolean, string, record, z } from "zod";
 export const FlagSchema = object({
     value: boolean(),
     default: boolean(),
-    description: string(),
+    description: string().optional(),
 });
 
 export const FlagMapSchema = record(string(), FlagSchema.optional())

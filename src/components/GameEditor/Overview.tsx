@@ -3,6 +3,7 @@ import { FunctionalComponent, h } from "preact";
 import { eventToString, listIds } from "../../lib/util";
 import { GameDesign } from "../../definitions/Game";
 import { SelectInput, TextInput } from "./formControls";
+import { FlagMapControl } from "./FlagMapControl";
 
 interface Props {
   gameDesign: GameDesign;
@@ -45,6 +46,9 @@ export const Overview: FunctionalComponent<Props> = ({
         <li>sequences: {gameDesign.sequences.length}</li>
         <li>endings: {gameDesign.endings.length}</li>
       </ul>
+
+      <h2>Flags</h2>
+      <FlagMapControl gameDesign={gameDesign} edit={edit} />
     </article>
   );
 };
