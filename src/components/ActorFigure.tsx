@@ -35,14 +35,12 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
 }
 
-// TO DO - figure out when not to default to status
-// eg Evil Skinner talk order, but status is still 'think'
 const getSoundValue = (
-    currentOrder: Order,
+    currentOrder: Order | undefined,
     status: string | undefined,
     soundMap: SoundEffectMap
 ): SoundValue | undefined => {
-    if (currentOrder?.type === 'act') {
+    if (currentOrder) {
         const [currentAction] = currentOrder.steps
         if (currentAction?.animation) {
             return soundMap[currentAction.animation]
@@ -74,7 +72,7 @@ export const ActorFigure: FunctionalComponent<Props> = ({
         status, soundEffectMap = {}
     } = data
     const spriteObject = overrideSprite || spriteService.get(spriteId)
-    const [currentOrder] = orders
+    const currentOrder: Order | undefined = orders[0]
     const text = currentOrder?.type === 'talk' ? currentOrder.steps[0]?.text : undefined;
     const animationName = getAnimationName(currentOrder, data.status, spriteObject)
     const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
