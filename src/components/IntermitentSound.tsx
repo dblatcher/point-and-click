@@ -18,24 +18,27 @@ export const IntermitentSound: FunctionalComponent<Props> = ({
     const [lastFrame, setLastFrame] = useState<number>(frameIndex || 0)
     const [soundControl, setSoundControl] = useState<SoundControl | null>(null)
 
-    const startSound = (soundValue: SoundValue): void => {
-        if (soundValue.soundId) {
+    const startSound = (soundValue: SoundValue | undefined): void => {
+        if (soundValue) {
             soundControl?.stop()
-            setSoundControl(soundService.play(soundValue.soundId, { loop: false, volume: soundValue.volume }))
+            setSoundControl(soundService.play(soundValue.soundId, { 
+                loop: false, 
+                volume: soundValue.volume 
+            }))
         } else {
             setSoundControl(null)
         }
     }
 
-    const startSoundCallBack = useCallback(startSound, [soundControl])
+    const startSoundCallback = useCallback(startSound, [soundControl])
 
     // play the sound when the animation reaches the frameIndex
     useEffect(() => {
         if (soundValue && frameIndex === soundValue?.frameIndex && frameIndex !== lastFrame) {
-            startSoundCallBack(soundValue)
+            startSoundCallback(soundValue)
         }
         setLastFrame(frameIndex || 0)
-    }, [frameIndex, lastFrame, startSoundCallBack, soundValue])
+    }, [frameIndex, lastFrame, startSoundCallback, soundValue])
 
 
     // stop the current sound if game is paused

@@ -59,7 +59,7 @@ export const initialActors: ActorData[] = [
         sprite: 'fire',
         status: 'out',
         soundEffectMap: {
-            burning: { soundId: 'fire' },
+            burning: { soundId: 'fire', volume: .5 },
         }
     },
     {

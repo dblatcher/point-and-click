@@ -1,6 +1,6 @@
 import { FunctionalComponent } from "preact";
 import { SoundControl } from "physics-worlds";
-import { useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 import { useInterval } from "../lib/useInterval"
 import soundService from "../services/soundService";
 import type { SoundValue } from "src";
@@ -17,31 +17,27 @@ export const PersistentSound: FunctionalComponent<Props> = ({
     isPaused,
 }: Props) => {
     const [soundControl, setSoundControl] = useState<SoundControl | null>(null)
-    const [soundId, setSoundId] = useState<string | undefined>()
-    const { soundId: propSoundId } = soundValue || {};
+    const [stateSoundValue, setStateSoundValue] = useState<SoundValue | undefined>(undefined)
 
-    const startSound = (newSoundId: string | undefined): void => {
-        if (newSoundId) {
-            setSoundControl(soundService.play(newSoundId, { loop: true }))
+    const startSound = (newSoundValue: SoundValue | undefined): void => {
+        soundControl?.stop()
+        if (newSoundValue) {
+            setSoundControl(soundService.play(newSoundValue.soundId, {
+                loop: true,
+                volume: newSoundValue.volume
+            }))
         } else {
             setSoundControl(null)
         }
-        setSoundId(newSoundId)
+        setStateSoundValue(newSoundValue)
     }
+    const startSoundCallback = useCallback(startSound, [soundControl])
 
     const reactToSoundBeingEnabled = (isEnabled: boolean): void => {
-        if (isEnabled && soundId && !soundControl) {
-            startSound(soundId)
+        if (isEnabled && stateSoundValue && !soundControl) {
+            startSoundCallback(stateSoundValue)
         }
     }
-
-    const updateSound = (): void => {
-        if (soundId !== propSoundId) {
-            soundControl?.stop()
-            startSound(propSoundId)
-        }
-    }
-
     useEffect(() => {
         soundService.on('ready', reactToSoundBeingEnabled)
         return (): void => {
@@ -49,18 +45,28 @@ export const PersistentSound: FunctionalComponent<Props> = ({
         }
     })
 
+
+    // stop the current sound if game is paused
+    // play the sound again when unpaused
+    // (with return function) stop the sound when unmounting
     useEffect(() => {
         if (isPaused && soundControl) {
-            soundControl.stop()
             setSoundControl(null)
-        } else if (!isPaused && soundId && !soundControl) {
-            startSound(soundId)
+        } else if (!isPaused && stateSoundValue && !soundControl) {
+            startSoundCallback(stateSoundValue)
         }
         return (): void => {
             soundControl?.stop()
         }
-    }, [isPaused, soundControl, soundId])
+    }, [isPaused, soundControl, stateSoundValue, startSoundCallback])
 
+    // on every animation tick, play a new sound if the 
+    // prop has changed
+    const updateSound = (): void => {
+        if (stateSoundValue !== soundValue) {
+            startSoundCallback(soundValue)
+        }
+    }
     useInterval(updateSound, animationRate)
     return null
 }
