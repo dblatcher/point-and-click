@@ -4,6 +4,7 @@ import { IdentSchema, PositionSchema, SpriteParamsSchema } from "./BaseTypes"
 const SoundValueSchema = z.object({
     soundId: z.string(),
     frameIndex: z.number().optional(),
+    volume: z.number().optional(),
 })
 export type SoundValue = z.infer<typeof SoundValueSchema>;
 

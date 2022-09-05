@@ -32,6 +32,7 @@ export const initialActors: ActorData[] = [
             think: {
                 soundId: 'beep',
                 frameIndex: 0,
+                volume: .5,
             }
         }
     },
