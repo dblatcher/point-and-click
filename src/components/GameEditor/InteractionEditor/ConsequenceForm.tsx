@@ -40,6 +40,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         zoneType: zoneTypes,
         ref: getZoneRefsOrIds(gameDesign, consequence.roomId || '', consequence.zoneType),
         sound: soundService.getAll().map(_=>_.id),
+        flag: Object.keys(gameDesign.flagMap),
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
         targetId: targetDescriptions,
@@ -81,7 +82,9 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
             case 'addOrRemove':
             case 'ref':
             case 'targetType':
-            case 'sound': {
+            case 'sound': 
+            case 'flag':
+            {
                 copy[property] = value as string
                 break;
             }
@@ -123,6 +126,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'zoneType':
                 case 'ref':
                 case 'sound':
+                case 'flag':
                     return (
                         <div key={index}>
                             <SelectInput value={value as string}

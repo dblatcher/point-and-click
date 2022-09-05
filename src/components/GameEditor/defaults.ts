@@ -1,4 +1,5 @@
 import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Order, OrderType } from "src";
+import { Flag } from "src/definitions/Flag";
 
 export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'LOOK', label: 'look at' },
@@ -60,6 +61,10 @@ export const makeBlankSequence = (id = "NEW_SEQEUNCE"): Sequence => ({
     ]
 })
 
+export const makeNewFlag = (): Flag => ({
+    value: false, default: false
+})
+
 export function makeNewConsequence(type: ConsequenceType): Consequence {
     switch (type) {
         case 'conversation':
@@ -86,6 +91,8 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type: 'toggleZone', roomId: '', ref: '', on: true, zoneType: 'obstacle' }
         case 'soundEffect':
             return { type: 'soundEffect', sound: '', volume: 1 }
+        case 'flag':
+            return { type: 'flag', on: true, flag: '' }
     }
 }
 

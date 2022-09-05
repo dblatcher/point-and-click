@@ -2,6 +2,7 @@
 import { FunctionalComponent, h } from "preact";
 import { Flag, FlagMap, FlagSchema } from "../../definitions/Flag";
 import { GameDesign } from "../../definitions/Game";
+import { makeNewFlag } from "./defaults";
 import { RecordEditor } from "./RecordEditor";
 import { getModification, SchemaForm } from "./SchemaForm";
 
@@ -16,11 +17,8 @@ export const FlagMapControl: FunctionalComponent<Props> = ({
 }: Props) => {
 
     const addEntry = (key: string) => {
-        const newFlag: Flag = {
-            value: false, default: false
-        }
         const mod: Partial<FlagMap> = {}
-        mod[key] = newFlag
+        mod[key] = makeNewFlag()
         return edit('flagMap', Object.assign({}, gameDesign.flagMap, mod))
     }
 
