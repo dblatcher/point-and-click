@@ -1,7 +1,4 @@
-import { Order, OrderType } from "src/definitions/Order";
-import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, ConversationBranch, Ending } from "src";
-import { ImmediateConsequence } from "src/definitions/Interaction";
-
+import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Order, OrderType } from "src";
 
 export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'LOOK', label: 'look at' },

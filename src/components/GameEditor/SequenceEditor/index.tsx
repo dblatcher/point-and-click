@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage } from "src";
-import { ImmediateConsequence, ImmediateConsequenceSchema } from "../../../definitions/Interaction";
+import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage, ImmediateConsequence } from "src";
+import { ImmediateConsequenceSchema } from "../../../definitions/Consequence";
 import { cloneData } from "../../../lib/clone";
 import { getDefaultOrder, makeBlankSequence, makeBlankStage, makeNewConsequence } from "../defaults";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";

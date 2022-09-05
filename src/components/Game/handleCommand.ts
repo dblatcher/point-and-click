@@ -1,8 +1,7 @@
 import { GameProps, GameState, cellSize } from ".";
-import { Command, Interaction, RoomData, ActorData, HotspotZone } from "src";
+import { Command, Interaction, RoomData, ActorData, HotspotZone, OrderConsequence } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
-import { OrderConsequence } from "../../definitions/Interaction";
 import { findPath } from "../../lib/pathfinding/pathfind";
 
 function matchInteraction(

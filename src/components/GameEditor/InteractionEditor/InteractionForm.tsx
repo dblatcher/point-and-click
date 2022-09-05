@@ -2,8 +2,8 @@
 import { FunctionalComponent, h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { cloneData } from "../../../lib/clone";
-import { Consequence, InteractionSchema } from "../../../definitions/Interaction";
-import { GameDesign, Interaction, AnyConsequence } from "src";
+import { InteractionSchema } from "../../../definitions/Interaction";
+import { GameDesign, Interaction, AnyConsequence, Consequence } from "src";
 import { CheckBoxInput, SelectInput, StringInput } from "../formControls";
 import { listIds } from "../../../lib/util";
 import { ListEditor } from "../ListEditor";

@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { ImmediateConsequenceSchema } from "./Interaction"
+import { ImmediateConsequenceSchema } from "./Consequence"
 import { orderSchema } from "./Order"
 
 export const StageSchema = z.object({

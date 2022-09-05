@@ -7,12 +7,13 @@ export type { ItemData } from "./definitions/ItemData"
 export type { CommandTarget, Command } from "./definitions/Command";
 export type { Verb } from "./definitions/Verb";
 export type { RoomData, BackgroundLayer, ScaleLevel } from "./definitions/RoomData"
-export type { Order, MoveOrder, TalkOrder, ActOrder } from "./definitions/Order";
+export type { Order, MoveOrder, TalkOrder, ActOrder, OrderType } from "./definitions/Order";
 export type { ActorData, SoundValue } from "./definitions/ActorData";
 export type { Direction } from "./definitions/SpriteSheet";
 export type { Zone, HotspotZone, SupportedZoneShape, Shape } from "./definitions/Zone"
 export type { Conversation, ConversationChoice, ConversationBranch } from "./definitions/Conversation"
-export type { Consequence, Interaction, ConsequenceType, AnyConsequence, ZoneType } from "./definitions/Interaction"
+export type { Consequence, ConsequenceType, AnyConsequence, ZoneType, ImmediateConsequence, OrderConsequence } from "./definitions/Consequence"
+export type { Interaction } from "./definitions/Interaction"
 export { zoneTypes } from "./definitions/Interaction"
 export type { Sequence } from "./definitions/Sequence";
 export type { SpriteSheet, SpriteData, SpriteFrame, } from "./definitions/SpriteSheet";

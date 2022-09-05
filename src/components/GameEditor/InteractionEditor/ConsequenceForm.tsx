@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
-import { consequenceTypes, immediateConsequenceTypes, ZoneType, zoneTypes } from "../../../definitions/Interaction";
+import { consequenceTypes, immediateConsequenceTypes, ZoneType, zoneTypes } from "../../../definitions/Consequence";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
 import { CheckBoxInput, NumberInput, SelectInput, StringInput } from "../formControls";
 import { listIds } from "../../../lib/util";
