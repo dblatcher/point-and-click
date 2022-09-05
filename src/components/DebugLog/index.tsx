@@ -68,28 +68,53 @@ export const DebugLog: FunctionalComponent<Props> = ({
                 </section>
             </div>
             <div className={styles.layout}>
-                <table className={styles.actorTable}>
-                    <thead>
-                        <tr>
-                            <th />
-                            <th>status</th>
-                            <th>order type</th>
-                            <th>animation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {actorsInRoom.map((actor, index) => (
-                            <tr key={index}>
-                                <th>{actor.id}</th>
-                                <td>{actor.status}</td>
-                                {getOrderDescrition(actor.id).map((text, index2) => (
-                                    <td key={index2}>{text}</td>
-                                ))}
+                <div>
+
+
+                    <table className={styles.actorTable}>
+                        <thead>
+                            <tr>
+                                <th />
+                                <th>status</th>
+                                <th>order type</th>
+                                <th>animation</th>
                             </tr>
-                        )
-                        )}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {actorsInRoom.map((actor, index) => (
+                                <tr key={index}>
+                                    <th>{actor.id}</th>
+                                    <td>{actor.status}</td>
+                                    {getOrderDescrition(actor.id).map((text, index2) => (
+                                        <td key={index2}>{text}</td>
+                                    ))}
+                                </tr>
+                            )
+                            )}
+                        </tbody>
+                    </table>
+
+                    <table className={styles.actorTable}>
+                        <thead>
+                            <tr>
+                                <th>Flag</th>
+                                <th>value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Object.entries(condition.flagMap).map(entry => {
+                                if (!entry || !entry[1]) { return null }
+                                const [flagKey, flag] = entry;
+                                return <tr>
+                                    <td>{flagKey}</td>
+                                    <td>{flag?.value ? 'TRUE' : 'FALSE'}</td>
+                                    <td>{flag?.description}</td>
+                                </tr>
+                            })}
+                        </tbody>
+                    </table>
+
+                </div>
 
                 <ul className={styles.loglist} ref={listRef} style={{ height: '100px' }}>
                     {log.map((entry, index) => (

@@ -76,6 +76,7 @@ export default class Game extends Component<GameProps, GameState> {
         const actors = props.actors.map(cloneData);
         const items = props.items.map(cloneData);
         const conversations = props.conversations.map(cloneData);
+        const flagMap = cloneData(props.flagMap);
 
         return {
             viewAngle: 0,
@@ -91,7 +92,8 @@ export default class Game extends Component<GameProps, GameState> {
             actorOrders: props.actorOrders || {},
             conversations,
             currentConversationId: props.currentConversationId,
-            debugLog: [makeDebugEntry(`Running: ${props.id}`)]
+            debugLog: [makeDebugEntry(`Running: ${props.id}`)],
+            flagMap,
         }
     }
 
@@ -99,14 +101,14 @@ export default class Game extends Component<GameProps, GameState> {
         const {
             rooms, actors, interactions, items,
             currentRoomId, actorOrders, sequenceRunning,
-            conversations, currentConversationId, id,
+            conversations, currentConversationId, id, flagMap,
         } = this.state
 
         return {
             id,
             rooms, actors, interactions, items,
             currentRoomId, actorOrders, sequenceRunning,
-            conversations, currentConversationId,
+            conversations, currentConversationId, flagMap,
         }
     }
 

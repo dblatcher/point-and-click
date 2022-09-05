@@ -112,6 +112,7 @@ export class GameEditor extends Component<Props, State>{
                     sprites: [],
                     spriteSheets: [],
                     endings: [],
+                    flagMap: {},
                 },
                 tabOpen: tabs.indexOf('main'),
                 resetTimeStamp: 0,

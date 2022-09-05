@@ -9,6 +9,7 @@ import { VerbSchema } from "./Verb"
 import { Conversation, ConversationSchema } from "./Conversation"
 import { SpriteData, SpriteSheet, SpriteDataSchema, SpriteSheetSchema } from "./SpriteSheet"
 import { Ending, EndingSchema } from "./Ending"
+import { FlagMapSchema } from "./Flag"
 
 
 const GameHappeningsSchema = z.object({
@@ -26,6 +27,7 @@ const GameContentsDataSchema = z.object({
     interactions: InteractionSchema.array(),
     conversations: ConversationSchema.array(),
     currentRoomId: z.string(),
+    flagMap: FlagMapSchema,
     id: z.string(),
 })
 

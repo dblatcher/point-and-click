@@ -7,6 +7,7 @@ import { sequences } from './sequences';
 import { conversations } from './conversations';
 import { spriteDataList, spriteSheets } from './sprites'
 import { endings } from './endings'
+import { flagMap } from './flags'
 import { GameDesign } from "../src/definitions/Game";
 
 const player = actors.find(actor => actor.isPlayer)
@@ -15,7 +16,7 @@ const startingRoom = rooms.find(room => room.id === player?.room) || rooms[0]
 export const prebuiltGameDesign: GameDesign = {
     id:"THE_TEST_GAME",
     rooms,
-    actors: actors,
+    actors,
     interactions,
     items,
     verbs,
@@ -25,4 +26,5 @@ export const prebuiltGameDesign: GameDesign = {
     endings,
     sprites: spriteDataList,
     spriteSheets,
+    flagMap,
 }
