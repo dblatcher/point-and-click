@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { IdentSchema, PositionSchema, SpriteParamsSchema } from "./BaseTypes"
 
-const SoundValueSchema = z.object({
+export const SoundValueSchema = z.object({
     soundId: z.string(),
     frameIndex: z.number().optional(),
     volume: z.number().optional(),

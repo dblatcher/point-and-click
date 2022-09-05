@@ -115,15 +115,12 @@ export class ActorEditor extends Component<Props, State> {
         this.setState(modification)
     }
     changeSoundMap(key: string, value?: SoundValue): void {
-        console.log('chageSoundMap', key, value)
         this.setState(state => {
             const { soundEffectMap = {} } = state
             if (typeof value === 'undefined') {
                 delete soundEffectMap[key]
             } else {
-                console.log('updating')
                 soundEffectMap[key] = value
-                console.log(soundEffectMap)
             }
             return { soundEffectMap }
         })

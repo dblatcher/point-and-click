@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact";
-import { SoundValue } from "src/definitions/ActorData";
+import { SoundValue, SoundValueSchema } from "../../../definitions/ActorData";
 import soundService from "../../../services/soundService";
-import { SelectInput } from "../formControls";
+import { getModification, SchemaForm } from "../SchemaForm";
 
 
 interface Props {
@@ -11,19 +11,21 @@ interface Props {
 }
 
 export const SoundValueForm: FunctionComponent<Props> = ({ animation, data, updateData }) => {
-    const {soundId} = data
-    const handleUpdate = (soundId: string): void => {
-        console.log(soundId)
-        return updateData({soundId})
-    }
 
     return (
         <div>
-            <span>{animation}: </span>
-            <SelectInput 
-                value={soundId} 
-                items={soundService.list()} 
-                onSelect={handleUpdate} />
+            <b>{animation}: </b>
+
+            <SchemaForm schema={SoundValueSchema}
+                options={{ soundId: soundService.list() }}
+                numberConfig={{ volume: { max: 2, step: .1 } }}
+                data={data}
+                changeValue={(value, field): void => {
+                    return updateData(
+                        Object.assign({}, data, getModification(value, field))
+                    )
+                }}
+            />
         </div>
     )
 }

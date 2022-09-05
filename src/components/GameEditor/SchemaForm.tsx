@@ -12,11 +12,18 @@ export interface FieldDef {
 }
 export type FieldValue = string | number | boolean | undefined;
 
+type NumberInputSettings = {
+    min?: number;
+    max?: number;
+    step?: number;
+}
+
 interface Props<T extends z.ZodRawShape> {
     schema: z.ZodObject<T>;
     data: Record<string, unknown>;
     changeValue: { (value: FieldValue, field: FieldDef): void };
     options?: Partial<Record<keyof T, string[]>>;
+    numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
 }
 
 export function fieldValueIsRightType(value: FieldValue, field: FieldDef): boolean {
@@ -29,6 +36,15 @@ export function fieldValueIsRightType(value: FieldValue, field: FieldDef): boole
     }
 }
 
+export function getModification(value: FieldValue, field: FieldDef): Record<string, FieldValue> {
+    if (fieldValueIsRightType(value, field)) {
+        const mod: Record<string, FieldValue> = {};
+        mod[field.key] = value
+        return mod
+    }
+    return {}
+}
+
 interface SchemaFieldProps<T> {
     field: FieldDef;
     noTriState?: boolean;
@@ -36,10 +52,11 @@ interface SchemaFieldProps<T> {
     options?: string[];
     stringInputType?: string;
     showUnsupported?: boolean;
+    numberInputSettings?: NumberInputSettings;
 }
 
 function SchemaField<T extends z.ZodRawShape>({
-    field, change, noTriState, options, showUnsupported = false, stringInputType
+    field, change, noTriState, options, showUnsupported = false, stringInputType, numberInputSettings = {}
 }: SchemaFieldProps<T>): VNode | null {
     const { key, optional, type, value } = field;
     let safeValue: FieldValue
@@ -90,11 +107,13 @@ function SchemaField<T extends z.ZodRawShape>({
             if (typeof value === 'number' || typeof value === 'undefined') {
                 return field.optional ? (
                     <OptionalNumberInput label={key}
+                        {...numberInputSettings}
                         value={value}
                         inputHandler={(value) => { change(value, field) }}
                     />
                 ) : (
                     <NumberInput label={key}
+                        {...numberInputSettings}
                         value={value || 0}
                         inputHandler={(value) => { change(value, field) }}
                     />
@@ -127,7 +146,7 @@ function SchemaField<T extends z.ZodRawShape>({
  * Creates a form for the schema, Supports only primitives and optional primitives
  */
 export function SchemaForm<T extends z.ZodRawShape>({
-    schema, data, changeValue, options = {}
+    schema, data, changeValue, options = {}, numberConfig = {}
 }: Props<T>): VNode {
 
     const fields: FieldDef[] = []
@@ -154,6 +173,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
             <SchemaField key={field.key}
                 noTriState
                 options={options[field.key]}
+                numberInputSettings={numberConfig[field.key]}
                 change={changeValue}
                 field={field}
                 stringInputType={field.key === 'text' ? 'textArea' : undefined}
