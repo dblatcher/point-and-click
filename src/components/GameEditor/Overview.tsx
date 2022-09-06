@@ -47,8 +47,10 @@ export const Overview: FunctionalComponent<Props> = ({
         <li>endings: {gameDesign.endings.length}</li>
       </ul>
 
-      <h2>Flags</h2>
-      <FlagMapControl gameDesign={gameDesign} edit={edit} />
+      <fieldset style={{ maxWidth: '35em' }}>
+        <legend>Flags</legend>
+        <FlagMapControl gameDesign={gameDesign} edit={edit} />
+      </fieldset>
     </article>
   );
 };
