@@ -159,6 +159,17 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
             case 'soundEffect': {
                 const { sound, volume } = consequence
                 soundService.play(sound, { volume })
+                break;
+            }
+            case 'flag': {
+                const { flag, on } = consequence
+                const flagEntry = state.flagMap[flag]
+                if (flagEntry) {
+                    flagEntry.value = on
+                }  else {
+                    console.warn(`No such flag ${flag}`)
+                }
+                break;
             }
         }
     }
