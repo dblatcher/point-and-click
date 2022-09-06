@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h } from "preact";
+import { Component, h, Fragment } from "preact";
 import { GameDesign, Interaction } from "src";
 import { DeleteButton, SelectInput } from "../formControls";
 import styles from '../editorStyles.module.css';
@@ -68,6 +68,20 @@ export class InteractionEditor extends Component<Props, State> {
         })
     }
 
+    renderFlagConditions(interaction: Interaction) {
+        const { flagsThatMustBeFalse, flagsThatMustBeTrue } = interaction
+        if (!flagsThatMustBeFalse && !flagsThatMustBeTrue) {
+            return <span>none</span>
+        }
+
+
+
+        return <>
+            {flagsThatMustBeFalse?.map((flag, index) => (<b key={index}>![{flag}]</b>))}
+            {flagsThatMustBeTrue?.map((flag, index) => (<b key={index}>[{flag}]</b>))}
+        </>
+    }
+
     render() {
         const { gameDesign } = this.props
         const { interactions, verbs, items, rooms } = gameDesign
@@ -87,6 +101,7 @@ export class InteractionEditor extends Component<Props, State> {
                             <td>item</td>
                             <td>room</td>
                             <td rowSpan={2}>consequences</td>
+                            <td rowSpan={2}>Flag conditions</td>
                         </tr>
                         <tr>
                             <td>
@@ -137,6 +152,7 @@ export class InteractionEditor extends Component<Props, State> {
                                 <td>{interaction.itemId}</td>
                                 <td>{interaction.roomId}</td>
                                 <td>{interaction.consequences.length}x consequences</td>
+                                <td>{this.renderFlagConditions(interaction)}</td>
                                 <td><DeleteButton label="delete" confirmationText="really?" onClick={() => { this.props.deleteInteraction(index) }} /></td>
                                 <td><button onClick={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}>edit</button></td>
                             </tr>

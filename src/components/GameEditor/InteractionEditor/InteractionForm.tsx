@@ -4,7 +4,7 @@ import { useState } from "preact/hooks";
 import { cloneData } from "../../../lib/clone";
 import { InteractionSchema } from "../../../definitions/Interaction";
 import { GameDesign, Interaction, AnyConsequence, Consequence } from "src";
-import { CheckBoxInput, SelectInput, StringInput } from "../formControls";
+import { CheckBoxInput, SelectAndConfirmInput, SelectInput, StringInput } from "../formControls";
 import { listIds } from "../../../lib/util";
 import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
@@ -39,6 +39,12 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                 {
                     modification[property] = value as boolean;
                     break;
+                }
+            case 'flagsThatMustBeFalse':
+            case 'flagsThatMustBeTrue':
+                {
+                    modification[property] = value as string[];
+                    break
                 }
         }
         setInteraction(Object.assign({}, interaction, modification))
@@ -120,6 +126,48 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                         inputHandler={(value) => { setInteractionProperty('mustReachFirst', value) }}
                         value={interaction.mustReachFirst}
                     />
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <fieldset>
+
+                        <legend>Flags that must be false[{interaction.flagsThatMustBeFalse?.length || 0}]</legend>
+                        <ListEditor noMoveButtons
+                            list={interaction.flagsThatMustBeFalse || []}
+                            describeItem={(item, index) => (
+                                <span key={index}>{item}</span>
+                            )}
+                            mutateList={value => setInteractionProperty('flagsThatMustBeFalse', value)}
+                        />
+                        <SelectAndConfirmInput
+                            label="ADD"
+                            items={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeFalse?.includes(id))}
+                            onSelect={flagId => {
+                                if (flagId.length === 0) { return }
+                                const newList = [...interaction.flagsThatMustBeFalse || [], flagId]
+                                setInteractionProperty('flagsThatMustBeFalse', newList)
+                            }}
+                        />
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Flags that must be true[{interaction.flagsThatMustBeTrue?.length || 0}]</legend>
+                        <ListEditor noMoveButtons
+                            list={interaction.flagsThatMustBeTrue || []}
+                            describeItem={(item, index) => (
+                                <span key={index}>{item}</span>
+                            )}
+                            mutateList={value => setInteractionProperty('flagsThatMustBeTrue', value)}
+                        />
+                        <SelectAndConfirmInput
+                            label="ADD"
+                            items={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeTrue?.includes(id))}
+                            onSelect={flagId => {
+                                if (flagId.length === 0) { return }
+                                const newList = [...interaction.flagsThatMustBeTrue || [], flagId]
+                                setInteractionProperty('flagsThatMustBeTrue', newList)
+                            }}
+                        />
+                    </fieldset>
                 </div>
             </fieldset>
 

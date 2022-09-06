@@ -348,7 +348,7 @@ export const SelectAndConfirmInput: FunctionalComponent<{
         <>
             {label && <label>{label}:</label>}
             <SelectInput items={items} descriptions={descriptions} value={value} onSelect={setValue} />
-            <button onClick={() => onSelect(value)}>{value}</button>
+            <button onClick={() => onSelect(value)}>CONFIRM</button>
         </>
     )
 }

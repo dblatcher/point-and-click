@@ -25,7 +25,7 @@ const buttonStyle = {
     DELETE: styles.deleteButton,
 }
 
-export class ListEditor<T extends {}> extends Component<Props<T>> {
+export class ListEditor<T> extends Component<Props<T>> {
 
     handleDelete(index: number) {
         const { list, mutateList } = this.props
