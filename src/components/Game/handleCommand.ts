@@ -3,19 +3,53 @@ import { Command, Interaction, RoomData, ActorData, HotspotZone, OrderConsequenc
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
 import { findPath } from "../../lib/pathfinding/pathfind";
+import { FlagMap } from "src/definitions/Flag";
+
+
+function failsOnFlags(mustBe: boolean, idList: string[], flagMap: FlagMap): boolean {
+    const results: (boolean | undefined)[] = idList.map(id => {
+        const flag = flagMap[id]
+        if (!flag) {
+            console.warn(`Invalid flag id: "${id}"`)
+            return undefined
+        }
+        return flag.value === mustBe
+    })
+    return results.includes(false)
+}
 
 function matchInteraction(
     command: Command,
     room: RoomData | undefined,
-    interactions: Interaction[]
+    interactions: Interaction[],
+    flagMap: FlagMap,
 ): Interaction | undefined {
     const { verb, item, target } = command
     return interactions.find(interaction => {
-        return interaction.verbId === verb.id
+
+        const matchesCommandAndTargetStatus = interaction.verbId === verb.id
             && interaction.targetId === target.id
             && (!interaction.roomId || interaction?.roomId === room?.id)
             && ((!interaction.itemId && !item) || (interaction?.itemId == item?.id))
             && ((!interaction.targetStatus) || (interaction.targetStatus == target.status))
+
+        if (!matchesCommandAndTargetStatus) {
+            return false
+        }
+
+        if (interaction.flagsThatMustBeTrue) {
+            if (failsOnFlags(true, interaction.flagsThatMustBeTrue, flagMap)) {
+                return false
+            }
+        }
+
+        if (interaction.flagsThatMustBeFalse) {
+            if (failsOnFlags(false, interaction.flagsThatMustBeFalse, flagMap)) {
+                return false
+            }
+        }
+
+        return matchesCommandAndTargetStatus
     })
 }
 
@@ -122,7 +156,7 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
 
         const currentRoom = rooms.find(_ => _.id === currentRoomId)
         const player = actors.find(_ => _.isPlayer)
-        const interaction = matchInteraction(command, currentRoom, state.interactions)
+        const interaction = matchInteraction(command, currentRoom, state.interactions, state.flagMap)
 
         if (interaction && interaction.mustReachFirst && command.target.type !== 'item') {
             debugLog.push(makeDebugEntry(`${describeCommand(command)}: (pending interaction)`, 'command'))

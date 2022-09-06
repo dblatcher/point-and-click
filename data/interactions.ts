@@ -171,6 +171,25 @@ export const interactions: Interaction[] = [
         verbId: 'TAKE',
         targetId: 'TUBE',
         mustReachFirst: true,
+        flagsThatMustBeFalse: ['testFlag', 'flagThatDoesNotExist'],
+        flagsThatMustBeTrue: ['otherFlagThatDoesNotExist'],
+        consequences: [
+            {
+                type: 'talk',
+                text: 'I cannot because of the test flag.',
+            },
+            {
+                type: 'soundEffect',
+                sound: 'beep',
+                volume: 1,
+            },
+        ]
+    },
+    {
+        verbId: 'TAKE',
+        targetId: 'TUBE',
+        mustReachFirst: true,
+        flagsThatMustBeTrue: ['testFlag'],
         consequences: [
             {
                 type: 'removeActor',

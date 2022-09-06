@@ -1,6 +1,5 @@
 import { z } from "zod"
 import { ConsequenceSchema } from "./Consequence"
-import { Order, orderSchema } from "./Order"
 
 
 export const InteractionSchema = z.object({
@@ -11,6 +10,8 @@ export const InteractionSchema = z.object({
     targetStatus: z.string().optional(),
     mustReachFirst: z.boolean().optional(),
     consequences: z.array(ConsequenceSchema),
+    flagsThatMustBeFalse: z.array(z.string()).optional(),
+    flagsThatMustBeTrue: z.array(z.string()).optional(),
 })
 
 export type Interaction = z.infer<typeof InteractionSchema>
