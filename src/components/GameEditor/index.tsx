@@ -12,29 +12,28 @@ import { ImageAssetTool } from "./ImageAssetTool";
 import { ItemEditor } from "./itemEditor";
 import { InteractionEditor } from "./InteractionEditor";
 import { ConversationEditor } from "./ConversationEditor";
+import { SequenceEditor } from "./SequenceEditor";
+import { GameDesignSaveAndLoad } from "./GameDesignSaveAndLoad";
+import { SoundAssetTool } from "./SoundAssetTool";
+import { EndingEditor } from "./EndingEditor";
+import Game from "../Game";
 
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 
 import { prebuiltGameDesign } from '../../../data/fullGame';
 import { listIds, findById, findIndexById } from "../../lib/util";
 import { RoomData, GameDesign, GameDataItem, Interaction, Ending } from "src";
-
+import { FlagMap } from "src/definitions/Flag";
 
 import { populateServicesForPreBuiltGame } from "../../services/populateServices";
 import imageService from "../../services/imageService";
 import spriteService from "../../services/spriteService";
-import { SequenceEditor } from "./SequenceEditor";
+import spriteSheetService from "../../services/spriteSheetService";
 
 import layoutStyles from "./editorLayoutStyles.module.css";
-import { EndingEditor } from "./EndingEditor";
-import spriteSheetService from "../../services/spriteSheetService";
-import Game from "../Game";
-import { GameDesignSaveAndLoad } from "./GameDesignSaveAndLoad";
-import { SoundAssetTool } from "./SoundAssetTool";
-import { FlagMap } from "src/definitions/Flag";
 
 
-const usePrebuiltGame = true
+const usePrebuiltGame = false
 if (usePrebuiltGame) {
     populateServicesForPreBuiltGame()
 }
@@ -224,12 +223,16 @@ export class GameEditor extends Component<Props, State>{
 
     deleteArrayItem(index: number, property: keyof GameDesign) {
         // TO DO - check for references to the ID of the deleted item?
-        // TO DELETE ITEMS FROM SERVICE?
         this.setState(state => {
             const { gameDesign } = state
             if (Array.isArray(gameDesign[property])) {
-                const [deletedItem] = (gameDesign[property] as unknown[]).splice(index, 1)
-                console.log({ deletedItem })
+                const [deletedItem] = (gameDesign[property] as GameDataItem[]).splice(index, 1)
+                if (property === 'sprites' && 'id' in deletedItem) {
+                    spriteService.remove(deletedItem.id)
+                }
+                if (property === 'spriteSheets' && 'id' in deletedItem) {
+                    spriteSheetService.remove(deletedItem.id)
+                }
             }
             return { gameDesign }
         })

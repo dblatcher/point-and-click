@@ -210,6 +210,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     reset={this.handleResetButton}
                     saveButton={true}
                     load={this.handleLoadButton}
+                    deleteItem={this.props.deleteData}
                 />
             </div>
 

@@ -30,6 +30,18 @@ export class Service<T extends ServiceItem> extends TypedEmitter<ServiceEvents> 
         this.reportUpdate()
     }
 
+    remove(ids: string | string[]): void {
+        if (!Array.isArray(ids)) {
+            ids = [ids]
+        }
+        ids.forEach(id => {
+            if (id in this.data) {
+                delete this.data[id]
+            }
+        })
+        this.reportUpdate()
+    }
+
     get(id: string): T | undefined {
         return this.data[id]
     }
