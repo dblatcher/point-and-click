@@ -97,3 +97,17 @@
 .plusButton:not(:disabled):hover {
     background-color: palegreen;
 }
+
+.flexList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.flexList li {
+    display: flex;
+}
+
+.flexList li button:first-child {
+    flex: 1;
+}

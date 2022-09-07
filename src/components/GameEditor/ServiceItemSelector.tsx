@@ -3,8 +3,9 @@ import { FunctionalComponent, h } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { eventToString } from "../../lib/util";
 import { Service, ServiceItem } from "../../services/Service";
+import { icons } from "./dataEditors";
 
-import styles from "./editorStyles.module.css"
+import editorStyles from "./editorStyles.module.css"
 
 
 interface Props {
@@ -44,6 +45,10 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, selec
         }
     }
 
+    const handleDelete = (id: string) => {
+        service.remove(id)
+    }
+
     const list = filterItems
         ? service.getAll().filter(filterItems).map(item => item.id)
         : service.list();
@@ -64,18 +69,18 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, selec
             )
         case 'buttons':
         default:
-            return <fieldset className={styles.fieldset}>
+            return <fieldset className={editorStyles.fieldset}>
                 <legend>{legend}</legend>
                 <div updated-at={timestamp}>
-                    <ul>
+                    <ul className={editorStyles.flexList}>
                         {list.map(id =>
                             <li key={id}>
                                 <button onClick={() => { handleSelect(id) }}>{id}</button>
+                                <button className={editorStyles.deleteButton} onClick={() => { handleDelete(id) }}>{icons.DELETE}</button>
                             </li>
                         )}
                     </ul>
                 </div>
             </fieldset>
     }
-
 }

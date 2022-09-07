@@ -156,10 +156,31 @@ export class ImageAssetTool extends Component<{}, State> {
       uploadWarning,
     } = this.state;
 
+    const saveButtonText = imageService.list().includes(id) ? `UPDATE ${id}` : `ADD NEW ASSET`
+
     return (
       <article>
         <h2>Image asset tool</h2>
         <div className={styles.container}>
+          <section>
+            <ServiceItemSelector
+              legend="assets"
+              service={imageService}
+              select={this.openFromService} />
+
+            <fieldset className={styles.fieldset}>
+              <div className={styles.row}>
+                <button onClick={this.zipImages}>zip all image assets</button>
+              </div>
+              <div className={styles.row}>
+                <button onClick={this.loadFromZipFile}>
+                  load assets from zip file
+                </button>
+                {uploadWarning && <Warning>{uploadWarning}</Warning>}
+              </div>
+            </fieldset>
+          </section>
+
           <section>
             <fieldset className={styles.fieldset}>
               <legend>image properties</legend>
@@ -173,8 +194,7 @@ export class ImageAssetTool extends Component<{}, State> {
                   value={id}
                   onInput={(event) =>
                     this.changeValue("id", eventToString(event))
-                  }
-                />
+                  } />
               </div>
               <div className={styles.row}>
                 <SelectInput
@@ -182,34 +202,14 @@ export class ImageAssetTool extends Component<{}, State> {
                   label="category"
                   value={category}
                   items={imageAssetCategories}
-                  haveEmptyOption={true}
-                />
+                  haveEmptyOption={true} />
               </div>
-            </fieldset>
-
-            <fieldset className={styles.fieldset}>
               <div className={styles.row}>
-                <button onClick={this.saveToService}>Save to service</button>
+                <button onClick={this.saveToService}>{saveButtonText}</button>
                 {saveWarning && <Warning>{saveWarning}</Warning>}
               </div>
-
-              <div className={styles.row}>
-                <button onClick={this.zipImages}>zip assets</button>
-              </div>
-              <div className={styles.row}>
-                <button onClick={this.loadFromZipFile}>
-                  load assets from zip file
-                </button>
-                {uploadWarning && <Warning>{uploadWarning}</Warning>}
-              </div>
             </fieldset>
-            <ServiceItemSelector
-              legend="open asset"
-              service={imageService}
-              select={this.openFromService}
-            />
-          </section>
-          <section>
+
             <p>Resizing the preview does not effect the image data.</p>
             <div className={styles.spriteSheetPreview}>
               <img src={href} />

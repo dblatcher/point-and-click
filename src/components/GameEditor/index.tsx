@@ -33,7 +33,7 @@ import spriteSheetService from "../../services/spriteSheetService";
 import layoutStyles from "./editorLayoutStyles.module.css";
 
 
-const usePrebuiltGame = false
+const usePrebuiltGame = true
 if (usePrebuiltGame) {
     populateServicesForPreBuiltGame()
 }

@@ -116,7 +116,7 @@ export class SoundAssetTool extends Component<{}, State> {
   }
 
   zipSounds = async () => {
-    const result = await buildAssetZipBlob('sounds',soundService);
+    const result = await buildAssetZipBlob('sounds', soundService);
     if (result.success === false) {
       return this.setState({ saveWarning: result.error });
     }
@@ -163,6 +163,25 @@ export class SoundAssetTool extends Component<{}, State> {
         <h2>Sound asset tool</h2>
         <div className={styles.container}>
           <section>
+            <ServiceItemSelector
+              legend="open asset"
+              service={soundService}
+              select={this.openFromService} />
+
+            <fieldset className={styles.fieldset}>
+              <div className={styles.row}>
+                <button onClick={this.zipSounds}>zip assets</button>
+              </div>
+              <div className={styles.row}>
+                <button onClick={this.loadFromZipFile}>
+                  load assets from zip file
+                </button>
+                {uploadWarning && <Warning>{uploadWarning}</Warning>}
+              </div>
+            </fieldset>
+          </section>
+
+          <section>
             <fieldset className={styles.fieldset}>
               <legend>sound properties</legend>
 
@@ -187,38 +206,19 @@ export class SoundAssetTool extends Component<{}, State> {
                   haveEmptyOption={true}
                 />
               </div>
-            </fieldset>
 
-            <fieldset className={styles.fieldset}>
               <div className={styles.row}>
                 <button onClick={this.saveToService}>Save to service</button>
                 {saveWarning && <Warning>{saveWarning}</Warning>}
               </div>
-
-              <div className={styles.row}>
-                <button onClick={this.zipSounds}>zip assets</button>
-              </div>
-              <div className={styles.row}>
-                <button onClick={this.loadFromZipFile}>
-                  load assets from zip file
-                </button>
-                {uploadWarning && <Warning>{uploadWarning}</Warning>}
-              </div>
             </fieldset>
-            <ServiceItemSelector
-              legend="open asset"
-              service={soundService}
-              select={this.openFromService}
-            />
-          </section>
 
-          <section>
             {href && (
               <p>{this.state.originalFileName} : {href}</p>
 
             )}
             <p>play</p>
-              <SoundToggle />
+            <SoundToggle />
             {(id && soundService.get(id)) && (
               <button onClick={() => { soundService.play(id) }}>play {id}</button>
             )}
