@@ -357,7 +357,7 @@ export class GameEditor extends Component<Props, State>{
                 <hr />
 
                 <div>
-                    <button onClick={() => this.setState({ tabOpen: tabs.indexOf("test") })}>Test Game</button>
+                    <button onClick={() => this.setState({ tabOpen: tabs.indexOf("test"), resetTimeStamp: Date.now() })}>Test Game</button>
                 </div>
             </nav>
             <section className={layoutStyles.tabMenuHolder}>
