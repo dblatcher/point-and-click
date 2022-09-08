@@ -19,13 +19,15 @@ import imageService, {
 } from "../../../services/imageService";
 import { buildAssetZipBlob, readImageAssetFromZipFile } from "../../../lib/zipFiles";
 
-type ExtraState = {
+
+type State = {
   urlIsObjectUrl: boolean;
   saveWarning?: string;
   uploadWarning?: string;
-};
+  asset: Partial<ImageAsset>;
+}
 
-type State = Partial<ImageAsset> & ExtraState;
+
 
 export class ImageAssetTool extends Component<{}, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
@@ -34,7 +36,9 @@ export class ImageAssetTool extends Component<{}, State> {
     super(props);
     this.state = {
       urlIsObjectUrl: false,
-      id: "NEW_IMAGE",
+      asset: {
+        id: "NEW_IMAGE",
+      }
     };
     this.loadFile = this.loadFile.bind(this);
     this.saveToService = this.saveToService.bind(this);
@@ -45,7 +49,9 @@ export class ImageAssetTool extends Component<{}, State> {
   }
 
   loadFile = async () => {
-    const { urlIsObjectUrl, href: oldHref } = this.state;
+    const { urlIsObjectUrl, asset } = this.state;
+    const { href: oldHref } = asset;
+
     const file = await uploadFile();
     if (!file) {
       return;
@@ -57,56 +63,66 @@ export class ImageAssetTool extends Component<{}, State> {
     }
 
     this.setState({
-      href: newUrl,
+      asset: {
+        href: newUrl,
+        id: file.name,
+        originalFileName: file.name,
+      },
       urlIsObjectUrl: true,
-      id: file.name,
       saveWarning: undefined,
-      originalFileName: file.name,
     });
   };
 
   changeValue(propery: keyof ImageAsset, newValue: string | number) {
-    const modification: Partial<State> = {
-      saveWarning: undefined,
-    };
-    switch (propery) {
-      case "id":
-        if (typeof newValue === "string") {
-          modification[propery] = newValue.toUpperCase();
-        }
-        break;
-      case "category":
-        if (
-          typeof newValue === "string" &&
-          imageAssetCategories.includes(newValue as ImageAssetCategory)
-        ) {
-          modification[propery] = newValue as ImageAssetCategory;
-        }
-        break;
-    }
-    this.setState(modification);
+
+    this.setState(state => {
+      const asset = state.asset
+
+      switch (propery) {
+        case "id":
+          if (typeof newValue === "string") {
+            asset[propery] = newValue.toUpperCase();
+          }
+          break;
+        case "category":
+          if (
+            typeof newValue === "string" &&
+            imageAssetCategories.includes(newValue as ImageAssetCategory)
+          ) {
+            asset[propery] = newValue as ImageAssetCategory;
+          }
+          break;
+      }
+
+      return {
+        saveWarning: undefined,
+        asset,
+      }
+    })
+
   }
 
   saveToService() {
-    const { state } = this;
+    const { asset } = this.state;
 
-    if (!state.id) {
-      this.setState({ saveWarning: "NO ID" });
-      return;
-    }
-    if (!state.href) {
-      this.setState({ saveWarning: "NO FILE" });
-      return;
-    }
-    if (!state.category) {
-      this.setState({ saveWarning: "NO CATEGORY" });
+    if (!asset.id || !asset.href || !asset.category) {
+      let saveWarning = ''
+      if (!asset.id) {
+        saveWarning += "NO ID "
+      }
+      if (!asset.href) {
+        saveWarning += "NO FILE "
+      }
+      if (!asset.category) {
+        saveWarning += "NO CATEGORY "
+      }
+      this.setState({ saveWarning });
       return;
     }
 
-    const copy = cloneData(state) as ImageAsset & Partial<ExtraState>;
-    delete copy.urlIsObjectUrl;
-    delete copy.saveWarning;
-    delete copy.uploadWarning;
+    const copy = {
+      ...asset
+    } as ImageAsset
 
     this.setState({ saveWarning: undefined }, () => {
       imageService.add(copy);
@@ -136,25 +152,29 @@ export class ImageAssetTool extends Component<{}, State> {
   };
 
   openFromService(asset: ServiceItem) {
-    const copy = cloneData(asset as ImageAsset);
+    const assetCopy = cloneData(asset as ImageAsset);
     this.setState((state) => {
       const newState = {
         ...state,
-        ...copy,
+        asset: assetCopy,
       };
-      newState.originalFileName = copy.originalFileName;
+      newState.asset.originalFileName = assetCopy.originalFileName;
       return newState;
     });
   }
 
   render() {
     const {
+      saveWarning,
+      uploadWarning,
+      asset
+    } = this.state;
+
+    const {
       href,
       id = "",
-      saveWarning,
       category = "",
-      uploadWarning,
-    } = this.state;
+    } = asset
 
     const saveButtonText = imageService.list().includes(id) ? `UPDATE ${id}` : `ADD NEW ASSET`
 
