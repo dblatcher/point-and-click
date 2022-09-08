@@ -21,22 +21,24 @@ import soundService, {
 } from "../../../services/soundService";
 import { buildAssetZipBlob, readSoundAssetFromZipFile } from "../../../lib/zipFiles";
 
-type ExtraState = {
-  urlIsObjectUrl: boolean;
+type State = {
   saveWarning?: string;
   uploadWarning?: string;
-};
+  asset: Partial<SoundAsset>;
+  fileObjectUrl?: string;
+}
 
-type State = Partial<SoundAsset> & ExtraState;
 
 export class SoundAssetTool extends Component<{}, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
+  fileRef: RefObject<File>;
 
   constructor(props: SoundAssetTool["props"]) {
     super(props);
     this.state = {
-      urlIsObjectUrl: false,
-      id: "NEW_SOUND",
+      asset: {
+        id: "NEW_SOUND",
+      }
     };
     this.loadFile = this.loadFile.bind(this);
     this.saveToService = this.saveToService.bind(this);
@@ -44,72 +46,84 @@ export class SoundAssetTool extends Component<{}, State> {
     this.zipSounds = this.zipSounds.bind(this);
 
     this.canvasRef = createRef();
+    this.fileRef = createRef();
   }
 
   loadFile = async () => {
-    const { urlIsObjectUrl, href: oldHref } = this.state;
     const file = await uploadFile();
     if (!file) {
       return;
     }
+    this.fileRef.current = file
     const newUrl = fileToObjectUrl(file);
 
-    if (oldHref && urlIsObjectUrl && typeof window !== undefined) {
-      window.URL.revokeObjectURL(oldHref);
+    if (this.state.fileObjectUrl && typeof window !== undefined) {
+      window.URL.revokeObjectURL(this.state.fileObjectUrl);
     }
 
     this.setState({
-      href: newUrl,
-      urlIsObjectUrl: true,
-      id: file.name,
+      asset: {
+        id: file.name,
+        originalFileName: file.name,
+      },
       saveWarning: undefined,
-      originalFileName: file.name,
+      fileObjectUrl: newUrl,
     });
   };
 
   changeValue(propery: keyof SoundAsset, newValue: string | number) {
-    const modification: Partial<State> = {
-      saveWarning: undefined,
-    };
-    switch (propery) {
-      case "id":
-        if (typeof newValue === "string") {
-          modification[propery] = newValue.toUpperCase();
-        }
-        break;
-      case "category":
-        if (
-          typeof newValue === "string" &&
-          soundAssetCategories.includes(newValue as SoundAssetCategory)
-        ) {
-          modification[propery] = newValue as SoundAssetCategory;
-        }
-        break;
-    }
-    this.setState(modification);
+    this.setState(state => {
+      const asset = state.asset
+      switch (propery) {
+        case "id":
+          if (typeof newValue === "string") {
+            asset[propery] = newValue.toUpperCase();
+          }
+          break;
+        case "category":
+          if (
+            typeof newValue === "string" &&
+            soundAssetCategories.includes(newValue as SoundAssetCategory)
+          ) {
+            asset[propery] = newValue as SoundAssetCategory;
+          }
+          break;
+      }
+
+      return {
+        saveWarning: undefined,
+        asset,
+      }
+    })
   }
 
   saveToService() {
-    const { state } = this;
+    const { asset } = this.state;
+    const { current: file } = this.fileRef
 
-    if (!state.id) {
-      this.setState({ saveWarning: "NO ID" });
+    // create a new url as the one in state is revoked when
+    // a new file is uploaded or a asset retrieved from the service.
+    const newHref = file ? fileToObjectUrl(file) : undefined
+
+    if (!asset.id || !newHref || !asset.category) {
+      let saveWarning = ''
+      if (!asset.id) {
+        saveWarning += "NO ID "
+      }
+      if (!newHref) {
+        saveWarning += "NO FILE "
+      }
+      if (!asset.category) {
+        saveWarning += "NO CATEGORY "
+      }
+      this.setState({ saveWarning });
       return;
     }
-    if (!state.href) {
-      this.setState({ saveWarning: "NO FILE" });
-      return;
-    }
-    if (!state.category) {
-      this.setState({ saveWarning: "NO CATEGORY" });
-      return;
-    }
 
-    const copy = cloneData(state) as SoundAsset & Partial<ExtraState>;
-    delete copy.urlIsObjectUrl;
-    delete copy.saveWarning;
-    delete copy.uploadWarning;
-
+    const copy = {
+      ...asset,
+      href: newHref
+    } as SoundAsset
     this.setState({ saveWarning: undefined }, () => {
       soundService.add(copy);
     });
@@ -138,25 +152,28 @@ export class SoundAssetTool extends Component<{}, State> {
   };
 
   openFromService(asset: ServiceItem) {
-    const copy = cloneData(asset as SoundAsset);
-    this.setState((state) => {
-      const newState = {
-        ...state,
-        ...copy,
-      };
-      newState.originalFileName = copy.originalFileName;
-      return newState;
+    const assetCopy = cloneData(asset as SoundAsset);
+    this.fileRef.current = null
+    if (this.state.fileObjectUrl && typeof window !== undefined) {
+      window.URL.revokeObjectURL(this.state.fileObjectUrl);
+    }
+    this.setState({
+      fileObjectUrl: undefined,
+      asset: assetCopy,
     });
   }
 
   render() {
     const {
-      href,
-      id = "",
       saveWarning,
-      category = "",
       uploadWarning,
+      asset
     } = this.state;
+
+    const {
+      id = "",
+      category = "",
+    } = asset
 
     return (
       <article>
@@ -213,10 +230,6 @@ export class SoundAssetTool extends Component<{}, State> {
               </div>
             </fieldset>
 
-            {href && (
-              <p>{this.state.originalFileName} : {href}</p>
-
-            )}
             <p>play</p>
             <SoundToggle />
             {(id && soundService.get(id)) && (

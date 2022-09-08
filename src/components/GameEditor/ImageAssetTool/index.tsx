@@ -231,8 +231,6 @@ export class ImageAssetTool extends Component<{}, State> {
               </div>
             </fieldset>
 
-            <p>asset.href: {href}</p>
-            <p>fileObjectUrl: {fileObjectUrl}</p>
             <p>Resizing the preview does not effect the image data.</p>
             <div className={styles.spriteSheetPreview}>
               <img src={href || fileObjectUrl} />
