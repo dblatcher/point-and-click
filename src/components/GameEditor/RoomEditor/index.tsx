@@ -121,7 +121,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 case 'WALKABLE':
                     return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_WALKABLE', index: walkableAreas.length - 1 } : undefined
                 case 'HOTSPOT':
-                    return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: walkableAreas.length - 1 } : undefined
+                    return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1} : undefined
                 default:
                     return clickEffect
             }
