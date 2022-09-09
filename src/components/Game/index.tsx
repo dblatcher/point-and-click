@@ -49,7 +49,9 @@ export type RoomContentItem = {
 }
 
 
-export const cellSize = 10
+export const cellSize = 5
+// use true for debugging only- slows program!
+const renderCells = false
 const TIMER_SPEED = 10
 
 export default class Game extends Component<GameProps, GameState> {
@@ -298,8 +300,7 @@ export default class Game extends Component<GameProps, GameState> {
                         handleHotspotClick={this.handleTargetClick}
                         handleHover={this.handleHover}
                         contents={contentList}
-                    // use for debugging - slows render!
-                    // obstacleCells={this.state.cellMatrix}
+                        obstacleCells={renderCells ? this.state.cellMatrix : undefined}
                     />
                 }
 
