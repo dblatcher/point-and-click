@@ -3,7 +3,7 @@ import { Command, Interaction, RoomData, ActorData, HotspotZone, OrderConsequenc
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
 import { findPath } from "../../lib/pathfinding/pathfind";
-import { FlagMap } from "src/definitions/Flag";
+import { FlagMap } from "../../definitions/Flag";
 
 
 function failsOnFlags(mustBe: boolean, idList: string[], flagMap: FlagMap): boolean {
@@ -129,7 +129,22 @@ function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): Game
     return state
 }
 
-function makeGoToOrder(player: ActorData, target: ActorData | HotspotZone): OrderConsequence {
+function getTargetPoint(target: ActorData | HotspotZone): { x: number; y: number } {
+
+    if (target.type === 'actor') {
+        return {
+            x: target.x,
+            y: target.y,
+        }
+    }
+
+    return {
+        x: target.walkToX || target.x,
+        y: target.walkToY || target.y,
+    }
+}
+
+function makeGoToOrder(player: ActorData, target: { x: number; y: number }): OrderConsequence {
     return {
         type: 'order',
         actorId: player.id,
@@ -159,16 +174,17 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
         const interaction = matchInteraction(command, currentRoom, state.interactions, state.flagMap)
 
         if (interaction && interaction.mustReachFirst && command.target.type !== 'item') {
-            debugLog.push(makeDebugEntry(`${describeCommand(command)}: (pending interaction)`, 'command'))
+            debugLog.push(makeDebugEntry(`${describeCommand(command)}: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command'))
+            const targetPoint = getTargetPoint(command.target)
 
             if (player) {
-                const isReachable = findPath(player, command.target, cellMatrix, cellSize).length > 0;
+                const isReachable = findPath(player, targetPoint, cellMatrix, cellSize).length > 0;
                 if (isReachable) {
                     state.pendingInteraction = interaction
                     const execute = makeConsequenceExecutor(state, props)
-                    execute(makeGoToOrder(player, command.target))
+                    execute(makeGoToOrder(player, targetPoint))
                 } else {
-                    debugLog.push(makeDebugEntry(`cannot reach [${command.target.x}, ${command.target.y}] from [${player.x},${player.y}]`, 'pathfinding'))
+                    debugLog.push(makeDebugEntry(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding'))
                     doDefaultResponse(command, state, true)
                 }
             }

@@ -32,6 +32,8 @@ export const HotspotZoneSchema = ShapeSchema
     .merge(z.object({
         type: z.literal('hotspot'),
         parallax: z.number(),
+        walkToX: z.number().optional(),
+        walkToY: z.number().optional(),
     }))
 
 export type HotspotZone = z.infer<typeof HotspotZoneSchema>

@@ -121,7 +121,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 case 'WALKABLE':
                     return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_WALKABLE', index: walkableAreas.length - 1 } : undefined
                 case 'HOTSPOT':
-                    return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1} : undefined
+                    return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1 } : undefined
                 default:
                     return clickEffect
             }
@@ -231,6 +231,12 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 switch (propery) {
                     case 'parallax':
                         if (typeof newValue === 'number') {
+                            hotspot[propery] = newValue
+                        }
+                        break;
+                    case 'walkToX':
+                    case 'walkToY':
+                        if (typeof newValue === 'number' || typeof newValue === 'undefined') {
                             hotspot[propery] = newValue
                         }
                         break;
@@ -488,6 +494,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     actors={actors}
                     roomData={this.state}
                     clickEffect={clickEffect}
+                    activeHotspotIndex={this.state.hotspotTab}
                     handleRoomClick={this.handleRoomClick} />
             </div>
 

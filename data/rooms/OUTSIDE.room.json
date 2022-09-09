@@ -32,7 +32,9 @@
       "x": 33,
       "y": 170,
       "circle": 35,
-      "parallax": 0
+      "parallax": 0,
+      "walkToX": 160,
+      "walkToY": 10
     },
     {
       "id": "bush",

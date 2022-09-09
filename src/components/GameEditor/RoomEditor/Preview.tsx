@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment, JSX } from "preact";
-import { RoomData, ActorData } from "src";
+import { RoomData, ActorData, HotspotZone } from "src";
 import { Room } from "../../Room";
 import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "../../../lib/util";
 import { putActorsInDisplayOrder } from "../../../lib/roomFunctions";
 import HorizontalLine from "../../HorizontalLine";
 import { makeTestActor } from "./testSprite";
+import MarkerShape from "../../MarkerShape";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -27,6 +28,7 @@ type Props = {
     actors: ActorData[];
     clickEffect?: ClickEffect;
     handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number): void };
+    activeHotspotIndex?: number;
 }
 
 
@@ -52,14 +54,14 @@ function getClickCaption(clickEffect?: ClickEffect): string {
 
 export class Preview extends Component<Props, State>{
 
-    constructor(props: Preview['props']) {
+    constructor(props: Props) {
         super(props)
         this.state = {
             viewAngle: 0,
             maxHeight: 400,
             showObstacleAreas: true,
             highlightHotspots: true,
-            showScaleLines: true,
+            showScaleLines: false,
             showTestActor: false,
             showRealActors: true,
             testActor: makeTestActor({ x: props.roomData.width / 2, y: 20 }),
@@ -93,6 +95,28 @@ export class Preview extends Component<Props, State>{
                 return { testActor }
             }
         )
+    }
+
+    get hotspotToHaveMarkWalkToPoint(): HotspotZone | undefined {
+        const { activeHotspotIndex, roomData } = this.props
+        if (typeof activeHotspotIndex === 'undefined') { return undefined }
+        const activeHotspot = roomData.hotspots ? roomData.hotspots[activeHotspotIndex] : undefined
+        if (!activeHotspot) { return undefined }
+
+        const { walkToX, walkToY } = activeHotspot
+        if (
+            typeof walkToX === 'undefined' && typeof walkToY === 'undefined'
+        ) {
+            return undefined
+        }
+        return activeHotspot
+    }
+
+    get walkToPointLabel(): string {
+        const { hotspotToHaveMarkWalkToPoint: hotspot } = this
+        if (!hotspot) { return '' }
+        const { id, x, y, walkToX, walkToY } = hotspot
+        return `${id}:[${walkToX || x}, ${walkToY || y}]`
     }
 
     get hotspotsToMark(): number[] {
@@ -228,14 +252,25 @@ export class Preview extends Component<Props, State>{
                                 text={`scale: ${yAndScale[1]}`}
                                 roomData={roomData} />
                         ))}
+
+                        {this.hotspotToHaveMarkWalkToPoint && (
+                            <MarkerShape
+                                roomData={roomData}
+                                viewAngle={viewAngle}
+                                color={'red'}
+                                text={this.walkToPointLabel}
+                                x={this.hotspotToHaveMarkWalkToPoint.walkToX || this.hotspotToHaveMarkWalkToPoint.x}
+                                y={this.hotspotToHaveMarkWalkToPoint.walkToY || this.hotspotToHaveMarkWalkToPoint.y}
+                            />
+                        )}
                     </Room>
-                    <p style={{ 
-                        position: 'absolute', 
-                        right: 0, top: 0, 
-                        margin: "0 1em", 
+                    <p style={{
+                        position: 'absolute',
+                        right: 0, top: 0,
+                        margin: "0 1em",
                         padding: "0 .25em",
-                        color:'white',
-                        backgroundColor:'rgba(0,0,0,.5)' 
+                        color: 'white',
+                        backgroundColor: 'rgba(0,0,0,.5)'
                     }}>{getClickCaption(clickEffect)}</p>
                 </section>
             </>
