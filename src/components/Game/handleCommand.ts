@@ -168,6 +168,7 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                     const execute = makeConsequenceExecutor(state, props)
                     execute(makeGoToOrder(player, command.target))
                 } else {
+                    debugLog.push(makeDebugEntry(`cannot reach [${command.target.x}, ${command.target.y}] from [${player.x},${player.y}]`, 'pathfinding'))
                     doDefaultResponse(command, state, true)
                 }
             }

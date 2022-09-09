@@ -10,7 +10,7 @@ interface Props {
     log: LogEntry[];
 }
 
-type LogEntrySubject = "command" | "order";
+type LogEntrySubject = "command" | "order" | 'pathfinding';
 export type LogEntry = {
     content: string;
     time: Date;
