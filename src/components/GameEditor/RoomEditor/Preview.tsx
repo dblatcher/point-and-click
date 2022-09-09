@@ -7,7 +7,7 @@ import { eventToBoolean, eventToNumber } from "../../../lib/util";
 import { putActorsInDisplayOrder } from "../../../lib/roomFunctions";
 import HorizontalLine from "../../HorizontalLine";
 import { makeTestActor } from "./testSprite";
-import MarkerShape from "../../MarkerShape";
+import { MarkerShape } from "../../MarkerShape";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -99,7 +99,8 @@ export class Preview extends Component<Props, State>{
 
     get hotspotToHaveMarkWalkToPoint(): HotspotZone | undefined {
         const { activeHotspotIndex, roomData } = this.props
-        if (typeof activeHotspotIndex === 'undefined') { return undefined }
+        const { highlightHotspots } = this.state
+        if (typeof activeHotspotIndex === 'undefined' || !highlightHotspots) { return undefined }
         const activeHotspot = roomData.hotspots ? roomData.hotspots[activeHotspotIndex] : undefined
         if (!activeHotspot) { return undefined }
 
