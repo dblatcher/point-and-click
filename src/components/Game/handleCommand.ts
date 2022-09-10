@@ -3,81 +3,8 @@ import { Command, Interaction, RoomData, ActorData, HotspotZone, OrderConsequenc
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
 import { findPath } from "../../lib/pathfinding/pathfind";
-import { FlagMap } from "../../definitions/Flag";
+import { getDefaultResponseText, matchInteraction } from "../../lib/commandFunctions";
 
-
-function failsOnFlags(mustBe: boolean, idList: string[], flagMap: FlagMap): boolean {
-    const results: (boolean | undefined)[] = idList.map(id => {
-        const flag = flagMap[id]
-        if (!flag) {
-            console.warn(`Invalid flag id: "${id}"`)
-            return undefined
-        }
-        return flag.value === mustBe
-    })
-    return results.includes(false)
-}
-
-function matchInteraction(
-    command: Command,
-    room: RoomData | undefined,
-    interactions: Interaction[],
-    flagMap: FlagMap,
-): Interaction | undefined {
-    const { verb, item, target } = command
-    return interactions.find(interaction => {
-
-        const matchesCommandAndTargetStatus = interaction.verbId === verb.id
-            && interaction.targetId === target.id
-            && (!interaction.roomId || interaction?.roomId === room?.id)
-            && ((!interaction.itemId && !item) || (interaction?.itemId == item?.id))
-            && ((!interaction.targetStatus) || (interaction.targetStatus == target.status))
-
-        if (!matchesCommandAndTargetStatus) {
-            return false
-        }
-
-        if (interaction.flagsThatMustBeTrue) {
-            if (failsOnFlags(true, interaction.flagsThatMustBeTrue, flagMap)) {
-                return false
-            }
-        }
-
-        if (interaction.flagsThatMustBeFalse) {
-            if (failsOnFlags(false, interaction.flagsThatMustBeFalse, flagMap)) {
-                return false
-            }
-        }
-
-        return matchesCommandAndTargetStatus
-    })
-}
-
-function getDefaultResponseText(command: Command, unreachable: boolean): string {
-    const { verb, item, target } = command
-
-    const { defaultResponseCannotReach, defaultResponseNoItem, defaultResponseWithItem } = verb
-    const template = unreachable
-        ? defaultResponseCannotReach
-        : item
-            ? defaultResponseWithItem
-            : defaultResponseNoItem
-
-    if (template) {
-        let output = template;
-        output = output.replace('$TARGET', target.name || target.id)
-        output = output.replace('$ITEM', item?.name || item?.id || '')
-        return output
-    }
-
-    const genericText = unreachable
-        ? `I can't reach the ${target.name || target.id}`
-        : item
-            ? `I can't ${verb.label} the ${item.name || item.id} ${verb.preposition} the ${target.name || target.id}`
-            : `Nothing happens when I ${verb.label} the ${target.name || target.id}`;
-
-    return genericText
-}
 
 function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
     const { actors } = state

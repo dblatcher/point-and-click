@@ -18,6 +18,7 @@ export { zoneTypes } from "./definitions/Interaction"
 export type { Sequence } from "./definitions/Sequence";
 export type { SpriteSheet, SpriteData, SpriteFrame, } from "./definitions/SpriteSheet";
 export type { Ending } from "./definitions/Ending"
+export type { FlagMap, Flag } from "./definitions/Flag"
 
 export type { Direction, Ident, SpriteParams, Position } from "./definitions/BaseTypes"
 
