@@ -5,7 +5,7 @@ import { orderSchema } from "./Order"
 import { RoomData, RoomDataSchema } from "./RoomData"
 import { Sequence, SequenceSchema } from "./Sequence"
 import { ActorData, ActorDataSchema } from "./ActorData"
-import { VerbSchema } from "./Verb"
+import { Verb, VerbSchema } from "./Verb"
 import { Conversation, ConversationSchema } from "./Conversation"
 import { SpriteData, SpriteSheet, SpriteDataSchema, SpriteSheetSchema } from "./SpriteSheet"
 import { Ending, EndingSchema } from "./Ending"
@@ -52,4 +52,4 @@ export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>
 export type GameDesign = z.infer<typeof GameDesignSchema>
 
-export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | SpriteSheet | Sequence | Ending
+export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | SpriteSheet | Sequence | Ending | Verb
