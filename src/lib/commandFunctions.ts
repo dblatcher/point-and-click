@@ -6,6 +6,22 @@ export const wildCard = {
     VERB: "$VERB",
 } as const
 
+export const describeCommand = (command: Command, useNames = false): string => {
+    const { verb, target, item } = command
+
+    if (useNames) {
+        if (item) {
+            return `${verb.label}  ${item.name} ${verb.preposition} ${target.name}`
+        }
+        return `${verb.label} ${target.name}`
+    }
+
+    if (item) {
+        return `${verb.id}  ${item.id} ${verb.preposition} ${target.id}`
+    }
+    return `${verb.id} ${target.id}`
+}
+
 export function getDefaultResponseText(command: Command, unreachable: boolean): string {
     const { verb, item, target } = command
 
@@ -20,6 +36,7 @@ export function getDefaultResponseText(command: Command, unreachable: boolean): 
         let output = template;
         output = output.replace(wildCard.TARGET, target.name || target.id)
         output = output.replace(wildCard.ITEM, item?.name || item?.id || '')
+        output = output.replace(wildCard.VERB, verb.label)
         return output
     }
 

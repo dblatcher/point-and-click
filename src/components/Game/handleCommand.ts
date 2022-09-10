@@ -3,7 +3,7 @@ import { Command, Interaction, RoomData, ActorData, HotspotZone, OrderConsequenc
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
 import { findPath } from "../../lib/pathfinding/pathfind";
-import { getDefaultResponseText, matchInteraction } from "../../lib/commandFunctions";
+import { getDefaultResponseText, matchInteraction, describeCommand } from "../../lib/commandFunctions";
 
 
 function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
@@ -24,14 +24,6 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
     return state
 }
 
-const describeCommand = (command: Command): string => {
-    const { verb, target, item } = command
-    if (item) {
-        return `[${verb.id}  ${item.id} ${verb.preposition} ${target.id}]`
-    }
-    return `[${verb.id} ${target.id}]`
-
-}
 const describeConsequences = (interaction: Interaction): string => `(${interaction.consequences?.map(_ => _.type).join()})`
 
 function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): GameState {
@@ -101,7 +93,7 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
         const interaction = matchInteraction(command, currentRoom, state.interactions, state.flagMap)
 
         if (interaction && interaction.mustReachFirst && command.target.type !== 'item') {
-            debugLog.push(makeDebugEntry(`${describeCommand(command)}: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command'))
+            debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command'))
             const targetPoint = getTargetPoint(command.target)
 
             if (player) {
@@ -116,11 +108,11 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                 }
             }
         } else if (interaction) {
-            debugLog.push(makeDebugEntry(`${describeCommand(command)}: ${describeConsequences(interaction)}`, 'command'))
+            debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: ${describeConsequences(interaction)}`, 'command'))
             const execute = makeConsequenceExecutor(state, props)
             interaction.consequences.forEach(execute)
         } else {
-            debugLog.push(makeDebugEntry(`${describeCommand(command)}: (no match)`, 'command'))
+            debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: (no match)`, 'command'))
             doDefaultResponse(command, state)
         }
 
