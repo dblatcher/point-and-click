@@ -118,12 +118,6 @@ export const OptionalNumberInput: FunctionalComponent<{
 
     return <>
         <label>{props.label}</label>
-
-        <span>
-            <label>undefined:</label>
-            <input type="checkbox" checked={typeof props.value === 'undefined'} onChange={toggleUndefined} />
-        </span>
-
         <input type='number' disabled={typeof props.value === 'undefined'}
             style={{ width: '3rem' }}
             value={props.value}
@@ -133,6 +127,10 @@ export const OptionalNumberInput: FunctionalComponent<{
             onInput={sendNumberValue}
             ref={numberFieldRef}
         />
+        <span>
+            <label>undef:</label>
+            <input type="checkbox" checked={typeof props.value === 'undefined'} onChange={toggleUndefined} />
+        </span>
     </>
 }
 
@@ -192,13 +190,13 @@ export const OptionalStringInput: FunctionalComponent<{
     const textFieldRef = useRef<HTMLInputElement>(null)
 
     const sendStringValue: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
-        props.inputHandler(eventToString(event))
+        inputHandler(eventToString(event))
     }
 
     const toggleUndefined: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
         const { checked } = event.target as HTMLInputElement;
         if (checked) {
-            return props.inputHandler(undefined)
+            return inputHandler(undefined)
         }
         const textInputValue = textFieldRef.current?.value
         props.inputHandler(textInputValue || '')
@@ -206,16 +204,15 @@ export const OptionalStringInput: FunctionalComponent<{
 
     return <>
         {label && <label>{label}</label>}
-        <span>
-            <label>undefined:</label>
-            <input type="checkbox" checked={typeof props.value === 'undefined'} onChange={toggleUndefined} />
-        </span>
-
-        <input type={type} disabled={typeof props.value === 'undefined'}
-            value={props.value}
+        <input type={type} disabled={typeof value === 'undefined'}
+            value={value}
             onInput={sendStringValue}
             ref={textFieldRef}
         />
+        <span>
+            <label>undef:</label>
+            <input type="checkbox" checked={typeof value === 'undefined'} onChange={toggleUndefined} />
+        </span>
     </>
 
 }

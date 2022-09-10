@@ -3,7 +3,8 @@ import { FunctionComponent, h } from "preact";
 import { Room } from "../../Room";
 import { ActorData, RoomData } from "../../.."
 import { clamp } from "../../../lib/util";
-import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "../../../lib/roomFunctions";
+import { getTargetPoint, getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "../../../lib/roomFunctions";
+import { MarkerShape } from "../../MarkerShape";
 
 interface Props {
     actorData: ActorData;
@@ -19,6 +20,8 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
     const contents = [...otherActors, actorData]
         .sort(putActorsInDisplayOrder)
         .map(actor => ({ data: actor }))
+
+    
 
     return (
         <section style={{
@@ -42,7 +45,15 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
                     maxWidth={1000}
                     maxHeight={300}
                     forPreview={true}
-                />
+                >
+                    <MarkerShape
+                        roomData={roomData}
+                        viewAngle={viewAngle}
+                        color={'red'}
+                        // text={this.walkToPointLabel}
+                        {...getTargetPoint(actorData)}
+                    />
+                </Room>
 
             )}
         </section>

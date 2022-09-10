@@ -1,9 +1,10 @@
 import { GameProps, GameState, cellSize } from ".";
-import { Command, Interaction, RoomData, ActorData, HotspotZone, OrderConsequence } from "src";
+import { Command, Interaction, RoomData, ActorData, OrderConsequence } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
 import { findPath } from "../../lib/pathfinding/pathfind";
 import { getDefaultResponseText, matchInteraction, describeCommand } from "../../lib/commandFunctions";
+import { getTargetPoint } from "../../lib/roomFunctions";
 
 
 function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
@@ -46,21 +47,6 @@ function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): Game
         }
     }
     return state
-}
-
-function getTargetPoint(target: ActorData | HotspotZone): { x: number; y: number } {
-
-    if (target.type === 'actor') {
-        return {
-            x: target.x,
-            y: target.y,
-        }
-    }
-
-    return {
-        x: target.walkToX || target.x,
-        y: target.walkToY || target.y,
-    }
 }
 
 function makeGoToOrder(player: ActorData, target: { x: number; y: number }): OrderConsequence {

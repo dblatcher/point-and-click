@@ -494,7 +494,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     actors={actors}
                     roomData={this.state}
                     clickEffect={clickEffect}
-                    activeHotspotIndex={this.state.hotspotTab}
+                    activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
                     handleRoomClick={this.handleRoomClick} />
             </div>
 

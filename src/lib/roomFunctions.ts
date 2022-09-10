@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { RoomData, ActorData } from "src";
+import { RoomData, ActorData, HotspotZone } from "src";
 
 export const putActorsInDisplayOrder = (a: ActorData, b: ActorData) => (b.y + (b.baseline ? b.baseline : 0)) - (a.y + (a.baseline ? a.baseline : 0))
 
@@ -36,4 +36,20 @@ export function getViewAngleCenteredOn(xPosition: number, roomData: RoomData) {
     const { width } = roomData
     const offCenter = 2 * (xPosition - width / 2) / width
     return -offCenter * 2
+}
+
+export function getTargetPoint(target: ActorData | HotspotZone): { x: number; y: number } {
+
+    if (target.type === 'actor') {
+        const { x, y, walkToX = 0, walkToY = 0 } = target
+        return {
+            x: x + walkToX,
+            y: y + walkToY,
+        }
+    }
+
+    return {
+        x: target.walkToX || target.x,
+        y: target.walkToY || target.y,
+    }
 }

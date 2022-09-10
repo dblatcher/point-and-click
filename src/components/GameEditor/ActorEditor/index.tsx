@@ -3,7 +3,7 @@ import { Component, h } from "preact";
 import { ActorData, Direction, RoomData, Point } from "src";
 import { ActorDataSchema, SoundValue } from "../../../definitions/ActorData";
 import { directions } from "../../../definitions/SpriteSheet";
-import { CheckBoxInput, IdentInput, NumberInput, SelectInput, TextInput } from "../formControls";
+import { CheckBoxInput, IdentInput, NumberInput, OptionalNumberInput, SelectInput, TextInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import spriteService from "../../../services/spriteService";
 import { SpritePreview } from "../SpritePreview";
@@ -73,7 +73,7 @@ export class ActorEditor extends Component<Props, State> {
         return actorData
     }
 
-    changeValue(propery: keyof ActorData, newValue: string | number | boolean) {
+    changeValue(propery: keyof ActorData, newValue: unknown) {
         const modification: Partial<State> = {}
         switch (propery) {
             case 'id':
@@ -109,6 +109,12 @@ export class ActorEditor extends Component<Props, State> {
             case 'noInteraction':
                 if (typeof newValue === 'boolean' || typeof newValue === 'undefined') {
                     modification[propery] = newValue || undefined
+                }
+                break;
+            case 'walkToX':
+            case 'walkToY':
+                if (typeof newValue === 'number' || typeof newValue === 'undefined') {
+                    modification[propery] = newValue
                 }
                 break;
         }
@@ -177,7 +183,7 @@ export class ActorEditor extends Component<Props, State> {
 
     render() {
         const { state } = this
-        const { sprite: spriteId, width = 1, height = 1, soundEffectMap = {} } = state
+        const { sprite: spriteId, width = 1, height = 1, soundEffectMap = {}, walkToX, walkToY } = state
         const { actorIds } = this.props
 
         return (
@@ -194,60 +200,22 @@ export class ActorEditor extends Component<Props, State> {
                         />
                         <SelectInput label="status" value={state.status || ''} items={this.spriteAnimations}
                             onSelect={(item: string) => { this.changeValue('status', item) }} />
-                    </fieldset>
 
-                    <SpritePreview data={this.previewData} />
-
-                    <StorageMenu
-                        type="actorData"
-                        data={this.currentData}
-                        originalId={this.props.data?.id}
-                        existingIds={actorIds}
-                        reset={this.handleResetButton}
-                        update={this.handleUpdateButton}
-                        deleteItem={this.props.deleteData}
-                        saveButton={true}
-                        load={this.handleLoadButton}
-                    />
-                </div>
-                <div className={styles.rowTopLeft}>
-                    <fieldset>
-                        <legend>Actor details</legend>
-                        <div>
-                            <NumberInput label="movement speed" value={state.speed || 1} inputHandler={value => { this.changeValue('speed', value) }} />
-                        </div>
                         <div>
                             <CheckBoxInput label="Is player actor" value={state.isPlayer} inputHandler={value => { this.changeValue('isPlayer', value) }} />
-                        </div>
-                        <div>
-                            <CheckBoxInput label="Cannot interact with" value={state.noInteraction} inputHandler={value => { this.changeValue('noInteraction', value) }} />
-                        </div>
-                        <div>
-                            <NumberInput label="display baseline" value={state.baseline || 0} min={0} max={state.height} inputHandler={value => { this.changeValue('baseline', value) }} />
                         </div>
                         <div>
                             <TextInput type="color" label="dialogue color" value={state.dialogueColor || ''} onInput={event => { this.changeValue('dialogueColor', eventToString(event)) }} />
                             <span>{state.dialogueColor}</span>
                         </div>
+                        <div>
+                            <NumberInput label="movement speed" value={state.speed || 1} inputHandler={value => { this.changeValue('speed', value) }} />
+                        </div>
+                        <div>
+                            <CheckBoxInput label="Cannot interact with" value={state.noInteraction} inputHandler={value => { this.changeValue('noInteraction', value) }} />
+                        </div>
                     </fieldset>
-                    <fieldset>
-                        <legend>Disposition</legend>
-                        <SelectInput label="direction" value={state.direction || 'left'} items={directions}
-                            onSelect={(item: string) => { this.changeValue('direction', item) }} />
 
-                        <div>
-                            <NumberInput label="x" value={state.x} inputHandler={value => { this.changeValue('x', value) }} />
-                            <NumberInput label="y" value={state.y} inputHandler={value => { this.changeValue('y', value) }} />
-                        </div>
-                        <div>
-                            <SelectInput label="roomId"
-                                emptyOptionLabel="[no room]"
-                                items={listIds(this.props.rooms)}
-                                value={state.room || ''}
-                                haveEmptyOption={true}
-                                onSelect={roomId => { this.changeValue('room', roomId) }} />
-                        </div>
-                    </fieldset>
                     <fieldset>
                         <legend>Sprite</legend>
 
@@ -267,7 +235,55 @@ export class ActorEditor extends Component<Props, State> {
                         </div>
                         <TextInput label="filter" value={state.filter || ''}
                             onInput={(event) => this.changeValue('filter', eventToString(event))} />
+
+                        <SpritePreview data={this.previewData} />
+
+                        <div>
+                            <NumberInput label="display baseline" value={state.baseline || 0} min={0} max={state.height} inputHandler={value => { this.changeValue('baseline', value) }} />
+                        </div>
                     </fieldset>
+
+                    <StorageMenu
+                        type="actorData"
+                        data={this.currentData}
+                        originalId={this.props.data?.id}
+                        existingIds={actorIds}
+                        reset={this.handleResetButton}
+                        update={this.handleUpdateButton}
+                        deleteItem={this.props.deleteData}
+                        saveButton={true}
+                        load={this.handleLoadButton}
+                    />
+                </div>
+                <div className={styles.rowTopLeft}>
+
+                    <fieldset>
+                        <legend>Position</legend>
+                        <div>
+                            <SelectInput label="roomId"
+                                emptyOptionLabel="[no room]"
+                                items={listIds(this.props.rooms)}
+                                value={state.room || ''}
+                                haveEmptyOption={true}
+                                onSelect={roomId => { this.changeValue('room', roomId) }} />
+                        </div>
+                        <SelectInput label="direction" value={state.direction || 'left'} items={directions}
+                            onSelect={(item: string) => { this.changeValue('direction', item) }} />
+
+                        <div>
+                            <NumberInput label="x" value={state.x} inputHandler={value => { this.changeValue('x', value) }} />
+                            <NumberInput label="y" value={state.y} inputHandler={value => { this.changeValue('y', value) }} />
+                        </div>
+
+                        <span>walk to point</span>
+                        <div>
+                            <OptionalNumberInput value={walkToX} label="X: " inputHandler={value => { this.changeValue('walkToX', value) }} />
+                        </div>
+                        <div>
+                            <OptionalNumberInput value={walkToY} label="Y: " inputHandler={value => { this.changeValue('walkToY', value) }} />
+                        </div>
+                    </fieldset>
+
                     <fieldset>
                         <legend>Sounds</legend>
                         {soundEffectMap && (

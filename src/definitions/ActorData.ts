@@ -22,6 +22,8 @@ export const ActorDataSchema = IdentSchema
         baseline: z.optional(z.number()),
         dialogueColor: z.optional(z.string()),
         soundEffectMap: SoundEffectMapSchema.optional(),
+        walkToX: z.number().optional(),
+        walkToY: z.number().optional(),
     }))
 
 export type ActorData = z.infer<typeof ActorDataSchema>
