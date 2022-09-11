@@ -256,7 +256,6 @@ export class ActorEditor extends Component<Props, State> {
                     />
                 </div>
                 <div className={styles.rowTopLeft}>
-
                     <fieldset>
                         <legend>Position</legend>
                         <div>
@@ -283,7 +282,15 @@ export class ActorEditor extends Component<Props, State> {
                             <OptionalNumberInput value={walkToY} label="Y: " inputHandler={value => { this.changeValue('walkToY', value) }} />
                         </div>
                     </fieldset>
+                    <PositionPreview
+                        actorData={this.state}
+                        otherActors={this.otherActorsInRoom}
+                        roomData={this.state.room ? findById(this.state.room, this.props.rooms) : undefined}
+                        reportClick={this.handlePreviewClick}
+                    />
+                </div>
 
+                <div className={styles.rowTopLeft}>
                     <fieldset>
                         <legend>Sounds</legend>
                         {soundEffectMap && (
@@ -302,14 +309,6 @@ export class ActorEditor extends Component<Props, State> {
                         )}
                     </fieldset>
                 </div>
-
-                <PositionPreview
-                    actorData={this.state}
-                    otherActors={this.otherActorsInRoom}
-                    roomData={this.state.room ? findById(this.state.room, this.props.rooms) : undefined}
-                    reportClick={this.handlePreviewClick}
-                />
-
             </article>
         )
     }
