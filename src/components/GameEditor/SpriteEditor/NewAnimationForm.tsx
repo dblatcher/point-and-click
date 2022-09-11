@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
 import { useState } from "preact/hooks";
-import { eventToString } from "../../../lib/util";
 import { icons } from "../dataEditors";
-import { TextInput, Warning } from "../formControls";
+import { Warning, StringInput } from "../formControls";
 import editorStyles from '../editorStyles.module.css';
+import { Sprite } from "../../../lib/Sprite";
 
 interface Props {
     existingKeys: string[];
@@ -21,11 +21,19 @@ export const NewAnimationForm: FunctionalComponent<Props> = ({ existingKeys, sub
         setAnimationKey('')
     }
 
+    const animationKeySuggestions = Object.values(Sprite.DEFAULT_ANIMATION)
+        .filter(value => !existingKeys.includes(value))
+
     return (
         <div>
             <div>
-                <TextInput label="New animation:" value={animationKey} onInput={event => setAnimationKey(eventToString(event))} />
-                <button 
+                <StringInput
+                    label="New animation:" value={animationKey}
+                    inputHandler={setAnimationKey}
+                    suggestions={animationKeySuggestions}
+                />
+
+                <button
                     className={editorStyles.plusButton}
                     onClick={handleSubmit} disabled={keyAlreadyUsed || animationKey === ''}>{icons.INSERT}</button>
             </div>

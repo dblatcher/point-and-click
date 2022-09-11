@@ -29,7 +29,7 @@ export const ParallaxInput: FunctionalComponent<FieldProps & {
 
     return <NumberInput
         {...props}
-         label={label}
+        label={label}
         max={2} min={0} step={.05}
     />
 }
@@ -125,8 +125,11 @@ export const StringInput: FunctionalComponent<FieldProps & {
     value: string;
     type?: string;
     inputHandler: { (value: string): void };
+    suggestions?: string[];
 }> = (props) => {
-    const { type = 'text', value, inputHandler } = props
+    const { type = 'text', value, inputHandler, suggestions } = props
+
+    const datalistId = suggestions ? suggestions.join() : undefined;
 
     if (type === 'textArea') {
         return <FieldWrapper {...props}>
@@ -140,11 +143,21 @@ export const StringInput: FunctionalComponent<FieldProps & {
     }
 
     return <FieldWrapper {...props}>
-        <input value={value} type={type} onInput={
-            (event): void => {
-                inputHandler(eventToString(event))
-            }
-        } />
+        <input
+            value={value}
+            type={type}
+            list={datalistId}
+            onInput={
+                (event): void => { inputHandler(eventToString(event)) }
+            } />
+
+        {suggestions && (
+            <datalist id={datalistId}>
+                {suggestions.map((suggestion, index) =>
+                    <option value={suggestion} key={index} />
+                )}
+            </datalist>
+        )}
     </FieldWrapper>
 }
 

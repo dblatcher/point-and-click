@@ -168,9 +168,7 @@ export class ActorEditor extends Component<Props, State> {
         const { sprite: spriteId } = this.state
         const sprite = spriteService.get(spriteId)
         const spriteAnimations = sprite ? Object.keys(sprite.data.animations) : []
-
-        const defaultAnimations = Object.keys(Sprite.DEFAULT_ANIMATION)
-
+        const defaultAnimations = Object.values(Sprite.DEFAULT_ANIMATION).filter(value => !spriteAnimations.includes(value))
         return [...spriteAnimations, ...defaultAnimations]
     }
 
@@ -210,13 +208,8 @@ export class ActorEditor extends Component<Props, State> {
                         <StringInput
                             block className={styles.row}
                             label="status" value={status || ''}
+                            suggestions={this.statusSuggestions}
                             inputHandler={(value) => changeValue('status', value)} />
-
-                        <SelectInput
-                            block className={styles.row}
-                            label="status" value={state.status || ''} items={this.statusSuggestions}
-                            onSelect={(item: string) => { changeValue('status', item) }} />
-
                         <CheckBoxInput
                             block className={styles.row}
                             label="Is player actor" value={state.isPlayer}
