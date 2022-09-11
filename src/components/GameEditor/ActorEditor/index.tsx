@@ -209,7 +209,7 @@ export class ActorEditor extends Component<Props, State> {
                             inputHandler={(value) => changeValue('name', value)} />
                         <StringInput
                             block className={styles.row}
-                            label="staus" value={status || ''}
+                            label="status" value={status || ''}
                             inputHandler={(value) => changeValue('status', value)} />
 
                         <SelectInput

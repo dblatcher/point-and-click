@@ -38,45 +38,6 @@ export const ParallaxInput: FunctionalComponent<{
 }
 
 
-export const IdentInput: FunctionalComponent<{
-    showType?: boolean;
-    value: Ident;
-    onChangeName?: JSX.EventHandler<JSX.TargetedEvent>;
-    onChangeStatus?: JSX.EventHandler<JSX.TargetedEvent>;
-    onChangeId?: JSX.EventHandler<JSX.TargetedEvent>;
-}> = (props) => {
-    const { onChangeName, onChangeId, onChangeStatus, showType } = props
-    const { type, name, id, status } = props.value
-    return <>
-        {showType && <label><b>{type}</b></label>}
-        <div className={styles.row}>
-            <label>ID:</label>
-            <input type='text'
-                value={id}
-                disabled={!onChangeId}
-                onChange={onChangeId}
-            />
-        </div>
-        <div className={styles.row}>
-            <label>name:</label>
-            <input type='text'
-                value={name}
-                disabled={!onChangeName}
-                onChange={onChangeName}
-            />
-        </div>
-        <div className={styles.row}>
-            <label>status:</label>
-            <input type='text'
-                value={status}
-                disabled={!onChangeStatus}
-                onChange={onChangeStatus}
-            />
-        </div>
-    </>
-}
-
-
 export const NumberInput: FunctionalComponent<FieldProps & {
     value: number;
     inputHandler: { (value: number): void };

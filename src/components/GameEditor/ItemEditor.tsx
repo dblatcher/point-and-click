@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, Component } from "preact"
 import { ItemData } from "src"
-import { eventToString } from "../../lib/util";
-import { IdentInput, SelectInput } from "./formControls";
+import { SelectInput, StringInput } from "./formControls";
 import { ServiceItemSelector } from "./ServiceItemSelector";
 import imageService, { ImageAsset } from "../../services/imageService";
 import styles from "./editorStyles.module.css"
@@ -39,6 +38,7 @@ export class ItemEditor extends Component<Props, State> {
 
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
+        this.changeValue = this.changeValue.bind(this)
     }
 
     handleResetButton() {
@@ -72,7 +72,8 @@ export class ItemEditor extends Component<Props, State> {
     }
 
     render() {
-        const { actorId = '', id } = this.state
+        const { changeValue } = this
+        const { actorId = '', id, name } = this.state
         const { itemIds } = this.props
 
         return (
@@ -81,25 +82,30 @@ export class ItemEditor extends Component<Props, State> {
                 <div class={styles.container}>
                     <fieldset class={styles.fieldset}>
                         <legend>Data</legend>
-                        <IdentInput showType={true} value={this.state}
-                            onChangeId={(event) => this.changeValue('id', eventToString(event))}
-                            onChangeName={(event) => this.changeValue('name', eventToString(event))}
-                        />
+                        <StringInput
+                            block className={styles.row}
+                            label="id" value={id}
+                            inputHandler={(value) => changeValue('id', value)} />
+                        <StringInput
+                            block className={styles.row}
+                            label="name" value={name || ''}
+                            inputHandler={(value) => changeValue('name', value)} />
 
-                        <div>
-                            <SelectInput label="actorId"
-                                emptyOptionLabel="[no Actor]"
-                                items={this.props.actorIds}
-                                value={actorId}
-                                haveEmptyOption={true}
-                                onSelect={id => { this.changeValue('actorId', id) }} />
-                        </div>
+                        <SelectInput
+                            block className={styles.row}
+                            label="actorId"
+                            emptyOptionLabel="[no Actor]"
+                            items={this.props.actorIds}
+                            value={actorId}
+                            haveEmptyOption={true}
+                            onSelect={id => { changeValue('actorId', id) }} />
+
 
                         <ServiceItemSelector legend='picture'
                             format="select"
                             filterItems={item => (item as ImageAsset).category === 'item'}
-                            select={item => this.changeValue('imageId', item.id)}
-                            selectNone={() => this.changeValue('imageId', undefined)}
+                            select={item => changeValue('imageId', item.id)}
+                            selectNone={() => changeValue('imageId', undefined)}
                             service={imageService}
                             selectedItemId={this.state.imageId} />
                     </fieldset>
