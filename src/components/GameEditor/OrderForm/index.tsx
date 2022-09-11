@@ -1,21 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, Component } from "preact"
-import styles from "../editorStyles.module.css"
-import { ActOrder, ActStep, MoveOrder, MoveStep, Order, OrderType, orderTypes, stepSchama, TalkOrder, TalkStep } from "../../../definitions/Order";
+import { ActOrder, MoveOrder, Order, OrderType, orderTypes, stepSchama, TalkOrder } from "../../../definitions/Order";
 import { SelectInput } from "../formControls";
-import { getDefaultOrder } from "../defaults";
+import { getDefaultOrder, makeNewStep } from "../defaults";
 import { ListEditor } from "../ListEditor";
 import { FieldDef, SchemaForm } from "../SchemaForm";
 
 interface Props {
     data: Order;
     updateData: { (data: Order): void };
-}
-
-const makeNewStep = {
-    talk: (): TalkStep => ({ time: 100, text: "", animation: undefined }),
-    act: (): ActStep => ({ duration: 100, reverse: false, animation: '' }),
-    move: (): MoveStep => ({ speed: 100, x: 0, y: 0, animation: '' }),
 }
 
 export class OrderForm extends Component<Props> {

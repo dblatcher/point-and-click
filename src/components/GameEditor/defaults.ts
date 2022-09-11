@@ -1,5 +1,7 @@
 import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Order, OrderType } from "src";
 import { Flag } from "src/definitions/Flag";
+import { TalkStep, ActStep, MoveStep } from "src/definitions/Order";
+import { Sprite } from "../../lib/Sprite";
 
 export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'LOOK', label: 'look at' },
@@ -96,6 +98,12 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
         case 'flag':
             return { type: 'flag', on: true, flag: '' }
     }
+}
+
+export const makeNewStep = {
+    talk: (): TalkStep => ({ time: 100, text: "", animation: Sprite.DEFAULT_ANIMATION.talk }),
+    act: (): ActStep => ({ duration: 100, reverse: false, animation: '' }),
+    move: (): MoveStep => ({ speed: 100, x: 0, y: 0, animation: '' }),
 }
 
 export const makeBlankEnding = (id = "NEW_ENDING", message = "game over"): Ending => ({ id, message, })
