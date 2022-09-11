@@ -32,7 +32,7 @@ const getAnimationName = (currentOrder: Order, status: string | undefined, sprit
     if (!sprite) { return 'wait' }
     const animationName = currentOrder ? currentOrder.steps[0]?.animation : status;
     const validAnimationName = (animationName && sprite.hasAnimation(animationName)) ? animationName : undefined;
-    return validAnimationName || sprite.DEFAULT_ANIMATIONS[currentOrder?.type || 'wait'];
+    return validAnimationName || Sprite.DEFAULT_ANIMATION[currentOrder?.type || 'wait'];
 }
 
 const getSoundValue = (

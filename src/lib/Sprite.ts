@@ -15,12 +15,12 @@ export class Sprite {
         this.data = data
     }
 
-    readonly DEFAULT_ANIMATIONS = {
+    static readonly DEFAULT_ANIMATION = {
         talk: 'talk',
         move: 'walk',
         wait: 'default',
         act: 'default',
-    }
+    } as const
 
     public get id() {
         return this.data.id
@@ -35,7 +35,7 @@ export class Sprite {
     public getAnimation(animationName?: string, type?: 'talk' | 'move' | 'wait' | 'act') {
         const { animations } = this.data
         if (animationName && this.hasAnimation(animationName)) {return animations[animationName]}
-        if (type && this.hasAnimation(this.DEFAULT_ANIMATIONS[type])) {return animations[this.DEFAULT_ANIMATIONS[type]]}
+        if (type && this.hasAnimation(Sprite.DEFAULT_ANIMATION[type])) {return animations[Sprite.DEFAULT_ANIMATION[type]]}
         return {}
     }
 
