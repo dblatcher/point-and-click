@@ -23,6 +23,7 @@ interface Props<T extends z.ZodRawShape> {
     data: Record<string, unknown>;
     changeValue: { (value: FieldValue, field: FieldDef): void };
     options?: Partial<Record<keyof T, string[]>>;
+    suggestions?: Partial<Record<keyof T, string[]>>;
     numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
 }
 
@@ -50,13 +51,17 @@ interface SchemaFieldProps<T> {
     noTriState?: boolean;
     change: { (value: FieldValue, field: FieldDef): void };
     options?: string[];
+    suggestions?: string[];
     stringInputType?: string;
     showUnsupported?: boolean;
     numberInputSettings?: NumberInputSettings;
 }
 
 function SchemaField<T extends z.ZodRawShape>({
-    field, change, noTriState, options, showUnsupported = false, stringInputType, numberInputSettings = {}
+    field, change, noTriState,
+    options, suggestions, stringInputType,
+    showUnsupported = false,
+    numberInputSettings = {}
 }: SchemaFieldProps<T>): VNode | null {
     const { key, optional, type, value } = field;
     let safeValue: FieldValue
@@ -83,6 +88,7 @@ function SchemaField<T extends z.ZodRawShape>({
             return <StringInput label={key}
                 value={value || ''}
                 type={stringInputType}
+                suggestions={suggestions}
                 inputHandler={(value) => { change(value, field) }}
             />
 
@@ -146,7 +152,7 @@ function SchemaField<T extends z.ZodRawShape>({
  * Creates a form for the schema, Supports only primitives and optional primitives
  */
 export function SchemaForm<T extends z.ZodRawShape>({
-    schema, data, changeValue, options = {}, numberConfig = {}
+    schema, data, changeValue, options = {}, numberConfig = {}, suggestions = {}
 }: Props<T>): VNode {
 
     const fields: FieldDef[] = []
@@ -173,6 +179,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
             <SchemaField key={field.key}
                 noTriState
                 options={options[field.key]}
+                suggestions={suggestions[field.key]}
                 numberInputSettings={numberConfig[field.key]}
                 change={changeValue}
                 field={field}
