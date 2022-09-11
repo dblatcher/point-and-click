@@ -1,8 +1,6 @@
 import { ComponentChild, ComponentChildren, FunctionalComponent, Fragment, h, JSX } from "preact"
 import { useEffect, useRef, useState } from "preact/hooks";
 import { eventToBoolean, eventToNumber, eventToString } from "../../lib/util";
-import { Ident } from "src"
-import styles from './editorStyles.module.css';
 
 
 type FieldProps = {
@@ -299,7 +297,7 @@ export const SelectAndConfirmInput: FunctionalComponent<FieldProps & {
     items: string[];
     descriptions?: string[];
 }> = (props) => {
-    const { descriptions, items, label, onSelect } = props
+    const { descriptions, items, onSelect } = props
     const [value, setValue] = useState(items[0])
     useEffect(() => {
         setValue(items[0])
