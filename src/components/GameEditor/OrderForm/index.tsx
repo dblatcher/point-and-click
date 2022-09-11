@@ -5,9 +5,13 @@ import { SelectInput } from "../formControls";
 import { getDefaultOrder, makeNewStep } from "../defaults";
 import { ListEditor } from "../ListEditor";
 import { FieldDef, SchemaForm } from "../SchemaForm";
+import { ActorData, SpriteData } from "src";
+import { Sprite } from "../../../lib/Sprite";
 
 interface Props {
     data: Order;
+    actorData?: ActorData;
+    spriteData?: SpriteData;
     updateData: { (data: Order): void };
 }
 
@@ -15,6 +19,7 @@ export class OrderForm extends Component<Props> {
     constructor(props: Props) {
         super(props)
         this.changeStep = this.changeStep.bind(this)
+        this.changeValue = this.changeValue.bind(this)
     }
 
     changeValue(propery: keyof Order, newValue: string | undefined | Order['steps']) {
@@ -65,8 +70,20 @@ export class OrderForm extends Component<Props> {
         this.changeValue('steps', stepListCopy as Order['steps'])
     }
 
+    get animationSuggestions(): string[] | undefined {
+        const { spriteData } = this.props
+        if (!spriteData) {
+            return undefined
+        }
+
+        const spriteAnimations = Object.keys(spriteData.animations)
+        const defaultAnimations = Object.values(Sprite.DEFAULT_ANIMATION).filter(value => !spriteAnimations.includes(value))
+        return [...spriteAnimations, ...defaultAnimations]
+    }
+
     render() {
         const { type, steps } = this.props.data
+        const { animationSuggestions, changeStep, changeValue } = this
 
         return (
             <article style={{ flex: 1 }}>
@@ -75,7 +92,7 @@ export class OrderForm extends Component<Props> {
                     <SelectInput label="order type"
                         value={type}
                         items={orderTypes}
-                        onSelect={newValue => this.changeValue('type', newValue)}
+                        onSelect={newValue => changeValue('type', newValue)}
                     />
                 </div>
 
@@ -84,11 +101,12 @@ export class OrderForm extends Component<Props> {
                         list={steps}
                         describeItem={(step, index) => (
                             <SchemaForm key={index}
-                                changeValue={(value, field) => { this.changeStep(value, field, index) }}
+                                changeValue={(value, field) => { changeStep(value, field, index) }}
                                 data={step}
+                                suggestions={{ animation: animationSuggestions }}
                                 schema={stepSchama[type]} />
                         )}
-                        mutateList={(newList) => this.changeValue('steps', newList)}
+                        mutateList={(newList) => changeValue('steps', newList)}
                         createItem={makeNewStep[type]}
                     />
                 )}
@@ -97,11 +115,12 @@ export class OrderForm extends Component<Props> {
                         list={steps}
                         describeItem={(step, index) => (
                             <SchemaForm key={index}
-                                changeValue={(value, field) => { this.changeStep(value, field, index) }}
+                                changeValue={(value, field) => { changeStep(value, field, index) }}
                                 data={step}
+                                suggestions={{ animation: animationSuggestions }}
                                 schema={stepSchama[type]} />
                         )}
-                        mutateList={(newList) => this.changeValue('steps', newList)}
+                        mutateList={(newList) => changeValue('steps', newList)}
                         createItem={makeNewStep[type]}
                     />
                 )}
@@ -110,11 +129,12 @@ export class OrderForm extends Component<Props> {
                         list={steps}
                         describeItem={(step, index) => (
                             <SchemaForm key={index}
-                                changeValue={(value, field) => { this.changeStep(value, field, index) }}
+                                changeValue={(value, field) => { changeStep(value, field, index) }}
                                 data={step}
+                                suggestions={{ animation: animationSuggestions }}
                                 schema={stepSchama[type]} />
                         )}
-                        mutateList={(newList) => this.changeValue('steps', newList)}
+                        mutateList={(newList) => changeValue('steps', newList)}
                         createItem={makeNewStep[type]}
                     />
                 )}

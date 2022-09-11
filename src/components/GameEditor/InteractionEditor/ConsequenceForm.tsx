@@ -3,7 +3,7 @@ import { FunctionalComponent, h } from "preact";
 import { consequenceTypes, immediateConsequenceTypes, ZoneType, zoneTypes } from "../../../definitions/Consequence";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
 import { CheckBoxInput, NumberInput, SelectInput, StringInput } from "../formControls";
-import { listIds } from "../../../lib/util";
+import { findById, listIds } from "../../../lib/util";
 import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions, getZoneRefsOrIds } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
@@ -177,12 +177,16 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
 
                 case 'orders': {
                     const orders = value as Order[]
+                    const actorData = findById(consequence.actorId, gameDesign.actors)
+                    const spriteData = findById(actorData?.sprite, gameDesign.sprites)
+
                     return (
                         <div key={index}>
                             <ListEditor
                                 list={orders}
                                 describeItem={(order, index) =>
                                     <OrderForm
+                                        spriteData={spriteData}
                                         updateData={(newOrder) => { editOrder(newOrder, index) }}
                                         data={order} key={index} />
                                 }

@@ -11,7 +11,7 @@ import { StorageMenu } from "../StorageMenu";
 import styles from "../editorStyles.module.css"
 import { SelectAndConfirmInput, StringInput } from "../formControls";
 import { TabMenu } from "../../TabMenu";
-import { listIds } from "../../../lib/util";
+import { listIds, findById } from "../../../lib/util";
 import { DataItemEditorProps } from "../dataEditors";
 
 type Props = DataItemEditorProps<Sequence> & {
@@ -100,12 +100,16 @@ export class SequenceEditor extends Component<Props, State> {
     }
 
     renderActorOrderList(actorId: string, orders: Order[], stageIndex: number) {
+        const { gameDesign } = this.props
+        const actorData = findById(actorId, gameDesign.actors)
+        const spriteData = findById(actorData?.sprite, gameDesign.sprites)
         return (
             <ListEditor
                 list={orders}
                 describeItem={(order, orderIndex) => (
                     <OrderForm key={orderIndex}
                         data={order}
+                        spriteData={spriteData}
                         updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, actorId, orderIndex) }}
                     />
                 )}
