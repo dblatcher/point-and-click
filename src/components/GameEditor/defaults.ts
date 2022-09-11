@@ -11,7 +11,7 @@ export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'TALK', label: 'talk to' },
 ]
 
-export const makeBlankVerb: { (): Verb } = () => ({ id: "NEW_VERB", label:"new verb" })
+export const makeBlankVerb: { (): Verb } = () => ({ id: "NEW_VERB", label: "new verb" })
 
 export const getBlankRoom: { (): RoomData } = () => ({
     id: '_NEW_ROOM',
@@ -84,13 +84,13 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
         case 'changeRoom':
             return { type: 'changeRoom', roomId: '', takePlayer: true, x: 0, y: 0 }
         case 'talk':
-            return { type: 'talk', text: '', actorId: '', time: 100 }
+            return { type: 'talk', actorId: '', time: 100, text: '' }
         case 'ending':
             return { type: 'ending', endingId: '' }
         case 'teleportActor':
             return { type: 'teleportActor', actorId: '', x: 0, y: 0, roomId: '' }
         case 'order':
-            return { type: 'order', orders: [] }
+            return { type: 'order', actorId: '', orders: [] }
         case 'toggleZone':
             return { type: 'toggleZone', roomId: '', ref: '', on: true, zoneType: 'obstacle' }
         case 'soundEffect':
@@ -101,7 +101,7 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
 }
 
 export const makeNewStep = {
-    talk: (): TalkStep => ({ time: 100, text: "", animation: Sprite.DEFAULT_ANIMATION.talk }),
+    talk: (): TalkStep => ({ time: 100, animation: Sprite.DEFAULT_ANIMATION.talk, text: "", }),
     act: (): ActStep => ({ duration: 100, reverse: false, animation: '' }),
     move: (): MoveStep => ({ speed: 100, x: 0, y: 0, animation: '' }),
 }
