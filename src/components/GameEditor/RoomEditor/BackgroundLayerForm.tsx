@@ -3,8 +3,9 @@ import { h } from "preact";
 import { useState } from "preact/hooks"
 import { ImageAsset } from "../../../services/imageService";
 import { BackgroundLayer } from "src";
-import { clamp, eventToNumber } from "../../../lib/util";
-import { ParallaxInput } from "../formControls";
+import { ParallaxInput, SelectInput } from "../formControls";
+import { icons } from "../dataEditors";
+import { listIds } from "../../../lib/util";
 
 interface Props {
     imageAssets: Readonly<ImageAsset>[];
@@ -13,23 +14,29 @@ interface Props {
 
 export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
 
-    const [imageIndex, setImageIndex] = useState<number>(0);
+    const [imageId, setImageId] = useState<string>('');
     const [parallax, setParallax] = useState<number>(0);
 
     return <div>
 
-        <select value={imageIndex} readonly onChange={event => { setImageIndex(eventToNumber(event)) }}>
-            {imageAssets.map((asset, index) => <option key={index} value={index}>{asset.id}</option>)}
-        </select>
+        <SelectInput
+            value={imageId}
+            items={listIds(imageAssets)}
+            onSelect={setImageId}
+            haveEmptyOption
+            emptyOptionLabel='select background'
+        />
 
-        <ParallaxInput value={parallax}
-            onChange={(event) => { setParallax(clamp(eventToNumber(event), 2, 0)) }}
+        <ParallaxInput
+            value={parallax}
+            inputHandler={setParallax}
         />
 
         <button onClick={() => {
-            addNewLayer({ imageId: imageAssets[imageIndex].id, parallax })
+            if (!imageId) { return }
+            addNewLayer({ imageId, parallax })
             setParallax(0)
-            setImageIndex(0)
-        }}>INSERT NEW ➕</button>
+            setImageId('')
+        }}>{icons.INSERT} background</button>
     </div>
 }

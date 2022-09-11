@@ -21,18 +21,17 @@ const FieldWrapper: FunctionalComponent<FieldProps & { children?: ComponentChild
 }
 
 
-export const ParallaxInput: FunctionalComponent<{
+export const ParallaxInput: FunctionalComponent<FieldProps & {
     value: number;
-    onChange: JSX.EventHandler<JSX.TargetedEvent>;
+    inputHandler: { (value: number): void };
 }> = (props) => {
-    return <>
-        <label>parallax:</label>
-        <input type='number'
-            value={props.value}
-            max={2} min={0} step={.05}
-            onChange={props.onChange}
-        />
-    </>
+    const { label = 'parallax' } = props
+
+    return <NumberInput
+        {...props}
+         label={label}
+        max={2} min={0} step={.05}
+    />
 }
 
 

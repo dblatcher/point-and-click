@@ -2,8 +2,8 @@
 import { h } from "preact";
 import { ImageAsset } from "../../../services/imageService";
 import { BackgroundLayer } from "src";
-import { clamp, eventToNumber } from "../../../lib/util";
-import { ParallaxInput } from "../formControls";
+import { clamp, listIds } from "../../../lib/util";
+import { ParallaxInput, SelectInput } from "../formControls";
 
 
 interface Props {
@@ -14,16 +14,18 @@ interface Props {
 }
 
 export function BackgroundLayerControl({ layer,  index, imageAssets, change }: Props) {
-    const { parallax } = layer
-    const assetIndex = imageAssets.findIndex(_ => _.id === layer.imageId)
+    const { parallax, imageId } = layer
 
     return <div>
-        <select value={assetIndex} onChange={(event) => { change(index, 'imageId', imageAssets[eventToNumber(event)].id) }}>
-            {imageAssets.map((asset, index) => <option key={index} value={index}>{asset.id}</option>)}
-        </select>
-
+        <SelectInput
+            value={imageId}
+            items={listIds(imageAssets)}
+            onSelect={(value) => { change(index, 'imageId', value) }}
+            haveEmptyOption
+            emptyOptionLabel='select background'
+        />
         <ParallaxInput value={parallax}
-            onChange={(event) => { change(index, 'parallax', clamp(eventToNumber(event), 2, 0)) }}
+            inputHandler={(value) => { change(index, 'parallax', clamp(value, 2, 0)) }}
         />
     </div>
 }

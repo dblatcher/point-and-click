@@ -41,7 +41,7 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
                     <legend>shape and position</legend>
                     <div className={styles.row}>
                         <ParallaxInput value={parallax}
-                            onChange={event => { change(index, 'parallax', eventToNumber(event), type) }} />
+                            inputHandler={value => { change(index, 'parallax', value, type) }} />
                     </div>
                     <ShapeControl
                         shape={hotspot} index={index}
