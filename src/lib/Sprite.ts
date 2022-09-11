@@ -1,4 +1,4 @@
-import { SpriteSheet, SpriteData, Direction, SpriteFrame } from "../definitions/SpriteSheet"
+import { SpriteSheet, SpriteData, Direction, SpriteFrame, Animation } from "../definitions/SpriteSheet"
 import spriteSheetService from "../services/spriteSheetService";
 import imageService from "../services/imageService";
 
@@ -32,10 +32,10 @@ export class Sprite {
         return !!animations[animationName]
     }
 
-    public getAnimation(animationName?: string, type?: 'talk' | 'move' | 'wait' | 'act') {
+    public getAnimation(animationName?: string, type?: 'talk' | 'move' | 'wait' | 'act'): Animation {
         const { animations } = this.data
-        if (animationName && this.hasAnimation(animationName)) {return animations[animationName]}
-        if (type && this.hasAnimation(Sprite.DEFAULT_ANIMATION[type])) {return animations[Sprite.DEFAULT_ANIMATION[type]]}
+        if (animationName && this.hasAnimation(animationName)) { return animations[animationName] }
+        if (type && this.hasAnimation(Sprite.DEFAULT_ANIMATION[type])) { return animations[Sprite.DEFAULT_ANIMATION[type]] }
         return {}
     }
 

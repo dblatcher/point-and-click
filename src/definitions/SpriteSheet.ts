@@ -27,6 +27,8 @@ const animationsSchema = z.object({
     down: SpriteFrameSchema.array().optional(),
 })
 
+export type Animation =  Partial<Record<Direction, SpriteFrame[]>>
+
 export const SpriteDataSchema = z.object({
     id: z.string(),
     defaultDirection: DirectionEnum,
