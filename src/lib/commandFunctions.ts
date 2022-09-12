@@ -1,4 +1,5 @@
-import { Command, Interaction, RoomData, FlagMap } from "src";
+import { Command, Interaction, RoomData, FlagMap, CommandTarget, GameDesign } from "src";
+import { findById } from "./util";
 
 export const wildCard = {
     ITEM: "$ITEM",
@@ -20,6 +21,16 @@ export const describeCommand = (command: Command, useNames = false): string => {
         return `${verb.id}  ${item.id} ${verb.preposition} ${target.id}`
     }
     return `${verb.id} ${target.id}`
+}
+
+export function findTarget(interaction: Partial<Interaction>, gameDesign: GameDesign): CommandTarget | undefined {
+    const { targetId, roomId } = interaction
+    if (!targetId) { return undefined }
+    const { rooms, actors, items } = gameDesign
+    const room = roomId ? findById(roomId, rooms) : undefined;
+    const relevantRooms: RoomData[] = room ? [room] : roomId ? [] : rooms
+    const hotspots = relevantRooms.flatMap(room => room.hotspots || [])
+    return findById(targetId, [...actors, ...items, ...hotspots])
 }
 
 export function getDefaultResponseText(command: Command, unreachable: boolean): string {

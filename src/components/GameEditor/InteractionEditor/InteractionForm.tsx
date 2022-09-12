@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h, Fragment } from "preact";
 import { useState } from "preact/hooks";
-import { cloneData } from "../../../lib/clone";
-import { InteractionSchema } from "../../../definitions/Interaction";
 import { GameDesign, Interaction, AnyConsequence, Consequence } from "src";
-import { CheckBoxInput, SelectAndConfirmInput, SelectInput, StringInput } from "../formControls";
+import { InteractionSchema } from "../../../definitions/Interaction";
+import { cloneData } from "../../../lib/clone";
 import { listIds } from "../../../lib/util";
-import { ListEditor } from "../ListEditor";
-import { ConsequenceForm } from "./ConsequenceForm";
+import { findTarget } from "../../../lib/commandFunctions";
+import { getAnimationSuggestions } from "../../../lib/animationFunctions";
+import { CheckBoxInput, SelectAndConfirmInput, SelectInput, StringInput } from "../formControls";
 import { makeNewConsequence } from "../defaults";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { ListEditor } from "../ListEditor";
+import { ConsequenceForm } from "./ConsequenceForm";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -72,6 +74,12 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
     const { consequences = [] } = interaction
     const parseResult = InteractionSchema.safeParse(interaction)
 
+    const statusSuggestions: string[] = []
+    const target = findTarget(interaction, gameDesign);
+    if (target?.type === 'actor') {
+        statusSuggestions.push(...getAnimationSuggestions(target.id, gameDesign));
+    }
+
     return (
         <article>
             <fieldset>
@@ -118,6 +126,7 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                         label="Target status must be"
                         inputHandler={(value) => { setInteractionProperty('targetStatus', value) }}
                         value={interaction.targetStatus || ''}
+                        suggestions={statusSuggestions}
                     />
                 </div>
                 <div>
