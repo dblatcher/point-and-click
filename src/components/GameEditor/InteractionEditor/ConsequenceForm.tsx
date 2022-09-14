@@ -2,13 +2,14 @@
 import { FunctionalComponent, h } from "preact";
 import { consequenceTypes, immediateConsequenceTypes, ZoneType, zoneTypes } from "../../../definitions/Consequence";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
-import { CheckBoxInput, NumberInput, SelectInput, StringInput } from "../formControls";
-import { findById, listIds } from "../../../lib/util";
+import { NumberInput, SelectInput, StringInput } from "../formControls";
+import { listIds } from "../../../lib/util";
 import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions, getZoneRefsOrIds } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
 import { getDefaultOrder } from "../defaults";
 import { cloneData } from "../../../lib/clone";
+import { getAnimationSuggestions } from "../../../lib/animationFunctions";
 import { makeNewConsequence } from "../defaults";
 import soundService from "../../../services/soundService";
 
@@ -39,7 +40,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         endingId: listIds(gameDesign.endings),
         zoneType: zoneTypes,
         ref: getZoneRefsOrIds(gameDesign, consequence.roomId || '', consequence.zoneType),
-        sound: soundService.getAll().map(_=>_.id),
+        sound: soundService.getAll().map(_ => _.id),
         flag: Object.keys(gameDesign.flagMap),
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
@@ -82,12 +83,12 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
             case 'addOrRemove':
             case 'ref':
             case 'targetType':
-            case 'sound': 
+            case 'sound':
             case 'flag':
-            {
-                copy[property] = value as string
-                break;
-            }
+                {
+                    copy[property] = value as string
+                    break;
+                }
             case 'end':
             case 'takePlayer':
             case 'on':
@@ -177,8 +178,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
 
                 case 'orders': {
                     const orders = value as Order[]
-                    const actorData = findById(consequence.actorId, gameDesign.actors)
-                    const spriteData = findById(actorData?.sprite, gameDesign.sprites)
+
+                    const animationSuggestions = consequence.actorId ? getAnimationSuggestions(consequence.actorId, gameDesign) : undefined;
 
                     return (
                         <div key={index}>
@@ -186,7 +187,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                                 list={orders}
                                 describeItem={(order, index) =>
                                     <OrderForm
-                                        spriteData={spriteData}
+                                        animationSuggestions={animationSuggestions}
                                         updateData={(newOrder) => { editOrder(newOrder, index) }}
                                         data={order} key={index} />
                                 }

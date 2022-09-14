@@ -3,6 +3,8 @@ import { Component, h } from "preact";
 import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage, ImmediateConsequence } from "src";
 import { ImmediateConsequenceSchema } from "../../../definitions/Consequence";
 import { cloneData } from "../../../lib/clone";
+import { getAnimationSuggestions } from "../../../lib/animationFunctions";
+import { listIds, findById } from "../../../lib/util";
 import { getDefaultOrder, makeBlankSequence, makeBlankStage, makeNewConsequence } from "../defaults";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { ListEditor } from "../ListEditor";
@@ -11,7 +13,6 @@ import { StorageMenu } from "../StorageMenu";
 import styles from "../editorStyles.module.css"
 import { SelectAndConfirmInput, StringInput } from "../formControls";
 import { TabMenu } from "../../TabMenu";
-import { listIds, findById } from "../../../lib/util";
 import { DataItemEditorProps } from "../dataEditors";
 
 type Props = DataItemEditorProps<Sequence> & {
@@ -101,15 +102,14 @@ export class SequenceEditor extends Component<Props, State> {
 
     renderActorOrderList(actorId: string, orders: Order[], stageIndex: number) {
         const { gameDesign } = this.props
-        const actorData = findById(actorId, gameDesign.actors)
-        const spriteData = findById(actorData?.sprite, gameDesign.sprites)
+
         return (
             <ListEditor
                 list={orders}
                 describeItem={(order, orderIndex) => (
                     <OrderForm key={orderIndex}
                         data={order}
-                        spriteData={spriteData}
+                        animationSuggestions={getAnimationSuggestions(actorId, gameDesign)}
                         updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, actorId, orderIndex) }}
                     />
                 )}
