@@ -2,7 +2,7 @@
 import { FunctionalComponent, h } from "preact";
 import { consequenceTypes, immediateConsequenceTypes, ZoneType, zoneTypes } from "../../../definitions/Consequence";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
-import { NumberInput, SelectInput, StringInput } from "../formControls";
+import { CheckBoxInput, NumberInput, SelectInput, StringInput } from "../formControls";
 import { listIds } from "../../../lib/util";
 import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions, getZoneRefsOrIds } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
@@ -139,11 +139,21 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                         </div>
                     )
                 case 'status':
+                    const animationSuggestions = getAnimationSuggestions(consequence.targetId, gameDesign)
+                    return (
+                        <div key={index}>
+                            <StringInput value={value as string}
+                                label={property}
+                                suggestions={animationSuggestions}
+                                inputHandler={value => { updateProperty(property, value) }}
+                            />
+                        </div>
+                    )
                 case 'text':
                     return (
                         <div key={index}>
                             <StringInput value={value as string}
-                                type={property === 'text' ? 'textArea' : undefined}
+                                type={'textArea'}
                                 label={property}
                                 inputHandler={value => { updateProperty(property, value) }}
                             />
@@ -178,9 +188,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
 
                 case 'orders': {
                     const orders = value as Order[]
-
-                    const animationSuggestions = consequence.actorId ? getAnimationSuggestions(consequence.actorId, gameDesign) : undefined;
-
+                    const animationSuggestions = getAnimationSuggestions(consequence.actorId, gameDesign);
                     return (
                         <div key={index}>
                             <ListEditor
