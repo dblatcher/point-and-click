@@ -84,7 +84,7 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
         case 'changeRoom':
             return { type: 'changeRoom', roomId: '', takePlayer: true, x: 0, y: 0 }
         case 'talk':
-            return { type: 'talk', actorId: '', time: 100, text: '' }
+            return { type: 'talk', actorId: '', time: 250, text: '' }
         case 'ending':
             return { type: 'ending', endingId: '' }
         case 'teleportActor':
@@ -101,7 +101,7 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
 }
 
 export const makeNewStep = {
-    talk: (): TalkStep => ({ time: 100, animation: Sprite.DEFAULT_ANIMATION.talk, text: "", }),
+    talk: (): TalkStep => ({ time: 250, animation: Sprite.DEFAULT_ANIMATION.talk, text: "", }),
     act: (): ActStep => ({ duration: 100, reverse: false, animation: '' }),
     move: (): MoveStep => ({ speed: 100, x: 0, y: 0, animation: '' }),
 }

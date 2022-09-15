@@ -35,7 +35,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 break;
             }
             case 'talk': {
-                const { actorId, text, time = 100 } = consequence
+                const { actorId, text, time = 250 } = consequence
                 const actor = getActor(actorId)
                 if (!actor) { return }
 
