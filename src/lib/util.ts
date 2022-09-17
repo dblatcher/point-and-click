@@ -33,3 +33,13 @@ export function findIndexById<T extends { id: string }>(id: string | undefined, 
     if (!id) { return -1 }
     return list.findIndex(_ => _.id === id)
 }
+
+export function deduplicateStringArray(list: string[]): string[] {
+    const newList: string[] = []
+    list.forEach(item => {
+        if (!newList.includes(item)) {
+            newList.push(item)
+        }
+    })
+    return newList
+}

@@ -6,7 +6,7 @@ import { InteractionSchema } from "../../../definitions/Interaction";
 import { cloneData } from "../../../lib/clone";
 import { listIds } from "../../../lib/util";
 import { findTarget } from "../../../lib/commandFunctions";
-import { getAnimationSuggestions } from "../../../lib/animationFunctions";
+import { getStatusSuggestions } from "../../../lib/animationFunctions";
 import { CheckBoxInput, SelectAndConfirmInput, SelectInput, StringInput } from "../formControls";
 import { makeNewConsequence } from "../defaults";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
@@ -77,7 +77,7 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
     const statusSuggestions: string[] = []
     const target = findTarget(interaction, gameDesign);
     if (target?.type === 'actor') {
-        statusSuggestions.push(...getAnimationSuggestions(target.id, gameDesign));
+        statusSuggestions.push(...getStatusSuggestions(target.id, gameDesign));
     }
 
     return (

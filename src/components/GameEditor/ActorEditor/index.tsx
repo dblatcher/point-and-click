@@ -10,6 +10,7 @@ import { SpritePreview } from "../SpritePreview";
 import { StorageMenu } from "../StorageMenu";
 import { cloneData } from "../../../lib/clone";
 import { Sprite } from "../../../lib/Sprite";
+import { getStatusSuggestions } from "../../../lib/animationFunctions";
 import { findById, listIds } from "../../../lib/util";
 import { uploadJsonData } from "../../../lib/files";
 import styles from "../editorStyles.module.css"
@@ -165,11 +166,13 @@ export class ActorEditor extends Component<Props, State> {
     }
 
     get statusSuggestions(): string[] {
-        const { sprite: spriteId } = this.state
+        const { sprite: spriteId, id } = this.state
         const sprite = spriteService.get(spriteId)
-        const spriteAnimations = sprite ? Object.keys(sprite.data.animations) : []
-        const defaultAnimations = Object.values(Sprite.DEFAULT_ANIMATION).filter(value => !spriteAnimations.includes(value))
-        return [...spriteAnimations, ...defaultAnimations]
+        const sprites = sprite ? [sprite.data] : []
+        return getStatusSuggestions(id, {
+            sprites,
+            actors: [this.state]
+        })
     }
 
     get otherActorsInRoom(): ActorData[] {
@@ -293,11 +296,11 @@ export class ActorEditor extends Component<Props, State> {
                             onSelect={(item: string) => { changeValue('direction', item) }} />
 
                         <div>
-                            <NumberInput 
-                                label="x" value={state.x} 
+                            <NumberInput
+                                label="x" value={state.x}
                                 inputHandler={value => { changeValue('x', value) }} />
-                            <NumberInput 
-                                label="y" value={state.y} 
+                            <NumberInput
+                                label="y" value={state.y}
                                 inputHandler={value => { changeValue('y', value) }} />
                         </div>
 

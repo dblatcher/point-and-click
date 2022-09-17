@@ -3,7 +3,7 @@ import { Component, h } from "preact";
 import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage, ImmediateConsequence } from "src";
 import { ImmediateConsequenceSchema } from "../../../definitions/Consequence";
 import { cloneData } from "../../../lib/clone";
-import { getAnimationSuggestions } from "../../../lib/animationFunctions";
+import { getStatusSuggestions } from "../../../lib/animationFunctions";
 import { listIds, findById } from "../../../lib/util";
 import { getDefaultOrder, makeBlankSequence, makeBlankStage, makeNewConsequence } from "../defaults";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
@@ -109,7 +109,7 @@ export class SequenceEditor extends Component<Props, State> {
                 describeItem={(order, orderIndex) => (
                     <OrderForm key={orderIndex}
                         data={order}
-                        animationSuggestions={getAnimationSuggestions(actorId, gameDesign)}
+                        animationSuggestions={getStatusSuggestions(actorId, gameDesign)}
                         updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, actorId, orderIndex) }}
                     />
                 )}

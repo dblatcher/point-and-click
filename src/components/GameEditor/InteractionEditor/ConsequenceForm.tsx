@@ -9,7 +9,7 @@ import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
 import { getDefaultOrder } from "../defaults";
 import { cloneData } from "../../../lib/clone";
-import { getAnimationSuggestions } from "../../../lib/animationFunctions";
+import { getStatusSuggestions } from "../../../lib/animationFunctions";
 import { makeNewConsequence } from "../defaults";
 import soundService from "../../../services/soundService";
 
@@ -139,7 +139,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                         </div>
                     )
                 case 'status':
-                    const animationSuggestions = getAnimationSuggestions(consequence.targetId, gameDesign)
+                    const animationSuggestions = getStatusSuggestions(consequence.targetId, gameDesign)
                     return (
                         <div key={index}>
                             <StringInput value={value as string}
@@ -188,7 +188,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
 
                 case 'orders': {
                     const orders = value as Order[]
-                    const animationSuggestions = getAnimationSuggestions(consequence.actorId, gameDesign);
+                    const animationSuggestions = getStatusSuggestions(consequence.actorId, gameDesign);
                     return (
                         <div key={index}>
                             <ListEditor
