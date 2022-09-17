@@ -39,6 +39,24 @@ export class ItemEditor extends Component<Props, State> {
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.changeValue = this.changeValue.bind(this)
+        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
+    }
+
+    setStateWithAutosave(input: Partial<State> | { (state: State): Partial<State> }, callback?: { (): void }) {
+        const { options, data, updateData, itemIds = [] } = this.props
+
+        if (!options.autoSave) {
+            return this.setState(input, callback)
+        }
+
+        return this.setState(input, () => {
+            if (data && itemIds.includes(this.state.id)) {
+                updateData(this.state)
+            }
+            if (callback) {
+                callback()
+            }
+        })
     }
 
     handleResetButton() {
@@ -68,7 +86,10 @@ export class ItemEditor extends Component<Props, State> {
                 }
                 break;
         }
-        this.setState(modification)
+        if (propery === 'id') {
+            return this.setState(modification)
+        }
+        this.setStateWithAutosave(modification)
     }
 
     render() {
@@ -128,7 +149,9 @@ export class ItemEditor extends Component<Props, State> {
                     existingIds={itemIds}
                     reset={this.handleResetButton}
                     deleteItem={this.props.deleteData}
-                    update={this.handleUpdateButton} />
+                    update={this.handleUpdateButton}
+                    options={this.props.options}
+                />
 
             </article>
         )

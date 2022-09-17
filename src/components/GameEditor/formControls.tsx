@@ -197,7 +197,6 @@ export const OptionalStringInput: FunctionalComponent<FieldProps & {
 }
 
 export const CheckBoxInput: FunctionalComponent<FieldProps & {
-    label: string;
     value?: boolean;
     inputHandler: { (value: boolean): void };
 }> = (props) => {
@@ -214,7 +213,6 @@ export const CheckBoxInput: FunctionalComponent<FieldProps & {
 }
 
 export const TriStateInput: FunctionalComponent<FieldProps & {
-    label: string;
     name?: string;
     value: boolean | undefined;
     inputHandler: { (value: boolean | undefined): void };

@@ -1,6 +1,7 @@
 import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Order, OrderType } from "src";
 import { Flag } from "src/definitions/Flag";
 import { TalkStep, ActStep, MoveStep } from "src/definitions/Order";
+import { boolean } from "zod";
 import { Sprite } from "../../lib/Sprite";
 
 export const defaultVerbs1: { (): Verb[] } = () => [
@@ -36,9 +37,10 @@ export const getDefaultOrder = (type: OrderType): Order => {
 }
 
 
-export const makeBlankConversationChoice = (text = "ENTER CHOICE TEXT"): ConversationChoice => ({
+export const makeBlankConversationChoice = (text = "ENTER CHOICE TEXT", end?: boolean): ConversationChoice => ({
     text,
     sequence: '',
+    end,
 })
 export const makeBlankConversation = (): Conversation => ({
     id: 'NEW_CONVERSATION',
@@ -46,7 +48,8 @@ export const makeBlankConversation = (): Conversation => ({
     branches: {
         start: {
             choices: [
-                makeBlankConversationChoice()
+                makeBlankConversationChoice(),
+                makeBlankConversationChoice('goodbye', true),
             ]
         }
     }

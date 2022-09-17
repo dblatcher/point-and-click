@@ -77,6 +77,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.handleTreeEntryClick = this.handleTreeEntryClick.bind(this)
+        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
     }
 
     get currentData(): RoomData {
@@ -87,6 +88,20 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         delete roomData.walkableTab
         delete roomData.hotspotTab
         return roomData
+    }
+
+    setStateWithAutosave(input: Partial<RoomEditorState> | { (state: RoomEditorState): Partial<RoomEditorState> }) {
+        const { options, data, updateData, existingRoomIds = [] } = this.props
+
+        if (!options.autoSave) {
+            return this.setState(input)
+        }
+
+        return this.setState(input, () => {
+            if (data && existingRoomIds.includes(this.state.id)) {
+                updateData(this.currentData)
+            }
+        })
     }
 
     setClickEffect(clickEffect?: ClickEffect) {
@@ -163,7 +178,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 break;
         }
 
-        this.setState({
+        this.setStateWithAutosave({
             hotspots, obstacleAreas, walkableAreas,
             hotspotTab, obstableTab, walkableTab,
             clickEffect: getNextClickEffect(clickEffect),
@@ -196,11 +211,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 walkableAreas.splice(index, 1)
                 break;
         }
-        this.setState({ obstacleAreas, hotspots, walkableAreas })
+        this.setStateWithAutosave({ obstacleAreas, hotspots, walkableAreas })
     }
     changeZone: ShapeChangeFunction = (index, propery, newValue, type) => {
 
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = state
             function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
                 switch (propery) {
@@ -281,7 +296,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             }
         }
 
-        this.setState(mod)
+        this.setStateWithAutosave(mod)
     }
 
     changeBackground(index: number, propery: keyof BackgroundLayer, newValue: string | number) {
@@ -301,12 +316,12 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 break;
         }
 
-        this.setState({ background })
+        this.setStateWithAutosave({ background })
     }
     addBackground(newLayer: BackgroundLayer) {
         const { background } = this.state
         background.push(newLayer)
-        this.setState({ background })
+        this.setStateWithAutosave({ background })
     }
     handleLoadButton = async () => {
         const { data, error } = await uploadJsonData(RoomDataSchema)
@@ -329,8 +344,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
     }
     handleTreeEntryClick(folderId: string, data: { id: string }, isForNew: boolean | undefined) {
-        console.log(folderId, data, isForNew)
-
         if (isForNew) {
             switch (folderId) {
                 case 'WALKABLE':
@@ -446,7 +459,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             clickEffect, mainTab
         } = this.state
 
-        const { existingRoomIds = [], actors = [] } = this.props
+        const { existingRoomIds = [], actors = [], options, deleteData } = this.props
 
         const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
 
@@ -458,19 +471,19 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     <legend>Room</legend>
                     <div className={styles.row}>
                         <label >ID</label>
-                        <input type="text" value={id} onInput={event => this.setState({ id: eventToString(event) })} />
+                        <input type="text" value={id} onInput={event => this.setStateWithAutosave({ id: eventToString(event) })} />
                     </div>
                     <div className={styles.row}>
                         <NumberInput label="height" value={height}
-                            inputHandler={height => this.setState({ height })} />
+                            inputHandler={height => this.setStateWithAutosave({ height })} />
                     </div>
                     <div className={styles.row}>
                         <NumberInput label="width" value={width}
-                            inputHandler={width => this.setState({ width })} />
+                            inputHandler={width => this.setStateWithAutosave({ width })} />
                     </div>
                     <div className={styles.row}>
                         <NumberInput label="Frame Width" value={frameWidth}
-                            inputHandler={frameWidth => this.setState({ frameWidth })} />
+                            inputHandler={frameWidth => this.setStateWithAutosave({ frameWidth })} />
                     </div>
                     {frameWidth > width && (
                         <Warning>frame width is bigger than room width</Warning>
@@ -483,9 +496,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     existingIds={existingRoomIds}
                     reset={this.handleResetButton}
                     update={this.handleUpdateButton}
-                    deleteItem={this.props.deleteData}
+                    deleteItem={deleteData}
                     saveButton={true}
                     load={this.handleLoadButton}
+                    options={options}
                 />
             </div>
 
@@ -513,7 +527,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         {
                             label: 'Scaling', content: (
                                 <ScalingControl
-                                    change={(scaling: ScaleLevel) => { this.setState({ scaling }) }}
+                                    change={(scaling: ScaleLevel) => { this.setStateWithAutosave({ scaling }) }}
                                     scaling={scaling}
                                     height={this.state.height} />
                             )
@@ -522,7 +536,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                             label: 'Background', content: (<>
                                 <ListEditor
                                     list={background}
-                                    mutateList={(background) => { this.setState({ background }) }}
+                                    mutateList={(background) => { this.setStateWithAutosave({ background }) }}
                                     describeItem={(layer, index) => (
                                         <BackgroundLayerControl index={index}
                                             imageAssets={imageAssets}

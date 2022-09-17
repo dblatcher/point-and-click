@@ -69,11 +69,29 @@ export class ActorEditor extends Component<Props, State> {
         this.handlePreviewClick = this.handlePreviewClick.bind(this)
         this.changeValue = this.changeValue.bind(this)
         this.changeSoundMap = this.changeSoundMap.bind(this)
+        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
     }
 
     get currentData(): ActorData {
         const actorData = cloneData(this.state) as State;
         return actorData
+    }
+
+    setStateWithAutosave(input: Partial<State> | { (state: State): Partial<State> }, callback?: { (): void }) {
+        const { options, data, updateData, actorIds = [] } = this.props
+
+        if (!options.autoSave) {
+            return this.setState(input, callback)
+        }
+
+        return this.setState(input, () => {
+            if (data && actorIds.includes(this.state.id)) {
+                updateData(this.currentData)
+            }
+            if (callback) {
+                callback()
+            }
+        })
     }
 
     changeValue(propery: keyof ActorData, newValue: unknown) {
@@ -121,10 +139,13 @@ export class ActorEditor extends Component<Props, State> {
                 }
                 break;
         }
-        this.setState(modification)
+        if (propery === 'id') {
+            return this.setState(modification)
+        }
+        this.setStateWithAutosave(modification)
     }
     changeSoundMap(key: string, value?: SoundValue): void {
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { soundEffectMap = {} } = state
             if (typeof value === 'undefined') {
                 delete soundEffectMap[key]
@@ -155,7 +176,7 @@ export class ActorEditor extends Component<Props, State> {
         }
     }
     handlePreviewClick(point: Point) {
-        this.setState(point)
+        this.setStateWithAutosave(point)
     }
 
     get previewData(): ActorData {
@@ -244,7 +265,7 @@ export class ActorEditor extends Component<Props, State> {
                             format='select'
                             service={spriteService}
                             select={
-                                item => this.setState({ sprite: item.id })
+                                item => this.setStateWithAutosave({ sprite: item.id })
                             } />
 
                         <div>
@@ -279,6 +300,7 @@ export class ActorEditor extends Component<Props, State> {
                         deleteItem={this.props.deleteData}
                         saveButton={true}
                         load={this.handleLoadButton}
+                        options={this.props.options}
                     />
                 </div>
                 <div className={styles.rowTopLeft}>

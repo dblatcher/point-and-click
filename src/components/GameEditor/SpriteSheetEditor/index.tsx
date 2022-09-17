@@ -46,6 +46,7 @@ export class SpriteSheetTool extends Component<Props, State> {
         }
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.handleResetButton = this.handleResetButton.bind(this)
+        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
         this.canvasRef = createRef()
     }
 
@@ -54,6 +55,23 @@ export class SpriteSheetTool extends Component<Props, State> {
         delete copy.urlIsObjectUrl
         delete copy.saveWarning
         return copy
+    }
+
+    setStateWithAutosave(input: Partial<State> | { (state: State): Partial<State> }, callback?: { (): void }) {
+        const { options, data, updateData, spriteSheetIds = [] } = this.props
+
+        if (!options.autoSave) {
+            return this.setState(input, callback)
+        }
+
+        return this.setState(input, () => {
+            if (data && spriteSheetIds.includes(this.state.id)) {
+                updateData(this.currentData)
+            }
+            if (callback) {
+                callback()
+            }
+        })
     }
 
     changeValue(propery: keyof SpriteSheet, newValue: string | number) {
@@ -80,7 +98,10 @@ export class SpriteSheetTool extends Component<Props, State> {
                 }
                 break;
         }
-        this.setState(modification)
+        if (propery === 'id') {
+            return this.setState(modification)
+        }
+        this.setStateWithAutosave(modification)
     }
 
     handleUpdateButton() {
@@ -177,6 +198,7 @@ export class SpriteSheetTool extends Component<Props, State> {
                             update={this.handleUpdateButton}
                             deleteItem={this.props.deleteData}
                             reset={this.handleResetButton}
+                            options={this.props.options}
                         />
                         <fieldset>
                             <div className={styles.row}>

@@ -56,7 +56,17 @@ export class VerbEditor extends Component<Props, State> {
     }
 
     handleUpdate(value: FieldValue, field: FieldDef): void {
-        return this.setState(getModification(value, field))
+        const { options, data, updateData, gameDesign } = this.props
+        const property = field.key as keyof Verb;
+
+        return this.setState(getModification(value, field), () => {
+            if (options.autoSave && property !== 'id') {
+                const isExistingId = listIds(gameDesign.verbs).includes(this.state.id)
+                if (data && isExistingId) {
+                    updateData(this.currentData)
+                }
+            }
+        })
     }
 
     get testCommand(): Command {
@@ -75,7 +85,7 @@ export class VerbEditor extends Component<Props, State> {
     }
 
     render() {
-        const { gameDesign, updateData } = this.props
+        const { gameDesign, updateData, options } = this.props
 
         return (
             <article>
@@ -89,6 +99,7 @@ export class VerbEditor extends Component<Props, State> {
                     data={this.currentData}
                     originalId={this.props.data?.id}
                     reset={() => this.setState(this.initialState)}
+                    options={options}
                 />
 
                 <div style={{ display: 'flex', flexWrap: 'wrap' }}>

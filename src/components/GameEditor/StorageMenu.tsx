@@ -3,6 +3,7 @@ import styles from "./editorStyles.module.css"
 
 import { downloadJsonFile, } from "../../lib/files";
 import { DeleteButton } from "./formControls";
+import { EditorOptions } from ".";
 
 interface Props {
     type: string;
@@ -14,12 +15,12 @@ interface Props {
     saveButton?: boolean;
     load?: { (): void };
     deleteItem?: { (index: number): void };
+    options: EditorOptions;
 }
 
 export const StorageMenu: FunctionalComponent<Props> = ({
-    type, data, originalId, existingIds, reset, update, saveButton, load, deleteItem
+    type, data, originalId, existingIds, reset, update, saveButton, load, deleteItem, options
 }: Props) => {
-
     const currentId = data?.id || '';
 
     const updateButtonText = originalId === currentId
@@ -29,9 +30,11 @@ export const StorageMenu: FunctionalComponent<Props> = ({
             : `Add new ${type} ${currentId}`
 
     const indexOfOriginalId = originalId ? existingIds.indexOf(originalId) : -1
-    const showDeleteButton = typeof originalId && originalId === currentId && indexOfOriginalId !== -1 && !!deleteItem
+    const showDeleteButton =  originalId === currentId && indexOfOriginalId !== -1 && !!deleteItem
     const deleteButtonText = `Delete ${type} ${currentId}`
 
+    const showUpdateButton = !options?.autoSave || !existingIds.includes(currentId)
+    const showResetButton = data && !(options?.autoSave && originalId === currentId);
 
     return (
         <fieldset className={styles.fieldset}>
@@ -41,9 +44,9 @@ export const StorageMenu: FunctionalComponent<Props> = ({
                 {load && <button onClick={load}>Load from file</button>}
             </div>
             <div>
-                {data && <button onClick={reset}>Reset</button>}
+                {showResetButton && <button onClick={reset}>Reset</button>}
 
-                {data?.id && <button onClick={update}>
+                {showUpdateButton && <button onClick={update}>
                     {updateButtonText}
                 </button>}
             </div>

@@ -23,7 +23,7 @@ import { defaultVerbs1, getBlankRoom } from "./defaults";
 
 import { prebuiltGameDesign } from '../../../data/fullGame';
 import { listIds, findById, findIndexById } from "../../lib/util";
-import { RoomData, GameDesign, GameDataItem, Interaction, Ending, Verb } from "src";
+import { GameDesign, GameDataItem, Interaction, Ending, Verb } from "src";
 import { FlagMap } from "src/definitions/Flag";
 
 import { populateServicesForPreBuiltGame } from "../../services/populateServices";
@@ -32,11 +32,16 @@ import spriteService from "../../services/spriteService";
 import spriteSheetService from "../../services/spriteSheetService";
 
 import layoutStyles from "./editorLayoutStyles.module.css";
+import { CheckBoxInput } from "./formControls";
 
 
 const usePrebuiltGame = false
 if (usePrebuiltGame) {
     populateServicesForPreBuiltGame()
+}
+
+export type EditorOptions = {
+    autoSave: boolean;
 }
 
 type State = {
@@ -53,6 +58,8 @@ type State = {
     verbId?: string;
 
     resetTimeStamp: number;
+
+    options: EditorOptions;
 };
 
 type Props = {
@@ -76,6 +83,8 @@ const tabs: string[] = [
     'test',
 ]
 
+const defaultRoomId = 'ROOM_1' as const;
+
 function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[] {
     const newItem = newData as T;
     const matchIndex = findIndexById(newItem.id, list)
@@ -91,36 +100,32 @@ export class GameEditor extends Component<Props, State>{
 
     constructor(props: Props) {
         super(props)
-        if (usePrebuiltGame) {
-            this.state = {
-                gameDesign: {
-                    ...prebuiltGameDesign
-                },
-                tabOpen: tabs.indexOf('main'),
-                resetTimeStamp: 0,
-            }
-        } else {
-            const blankRoom: RoomData = Object.assign(getBlankRoom(), { id: 'ROOM_1', height: 150 })
-            this.state = {
-                gameDesign: {
-                    id: "NEW_GAME",
-                    rooms: [blankRoom],
-                    actors: [],
-                    interactions: [],
-                    items: [],
-                    conversations: [],
-                    verbs: defaultVerbs1(),
-                    currentRoomId: blankRoom.id,
-                    sequences: [],
-                    sprites: [],
-                    spriteSheets: [],
-                    endings: [],
-                    flagMap: {},
-                },
-                tabOpen: tabs.indexOf('main'),
-                resetTimeStamp: 0,
-            }
+        const gameDesign = usePrebuiltGame ? { ...prebuiltGameDesign } : {
+            id: "NEW_GAME",
+            rooms: [Object.assign(getBlankRoom(), { id: defaultRoomId, height: 150 })],
+            actors: [],
+            interactions: [],
+            items: [],
+            conversations: [],
+            verbs: defaultVerbs1(),
+            currentRoomId: defaultRoomId,
+            sequences: [],
+            sprites: [],
+            spriteSheets: [],
+            endings: [],
+            flagMap: {},
+        };
+
+
+        this.state = {
+            gameDesign,
+            tabOpen: tabs.indexOf('main'),
+            resetTimeStamp: 0,
+            options: {
+                autoSave: true
+            },
         }
+
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
         this.performUpdate = this.performUpdate.bind(this)
         this.changeInteraction = this.changeInteraction.bind(this)
@@ -277,7 +282,10 @@ export class GameEditor extends Component<Props, State>{
     }
 
     render() {
-        const { gameDesign, tabOpen, roomId, itemId, actorId, spriteId, spriteSheetId, conversationId, sequenceId, endingId, verbId } = this.state
+        const {
+            gameDesign, tabOpen, options,
+            roomId, itemId, actorId, spriteId, spriteSheetId, conversationId, sequenceId, endingId, verbId
+        } = this.state
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
@@ -372,6 +380,24 @@ export class GameEditor extends Component<Props, State>{
                 <div>
                     <button onClick={() => this.setState({ tabOpen: tabs.indexOf("test"), resetTimeStamp: Date.now() })}>Test Game</button>
                 </div>
+
+                <hr />
+                <div>
+                    <h3>options</h3>
+
+                    <div>
+                        <CheckBoxInput
+                            label="autosave"
+                            value={this.state.options.autoSave}
+                            inputHandler={value => this.setState(state => {
+                                const { options } = state
+                                options.autoSave = value
+                                return { options }
+                            })}
+                        />
+                        {this.state.options.autoSave.toString()}
+                    </div>
+                </div>
             </nav>
             <section className={layoutStyles.tabMenuHolder}>
                 <TabMenu backgroundColor="none" noButtons defaultOpenIndex={tabOpen} tabs={[
@@ -386,6 +412,7 @@ export class GameEditor extends Component<Props, State>{
                             deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
                             existingRoomIds={listIds(gameDesign.rooms)}
                             actors={gameDesign.actors}
+                            options={options}
                             key={roomId} data={this.currentRoom} />
                     },
                     {
@@ -394,6 +421,7 @@ export class GameEditor extends Component<Props, State>{
                             deleteData={index => { this.deleteArrayItem(index, 'items') }}
                             itemIds={listIds(gameDesign.items)}
                             actorIds={listIds(gameDesign.actors)}
+                            options={options}
                             key={itemId} data={this.currentItem}
                         />
                     },
@@ -404,6 +432,7 @@ export class GameEditor extends Component<Props, State>{
                             actorIds={listIds(gameDesign.actors)}
                             updateData={data => { this.performUpdate('actors', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'actors') }}
+                            options={options}
                             key={actorId} data={this.currentActor}
                         />
                     },
@@ -413,6 +442,7 @@ export class GameEditor extends Component<Props, State>{
                             conversations={gameDesign.conversations}
                             updateData={data => { this.performUpdate('conversations', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
+                            options={options}
                             key={conversationId} data={this.currentConversation}
                         />
                     },
@@ -421,6 +451,7 @@ export class GameEditor extends Component<Props, State>{
                             updateData={data => { this.performUpdate('sprites', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
                             key={spriteId} data={this.currentSprite}
+                            options={options}
                             spriteIds={listIds(gameDesign.sprites)}
                         />
                     },
@@ -429,6 +460,7 @@ export class GameEditor extends Component<Props, State>{
                             updateData={data => { this.performUpdate('spriteSheets', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'spriteSheets') }}
                             key={spriteSheetId} data={this.currentSpriteSheet}
+                            options={options}
                             spriteSheetIds={listIds(gameDesign.spriteSheets)}
                         />
                     },
@@ -445,6 +477,7 @@ export class GameEditor extends Component<Props, State>{
                             data={findById(sequenceId, gameDesign.sequences)}
                             updateData={data => { this.performUpdate('sequences', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'sequences') }}
+                            options={options}
                             sequenceId={sequenceId} />
                     },
                     {
@@ -454,6 +487,7 @@ export class GameEditor extends Component<Props, State>{
                             data={findById(endingId, gameDesign.endings)}
                             updateData={data => { this.performUpdate('endings', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'endings') }}
+                            options={options}
                         />
                     },
                     {
@@ -463,6 +497,7 @@ export class GameEditor extends Component<Props, State>{
                             data={findById(verbId, gameDesign.verbs)}
                             updateData={data => { this.performUpdate('verbs', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'verbs') }}
+                            options={options}
                         />
                     },
                     { label: 'Image uploader', content: <ImageAssetTool /> },

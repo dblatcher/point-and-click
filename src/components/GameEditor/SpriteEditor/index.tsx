@@ -5,7 +5,7 @@ import { cloneData } from "../../../lib/clone";
 import { Sprite } from "../../../lib/Sprite";
 import { uploadJsonData } from "../../../lib/files";
 import { eventToString } from "../../../lib/util";
-import { ActorData, Direction, SpriteData, SpriteFrame } from "src"
+import { ActorData, Direction, SpriteData, SpriteFrame, Animation } from "src"
 import { StringInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";
@@ -61,6 +61,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.editCycle = this.editCycle.bind(this)
         this.buildActorData = this.buildActorData.bind(this)
         this.pickFrame = this.pickFrame.bind(this)
+        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
     }
 
     get currentData(): SpriteData {
@@ -70,6 +71,23 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         delete data.selectedCol;
         delete data.selectedSheetId;
         return data
+    }
+
+    setStateWithAutosave(input: Partial<SpriteEditorState> | { (state: SpriteEditorState): Partial<SpriteEditorState> }, callback?: { (): void }) {
+        const { options, data, updateData, spriteIds = [] } = this.props
+
+        if (!options.autoSave) {
+            return this.setState(input, callback)
+        }
+
+        return this.setState(input, () => {
+            if (data && spriteIds.includes(this.state.id)) {
+                updateData(this.currentData)
+            }
+            if (callback) {
+                callback()
+            }
+        })
     }
 
     pickFrame(selectedRow: number, selectedCol: number, selectedSheetId?: string) {
@@ -92,13 +110,16 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 }
                 break;
         }
-        this.setState(modification)
+        if (propery === 'id') {
+            return this.setState(modification)
+        }
+        this.setStateWithAutosave(modification)
     }
 
     addAnimation(animationKey: string) {
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { animations, defaultDirection } = state
-            const newAnimation: Partial<Record<Direction, SpriteFrame[] | undefined>> = {}
+            const newAnimation: Animation = {}
             newAnimation[defaultDirection] = []
             animations[animationKey] = newAnimation
             return { animations, selectedAnimation: animationKey }
@@ -106,7 +127,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     deleteAnimation(animationKey: string) {
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { animations } = state
             delete animations[animationKey]
             return { animations }
@@ -114,7 +135,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     editCycle(animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined) {
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { animations, defaultDirection } = state
             const animation = animations[animationKey]
             if (!animation) { return {} }
@@ -211,6 +232,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     saveButton={true}
                     load={this.handleLoadButton}
                     deleteItem={this.props.deleteData}
+                    options={this.props.options}
                 />
             </div>
 

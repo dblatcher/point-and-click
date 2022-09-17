@@ -40,7 +40,9 @@ export class ConversationEditor extends Component<Props, State> {
         super(props)
         const initialState = props.data ? cloneData(props.data) : makeBlankConversation()
         this.state = {
-            ...initialState
+            ...initialState,
+            openBranchId: initialState.defaultBranch,
+            activeChoiceIndex: 0,
         }
 
         this.handleLoadButton = this.handleLoadButton.bind(this)
@@ -52,12 +54,30 @@ export class ConversationEditor extends Component<Props, State> {
         this.removeChoiceListItem = this.removeChoiceListItem.bind(this)
         this.addNewBranch = this.addNewBranch.bind(this)
         this.addNewChoice = this.addNewChoice.bind(this)
+        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
     }
 
     get currentData(): Conversation {
         const conversation = cloneData(this.state) as State;
         delete conversation.openBranchId
         return conversation
+    }
+
+    setStateWithAutosave(input: Partial<State> | { (state: State): Partial<State> }, callback?: { (): void }) {
+        const { options, data, updateData, conversations } = this.props
+
+        if (!options.autoSave) {
+            return this.setState(input, callback)
+        }
+
+        return this.setState(input, () => {
+            if (data && listIds(conversations).includes(this.state.id)) {
+                updateData(this.currentData)
+            }
+            if (callback) {
+                callback()
+            }
+        })
     }
 
     changeValue(propery: keyof Conversation, newValue: string | number | boolean) {
@@ -75,7 +95,10 @@ export class ConversationEditor extends Component<Props, State> {
                 }
                 break;
         }
-        this.setState(modification)
+        if (propery === 'id') {
+            return this.setState(modification)
+        }
+        this.setStateWithAutosave(modification)
     }
     handleLoadButton = async () => {
         const { data, error } = await uploadJsonData(ConversationSchema)
@@ -101,7 +124,7 @@ export class ConversationEditor extends Component<Props, State> {
         indexOfSet: number,
         newRefSet: (string | undefined)[],
     ) {
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { branches } = state
             const { choice } = this.getBranchAndChoice(state)
             if (!choice) { return {} }
@@ -114,7 +137,7 @@ export class ConversationEditor extends Component<Props, State> {
     addChoiceListItem(
         property: 'enablesChoices' | 'disablesChoices'
     ) {
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { branches } = state
             const { choice } = this.getBranchAndChoice(state)
             if (!choice) { return {} }
@@ -128,7 +151,7 @@ export class ConversationEditor extends Component<Props, State> {
         property: 'enablesChoices' | 'disablesChoices',
         index: number
     ) {
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { branches } = state
             const { choice } = this.getBranchAndChoice(state)
             if (!choice || !choice[property]) { return {} }
@@ -142,7 +165,7 @@ export class ConversationEditor extends Component<Props, State> {
         console.log(value, field, 'index')
         console.log(`Change field ${field.key}(${field.type}) to "${value?.toString()}" in ${openBranchId}[${activeChoiceIndex}]`)
 
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { branches, openBranchId, activeChoiceIndex } = state
             if (!openBranchId || typeof activeChoiceIndex !== 'number') { return {} }
             const choices = branches[openBranchId]?.choices
@@ -180,7 +203,7 @@ export class ConversationEditor extends Component<Props, State> {
     }
 
     addNewBranch() {
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { branches = {} } = state
             const numberOfBranches = Object.keys(branches).length
             const branchKey = `BRANCH_${numberOfBranches + 1}`
@@ -194,7 +217,7 @@ export class ConversationEditor extends Component<Props, State> {
     }
 
     addNewChoice(folderId: string): void {
-        this.setState(state => {
+        this.setStateWithAutosave(state => {
             const { branches = {} } = state
             const branch = branches[folderId]
             if (!branch) { return {} }
@@ -255,7 +278,7 @@ export class ConversationEditor extends Component<Props, State> {
     render() {
         const { state } = this
         const { branches, defaultBranch, currentBranch, openBranchId, id } = this.state
-        const { conversations, sequenceIds } = this.props
+        const { conversations, sequenceIds, deleteData, options } = this.props
         const { choice } = this.getBranchAndChoice(state)
 
         return (
@@ -268,9 +291,10 @@ export class ConversationEditor extends Component<Props, State> {
                     existingIds={listIds(conversations)}
                     reset={this.handleResetButton}
                     update={this.handleUpdateButton}
-                    deleteItem={this.props.deleteData}
+                    deleteItem={deleteData}
                     saveButton={true}
                     load={this.handleLoadButton}
+                    options={options}
                 />
                 <fieldset>
                     <legend>Conversation</legend>

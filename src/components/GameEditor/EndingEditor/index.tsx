@@ -5,7 +5,7 @@ import { cloneData } from "../../../lib/clone";
 import { makeBlankEnding } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
 import { listIds } from "../../../lib/util";
-import { FieldDef, SchemaForm, FieldValue, fieldValueIsRightType } from "../SchemaForm";
+import { FieldDef, SchemaForm, FieldValue, fieldValueIsRightType, getModification } from "../SchemaForm";
 import { EndingSchema } from "../../../definitions/Ending";
 import imageService from "../../../services/imageService";
 import { EndingScreen } from "../../EndingScreen";
@@ -43,31 +43,22 @@ export class EndingEditor extends Component<Props, State> {
     }
 
     handleUpdate(value: FieldValue, field: FieldDef): void {
-        if (!fieldValueIsRightType(value, field)) {
-            console.warn('MISMATCH FROM SCHEMA FORM', value, field)
-            return
-        }
+        const { options, data, updateData, gameDesign } = this.props
         const property = field.key as keyof Ending;
 
-        const mod: Partial<Ending> = {}
-        switch (property) {
-            case 'id':
-            case 'message':
-                mod[property] = value as string
-                break;
-            case 'imageId':
-                mod[property] = value as string | undefined
-                break;
-            case 'imageWidth':
-                mod[property] = value as number | undefined
-                break;
-        }
-        return this.setState(mod)
+        return this.setState(getModification(value, field), () => {
+            if (options.autoSave && property !== 'id') {
+                const isExistingId = listIds(gameDesign.endings).includes(this.state.id)
+                if ( data && isExistingId) {
+                    updateData(this.currentData)
+                }
+            }
+        })
     }
 
 
     render() {
-        const { gameDesign, updateData } = this.props
+        const { gameDesign, updateData, options } = this.props
 
         return (
             <article>
@@ -81,6 +72,7 @@ export class EndingEditor extends Component<Props, State> {
                     data={this.currentData}
                     originalId={this.props.data?.id}
                     reset={() => this.setState(this.initialState)}
+                    options={options}
                 />
 
                 <fieldset style={{ maxWidth: '25rem' }}>
