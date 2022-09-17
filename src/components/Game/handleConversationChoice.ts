@@ -60,6 +60,33 @@ function setChoicesDisabled(
     return conversations
 }
 
+function buildDefaultSequence(choice: ConversationChoice, state: GameState): Sequence {
+
+    const sequence: Sequence = { id: "", stages: [{ actorOrders: {} }] }
+    const player = state.actors.find(_ => _.isPlayer)
+
+    if (!player) {
+        return sequence
+    }
+
+    const { actorOrders } = sequence.stages[0]
+    if (actorOrders) {
+        actorOrders[player.id] = [
+            {
+                type: 'talk',
+                steps: [
+                    {
+                        text: choice.text,
+                        time: 250,
+                    }
+                ]
+            }
+        ]
+    }
+
+    return sequence
+}
+
 export function handleConversationChoice(choice: ConversationChoice, sequences: Sequence[]): { (state: GameState): Partial<GameState> } {
 
     return (state): GameState => {
@@ -83,17 +110,18 @@ export function handleConversationChoice(choice: ConversationChoice, sequences: 
         }
 
         const originalSequence = findById(choice.sequence, sequences)
-        if (!originalSequence) {
+        if (choice.sequence && !originalSequence) {
             console.warn(`invalid sequenceId "${choice.sequence}" in conversation "${currentConversationId}"`)
-        } else {
-            const sequenceCopy = originalSequence ? cloneData(originalSequence) : { id: "", stages: [] }
-            if (choice.end) {
-                sequenceCopy.stages.push({
-                    immediateConsequences: [{ type: 'conversation', end: true, conversationId: currentConversationId }]
-                })
-            }
-            state.sequenceRunning = sequenceCopy
         }
+
+        const sequenceCopy: Sequence = originalSequence ? cloneData(originalSequence) : buildDefaultSequence(choice, state);
+        if (choice.end) {
+            sequenceCopy.stages.push({
+                immediateConsequences: [{ type: 'conversation', end: true, conversationId: currentConversationId }]
+            })
+        }
+        state.sequenceRunning = sequenceCopy
+
 
         return state
     }
