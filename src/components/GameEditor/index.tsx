@@ -35,7 +35,7 @@ import layoutStyles from "./editorLayoutStyles.module.css";
 import { CheckBoxInput } from "./formControls";
 
 
-const usePrebuiltGame = false
+const usePrebuiltGame = true
 if (usePrebuiltGame) {
     populateServicesForPreBuiltGame()
 }
@@ -190,6 +190,7 @@ export class GameEditor extends Component<Props, State>{
                     break
                 }
                 case 'conversations': {
+                    console.log('CONV', data)
                     addNewOrUpdate(data, gameDesign[property])
                     actorId = (data as GameDataItem).id
                     break

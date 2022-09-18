@@ -3,11 +3,12 @@ import { FunctionalComponent, h } from "preact";
 import { findById, listIds } from "../../../lib/util";
 import { Conversation } from "src";
 import { SelectInput } from "../formControls";
+import { ChoiceRefSet } from "src/definitions/Conversation";
 
 
 interface Props {
-    refSet: (string | undefined)[];
-    change: { (newSet: (string | undefined)[]): void };
+    refSet: ChoiceRefSet;
+    change: { (newSet: ChoiceRefSet): void };
     remove: { (): void };
     conversations: Conversation[];
     currentConversationId: string;
@@ -18,7 +19,7 @@ export const ChoiceSelector: FunctionalComponent<Props> = ({
     refSet, change, remove, conversations, currentConversationId, openBranchId,
 }: Props) => {
 
-    const [choiceRef, branchId, conversationId] = refSet;
+    const {choiceRef, branchId, conversationId} = refSet;
 
     const conversation = findById(conversationId || currentConversationId, conversations)
     const branches = conversation?.branches || {};
@@ -30,14 +31,21 @@ export const ChoiceSelector: FunctionalComponent<Props> = ({
         .filter(ref => typeof ref === 'string') as string[]
     : []
 
-    const updateSet = (value: string, index: number) => {
-        if (refSet[index] === value) {
+    /**
+     * BUG - [undefined] => [null] in JSON
+     */
+    const updateSet = (value: string, property: keyof ChoiceRefSet) => {
+        if (refSet[property] === value) {
             return
         }
-        const copy = [...refSet]
-        copy[index] = value
-        if (index > 0) { copy[0] = undefined }
-        if (index > 1) { copy[1] = undefined }
+        const copy = {...refSet}
+        copy[property] = value
+        if (property === 'conversationId') {
+            delete copy.branchId
+            delete copy.choiceRef
+        } else if (property === 'branchId') { 
+            delete copy.choiceRef
+        }
 
         change(copy)
     }
@@ -48,21 +56,21 @@ export const ChoiceSelector: FunctionalComponent<Props> = ({
                 items={listIds(conversations)}
                 haveEmptyOption={true}
                 emptyOptionLabel="[current conversation]"
-                onSelect={(item) => { updateSet(item, 2) }}
+                onSelect={(item) => { updateSet(item, 'conversationId') }}
             />
 
             <SelectInput value={branchId || ''}
                 items={Object.keys(branches)}
                 haveEmptyOption={true}
                 emptyOptionLabel="[current branch]"
-                onSelect={(item) => { updateSet(item, 1) }}
+                onSelect={(item) => { updateSet(item, 'branchId') }}
             />
 
             <SelectInput value={choiceRef || ''}
                 items={choiceRefs}
                 haveEmptyOption={true}
                 emptyOptionLabel="[none]"
-                onSelect={(item) => { updateSet(item, 0) }}
+                onSelect={(item) => { updateSet(item, 'choiceRef') }}
             />
 
             <button onClick={remove}>x</button>

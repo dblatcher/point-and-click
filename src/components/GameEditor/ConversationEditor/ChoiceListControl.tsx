@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
 import { Conversation } from "src";
+import { ChoiceRefSet } from "src/definitions/Conversation";
 import { ChoiceSelector } from "./ChoiceSelector";
 
 interface Props {
     property: 'enablesChoices' | 'disablesChoices';
-    choices: (string | undefined)[][];
-    change: { (property: 'enablesChoices' | 'disablesChoices', indexOfSet: number, newRefSet: (string | undefined)[],): void };
+    choices: ChoiceRefSet[];
+    change: { (property: 'enablesChoices' | 'disablesChoices', indexOfSet: number, newRefSet: ChoiceRefSet,): void };
     remove: { (property: 'enablesChoices' | 'disablesChoices', index: number): void };
     add: { (property: 'enablesChoices' | 'disablesChoices'): void };
     conversations: Conversation[];

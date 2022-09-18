@@ -25,10 +25,10 @@ const chat: Conversation = {
                     text: 'Do you have a hammer?',
                     once: true,
                     enablesChoices: [
-                        ['ASK_FOR_HAMMER']
+                        { choiceRef: 'ASK_FOR_HAMMER' },
                     ],
                     disablesChoices: [
-                        ['ASK_ABOUT_TOOLS', 'hello']
+                        { choiceRef: 'ASK_ABOUT_TOOLS', branchId: 'hello' }
                     ],
                     sequence: "CHAT_TOOLS_0"
                 },

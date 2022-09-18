@@ -2,16 +2,17 @@ import { Conversation, ConversationChoice, Sequence } from "src";
 import { cloneData } from "../../lib/clone";
 import { GameState } from ".";
 import { findById } from "../../lib/util";
+import { ChoiceRefSet } from "src/definitions/Conversation";
 
 
 function findChoiceFromRefSet(
-    choiceRefSet: (string | undefined)[],
+    choiceRefSet: ChoiceRefSet,
     conversations: Conversation[],
     currentConversation: Conversation
 ): ConversationChoice | undefined {
 
     // eslint-disable-next-line prefer-const
-    let [choiceRef, branchId, conversationId] = choiceRefSet;
+    let {choiceRef, branchId, conversationId} = choiceRefSet;
     if (!choiceRef) {
         console.warn(`missing choiceRef for findChoiceFromRefSet in conversation ${currentConversation.id}`)
         return
@@ -45,7 +46,7 @@ function findChoiceFromRefSet(
 
 function setChoicesDisabled(
     disable: boolean,
-    choiceRefSets: (string | undefined)[][],
+    choiceRefSets: ChoiceRefSet[],
     conversations: Conversation[],
     currentConversation: Conversation
 ): Conversation[] {

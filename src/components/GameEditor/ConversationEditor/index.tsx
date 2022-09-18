@@ -6,7 +6,7 @@ import { SelectInput, TextInput } from "../formControls";
 import { cloneData } from "../../../lib/clone";
 import { uploadJsonData } from "../../../lib/files";
 import { StorageMenu } from "../StorageMenu";
-import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationChoiceSchema } from "../../../definitions/Conversation";
+import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationChoiceSchema, ChoiceRefSet } from "../../../definitions/Conversation";
 import { Entry, Folder, TreeMenu } from "../TreeMenu";
 import styles from "../editorStyles.module.css"
 import { SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
@@ -119,10 +119,14 @@ export class ConversationEditor extends Component<Props, State> {
         }
     }
 
+    //TO DO - find the bug that results in the list being [string, null, null]!
+    // {x:[1,undefined,1]} clones to {x:[1,null,1]}
+    // either support null value at runtime of change the schema to avoid
+    // undefined as array members
     updateChoiceListItem(
         property: 'enablesChoices' | 'disablesChoices',
         indexOfSet: number,
-        newRefSet: (string | undefined)[],
+        newRefSet: ChoiceRefSet,
     ) {
         this.setStateWithAutosave(state => {
             const { branches } = state
@@ -142,7 +146,7 @@ export class ConversationEditor extends Component<Props, State> {
             const { choice } = this.getBranchAndChoice(state)
             if (!choice) { return {} }
             if (!choice[property]) { choice[property] = [] }
-            choice[property]?.push([undefined, undefined, undefined])
+            choice[property]?.push({})
             return { branches }
         })
     }
@@ -277,7 +281,7 @@ export class ConversationEditor extends Component<Props, State> {
 
     render() {
         const { state } = this
-        const { branches, defaultBranch, currentBranch, openBranchId, id } = this.state
+        const { branches, defaultBranch, currentBranch, openBranchId, id, activeChoiceIndex } = this.state
         const { conversations, sequenceIds, deleteData, options } = this.props
         const { choice } = this.getBranchAndChoice(state)
 
@@ -343,7 +347,7 @@ export class ConversationEditor extends Component<Props, State> {
 
                     {choice && (
                         <section style={{ paddingLeft: '1em' }}>
-                            <SchemaForm
+                            <SchemaForm key={`schema-${id}-${openBranchId}-${activeChoiceIndex}`}
                                 schema={ConversationChoiceSchema}
                                 data={choice}
                                 changeValue={this.handleChoiceChange}
@@ -353,7 +357,7 @@ export class ConversationEditor extends Component<Props, State> {
                                 }}
                             />
 
-                            <ChoiceListControl
+                            <ChoiceListControl key={`disablesChoices-${id}-${openBranchId}-${activeChoiceIndex}`}
                                 choices={choice.disablesChoices || []}
                                 property="disablesChoices"
                                 conversations={conversations}
@@ -363,7 +367,7 @@ export class ConversationEditor extends Component<Props, State> {
                                 change={this.updateChoiceListItem}
                                 remove={this.removeChoiceListItem}
                             />
-                            <ChoiceListControl
+                            <ChoiceListControl key={`enablesChoice-s${id}-${openBranchId}-${activeChoiceIndex}`}
                                 choices={choice.enablesChoices || []}
                                 property="enablesChoices"
                                 conversations={conversations}

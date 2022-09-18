@@ -1,5 +1,13 @@
 import { z } from "zod"
 
+const ChoiceRefSetSchema = z.object({
+    conversationId: z.string().optional(),
+    branchId: z.string().optional(),
+    choiceRef: z.string().optional(),
+})
+
+export type ChoiceRefSet = z.infer<typeof ChoiceRefSetSchema>;
+
 export const ConversationChoiceSchema = z.object({
     ref: z.string().optional(),
     text: z.string(),
@@ -7,8 +15,8 @@ export const ConversationChoiceSchema = z.object({
     nextBranch: z.optional(z.string()),
     once: z.optional(z.boolean()),
     disabled: z.optional(z.boolean()),
-    enablesChoices: z.optional(z.array(z.array(z.optional(z.string())))),
-    disablesChoices: z.optional(z.array(z.array(z.optional(z.string())))),
+    enablesChoices: z.array(ChoiceRefSetSchema).optional(),
+    disablesChoices: z.array(ChoiceRefSetSchema).optional(),
     end: z.optional(z.boolean()),
 })
 
