@@ -30,13 +30,13 @@ export function ItemMenu({ items, currentItemId, select, handleHover }: Props) {
                         <button key={item.id} className={classNames}
                             style={{
                                 backgroundImage: imageUrl ? `url(${imageUrl})` : undefined,
-                                minHeight: '3rem',
+                                minHeight: '4rem',
                             }}
                             onClick={() => { select(item) }}
                             onMouseEnter={handleHover ? () => { handleHover(item, 'enter') } : undefined}
                             onMouseLeave={handleHover ? () => { handleHover(item, 'leave') } : undefined}
                         >
-                            <span>{item.name || item.id}</span>
+                            {!imageUrl && <span>{item.name || item.id}</span>}
                         </button>
                     )
                 })}
