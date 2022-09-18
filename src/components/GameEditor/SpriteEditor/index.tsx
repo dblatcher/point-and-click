@@ -13,7 +13,7 @@ import spriteService from "../../../services/spriteService";
 import { FramePicker } from "./FramePicker";
 import styles from '../editorStyles.module.css';
 import { StorageMenu } from "../StorageMenu";
-import { DataItemEditorProps } from "../dataEditors";
+import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
 
 type ExtraState = {
     selectedAnimation?: string;
@@ -42,6 +42,8 @@ function getBlankSprite(): SpriteData {
 
 export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState>{
 
+    setStateWithAutosave: EnhancedSetStateFunction<SpriteEditorState>
+
     constructor(props: SpriteEditorProps) {
         super(props)
 
@@ -61,7 +63,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.editCycle = this.editCycle.bind(this)
         this.buildActorData = this.buildActorData.bind(this)
         this.pickFrame = this.pickFrame.bind(this)
-        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
+        this.setStateWithAutosave = higherLevelSetStateWithAutosave(this).bind(this)
     }
 
     get currentData(): SpriteData {
@@ -73,21 +75,8 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         return data
     }
 
-    setStateWithAutosave(input: Partial<SpriteEditorState> | { (state: SpriteEditorState): Partial<SpriteEditorState> }, callback?: { (): void }) {
-        const { options, data, updateData, spriteIds = [] } = this.props
-
-        if (!options.autoSave) {
-            return this.setState(input, callback)
-        }
-
-        return this.setState(input, () => {
-            if (data && spriteIds.includes(this.state.id)) {
-                updateData(this.currentData)
-            }
-            if (callback) {
-                callback()
-            }
-        })
+    get existingIds(): string[] {
+        return this.props.spriteIds
     }
 
     pickFrame(selectedRow: number, selectedCol: number, selectedSheetId?: string) {

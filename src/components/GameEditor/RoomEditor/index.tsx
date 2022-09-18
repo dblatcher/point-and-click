@@ -22,7 +22,7 @@ import { RoomDataSchema } from "../../../definitions/RoomData";
 import { ListEditor } from "../ListEditor";
 import { Entry, Folder, TreeMenu } from "../TreeMenu";
 import { ZoneSetEditor } from "./ZoneSetEditor";
-import { DataItemEditorProps } from "../dataEditors";
+import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
 
 type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -33,7 +33,7 @@ type RoomEditorState = RoomData & {
 };
 
 type RoomEditorProps = DataItemEditorProps<RoomData> & {
-    existingRoomIds?: string[];
+    existingRoomIds: string[];
     actors?: ActorData[];
 }
 
@@ -53,6 +53,8 @@ function makeNewZone(point: Point, effect: NewObstableEffect | NewWalkableEffect
 }
 
 export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
+
+    setStateWithAutosave: EnhancedSetStateFunction<RoomEditorState>
 
     constructor(props: RoomEditor['props']) {
         super(props)
@@ -77,7 +79,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.handleTreeEntryClick = this.handleTreeEntryClick.bind(this)
-        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
+        this.setStateWithAutosave = higherLevelSetStateWithAutosave(this).bind(this)
     }
 
     get currentData(): RoomData {
@@ -90,18 +92,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         return roomData
     }
 
-    setStateWithAutosave(input: Partial<RoomEditorState> | { (state: RoomEditorState): Partial<RoomEditorState> }) {
-        const { options, data, updateData, existingRoomIds = [] } = this.props
-
-        if (!options.autoSave) {
-            return this.setState(input)
-        }
-
-        return this.setState(input, () => {
-            if (data && existingRoomIds.includes(this.state.id)) {
-                updateData(this.currentData)
-            }
-        })
+    get existingIds(): string[] {
+        return this.props.existingRoomIds
     }
 
     setClickEffect(clickEffect?: ClickEffect) {

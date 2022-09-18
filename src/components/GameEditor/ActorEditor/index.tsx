@@ -9,13 +9,12 @@ import spriteService from "../../../services/spriteService";
 import { SpritePreview } from "../SpritePreview";
 import { StorageMenu } from "../StorageMenu";
 import { cloneData } from "../../../lib/clone";
-import { Sprite } from "../../../lib/Sprite";
 import { getStatusSuggestions } from "../../../lib/animationFunctions";
 import { findById, listIds } from "../../../lib/util";
 import { uploadJsonData } from "../../../lib/files";
 import styles from "../editorStyles.module.css"
 import { PositionPreview } from "./PositionPreview";
-import { DataItemEditorProps } from "../dataEditors";
+import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
 import { RecordEditor } from "../RecordEditor";
 import { SoundValueForm } from "./SoundValueForm";
 
@@ -52,6 +51,8 @@ const newSound = (): SoundValue => ({ soundId: "beep" })
 
 export class ActorEditor extends Component<Props, State> {
 
+    setStateWithAutosave: EnhancedSetStateFunction<State>
+
     constructor(props: Props) {
         super(props)
 
@@ -69,7 +70,7 @@ export class ActorEditor extends Component<Props, State> {
         this.handlePreviewClick = this.handlePreviewClick.bind(this)
         this.changeValue = this.changeValue.bind(this)
         this.changeSoundMap = this.changeSoundMap.bind(this)
-        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
+        this.setStateWithAutosave = higherLevelSetStateWithAutosave(this).bind(this)
     }
 
     get currentData(): ActorData {
@@ -77,21 +78,8 @@ export class ActorEditor extends Component<Props, State> {
         return actorData
     }
 
-    setStateWithAutosave(input: Partial<State> | { (state: State): Partial<State> }, callback?: { (): void }) {
-        const { options, data, updateData, actorIds = [] } = this.props
-
-        if (!options.autoSave) {
-            return this.setState(input, callback)
-        }
-
-        return this.setState(input, () => {
-            if (data && actorIds.includes(this.state.id)) {
-                updateData(this.currentData)
-            }
-            if (callback) {
-                callback()
-            }
-        })
+    get existingIds(): string[] {
+        return this.props.actorIds;
     }
 
     changeValue(propery: keyof ActorData, newValue: unknown) {
