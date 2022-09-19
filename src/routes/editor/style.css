@@ -15,3 +15,8 @@
 .editor h3 {
 	margin: 0;
 }
+
+.editor textarea {
+	width: 20rem;
+	height: 3rem;
+}
