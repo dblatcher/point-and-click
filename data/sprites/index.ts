@@ -3,7 +3,7 @@ import * as marioSprite from "./marioSprite";
 import * as fireSprite from "./fireSprite";
 import * as tubeSprite from "./tubeSprite";
 import * as boySprite from "./boySprite";
-import { SpriteData, SpriteSheet } from "src/definitions/SpriteSheet";
+import { SpriteData } from "src/definitions/SpriteSheet";
 
 export const spriteDataList: SpriteData[] = [
   skinnerSprite.data,
@@ -12,11 +12,3 @@ export const spriteDataList: SpriteData[] = [
   tubeSprite.data,
   boySprite.data,
 ];
-
-export const spriteSheets: SpriteSheet[] = [
-    ...skinnerSprite.sheets,
-    ...marioSprite.sheets,
-    ...fireSprite.sheets,
-    ...tubeSprite.sheets,
-    ...boySprite.sheets,
-]

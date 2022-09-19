@@ -1,5 +1,4 @@
 import { SpriteData, Direction, SpriteFrame, Animation } from "../definitions/SpriteSheet"
-import spriteSheetService from "../services/spriteSheetService";
 import imageService, { ImageAsset } from "../services/imageService";
 
 
@@ -55,9 +54,7 @@ export class Sprite {
         const frame = frames[frameIndex]
 
         if (!frame) { return undefined }
-        const sheet = spriteSheetService.get(frame.imageId)
-        if (!sheet) { return undefined }
-        const imageAsset = imageService.get(sheet.imageId)
+        const imageAsset = imageService.get(frame.imageId)
         if (!imageAsset) { return undefined }
         return {
             image: imageAsset,

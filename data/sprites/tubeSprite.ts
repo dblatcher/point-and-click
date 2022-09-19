@@ -1,13 +1,4 @@
-import { SpriteData, SpriteSheet } from "../../src/definitions/SpriteSheet";
-
-export const sheets: SpriteSheet[] = [
-    {
-        id: 'tube',
-        imageId: "tube.png",
-        rows: 1,
-        cols: 1
-    },
-]
+import { SpriteData } from "../../src/definitions/SpriteSheet";
 
 export const data: SpriteData = {
     id: 'tube',
@@ -15,7 +6,7 @@ export const data: SpriteData = {
     animations: {
         default: {
             left: [
-                { imageId: 'tube', row: 0, col: 0 },
+                { imageId: 'tube.png', row: 0, col: 0 },
             ],
         }
     }
