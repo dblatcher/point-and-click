@@ -231,7 +231,6 @@ export class GameEditor extends Component<Props, State>{
                     break
                 }
                 case 'openingSequenceId': {
-                    console.log('openingSequenceId data', typeof data, data)
                     if (data === '' || typeof data === 'undefined') {
                         gameDesign[property] = undefined
                     } else {
