@@ -121,7 +121,7 @@ export class ImageAssetTool extends Component<{}, State> {
 
     // create a new url as the one in state is revoked when
     // a new file is uploaded or a asset retrieved from the service.
-    const newHref = file ? fileToObjectUrl(file) : undefined
+    const newHref = file ? fileToObjectUrl(file) : asset.href
 
     if (!asset.id || !newHref || !asset.category) {
       let saveWarning = ''
@@ -185,12 +185,10 @@ export class ImageAssetTool extends Component<{}, State> {
     const {
       saveWarning,
       uploadWarning,
-      fileObjectUrl,
       asset
     } = this.state;
 
     const {
-      href,
       id = "",
       category = "",
       rows, cols, widthScale, heightScale
@@ -286,8 +284,6 @@ export class ImageAssetTool extends Component<{}, State> {
             </fieldset>
 
             <p>Resizing the preview does not effect the image data.</p>
-
-            <p>{this.fullAsset.href}</p>
             <SpriteSheetPreview
               imageAsset={this.fullAsset}
               canvasScale={300} />
