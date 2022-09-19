@@ -55,7 +55,7 @@ export class Sprite {
         const frame = frames[frameIndex]
 
         if (!frame) { return undefined }
-        const sheet = spriteSheetService.get(frame.sheetId)
+        const sheet = spriteSheetService.get(frame.imageId)
         if (!sheet) { return undefined }
         const imageAsset = imageService.get(sheet.imageId)
         if (!imageAsset) { return undefined }

@@ -23,7 +23,7 @@ export const FramePreview: FunctionalComponent<Props> = ({
         height: '100%',
     }
 
-    const sheet = spriteSheetService.get(frame.sheetId)
+    const sheet = spriteSheetService.get(frame.imageId)
     if (sheet) {
         const url = imageService.get(sheet.imageId)?.href
         Object.assign(figureStyle, {

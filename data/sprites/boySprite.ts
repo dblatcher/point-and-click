@@ -15,42 +15,42 @@ export const data: SpriteData = {
     animations: {
         default: {
             down: [
-                { sheetId: 'boy', row: 0, col: 0 },
+                { imageId: 'boy', row: 0, col: 0 },
             ],
             up: [
-                { sheetId: 'boy', row: 1, col: 0 },
+                { imageId: 'boy', row: 1, col: 0 },
             ],
             left: [
-                { sheetId: 'boy', row: 2, col: 0 },
+                { imageId: 'boy', row: 2, col: 0 },
             ],
             right: [
-                { sheetId: 'boy', row: 3, col: 0 },
+                { imageId: 'boy', row: 3, col: 0 },
             ],
         },
         walk: {
             down: [
-                { sheetId: 'boy', row: 0, col: 0 },
-                { sheetId: 'boy', row: 0, col: 1 },
-                { sheetId: 'boy', row: 0, col: 2 },
-                { sheetId: 'boy', row: 0, col: 3 },
+                { imageId: 'boy', row: 0, col: 0 },
+                { imageId: 'boy', row: 0, col: 1 },
+                { imageId: 'boy', row: 0, col: 2 },
+                { imageId: 'boy', row: 0, col: 3 },
             ],
             up: [
-                { sheetId: 'boy', row: 1, col: 0 },
-                { sheetId: 'boy', row: 1, col: 1 },
-                { sheetId: 'boy', row: 1, col: 2 },
-                { sheetId: 'boy', row: 1, col: 3 },
+                { imageId: 'boy', row: 1, col: 0 },
+                { imageId: 'boy', row: 1, col: 1 },
+                { imageId: 'boy', row: 1, col: 2 },
+                { imageId: 'boy', row: 1, col: 3 },
             ],
             left: [
-                { sheetId: 'boy', row: 2, col: 0 },
-                { sheetId: 'boy', row: 2, col: 1 },
-                { sheetId: 'boy', row: 2, col: 2 },
-                { sheetId: 'boy', row: 2, col: 3 },
+                { imageId: 'boy', row: 2, col: 0 },
+                { imageId: 'boy', row: 2, col: 1 },
+                { imageId: 'boy', row: 2, col: 2 },
+                { imageId: 'boy', row: 2, col: 3 },
             ],
             right: [
-                { sheetId: 'boy', row: 3, col: 0 },
-                { sheetId: 'boy', row: 3, col: 1 },
-                { sheetId: 'boy', row: 3, col: 2 },
-                { sheetId: 'boy', row: 3, col: 3 },
+                { imageId: 'boy', row: 3, col: 0 },
+                { imageId: 'boy', row: 3, col: 1 },
+                { imageId: 'boy', row: 3, col: 2 },
+                { imageId: 'boy', row: 3, col: 3 },
             ],
 
         },

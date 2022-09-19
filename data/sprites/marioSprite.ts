@@ -15,24 +15,24 @@ export const data: SpriteData = {
     animations: {
         default: {
             left: [
-                { sheetId: 'mario', row: 1, col: 0 },
+                { imageId: 'mario', row: 1, col: 0 },
             ],
             right: [
-                { sheetId: 'mario', row: 0, col: 0 },
+                { imageId: 'mario', row: 0, col: 0 },
             ]
         },
         walk: {
             left: [
-                { sheetId: 'mario', row: 1, col: 0 },
-                { sheetId: 'mario', row: 1, col: 1 },
-                { sheetId: 'mario', row: 1, col: 2 },
-                { sheetId: 'mario', row: 1, col: 1 },
+                { imageId: 'mario', row: 1, col: 0 },
+                { imageId: 'mario', row: 1, col: 1 },
+                { imageId: 'mario', row: 1, col: 2 },
+                { imageId: 'mario', row: 1, col: 1 },
             ],
             right: [
-                { sheetId: 'mario', row: 0, col: 0 },
-                { sheetId: 'mario', row: 0, col: 1 },
-                { sheetId: 'mario', row: 0, col: 2 },
-                { sheetId: 'mario', row: 0, col: 1 },
+                { imageId: 'mario', row: 0, col: 0 },
+                { imageId: 'mario', row: 0, col: 1 },
+                { imageId: 'mario', row: 0, col: 2 },
+                { imageId: 'mario', row: 0, col: 1 },
             ]
         },
     }

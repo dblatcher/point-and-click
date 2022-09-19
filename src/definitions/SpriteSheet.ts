@@ -13,7 +13,7 @@ export const SpriteSheetSchema = z.object({
 export type SpriteSheet = z.infer<typeof SpriteSheetSchema>
 
 export const SpriteFrameSchema = z.object({
-    sheetId: z.string(),
+    imageId: z.string(),
     row: z.number(),
     col: z.number(),
 })

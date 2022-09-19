@@ -269,7 +269,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                             selectedFrame={selectedSheetId ? {
                                 row: selectedRow,
                                 col: selectedCol,
-                                sheetId: selectedSheetId,
+                                imageId: selectedSheetId,
                             } : undefined}
                         />
                     )}

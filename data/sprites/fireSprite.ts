@@ -15,25 +15,25 @@ export const data: SpriteData = {
     animations: {
         default: {
             left: [
-                { sheetId: 'fire', row: 0, col: 0 },
-                { sheetId: 'fire', row: 0, col: 1 },
-                { sheetId: 'fire', row: 0, col: 2 },
-                { sheetId: 'fire', row: 0, col: 3 },
+                { imageId: 'fire', row: 0, col: 0 },
+                { imageId: 'fire', row: 0, col: 1 },
+                { imageId: 'fire', row: 0, col: 2 },
+                { imageId: 'fire', row: 0, col: 3 },
             ],
         },
         out: {
             left: [
-                { sheetId: 'fire', row: 1, col: 2 },
-                { sheetId: 'fire', row: 1, col: 3 },
+                { imageId: 'fire', row: 1, col: 2 },
+                { imageId: 'fire', row: 1, col: 3 },
             ],
         },
         fade: {
             left: [
-                { sheetId: 'fire', row: 0, col: 1 },
-                { sheetId: 'fire', row: 0, col: 0 },
-                { sheetId: 'fire', row: 1, col: 0 },
-                { sheetId: 'fire', row: 1, col: 1 },
-                { sheetId: 'fire', row: 1, col: 2 },
+                { imageId: 'fire', row: 0, col: 1 },
+                { imageId: 'fire', row: 0, col: 0 },
+                { imageId: 'fire', row: 1, col: 0 },
+                { imageId: 'fire', row: 1, col: 1 },
+                { imageId: 'fire', row: 1, col: 2 },
             ]
         }
     }

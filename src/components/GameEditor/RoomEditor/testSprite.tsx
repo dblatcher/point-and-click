@@ -20,16 +20,16 @@ const data: SpriteData = {
     animations: {
         default: {
             left: [
-                { sheetId: '_test_sprite_sheet', row: 1, col: 0 },
-                { sheetId: '_test_sprite_sheet', row: 1, col: 1 },
-                { sheetId: '_test_sprite_sheet', row: 1, col: 2 },
-                { sheetId: '_test_sprite_sheet', row: 1, col: 1 },
+                { imageId: '_test_sprite_sheet', row: 1, col: 0 },
+                { imageId: '_test_sprite_sheet', row: 1, col: 1 },
+                { imageId: '_test_sprite_sheet', row: 1, col: 2 },
+                { imageId: '_test_sprite_sheet', row: 1, col: 1 },
             ],
             right: [
-                { sheetId: '_test_sprite_sheet', row: 0, col: 0 },
-                { sheetId: '_test_sprite_sheet', row: 0, col: 1 },
-                { sheetId: '_test_sprite_sheet', row: 0, col: 2 },
-                { sheetId: '_test_sprite_sheet', row: 0, col: 1 },
+                { imageId: '_test_sprite_sheet', row: 0, col: 0 },
+                { imageId: '_test_sprite_sheet', row: 0, col: 1 },
+                { imageId: '_test_sprite_sheet', row: 0, col: 2 },
+                { imageId: '_test_sprite_sheet', row: 0, col: 1 },
             ]
         },
     }

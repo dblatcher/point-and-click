@@ -15,7 +15,7 @@ export const data: SpriteData = {
     animations: {
         default: {
             left: [
-                { sheetId: 'tube', row: 0, col: 0 },
+                { imageId: 'tube', row: 0, col: 0 },
             ],
         }
     }

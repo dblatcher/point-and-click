@@ -63,7 +63,7 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                                     }}
                                     describeItem={(frame) => (
                                         <button
-                                            onClick={() => { pickFrame(frame.row, frame.col, frame.sheetId) }}
+                                            onClick={() => { pickFrame(frame.row, frame.col, frame.imageId) }}
                                             className={styles.frameBlock}>
                                             <FramePreview
                                                 height={50}
@@ -71,7 +71,7 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                                                 backgroundColor={'yellow'}
                                                 frame={frame} />
                                             <div className={styles.frameBlockText}>
-                                                <p>{frame.sheetId}</p>
+                                                <p>{frame.imageId}</p>
                                                 <p>[{frame.col}, {frame.row}]</p>
                                             </div>
                                         </button>
