@@ -183,6 +183,7 @@ export class SoundAssetTool extends Component<{}, State> {
             <ServiceItemSelector
               legend="open asset"
               service={soundService}
+              currentSelection={id}
               select={this.openFromService} />
 
             <fieldset className={styles.fieldset}>

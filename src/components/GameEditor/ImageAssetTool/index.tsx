@@ -204,6 +204,7 @@ export class ImageAssetTool extends Component<{}, State> {
             <ServiceItemSelector
               legend="assets"
               service={imageService}
+              currentSelection={id}
               select={this.openFromService} />
 
             <fieldset className={styles.fieldset}>

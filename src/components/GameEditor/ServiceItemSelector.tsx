@@ -6,6 +6,7 @@ import { Service, ServiceItem } from "../../services/Service";
 import { icons } from "./dataEditors";
 
 import editorStyles from "./editorStyles.module.css"
+import { StringInput } from "./formControls";
 
 
 interface Props {
@@ -16,17 +17,20 @@ interface Props {
     format?: 'buttons' | 'select';
     selectedItemId?: string;
     filterItems?: { (item: ServiceItem): boolean };
+    currentSelection?: string;
 }
 
-export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, select, selectNone, legend, format = 'buttons', selectedItemId = '', filterItems }: Props) => {
+export const ServiceItemSelector: FunctionalComponent<Props> = ({
+    service, select, selectNone, legend, format = 'buttons', selectedItemId = '', filterItems, currentSelection
+}: Props) => {
 
+    const [searchInput, setSearchInput] = useState('')
     const [timestamp, setTimestamp] = useState<number>(Date.now())
     const refresh = () => {
         setTimestamp(Date.now())
     }
 
     useEffect(() => {
-
         service.on('update', refresh)
         return () => {
             service.off('update', refresh)
@@ -53,6 +57,8 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, selec
         ? service.getAll().filter(filterItems).map(item => item.id)
         : service.list();
 
+    const searchedList = searchInput !== '' ? list.filter(id => id.toLowerCase().includes(searchInput.toLowerCase())) : list
+
     switch (format) {
         case 'select':
             return (
@@ -69,13 +75,15 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({ service, selec
             )
         case 'buttons':
         default:
+
             return <fieldset className={editorStyles.fieldset}>
                 <legend>{legend}</legend>
+                <StringInput label="search" block value={searchInput} inputHandler={setSearchInput} />
                 <div updated-at={timestamp}>
                     <ul className={editorStyles.flexList}>
-                        {list.map(id =>
+                        {searchedList.map(id =>
                             <li key={id}>
-                                <button onClick={() => { handleSelect(id) }}>{id}</button>
+                                <button onClick={() => { handleSelect(id) }}>{id === currentSelection ? `** ${id} **` : id}</button>
                                 <button className={editorStyles.deleteButton} onClick={() => { handleDelete(id) }}>{icons.DELETE}</button>
                             </li>
                         )}
