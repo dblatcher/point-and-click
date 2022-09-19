@@ -63,7 +63,10 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.editCycle = this.editCycle.bind(this)
         this.buildActorData = this.buildActorData.bind(this)
         this.pickFrame = this.pickFrame.bind(this)
-        this.setStateWithAutosave = higherLevelSetStateWithAutosave(this).bind(this)
+        this.setStateWithAutosave = (input, callback) => {
+            higherLevelSetStateWithAutosave(this).bind(this)(input, callback)
+            spriteService.add(new Sprite(this.currentData))
+        }
     }
 
     get currentData(): SpriteData {
@@ -160,8 +163,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
     handleUpdateButton() {
         const { currentData } = this
-        const spriteObject = new Sprite(currentData)
-        spriteService.add(spriteObject)
+        spriteService.add(new Sprite(currentData))
         if (this.props.updateData) {
             this.props.updateData(currentData)
         }
