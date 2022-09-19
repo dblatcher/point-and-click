@@ -6,9 +6,9 @@ import HorizontalLine from "../HorizontalLine";
 import { Sprite } from "../../lib/Sprite";
 
 const makeRoomData: { (actorData: ActorData): RoomData } = (actorData) => ({
-    height: actorData.height + 10,
-    width: actorData.width + 10,
-    frameWidth: actorData.width + 10,
+    height: actorData.height  + 10,
+    width: (actorData.width * 1.5) + 10,
+    frameWidth: (actorData.width * 1.5) + 10,
     id: '',
     background: []
 })
@@ -37,8 +37,12 @@ export class SpritePreview extends Component<Props, State>{
     render() {
         const { maxWidth } = this.state
         const { data, overrideSprite } = this.props
-
         const roomData = makeRoomData(data)
+
+        const modifiedActorData: ActorData = {
+            ...data,
+            x: roomData.width / 2
+        }
 
         return (
             <Room data={roomData}
@@ -49,7 +53,7 @@ export class SpritePreview extends Component<Props, State>{
                 highlightHotspots={false}
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 handleRoomClick={() => { }}
-                contents={[{ overrideSprite, data, }]}
+                contents={[{ overrideSprite, data: modifiedActorData, }]}
             >
                 <HorizontalLine roomData={roomData} y={data.baseline || 0} />
             </Room>
