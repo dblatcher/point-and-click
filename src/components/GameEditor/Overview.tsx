@@ -52,7 +52,6 @@ export const Overview: FunctionalComponent<Props> = ({
         <li>actors: {gameDesign.actors.length}</li>
         <li>conversations: {gameDesign.conversations.length}</li>
         <li>sprites: {gameDesign.sprites.length}</li>
-        <li>sprite sheets: {gameDesign.spriteSheets.length}</li>
         <li>interactions: {gameDesign.interactions.length}</li>
         <li>sequences: {gameDesign.sequences.length}</li>
         <li>endings: {gameDesign.endings.length}</li>

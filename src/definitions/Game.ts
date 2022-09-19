@@ -7,7 +7,7 @@ import { Sequence, SequenceSchema } from "./Sequence"
 import { ActorData, ActorDataSchema } from "./ActorData"
 import { Verb, VerbSchema } from "./Verb"
 import { Conversation, ConversationSchema } from "./Conversation"
-import { SpriteData, SpriteSheet, SpriteDataSchema, SpriteSheetSchema } from "./SpriteSheet"
+import { SpriteData, SpriteDataSchema } from "./SpriteSheet"
 import { Ending, EndingSchema } from "./Ending"
 import { FlagMapSchema } from "./Flag"
 
@@ -36,7 +36,6 @@ export const FixedGameInfoSchema = z.object({
     verbs: VerbSchema.array(),
     sequences: SequenceSchema.array(),
     sprites: SpriteDataSchema.array(),
-    spriteSheets: SpriteSheetSchema.array(),
     endings: EndingSchema.array(),
     openingSequenceId: z.string().optional(),
 })
@@ -54,4 +53,4 @@ export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>
 export type GameDesign = z.infer<typeof GameDesignSchema>
 
-export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | SpriteSheet | Sequence | Ending | Verb
+export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Ending | Verb

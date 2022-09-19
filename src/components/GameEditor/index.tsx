@@ -108,7 +108,6 @@ export class GameEditor extends Component<Props, State>{
             currentRoomId: defaultRoomId,
             sequences: [],
             sprites: [],
-            spriteSheets: [],
             endings: [],
             flagMap: {},
         };

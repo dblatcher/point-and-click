@@ -1,7 +1,6 @@
 import imageService, { ImageAsset } from "./imageService";
 import soundService, { SoundAsset } from "./soundService";
 import spriteService from "./spriteService";
-import spriteSheetService from "./spriteSheetService";
 import { Sprite } from "../lib/Sprite";
 import { imageAssets } from "../../data/images";
 import { soundAssets } from "../../data/sounds";
@@ -12,7 +11,6 @@ export function populateServicesForPreBuiltGame(): void {
   const sprites = prebuiltGameDesign.sprites.map((data) => new Sprite(data));
   console.log("populating services");
   spriteService.add(sprites);
-  spriteSheetService.add(prebuiltGameDesign.spriteSheets);
   imageService.add(imageAssets);
   soundService.add(soundAssets);
 }
@@ -24,7 +22,6 @@ export function populateServices(
 ): void {
   console.log("populating services for:", gameDesign.id);
   spriteService.add(gameDesign.sprites.map((data) => new Sprite(data)));
-  spriteSheetService.add(gameDesign.spriteSheets);
   imageService.add(imageAssets);
   soundService.add(soundAssets);
 }

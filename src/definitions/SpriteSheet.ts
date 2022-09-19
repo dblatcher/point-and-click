@@ -2,16 +2,6 @@ import { z } from "zod"
 import { type Direction, directions, DirectionEnum } from "./BaseTypes"
 
 
-export const SpriteSheetSchema = z.object({
-    id: z.string(),
-    imageId: z.string(),
-    rows: z.number(),
-    cols: z.number(),
-    widthScale: z.number().optional(),
-    heightScale: z.number().optional(),
-})
-export type SpriteSheet = z.infer<typeof SpriteSheetSchema>
-
 export const SpriteFrameSchema = z.object({
     imageId: z.string(),
     row: z.number(),
@@ -36,12 +26,6 @@ export const SpriteDataSchema = z.object({
 })
 export type SpriteData = z.infer<typeof SpriteDataSchema>
 
-
-// export interface SpriteData {
-//     id: string;
-//     defaultDirection: Direction;
-//     animations: Record<string, Partial<Record<Direction, SpriteFrame[]>>>;
-// }
 
 
 export { Direction, directions }

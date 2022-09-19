@@ -25,7 +25,6 @@ export const prebuiltGameDesign: GameDesign = {
     conversations,
     endings,
     sprites: spriteDataList,
-    spriteSheets: [],
     flagMap,
     openingSequenceId: 'LIGHT_FIRE',
 }

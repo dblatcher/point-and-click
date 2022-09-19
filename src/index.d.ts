@@ -16,7 +16,7 @@ export type { Consequence, ConsequenceType, AnyConsequence, ZoneType, ImmediateC
 export type { Interaction } from "./definitions/Interaction"
 export { zoneTypes } from "./definitions/Interaction"
 export type { Sequence } from "./definitions/Sequence";
-export type { SpriteSheet, SpriteData, SpriteFrame, Animation } from "./definitions/SpriteSheet";
+export type { SpriteData, SpriteFrame, Animation } from "./definitions/SpriteSheet";
 export type { Ending } from "./definitions/Ending"
 export type { FlagMap, Flag } from "./definitions/Flag"
 

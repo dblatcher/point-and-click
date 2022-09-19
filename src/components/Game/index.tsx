@@ -280,7 +280,6 @@ export default class Game extends Component<GameProps, GameState> {
                         verbs,
                         sequences: this.props.sequences,
                         sprites: this.props.sprites,
-                        spriteSheets: this.props.spriteSheets,
                         endings: this.props.endings,
                         ...this.state,
                     }}
