@@ -35,7 +35,7 @@ import layoutStyles from "./editorLayoutStyles.module.css";
 import { CheckBoxInput } from "./formControls";
 
 
-const usePrebuiltGame = false
+const usePrebuiltGame = true
 if (usePrebuiltGame) {
     populateServicesForPreBuiltGame()
 }
@@ -516,7 +516,7 @@ export class GameEditor extends Component<Props, State>{
                             <div>
                                 <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset game test</button>
                                 <hr />
-                                <Game key={this.state.resetTimeStamp}
+                                <Game key={this.state.resetTimeStamp} startPaused
                                     {...gameDesign} actorOrders={{}} gameNotBegun
                                     showDebugLog={true} />
                             </div>

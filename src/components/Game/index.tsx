@@ -26,6 +26,7 @@ export type GameProps = Readonly<{
     reset?: { (): void };
     load?: { (): void };
     showDebugLog?: boolean;
+    startPaused?: boolean;
 } & GameCondition>
 
 export type GameState = GameData & {
@@ -90,7 +91,7 @@ export default class Game extends Component<GameProps, GameState> {
 
         return {
             viewAngle: 0,
-            isPaused: false,
+            isPaused: props.startPaused || false,
             id: props.id,
             currentRoomId: props.currentRoomId,
             actors,
