@@ -33,7 +33,7 @@ import layoutStyles from "./editorLayoutStyles.module.css";
 import { CheckBoxInput } from "./formControls";
 
 
-const usePrebuiltGame = true
+const usePrebuiltGame = false
 if (usePrebuiltGame) {
     populateServicesForPreBuiltGame()
 }
