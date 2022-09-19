@@ -46,9 +46,6 @@ export const Overview: FunctionalComponent<Props> = ({
         }}
       />
 
-      <p>{gameDesign.openingSequenceId}</p>
-      <p>{typeof gameDesign.openingSequenceId}</p>
-
       <ul>
         <li>rooms: {gameDesign.rooms.length}</li>
         <li>items: {gameDesign.items.length}</li>
