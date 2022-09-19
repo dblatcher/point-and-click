@@ -142,6 +142,7 @@ export class SpriteSheetTool extends Component<Props, State> {
             spriteSheetIds
         } = this.props
 
+return null;
         return (
             <article>
                 <h2>SpriteSheetTool</h2>
@@ -212,9 +213,6 @@ export class SpriteSheetTool extends Component<Props, State> {
                         <p>Resizing the preview does not effect the SpriteSheet data.</p>
                         <p>The dimensions of the frame are set on the sprite objects.</p>
 
-                        <SpriteSheetPreview
-                            sheet={{ rows, cols, imageId, id }}
-                            canvasScale={canvasScale} />
                     </section>
                 </div>
             </article>

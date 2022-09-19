@@ -1,7 +1,6 @@
 import { FunctionalComponent, h, JSX } from "preact";
 import { SpriteFrame } from "src";
 import imageService from "../../../services/imageService";
-import spriteSheetService from "../../../services/spriteSheetService";
 
 
 interface Props {
@@ -23,14 +22,14 @@ export const FramePreview: FunctionalComponent<Props> = ({
         height: '100%',
     }
 
-    const sheet = spriteSheetService.get(frame.imageId)
-    if (sheet) {
-        const url = imageService.get(sheet.imageId)?.href
+    const image = imageService.get(frame.imageId)
+    if (image) {
+        const { href, cols = 1, rows = 1 } = image
         Object.assign(figureStyle, {
-            backgroundImage: `url(${url})`,
+            backgroundImage: `url(${href})`,
             backgroundPositionX: `${-100 * frame.col}%`,
             backgroundPositionY: `${-100 * frame.row}%`,
-            backgroundSize: `${100 * sheet.cols}% ${100 * sheet.rows}%`,
+            backgroundSize: `${100 * cols}% ${100 * rows}%`,
         })
     }
 

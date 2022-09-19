@@ -29,7 +29,6 @@ import { FlagMap } from "src/definitions/Flag";
 import { populateServicesForPreBuiltGame } from "../../services/populateServices";
 import imageService from "../../services/imageService";
 import spriteService from "../../services/spriteService";
-import spriteSheetService from "../../services/spriteSheetService";
 
 import layoutStyles from "./editorLayoutStyles.module.css";
 import { CheckBoxInput } from "./formControls";
@@ -252,9 +251,6 @@ export class GameEditor extends Component<Props, State>{
                 if (property === 'sprites' && 'id' in deletedItem) {
                     spriteService.remove(deletedItem.id)
                 }
-                if (property === 'spriteSheets' && 'id' in deletedItem) {
-                    spriteSheetService.remove(deletedItem.id)
-                }
             }
             return { gameDesign }
         })
@@ -273,7 +269,6 @@ export class GameEditor extends Component<Props, State>{
     }
     loadNewGame(gameDesign: GameDesign) {
         this.setState({ gameDesign })
-        spriteSheetService.add(gameDesign.spriteSheets)
     }
 
     get noOpenItemsState(): Partial<State> {

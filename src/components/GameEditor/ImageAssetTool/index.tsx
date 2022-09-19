@@ -6,7 +6,7 @@ import {
   uploadFile,
 } from "../../../lib/files";
 import { eventToString } from "../../../lib/util";
-import { SelectInput, TextInput, Warning } from "../formControls";
+import { OptionalNumberInput, SelectInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "src/services/Service";
@@ -18,6 +18,7 @@ import imageService, {
 
 } from "../../../services/imageService";
 import { buildAssetZipBlob, readImageAssetFromZipFile } from "../../../lib/zipFiles";
+import { SpriteSheetPreview } from "../SpriteSheetPreview";
 
 
 type State = {
@@ -49,6 +50,15 @@ export class ImageAssetTool extends Component<{}, State> {
     this.fileRef = createRef();
   }
 
+  get fullAsset(): ImageAsset {
+    return {
+      id: '',
+      category: 'spriteSheet',
+      ...this.state.asset,
+      href: this.state.fileObjectUrl || this.state.asset.href || '',
+    }
+  }
+
   loadFile = async () => {
     const file = await uploadFile();
     if (!file) {
@@ -71,7 +81,7 @@ export class ImageAssetTool extends Component<{}, State> {
     });
   };
 
-  changeValue(propery: keyof ImageAsset, newValue: string | number) {
+  changeValue(propery: keyof ImageAsset, newValue: string | number | undefined) {
     this.setState(state => {
       const asset = state.asset
       switch (propery) {
@@ -86,6 +96,14 @@ export class ImageAssetTool extends Component<{}, State> {
             imageAssetCategories.includes(newValue as ImageAssetCategory)
           ) {
             asset[propery] = newValue as ImageAssetCategory;
+          }
+          break;
+        case 'cols':
+        case 'rows':
+        case 'heightScale':
+        case 'widthScale':
+          if (typeof newValue === 'number' || typeof newValue === 'undefined') {
+            asset[propery] = newValue
           }
           break;
       }
@@ -175,6 +193,7 @@ export class ImageAssetTool extends Component<{}, State> {
       href,
       id = "",
       category = "",
+      rows, cols, widthScale, heightScale
     } = asset
 
     const saveButtonText = imageService.list().includes(id) ? `UPDATE ${id}` : `ADD NEW ASSET`
@@ -225,6 +244,41 @@ export class ImageAssetTool extends Component<{}, State> {
                   items={imageAssetCategories}
                   haveEmptyOption={true} />
               </div>
+
+
+              <div className={styles.row}>
+                <OptionalNumberInput label="rows" value={rows} min={1}
+                  key={`${id}1`}
+                  inputHandler={
+                    value => { this.changeValue('rows', value) }
+                  }
+                />
+                <OptionalNumberInput label="cols" value={cols} min={1}
+                  key={`${id}2`}
+                  inputHandler={
+                    value => { this.changeValue('cols', value) }
+                  }
+                />
+              </div>
+              <div className={styles.row}>
+                <OptionalNumberInput label="widthScale" value={widthScale} step={.1}
+                  key={`${id}3`}
+                  inputHandler={
+                    value => { this.changeValue('widthScale', value) }
+                  }
+                />
+                <OptionalNumberInput label="heightScale" value={heightScale} step={.1}
+                  key={`${id}4`}
+                  inputHandler={
+                    value => { this.changeValue('heightScale', value) }
+                  }
+                />
+              </div>
+
+
+            </fieldset>
+
+            <fieldset className={styles.fieldset}>
               <div className={styles.row}>
                 <button onClick={this.saveToService}>{saveButtonText}</button>
                 {saveWarning && <Warning>{saveWarning}</Warning>}
@@ -232,9 +286,12 @@ export class ImageAssetTool extends Component<{}, State> {
             </fieldset>
 
             <p>Resizing the preview does not effect the image data.</p>
-            <div className={styles.spriteSheetPreview}>
-              <img src={href || fileObjectUrl} />
-            </div>
+
+            <p>{this.fullAsset.href}</p>
+            <SpriteSheetPreview
+              imageAsset={this.fullAsset}
+              canvasScale={300} />
+
           </section>
         </div>
       </article>

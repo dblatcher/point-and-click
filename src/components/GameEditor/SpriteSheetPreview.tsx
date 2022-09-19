@@ -1,17 +1,16 @@
 import { FunctionalComponent, h, JSX } from "preact";
 import { useEffect, useRef } from "preact/hooks";
-import { SpriteSheet } from "src";
-import imageService from "../../services/imageService";
+import { ImageAsset } from "../../services/imageService";
 import styles from './editorStyles.module.css';
 
 interface Props {
-    sheet: SpriteSheet;
+    imageAsset: ImageAsset;
     canvasScale: number;
     highlight?: { row: number; col: number };
     handleClick?: JSX.MouseEventHandler<HTMLCanvasElement>;
 }
 
-export const SpriteSheetPreview: FunctionalComponent<Props> = ({ sheet, canvasScale, handleClick, highlight }: Props) => {
+export const SpriteSheetPreview: FunctionalComponent<Props> = ({ imageAsset, canvasScale, handleClick, highlight }: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
@@ -19,7 +18,7 @@ export const SpriteSheetPreview: FunctionalComponent<Props> = ({ sheet, canvasSc
         if (!canvas) { return }
         const ctx = canvas.getContext('2d')
         if (!ctx) { return }
-        const { rows = 1, cols = 1 } = sheet
+        const { rows = 1, cols = 1 } = imageAsset
 
         ctx.clearRect(0, 0, canvasScale, canvasScale)
         ctx.lineWidth = 3;
@@ -58,13 +57,12 @@ export const SpriteSheetPreview: FunctionalComponent<Props> = ({ sheet, canvasSc
             ctx.fillRect(...squarePoints[0], canvasScale * (1 / cols), canvasScale * (1 / rows))
             ctx.stroke()
         }
-    }, [sheet, canvasScale, highlight])
+    }, [imageAsset, canvasScale, highlight])
 
-    const imageAsset = imageService.get(sheet.imageId)
 
     return (
         <figure className={styles.spriteSheetPreview} style={{ cursor: !!handleClick ? 'pointer' : undefined }}>
-            {imageAsset && <img src={imageAsset.href} />}
+            { <img src={imageAsset.href} />}
             <canvas ref={canvasRef}
                 onClick={handleClick}
                 height={canvasScale}

@@ -1,5 +1,7 @@
 import { FunctionalComponent, h, Fragment, JSX } from "preact";
-import spriteSheetService from "../../../services/spriteSheetService";
+
+import imageService from "../../../services/imageService";
+
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { SpriteSheetPreview } from "../SpriteSheetPreview";
 
@@ -12,30 +14,32 @@ interface Props {
 
 export const FramePicker: FunctionalComponent<Props> = ({ row, col, sheetId, pickFrame }) => {
 
-    const sheet = sheetId ? spriteSheetService.get(sheetId) : undefined;
+    const image = sheetId ? imageService.get(sheetId) : undefined;
+
 
     const handleClick = (event: JSX.TargetedEvent<HTMLCanvasElement, MouseEvent>): void => {
-        if (!sheet) { return }
+        if (!image) { return }
+        const { cols = 1, rows = 1 } = image
         const { offsetX, offsetY } = event
         const { clientWidth, clientHeight } = event.target as HTMLCanvasElement;
-        const newCol = Math.floor(sheet.cols * (offsetX / clientWidth))
-        const newRow = Math.floor(sheet.rows * (offsetY / clientHeight))
+        const newCol = Math.floor(cols * (offsetX / clientWidth))
+        const newRow = Math.floor(rows * (offsetY / clientHeight))
         pickFrame(newRow, newCol, sheetId)
     }
 
     return (<>
         <ServiceItemSelector legend="pick sheet"
             format="select"
-            service={spriteSheetService}
+            service={imageService}
             selectedItemId={sheetId}
             select={(item): void => { pickFrame(0, 0, item.id) }} />
 
-        {sheet && (<>
+        {image && (<>
             <SpriteSheetPreview
-            sheet={sheet}
-            highlight={{ row, col }}
-            canvasScale={300}
-            handleClick={handleClick} />
+                imageAsset={image}
+                highlight={{ row, col }}
+                canvasScale={300}
+                handleClick={handleClick} />
             <span>{sheetId} [ <span>{col}</span>,<span>{row}</span> ]</span>
         </>)}
     </>
