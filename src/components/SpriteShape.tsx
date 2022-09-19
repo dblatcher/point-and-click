@@ -36,6 +36,9 @@ export const SpriteShape: FunctionalComponent<Props> = ({
         pointerEvents: clickHandler ? 'default' : 'none'
     }
 
+    const widthAdjustedByScale = width * widthScale
+    const heightAdjustedByScale = height * heightScale
+
     const shouldReportHover = !!(handleHover && hoverData);
     const onMouseEnter = shouldReportHover ? (): void => { handleHover(hoverData, 'enter') } : undefined
     const onMouseLeave = shouldReportHover ? (): void => { handleHover(hoverData, 'leave') } : undefined
@@ -46,9 +49,9 @@ export const SpriteShape: FunctionalComponent<Props> = ({
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             style={svgStyle}
-            x={placeOnScreen(x - (width / 2), viewAngle, roomData)}
-            y={roomData.height - y - height} >
-            <foreignObject x="0" y="0" width={width * widthScale} height={height * heightScale}>
+            x={placeOnScreen(x - (widthAdjustedByScale / 2), viewAngle, roomData)}
+            y={roomData.height - y - heightAdjustedByScale} >
+            <foreignObject x="0" y="0" width={widthAdjustedByScale} height={heightAdjustedByScale}>
                 <div style={divStyle} />
             </foreignObject>
         </svg>
