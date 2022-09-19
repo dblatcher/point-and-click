@@ -1,4 +1,4 @@
-import Zod, { ZodAny, object, string } from "zod";
+import Zod, { object, string, number } from "zod";
 import { Service } from "./Service";
 
 export type ImageAssetCategory = 'background' | 'item' | 'spriteSheet'
@@ -10,6 +10,11 @@ export type ImageAsset = {
     href: string;
     category: ImageAssetCategory;
     originalFileName?: string;
+
+    rows?: number;
+    cols?: number;
+    widthScale?: number;
+    heightScale?: number;
 }
 
 export const ImageAssetSchema = object({
@@ -17,6 +22,11 @@ export const ImageAssetSchema = object({
     href: string(),
     category: Zod.enum(['background', 'item', 'spriteSheet']),
     originalFileName: string().optional(),
+
+    rows: number().optional(),
+    cols: number().optional(),
+    widthScale: number().optional(),
+    heightScale: number().optional(),
 })
 
 function getFileExtension(asset: ImageAsset): string | undefined {
