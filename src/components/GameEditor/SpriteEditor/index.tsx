@@ -176,9 +176,9 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
     buildActorData(animation: string, direction: Direction): ActorData {
         const { state } = this
-        const sheet = spriteService.get(state.id)?.getFrame(animation, 0, direction)?.sheet
-        const widthScale = sheet?.widthScale || 1
-        const heightScale = sheet?.heightScale || 1
+        const image = spriteService.get(state.id)?.getFrame(animation, 0, direction)?.image
+        const widthScale = image?.widthScale || 1
+        const heightScale = image?.heightScale || 1
 
         return {
             type: 'actor',

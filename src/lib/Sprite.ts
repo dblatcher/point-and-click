@@ -1,10 +1,10 @@
-import { SpriteSheet, SpriteData, Direction, SpriteFrame, Animation } from "../definitions/SpriteSheet"
+import { SpriteData, Direction, SpriteFrame, Animation } from "../definitions/SpriteSheet"
 import spriteSheetService from "../services/spriteSheetService";
-import imageService from "../services/imageService";
+import imageService, { ImageAsset } from "../services/imageService";
 
 
-interface SheetWithFrame {
-    sheet: SpriteSheet
+interface ImageWithFrame {
+    image: ImageAsset,
     row: number
     col: number
 }
@@ -47,7 +47,7 @@ export class Sprite {
     }
 
 
-    public getFrame(animationName: string, frameIndex: number, direction: Direction = this.data.defaultDirection): SheetWithFrame | undefined {
+    public getFrame(animationName: string, frameIndex: number, direction: Direction = this.data.defaultDirection): ImageWithFrame | undefined {
 
         const frames = this.getFrames(animationName, direction);
         if (!frames) { return undefined }
@@ -57,8 +57,10 @@ export class Sprite {
         if (!frame) { return undefined }
         const sheet = spriteSheetService.get(frame.sheetId)
         if (!sheet) { return undefined }
+        const imageAsset = imageService.get(sheet.imageId)
+        if (!imageAsset) { return undefined }
         return {
-            sheet,
+            image: imageAsset,
             row: frame.row,
             col: frame.col
         }
@@ -67,19 +69,20 @@ export class Sprite {
     public getFrameScale(animationName = 'default', frameIndex = 0, direction?: Direction): [number, number] {
         const frame = this.getFrame(animationName, frameIndex, direction) || this.getFrame('default', 0, this.data.defaultDirection)
         if (!frame) { return [1, 1] }
-        return [frame.sheet.widthScale || 1, frame.sheet.heightScale || 1]
+        return [frame.image?.widthScale || 1, frame.image?.heightScale || 1]
     }
 
     public getStyle(animationName = 'default', frameIndex = 0, direction?: Direction) {
         const frame = this.getFrame(animationName, frameIndex, direction) || this.getFrame('default', 0, this.data.defaultDirection)
         if (!frame) { return {} }
-        const href = imageService.get(frame.sheet.imageId)?.href
+
+        const { href, cols = 1, rows = 1 } = frame.image
 
         return {
             backgroundImage: `url(${href})`,
             backgroundPositionX: `${-100 * frame.col}%`,
             backgroundPositionY: `${-100 * frame.row}%`,
-            backgroundSize: `${100 * frame.sheet.cols}% ${100 * frame.sheet.rows}%`,
+            backgroundSize: `${100 * cols}% ${100 * rows}%`,
             width: '100%',
             height: '100%',
             filter: undefined
