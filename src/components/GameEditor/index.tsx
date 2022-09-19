@@ -3,7 +3,6 @@ import { Component, h } from "preact";
 
 import { TreeMenu, Folder, Entry } from "./TreeMenu";
 import { Overview } from "./Overview";
-import { SpriteSheetTool } from "./SpriteSheetEditor";
 import { RoomEditor } from "./RoomEditor";
 import { SpriteEditor } from "./SpriteEditor";
 import { TabMenu } from "../TabMenu";
@@ -51,7 +50,6 @@ type State = {
     actorId?: string;
     conversationId?: string;
     spriteId?: string;
-    spriteSheetId?: string;
     sequenceId?: string;
     endingId?: string;
     verbId?: string;
@@ -72,7 +70,7 @@ const tabs: string[] = [
     'actors',
     'conversations',
     'sprites',
-    'spriteSheets',
+
     'interactions',
     'sequences',
     'endings',
@@ -162,16 +160,13 @@ export class GameEditor extends Component<Props, State>{
     get currentSprite() {
         return findById(this.state.spriteId, this.state.gameDesign.sprites)
     }
-    get currentSpriteSheet() {
-        return findById(this.state.spriteSheetId, this.state.gameDesign.spriteSheets)
-    }
 
     performUpdate(property: keyof GameDesign, data: unknown) {
         console.log(property, data)
 
         this.setState(state => {
             const { gameDesign } = state
-            let { roomId, itemId, actorId, spriteId, spriteSheetId, sequenceId, endingId, verbId, } = state
+            let { roomId, itemId, actorId, spriteId, sequenceId, endingId, verbId, } = state
             switch (property) {
                 case 'rooms': {
                     addNewOrUpdate(data, gameDesign[property])
@@ -197,11 +192,6 @@ export class GameEditor extends Component<Props, State>{
                 case 'sprites': {
                     addNewOrUpdate(data, gameDesign[property])
                     spriteId = (data as GameDataItem).id
-                    break
-                }
-                case 'spriteSheets': {
-                    addNewOrUpdate(data, gameDesign[property])
-                    spriteSheetId = (data as GameDataItem).id
                     break
                 }
                 case 'sequences': {
@@ -238,7 +228,7 @@ export class GameEditor extends Component<Props, State>{
                     break
                 }
             }
-            return { gameDesign, roomId, itemId, actorId, spriteId, spriteSheetId, sequenceId, endingId, verbId }
+            return { gameDesign, roomId, itemId, actorId, spriteId, sequenceId, endingId, verbId }
         })
     }
 
@@ -277,7 +267,6 @@ export class GameEditor extends Component<Props, State>{
             itemId: undefined,
             actorId: undefined,
             spriteId: undefined,
-            spriteSheetId: undefined,
             conversationId: undefined,
             sequenceId: undefined,
             endingId: undefined,
@@ -288,7 +277,7 @@ export class GameEditor extends Component<Props, State>{
     render() {
         const {
             gameDesign, tabOpen, options,
-            roomId, itemId, actorId, spriteId, spriteSheetId, conversationId, sequenceId, endingId, verbId
+            roomId, itemId, actorId, spriteId, conversationId, sequenceId, endingId, verbId
         } = this.state
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
@@ -315,7 +304,6 @@ export class GameEditor extends Component<Props, State>{
             makeFolder('actors', gameDesign.actors, actorId),
             makeFolder('conversations', gameDesign.conversations, conversationId),
             makeFolder('sprites', gameDesign.sprites, spriteId),
-            makeFolder('spriteSheets', gameDesign.spriteSheets, spriteSheetId),
             makeFolder('interactions'),
             makeFolder('sequences', gameDesign.sequences, sequenceId),
             makeFolder('endings', gameDesign.endings, endingId),
@@ -361,9 +349,6 @@ export class GameEditor extends Component<Props, State>{
                                 break;
                             case 'sprites':
                                 modification.spriteId = newId
-                                break;
-                            case 'spriteSheets':
-                                modification.spriteSheetId = newId
                                 break;
                             case 'sequences':
                                 modification.sequenceId = newId
@@ -457,15 +442,6 @@ export class GameEditor extends Component<Props, State>{
                             key={spriteId} data={this.currentSprite}
                             options={options}
                             spriteIds={listIds(gameDesign.sprites)}
-                        />
-                    },
-                    {
-                        label: 'Sprite Sheets', content: <SpriteSheetTool
-                            updateData={data => { this.performUpdate('spriteSheets', data) }}
-                            deleteData={index => { this.deleteArrayItem(index, 'spriteSheets') }}
-                            key={spriteSheetId} data={this.currentSpriteSheet}
-                            options={options}
-                            spriteSheetIds={listIds(gameDesign.spriteSheets)}
                         />
                     },
                     {
