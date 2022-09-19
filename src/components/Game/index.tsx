@@ -80,6 +80,14 @@ export default class Game extends Component<GameProps, GameState> {
         const conversations = props.conversations.map(cloneData);
         const flagMap = cloneData(props.flagMap);
 
+
+
+        const openingSequenceInProps = findById(props.openingSequenceId, props.sequences)
+        const openingSequenceCopy = (openingSequenceInProps && props.gameNotBegun)
+            ? cloneData(openingSequenceInProps)
+            : undefined
+
+
         return {
             viewAngle: 0,
             isPaused: false,
@@ -90,12 +98,13 @@ export default class Game extends Component<GameProps, GameState> {
             currentVerbId: props.verbs[0].id,
             interactions: [...props.interactions],
             items,
-            sequenceRunning: props.sequenceRunning || undefined,
+            sequenceRunning: props.sequenceRunning || openingSequenceCopy,
             actorOrders: props.actorOrders || {},
             conversations,
             currentConversationId: props.currentConversationId,
             debugLog: [makeDebugEntry(`Running: ${props.id}`)],
             flagMap,
+            gameNotBegun: false,
         }
     }
 
@@ -103,14 +112,14 @@ export default class Game extends Component<GameProps, GameState> {
         const {
             rooms, actors, interactions, items,
             currentRoomId, actorOrders, sequenceRunning,
-            conversations, currentConversationId, id, flagMap,
+            conversations, currentConversationId, id, flagMap, gameNotBegun
         } = this.state
 
         return {
             id,
             rooms, actors, interactions, items,
             currentRoomId, actorOrders, sequenceRunning,
-            conversations, currentConversationId, flagMap,
+            conversations, currentConversationId, flagMap, gameNotBegun
         }
     }
 

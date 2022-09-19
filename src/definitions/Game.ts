@@ -17,7 +17,8 @@ const GameHappeningsSchema = z.object({
     actorOrders: z.record(z.string(), orderSchema.array()),
     currentConversationId: z.string().optional(),
     endingId: z.string().optional(),
-    pendingInteraction: InteractionSchema.optional()
+    pendingInteraction: InteractionSchema.optional(),
+    gameNotBegun: z.boolean(),
 })
 
 const GameContentsDataSchema = z.object({
@@ -26,8 +27,8 @@ const GameContentsDataSchema = z.object({
     actors: ActorDataSchema.array(),
     interactions: InteractionSchema.array(),
     conversations: ConversationSchema.array(),
-    currentRoomId: z.string(),
     flagMap: FlagMapSchema,
+    currentRoomId: z.string(),
     id: z.string(),
 })
 
@@ -37,6 +38,7 @@ export const FixedGameInfoSchema = z.object({
     sprites: SpriteDataSchema.array(),
     spriteSheets: SpriteSheetSchema.array(),
     endings: EndingSchema.array(),
+    openingSequenceId: z.string().optional(),
 })
 export const GameDataSchema = GameContentsDataSchema.and(GameHappeningsSchema)
 const GameConditionSchema = GameContentsDataSchema.and(GameHappeningsSchema).and(FixedGameInfoSchema)

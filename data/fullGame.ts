@@ -27,4 +27,5 @@ export const prebuiltGameDesign: GameDesign = {
     sprites: spriteDataList,
     spriteSheets,
     flagMap,
+    openingSequenceId: 'LIGHT_FIRE',
 }

@@ -230,6 +230,15 @@ export class GameEditor extends Component<Props, State>{
                     gameDesign[property] = data as string
                     break
                 }
+                case 'openingSequenceId': {
+                    console.log('openingSequenceId data', typeof data, data)
+                    if (data === '' || typeof data === 'undefined') {
+                        gameDesign[property] = undefined
+                    } else {
+                        gameDesign[property] = data as string
+                    }
+                    break
+                }
             }
             return { gameDesign, roomId, itemId, actorId, spriteId, spriteSheetId, sequenceId, endingId, verbId }
         })
@@ -509,7 +518,7 @@ export class GameEditor extends Component<Props, State>{
                                 <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset game test</button>
                                 <hr />
                                 <Game key={this.state.resetTimeStamp}
-                                    {...gameDesign} actorOrders={{}}
+                                    {...gameDesign} actorOrders={{}} gameNotBegun
                                     showDebugLog={true} />
                             </div>
                         )

@@ -35,6 +35,20 @@ export const Overview: FunctionalComponent<Props> = ({
         }}
       />
 
+      <SelectInput
+        value={gameDesign.openingSequenceId || ''}
+        label={"OpeningSequence"}
+        haveEmptyOption={true}
+        emptyOptionLabel="[none]"
+        items={listIds(gameDesign.sequences)}
+        onSelect={(value) => {
+          edit("openingSequenceId", value);
+        }}
+      />
+
+      <p>{gameDesign.openingSequenceId}</p>
+      <p>{typeof gameDesign.openingSequenceId}</p>
+
       <ul>
         <li>rooms: {gameDesign.rooms.length}</li>
         <li>items: {gameDesign.items.length}</li>

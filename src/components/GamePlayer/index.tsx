@@ -31,8 +31,8 @@ export default class GamePlayer extends Component<Props, State> {
 
     if (props.prebuiltGame) {
       populateServices(
-        props.prebuiltGame, 
-        props.prebuiltImageAssets || [], 
+        props.prebuiltGame,
+        props.prebuiltImageAssets || [],
         props.prebuiltSoundAssets || []);
     }
 
@@ -90,12 +90,14 @@ export default class GamePlayer extends Component<Props, State> {
     if (loadedGameDesign) {
       return {
         ...cloneData(loadedGameDesign),
+        gameNotBegun: true,
         actorOrders: {},
       };
     }
     if (prebuiltGame) {
       return {
         ...cloneData(prebuiltGame),
+        gameNotBegun: true,
         actorOrders: {},
       };
     }
