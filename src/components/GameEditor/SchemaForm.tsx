@@ -64,6 +64,9 @@ function SchemaField<T extends z.ZodRawShape>({
     numberInputSettings = {}
 }: SchemaFieldProps<T>): VNode | null {
     const { key, optional, type, value } = field;
+    const isSupported = ['ZodString', 'ZodBoolean', 'ZodNumber'].includes(type)
+    if (!isSupported && !showUnsupported) { return null }
+
     let safeValue: FieldValue
     switch (typeof value) {
         case 'string':
