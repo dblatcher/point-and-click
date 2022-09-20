@@ -11,6 +11,7 @@ interface Props<T> {
     setEntry: { (key: string, value: T | undefined): void };
     addEntry: { (key: string): void };
     renderKeys?: boolean;
+    addEntryLabel?: string;
 };
 
 interface State {
@@ -46,14 +47,14 @@ export class RecordEditor<T> extends Component<Props<T>, State> {
     }
 
     render() {
-        const { record, addEntry } = this.props
+        const { record, addEntry, addEntryLabel } = this.props
         const { newKey = '' } = this.state
         return <div>
             <ul className={styles.mainList}>
                 {Object.entries(record).map(this.renderEntry)}
             </ul>
             <hr />
-            <StringInput value={newKey} label={'add entry'}
+            <StringInput value={newKey} label={addEntryLabel || 'add entry'}
                 inputHandler={newKey => this.setState({ newKey })}
             />
             <button

@@ -37,7 +37,7 @@ export const getDefaultOrder = (type: OrderType): Order => {
 }
 
 
-export const makeBlankConversationChoice = (text = "ENTER CHOICE TEXT", end?: boolean): ConversationChoice => ({
+export const makeBlankConversationChoice = (text = "...", end?: boolean): ConversationChoice => ({
     text,
     sequence: '',
     end,

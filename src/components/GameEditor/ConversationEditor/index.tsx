@@ -7,12 +7,13 @@ import { cloneData } from "../../../lib/clone";
 import { uploadJsonData } from "../../../lib/files";
 import { StorageMenu } from "../StorageMenu";
 import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationChoiceSchema, ChoiceRefSet } from "../../../definitions/Conversation";
-import { Entry, Folder, TreeMenu } from "../TreeMenu";
-import styles from "../editorStyles.module.css"
 import { SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
 import { ChoiceListControl } from "./ChoiceListControl";
 import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
-import { DataItemEditorProps } from "../dataEditors"
+import { DataItemEditorProps, icons } from "../dataEditors"
+import { RecordEditor } from "../RecordEditor";
+import { ListEditor } from "../ListEditor";
+import styles from "../editorStyles.module.css"
 
 type ExtraState = {
     openBranchId?: string;
@@ -54,6 +55,9 @@ export class ConversationEditor extends Component<Props, State> {
         this.removeChoiceListItem = this.removeChoiceListItem.bind(this)
         this.addNewBranch = this.addNewBranch.bind(this)
         this.addNewChoice = this.addNewChoice.bind(this)
+        this.changeBranch = this.changeBranch.bind(this)
+        this.mutateChoiceList = this.mutateChoiceList.bind(this)
+
         this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
     }
 
@@ -165,9 +169,6 @@ export class ConversationEditor extends Component<Props, State> {
     }
 
     handleChoiceChange(value: FieldValue, field: FieldDef) {
-        const { openBranchId, activeChoiceIndex } = this.state
-        console.log(value, field, 'index')
-        console.log(`Change field ${field.key}(${field.type}) to "${value?.toString()}" in ${openBranchId}[${activeChoiceIndex}]`)
 
         this.setStateWithAutosave(state => {
             const { branches, openBranchId, activeChoiceIndex } = state
@@ -206,17 +207,38 @@ export class ConversationEditor extends Component<Props, State> {
         })
     }
 
-    addNewBranch() {
+    changeBranch(branchName: string, branch: ConversationBranch | undefined) {
+        this.setStateWithAutosave(state => {
+            const { branches = {} } = state
+            if (branch) {
+                branches[branchName] = branch
+            } else {
+                delete branches[branchName]
+            }
+            return { branches }
+        })
+    }
+
+    addNewBranch(branchName?: string) {
         this.setStateWithAutosave(state => {
             const { branches = {} } = state
             const numberOfBranches = Object.keys(branches).length
-            const branchKey = `BRANCH_${numberOfBranches + 1}`
+            const branchKey = branchName || `BRANCH_${numberOfBranches + 1}`
             branches[branchKey] = {
                 choices: [
                     makeBlankConversationChoice()
                 ]
             }
             return { branches, openBranchId: branchKey }
+        })
+    }
+
+    mutateChoiceList(branchKey: string, newList: ConversationChoice[]) {
+        this.setStateWithAutosave(state => {
+            const { branches = {} } = state
+            const branch = branches[branchKey];
+            if (branch) { branch.choices = newList }
+            return { branches }
         })
     }
 
@@ -228,43 +250,6 @@ export class ConversationEditor extends Component<Props, State> {
             branch.choices.push(makeBlankConversationChoice())
             return { branches }
         })
-    }
-
-    get conversationTree(): Folder[] {
-        const { branches, openBranchId, activeChoiceIndex } = this.state
-        const branchFolders = Object.entries(branches).map(([id, branch]) => {
-
-            const entries: Entry[] = branch?.choices.map((choice, index) => ({
-                label: choice.text ? truncateLine(choice.text, 25) : "[no text]",
-                active: openBranchId === id && activeChoiceIndex === index,
-                data: {
-                    id: index.toString(),
-                }
-            })) || []
-
-            entries?.push({
-                label: "+ [new choice]",
-                active: false,
-                isForNew: true,
-                data: {
-                    id: '',
-                }
-            })
-
-            return {
-                id,
-                open: openBranchId === id,
-                entries,
-            }
-        })
-
-        const newBranchFolder: Folder = {
-            id: '',
-            label: '+ [NEW BRANCH]',
-            open: false,
-        }
-
-        return [...branchFolders, newBranchFolder]
     }
 
     getBranchAndChoice(state: State): { branch?: ConversationBranch; choice?: ConversationChoice } {
@@ -324,26 +309,55 @@ export class ConversationEditor extends Component<Props, State> {
 
                 <fieldset className={styles.rowTopLeft}>
 
-                    <TreeMenu
-                        folders={this.conversationTree}
-                        folderClick={(folderId) => {
-                            if (!folderId) {
-                                return this.addNewBranch()
-                            }
-                            this.setState({
-                                openBranchId: folderId,
-                                activeChoiceIndex: undefined,
-                            })
+                    <RecordEditor
+                        record={branches}
+                        addEntryLabel={'new branch'}
+                        describeValue={(branchKey, branch) => {
+                            return (
+                                <div key={branchKey}>
+                                    <span>Branch: <strong>{branchKey}</strong></span>
+                                    <ListEditor
+                                        list={branch.choices}
+                                        describeItem={(choice, choiceIndex) => {
+                                            return (
+                                                <div key={choiceIndex}>
+                                                    <button
+                                                        onClick={() => {
+                                                            this.setState({
+                                                                openBranchId: branchKey,
+                                                                activeChoiceIndex: choiceIndex,
+                                                            })
+                                                        }
+                                                        }
+                                                        style={{
+                                                            textAlign: 'left',
+                                                            minWidth: '12em',
+                                                            padding: 2,
+                                                            fontWeight: choiceIndex === activeChoiceIndex && branchKey === openBranchId ? 700 : 400,
+                                                        }}>
+                                                        {choice.text ? truncateLine(choice.text, 25) : "[no text]"}
+                                                    </button>
+                                                </div>
+                                            )
+                                        }}
+                                        mutateList={newList => {
+                                            this.mutateChoiceList(branchKey, newList)
+                                        }}
+                                    />
+                                    <button
+                                        className={styles.plusButton}
+                                        style={{ width: '100%' }}
+                                        onClick={() => { this.addNewChoice(branchKey) }}>
+                                        add choice{icons.INSERT}
+                                    </button>
+                                </div>
+                            )
                         }}
-                        entryClick={(folderId, data, isForNew) => {
-                            if (isForNew) {
-                                return this.addNewChoice(folderId)
-                            }
-                            this.setState({
-                                openBranchId: folderId,
-                                activeChoiceIndex: Number(data.id),
-                            })
-                        }} />
+                        setEntry={this.changeBranch}
+                        addEntry={(key) => {
+                            this.addNewBranch(key)
+                        }}
+                    />
 
                     {choice && (
                         <section style={{ paddingLeft: '1em' }}>
