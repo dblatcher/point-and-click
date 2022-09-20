@@ -4,7 +4,8 @@ import { findById, listIds } from "../../../lib/util";
 import { Conversation } from "src";
 import { SelectInput } from "../formControls";
 import { ChoiceRefSet } from "src/definitions/Conversation";
-
+import styles from "../editorStyles.module.css"
+import { icons } from "../dataEditors";
 
 interface Props {
     refSet: ChoiceRefSet;
@@ -19,17 +20,17 @@ export const ChoiceSelector: FunctionalComponent<Props> = ({
     refSet, change, remove, conversations, currentConversationId, openBranchId,
 }: Props) => {
 
-    const {choiceRef, branchId, conversationId} = refSet;
+    const { choiceRef, branchId, conversationId } = refSet;
 
     const conversation = findById(conversationId || currentConversationId, conversations)
     const branches = conversation?.branches || {};
     const branch = branches[branchId || openBranchId]
 
-    const choiceRefs: string[] = branch 
-    ? branch.choices
-        .map(choice => choice.ref)
-        .filter(ref => typeof ref === 'string') as string[]
-    : []
+    const choiceRefs: string[] = branch
+        ? branch.choices
+            .map(choice => choice.ref)
+            .filter(ref => typeof ref === 'string') as string[]
+        : []
 
     /**
      * BUG - [undefined] => [null] in JSON
@@ -38,12 +39,12 @@ export const ChoiceSelector: FunctionalComponent<Props> = ({
         if (refSet[property] === value) {
             return
         }
-        const copy = {...refSet}
+        const copy = { ...refSet }
         copy[property] = value
         if (property === 'conversationId') {
             delete copy.branchId
             delete copy.choiceRef
-        } else if (property === 'branchId') { 
+        } else if (property === 'branchId') {
             delete copy.choiceRef
         }
 
@@ -73,7 +74,11 @@ export const ChoiceSelector: FunctionalComponent<Props> = ({
                 onSelect={(item) => { updateSet(item, 'choiceRef') }}
             />
 
-            <button onClick={remove}>x</button>
+            <button
+                className={styles.deleteButton}
+                onClick={remove}>
+                {icons.DELETE}
+            </button>
         </div>
     )
 }

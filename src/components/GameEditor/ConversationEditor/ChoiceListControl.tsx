@@ -3,6 +3,8 @@ import { FunctionalComponent, h } from "preact";
 import { Conversation } from "src";
 import { ChoiceRefSet } from "src/definitions/Conversation";
 import { ChoiceSelector } from "./ChoiceSelector";
+import styles from "../editorStyles.module.css"
+import { icons } from "../dataEditors";
 
 interface Props {
     property: 'enablesChoices' | 'disablesChoices';
@@ -25,7 +27,7 @@ export const ChoiceListControl: FunctionalComponent<Props> = ({
             borderBottom: '1px dotted black',
             borderTop: '1px dotted black',
         }}>
-            <p>{property}</p>
+            <b>{property}</b>
             {
                 choices?.map((refSet, index) => (
                     <ChoiceSelector refSet={refSet} key={index}
@@ -39,7 +41,11 @@ export const ChoiceListControl: FunctionalComponent<Props> = ({
             }
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <span>Add choice</span>
-                <button onClick={() => { add(property) }}>+</button>
+                <button
+                    className={styles.plusButton}
+                    onClick={() => { add(property) }}>
+                    {icons.INSERT}
+                </button>
             </div>
         </article>
     )
