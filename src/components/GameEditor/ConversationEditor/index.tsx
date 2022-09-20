@@ -123,10 +123,6 @@ export class ConversationEditor extends Component<Props, State> {
         }
     }
 
-    //TO DO - find the bug that results in the list being [string, null, null]!
-    // {x:[1,undefined,1]} clones to {x:[1,null,1]}
-    // either support null value at runtime of change the schema to avoid
-    // undefined as array members
     updateChoiceListItem(
         property: 'enablesChoices' | 'disablesChoices',
         indexOfSet: number,
@@ -219,7 +215,10 @@ export class ConversationEditor extends Component<Props, State> {
         })
     }
 
-    addNewBranch(branchName?: string) {
+    addNewBranch(branchName: string) {
+        if (!branchName || this.state.branches[branchName]) {
+            return
+        }
         this.setStateWithAutosave(state => {
             const { branches = {} } = state
             const numberOfBranches = Object.keys(branches).length
@@ -229,7 +228,7 @@ export class ConversationEditor extends Component<Props, State> {
                     makeBlankConversationChoice()
                 ]
             }
-            return { branches, openBranchId: branchKey }
+            return { branches, openBranchId: branchKey, activeChoiceIndex: 0 }
         })
     }
 
