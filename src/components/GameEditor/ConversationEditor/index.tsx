@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { eventToString, listIds } from "../../../lib/util";
-import { SelectInput, TextInput } from "../formControls";
+import { listIds } from "../../../lib/util";
+import { SelectInput, StringInput } from "../formControls";
 
 import { cloneData } from "../../../lib/clone";
 import { uploadJsonData } from "../../../lib/files";
 import { StorageMenu } from "../StorageMenu";
 import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationChoiceSchema, ChoiceRefSet } from "../../../definitions/Conversation";
-import { SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
+import { getModification, SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
 import { ChoiceListControl } from "./ChoiceListControl";
 import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
 import { DataItemEditorProps, icons } from "../dataEditors"
@@ -174,31 +174,7 @@ export class ConversationEditor extends Component<Props, State> {
             const choice = choices[activeChoiceIndex]
             if (!choice) { return {} }
 
-            const castKey = field.key as keyof ConversationChoice;
-            switch (castKey) {
-                case 'disabled':
-                case 'end':
-                case 'once':
-                    if (typeof value === 'boolean') {
-                        choice[castKey] = value as boolean;
-                    }
-                    if (typeof value === 'undefined' && field.optional) {
-                        choice[castKey] = undefined
-                    }
-                    break;
-                case 'nextBranch':
-                case 'ref':
-                case 'sequence':
-                case 'text':
-                    if (typeof value === 'string') {
-                        choice[castKey] = value as string;
-                    }
-                    break;
-                case 'disablesChoices':
-                case 'enablesChoices':
-                    console.warn('unsupported:')
-            }
-
+            Object.assign(choice, getModification(value, field))
             return { branches }
         })
     }
@@ -272,94 +248,93 @@ export class ConversationEditor extends Component<Props, State> {
         return (
             <article>
                 <h2>Conversation Editor</h2>
-                <StorageMenu
-                    type="conversation"
-                    data={this.currentData}
-                    originalId={this.props.data?.id}
-                    existingIds={listIds(conversations)}
-                    reset={this.handleResetButton}
-                    update={this.handleUpdateButton}
-                    deleteItem={deleteData}
-                    saveButton={true}
-                    load={this.handleLoadButton}
-                    options={options}
-                />
-                <fieldset>
-                    <legend>Conversation</legend>
-                    <div>
-                        <TextInput label="id"
+                <section className={styles.row}>
+                    <fieldset>
+                        <legend>Conversation</legend>
+                        <StringInput block
+                            label="id"
                             value={state.id || ''}
-                            onInput={event => { this.changeValue('id', eventToString(event)) }} />
-                    </div>
-
-                    <div>
-                        <SelectInput label="defaultBranch"
+                            inputHandler={value => { this.changeValue('id', value) }} />
+                        <SelectInput block
+                            label="defaultBranch"
                             value={defaultBranch}
                             items={Object.keys(branches)}
                             onSelect={(item: string) => { this.changeValue('defaultBranch', item) }} />
-                    </div>
-
-                    <div>
-                        <SelectInput label="currentBranch" value={currentBranch || ''} items={Object.keys(branches)}
+                        <SelectInput block
+                            label="currentBranch" value={currentBranch || ''} items={Object.keys(branches)}
                             haveEmptyOption={true} emptyOptionLabel="(choose branch)"
                             onSelect={(item: string) => { this.changeValue('currentBranch', item) }} />
-                    </div>
-                </fieldset>
-
-                <fieldset className={styles.rowTopLeft}>
-
-                    <RecordEditor
-                        record={branches}
-                        addEntryLabel={'new branch'}
-                        describeValue={(branchKey, branch) => {
-                            return (
-                                <div key={branchKey}>
-                                    <span>Branch: <strong>{branchKey}</strong></span>
-                                    <ListEditor
-                                        list={branch.choices}
-                                        describeItem={(choice, choiceIndex) => {
-                                            return (
-                                                <div key={choiceIndex}>
-                                                    <button
-                                                        onClick={() => {
-                                                            this.setState({
-                                                                openBranchId: branchKey,
-                                                                activeChoiceIndex: choiceIndex,
-                                                            })
-                                                        }
-                                                        }
-                                                        style={{
-                                                            textAlign: 'left',
-                                                            minWidth: '12em',
-                                                            padding: 2,
-                                                            fontWeight: choiceIndex === activeChoiceIndex && branchKey === openBranchId ? 700 : 400,
-                                                        }}>
-                                                        {choice.text ? truncateLine(choice.text, 25) : "[no text]"}
-                                                    </button>
-                                                </div>
-                                            )
-                                        }}
-                                        mutateList={newList => {
-                                            this.mutateChoiceList(branchKey, newList)
-                                        }}
-                                    />
-                                    <button
-                                        className={styles.plusButton}
-                                        style={{ width: '100%' }}
-                                        onClick={() => { this.addNewChoice(branchKey) }}>
-                                        add choice{icons.INSERT}
-                                    </button>
-                                </div>
-                            )
-                        }}
-                        setEntry={this.changeBranch}
-                        addEntry={(key) => {
-                            this.addNewBranch(key)
-                        }}
+                    </fieldset>
+                    <StorageMenu
+                        type="conversation"
+                        data={this.currentData}
+                        originalId={this.props.data?.id}
+                        existingIds={listIds(conversations)}
+                        reset={this.handleResetButton}
+                        update={this.handleUpdateButton}
+                        deleteItem={deleteData}
+                        saveButton={true}
+                        load={this.handleLoadButton}
+                        options={options}
                     />
+                </section>
+
+                <section className={styles.rowTopLeft}>
+
+                    <fieldset>
+                        <RecordEditor
+                            record={branches}
+                            addEntryLabel={'new branch'}
+                            describeValue={(branchKey, branch) => {
+                                return (
+                                    <div key={branchKey}>
+                                        <span>Branch: <strong>{branchKey}</strong></span>
+                                        <ListEditor
+                                            list={branch.choices}
+                                            describeItem={(choice, choiceIndex) => {
+                                                return (
+                                                    <div key={choiceIndex}>
+                                                        <button
+                                                            onClick={() => {
+                                                                this.setState({
+                                                                    openBranchId: branchKey,
+                                                                    activeChoiceIndex: choiceIndex,
+                                                                })
+                                                            }
+                                                            }
+                                                            style={{
+                                                                textAlign: 'left',
+                                                                minWidth: '12em',
+                                                                padding: 2,
+                                                                fontWeight: choiceIndex === activeChoiceIndex && branchKey === openBranchId ? 700 : 400,
+                                                            }}>
+                                                            {choice.text ? truncateLine(choice.text, 25) : "[no text]"}
+                                                        </button>
+                                                    </div>
+                                                )
+                                            }}
+                                            mutateList={newList => {
+                                                this.mutateChoiceList(branchKey, newList)
+                                            }}
+                                        />
+                                        <button
+                                            className={styles.plusButton}
+                                            style={{ width: '100%' }}
+                                            onClick={() => { this.addNewChoice(branchKey) }}>
+                                            add choice{icons.INSERT}
+                                        </button>
+                                    </div>
+                                )
+                            }}
+                            setEntry={this.changeBranch}
+                            addEntry={(key) => {
+                                this.addNewBranch(key)
+                            }}
+                        />
+                    </fieldset>
 
                     {choice && (
-                        <section style={{ paddingLeft: '1em' }}>
+                        <fieldset>
                             <SchemaForm key={`schema-${id}-${openBranchId}-${activeChoiceIndex}`}
                                 schema={ConversationChoiceSchema}
                                 data={choice}
@@ -390,11 +365,11 @@ export class ConversationEditor extends Component<Props, State> {
                                 change={this.updateChoiceListItem}
                                 remove={this.removeChoiceListItem}
                             />
-                        </section>
+                        </fieldset>
                     )}
 
 
-                </fieldset>
+                </section>
             </article>
         )
     }
