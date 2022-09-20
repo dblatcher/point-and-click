@@ -155,6 +155,7 @@ export const ImmediateConsequenceSchema = z.union([
     ToggleZoneConsequenceSchema,
     SoundEffectConsequenceSchema,
     FlagConsequenceSchema,
+    ChangeRoomConsequenceSchema,
 ])
 export type ImmediateConsequence = z.infer<typeof ImmediateConsequenceSchema>
 export const immediateConsequenceTypes: ConsequenceType[] = ImmediateConsequenceSchema.options.map(member => member.shape.type.value)
