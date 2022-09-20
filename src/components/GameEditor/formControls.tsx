@@ -135,7 +135,6 @@ export const StringInput: FunctionalComponent<FieldProps & {
         return <FieldWrapper {...props}>
             <textarea onInput={
                 (event): void => {
-                    console.log(event)
                     inputHandler(eventToString(event))
                 }
             } >{value}</textarea>
