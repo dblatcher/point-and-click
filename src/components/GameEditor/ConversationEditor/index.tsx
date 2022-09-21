@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h } from "preact";
-import { listIds } from "../../../lib/util";
-import { SelectInput, StringInput } from "../formControls";
-
+import { GameDesign, Sequence } from "src";
 import { cloneData } from "../../../lib/clone";
 import { uploadJsonData } from "../../../lib/files";
-import { StorageMenu } from "../StorageMenu";
+import { listIds, findById } from "../../../lib/util";
 import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationChoiceSchema, ChoiceRefSet } from "../../../definitions/Conversation";
 import { getModification, SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
-import { ChoiceListControl } from "./ChoiceListControl";
 import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
 import { DataItemEditorProps, icons } from "../dataEditors"
+import { ChoiceListControl } from "./ChoiceListControl";
 import { RecordEditor } from "../RecordEditor";
+import { StorageMenu } from "../StorageMenu";
 import { ListEditor } from "../ListEditor";
+import { SelectInput, StringInput } from "../formControls";
+import { SequenceEditor } from "../SequenceEditor";
 import styles from "../editorStyles.module.css"
+import { NewSequenceForm } from "./NewSequenceForm";
 
 type ExtraState = {
     openBranchId?: string;
@@ -25,6 +27,8 @@ type State = Conversation & ExtraState;
 type Props = DataItemEditorProps<Conversation> & {
     conversations: Conversation[];
     sequenceIds: string[];
+    gameDesign: GameDesign;
+    updateSequenceData: { (data: Sequence): void };
 }
 
 
@@ -242,7 +246,7 @@ export class ConversationEditor extends Component<Props, State> {
     render() {
         const { state } = this
         const { branches, defaultBranch, currentBranch, openBranchId, id, activeChoiceIndex } = this.state
-        const { conversations, sequenceIds, deleteData, options } = this.props
+        const { conversations, sequenceIds, deleteData, options, gameDesign, updateSequenceData } = this.props
         const { choice } = this.getBranchAndChoice(state)
 
         return (
@@ -345,6 +349,22 @@ export class ConversationEditor extends Component<Props, State> {
                                 }}
                             />
 
+                            <hr />
+                            <NewSequenceForm
+                                existingIds={listIds(gameDesign.sequences)}
+                                addSequence={(sequence) => {
+                                    this.setStateWithAutosave(state => {
+                                        const { choice } = this.getBranchAndChoice(state)
+                                        if (choice) {
+                                            choice.sequence = sequence.id
+                                        }
+                                        return state
+                                    }, () => {
+                                        updateSequenceData(sequence)
+                                    })
+                                }}
+                            />
+
                             <ChoiceListControl key={`disablesChoices-${id}-${openBranchId}-${activeChoiceIndex}`}
                                 choices={choice.disablesChoices || []}
                                 property="disablesChoices"
@@ -365,10 +385,26 @@ export class ConversationEditor extends Component<Props, State> {
                                 change={this.updateChoiceListItem}
                                 remove={this.removeChoiceListItem}
                             />
+
+
+
                         </fieldset>
                     )}
+                </section>
 
-
+                <section style={{ marginTop: '1em' }}>
+                    {choice && choice.sequence && (
+                        <fieldset>
+                            <SequenceEditor key={choice.sequence} isSubSection
+                                sequenceId={choice.sequence}
+                                data={findById(choice.sequence, gameDesign.sequences)}
+                                updateData={updateSequenceData}
+                                deleteData={() => { }}
+                                gameDesign={gameDesign}
+                                options={options}
+                            />
+                        </fieldset>
+                    )}
                 </section>
             </article>
         )

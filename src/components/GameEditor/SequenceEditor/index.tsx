@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h } from "preact";
+import { Component, h, Fragment } from "preact";
 import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage, ImmediateConsequence } from "src";
 import { ImmediateConsequenceSchema } from "../../../definitions/Consequence";
 import { cloneData } from "../../../lib/clone";
@@ -18,6 +18,7 @@ import { DataItemEditorProps } from "../dataEditors";
 type Props = DataItemEditorProps<Sequence> & {
     gameDesign: GameDesign;
     sequenceId?: string;
+    isSubSection?: boolean;
 }
 
 type ExtraState = {
@@ -179,37 +180,49 @@ export class SequenceEditor extends Component<Props, State> {
     }
 
     render() {
-        const { gameDesign, sequenceId, updateData, deleteData, options } = this.props
+        const { gameDesign, sequenceId, updateData, deleteData, options, isSubSection, data } = this.props
         const { description, stages = [], id } = this.state
 
         return (
             <article>
-                <h2>Sequence Editor</h2>
 
-                <div className={styles.rowTopLeft}>
-                    <fieldset className={styles.fieldset}>
-                        <legend>details</legend>
-                        <StringInput label="id" value={id} // don't autosave when changing ID
-                            inputHandler={(id) => { this.setState({ id }) }}
-                        />
-                        <StringInput label="description" value={description || ''}
+                {isSubSection
+                    ? (<>
+                        <h3>Edit sequence: {data?.id}</h3>
+                        <StringInput block label="description" value={description || ''}
                             inputHandler={(description) => {
                                 this.setStateWithAutosave({ description })
                             }}
                         />
-                    </fieldset>
+                    </>)
+                    : (<>
+                        <h2>Sequence Editor</h2>
+                        <div className={styles.rowTopLeft}>
+                            <fieldset className={styles.fieldset}>
+                                <legend>details</legend>
+                                <StringInput block label="id" value={id} // don't autosave when changing ID
+                                    inputHandler={(id) => { this.setState({ id }) }}
+                                />
+                                <StringInput block label="description" value={description || ''}
+                                    inputHandler={(description) => {
+                                        this.setStateWithAutosave({ description })
+                                    }}
+                                />
+                            </fieldset>
 
-                    <StorageMenu
-                        type='sequence'
-                        data={this.currentData}
-                        originalId={sequenceId}
-                        existingIds={Object.keys(gameDesign.sequences)}
-                        reset={() => this.setState(this.initialState)}
-                        update={() => { updateData(this.currentData) }}
-                        deleteItem={deleteData}
-                        options={options}
-                    />
-                </div>
+                            <StorageMenu
+                                type='sequence'
+                                data={this.currentData}
+                                originalId={sequenceId}
+                                existingIds={listIds(gameDesign.sequences)}
+                                reset={() => this.setState(this.initialState)}
+                                update={() => { updateData(this.currentData) }}
+                                deleteItem={deleteData}
+                                options={options}
+                            />
+                        </div>
+                    </>)}
+
 
                 <ListEditor
                     list={stages}

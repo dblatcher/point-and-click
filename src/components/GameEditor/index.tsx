@@ -428,8 +428,10 @@ export class GameEditor extends Component<Props, State>{
                         label: 'Conversation Editor', content: <ConversationEditor
                             sequenceIds={listIds(gameDesign.sequences)}
                             conversations={gameDesign.conversations}
+                            gameDesign={gameDesign}
                             updateData={data => { this.performUpdate('conversations', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
+                            updateSequenceData={data => { this.performUpdate('sequences', data) }}
                             options={options}
                             key={conversationId} data={this.currentConversation}
                         />
