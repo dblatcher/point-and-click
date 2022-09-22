@@ -10,13 +10,12 @@ interface Props {
     col: number;
     sheetId?: string;
     pickFrame: { (row: number, col: number, sheetId?: string): void };
+    fixedSheet?: boolean;
 }
 
-export const FramePicker: FunctionalComponent<Props> = ({ row, col, sheetId, pickFrame }) => {
+export const FramePicker: FunctionalComponent<Props> = ({ row, col, sheetId, pickFrame, fixedSheet = false }) => {
 
     const image = sheetId ? imageService.get(sheetId) : undefined;
-
-
     const handleClick = (event: JSX.TargetedEvent<HTMLCanvasElement, MouseEvent>): void => {
         if (!image) { return }
         const { cols = 1, rows = 1 } = image
@@ -28,11 +27,13 @@ export const FramePicker: FunctionalComponent<Props> = ({ row, col, sheetId, pic
     }
 
     return (<>
-        <ServiceItemSelector legend="pick sheet"
-            format="select"
-            service={imageService}
-            selectedItemId={sheetId}
-            select={(item): void => { pickFrame(0, 0, item.id) }} />
+        {!fixedSheet && (
+            <ServiceItemSelector legend="pick sheet"
+                format="select"
+                service={imageService}
+                selectedItemId={sheetId}
+                select={(item): void => { pickFrame(0, 0, item.id) }} />
+        )}
 
         {image && (<>
             <SpriteSheetPreview

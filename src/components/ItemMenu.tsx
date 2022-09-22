@@ -4,12 +4,44 @@ import imageService from "../services/imageService";
 import { ItemData } from "src"
 import { HandleHoverFunction } from "./Game";
 import uiStyles from './uiStyles.module.css';
+import { JSXInternal } from "preact/src/jsx";
 
 interface Props {
     items: ItemData[];
     currentItemId?: string;
     select: { (item: ItemData): void };
     handleHover?: HandleHoverFunction;
+}
+
+const buildBackground = (itemData: ItemData): JSXInternal.CSSProperties | undefined => {
+
+    const { imageId, row = 0, col = 0 } = itemData
+
+    if (!imageId) { return undefined }
+    const asset = imageService.get(imageId);
+    if (!asset) { return undefined }
+
+    const { href: imageUrl, cols, rows } = asset
+
+    if (typeof cols === 'undefined' && typeof rows === 'undefined') {
+        return {
+            backgroundImage: `url(${imageUrl})`,
+            width: '100%',
+            height: '100%',
+            backgroundPosition: 'center',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat'
+        }
+    }
+
+    return {
+        backgroundImage: `url(${imageUrl})`,
+        backgroundPositionX: `${-100 * col}%`,
+        backgroundPositionY: `${-100 * row}%`,
+        backgroundSize: `${100 * (cols || 1)}% ${100 * (rows || 1)}%`,
+        width: '100%',
+        height: '100%',
+    }
 }
 
 export function ItemMenu({ items, currentItemId, select, handleHover }: Props) {
@@ -20,8 +52,7 @@ export function ItemMenu({ items, currentItemId, select, handleHover }: Props) {
         <div className={uiStyles.frame}>
             <nav className={[uiStyles.contents, uiStyles.menu].join(" ")}>
                 {items.map(item => {
-
-                    const imageUrl = imageService.get(item.imageId || '')?.href;
+                    const backgroundStyle = buildBackground(item);
                     const classNames = currentItemId === item.id
                         ? buttonOnClassNames
                         : buttonOffClassNames
@@ -29,14 +60,18 @@ export function ItemMenu({ items, currentItemId, select, handleHover }: Props) {
                     return (
                         <button key={item.id} className={classNames}
                             style={{
-                                backgroundImage: imageUrl ? `url(${imageUrl})` : undefined,
+                                position: 'relative',
                                 minHeight: '4rem',
                             }}
                             onClick={() => { select(item) }}
                             onMouseEnter={handleHover ? () => { handleHover(item, 'enter') } : undefined}
                             onMouseLeave={handleHover ? () => { handleHover(item, 'leave') } : undefined}
                         >
-                            {!imageUrl && <span>{item.name || item.id}</span>}
+                            {backgroundStyle ?
+                                <div style={backgroundStyle} />
+                                :
+                                <span>{item.name || item.id}</span>
+                            }
                         </button>
                     )
                 })}

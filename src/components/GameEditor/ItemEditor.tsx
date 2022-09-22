@@ -9,6 +9,7 @@ import { ItemMenu } from "../ItemMenu";
 import { cloneData } from "../../lib/clone";
 import { StorageMenu } from "./StorageMenu";
 import { DataItemEditorProps } from "./dataEditors";
+import { FramePicker } from "./SpriteEditor/FramePicker";
 
 type Props = DataItemEditorProps<ItemData> & {
     actorIds: string[];
@@ -40,6 +41,7 @@ export class ItemEditor extends Component<Props, State> {
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.changeValue = this.changeValue.bind(this)
         this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
+        this.changeFrame = this.changeFrame.bind(this)
     }
 
     setStateWithAutosave(input: Partial<State> | { (state: State): Partial<State> }, callback?: { (): void }) {
@@ -89,13 +91,24 @@ export class ItemEditor extends Component<Props, State> {
         if (propery === 'id') {
             return this.setState(modification)
         }
+
+        if (propery === 'imageId') {
+            modification.row = undefined
+            modification.col = undefined
+        }
         this.setStateWithAutosave(modification)
+    }
+
+    changeFrame(row: number, col: number) {
+        this.setStateWithAutosave({ col, row })
     }
 
     render() {
         const { changeValue } = this
-        const { actorId = '', id, name } = this.state
+        const { actorId = '', id, name, imageId } = this.state
         const { itemIds } = this.props
+
+        const imageAsset = imageId ? imageService.get(imageId) : undefined
 
         return (
             <article>
@@ -121,14 +134,20 @@ export class ItemEditor extends Component<Props, State> {
                             haveEmptyOption={true}
                             onSelect={id => { changeValue('actorId', id) }} />
 
-
                         <ServiceItemSelector legend='picture'
                             format="select"
-                            filterItems={item => (item as ImageAsset).category === 'item'}
+                            filterItems={item => (item as ImageAsset).category === 'item' || (item as ImageAsset).category === 'any'}
                             select={item => changeValue('imageId', item.id)}
                             selectNone={() => changeValue('imageId', undefined)}
                             service={imageService}
                             selectedItemId={this.state.imageId} />
+
+                        {imageAsset?.rows && (
+                            <div>row: {this.state.row}</div>
+                        )}
+                        {imageAsset?.cols && (
+                            <div>col: {this.state.col}</div>
+                        )}
                     </fieldset>
                     <fieldset class={styles.fieldset}>
                         <legend>Button Preview</legend>
@@ -142,6 +161,17 @@ export class ItemEditor extends Component<Props, State> {
                         </div>
                     </fieldset>
                 </div>
+
+                {(imageAsset?.rows || imageAsset?.cols) && (
+                    <div class={styles.container}>
+                        <FramePicker fixedSheet
+                            sheetId={this.state.imageId}
+                            row={this.state.row || 0}
+                            col={this.state.col || 0}
+                            pickFrame={this.changeFrame}
+                        />
+                    </div>
+                )}
 
                 <StorageMenu
                     data={this.state} type='ItemData'

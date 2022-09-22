@@ -1,9 +1,9 @@
 import Zod, { object, string, number } from "zod";
 import { Service } from "./Service";
 
-export type ImageAssetCategory = 'background' | 'item' | 'spriteSheet'
+export type ImageAssetCategory = 'background' | 'item' | 'spriteSheet' | 'any'
 
-export const imageAssetCategories: ImageAssetCategory[] = ['background', 'item', 'spriteSheet']
+export const imageAssetCategories: ImageAssetCategory[] = ['background', 'item', 'spriteSheet', 'any']
 
 export type ImageAsset = {
     id: string;
@@ -20,7 +20,7 @@ export type ImageAsset = {
 export const ImageAssetSchema = object({
     id: string(),
     href: string(),
-    category: Zod.enum(['background', 'item', 'spriteSheet']),
+    category: Zod.enum(['background', 'item', 'spriteSheet', 'any']),
     originalFileName: string().optional(),
 
     rows: number().optional(),
