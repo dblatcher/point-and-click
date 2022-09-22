@@ -8,9 +8,10 @@ import { StringInput } from '../formControls';
 interface Props {
     addSequence: { (sequence: Sequence): void };
     existingIds: string[];
+    suggestedIds?: string[];
 }
 // to do - support suggestion 
-export const NewSequenceForm: FunctionComponent<Props> = ({ addSequence, existingIds }) => {
+export const NewSequenceForm: FunctionComponent<Props> = ({ addSequence, existingIds, suggestedIds }) => {
     const [newId, setNewId] = useState('')
     const idIsAvailable = newId.length > 0 && !existingIds.includes(newId)
 
@@ -22,7 +23,7 @@ export const NewSequenceForm: FunctionComponent<Props> = ({ addSequence, existin
 
     return <div>
         <b>Use new Sequence:</b>
-        <StringInput value={newId} inputHandler={setNewId} />
+        <StringInput value={newId} inputHandler={setNewId} suggestions={suggestedIds}/>
         <button
             onClick={handleSubmit}
             disabled={!idIsAvailable}>

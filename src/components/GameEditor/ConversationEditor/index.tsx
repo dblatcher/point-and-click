@@ -351,6 +351,9 @@ export class ConversationEditor extends Component<Props, State> {
 
                             <hr />
                             <NewSequenceForm
+                                suggestedIds={[
+                                    `${id}-${openBranchId}-${activeChoiceIndex}`,
+                                ]}
                                 existingIds={listIds(gameDesign.sequences)}
                                 addSequence={(sequence) => {
                                     this.setStateWithAutosave(state => {
@@ -399,7 +402,7 @@ export class ConversationEditor extends Component<Props, State> {
                                 sequenceId={choice.sequence}
                                 data={findById(choice.sequence, gameDesign.sequences)}
                                 updateData={updateSequenceData}
-                                deleteData={() => { }}
+                                deleteData={(index) => { console.log('delete squence', index) }}
                                 gameDesign={gameDesign}
                                 options={options}
                             />

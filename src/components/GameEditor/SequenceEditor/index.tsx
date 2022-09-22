@@ -188,7 +188,8 @@ export class SequenceEditor extends Component<Props, State> {
 
                 {isSubSection
                     ? (<>
-                        <h3>Edit sequence: {data?.id}</h3>
+                        <h3>Edit sequence: </h3>
+                        <div>ID: <b>{data?.id}</b></div>
                         <StringInput block label="description" value={description || ''}
                             inputHandler={(description) => {
                                 this.setStateWithAutosave({ description })
