@@ -9,13 +9,6 @@ const OrderConsequenceSchema = z.object({
 })
 export type OrderConsequence = z.infer<typeof OrderConsequenceSchema>
 
-const TalkConsequenceSchema = z.object({
-    type: z.literal('talk'),
-    actorId: z.string().optional(),
-    text: z.string(),
-    time: z.optional(z.number()),
-})
-
 const ChangeRoomConsequenceSchema = z.object({
     type: z.literal('changeRoom'),
     roomId: z.string(),
@@ -92,7 +85,6 @@ const FlagConsequenceSchema = z.object({
 export const ConsequenceSchema = z.union([
     OrderConsequenceSchema,
     ChangeRoomConsequenceSchema,
-    TalkConsequenceSchema,
     InventoryConsequenceSchema,
     RemoveActorConsequenceSchema,
     ChangeStatusConsequenceSchema,
@@ -107,7 +99,7 @@ export const ConsequenceSchema = z.union([
 
 const ConsequenceTypeEnum = z.enum([
     'conversation', 'sequence', 'changeStatus',
-    'removeActor', 'inventory', 'changeRoom', 'talk', 'order', 'ending',
+    'removeActor', 'inventory', 'changeRoom', 'order', 'ending',
     'teleportActor', 'toggleZone', 'soundEffect', 'flag'
 ])
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>

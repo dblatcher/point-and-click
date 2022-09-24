@@ -92,8 +92,6 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type: "inventory", itemId: '', addOrRemove: 'ADD' }
         case 'changeRoom':
             return { type: 'changeRoom', roomId: '', takePlayer: true, x: 0, y: 0 }
-        case 'talk':
-            return { type: 'talk', actorId: '', time: DEFAULT_TALK_TIME, text: '' }
         case 'ending':
             return { type: 'ending', endingId: '' }
         case 'teleportActor':

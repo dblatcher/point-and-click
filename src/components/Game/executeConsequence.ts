@@ -34,20 +34,6 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
 
                 break;
             }
-            case 'talk': {
-                const { actorId, text, time = 250 } = consequence
-                const actor = getActor(actorId)
-                if (!actor) { return }
-
-                if (!actorOrders[actor.id]) {
-                    actorOrders[actor.id] = []
-                }
-                actorOrders[actor.id].push({
-                    type: 'talk',
-                    steps: [{ text, time }]
-                })
-                break;
-            }
             case 'changeRoom': {
                 const { roomId, takePlayer, x, y } = consequence;
                 const point = typeof x === 'number' && typeof y === 'number' ? { x, y } : undefined

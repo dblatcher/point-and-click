@@ -9,7 +9,7 @@ import { exectuteTalk } from "./executeTalk";
 import { exectuteSay } from "./executeSay";
 
 
-function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order: MoveOrder) {
+function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order: MoveOrder): void {
 
     const { steps: oldSteps } = order
     let pointReached: Point = { x: subject.x, y: subject.y }

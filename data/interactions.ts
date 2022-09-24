@@ -56,15 +56,22 @@ export const interactions: Interaction[] = [
         targetId: 'MARIO',
         consequences: [
             {
-                type: 'talk',
-                text: 'Hello.',
-                time: 100,
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: 'Hello.',
+                        time: 100,
+                    }
+                ]
             },
             {
-                type: 'talk',
-                actorId: 'MARIO',
-                text: 'Itsa me, Mario.',
-                time: 100,
+                type: 'order', actorId:'MARIO', orders: [
+                    {
+                        type: 'say',
+                        text: 'Itsa me, Mario.',
+                        time: 100,
+                    }
+                ]
             },
             {
                 type: 'conversation',
@@ -162,9 +169,14 @@ export const interactions: Interaction[] = [
         mustReachFirst: true,
         consequences: [
             {
-                type: 'talk',
-                text: 'I took the sun. Really...[SHOULD NOt BE SEEN]',
-            }
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: 'I took the sun. Really...[SHOULD NOt BE SEEN]',
+                        time: 100,
+                    }
+                ]
+            },
         ]
     },
     {
@@ -175,8 +187,13 @@ export const interactions: Interaction[] = [
         flagsThatMustBeTrue: ['otherFlagThatDoesNotExist'],
         consequences: [
             {
-                type: 'talk',
-                text: 'I cannot because of the test flag.',
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: 'I cannot because of the test flag.',
+                        time: 100,
+                    }
+                ]
             },
             {
                 type: 'soundEffect',
@@ -201,8 +218,13 @@ export const interactions: Interaction[] = [
                 itemId: 'PASTA',
             },
             {
-                type: 'talk',
-                text: 'I took it.',
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: 'I took it.',
+                        time: 250,
+                    }
+                ]
             },
             {
                 type: 'soundEffect',
@@ -218,7 +240,15 @@ export const interactions: Interaction[] = [
         itemId: 'BUCKET',
         targetStatus: 'out',
         consequences: [
-            { type: 'talk', text: 'It is out already' }
+            {
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: 'It is out already',
+                        time: 250,
+                    }
+                ]
+            },
         ]
     },
     {
@@ -235,7 +265,15 @@ export const interactions: Interaction[] = [
         itemId: 'MATCHES',
         targetStatus: 'burning',
         consequences: [
-            { type: 'talk', text: 'It is burning already' }
+            {
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: 'It is burning already',
+                        time: 250,
+                    }
+                ]
+            },
         ]
     },
     {
@@ -250,7 +288,15 @@ export const interactions: Interaction[] = [
         verbId: 'TALK',
         targetId: 'FIRE',
         consequences: [
-            { type: 'talk', text: 'this will end the game' },
+            {
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: 'this will end the game',
+                        time: 250,
+                    }
+                ]
+            },
             { type: 'ending', endingId: 'WIN' },
         ]
     },
