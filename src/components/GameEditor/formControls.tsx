@@ -248,6 +248,7 @@ export const DeleteButton: FunctionalComponent<{
     onClick: JSX.EventHandler<JSX.TargetedEvent>;
     noConfirmation?: boolean;
     confirmationText?: string;
+    className?: string;
 }> = (props) => {
 
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
@@ -258,7 +259,8 @@ export const DeleteButton: FunctionalComponent<{
 
     if (!showConfirmation) {
         return <div>
-            <button onClick={handleFirstButton}>[x]{props.label}</button>
+            <button className={props.className}
+                onClick={handleFirstButton}>{props.label}</button>
         </div>
     }
 
@@ -270,10 +272,12 @@ export const DeleteButton: FunctionalComponent<{
         <button onClick={(): void => {
             setShowConfirmation(false);
         }}>cancel</button>
-        <button onClick={(event): void => {
-            setShowConfirmation(false);
-            props.onClick.bind(undefined as never)(event);
-        }}>confirm</button>
+        <button
+            className={props.className}
+            onClick={(event): void => {
+                setShowConfirmation(false);
+                props.onClick.bind(undefined as never)(event);
+            }}>confirm</button>
     </div>
 }
 

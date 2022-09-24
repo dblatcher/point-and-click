@@ -6,7 +6,7 @@ import { Sprite } from "../../../lib/Sprite";
 import { uploadJsonData } from "../../../lib/files";
 import { eventToString } from "../../../lib/util";
 import { ActorData, Direction, SpriteData, SpriteFrame, Animation } from "src"
-import { StringInput } from "../formControls";
+import { SelectInput, StringInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";
 import spriteService from "../../../services/spriteService";
@@ -212,6 +212,9 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                             {directions.map(direction => <option key={direction}>{direction}</option>)}
                         </select>
                     </div>
+
+                    <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
+
                 </fieldset>
                 <StorageMenu
                     data={this.currentData}
@@ -230,22 +233,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             <div className={styles.container}>
                 <section>
                     <fieldset className={styles.fieldset}>
-                        <legend>Pick Animation</legend>
-
-                        <div className={styles.row}>
-                            <label>Edit Animation:</label>
-                            <select value={selectedAnimation}
-                                onChange={
-                                    event => { this.setState({ selectedAnimation: eventToString(event) }) }
-                                }>
-                                {Object.keys(this.state.animations).map(animKey => (
-                                    <option key={animKey}>{animKey}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
-                    </fieldset>
-                    <fieldset className={styles.fieldset}>
                         <legend>Pick Frame</legend>
                         <FramePicker
                             pickFrame={this.pickFrame}
@@ -257,22 +244,33 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 </section>
 
                 <section>
-                    {(selectedAnimation && animations[selectedAnimation]) && (
-                        <AnimationControl animKey={selectedAnimation}
-                            defaultDirection={defaultDirection}
-                            animation={animations[selectedAnimation]}
-                            overrideSprite={overrideSprite}
-                            buildActorData={this.buildActorData}
-                            deleteAll={() => this.deleteAnimation(selectedAnimation)}
-                            editCycle={this.editCycle}
-                            pickFrame={this.pickFrame}
-                            selectedFrame={selectedSheetId ? {
-                                row: selectedRow,
-                                col: selectedCol,
-                                imageId: selectedSheetId,
-                            } : undefined}
-                        />
-                    )}
+                    <fieldset>
+                        <legend>
+                            <SelectInput block className={styles.row}
+                                label={'Animation'}
+                                value={selectedAnimation || ''}
+                                items={Object.keys(this.state.animations)}
+                                onSelect={selectedAnimation => { this.setState({ selectedAnimation }) }}
+                            />
+                        </legend>
+
+                        {(selectedAnimation && animations[selectedAnimation]) && (
+                            <AnimationControl animKey={selectedAnimation}
+                                defaultDirection={defaultDirection}
+                                animation={animations[selectedAnimation]}
+                                overrideSprite={overrideSprite}
+                                buildActorData={this.buildActorData}
+                                deleteAll={() => this.deleteAnimation(selectedAnimation)}
+                                editCycle={this.editCycle}
+                                pickFrame={this.pickFrame}
+                                selectedFrame={selectedSheetId ? {
+                                    row: selectedRow,
+                                    col: selectedCol,
+                                    imageId: selectedSheetId,
+                                } : undefined}
+                            />
+                        )}
+                    </fieldset>
                 </section>
             </div>
         </article >
