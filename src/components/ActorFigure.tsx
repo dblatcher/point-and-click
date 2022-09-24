@@ -80,9 +80,7 @@ export const ActorFigure: FunctionalComponent<Props> = ({
     } = data
     const spriteObject = overrideSprite || spriteService.get(spriteId)
     const currentOrder: Order | undefined = orders[0]
-    const text = currentOrder?.type === 'talk' 
-        ? currentOrder.steps[0]?.text 
-        : currentOrder?.type === 'say' 
+    const text = currentOrder?.type === 'say' 
             ? currentOrder.text
             : undefined;
     const animationName = getAnimationName(currentOrder, data.status, spriteObject)

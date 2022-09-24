@@ -12,7 +12,7 @@ function findChoiceFromRefSet(
 ): ConversationChoice | undefined {
 
     // eslint-disable-next-line prefer-const
-    let {choiceRef, branchId, conversationId} = choiceRefSet;
+    let { choiceRef, branchId, conversationId } = choiceRefSet;
     if (!choiceRef) {
         console.warn(`missing choiceRef for findChoiceFromRefSet in conversation ${currentConversation.id}`)
         return
@@ -74,13 +74,9 @@ function buildDefaultSequence(choice: ConversationChoice, state: GameState): Seq
     if (actorOrders) {
         actorOrders[player.id] = [
             {
-                type: 'talk',
-                steps: [
-                    {
-                        text: choice.text,
-                        time: 250,
-                    }
-                ]
+                type: 'say',
+                text: choice.text,
+                time: 250,
             }
         ]
     }

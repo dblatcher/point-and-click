@@ -199,7 +199,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                                         updateData={(newOrder) => { editOrder(newOrder, index) }}
                                         data={order} key={index} />
                                 }
-                                createItem={() => getDefaultOrder('talk')}
+                                createItem={() => getDefaultOrder('say')}
                                 mutateList={newList => { updateProperty('orders', newList) }}
                             />
                         </div>

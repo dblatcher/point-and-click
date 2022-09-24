@@ -145,7 +145,7 @@ export class SequenceEditor extends Component<Props, State> {
                 <SelectAndConfirmInput
                     label="add orders for:"
                     items={listIds(gameDesign.actors).filter(id => !Object.keys(actorOrders).includes(id))}
-                    onSelect={value => { this.changeOrderList([getDefaultOrder('talk')], stageIndex, value) }}
+                    onSelect={value => { this.changeOrderList([getDefaultOrder('say')], stageIndex, value) }}
                 />
 
                 <TabMenu backgroundColor="none"

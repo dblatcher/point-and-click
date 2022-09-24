@@ -1,8 +1,8 @@
 import { Sequence } from "../../src/definitions/Sequence";
 
 export const DIALOGUE: Sequence = {
-    id:"DIALOGUE",
-    description:"Skinner talks to his doppleganger.",
+    id: "DIALOGUE",
+    description: "Skinner talks to his doppleganger.",
     stages: [
         {
             actorOrders: {
@@ -21,57 +21,32 @@ export const DIALOGUE: Sequence = {
         {
             actorOrders: {
                 PLAYER: [
-                    {
-                        type: 'talk',
-                        steps: [
-                            { text: 'hello', time: 100 },
-                            { text: 'I am Skinner', time: 100 },
-                        ]
-                    }
+                    { type: 'say', time: 100, text: 'hello' },
+                    { type: 'say', time: 100, text: 'I am Skinner' },
                 ],
                 FAKE_PLAYER_NO_ORDERS: [
 
                 ],
                 FAKE_PLAYER_WITH_ORDERS: [
-                    {
-                        type: 'talk',
-                        steps: [
-                            { text: 'I do not exist', time: 100 },
-                        ]
-                    }
+                    { type: 'say', time: 100, text: 'hello' },
                 ],
             }
         },
         {
             actorOrders: {
                 EVIL_SKINNER: [
-                    {
-                        type: 'talk',
-                        steps: [
-                            { text: 'Me too.', time: 100 }
-                        ]
-                    }
+                    { type: 'say', time: 100, text: 'Me too.' },
                 ]
             }
         },
         {
             actorOrders: {
                 EVIL_SKINNER: [
-                    {
-                        type: 'talk',
-                        steps: [
-                            { text: 'ha ha ha ha!', time: 120 }
-                        ]
-                    },
+                    { type: 'say', time: 120, text: 'ha ha ha ha!' },
                     { type: 'move', steps: [{ x: 200, y: 30 }] },
                 ],
                 PLAYER: [
-                    {
-                        type: 'talk',
-                        steps: [
-                            { text: 'nooo', time: 200, animation: 'yell' },
-                        ]
-                    }
+                    { type: 'say', time: 200, text: 'Noooo!', animation: 'yell' },
                 ]
             }
         },

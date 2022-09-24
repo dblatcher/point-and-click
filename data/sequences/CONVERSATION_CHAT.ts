@@ -6,23 +6,15 @@ const CHAT_HELLO_0: Sequence = {
         {
             actorOrders: {
                 PLAYER: [
-                    {
-                        type: 'talk', steps: [
-                            { text: 'hello there, lets talk about tools', time: 100 },
-                            { text: 'I am doing dialogue', time: 100 },
-                        ]
-                    }
+                    { type: 'say', text: 'hello there, lets talk about tools', time: 100 },
+                    { type: 'say', text: 'I am doing dialogue', time: 100 }
                 ]
             }
         },
         {
             actorOrders: {
                 MARIO: [
-                    {
-                        type: 'talk', steps: [
-                            { text: 'hello!', time: 100 },
-                        ]
-                    }
+                    { type: 'say', text: 'hello!', time: 100 },
                 ]
             }
         },
@@ -35,11 +27,7 @@ const CHAT_HELLO_1: Sequence = {
         {
             actorOrders: {
                 PLAYER: [
-                    {
-                        type: 'talk', steps: [
-                            { text: 'good bye', time: 100 }
-                        ]
-                    }
+                    { type: 'say', text: 'good bye', time: 100 }
                 ]
             }
         },
@@ -53,14 +41,14 @@ const CHAT_TOOLS_0: Sequence = {
             actorOrders: {
                 PLAYER: [
                     { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
-                    { type: 'talk', steps: [{ text: 'Do you have a hammer?', time: 100 }] },
+                    { type: 'say', text: 'Do you have a hammer?', time: 100 },
                 ]
             }
         },
         {
             actorOrders: {
                 MARIO: [
-                    { type: 'talk', steps: [{ text: 'Yes.', time: 100 }] },
+                    { type: 'say', text: 'Yes.', time: 100 },
                 ]
             }
         },
@@ -73,15 +61,14 @@ const CHAT_TOOLS_1: Sequence = {
         {
             actorOrders: {
                 PLAYER: [
-                    { type: 'talk', steps: [{ text: 'Can I have the hammer?', time: 100 }] },
-
+                    { type: 'say', text: 'Can I have the hammer?', time: 100 },
                 ]
             }
         },
         {
             actorOrders: {
                 MARIO: [
-                    { type: 'talk', steps: [{ text: 'Here you go.', time: 100 }] },
+                    { type: 'say', text: 'Here you go.', time: 100 },
                     { type: 'act', steps: [{ animation: 'walk', duration: 150 }] },
                 ]
             },
@@ -99,14 +86,14 @@ const CHAT_TOOLS_2: Sequence = {
             actorOrders: {
                 PLAYER: [
                     { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
-                    { type: 'talk', steps: [{ text: 'Do you have a screwdriver?', time: 100 }] },
+                    { type: 'say', text: 'Do you have a screwdriver?', time: 100 },
                 ]
             }
         },
         {
             actorOrders: {
                 MARIO: [
-                    { type: 'talk', steps: [{ text: 'No.', time: 100 }] },
+                    { type: 'say', text: 'No.', time: 100 },
                 ]
             }
         },
@@ -119,7 +106,7 @@ const CHAT_TOOLS_3: Sequence = {
         {
             actorOrders: {
                 PLAYER: [
-                    { type: 'talk', steps: [{ text: 'Never mind.', time: 100 }] },
+                    { type: 'say', text: 'Never mind.', time: 100 },
                 ]
             }
         },

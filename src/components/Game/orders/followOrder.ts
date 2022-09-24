@@ -5,7 +5,6 @@ import { Point } from "../../../lib/pathfinding/geometry";
 import { findPath } from "../../../lib/pathfinding/pathfind";
 import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
-import { exectuteTalk } from "./executeTalk";
 import { exectuteSay } from "./executeSay";
 
 
@@ -50,8 +49,6 @@ export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders?:
             findPathBetweenSteps(subject, cellMatrix, nextOrder)
         }
         executeMove(nextOrder, subject)
-    } else if (nextOrder.type === 'talk') {
-        exectuteTalk(nextOrder)
     } else if (nextOrder.type === 'say') {
         exectuteSay(nextOrder)
     } else if (nextOrder.type === 'act') {

@@ -18,8 +18,7 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
     }
 
     state.actorOrders[player.id].push({
-        type: 'talk',
-        steps: [{ text, time: 250 }]
+        type: 'say', text, time: 250
     })
 
     return state

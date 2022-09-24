@@ -11,22 +11,14 @@ export const PUT_OUT_FIRE: Sequence = {
                             x: 240, y: 10
                         }]
                     },
-                    {
-                        type: 'talk', steps: [{
-                            text: 'I wish to put it out.', time: 150,
-                        }]
-                    }
+                    { type: 'say', text: 'I wish to put it out.', time: 150 },
                 ]
             }
         },
         {
             actorOrders: {
                 PLAYER: [
-                    {
-                        type: 'talk', steps: [{
-                            text: 'ok...', time: 100,
-                        }]
-                    }
+                    { type: 'say', text: 'ok...', time: 100 },
                 ],
                 FIRE: [
                     {
@@ -43,11 +35,7 @@ export const PUT_OUT_FIRE: Sequence = {
         {
             actorOrders: {
                 PLAYER: [
-                    {
-                        type: 'talk', steps: [{
-                            text: 'It is out now.', time: 150,
-                        }]
-                    }
+                    { type: 'say', text: 'It is out now.', time: 150 },
                 ]
             }
         }

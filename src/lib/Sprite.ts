@@ -15,7 +15,6 @@ export class Sprite {
     }
 
     static readonly DEFAULT_ANIMATION = {
-        talk: 'talk',
         say: 'talk',
         move: 'walk',
         wait: 'default',
@@ -32,7 +31,7 @@ export class Sprite {
         return !!animations[animationName]
     }
 
-    public getAnimation(animationName?: string, type?: 'talk' | 'move' | 'wait' | 'act'): Animation {
+    public getAnimation(animationName?: string, type?: 'say' | 'move' | 'wait' | 'act'): Animation {
         const { animations } = this.data
         if (animationName && this.hasAnimation(animationName)) { return animations[animationName] }
         if (type && this.hasAnimation(Sprite.DEFAULT_ANIMATION[type])) { return animations[Sprite.DEFAULT_ANIMATION[type]] }

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, Component } from "preact"
-import { ActOrder, MoveOrder, orderTypes, stepSchama, TalkOrder } from "../../../definitions/Order";
+import { ActOrder, MoveOrder, orderTypes, stepSchama } from "../../../definitions/Order";
 import { SelectInput } from "../formControls";
 import { makeNewStep } from "../defaults";
 import { ListEditor } from "../ListEditor";
 import { FieldDef, SchemaForm } from "../SchemaForm";
 
-type OrderWithSteps = TalkOrder | MoveOrder | ActOrder
+type OrderWithSteps =  MoveOrder | ActOrder
 
 interface Props {
     data: OrderWithSteps;
@@ -30,12 +30,6 @@ export class OrderWithStepsForm extends Component<Props> {
                 break;
             }
             case 'steps': {
-                if (data.type === 'talk') {
-                    updateData({
-                        type: data.type,
-                        steps: newValue as (TalkOrder['steps'])
-                    })
-                }
                 if (data.type === 'act') {
                     updateData({
                         type: data.type,
@@ -84,20 +78,6 @@ export class OrderWithStepsForm extends Component<Props> {
                     />
                 </div>
 
-                {type === 'talk' && (
-                    <ListEditor
-                        list={steps}
-                        describeItem={(step, index) => (
-                            <SchemaForm key={index}
-                                changeValue={(value, field) => { changeStep(value, field, index) }}
-                                data={step}
-                                suggestions={{ animation: animationSuggestions }}
-                                schema={stepSchama[type]} />
-                        )}
-                        mutateList={(newList) => changeValue('steps', newList)}
-                        createItem={makeNewStep[type]}
-                    />
-                )}
                 {type === 'act' && (
                     <ListEditor
                         list={steps}

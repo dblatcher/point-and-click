@@ -1,7 +1,6 @@
 import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Order, OrderType } from "src";
 import { Flag } from "src/definitions/Flag";
-import { TalkStep, ActStep, MoveStep } from "src/definitions/Order";
-import { Sprite } from "../../lib/Sprite";
+import { ActStep, MoveStep } from "src/definitions/Order";
 
 const DEFAULT_TALK_TIME = 250;
 
@@ -108,7 +107,6 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
 }
 
 export const makeNewStep = {
-    talk: (): TalkStep => ({ time: DEFAULT_TALK_TIME, animation: Sprite.DEFAULT_ANIMATION.talk, text: "", }),
     act: (): ActStep => ({ duration: 100, reverse: false, animation: '' }),
     move: (): MoveStep => ({ speed: 100, x: 0, y: 0, animation: '' }),
 }

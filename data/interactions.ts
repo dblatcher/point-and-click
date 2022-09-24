@@ -9,13 +9,9 @@ export const interactions: Interaction[] = [
                 type: 'order',
                 orders: [
                     {
-                        type: 'talk',
-                        steps: [
-                            {
-                                text: 'Fire is hot',
-                                time: 100,
-                            }
-                        ]
+                        type: 'say',
+                        text: 'Fire is hot',
+                        time: 100,
                     }
                 ]
             }
@@ -38,14 +34,10 @@ export const interactions: Interaction[] = [
                         ]
                     },
                     {
-                        type: 'talk',
-                        steps: [
-                            {
-                                time: 300,
-                                text: 'I have a bucket!!',
-                                animation: 'yell',
-                            }
-                        ]
+                        type: 'say',
+                        time: 300,
+                        text: 'I have a bucket!!',
+                        animation: 'yell',
                     },
                 ]
             }
@@ -65,7 +57,7 @@ export const interactions: Interaction[] = [
                 ]
             },
             {
-                type: 'order', actorId:'MARIO', orders: [
+                type: 'order', actorId: 'MARIO', orders: [
                     {
                         type: 'say',
                         text: 'Itsa me, Mario.',
@@ -97,13 +89,9 @@ export const interactions: Interaction[] = [
                 type: 'order',
                 orders: [
                     {
-                        type: 'talk',
-                        steps: [
-                            {
-                                text: 'Looking at the sun is bad for your eyes.',
-                                time: 100,
-                            }
-                        ]
+                        type: 'say',
+                        text: 'Looking at the sun is bad for your eyes.',
+                        time: 100,
                     }
                 ]
             }
@@ -124,13 +112,9 @@ export const interactions: Interaction[] = [
                 type: 'order',
                 orders: [
                     {
-                        type: 'talk',
-                        steps: [
-                            {
-                                text: 'I am inside now',
-                                time: 100,
-                            }
-                        ]
+                        type: 'say',
+                        text: 'I am inside now',
+                        time: 100,
                     }
                 ]
             }
@@ -151,13 +135,9 @@ export const interactions: Interaction[] = [
                 type: 'order',
                 orders: [
                     {
-                        type: 'talk',
-                        steps: [
-                            {
-                                text: 'I am outside again',
-                                time: 100,
-                            }
-                        ]
+                        type: 'say',
+                        text: 'I am outside again',
+                        time: 100,
                     }
                 ]
             }
