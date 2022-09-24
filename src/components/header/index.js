@@ -9,6 +9,7 @@ const Header = () => (
 			<Link activeClassName={style.active} href="/">Game</Link>
 			<Link activeClassName={style.active} href="/prebuilt">Prebuilt Game</Link>
 			<Link activeClassName={style.active} href="/editor">editor</Link>
+			<Link activeClassName={style.active} href="/prebuilt-editor">prebuilt editor</Link>
 		</nav>
 	</header>
 );

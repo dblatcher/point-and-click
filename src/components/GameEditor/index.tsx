@@ -33,11 +33,6 @@ import layoutStyles from "./editorLayoutStyles.module.css";
 import { CheckBoxInput } from "./formControls";
 
 
-const usePrebuiltGame = false
-if (usePrebuiltGame) {
-    populateServicesForPreBuiltGame()
-}
-
 export type EditorOptions = {
     autoSave: boolean;
 }
@@ -60,7 +55,7 @@ type State = {
 };
 
 type Props = {
-
+    usePrebuiltGame?: boolean;
 }
 
 const tabs: string[] = [
@@ -97,7 +92,12 @@ export class GameEditor extends Component<Props, State>{
 
     constructor(props: Props) {
         super(props)
-        const gameDesign = usePrebuiltGame ? { ...prebuiltGameDesign } : {
+
+        if (props.usePrebuiltGame) {
+            populateServicesForPreBuiltGame()
+        }
+
+        const gameDesign = props.usePrebuiltGame ? { ...prebuiltGameDesign } : {
             id: "NEW_GAME",
             rooms: [Object.assign(getBlankRoom(), { id: defaultRoomId, height: 150 })],
             actors: [],
