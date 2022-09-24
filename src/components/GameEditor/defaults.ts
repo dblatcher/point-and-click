@@ -4,6 +4,8 @@ import { TalkStep, ActStep, MoveStep } from "src/definitions/Order";
 import { boolean } from "zod";
 import { Sprite } from "../../lib/Sprite";
 
+const DEFAULT_TALK_TIME = 250;
+
 export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'LOOK', label: 'look at' },
     { id: 'TAKE', label: 'pick up' },
@@ -30,6 +32,11 @@ export const getBlankRoom: { (): RoomData } = () => ({
 })
 
 export const getDefaultOrder = (type: OrderType): Order => {
+
+    if (type === 'say') {
+        return { type, text:'', time: DEFAULT_TALK_TIME}
+    }
+
     return {
         type,
         steps: []
@@ -87,7 +94,7 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
         case 'changeRoom':
             return { type: 'changeRoom', roomId: '', takePlayer: true, x: 0, y: 0 }
         case 'talk':
-            return { type: 'talk', actorId: '', time: 250, text: '' }
+            return { type: 'talk', actorId: '', time: DEFAULT_TALK_TIME, text: '' }
         case 'ending':
             return { type: 'ending', endingId: '' }
         case 'teleportActor':
@@ -104,7 +111,7 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
 }
 
 export const makeNewStep = {
-    talk: (): TalkStep => ({ time: 250, animation: Sprite.DEFAULT_ANIMATION.talk, text: "", }),
+    talk: (): TalkStep => ({ time: DEFAULT_TALK_TIME, animation: Sprite.DEFAULT_ANIMATION.talk, text: "", }),
     act: (): ActStep => ({ duration: 100, reverse: false, animation: '' }),
     move: (): MoveStep => ({ speed: 100, x: 0, y: 0, animation: '' }),
 }

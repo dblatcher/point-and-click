@@ -16,6 +16,7 @@ export class Sprite {
 
     static readonly DEFAULT_ANIMATION = {
         talk: 'talk',
+        say: 'talk',
         move: 'walk',
         wait: 'default',
         act: 'default',

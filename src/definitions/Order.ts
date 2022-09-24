@@ -23,6 +23,14 @@ export const TalkOrderSchema = z.object({
 })
 export type TalkOrder = z.infer<typeof TalkOrderSchema>
 
+export const SayOrderSchema = z.object({
+    type: z.literal('say'),
+    animation: z.optional(z.string()),
+    text: z.string(),
+    time: z.number(),
+})
+export type SayOrder = z.infer<typeof SayOrderSchema>
+
 export const ActOrderSchema = z.object({
     type: z.literal('act'),
     steps: z.array(z.object({
@@ -34,10 +42,10 @@ export const ActOrderSchema = z.object({
 })
 export type ActOrder = z.infer<typeof ActOrderSchema>
 
-export const orderSchema = z.union([MoveOrderSchema, ActOrderSchema, TalkOrderSchema])
-export type Order = MoveOrder | TalkOrder | ActOrder
-export type OrderType = 'move' | 'talk' | 'act'
-export const orderTypes: OrderType[] = ['move', 'talk', 'act']
+export const orderSchema = z.union([MoveOrderSchema, ActOrderSchema, TalkOrderSchema, SayOrderSchema])
+export type Order = z.infer<typeof orderSchema>
+export type OrderType = 'move' | 'talk' | 'act' | 'say'
+export const orderTypes: OrderType[] = orderSchema.options.map(option => option.shape.type.value)
 
 export const stepSchama = {
     talk: TalkOrderSchema.shape.steps.element,

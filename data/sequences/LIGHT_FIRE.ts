@@ -13,9 +13,10 @@ export const LIGHT_FIRE: Sequence = {
                         }]
                     },
                     {
-                        type: 'talk', steps: [{
-                            text: 'I wish to light this fire.', time: 150,
-                        }]
+                        type: 'say', text: 'I wish to light this fire.', time: 150,
+                    },
+                    {
+                        type: 'say', text: 'yes.', time: 50,
                     }
                 ]
             }
@@ -24,9 +25,7 @@ export const LIGHT_FIRE: Sequence = {
             actorOrders: {
                 PLAYER: [
                     {
-                        type: 'talk', steps: [{
-                            text: 'here goes...', time: 150,
-                        }]
+                        type: 'say', text: 'here goes...', time: 150,
                     }
                 ],
                 FIRE: [

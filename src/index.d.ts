@@ -7,7 +7,7 @@ export type { ItemData } from "./definitions/ItemData"
 export type { CommandTarget, Command } from "./definitions/Command";
 export type { Verb } from "./definitions/Verb";
 export type { RoomData, BackgroundLayer, ScaleLevel } from "./definitions/RoomData"
-export type { Order, MoveOrder, TalkOrder, ActOrder, OrderType } from "./definitions/Order";
+export type { Order, MoveOrder, TalkOrder, ActOrder, OrderType, SayOrder } from "./definitions/Order";
 export type { ActorData, SoundValue } from "./definitions/ActorData";
 export type { Direction } from "./definitions/SpriteSheet";
 export type { Zone, HotspotZone, SupportedZoneShape, Shape } from "./definitions/Zone"

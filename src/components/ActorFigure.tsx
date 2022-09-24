@@ -28,9 +28,12 @@ interface Props {
     forPreview?: boolean;
 }
 
-const getAnimationName = (currentOrder: Order, status: string | undefined, sprite?: Sprite): string => {
-    if (!sprite) { return 'wait' }
-    const animationName = currentOrder ? currentOrder.steps[0]?.animation : status;
+const getAnimationName = (currentOrder: Order | undefined, status: string | undefined, sprite?: Sprite): string => {
+    if (!sprite) { return Sprite.DEFAULT_ANIMATION.wait }
+
+    const animationName = (currentOrder?.type === 'say')
+        ? currentOrder.animation || status
+        : currentOrder ? currentOrder.steps[0]?.animation : status;
     const validAnimationName = (animationName && sprite.hasAnimation(animationName)) ? animationName : undefined;
     return validAnimationName || Sprite.DEFAULT_ANIMATION[currentOrder?.type || 'wait'];
 }
@@ -40,7 +43,11 @@ const getSoundValue = (
     status: string | undefined,
     soundMap: SoundEffectMap
 ): SoundValue | undefined => {
-    if (currentOrder) {
+    if (currentOrder?.type === 'say') {
+        if (currentOrder.animation) {
+            return soundMap[currentOrder.animation]
+        }
+    } else if (currentOrder) {
         const [currentAction] = currentOrder.steps
         if (currentAction?.animation) {
             return soundMap[currentAction.animation]
@@ -73,7 +80,11 @@ export const ActorFigure: FunctionalComponent<Props> = ({
     } = data
     const spriteObject = overrideSprite || spriteService.get(spriteId)
     const currentOrder: Order | undefined = orders[0]
-    const text = currentOrder?.type === 'talk' ? currentOrder.steps[0]?.text : undefined;
+    const text = currentOrder?.type === 'talk' 
+        ? currentOrder.steps[0]?.text 
+        : currentOrder?.type === 'say' 
+            ? currentOrder.text
+            : undefined;
     const animationName = getAnimationName(currentOrder, data.status, spriteObject)
     const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
     const frames = spriteObject?.getFrames(animationName, direction) || []

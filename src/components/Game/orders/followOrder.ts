@@ -6,6 +6,7 @@ import { findPath } from "../../../lib/pathfinding/pathfind";
 import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
 import { exectuteTalk } from "./executeTalk";
+import { exectuteSay } from "./executeSay";
 
 
 function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order: MoveOrder) {
@@ -51,14 +52,22 @@ export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders?:
         executeMove(nextOrder, subject)
     } else if (nextOrder.type === 'talk') {
         exectuteTalk(nextOrder)
+    } else if (nextOrder.type === 'say') {
+        exectuteSay(nextOrder)
     } else if (nextOrder.type === 'act') {
         executeAction(nextOrder)
     }
 
-    if (nextOrder.steps.length === 0) {
-        orders.shift()
-        if (nextOrder.type === 'move' && nextOrder.doPendingInteractionWhenFinished) {
-            return true
+    if ('steps' in nextOrder) {
+        if (nextOrder.steps.length === 0) {
+            orders.shift()
+            if (nextOrder.type === 'move' && nextOrder.doPendingInteractionWhenFinished) {
+                return true
+            }
+        }
+    } else if ('time' in nextOrder) {
+        if (nextOrder.time <= 0) {
+            orders.shift()
         }
     }
     return false
