@@ -2,17 +2,17 @@
 import { h, Component } from "preact"
 import { ActOrder, MoveOrder, orderTypes, stepSchama, TalkOrder } from "../../../definitions/Order";
 import { SelectInput } from "../formControls";
-import { getDefaultOrder, makeNewStep } from "../defaults";
+import { makeNewStep } from "../defaults";
 import { ListEditor } from "../ListEditor";
 import { FieldDef, SchemaForm } from "../SchemaForm";
 
 type OrderWithSteps = TalkOrder | MoveOrder | ActOrder
-type OrderWithStepsType = 'talk' | 'move' | 'act'
 
 interface Props {
     data: OrderWithSteps;
-    animationSuggestions?: string[]
+    animationSuggestions?: string[];
     updateData: { (data: OrderWithSteps): void };
+    changeType: { (type: string): void };
 }
 
 export class OrderWithStepsForm extends Component<Props> {
@@ -23,12 +23,10 @@ export class OrderWithStepsForm extends Component<Props> {
     }
 
     changeValue(propery: keyof OrderWithSteps, newValue: string | undefined | OrderWithSteps['steps']) {
-        const { data, updateData } = this.props
+        const { data, updateData,changeType } = this.props
         switch (propery) {
             case 'type': {
-                if (orderTypes.includes(newValue as OrderWithStepsType)) {
-                    updateData(getDefaultOrder(newValue as OrderWithStepsType) as OrderWithSteps)
-                }
+                changeType(newValue as string )
                 break;
             }
             case 'steps': {

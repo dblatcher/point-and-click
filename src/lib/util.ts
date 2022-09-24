@@ -34,6 +34,13 @@ export function findIndexById<T extends { id: string }>(id: string | undefined, 
     return list.findIndex(_ => _.id === id)
 }
 
+export function findValueAsType<T> (value: unknown, list: T[]): T | undefined {
+    if (list.includes(value as T)) {
+        return value as T
+    }
+    return undefined
+}
+
 export function deduplicateStringArray(list: string[]): string[] {
     const newList: string[] = []
     list.forEach(item => {

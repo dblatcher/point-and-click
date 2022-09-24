@@ -1,7 +1,6 @@
 import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Order, OrderType } from "src";
 import { Flag } from "src/definitions/Flag";
 import { TalkStep, ActStep, MoveStep } from "src/definitions/Order";
-import { boolean } from "zod";
 import { Sprite } from "../../lib/Sprite";
 
 const DEFAULT_TALK_TIME = 250;
