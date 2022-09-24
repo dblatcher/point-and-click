@@ -9,8 +9,15 @@ const invertMatrix = (cellMatrix: CellMatrix): CellMatrix => {
         .reverse()
 }
 
+const isOutOfBounds = (cell: Point, matrix: CellMatrix): boolean => {
+    return cell.x >= matrix[0].length ||
+        cell.y >= matrix.length ||
+        cell.x < 0 ||
+        cell.y < 0
+}
+
 export function findPath(start: Point, goal: Point, matrix: CellMatrix, cellSize: number): Point[] {
-    const invertedMatrix = invertMatrix(matrix)
+
     const toCell = (point: Point): Point => {
         return {
             x: Math.floor(point.x / cellSize),
@@ -24,15 +31,19 @@ export function findPath(start: Point, goal: Point, matrix: CellMatrix, cellSize
         }
     }
 
+    const invertedMatrix = invertMatrix(matrix)
     const startCell = toCell(start)
+    const goalCell = toCell(goal)
 
-    // starting outside matrix
-    if (startCell.x >= matrix[0].length || startCell.y >= matrix.length) {
+    if (isOutOfBounds(startCell, invertedMatrix)) {
+        return []
+    }
+    if (isOutOfBounds(goalCell, invertedMatrix)) {
         return []
     }
 
     const finder = new AStarFinder({ grid: { matrix: invertedMatrix } })
-    const pathPairs = finder.findPath(toCell(start), toCell(goal));
+    const pathPairs = finder.findPath(startCell, goalCell);
 
     if (pathPairs.length === 0) {
         return []

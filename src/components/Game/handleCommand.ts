@@ -11,16 +11,24 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
     const { actors } = state
     const player = actors.find(_ => _.isPlayer)
     if (!player) { return state }
-    const text = getDefaultResponseText(command, unreachable)
-
     if (!state.actorOrders[player.id]) {
         state.actorOrders[player.id] = []
     }
 
-    state.actorOrders[player.id].push({
-        type: 'say', text, time: 250
-    })
-
+    if (command.verb.isMoveVerb && (command.target.type === 'actor' || command.target.type === 'hotspot')) {
+        const point = getTargetPoint(command.target)
+        state.debugLog.push(makeDebugEntry(`walk to point is ${point.x}, ${point.y}`, 'pathfinding'))
+        state.actorOrders[player.id].push({
+            type: 'move', steps: [
+                { ...point }
+            ]
+        })
+    } else {
+        const text = getDefaultResponseText(command, unreachable)
+        state.actorOrders[player.id].push({
+            type: 'say', text, time: 250
+        })
+    }
     return state
 }
 
@@ -76,8 +84,9 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
         const currentRoom = rooms.find(_ => _.id === currentRoomId)
         const player = actors.find(_ => _.isPlayer)
         const interaction = matchInteraction(command, currentRoom, state.interactions, state.flagMap)
+        const mustReachFirst = interaction && (command.verb.isMoveVerb || interaction.mustReachFirst)
 
-        if (interaction && interaction.mustReachFirst && command.target.type !== 'item') {
+        if (interaction && mustReachFirst && command.target.type !== 'item') {
             debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command'))
             const targetPoint = getTargetPoint(command.target)
 

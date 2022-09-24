@@ -98,7 +98,7 @@ export const interactions: Interaction[] = [
         ]
     },
     {
-        verbId: 'USE',
+        verbId: 'WALK',
         targetId: 'bush',
         roomId: 'OUTSIDE',
         consequences: [

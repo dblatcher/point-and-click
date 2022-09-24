@@ -1,6 +1,7 @@
 import { Verb } from "../src/definitions/Verb";
 
 export const verbs: Verb[] = [
+    { id: 'WALK', label: 'walk to', isMoveVerb: true },
     { id: 'LOOK', label: 'look at', defaultResponseNoItem: "I don't see anything special about it.", defaultResponseCannotReach: "I cannot see clearly from over here." },
     { id: 'TAKE', label: 'pick up' },
     { id: 'PUSH', label: 'push' },
