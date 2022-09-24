@@ -14,20 +14,23 @@ interface Props {
     handleHover?: HandleHoverFunction;
     highlight?: boolean;
     markVertices?: boolean;
+    flash?: boolean;
     stopPropogation?: boolean;
 }
 
 const Hotspot: FunctionalComponent<Props> = ({
     zone: hotspot, roomData, viewAngle, highlight, markVertices, stopPropogation = true,
-    clickHandler, handleHover
+    clickHandler, handleHover, flash = false,
 }: Props) => {
     const { parallax } = hotspot
 
-    const className = highlight ? styles.highlightedHotspot : styles.hotspot
+    const classNames = highlight ? [styles.highlightedHotspot] : [styles.hotspot]
+
+    if (flash) { classNames.push(styles.flash)}
 
     return (
         <ZoneSvg
-            className={className}
+            className={classNames.join(" ")}
             x={hotspot.x + getShift(viewAngle, parallax, roomData)}
             y={roomData.height - hotspot.y}
             clickHandler={clickHandler}

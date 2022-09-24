@@ -4,7 +4,7 @@ import { RoomData, ActorData, HotspotZone } from "src";
 import { Room } from "../../Room";
 import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "../../../lib/util";
-import { putActorsInDisplayOrder } from "../../../lib/roomFunctions";
+import { getTargetPoint, putActorsInDisplayOrder } from "../../../lib/roomFunctions";
 import HorizontalLine from "../../HorizontalLine";
 import { makeTestActor } from "./testSprite";
 import { MarkerShape } from "../../MarkerShape";
@@ -103,21 +103,15 @@ export class Preview extends Component<Props, State>{
         if (typeof activeHotspotIndex === 'undefined' || !highlightHotspots) { return undefined }
         const activeHotspot = roomData.hotspots ? roomData.hotspots[activeHotspotIndex] : undefined
         if (!activeHotspot) { return undefined }
-
-        const { walkToX, walkToY } = activeHotspot
-        if (
-            typeof walkToX === 'undefined' && typeof walkToY === 'undefined'
-        ) {
-            return undefined
-        }
         return activeHotspot
     }
 
     get walkToPointLabel(): string {
         const { hotspotToHaveMarkWalkToPoint: hotspot } = this
         if (!hotspot) { return '' }
-        const { id, x, y, walkToX, walkToY } = hotspot
-        return `${id}:[${walkToX || x}, ${walkToY || y}]`
+        const { x, y } = getTargetPoint(hotspot)
+        const { id, } = hotspot
+        return `${id}:[${x}, ${y}]`
     }
 
     get hotspotsToMark(): number[] {
@@ -150,7 +144,7 @@ export class Preview extends Component<Props, State>{
             testActor, showTestActor, showRealActors,
             showScaleLines,
         } = this.state
-        const { roomData, handleRoomClick, clickEffect, actors } = this.props
+        const { roomData, handleRoomClick, clickEffect, actors, activeHotspotIndex } = this.props
         const { scaling = [] } = roomData
 
         const processClick = (x: number, y: number) => {
@@ -244,6 +238,7 @@ export class Preview extends Component<Props, State>{
                         handleRoomClick={processClick}
                         markHotspotVertices={this.hotspotsToMark}
                         markObstacleVertices={this.obstaclesToMark}
+                        flashHotspot={activeHotspotIndex}
                         markWalkableVertices={this.walkablesToMark}
                         contents={contents}
                     >
@@ -260,8 +255,7 @@ export class Preview extends Component<Props, State>{
                                 viewAngle={viewAngle}
                                 color={'red'}
                                 text={this.walkToPointLabel}
-                                x={this.hotspotToHaveMarkWalkToPoint.walkToX || this.hotspotToHaveMarkWalkToPoint.x}
-                                y={this.hotspotToHaveMarkWalkToPoint.walkToY || this.hotspotToHaveMarkWalkToPoint.y}
+                                { ...getTargetPoint(this.hotspotToHaveMarkWalkToPoint)}
                             />
                         )}
                     </Room>

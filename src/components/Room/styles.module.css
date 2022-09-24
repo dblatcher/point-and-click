@@ -33,6 +33,20 @@
     fill: rgba(0, 8, 245, 0.5);
 }
 
+@keyframes flashing {
+    0% {
+        fill: rgba(0, 8, 245, 0.5);
+    }
+    100% {
+        fill: rgba(255, 8, 8, 0.5);
+    }
+  }
+
+.flash {
+    fill: white;
+    animation: .5s linear 1s infinite alternate flashing;
+}
+
 .obstacleArea {
     fill: rgba(255, 100, 100, .8);
     stroke: white;

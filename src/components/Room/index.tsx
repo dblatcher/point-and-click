@@ -24,6 +24,7 @@ interface Props {
     highlightHotspots?: boolean;
     obstacleCells?: CellMatrix;
     markHotspotVertices?: number[];
+    flashHotspot?: number;
     markObstacleVertices?: number[];
     markWalkableVertices?: number[];
     showCaption?: boolean;
@@ -46,6 +47,7 @@ export const Room: FunctionComponent<Props> = ({
     highlightHotspots,
     obstacleCells,
     markHotspotVertices = [],
+    flashHotspot,
     markObstacleVertices = [],
     markWalkableVertices = [],
     showCaption = false,
@@ -158,6 +160,7 @@ export const Room: FunctionComponent<Props> = ({
                         stopPropogation={!!handleHotspotClick}
                         handleHover={handleHover}
                         markVertices={markHotspotVertices.includes(index)}
+                        flash={flashHotspot === index}
                     />
                 )}
 
