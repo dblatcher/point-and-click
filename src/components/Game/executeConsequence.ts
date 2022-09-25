@@ -136,7 +136,9 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                         const zone = zoneList.find(zone => zone.ref === ref)
                         if (zone) {
                             zone.disabled = !on
-                            state.cellMatrix = generateCellMatrix(room, cellSize)
+                            if (currentRoom?.id === room.id) {
+                                state.cellMatrix = generateCellMatrix(room, cellSize)
+                            }
                         }
                     }
                 }
