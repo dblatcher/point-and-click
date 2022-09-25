@@ -109,7 +109,7 @@ export class Preview extends Component<Props, State>{
     get walkToPointLabel(): string {
         const { hotspotToHaveMarkWalkToPoint: hotspot } = this
         if (!hotspot) { return '' }
-        const { x, y } = getTargetPoint(hotspot)
+        const { x, y } = getTargetPoint(hotspot, this.props.roomData)
         const { id, } = hotspot
         return `${id}:[${x}, ${y}]`
     }
@@ -255,7 +255,7 @@ export class Preview extends Component<Props, State>{
                                 viewAngle={viewAngle}
                                 color={'red'}
                                 text={this.walkToPointLabel}
-                                { ...getTargetPoint(this.hotspotToHaveMarkWalkToPoint)}
+                                { ...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
                             />
                         )}
                     </Room>

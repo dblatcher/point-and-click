@@ -38,18 +38,41 @@ export function getViewAngleCenteredOn(xPosition: number, roomData: RoomData) {
     return -offCenter * 2
 }
 
-export function getTargetPoint(target: ActorData | HotspotZone): { x: number; y: number } {
+export function getTargetPoint(target: ActorData | HotspotZone, roomData: RoomData): { x: number; y: number } {
 
-    if (target.type === 'actor') {
-        const { x, y, walkToX = 0, walkToY = 0 } = target
-        return {
-            x: x + walkToX,
-            y: y + walkToY,
+    switch (target.type) {
+        case 'actor': {
+            const { x, y, walkToX = 0, walkToY = 0 } = target
+            return {
+                x: x + walkToX,
+                y: y + walkToY,
+            }
+        }
+        case 'hotspot': {
+            const { x, y, walkToX, walkToY, parallax } = target
+            const { frameWidth } = roomData
+
+            let pointX: number;
+            if (typeof walkToX === 'undefined') {
+                const layerWidth = getLayerWidth(parallax, roomData)
+                const offset = (layerWidth - frameWidth) / 2
+                pointX = x + offset
+            } else {
+                pointX = walkToX
+            }
+
+            let pointY: number;
+            if (typeof walkToY === 'undefined') {
+                pointY = y
+            } else {
+                pointY = walkToY
+            }
+
+            return {
+                x: pointX,
+                y: pointY,
+            }
         }
     }
 
-    return {
-        x: target.walkToX || target.x,
-        y: target.walkToY || target.y,
-    }
 }

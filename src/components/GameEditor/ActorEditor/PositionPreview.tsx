@@ -51,7 +51,7 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
                         viewAngle={viewAngle}
                         color={'red'}
                         // text={this.walkToPointLabel}
-                        {...getTargetPoint(actorData)}
+                        {...getTargetPoint(actorData, roomData)}
                     />
                 </Room>
 

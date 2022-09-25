@@ -3,20 +3,24 @@ import { Command, Interaction, RoomData, ActorData, OrderConsequence } from "src
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
 import { findPath } from "../../lib/pathfinding/pathfind";
+import { findById } from "../../lib/util";
 import { getDefaultResponseText, matchInteraction, describeCommand } from "../../lib/commandFunctions";
 import { getTargetPoint } from "../../lib/roomFunctions";
 
 
 function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
-    const { actors } = state
+    const { actors, rooms, currentRoomId } = state
     const player = actors.find(_ => _.isPlayer)
-    if (!player) { return state }
+    const currentRoom = findById(currentRoomId, rooms)
+
+    if (!player || !currentRoom) { return state }
     if (!state.actorOrders[player.id]) {
         state.actorOrders[player.id] = []
     }
 
     if (command.verb.isMoveVerb && (command.target.type === 'actor' || command.target.type === 'hotspot')) {
-        const point = getTargetPoint(command.target)
+
+        const point = getTargetPoint(command.target, currentRoom)
         state.debugLog.push(makeDebugEntry(`walk to point is ${point.x}, ${point.y}`, 'pathfinding'))
         state.actorOrders[player.id].push({
             type: 'move', steps: [
@@ -80,15 +84,16 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
 
     return (state): GameState => {
         const { currentRoomId, rooms, debugLog, actors, cellMatrix = [] } = state
+        const currentRoom = findById(currentRoomId, rooms)
+        if (!currentRoom) { return state }
 
-        const currentRoom = rooms.find(_ => _.id === currentRoomId)
         const player = actors.find(_ => _.isPlayer)
         const interaction = matchInteraction(command, currentRoom, state.interactions, state.flagMap)
         const mustReachFirst = interaction && (command.verb.isMoveVerb || interaction.mustReachFirst)
 
         if (interaction && mustReachFirst && command.target.type !== 'item') {
             debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command'))
-            const targetPoint = getTargetPoint(command.target)
+            const targetPoint = getTargetPoint(command.target, currentRoom)
 
             if (player) {
                 const isReachable = findPath(player, targetPoint, cellMatrix, cellSize).length > 0;
