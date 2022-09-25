@@ -4,6 +4,8 @@ import { eventToString, listIds } from "../../lib/util";
 import { GameDesign } from "../../definitions/Game";
 import { SelectInput, TextInput } from "./formControls";
 import { FlagMapControl } from "./FlagMapControl";
+import { ListEditor } from "./ListEditor";
+import { VerbMenu } from "../VerbMenu";
 
 interface Props {
   gameDesign: GameDesign;
@@ -60,6 +62,24 @@ export const Overview: FunctionalComponent<Props> = ({
       <fieldset style={{ maxWidth: '35em' }}>
         <legend>Flags</legend>
         <FlagMapControl gameDesign={gameDesign} edit={edit} />
+      </fieldset>
+
+      <fieldset style={{ maxWidth: '35em' }}>
+        <legend>Verb Menu</legend>
+
+        <ListEditor noDeleteButtons
+          list={gameDesign.verbs}
+          mutateList={(list) => { edit('verbs', list) }}
+          describeItem={(verb, index) => (
+            <span key={index}>{verb.id} : {verb.label}</span>
+          )}
+        />
+
+        <VerbMenu
+          verbs={gameDesign.verbs}
+          currentVerbId={gameDesign.verbs[0] ? gameDesign.verbs[0].id : ''}
+          select={() => { }}
+        />
       </fieldset>
     </article>
   );

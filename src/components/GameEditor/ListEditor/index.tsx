@@ -9,6 +9,7 @@ interface Props<T> {
     createItem?: { (): T | undefined };
     createButton?: 'END';
     noMoveButtons?: boolean;
+    noDeleteButtons?: boolean;
     heavyBorders?: boolean;
 }
 
@@ -74,7 +75,7 @@ export class ListEditor<T> extends Component<Props<T>> {
     }
 
     render() {
-        const { list, describeItem, createItem, createButton, noMoveButtons, heavyBorders = false } = this.props
+        const { list, describeItem, createItem, createButton, noMoveButtons, heavyBorders = false, noDeleteButtons } = this.props
         const listStyle = heavyBorders ? [styles.mainList, styles.heavyList].join(" ") : [styles.mainList].join(" ")
 
         return (
@@ -99,7 +100,9 @@ export class ListEditor<T> extends Component<Props<T>> {
                                         {this.renderButton('UP', index)}
                                         {this.renderButton('DOWN', index)}
                                     </>}
-                                    {this.renderButton('DELETE', index)}
+                                    {!noDeleteButtons && <>
+                                        {this.renderButton('DELETE', index)}
+                                    </>}
                                 </nav>
                             </div>
                         </li>

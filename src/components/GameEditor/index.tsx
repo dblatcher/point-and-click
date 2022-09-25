@@ -183,7 +183,6 @@ export class GameEditor extends Component<Props, State>{
                     break
                 }
                 case 'conversations': {
-                    console.log('CONV', data)
                     addNewOrUpdate(data, gameDesign[property])
                     actorId = (data as GameDataItem).id
                     break
@@ -204,8 +203,12 @@ export class GameEditor extends Component<Props, State>{
                     break
                 }
                 case 'verbs': {
-                    addNewOrUpdate(data, gameDesign[property])
-                    verbId = (data as Verb).id
+                    if (Array.isArray(data)) {
+                        gameDesign[property] = data as Verb[]
+                    } else {
+                        addNewOrUpdate(data, gameDesign[property])
+                        verbId = (data as Verb).id
+                    }
                     break
                 }
                 case 'flagMap': {
