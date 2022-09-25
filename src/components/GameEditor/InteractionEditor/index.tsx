@@ -142,21 +142,25 @@ export class InteractionEditor extends Component<Props, State> {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredInteractions.map((interaction, index) => (
-                            <tr key={index}>
-                                <td>{interaction.verbId}</td>
-                                <td>
-                                    <span>{interaction.targetId}</span>
-                                    {interaction.targetStatus && <span>({interaction.targetStatus})</span>}
-                                </td>
-                                <td>{interaction.itemId}</td>
-                                <td>{interaction.roomId}</td>
-                                <td>{interaction.consequences.length}x consequences</td>
-                                <td>{this.renderFlagConditions(interaction)}</td>
-                                <td><DeleteButton label="delete" confirmationText="really?" onClick={() => { this.props.deleteInteraction(index) }} /></td>
-                                <td><button onClick={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}>edit</button></td>
-                            </tr>
-                        ))}
+                        {interactions.map((interaction, index) => {
+                            return filteredInteractions.includes(interaction)
+                                ? (
+                                    <tr key={index}>
+                                        <td>{interaction.verbId}</td>
+                                        <td>
+                                            <span>{interaction.targetId}</span>
+                                            {interaction.targetStatus && <span>({interaction.targetStatus})</span>}
+                                        </td>
+                                        <td>{interaction.itemId}</td>
+                                        <td>{interaction.roomId}</td>
+                                        <td>{interaction.consequences.length}x consequences</td>
+                                        <td>{this.renderFlagConditions(interaction)}</td>
+                                        <td><DeleteButton label="delete" confirmationText="really?" onClick={() => { this.props.deleteInteraction(index) }} /></td>
+                                        <td><button onClick={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}>edit</button></td>
+                                    </tr>
+                                )
+                                : <></>
+                        })}
                         <tr>
                             <td colSpan={10}>
                                 <button onClick={() =>
