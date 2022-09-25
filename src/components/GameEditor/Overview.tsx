@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionalComponent, h } from "preact";
-import { eventToString, listIds } from "../../lib/util";
+import { listIds } from "../../lib/util";
 import { GameDesign } from "../../definitions/Game";
-import { SelectInput, TextInput } from "./formControls";
+import { SelectInput, StringInput } from "./formControls";
 import { FlagMapControl } from "./FlagMapControl";
 import { ListEditor } from "./ListEditor";
 import { VerbMenu } from "../VerbMenu";
@@ -20,44 +20,50 @@ export const Overview: FunctionalComponent<Props> = ({
   return (
     <article>
       <h2>Main</h2>
-      <TextInput
-        value={gameDesign.id}
-        label="Game ID"
-        onInput={(event) => {
-          edit("id", eventToString(event));
-        }}
-      />
 
-      <SelectInput
-        value={gameDesign.currentRoomId}
-        label={"Starting Room"}
-        items={listIds(gameDesign.rooms)}
-        onSelect={(value) => {
-          edit("currentRoomId", value);
-        }}
-      />
+      <section style={{ display: 'flex', flexWrap: 'wrap' }}>
 
-      <SelectInput
-        value={gameDesign.openingSequenceId || ''}
-        label={"OpeningSequence"}
-        haveEmptyOption={true}
-        emptyOptionLabel="[none]"
-        items={listIds(gameDesign.sequences)}
-        onSelect={(value) => {
-          edit("openingSequenceId", value);
-        }}
-      />
+        <fieldset>
 
-      <ul>
-        <li>rooms: {gameDesign.rooms.length}</li>
-        <li>items: {gameDesign.items.length}</li>
-        <li>actors: {gameDesign.actors.length}</li>
-        <li>conversations: {gameDesign.conversations.length}</li>
-        <li>sprites: {gameDesign.sprites.length}</li>
-        <li>interactions: {gameDesign.interactions.length}</li>
-        <li>sequences: {gameDesign.sequences.length}</li>
-        <li>endings: {gameDesign.endings.length}</li>
-      </ul>
+          <StringInput block
+            value={gameDesign.id}
+            label="Game ID"
+            inputHandler={(value) => {
+              edit("id", value);
+            }}
+          />
+
+          <SelectInput block
+            value={gameDesign.currentRoomId}
+            label={"Starting Room"}
+            items={listIds(gameDesign.rooms)}
+            onSelect={(value) => {
+              edit("currentRoomId", value);
+            }}
+          />
+
+          <SelectInput block
+            value={gameDesign.openingSequenceId || ''}
+            label={"OpeningSequence"}
+            haveEmptyOption={true}
+            emptyOptionLabel="[none]"
+            items={listIds(gameDesign.sequences)}
+            onSelect={(value) => {
+              edit("openingSequenceId", value);
+            }}
+          />
+        </fieldset>
+        <ul>
+          <li>rooms: {gameDesign.rooms.length}</li>
+          <li>items: {gameDesign.items.length}</li>
+          <li>actors: {gameDesign.actors.length}</li>
+          <li>conversations: {gameDesign.conversations.length}</li>
+          <li>sprites: {gameDesign.sprites.length}</li>
+          <li>interactions: {gameDesign.interactions.length}</li>
+          <li>sequences: {gameDesign.sequences.length}</li>
+          <li>endings: {gameDesign.endings.length}</li>
+        </ul>
+      </section>
 
       <fieldset style={{ maxWidth: '35em' }}>
         <legend>Flags</legend>
