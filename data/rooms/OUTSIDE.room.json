@@ -6,7 +6,7 @@
   "background": [
     { "imageId": "sky.png", "parallax": 0 },
     { "imageId": "hill.png", "parallax": 0.1 },
-    { "imageId": "trees.png", "parallax": 1 }
+    { "imageId": "trees.png", "parallax": 1.01 }
   ],
   "hotspots": [
     {

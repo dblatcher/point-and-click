@@ -10,6 +10,7 @@ import BackgroundShape from "./BackgroundShape";
 import { HandleHoverFunction, RoomContentItem } from "../Game";
 import { ActorFigure } from "../ActorFigure";
 import { useEffect, useRef, useState } from "preact/hooks";
+import { DialogueBubble } from "../DialogueBubble";
 
 interface Props {
     data: RoomData;
@@ -188,6 +189,14 @@ export const Room: FunctionComponent<Props> = ({
                             roomData={data}
                         />
                     )}
+
+                {contents.map(entry => (
+                    <DialogueBubble key={entry.data.id}
+                        actorData={entry.data}
+                        orders={entry.orders || []}
+                        viewAngle={viewAngle}
+                        roomData={data} roomScale={scale} />
+                ))}
 
                 {children}
             </svg>

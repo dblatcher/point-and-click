@@ -1,13 +1,11 @@
 import { h, Fragment, FunctionalComponent, JSX } from "preact";
 import { useLayoutEffect, useState } from "preact/hooks";
 import { RoomData, Order, ActorData } from "src"
-import { placeOnScreen } from "../lib/roomFunctions";
 import { getScale } from "../lib/getScale";
 import { Sprite } from "../lib/Sprite";
 import { useInterval } from "../lib/useInterval"
 
 import { SpriteShape } from "./SpriteShape";
-import { DialogueBubble } from "./DialogueBubble";
 import spriteService from "../services/spriteService";
 import { HandleClickFunction, HandleHoverFunction } from "./Game";
 import { PersistentSound } from "./PersistentSound";
@@ -67,7 +65,6 @@ export const ActorFigure: FunctionalComponent<Props> = ({
     isPaused,
     clickHandler, handleHover,
     orders = [],
-    roomScale = 1,
     overrideSprite,
     forPreview
 }: Props) => {
@@ -75,14 +72,11 @@ export const ActorFigure: FunctionalComponent<Props> = ({
 
     const {
         x, y,
-        height = 50, width = 50, sprite: spriteId, filter, dialogueColor = '',
+        height = 50, width = 50, sprite: spriteId, filter,
         status, soundEffectMap = {}
     } = data
     const spriteObject = overrideSprite || spriteService.get(spriteId)
     const currentOrder: Order | undefined = orders[0]
-    const text = currentOrder?.type === 'say' 
-            ? currentOrder.text
-            : undefined;
     const animationName = getAnimationName(currentOrder, data.status, spriteObject)
     const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
     const frames = spriteObject?.getFrames(animationName, direction) || []
@@ -141,13 +135,7 @@ export const ActorFigure: FunctionalComponent<Props> = ({
                 filter={filter}
                 status={data.status}
             />
-            {text &&
-                <DialogueBubble text={text}
-                    x={placeOnScreen(x, viewAngle, roomData)}
-                    y={y + (height * spriteScale)}
-                    dialogueColor={dialogueColor}
-                    roomData={roomData} roomScale={roomScale} />
-            }
+
             {(!forPreview && typeof soundValue?.frameIndex === 'undefined') &&
                 <PersistentSound
                     soundValue={soundValue}

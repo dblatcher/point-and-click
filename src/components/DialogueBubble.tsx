@@ -1,5 +1,7 @@
 import { h, FunctionalComponent } from "preact"
-import { RoomData } from "src"
+import { Order, RoomData, ActorData } from "src"
+import { getScale } from "../lib/getScale"
+import { placeOnScreen } from "../lib/roomFunctions"
 import { clamp } from "../lib/util"
 
 const bubbleStyle = {
@@ -10,14 +12,28 @@ const bubbleStyle = {
 }
 
 export const DialogueBubble: FunctionalComponent<{
-    text: string;
-    x: number;
-    y: number;
     roomData: RoomData;
-    dialogueColor?: string;
     roomScale: number;
+    actorData: ActorData;
+    orders?: Order[];
+    viewAngle: number;
 }> = (props) => {
-    const { text, x, y, roomData, dialogueColor = 'black', roomScale } = props
+    const { roomData, roomScale, orders, actorData, viewAngle } = props
+
+    const spriteScale = getScale(actorData.y, roomData.scaling)
+    const y = actorData.y + (actorData.height * spriteScale)
+    const x = placeOnScreen(actorData.x, viewAngle, roomData)
+
+    if (!orders) { return null }
+
+    const currentOrder: Order | undefined = orders[0]
+    const text = currentOrder?.type === 'say'
+        ? currentOrder.text
+        : undefined;
+    if (!text) {
+        return null
+    }
+
     // divide by roomScale to counteract the scalling of the room
     // IE text is not smaller when the room is zoomed out
     const width = 240 / roomScale
@@ -48,7 +64,7 @@ export const DialogueBubble: FunctionalComponent<{
                 <span
                     style={{
                         ...bubbleStyle,
-                        color: dialogueColor,
+                        color: actorData.dialogueColor || 'black',
                         display: text ? 'inline-block' : 'none',
                     }}>{text}</span>
             </div>
