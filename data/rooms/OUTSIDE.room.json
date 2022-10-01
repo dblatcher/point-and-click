@@ -43,7 +43,8 @@
       "x": 175,
       "y": 50,
       "rect": [60, 50],
-      "parallax": 1
+      "parallax": 1,
+      "walkToY": 5
     },
     {
       "x": 134,

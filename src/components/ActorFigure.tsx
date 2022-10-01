@@ -26,14 +26,24 @@ interface Props {
     forPreview?: boolean;
 }
 
+const getUnverifiedAnimationName = (currentOrder: Order | undefined, status: string | undefined): string | undefined => {
+    const specificAnimationFromOrder = currentOrder
+        ? ('steps' in currentOrder)
+            ? currentOrder.steps[0]?.animation
+            : currentOrder.animation
+        : undefined;
+    const defaultAnimationFromOrder = currentOrder
+        ? Sprite.DEFAULT_ANIMATION[currentOrder.type]
+        : undefined
+    return specificAnimationFromOrder || defaultAnimationFromOrder || status;
+}
+
 const getAnimationName = (currentOrder: Order | undefined, status: string | undefined, sprite?: Sprite): string => {
     if (!sprite) { return Sprite.DEFAULT_ANIMATION.wait }
-
-    const animationName = (currentOrder?.type === 'say')
-        ? currentOrder.animation || status
-        : currentOrder ? currentOrder.steps[0]?.animation : status;
-    const validAnimationName = (animationName && sprite.hasAnimation(animationName)) ? animationName : undefined;
-    return validAnimationName || Sprite.DEFAULT_ANIMATION[currentOrder?.type || 'wait'];
+    const animationName = getUnverifiedAnimationName(currentOrder, status)
+    return animationName && sprite.hasAnimation(animationName)
+        ? animationName
+        : Sprite.DEFAULT_ANIMATION[currentOrder?.type || 'wait'];
 }
 
 const getSoundValue = (
@@ -41,19 +51,8 @@ const getSoundValue = (
     status: string | undefined,
     soundMap: SoundEffectMap
 ): SoundValue | undefined => {
-    if (currentOrder?.type === 'say') {
-        if (currentOrder.animation) {
-            return soundMap[currentOrder.animation]
-        }
-    } else if (currentOrder) {
-        const [currentAction] = currentOrder.steps
-        if (currentAction?.animation) {
-            return soundMap[currentAction.animation]
-        }
-    } else if (status) {
-        return soundMap[status]
-    }
-    return undefined
+    const animationName = getUnverifiedAnimationName(currentOrder, status)
+    return animationName ? soundMap[animationName] : undefined
 }
 
 
@@ -78,11 +77,11 @@ export const ActorFigure: FunctionalComponent<Props> = ({
     const spriteObject = overrideSprite || spriteService.get(spriteId)
     const currentOrder: Order | undefined = orders[0]
     const animationName = getAnimationName(currentOrder, data.status, spriteObject)
+    const soundValue = getSoundValue(currentOrder, status, soundEffectMap)
     const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
     const frames = spriteObject?.getFrames(animationName, direction) || []
     const spriteScale = getScale(y, roomData.scaling)
 
-    const soundValue = getSoundValue(currentOrder, status, soundEffectMap)
 
     const updateFrame = (): void => {
         if (!frames || isPaused) { return }
