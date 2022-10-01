@@ -12,6 +12,7 @@ interface Props<T> {
     addEntry: { (key: string): void };
     renderKeys?: boolean;
     addEntryLabel?: string;
+    newKeySuggestions?: string[];
 };
 
 interface State {
@@ -47,19 +48,25 @@ export class RecordEditor<T> extends Component<Props<T>, State> {
     }
 
     render() {
-        const { record, addEntry, addEntryLabel } = this.props
+        const { record, addEntry, addEntryLabel, newKeySuggestions = [] } = this.props
         const { newKey = '' } = this.state
+        const existingKeys = Object.keys(record)
         return <div>
             <ul className={styles.mainList}>
                 {Object.entries(record).map(this.renderEntry)}
             </ul>
             <hr />
-            <StringInput value={newKey} label={addEntryLabel || 'add entry'}
+            <StringInput value={newKey}
+                label={addEntryLabel || 'add entry'}
                 inputHandler={newKey => this.setState({ newKey })}
+                suggestions={newKeySuggestions.filter(suggestion => !existingKeys.includes(suggestion))}
             />
             <button
                 className={editorStyles.plusButton}
-                onClick={() => { addEntry(newKey) }}
+                onClick={() => {
+                    this.setState({ newKey: '' })
+                    addEntry(newKey)
+                }}
             >{icons.INSERT}</button>
         </div>
     }

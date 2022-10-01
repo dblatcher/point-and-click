@@ -278,6 +278,25 @@ export class ActorEditor extends Component<Props, State> {
 
                     </fieldset>
 
+                    <fieldset>
+                        <legend>Sounds</legend>
+                        {soundEffectMap && (
+                            <RecordEditor
+                                record={soundEffectMap}
+                                addEntryLabel={'add sfx for:'}
+                                describeValue={(key, value) =>
+                                    <SoundValueForm
+                                        animation={key}
+                                        data={value}
+                                        updateData={(data) => { this.changeSoundMap(key, data) }}
+                                    />
+                                }
+                                setEntry={(key, value) => { this.changeSoundMap(key, value) }}
+                                addEntry={(key) => { this.changeSoundMap(key, newSound()) }}
+                                newKeySuggestions={this.statusSuggestions}
+                            />
+                        )}
+                    </fieldset>
                     <StorageMenu
                         type="actorData"
                         data={this.currentData}
@@ -330,26 +349,6 @@ export class ActorEditor extends Component<Props, State> {
                         roomData={this.state.room ? findById(this.state.room, this.props.rooms) : undefined}
                         reportClick={this.handlePreviewClick}
                     />
-                </div>
-
-                <div className={styles.rowTopLeft}>
-                    <fieldset>
-                        <legend>Sounds</legend>
-                        {soundEffectMap && (
-                            <RecordEditor
-                                record={soundEffectMap}
-                                describeValue={(key, value) =>
-                                    <SoundValueForm
-                                        animation={key}
-                                        data={value}
-                                        updateData={(data) => { this.changeSoundMap(key, data) }}
-                                    />
-                                }
-                                setEntry={(key, value) => { this.changeSoundMap(key, value) }}
-                                addEntry={(key) => { this.changeSoundMap(key, newSound()) }}
-                            />
-                        )}
-                    </fieldset>
                 </div>
             </article>
         )
