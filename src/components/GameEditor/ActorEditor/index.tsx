@@ -163,8 +163,17 @@ export class ActorEditor extends Component<Props, State> {
             this.props.updateData(this.currentData)
         }
     }
-    handlePreviewClick(point: Point) {
-        this.setStateWithAutosave(point)
+    handlePreviewClick(point: Point, pointRole: 'position' | 'walkTo') {
+        switch (pointRole) {
+            case 'position':
+                return this.setStateWithAutosave(point)
+            case 'walkTo': {
+                const { x, y } = this.state;
+                const walkToX = point.x - x
+                const walkToY = point.y - y
+                return this.setStateWithAutosave({ walkToX, walkToY })
+            }
+        }
     }
 
     get previewData(): ActorData {

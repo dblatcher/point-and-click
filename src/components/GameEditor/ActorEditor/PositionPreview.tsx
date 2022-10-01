@@ -5,15 +5,20 @@ import { ActorData, RoomData } from "../../.."
 import { clamp } from "../../../lib/util";
 import { getTargetPoint, getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "../../../lib/roomFunctions";
 import { MarkerShape } from "../../MarkerShape";
+import { useState } from "preact/hooks";
+
+type PointRole = 'position' | 'walkTo';
 
 interface Props {
     actorData: ActorData;
     otherActors: ActorData[];
     roomData?: RoomData;
-    reportClick: { (point: { x: number; y: number }): void };
+    reportClick: { (point: { x: number; y: number }, pointRole: PointRole): void };
 }
 
 export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData, reportClick, otherActors }) => {
+
+    const [role, setRole] = useState<PointRole>('position')
 
     const viewAngle = roomData ? clamp(getViewAngleCenteredOn(actorData.x, roomData), 1, -1) : 0
 
@@ -21,7 +26,7 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
         .sort(putActorsInDisplayOrder)
         .map(actor => ({ data: actor }))
 
-    
+
 
     return (
         <section style={{
@@ -30,6 +35,8 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
             padding: '.5em',
             cursor: 'crosshair',
             minHeight: 300,
+            minWidth: 200,
+            position: 'relative',
         }}>
             {roomData && (
                 <Room
@@ -40,7 +47,7 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
 
                     handleRoomClick={(x, y) => {
                         const point = locateClickInWorld(x, y, viewAngle, roomData)
-                        reportClick({ x: Math.round(point.x), y: Math.round(point.y) })
+                        reportClick({ x: Math.round(point.x), y: Math.round(point.y) }, role)
                     }}
                     maxWidth={1000}
                     maxHeight={300}
@@ -56,6 +63,29 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
                 </Room>
 
             )}
+            <nav style={{
+                position: 'absolute',
+                display: 'inlineBlock',
+                top: 0,
+                left: 0,
+            }}>
+                <button onClick={() => { setRole('position') }}
+                    style={{
+                        cursor: 'pointer',
+                        fontWeight: role === 'position' ? 700 : 400
+                    }}
+                >
+                    position
+                </button>
+                <button onClick={() => { setRole('walkTo') }}
+                    style={{
+                        cursor: 'pointer',
+                        fontWeight: role === 'walkTo' ? 700 : 400
+                    }}
+                >
+                    walkTo
+                </button>
+            </nav>
         </section>
     )
 }
