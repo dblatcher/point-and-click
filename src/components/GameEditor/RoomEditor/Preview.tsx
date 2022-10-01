@@ -47,6 +47,8 @@ function getClickCaption(clickEffect?: ClickEffect): string {
             return `Click to add new ${clickEffect.shape} hotspot`
         case 'POLYGON_POINT_HOTSPOT':
             return `Click to add new point`
+        case 'HOTSPOT_WALKTO_POINT':
+            return 'Click to set walk to point'
         default:
             return 'UNKNOWN!'
     }

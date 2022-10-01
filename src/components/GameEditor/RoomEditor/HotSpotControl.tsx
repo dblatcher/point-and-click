@@ -4,7 +4,6 @@ import { ClickEffect } from "./ClickEffect";
 import { HotspotZone } from "src";
 import { OptionalNumberInput, ParallaxInput, StringInput } from "../formControls";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
-import { eventToNumber } from "../../../lib/util";
 import styles from '../editorStyles.module.css';
 
 
@@ -61,6 +60,7 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
                         block
                         value={walkToY} label="Y: "
                         inputHandler={value => { change(index, 'walkToY', value, type) }} />
+                    <button onClick={()=>{ setClickEffect({type:'HOTSPOT_WALKTO_POINT', index})}}>select point</button>
                 </fieldset>
             </div>
         </article>

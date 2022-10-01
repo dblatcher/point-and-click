@@ -1,6 +1,11 @@
 import { Component, h, Fragment } from "preact";
 import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, SupportedZoneShape, ActorData } from "src";
+import { RoomDataSchema } from "../../../definitions/RoomData";
 import { Point } from "../../../lib/pathfinding/geometry";
+import { cloneData } from "../../../lib/clone";
+import { eventToString, listIds } from "../../../lib/util";
+import { getShift, locateClickInWorld } from "../../../lib/roomFunctions";
+import { uploadJsonData } from "../../../lib/files";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ShapeChangeFunction } from "./ShapeControl";
@@ -9,20 +14,15 @@ import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
-import { cloneData } from "../../../lib/clone";
-import { eventToString, listIds } from "../../../lib/util";
-import { getShift, locateClickInWorld } from "../../../lib/roomFunctions";
 import { TabMenu } from "../../TabMenu";
-import { uploadJsonData } from "../../../lib/files";
 import styles from '../editorStyles.module.css';
-import imageService from "../../../services/imageService";
 import { getBlankRoom } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
-import { RoomDataSchema } from "../../../definitions/RoomData";
 import { ListEditor } from "../ListEditor";
 import { Entry, Folder, TreeMenu } from "../TreeMenu";
 import { ZoneSetEditor } from "./ZoneSetEditor";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
+import imageService from "../../../services/imageService";
 
 type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -114,7 +114,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             y: Math.round(pointClicked.y),
         }
 
-        const targetPoint = ['OBSTACLE', 'POLYGON_POINT_OBSTACLE', 'WALKABLE', 'POLYGON_POINT_WALKABLE'].includes(clickEffect.type)
+        const targetPoint = [
+            'OBSTACLE', 'POLYGON_POINT_OBSTACLE', 'WALKABLE', 'POLYGON_POINT_WALKABLE', 'HOTSPOT_WALKTO_POINT'
+        ].includes(clickEffect.type)
             ? locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngle, this.state)
             : {
                 x: roundedPoint.x - getShift(viewAngle, defaultParallax, this.state),
@@ -161,13 +163,21 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     targetPoint.x - walkable.x, targetPoint.y - walkable.y
                 ])
                 break;
-            case 'POLYGON_POINT_HOTSPOT':
+            case 'POLYGON_POINT_HOTSPOT': {
                 const hotspot = hotspots[clickEffect.index]
                 if (!hotspot?.polygon) { return }
                 hotspot.polygon.push([
                     targetPoint.x - hotspot.x, targetPoint.y - hotspot.y
                 ])
                 break;
+            }
+            case 'HOTSPOT_WALKTO_POINT': {
+                const hotspot = hotspots[clickEffect.index]
+                console.log(hotspot, targetPoint)
+                hotspot.walkToX = targetPoint.x
+                hotspot.walkToY = targetPoint.y
+                break;
+            }
         }
 
         this.setStateWithAutosave({
@@ -178,7 +188,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     makeNewHotspot(point: Point, effect: NewHotspotEffect, idNumber: number, viewAngle: number): HotspotZone {
-
         const zone: HotspotZone = { ...point, type: 'hotspot', id: `HOTSPOT_${idNumber}`, parallax: defaultParallax }
         switch (effect.shape) {
             case 'circle': zone.circle = 20;
@@ -287,7 +296,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 }
             }
         }
-
         this.setStateWithAutosave(mod)
     }
 

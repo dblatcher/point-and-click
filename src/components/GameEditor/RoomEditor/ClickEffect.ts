@@ -30,9 +30,15 @@ export type NewHotspotPolygonPointEffect = {
     index: number;
 }
 
+export type HotspotWalkToPoint = {
+    type: 'HOTSPOT_WALKTO_POINT';
+    index: number;
+}
+
 export type ClickEffect = NewObstableEffect |
     NewObstaclePolygonPointEffect |
     NewHotspotEffect |
     NewHotspotPolygonPointEffect |
     NewWalkableEffect |
-    NewWalkablePolygonPointEffect
+    NewWalkablePolygonPointEffect |
+    HotspotWalkToPoint
