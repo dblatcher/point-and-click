@@ -21,6 +21,23 @@ interface Props {
 }
 
 
+const getNumberInputParams = (property: keyof AnyConsequence): Partial<{ step: number, min: number, max: number }> => {
+    switch (property) {
+        case 'volume':
+            return {
+                step: .1,
+                max: 2,
+                min: 0,
+            }
+        case 'time':
+            return {
+                min: 0
+            }
+        default:
+            return {}
+    }
+}
+
 export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameDesign, update, immediateOnly }: Props) => {
 
     const entries = Object.entries(consequence) as [keyof AnyConsequence, string | boolean | number | Order[]][]
@@ -182,6 +199,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                                 value={value as number}
                                 label={property}
                                 inputHandler={v => { updateProperty(property, v) }}
+                                {...getNumberInputParams(property)}
                             />
                         </div>
                     )
