@@ -2,11 +2,8 @@
 import { h, FunctionalComponent } from "preact";
 import styles from "./treeMenuStyles.module.css"
 
-interface Props {
-    folders: Folder[];
-    folderClick: { (folderId: string): void };
-    entryClick: { (folderId: string, data: { id: string }, isForNew?: boolean): void };
-}
+export type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
+export type FolderClickFunction = { (folderId: string): void }
 
 export interface Entry {
     label?: string;
@@ -38,6 +35,12 @@ const getEntryClass = (entry: Entry): string => (
     entry.active ? [styles.button, styles.active].join(" ") : styles.button
 )
 
+
+interface Props {
+    folders: Folder[];
+    folderClick: FolderClickFunction;
+    entryClick: EntryClickFunction;
+}
 
 export const TreeMenu: FunctionalComponent<Props> = ({ folders, folderClick, entryClick }: Props) => {
 

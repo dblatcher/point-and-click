@@ -1,9 +1,9 @@
 import { Component, h, Fragment } from "preact";
-import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, SupportedZoneShape, ActorData } from "src";
+import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "src";
 import { RoomDataSchema } from "../../../definitions/RoomData";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { cloneData } from "../../../lib/clone";
-import { eventToString, listIds } from "../../../lib/util";
+import { eventToString } from "../../../lib/util";
 import { getShift, locateClickInWorld } from "../../../lib/roomFunctions";
 import { uploadJsonData } from "../../../lib/files";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
@@ -19,12 +19,12 @@ import styles from '../editorStyles.module.css';
 import { getBlankRoom } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
 import { ListEditor } from "../ListEditor";
-import { Entry, Folder, TreeMenu } from "../TreeMenu";
 import { ZoneSetEditor } from "./ZoneSetEditor";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
 import imageService from "../../../services/imageService";
+import { RoomEditorTreeMenu } from "./RoomEditorTreeMenu";
 
-type RoomEditorState = RoomData & {
+export type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
     mainTab: number;
     walkableTab: number;
@@ -380,78 +380,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
     }
 
-    get menuFolders(): Folder[] {
-        const {
-            obstacleAreas = [], walkableAreas = [], hotspots = [], background = [],
-            mainTab, clickEffect, walkableTab, obstableTab, hotspotTab
-        } = this.state
-        const getShape = (zone: Zone): string => zone.polygon ? 'polygon' : zone.circle ? 'circle' : zone.rect ? 'rect' : '??';
-
-        const newZoneEntryisActive = (clickEffectType: ClickEffect["type"], shape: SupportedZoneShape): boolean => {
-            return clickEffect?.type === clickEffectType && 'shape' in clickEffect && clickEffect.shape === shape
-        }
-
-        const makeNewZoneEntries = (clickEffectType: ClickEffect["type"]) => ([
-            { label: '➕ circle', isForNew: true, data: { id: 'circle' }, active: newZoneEntryisActive(clickEffectType, 'circle') },
-            { label: '➕ rect', isForNew: true, data: { id: 'rect' }, active: newZoneEntryisActive(clickEffectType, 'rect') },
-            { label: '➕ polygon', isForNew: true, data: { id: 'polygon' }, active: newZoneEntryisActive(clickEffectType, 'polygon') },
-        ])
-
-        const obstacleEntries: Entry[] = obstacleAreas.map((obstacle, index) => ({
-            label: obstacle.ref || `#${index} ${getShape(obstacle)}`,
-            data: {
-                id: index.toString()
-            },
-            active: obstableTab === index,
-        })).concat(makeNewZoneEntries('OBSTACLE'))
-
-        const walkableEntries: Entry[] = walkableAreas.map((walkable, index) => ({
-            label: walkable.ref || `#${index} ${getShape(walkable)}`,
-            data: {
-                id: index.toString()
-            },
-            active: walkableTab === index,
-        })).concat(makeNewZoneEntries('WALKABLE'))
-
-        const hotspotEntries: Entry[] = hotspots.map((hotspot, index) => ({
-            label: hotspot.id,
-            data: hotspot,
-            active: hotspotTab === index
-        }))
-
-        hotspotEntries.push(...makeNewZoneEntries('HOTSPOT'))
-
-        return [
-            {
-                id: 'scaling',
-                open: mainTab === 0,
-            },
-            {
-                id: 'backgrounds',
-                label: `backgrounds [${background.length}]`,
-                open: mainTab === 1,
-            },
-            {
-                id: 'OBSTACLE',
-                label: `obstacles [${obstacleAreas.length}]`,
-                open: mainTab === 2,
-                entries: obstacleEntries
-            },
-            {
-                id: 'WALKABLE',
-                label: `walkables [${walkableAreas.length}]`,
-                open: mainTab === 3,
-                entries: walkableEntries
-            },
-            {
-                id: 'HOTSPOT',
-                label: `hotspots [${hotspots.length}]`,
-                open: mainTab === 4,
-                entries: hotspotEntries
-            },
-        ]
-    }
-
     render() {
         const {
             id, background, height, width, frameWidth, obstacleAreas = [], hotspots = [], walkableAreas = [],
@@ -513,12 +441,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             </div>
 
             <div className={styles.container}>
-                <TreeMenu
-                    folders={this.menuFolders}
-                    folderClick={(folderId) => {
-                        this.setState({ mainTab: listIds(this.menuFolders).indexOf(folderId) })
-                    }}
-                    entryClick={this.handleTreeEntryClick}
+                <RoomEditorTreeMenu
+                    roomEditorState={this.state}
+                    handleTreeEntryClick={this.handleTreeEntryClick}
+                    handleFolderClick={(mainTab) => { this.setState({ mainTab }) }}
                 />
                 <TabMenu noButtons
                     containerStyle={{ flex: 1 }}
