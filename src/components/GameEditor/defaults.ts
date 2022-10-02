@@ -32,7 +32,7 @@ export const getBlankRoom: { (): RoomData } = () => ({
 export const getDefaultOrder = (type: OrderType): Order => {
 
     if (type === 'say') {
-        return { type, text:'', time: DEFAULT_TALK_TIME}
+        return { type, text: '', time: DEFAULT_TALK_TIME }
     }
 
     return {
@@ -103,6 +103,8 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type: 'soundEffect', sound: '', volume: 1 }
         case 'flag':
             return { type: 'flag', on: true, flag: '' }
+        case 'conversationChoice':
+            return { type: 'conversationChoice', conversationId: '', branchId: '', choiceRef: '', on: true }
     }
 }
 

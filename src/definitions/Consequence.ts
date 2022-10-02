@@ -82,6 +82,14 @@ const FlagConsequenceSchema = z.object({
     flag: z.string(),
 })
 
+const ConversationChoiceConsequenceSchema = z.object({
+    type: z.literal('conversationChoice'),
+    on: z.boolean(),
+    conversationId: z.string(),
+    branchId: z.string(),
+    choiceRef: z.string(),
+})
+
 export const ConsequenceSchema = z.union([
     OrderConsequenceSchema,
     ChangeRoomConsequenceSchema,
@@ -95,12 +103,13 @@ export const ConsequenceSchema = z.union([
     ToggleZoneConsequenceSchema,
     SoundEffectConsequenceSchema,
     FlagConsequenceSchema,
+    ConversationChoiceConsequenceSchema,
 ])
 
 const ConsequenceTypeEnum = z.enum([
     'conversation', 'sequence', 'changeStatus',
     'removeActor', 'inventory', 'changeRoom', 'order', 'ending',
-    'teleportActor', 'toggleZone', 'soundEffect', 'flag'
+    'teleportActor', 'toggleZone', 'soundEffect', 'flag', 'conversationChoice'
 ])
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
 export const consequenceTypes: ConsequenceType[] = ConsequenceTypeEnum.options
@@ -135,6 +144,8 @@ export type AnyConsequence = Consequence & {
     sound?: string;
     volume?: number;
     flag?: string;
+    branchId?: string;
+    choiceRef?: string;
 }
 
 export const ImmediateConsequenceSchema = z.union([
@@ -148,6 +159,7 @@ export const ImmediateConsequenceSchema = z.union([
     SoundEffectConsequenceSchema,
     FlagConsequenceSchema,
     ChangeRoomConsequenceSchema,
+    ConversationChoiceConsequenceSchema,
 ])
 export type ImmediateConsequence = z.infer<typeof ImmediateConsequenceSchema>
 export const immediateConsequenceTypes: ConsequenceType[] = ImmediateConsequenceSchema.options.map(member => member.shape.type.value)

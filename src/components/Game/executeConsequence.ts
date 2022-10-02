@@ -154,9 +154,26 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 const flagEntry = state.flagMap[flag]
                 if (flagEntry) {
                     flagEntry.value = on
-                }  else {
+                } else {
                     console.warn(`No such flag ${flag}`)
                 }
+                break;
+            }
+            case 'conversationChoice': {
+                const { conversationId, choiceRef, branchId, on } = consequence
+                const conversation = findById(conversationId, state.conversations);
+                const branch = conversation?.branches[branchId];
+                const choice = branch?.choices.find(choice => choice.ref === choiceRef);
+
+                if (choice) {
+                    choice.disabled = !on
+                } else {
+                    console.warn('no such conversation choice:', conversationId, branchId, choiceRef)
+                }
+                break;
+            }
+            default: {
+                console.warn('unsupported conseqeunce!', consequence)
                 break;
             }
         }

@@ -3,7 +3,7 @@ import { FunctionalComponent, h } from "preact";
 import { consequenceTypes, immediateConsequenceTypes, ZoneType, zoneTypes } from "../../../definitions/Consequence";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
 import { CheckBoxInput, NumberInput, SelectInput, StringInput } from "../formControls";
-import { listIds } from "../../../lib/util";
+import { findById, listIds } from "../../../lib/util";
 import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions, getZoneRefsOrIds } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
@@ -38,12 +38,25 @@ const getNumberInputParams = (property: keyof AnyConsequence): Partial<{ step: n
     }
 }
 
+const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, branchId: string | undefined, gameDesign: GameDesign) => {
+
+    const conversation = findById(conversationId, gameDesign.conversations)
+    const branch = conversation && branchId ? conversation.branches[branchId] : undefined;
+    const branchIdList = Object.keys(conversation?.branches || {})
+    const choiceRefList: string[] = branch
+        ? branch.choices.map(choice => choice.ref).filter(ref => typeof ref === 'string') as string[]
+        : []
+
+    return { branchIdList, choiceRefList }
+}
+
 export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameDesign, update, immediateOnly }: Props) => {
 
     const entries = Object.entries(consequence) as [keyof AnyConsequence, string | boolean | number | Order[]][]
 
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
 
+    const { branchIdList, choiceRefList } = getBranchIdAndChoiceRefOptions(consequence.conversationId, consequence.branchId, gameDesign)
     const optionListIds = {
         type: immediateOnly ? immediateConsequenceTypes : consequenceTypes,
         conversationId: listIds(gameDesign.conversations),
@@ -59,6 +72,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         ref: getZoneRefsOrIds(gameDesign, consequence.roomId || '', consequence.zoneType),
         sound: soundService.getAll().map(_ => _.id),
         flag: Object.keys(gameDesign.flagMap),
+        branchId: branchIdList,
+        choiceRef: choiceRefList,
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
         targetId: targetDescriptions,
@@ -102,6 +117,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
             case 'targetType':
             case 'sound':
             case 'flag':
+            case 'branchId':
+            case 'choiceRef':
                 {
                     copy[property] = value as string
                     break;
@@ -145,6 +162,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 case 'ref':
                 case 'sound':
                 case 'flag':
+                case 'branchId':
+                case 'choiceRef':
                     return (
                         <div key={index}>
                             <SelectInput value={value as string}
