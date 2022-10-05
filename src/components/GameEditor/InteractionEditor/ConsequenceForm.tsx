@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h, Fragment } from "preact";
+import { FunctionalComponent, h } from "preact";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "../../../definitions/Consequence";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
 import { SelectInput } from "../formControls";
@@ -119,8 +119,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 })
             }}
         />
-        {consequence.orders && (<>
-            <label style={{ fontWeight: 'bold' }}>orders</label>
+        {consequence.orders && (<fieldset>
+            <legend style={{ fontWeight: 'bold' }}>orders</legend>
             <ListEditor
                 list={consequence.orders}
                 describeItem={(order, index) =>
@@ -132,6 +132,6 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 createItem={() => getDefaultOrder('say')}
                 mutateList={newList => { updateProperty('orders', newList) }}
             />
-        </>)}
+        </fieldset>)}
     </div>
 }

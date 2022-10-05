@@ -47,52 +47,6 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                 onClick={deleteAll} />
         }
 
-        <ul className={styles.animationList}>
-            {directionsUsed.map(dirKey => (
-                <li key={dirKey}>
-                    <div className={editorStyles.row}>
-                        <em>{dirKey}{dirKey === defaultDirection && '(default)'}</em>
-                        {dirKey !== defaultDirection && (
-                            <DeleteButton noConfirmation
-                                className={editorStyles.deleteButton}
-                                label={`${icons.DELETE} ${dirKey}`}
-                                onClick={() => { deleteDirection(dirKey) }} />
-                        )}
-                    </div>
-                    <SpritePreview
-                        overrideSprite={overrideSprite}
-                        data={buildActorData(animKey, dirKey)}
-                    />
-                    <div className={editorStyles.row} style={{ alignItems: 'flex-end', minWidth: '14rem' }}>
-                        <div style={{ minWidth: '14rem' }}>
-                            <ListEditor
-                                list={animation[dirKey] as SpriteFrame[]}
-                                mutateList={newlist => {
-                                    return editCycle(animKey, dirKey, newlist)
-                                }}
-                                describeItem={(frame) => (
-                                    <button
-                                        onClick={() => { pickFrame(frame.row, frame.col, frame.imageId) }}
-                                        className={styles.frameBlock}>
-                                        <FramePreview
-                                            height={50}
-                                            width={50}
-                                            backgroundColor={'yellow'}
-                                            frame={frame} />
-                                        <div className={styles.frameBlockText}>
-                                            <p>{frame.imageId}</p>
-                                            <p>[{frame.col}, {frame.row}]</p>
-                                        </div>
-                                    </button>
-                                )}
-                                createItem={() => selectedFrame ? { ...selectedFrame } : undefined}
-                            />
-                        </div>
-                    </div>
-                </li>
-            ))}
-        </ul>
-
         <div>
             {directionsNotUsed.map(direction => (
                 <button
@@ -100,5 +54,58 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                     key={direction} onClick={() => { addDirection(direction) }}>{icons.INSERT} direction {direction}</button>
             ))}
         </div>
+
+        <ul className={styles.animationList}>
+            {directionsUsed.map(dirKey => (
+                <li key={dirKey}>
+                    <fieldset>
+                        <legend className={editorStyles.row}>
+                            <strong style={{
+                                minHeight: '1.5em',
+                                marginRight: dirKey !== defaultDirection ? '1em' : undefined
+                            }}>
+                                {dirKey}{dirKey === defaultDirection && '(default)'}
+                            </strong>
+                            {dirKey !== defaultDirection && (
+                                <DeleteButton noConfirmation
+                                    className={editorStyles.deleteButton}
+                                    label={`${icons.DELETE} ${dirKey}`}
+                                    onClick={() => { deleteDirection(dirKey) }} />
+                            )}
+                        </legend>
+                        <SpritePreview
+                            overrideSprite={overrideSprite}
+                            data={buildActorData(animKey, dirKey)}
+                        />
+                        <div className={editorStyles.row} style={{ alignItems: 'flex-end', minWidth: '14rem' }}>
+                            <div style={{ minWidth: '14rem' }}>
+                                <ListEditor
+                                    list={animation[dirKey] as SpriteFrame[]}
+                                    mutateList={newlist => {
+                                        return editCycle(animKey, dirKey, newlist)
+                                    }}
+                                    describeItem={(frame) => (
+                                        <button
+                                            onClick={() => { pickFrame(frame.row, frame.col, frame.imageId) }}
+                                            className={styles.frameBlock}>
+                                            <FramePreview
+                                                height={50}
+                                                width={50}
+                                                backgroundColor={'yellow'}
+                                                frame={frame} />
+                                            <div className={styles.frameBlockText}>
+                                                <p>{frame.imageId}</p>
+                                                <p>[{frame.col}, {frame.row}]</p>
+                                            </div>
+                                        </button>
+                                    )}
+                                    createItem={() => selectedFrame ? { ...selectedFrame } : undefined}
+                                />
+                            </div>
+                        </div>
+                    </fieldset>
+                </li>
+            ))}
+        </ul>
     </>)
 }
