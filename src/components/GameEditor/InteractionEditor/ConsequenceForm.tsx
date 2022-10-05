@@ -43,7 +43,6 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         actorId: listIds(gameDesign.actors),
         itemId: listIds(gameDesign.items),
         roomId: listIds(gameDesign.rooms),
-        targetId: targetIds,
         targetType: ['actor', 'item', 'hotspot'],
         addOrRemove: ['ADD', 'REMOVE'],
         sequence: listIds(gameDesign.sequences),
@@ -109,6 +108,7 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
             }}
             options={optionListIds}
             suggestions={{
+                targetId: targetIds,
                 status: getStatusSuggestions(consequence.targetId, gameDesign)
             }}
             data={consequence}

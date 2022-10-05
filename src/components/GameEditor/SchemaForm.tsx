@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { z } from "zod"
+import { z, ZodType } from "zod"
 import { h, VNode } from "preact";
 import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, StringInput, TriStateInput } from "./formControls";
 import styles from './editorStyles.module.css';
@@ -9,6 +9,7 @@ export interface FieldDef {
     optional: boolean;
     type: string;
     value: unknown;
+    enumOptions?: string[];
 }
 export type FieldValue = string | number | boolean | undefined;
 
@@ -28,6 +29,10 @@ interface Props<T extends z.ZodRawShape> {
 }
 
 export function fieldValueIsRightType(value: FieldValue, field: FieldDef): boolean {
+
+    if (field.type === 'ZodEnum') {
+        return field.enumOptions?.includes(value as string) || false
+    }
     switch (typeof value) {
         case 'undefined': return field.optional;
         case 'string': return field.type === 'ZodString';
@@ -64,7 +69,7 @@ function SchemaField<T extends z.ZodRawShape>({
     numberInputSettings = {}
 }: SchemaFieldProps<T>): VNode | null {
     const { key, optional, type, value } = field;
-    const isSupported = ['ZodString', 'ZodBoolean', 'ZodNumber'].includes(type)
+    const isSupported = ['ZodString', 'ZodBoolean', 'ZodNumber', 'ZodEnum'].includes(type)
     if (!isSupported && !showUnsupported) { return null }
 
     let safeValue: FieldValue
@@ -130,6 +135,17 @@ function SchemaField<T extends z.ZodRawShape>({
             }
         }
 
+        if (type === 'ZodEnum' && !optional && field.enumOptions) {
+
+            if ((typeof value === 'string')) {
+                return <SelectInput label={key}
+                    value={value}
+                    onSelect={value => change(value, field)}
+                    items={field.enumOptions}
+                />
+            }
+        }
+
         if (showUnsupported) {
             return (
                 <div key={key}>
@@ -152,7 +168,8 @@ function SchemaField<T extends z.ZodRawShape>({
 }
 
 /**
- * Creates a form for the schema, Supports only primitives and optional primitives
+ * Creates a form for the schema, Supports only primitives, optional primitives
+ * and required string enums.
  */
 export function SchemaForm<T extends z.ZodRawShape>({
     schema, data, changeValue, options = {}, numberConfig = {}, suggestions = {}
@@ -174,6 +191,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
             optional: zod.isOptional(),
             type,
             value: data[key],
+            enumOptions: zod._def.typeName === 'ZodEnum' ? zod._def.values : undefined,
         })
     }
 
