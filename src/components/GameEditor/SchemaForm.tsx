@@ -28,7 +28,7 @@ interface Props<T extends z.ZodRawShape> {
     numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
 }
 
-export function fieldValueIsRightType(value: FieldValue, field: FieldDef): boolean {
+function fieldValueIsRightType(value: FieldValue, field: FieldDef): boolean {
 
     if (field.type === 'ZodEnum') {
         return field.enumOptions?.includes(value as string) || false
