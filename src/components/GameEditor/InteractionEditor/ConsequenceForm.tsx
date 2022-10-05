@@ -1,42 +1,26 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h } from "preact";
-import { consequenceTypes, immediateConsequenceTypes, ZoneType, zoneTypes } from "../../../definitions/Consequence";
+import { FunctionalComponent, h, Fragment } from "preact";
+import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "../../../definitions/Consequence";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
-import { CheckBoxInput, NumberInput, SelectInput, StringInput } from "../formControls";
+import { SelectInput } from "../formControls";
 import { findById, listIds } from "../../../lib/util";
 import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions, getZoneRefsOrIds } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
-import { getDefaultOrder } from "../defaults";
+import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { cloneData } from "../../../lib/clone";
 import { getStatusSuggestions } from "../../../lib/animationFunctions";
-import { makeNewConsequence } from "../defaults";
 import soundService from "../../../services/soundService";
+import { getModification, SchemaForm } from "../SchemaForm";
+import styles from '../editorStyles.module.css';
 
 interface Props {
     consequence: AnyConsequence;
     gameDesign: GameDesign;
-    update: { (consequence: Consequence): void }
-    immediateOnly?: boolean
+    update: { (consequence: Consequence): void };
+    immediateOnly?: boolean;
 }
 
-
-const getNumberInputParams = (property: keyof AnyConsequence): Partial<{ step: number, min: number, max: number }> => {
-    switch (property) {
-        case 'volume':
-            return {
-                step: .1,
-                max: 2,
-                min: 0,
-            }
-        case 'time':
-            return {
-                min: 0
-            }
-        default:
-            return {}
-    }
-}
 
 const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, branchId: string | undefined, gameDesign: GameDesign) => {
 
@@ -51,11 +35,7 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
 }
 
 export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameDesign, update, immediateOnly }: Props) => {
-
-    const entries = Object.entries(consequence) as [keyof AnyConsequence, string | boolean | number | Order[]][]
-
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
-
     const { branchIdList, choiceRefList } = getBranchIdAndChoiceRefOptions(consequence.conversationId, consequence.branchId, gameDesign)
     const optionListIds = {
         type: immediateOnly ? immediateConsequenceTypes : consequenceTypes,
@@ -82,174 +62,76 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         conversationId: getConversationsDescriptions(gameDesign),
         sequence: getSequenceDescriptions(gameDesign)
     }
-    const editOrder = (newOrder: Order, index: number): void => {
-        const ordersCopy = [...consequence.orders]
-        ordersCopy.splice(index, 1, newOrder)
-        updateProperty('orders', ordersCopy)
-    }
 
-    const updateProperty = (property: keyof AnyConsequence, value: unknown): void => {
+    // for properties not handled by the Schema form
+    const updateProperty = (property: 'orders', value: unknown): void => {
         const copy = cloneData(consequence)
         switch (property) {
-            case 'type': {
-                if (consequenceTypes.includes(value as ConsequenceType)) {
-                    update(makeNewConsequence(value as ConsequenceType))
-                }
-                return;
-            }
-            case 'zoneType': {
-                if (zoneTypes.includes(value as ZoneType)) {
-                    copy[property] = value as ZoneType
-                }
-                break;
-            }
-            case 'conversationId':
-            case 'sequence':
-            case 'targetId':
-            case 'status':
-            case 'actorId':
-            case 'itemId':
-            case 'roomId':
-            case 'endingId':
-            case 'text':
-            case 'addOrRemove':
-            case 'ref':
-            case 'targetType':
-            case 'sound':
-            case 'flag':
-            case 'branchId':
-            case 'choiceRef':
-                {
-                    copy[property] = value as string
-                    break;
-                }
-            case 'end':
-            case 'takePlayer':
-            case 'on':
-            case 'replaceCurrentOrders': {
-                copy[property] = value as boolean
-                break;
-            }
-            case 'time':
-            case 'volume':
-            case 'x':
-            case 'y':
-                copy[property] = value as number
-                break;
             case 'orders':
                 copy[property] = value as Order[]
         }
         update(copy)
     }
 
-    return <div>
+    const changeType = (value: string): void => {
+        if (consequenceTypes.includes(value as ConsequenceType)) {
+            update(makeNewConsequence(value as ConsequenceType))
+        }
+    }
 
-        {entries.map((entry, index) => {
-            const [property, value] = entry
+    const editOrder = (newOrder: Order, index: number): void => {
+        const ordersCopy = [...(consequence.orders || [])]
+        ordersCopy.splice(index, 1, newOrder)
+        updateProperty('orders', ordersCopy)
+    }
 
-            switch (property) {
-                case 'type':
-                case 'conversationId':
-                case 'actorId':
-                case 'itemId':
-                case 'roomId':
-                case 'targetType':
-                case 'addOrRemove':
-                case 'targetId':
-                case 'endingId':
-                case 'sequence':
-                case 'zoneType':
-                case 'ref':
-                case 'sound':
-                case 'flag':
-                case 'branchId':
-                case 'choiceRef':
-                    return (
-                        <div key={index}>
-                            <SelectInput value={value as string}
-                                label={property === 'type' ? 'consequence type' : property}
-                                items={optionListIds[property]}
-                                descriptions={optionListDescriptions[property]}
-                                onSelect={(value) => { updateProperty(property, value) }}
-                            />
-                        </div>
-                    )
-                case 'status':
-                    const animationSuggestions = getStatusSuggestions(consequence.targetId, gameDesign)
-                    return (
-                        <div key={index}>
-                            <StringInput value={value as string}
-                                label={property}
-                                suggestions={animationSuggestions}
-                                inputHandler={value => { updateProperty(property, value) }}
-                            />
-                        </div>
-                    )
-                case 'text':
-                    return (
-                        <div key={index}>
-                            <StringInput value={value as string}
-                                type={'textArea'}
-                                label={property}
-                                inputHandler={value => { updateProperty(property, value) }}
-                            />
-                        </div>
-                    )
-                case 'end':
-                case 'takePlayer':
-                case 'replaceCurrentOrders':
-                case 'on':
-                    return (
-                        <div key={index}>
-                            <CheckBoxInput
-                                value={value as boolean}
-                                label={property}
-                                inputHandler={v => { updateProperty(property, v) }}
-                            />
-                        </div>
-                    )
-                case 'x':
-                case 'y':
-                case 'time':
-                case 'volume':
-                    return (
-                        <div key={index}>
-                            <NumberInput
-                                value={value as number}
-                                label={property}
-                                inputHandler={v => { updateProperty(property, v) }}
-                                {...getNumberInputParams(property)}
-                            />
-                        </div>
-                    )
+    return <div className={styles.formBlock}>
 
-                case 'orders': {
-                    const orders = value as Order[]
-                    const animationSuggestions = getStatusSuggestions(consequence.actorId, gameDesign);
-                    return (
-                        <div key={index}>
-                            <ListEditor
-                                list={orders}
-                                describeItem={(order, index) =>
-                                    <OrderForm
-                                        animationSuggestions={animationSuggestions}
-                                        updateData={(newOrder) => { editOrder(newOrder, index) }}
-                                        data={order} key={index} />
-                                }
-                                createItem={() => getDefaultOrder('say')}
-                                mutateList={newList => { updateProperty('orders', newList) }}
-                            />
-                        </div>
-                    )
+        <SelectInput value={consequence.type}
+            block
+            className={styles.formRow}
+            label={'type'}
+            items={optionListIds.type}
+            descriptions={optionListDescriptions.type}
+            onSelect={changeType}
+        />
+
+        <SchemaForm
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            schema={consequenceMap[consequence.type] as any}
+            numberConfig={{
+                time: { min: 0 },
+                volume: {
+                    step: .1,
+                    max: 2,
+                    min: 0,
                 }
-                default:
-                    return (
-                        <div key={index}>
-                            {property} NOT SUPPORTED
-                        </div>
-                    )
-            }
-        })}
+            }}
+            options={optionListIds}
+            suggestions={{
+                status: getStatusSuggestions(consequence.targetId, gameDesign)
+            }}
+            data={consequence}
+            changeValue={(value, field) => {
+                update({
+                    ...consequence,
+                    ...getModification(value, field)
+                })
+            }}
+        />
+        {consequence.orders && (<>
+            <label style={{ fontWeight: 'bold' }}>orders</label>
+            <ListEditor
+                list={consequence.orders}
+                describeItem={(order, index) =>
+                    <OrderForm
+                        animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
+                        updateData={(newOrder) => { editOrder(newOrder, index) }}
+                        data={order} key={index} />
+                }
+                createItem={() => getDefaultOrder('say')}
+                mutateList={newList => { updateProperty('orders', newList) }}
+            />
+        </>)}
     </div>
-
 }

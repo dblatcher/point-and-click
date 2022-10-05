@@ -27,6 +27,11 @@
     justify-content: space-between;
 }
 
+.formBlock {
+    min-width: 25rem;
+    padding: 2px;
+}
+
 .formRow {
     display: flex;
     align-items: flex-end;

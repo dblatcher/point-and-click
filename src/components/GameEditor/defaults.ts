@@ -96,7 +96,9 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
         case 'teleportActor':
             return { type: 'teleportActor', actorId: '', x: 0, y: 0, roomId: '' }
         case 'order':
-            return { type: 'order', actorId: '', orders: [] }
+            return { type: 'order', actorId: '', orders: [
+                getDefaultOrder('say')
+            ] }
         case 'toggleZone':
             return { type: 'toggleZone', roomId: '', ref: '', on: true, zoneType: 'obstacle' }
         case 'soundEffect':

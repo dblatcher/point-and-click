@@ -114,6 +114,21 @@ const ConsequenceTypeEnum = z.enum([
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
 export const consequenceTypes: ConsequenceType[] = ConsequenceTypeEnum.options
 
+export const consequenceMap = {
+    conversation: ConversationChoiceConsequenceSchema,
+    sequence: SequenceConsequenceSchema,
+    changeStatus: ChangeStatusConsequenceSchema,
+    removeActor: RemoveActorConsequenceSchema,
+    inventory: InventoryConsequenceSchema,
+    changeRoom: ChangeRoomConsequenceSchema,
+    order: OrderConsequenceSchema,
+    ending: EndingConsequenceSchema,
+    teleportActor: TeleportActorConsequenceSchema,
+    toggleZone: ToggleZoneConsequenceSchema,
+    soundEffect: SoundEffectConsequenceSchema,
+    flag: FlagConsequenceSchema,
+    conversationChoice: ConversationChoiceConsequenceSchema,
+} as const
 
 export type Consequence = z.infer<typeof ConsequenceSchema>
 
@@ -135,7 +150,7 @@ export type AnyConsequence = Consequence & {
     time?: number;
     x?: number;
     y?: number;
-    orders: Order[];
+    orders?: Order[];
 
     on?: boolean;
     ref?: string;
