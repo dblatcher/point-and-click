@@ -4,7 +4,7 @@ import { ActOrder, MoveOrder, orderTypes, stepSchama } from "../../../definition
 import { SelectInput } from "../formControls";
 import { makeNewStep } from "../defaults";
 import { ListEditor } from "../ListEditor";
-import { FieldDef, SchemaForm } from "../SchemaForm";
+import { FieldDef, FieldValue, getModification, SchemaForm } from "../SchemaForm";
 
 type OrderWithSteps =  MoveOrder | ActOrder
 
@@ -47,14 +47,13 @@ export class OrderWithStepsForm extends Component<Props> {
         }
     }
 
-    changeStep(value: string | number | boolean | undefined, field: FieldDef, index: number) {
+    changeStep(value: FieldValue, field: FieldDef, index: number) {
         const { data } = this.props
         if (!data.steps[index]) {
             return
         }
 
-        const stepCopy: Record<string, unknown> = Object.assign({}, data.steps[index])
-        stepCopy[field.key] = value
+        const stepCopy = Object.assign({}, data.steps[index] , getModification(value,field))
         const result = stepSchama[data.type].safeParse(stepCopy)
         if (!result.success) { return }
         const stepListCopy = [...data.steps]
