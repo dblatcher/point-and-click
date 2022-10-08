@@ -35,8 +35,6 @@ export class OrderWithoutStepsForm extends Component<Props> {
     handleSchemaFormChange(value: FieldValue, field: FieldDef) {
         const { data, updateData } = this.props
         const mod = getModification(value, field)
-        console.log(mod)
-
         updateData({ ...data, ...mod })
     }
 
