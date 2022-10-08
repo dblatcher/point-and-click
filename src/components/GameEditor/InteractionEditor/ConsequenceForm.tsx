@@ -36,6 +36,8 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
 
 export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameDesign, update, immediateOnly }: Props) => {
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
+    const { ids: targetIdsWithoutItems, descriptions: targetDescriptionsWithoutItems } = getTargetLists(gameDesign, true)
+
     const { branchIdList, choiceRefList } = getBranchIdAndChoiceRefOptions(consequence.conversationId, consequence.branchId, gameDesign)
     const optionListIds = {
         type: immediateOnly ? immediateConsequenceTypes : consequenceTypes,
@@ -126,6 +128,8 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
                 describeItem={(order, index) =>
                     <OrderForm
                         animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
+                        targetIdOptions={targetIdsWithoutItems}
+                        targetIdDescriptions={targetDescriptionsWithoutItems}
                         updateData={(newOrder) => { editOrder(newOrder, index) }}
                         data={order} key={index} />
                 }

@@ -9,11 +9,13 @@ import { OrderWithStepsForm } from "./OrderWithStepsForm";
 
 interface Props {
     data: Order;
-    animationSuggestions?: string[];
+    animationSuggestions: string[];
+    targetIdOptions: string[];
+    targetIdDescriptions: string[];
     updateData: { (data: Order): void };
 }
 
-export const OrderForm: FunctionComponent<Props> = ({ data, animationSuggestions, updateData }) => {
+export const OrderForm: FunctionComponent<Props> = ({ data, animationSuggestions, targetIdOptions, targetIdDescriptions, updateData }) => {
 
     const changeType = (value: string) => {
         const orderType = findValueAsType(value, orderTypes)
@@ -34,6 +36,8 @@ export const OrderForm: FunctionComponent<Props> = ({ data, animationSuggestions
     return <OrderWithoutStepsForm
         data={data}
         animationSuggestions={animationSuggestions}
+        targetIdOptions={targetIdOptions}
+        targetIdDescriptions={targetIdDescriptions}
         updateData={updateData}
         changeType={changeType}
     />

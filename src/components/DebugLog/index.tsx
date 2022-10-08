@@ -36,7 +36,7 @@ export const DebugLog: FunctionalComponent<Props> = ({
 
     const describeOrder = (order?: Order): [string, string] => {
         if (!order) { return ["", ""] }
-        if (order.type === 'say') {
+        if (!('steps' in order)) {
             return [order.type, order.animation || ""]
         }
         const [currentStep] = order.steps

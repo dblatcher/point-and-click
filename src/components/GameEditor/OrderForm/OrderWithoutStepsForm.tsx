@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { h, Component } from "preact"
-import { orderTypes, SayOrder, SayOrderSchema } from "../../../definitions/Order";
+import { GotoOrder, GotoOrderSchema, orderTypes, SayOrder, SayOrderSchema } from "../../../definitions/Order";
 import { SelectInput } from "../formControls";
 import { SchemaForm, getModification, FieldValue, FieldDef } from "../SchemaForm";
 
 
-type OrderWithoutSteps = SayOrder
+type OrderWithoutSteps = SayOrder | GotoOrder
 
 interface Props {
     data: OrderWithoutSteps;
-    animationSuggestions?: string[];
+    animationSuggestions: string[];
+    targetIdOptions: string[];
+    targetIdDescriptions: string[];
     updateData: { (data: OrderWithoutSteps): void };
     changeType: { (type: string): void };
 }
@@ -40,7 +42,7 @@ export class OrderWithoutStepsForm extends Component<Props> {
 
     render() {
         const { type } = this.props.data
-        const { animationSuggestions } = this.props
+        const { animationSuggestions, targetIdOptions, targetIdDescriptions } = this.props
         const { changeValue } = this
 
         return (
@@ -57,6 +59,22 @@ export class OrderWithoutStepsForm extends Component<Props> {
                         data={this.props.data}
                         changeValue={this.handleSchemaFormChange}
                         suggestions={{ animation: animationSuggestions }}
+                    />
+                )}
+                {type === 'goTo' && (
+                    <SchemaForm
+                        schema={GotoOrderSchema}
+                        data={this.props.data}
+                        changeValue={this.handleSchemaFormChange}
+                        suggestions={{
+                            animation: animationSuggestions,
+                        }}
+                        options={{
+                            targetId: targetIdOptions,
+                        }}
+                        optionDescriptions={{
+                            targetId: targetIdDescriptions
+                        }}
                     />
                 )}
             </article>

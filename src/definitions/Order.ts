@@ -13,6 +13,14 @@ export const MoveOrderSchema = z.object({
 })
 export type MoveOrder = z.infer<typeof MoveOrderSchema>
 
+export const GotoOrderSchema = z.object({
+    type: z.literal('goTo'),
+    animation: z.optional(z.string()),
+    speed: z.optional(z.number()),
+    targetId: z.string(),
+})
+export type GotoOrder = z.infer<typeof GotoOrderSchema>
+
 export const SayOrderSchema = z.object({
     type: z.literal('say'),
     animation: z.optional(z.string()),
@@ -32,9 +40,9 @@ export const ActOrderSchema = z.object({
 })
 export type ActOrder = z.infer<typeof ActOrderSchema>
 
-export const orderSchema = z.union([MoveOrderSchema, ActOrderSchema, SayOrderSchema])
+export const orderSchema = z.union([MoveOrderSchema, ActOrderSchema, SayOrderSchema, GotoOrderSchema])
 export type Order = z.infer<typeof orderSchema>
-export type OrderType = 'move' | 'act' | 'say'
+export type OrderType = 'move' | 'act' | 'say' | 'goTo'
 export const orderTypes: OrderType[] = orderSchema.options.map(option => option.shape.type.value)
 
 export const stepSchama = {

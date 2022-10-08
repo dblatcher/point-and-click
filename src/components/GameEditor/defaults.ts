@@ -34,6 +34,9 @@ export const getDefaultOrder = (type: OrderType): Order => {
     if (type === 'say') {
         return { type, text: '', time: DEFAULT_TALK_TIME }
     }
+    if (type === 'goTo') {
+        return { type, speed: 2, targetId: '', animation: '' }
+    }
 
     return {
         type,
@@ -96,9 +99,11 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
         case 'teleportActor':
             return { type: 'teleportActor', actorId: '', x: 0, y: 0, roomId: '' }
         case 'order':
-            return { type: 'order', actorId: '', orders: [
-                getDefaultOrder('say')
-            ] }
+            return {
+                type: 'order', actorId: '', orders: [
+                    getDefaultOrder('say')
+                ]
+            }
         case 'toggleZone':
             return { type: 'toggleZone', roomId: '', ref: '', on: true, zoneType: 'obstacle' }
         case 'soundEffect':

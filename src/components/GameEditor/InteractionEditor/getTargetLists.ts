@@ -9,7 +9,7 @@ const emoji = {
     SEQUENCE: '📜',
 }
 
-export function getTargetLists(gameDesign: GameDesign): { ids: string[]; descriptions: string[] } {
+export function getTargetLists(gameDesign: GameDesign, excludeItems = false): { ids: string[]; descriptions: string[] } {
     const { actors, items, rooms } = gameDesign
     const ids: string[] = [];
     const descriptions: string[] = [];
@@ -18,10 +18,12 @@ export function getTargetLists(gameDesign: GameDesign): { ids: string[]; descrip
         ids.push(actor.id)
         descriptions.push(`${emoji.ACTOR} ${actor.id}`)
     })
-    items.forEach(item => {
-        ids.push(item.id)
-        descriptions.push(`${emoji.ITEM} ${item.id}`)
-    })
+    if (!excludeItems) {
+        items.forEach(item => {
+            ids.push(item.id)
+            descriptions.push(`${emoji.ITEM} ${item.id}`)
+        })
+    }
     rooms.forEach(room => {
         room.hotspots?.forEach(hotspot => {
             ids.push(hotspot.id)

@@ -17,6 +17,7 @@ export class Sprite {
     static readonly DEFAULT_ANIMATION = {
         say: 'talk',
         move: 'walk',
+        goTo: 'walk',
         wait: 'default',
         act: 'default',
     } as const

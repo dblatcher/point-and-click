@@ -14,6 +14,7 @@ import styles from "../editorStyles.module.css"
 import { SelectAndConfirmInput, StringInput } from "../formControls";
 import { TabMenu } from "../../TabMenu";
 import { DataItemEditorProps } from "../dataEditors";
+import { getTargetLists } from "../InteractionEditor/getTargetLists";
 
 type Props = DataItemEditorProps<Sequence> & {
     gameDesign: GameDesign;
@@ -119,6 +120,7 @@ export class SequenceEditor extends Component<Props, State> {
 
     renderActorOrderList(actorId: string, orders: Order[], stageIndex: number) {
         const { gameDesign } = this.props
+        const { ids: targetIds, descriptions } = getTargetLists(gameDesign, true)
 
         return (
             <ListEditor
@@ -126,6 +128,8 @@ export class SequenceEditor extends Component<Props, State> {
                 describeItem={(order, orderIndex) => (
                     <OrderForm key={orderIndex}
                         data={order}
+                        targetIdOptions={targetIds}
+                        targetIdDescriptions={descriptions}
                         animationSuggestions={getStatusSuggestions(actorId, gameDesign)}
                         updateData={(newOrder) => { this.changeOrder(newOrder, stageIndex, actorId, orderIndex) }}
                     />
