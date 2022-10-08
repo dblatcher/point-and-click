@@ -69,6 +69,7 @@ export class OrderWithoutStepsForm extends Component<Props> {
                         suggestions={{
                             animation: animationSuggestions,
                         }}
+                        // to do - exclude the id and description for the order's actorId
                         options={{
                             targetId: targetIdOptions,
                         }}

@@ -280,4 +280,23 @@ export const interactions: Interaction[] = [
             { type: 'ending', endingId: 'WIN' },
         ]
     },
+    {
+        verbId: 'PUSH',
+        targetId: 'MARIO',
+        mustReachFirst: true,
+        consequences: [
+            {
+                type: 'order', actorId:'MARIO', orders: [
+                    {
+                        type: 'goTo',
+                        targetId: 'FIRE',
+                    },
+                    {
+                        type: 'goTo',
+                        targetId: 'bush',
+                    },
+                ]
+            }
+        ]
+    },
 ]

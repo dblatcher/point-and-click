@@ -184,7 +184,7 @@ export default class Game extends Component<GameProps, GameState> {
             const { cellMatrix = [] } = state
             let pendingInteractionShouldBeDone = false;
             state.actors.forEach(actor => {
-                const triggersPendingInteraction = followOrder(actor, cellMatrix, state.actorOrders[actor.id])
+                const triggersPendingInteraction = followOrder(actor, cellMatrix, state.actorOrders[actor.id], state)
                 if (triggersPendingInteraction) {
                     pendingInteractionShouldBeDone = true
                 }

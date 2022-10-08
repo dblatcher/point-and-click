@@ -32,6 +32,7 @@ const GameContentsDataSchema = z.object({
     id: z.string(),
 })
 
+
 export const FixedGameInfoSchema = z.object({
     verbs: VerbSchema.array(),
     sequences: SequenceSchema.array(),
@@ -43,11 +44,12 @@ export const GameDataSchema = GameContentsDataSchema.and(GameHappeningsSchema)
 const GameConditionSchema = GameContentsDataSchema.and(GameHappeningsSchema).and(FixedGameInfoSchema)
 export const GameDesignSchema = GameContentsDataSchema.and(FixedGameInfoSchema)
 
-//                  GameData GameCondition GameDesign
-// GameHappenings  |   x    |   x        |  
-// GameContentsData|   x    |   x        |  x
-// FixedGameInfo   |        |   x        |  x
+//                  GameData GameCondition GameDesign GameContents
+// GameHappenings  |   x    |   x        |           |
+// GameContentsData|   x    |   x        |  x        |  x
+// FixedGameInfo   |        |   x        |  x        |
 
+export type GameContents = z.infer<typeof GameContentsDataSchema>
 export type GameData = z.infer<typeof GameDataSchema>
 export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>

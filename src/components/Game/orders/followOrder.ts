@@ -1,4 +1,4 @@
-import { cellSize } from "..";
+import { cellSize, GameState } from "..";
 import { ActorData, MoveOrder, Order } from "src";
 import { CellMatrix } from "../../../lib/pathfinding/cells";
 import { Point } from "../../../lib/pathfinding/geometry";
@@ -6,6 +6,7 @@ import { findPath } from "../../../lib/pathfinding/pathfind";
 import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
 import { exectuteSay } from "./executeSay";
+import { makeMoveOrderFromGoto } from "./makeMoveOrderFromGoto";
 
 
 function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order: MoveOrder): void {
@@ -40,7 +41,7 @@ function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order:
  * @param orders 
  * @returns whether they just finished an order that triggers the pendingInteraction
  */
-export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders?: Order[]): boolean {
+export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: Order[]|undefined, state: GameState): boolean {
     if (!orders || orders.length === 0) { return false }
     const [nextOrder] = orders
 
@@ -53,6 +54,10 @@ export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders?:
         exectuteSay(nextOrder)
     } else if (nextOrder.type === 'act') {
         executeAction(nextOrder)
+    } else if (nextOrder.type === 'goTo') {
+        const moveOrder = makeMoveOrderFromGoto(nextOrder, state)
+        orders.shift()
+        orders.unshift(moveOrder)
     }
 
     if ('steps' in nextOrder) {
