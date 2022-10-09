@@ -2,6 +2,7 @@ import { GameProps, GameState } from ".";
 import { Order, ActorData } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
+import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
 
 
 function validateOrderIdsAndClearEmpties(
@@ -54,6 +55,8 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     if (stageIsFinished) {
         sequenceRunning.stages.shift()
         console.log(`stage finished, ${sequenceRunning.stages.length} left.`)
+        removeHoverTargetIfGone(state)
+        removeItemIfGone(state)
     }
 
     return {

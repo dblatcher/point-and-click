@@ -1,12 +1,12 @@
 import { GameProps, GameState, cellSize } from ".";
-import { Command, Interaction, RoomData, ActorData, OrderConsequence } from "src";
+import { Command, Interaction, ActorData, OrderConsequence } from "src";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
 import { findPath } from "../../lib/pathfinding/pathfind";
 import { findById } from "../../lib/util";
 import { getDefaultResponseText, matchInteraction, describeCommand } from "../../lib/commandFunctions";
 import { getTargetPoint } from "../../lib/roomFunctions";
-
+import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
 
 function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
     const { actors, rooms, currentRoomId } = state
@@ -38,27 +38,6 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
 
 const describeConsequences = (interaction: Interaction): string => `(${interaction.consequences?.map(_ => _.type).join()})`
 
-function removeHoverTargetIfGone(state: GameState, currentRoom?: RoomData): GameState {
-    const { hoverTarget } = state
-    if (!hoverTarget) {
-        return state
-    }
-    const player = state.actors.find(_ => _.isPlayer)
-
-    if (currentRoom) {
-        if (hoverTarget.type === 'actor') {
-            if (hoverTarget.room !== currentRoom.id) {
-                state.hoverTarget = undefined
-            }
-        }
-    }
-    if (player) {
-        if (hoverTarget.type === 'item' && hoverTarget.actorId !== player.id) {
-            state.hoverTarget = undefined
-        }
-    }
-    return state
-}
 
 function makeGoToOrder(player: ActorData, target: { x: number; y: number }): OrderConsequence {
     return {
@@ -115,8 +94,8 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
             doDefaultResponse(command, state)
         }
 
-        removeHoverTargetIfGone(state, currentRoom)
-
+        removeHoverTargetIfGone(state)
+        removeItemIfGone(state)
         return state
     }
 }
