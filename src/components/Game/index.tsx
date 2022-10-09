@@ -1,21 +1,24 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, h, Fragment } from "preact";
 import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "src";
+//lib
 import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "../../lib/roomFunctions";
 import { clamp, findById } from "../../lib/util";
+import { cloneData } from "../../lib/clone";
+import { Sprite } from "../../lib/Sprite";
 import { CellMatrix, generateCellMatrix } from "../../lib/pathfinding/cells";
+// state logic
 import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { doPendingInteraction, handleCommand } from "./handleCommand";
+import { continueSequence } from "./continueSequence";
+import { handleConversationChoice } from "./handleConversationChoice";
+// component
 import { Room } from "../Room";
 import { VerbMenu } from "../VerbMenu";
 import { ItemMenu } from "../ItemMenu";
 import { CommandLine } from "../CommandLine";
-import { cloneData } from "../../lib/clone";
-import { continueSequence } from "./continueSequence";
-import { Sprite } from "src/lib/Sprite";
 import { ConversationMenu } from "../ConversationMenu";
-import { handleConversationChoice } from "./handleConversationChoice";
 import { EndingScreen } from "../EndingScreen";
 import { DebugLog, makeDebugEntry, type LogEntry } from "../DebugLog";
 import { SoundToggle } from "../SoundToggle";

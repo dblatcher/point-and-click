@@ -1,4 +1,3 @@
-import { RoomData } from "../../definitions/RoomData"
 import { findById } from "../../lib/util"
 import { GameState } from "."
 
