@@ -95,7 +95,13 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 const { sequence: sequenceKey } = consequence
                 const originalSequence = findById(sequenceKey, props.sequences)
                 if (originalSequence) {
-                    state.sequenceRunning = cloneData(originalSequence)
+                    const clonedSequence = cloneData(originalSequence)
+                    if (state.sequenceRunning) {
+                        state.sequenceRunning.id = [state.sequenceRunning.id, clonedSequence.id].join()
+                        state.sequenceRunning.stages.push(...clonedSequence.stages)
+                    } else {
+                        state.sequenceRunning = clonedSequence
+                    }
                 } else {
                     console.warn(`No such sequence ${sequenceKey}`)
                 }

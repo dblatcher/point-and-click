@@ -299,4 +299,12 @@ export const interactions: Interaction[] = [
             }
         ]
     },
+    {
+        verbId: 'TALK',
+        targetId: 'BUCKET',
+        consequences: [
+            {type:'sequence', sequence:'CHAIN_1'},
+            {type:'sequence', sequence:'CHAIN_2'}
+        ]
+    }
 ]

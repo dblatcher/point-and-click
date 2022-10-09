@@ -8,4 +8,49 @@ import * as CHAT from "./CONVERSATION_CHAT"
 export const sequences: Sequence[] = [
     DIALOGUE, PUT_OUT_FIRE, LIGHT_FIRE,
     ...Object.values(CHAT),
+    {
+        id: 'CHAIN_1',
+        stages: [
+            {
+                actorOrders: {
+                    PLAYER: [
+                        {
+                            type: 'say',
+                            text: 'this is sequence one',
+                            time: 250,
+                        },
+                        {
+                            type: 'say',
+                            text: 'second line',
+                            time: 250,
+                        },
+                        {
+                            type:'goTo',
+                            targetId:'bush',
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        id: 'CHAIN_2',
+        stages: [
+            {
+                actorOrders: {
+                    PLAYER: [
+                        {
+                            type: 'say',
+                            text: 'this is sequence two',
+                            time: 250,
+                        },
+                        {
+                            type:'goTo',
+                            targetId:'MARIO',
+                        }
+                    ]
+                }
+            }
+        ]
+    },
 ]
