@@ -22,7 +22,7 @@ import { defaultVerbs1, getBlankRoom } from "./defaults";
 
 import { prebuiltGameDesign } from '../../../data/fullGame';
 import { listIds, findById, findIndexById } from "../../lib/util";
-import { GameDesign, GameDataItem, Interaction, Ending, Verb } from "src";
+import { GameDesign, GameDataItem, Interaction, Verb } from "src";
 import { FlagMap } from "src/definitions/Flag";
 
 import { populateServicesForPreBuiltGame } from "../../services/populateServices";
@@ -40,15 +40,16 @@ export type EditorOptions = {
 type State = {
     gameDesign: GameDesign;
     tabOpen: number;
-    roomId?: string;
-    itemId?: string;
-    actorId?: string;
-    conversationId?: string;
-    spriteId?: string;
-    sequenceId?: string;
-    endingId?: string;
-    verbId?: string;
-
+    gameItemIds: {
+        rooms?: string;
+        items?: string;
+        actors?: string;
+        conversations?: string;
+        sprites?: string;
+        sequences?: string;
+        endings?: string;
+        verbs?: string;
+    };
     resetTimeStamp: number;
 
     options: EditorOptions;
@@ -116,6 +117,7 @@ export class GameEditor extends Component<Props, State>{
         this.state = {
             gameDesign,
             tabOpen: tabs.indexOf('main'),
+            gameItemIds: {},
             resetTimeStamp: 0,
             options: {
                 autoSave: true
@@ -145,19 +147,19 @@ export class GameEditor extends Component<Props, State>{
     }
 
     get currentRoom() {
-        return findById(this.state.roomId, this.state.gameDesign.rooms)
+        return findById(this.state.gameItemIds.rooms, this.state.gameDesign.rooms)
     }
     get currentItem() {
-        return findById(this.state.itemId, this.state.gameDesign.items)
+        return findById(this.state.gameItemIds.items, this.state.gameDesign.items)
     }
     get currentActor() {
-        return findById(this.state.actorId, this.state.gameDesign.actors)
+        return findById(this.state.gameItemIds.actors, this.state.gameDesign.actors)
     }
     get currentConversation() {
-        return findById(this.state.conversationId, this.state.gameDesign.conversations)
+        return findById(this.state.gameItemIds.conversations, this.state.gameDesign.conversations)
     }
     get currentSprite() {
-        return findById(this.state.spriteId, this.state.gameDesign.sprites)
+        return findById(this.state.gameItemIds.sprites, this.state.gameDesign.sprites)
     }
 
     performUpdate(property: keyof GameDesign, data: unknown) {
@@ -165,54 +167,32 @@ export class GameEditor extends Component<Props, State>{
 
         this.setState(state => {
             const { gameDesign } = state
-            let { roomId, itemId, actorId, spriteId, sequenceId, endingId, verbId, } = state
+            const { gameItemIds } = state
             switch (property) {
-                case 'rooms': {
-                    addNewOrUpdate(data, gameDesign[property])
-                    roomId = (data as GameDataItem).id
-                    break
-                }
-                case 'items': {
-                    addNewOrUpdate(data, gameDesign[property])
-                    itemId = (data as GameDataItem).id
-                    break
-                }
-                case 'actors': {
-                    addNewOrUpdate(data, gameDesign[property])
-                    actorId = (data as GameDataItem).id
-                    break
-                }
-                case 'conversations': {
-                    addNewOrUpdate(data, gameDesign[property])
-                    actorId = (data as GameDataItem).id
-                    break
-                }
-                case 'sprites': {
-                    addNewOrUpdate(data, gameDesign[property])
-                    spriteId = (data as GameDataItem).id
-                    break
-                }
-                case 'sequences': {
-                    addNewOrUpdate(data, gameDesign[property])
-                    sequenceId = (data as GameDataItem).id
-                    break
-                }
-                case 'endings': {
-                    addNewOrUpdate(data, gameDesign[property])
-                    endingId = (data as Ending).id
-                    break
-                }
-                case 'verbs': {
-                    if (Array.isArray(data)) {
-                        gameDesign[property] = data as Verb[]
-                    } else {
-                        addNewOrUpdate(data, gameDesign[property])
-                        verbId = (data as Verb).id
+                case 'rooms':
+                case 'items':
+                case 'actors':
+                case 'conversations':
+                case 'sprites':
+                case 'sequences':
+                case 'endings':
+                    {
+                        addNewOrUpdate(data, gameDesign[property] as GameDataItem[])
+                        gameItemIds[property] = (data as GameDataItem).id
+                        break
                     }
-                    break
-                }
+
+                case 'verbs':
+                    {
+                        if (Array.isArray(data)) {
+                            gameDesign[property] = data as Verb[]
+                        } else {
+                            addNewOrUpdate(data, gameDesign[property])
+                            gameItemIds[property] = (data as GameDataItem).id
+                        }
+                        break
+                    }
                 case 'flagMap': {
-                    console.log('FLAGMAP', data)
                     gameDesign.flagMap = (data as FlagMap)
                     break
                 }
@@ -230,7 +210,7 @@ export class GameEditor extends Component<Props, State>{
                     break
                 }
             }
-            return { gameDesign, roomId, itemId, actorId, spriteId, sequenceId, endingId, verbId }
+            return { gameDesign, gameItemIds }
         })
     }
 
@@ -263,23 +243,9 @@ export class GameEditor extends Component<Props, State>{
         this.setState({ gameDesign })
     }
 
-    get noOpenItemsState(): Partial<State> {
-        return {
-            roomId: undefined,
-            itemId: undefined,
-            actorId: undefined,
-            spriteId: undefined,
-            conversationId: undefined,
-            sequenceId: undefined,
-            endingId: undefined,
-            verbId: undefined,
-        }
-    }
-
     render() {
         const {
-            gameDesign, tabOpen, options,
-            roomId, itemId, actorId, spriteId, conversationId, sequenceId, endingId, verbId
+            gameDesign, tabOpen, options, gameItemIds,
         } = this.state
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
@@ -301,15 +267,15 @@ export class GameEditor extends Component<Props, State>{
 
         const folders = [
             makeFolder('main'),
-            makeFolder('rooms', gameDesign.rooms, roomId),
-            makeFolder('items', gameDesign.items, itemId),
-            makeFolder('actors', gameDesign.actors, actorId),
-            makeFolder('conversations', gameDesign.conversations, conversationId),
-            makeFolder('sprites', gameDesign.sprites, spriteId),
+            makeFolder('rooms', gameDesign.rooms, gameItemIds.rooms),
+            makeFolder('items', gameDesign.items, gameItemIds.items),
+            makeFolder('actors', gameDesign.actors, gameItemIds.actors),
+            makeFolder('conversations', gameDesign.conversations, gameItemIds.conversations),
+            makeFolder('sprites', gameDesign.sprites, gameItemIds.sprites),
             makeFolder('interactions'),
-            makeFolder('sequences', gameDesign.sequences, sequenceId),
-            makeFolder('endings', gameDesign.endings, endingId),
-            makeFolder('verbs', gameDesign.verbs, verbId),
+            makeFolder('sequences', gameDesign.sequences, gameItemIds.sequences),
+            makeFolder('endings', gameDesign.endings, gameItemIds.endings),
+            makeFolder('verbs', gameDesign.verbs, gameItemIds.verbs),
             makeFolder('images'),
             makeFolder('sounds'),
         ]
@@ -329,40 +295,28 @@ export class GameEditor extends Component<Props, State>{
                 <TreeMenu folders={folders}
                     folderClick={(folderId) => {
                         const folderIndex = tabs.indexOf(folderId);
-                        this.setState({ tabOpen: folderIndex, ...this.noOpenItemsState })
+                        this.setState({ tabOpen: folderIndex, gameItemIds: {} })
                     }}
                     entryClick={(folderId, data, isForNew) => {
                         const folderIndex = tabs.indexOf(folderId);
-                        const modification: Partial<State> = { tabOpen: folderIndex }
-                        const newId = isForNew ? undefined : data.id;
+                        const newId: string | undefined = isForNew ? undefined : data.id;
 
-                        switch (folderId) {
-                            case 'rooms':
-                                modification.roomId = newId
-                                break;
-                            case 'items':
-                                modification.itemId = newId
-                                break;
-                            case 'actors':
-                                modification.actorId = newId
-                                break;
-                            case 'conversations':
-                                modification.conversationId = newId
-                                break;
-                            case 'sprites':
-                                modification.spriteId = newId
-                                break;
-                            case 'sequences':
-                                modification.sequenceId = newId
-                                break;
-                            case 'endings':
-                                modification.endingId = newId
-                                break;
-                            case 'verbs':
-                                modification.verbId = newId
-                                break;
-                        }
-                        this.setState(modification)
+                        this.setState(state => {
+                            const { gameItemIds } = state
+                            switch (folderId) {
+                                case 'rooms':
+                                case 'items':
+                                case 'actors':
+                                case 'conversations':
+                                case 'sprites':
+                                case 'sequences':
+                                case 'endings':
+                                case 'verbs':
+                                    gameItemIds[folderId] = newId
+                                    break;
+                            }
+                            return { gameItemIds, tabOpen: folderIndex }
+                        })
                     }}
                 />
 
@@ -404,7 +358,7 @@ export class GameEditor extends Component<Props, State>{
                             existingRoomIds={listIds(gameDesign.rooms)}
                             actors={gameDesign.actors}
                             options={options}
-                            key={roomId} data={this.currentRoom} />
+                            key={gameItemIds.rooms} data={this.currentRoom} />
                     },
                     {
                         label: 'Items', content: <ItemEditor
@@ -413,7 +367,7 @@ export class GameEditor extends Component<Props, State>{
                             itemIds={listIds(gameDesign.items)}
                             actorIds={listIds(gameDesign.actors)}
                             options={options}
-                            key={itemId} data={this.currentItem}
+                            key={gameItemIds.items} data={this.currentItem}
                         />
                     },
                     {
@@ -424,7 +378,7 @@ export class GameEditor extends Component<Props, State>{
                             updateData={data => { this.performUpdate('actors', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'actors') }}
                             options={options}
-                            key={actorId} data={this.currentActor}
+                            key={gameItemIds.actors} data={this.currentActor}
                         />
                     },
                     {
@@ -436,14 +390,14 @@ export class GameEditor extends Component<Props, State>{
                             deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
                             updateSequenceData={data => { this.performUpdate('sequences', data) }}
                             options={options}
-                            key={conversationId} data={this.currentConversation}
+                            key={gameItemIds.conversations} data={this.currentConversation}
                         />
                     },
                     {
                         label: 'Sprite Editor', content: <SpriteEditor
                             updateData={data => { this.performUpdate('sprites', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
-                            key={spriteId} data={this.currentSprite}
+                            key={gameItemIds.sprites} data={this.currentSprite}
                             options={options}
                             spriteIds={listIds(gameDesign.sprites)}
                         />
@@ -456,19 +410,19 @@ export class GameEditor extends Component<Props, State>{
                     },
                     {
                         label: 'Sequences', content: <SequenceEditor
-                            key={sequenceId}
+                            key={gameItemIds.sequences}
                             gameDesign={gameDesign}
-                            data={findById(sequenceId, gameDesign.sequences)}
+                            data={findById(gameItemIds.sequences, gameDesign.sequences)}
                             updateData={data => { this.performUpdate('sequences', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'sequences') }}
                             options={options}
-                            sequenceId={sequenceId} />
+                            sequenceId={gameItemIds.sequences} />
                     },
                     {
                         label: 'endings', content: <EndingEditor
-                            key={endingId}
+                            key={gameItemIds.endings}
                             gameDesign={gameDesign}
-                            data={findById(endingId, gameDesign.endings)}
+                            data={findById(gameItemIds.endings, gameDesign.endings)}
                             updateData={data => { this.performUpdate('endings', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'endings') }}
                             options={options}
@@ -476,9 +430,9 @@ export class GameEditor extends Component<Props, State>{
                     },
                     {
                         label: 'verbs', content: <VerbEditor
-                            key={verbId}
+                            key={gameItemIds.verbs}
                             gameDesign={gameDesign}
-                            data={findById(verbId, gameDesign.verbs)}
+                            data={findById(gameItemIds.verbs, gameDesign.verbs)}
                             updateData={data => { this.performUpdate('verbs', data) }}
                             deleteData={index => { this.deleteArrayItem(index, 'verbs') }}
                             options={options}
