@@ -54,7 +54,7 @@ type State = {
     resetTimeStamp: number;
 
     options: EditorOptions;
-    history: GameDesign[];
+    history: { gameDesign: GameDesign; label: string }[];
     undoTime: number;
 };
 
@@ -172,7 +172,10 @@ export class GameEditor extends Component<Props, State>{
 
         this.setState(state => {
             const { gameDesign, gameItemIds, history } = state
-            history.push(cloneData(gameDesign))
+            history.push({
+                label: `update ${property}`,
+                gameDesign: cloneData(gameDesign)
+            })
             if (history.length > 10) { history.shift() }
             switch (property) {
                 case 'rooms':
@@ -224,7 +227,10 @@ export class GameEditor extends Component<Props, State>{
         // TO DO - check for references to the ID of the deleted item?
         this.setState(state => {
             const { gameDesign, history } = state
-            history.push(cloneData(gameDesign))
+            history.push({
+                label: `delete ${property}`,
+                gameDesign: cloneData(gameDesign)
+            })
             if (Array.isArray(gameDesign[property])) {
                 const [deletedItem] = (gameDesign[property] as GameDataItem[]).splice(index, 1)
                 if (property === 'sprites' && 'id' in deletedItem) {
@@ -237,7 +243,10 @@ export class GameEditor extends Component<Props, State>{
     changeInteraction(data: Interaction, index?: number) {
         this.setState(state => {
             const { gameDesign, history } = state
-            history.push(cloneData(gameDesign))
+            history.push({
+                label: `change interaction`,
+                gameDesign: cloneData(gameDesign)
+            })
             const { interactions } = gameDesign
             if (typeof index === 'undefined') {
                 interactions.push(data)
@@ -251,12 +260,13 @@ export class GameEditor extends Component<Props, State>{
         this.setState({ gameDesign })
     }
     undo() {
-        if (this.state.history.length === 0) { return }
         this.setState(state => {
             const { history } = state
-            const gameDesign = history.pop()
+            const historyItem = history.pop()
+            if (!historyItem) { return {} }
             return {
-                history, gameDesign,
+                history,
+                gameDesign: historyItem.gameDesign,
                 undoTime: Date.now()
             }
         })
@@ -310,7 +320,12 @@ export class GameEditor extends Component<Props, State>{
                 />
                 <hr />
                 <div>
-                    <button onClick={this.undo}>UNDO[{history.length}]</button>
+                    <button
+                        onClick={this.undo}
+                        disabled={history.length === 0}
+                    >
+                        UNDO {history[history.length-1]?.label} [{history.length}]
+                    </button>
                 </div>
                 <hr />
 
