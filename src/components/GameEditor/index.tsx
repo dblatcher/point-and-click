@@ -22,6 +22,7 @@ import { defaultVerbs1, getBlankRoom } from "./defaults";
 
 import { prebuiltGameDesign } from '../../../data/fullGame';
 import { listIds, findById, findIndexById } from "../../lib/util";
+import { cloneData } from "../../lib/clone";
 import { GameDesign, GameDataItem, Interaction, Verb } from "src";
 import { FlagMap } from "src/definitions/Flag";
 
@@ -53,6 +54,8 @@ type State = {
     resetTimeStamp: number;
 
     options: EditorOptions;
+    history: GameDesign[];
+    undoTime: number;
 };
 
 type Props = {
@@ -66,7 +69,6 @@ const tabs: string[] = [
     'actors',
     'conversations',
     'sprites',
-
     'interactions',
     'sequences',
     'endings',
@@ -122,6 +124,8 @@ export class GameEditor extends Component<Props, State>{
             options: {
                 autoSave: true
             },
+            history: [],
+            undoTime: 0,
         }
 
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
@@ -129,6 +133,7 @@ export class GameEditor extends Component<Props, State>{
         this.changeInteraction = this.changeInteraction.bind(this)
         this.deleteArrayItem = this.deleteArrayItem.bind(this)
         this.loadNewGame = this.loadNewGame.bind(this)
+        this.undo = this.undo.bind(this)
     }
 
     respondToServiceUpdate(payload: unknown) {
@@ -166,8 +171,9 @@ export class GameEditor extends Component<Props, State>{
         console.log(property, data)
 
         this.setState(state => {
-            const { gameDesign } = state
-            const { gameItemIds } = state
+            const { gameDesign, gameItemIds, history } = state
+            history.push(cloneData(gameDesign))
+            if (history.length > 10) { history.shift() }
             switch (property) {
                 case 'rooms':
                 case 'items':
@@ -217,35 +223,48 @@ export class GameEditor extends Component<Props, State>{
     deleteArrayItem(index: number, property: keyof GameDesign) {
         // TO DO - check for references to the ID of the deleted item?
         this.setState(state => {
-            const { gameDesign } = state
+            const { gameDesign, history } = state
+            history.push(cloneData(gameDesign))
             if (Array.isArray(gameDesign[property])) {
                 const [deletedItem] = (gameDesign[property] as GameDataItem[]).splice(index, 1)
                 if (property === 'sprites' && 'id' in deletedItem) {
                     spriteService.remove(deletedItem.id)
                 }
             }
-            return { gameDesign }
+            return { gameDesign, history }
         })
     }
     changeInteraction(data: Interaction, index?: number) {
         this.setState(state => {
-            const { gameDesign } = state
+            const { gameDesign, history } = state
+            history.push(cloneData(gameDesign))
             const { interactions } = gameDesign
             if (typeof index === 'undefined') {
                 interactions.push(data)
             } else {
                 interactions.splice(index, 1, data)
             }
-            return { gameDesign }
+            return { gameDesign, history }
         })
     }
     loadNewGame(gameDesign: GameDesign) {
         this.setState({ gameDesign })
     }
+    undo() {
+        if (this.state.history.length === 0) { return }
+        this.setState(state => {
+            const { history } = state
+            const gameDesign = history.pop()
+            return {
+                history, gameDesign,
+                undoTime: Date.now()
+            }
+        })
+    }
 
     render() {
         const {
-            gameDesign, tabOpen, options, gameItemIds,
+            gameDesign, tabOpen, options, gameItemIds, history,
         } = this.state
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
@@ -289,7 +308,10 @@ export class GameEditor extends Component<Props, State>{
                     gameDesign={gameDesign}
                     loadNewGame={this.loadNewGame}
                 />
-
+                <hr />
+                <div>
+                    <button onClick={this.undo}>UNDO[{history.length}]</button>
+                </div>
                 <hr />
 
                 <TreeMenu folders={folders}
@@ -345,115 +367,116 @@ export class GameEditor extends Component<Props, State>{
                 </div>
             </nav>
             <section className={layoutStyles.tabMenuHolder}>
-                <TabMenu backgroundColor="none" noButtons defaultOpenIndex={tabOpen} tabs={[
-                    {
-                        label: 'main', content: <Overview
-                            gameDesign={gameDesign}
-                            edit={(property, value) => { this.performUpdate(property, value) }} />
-                    },
-                    {
-                        label: 'Room Editor', content: <RoomEditor
-                            updateData={data => { this.performUpdate('rooms', data) }}
-                            deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
-                            existingRoomIds={listIds(gameDesign.rooms)}
-                            actors={gameDesign.actors}
-                            options={options}
-                            key={gameItemIds.rooms} data={this.currentRoom} />
-                    },
-                    {
-                        label: 'Items', content: <ItemEditor
-                            updateData={data => { this.performUpdate('items', data) }}
-                            deleteData={index => { this.deleteArrayItem(index, 'items') }}
-                            itemIds={listIds(gameDesign.items)}
-                            actorIds={listIds(gameDesign.actors)}
-                            options={options}
-                            key={gameItemIds.items} data={this.currentItem}
-                        />
-                    },
-                    {
-                        label: 'Actor Editor', content: <ActorEditor
-                            rooms={gameDesign.rooms}
-                            actors={gameDesign.actors}
-                            actorIds={listIds(gameDesign.actors)}
-                            updateData={data => { this.performUpdate('actors', data) }}
-                            deleteData={index => { this.deleteArrayItem(index, 'actors') }}
-                            options={options}
-                            key={gameItemIds.actors} data={this.currentActor}
-                        />
-                    },
-                    {
-                        label: 'Conversation Editor', content: <ConversationEditor
-                            sequenceIds={listIds(gameDesign.sequences)}
-                            conversations={gameDesign.conversations}
-                            gameDesign={gameDesign}
-                            updateData={data => { this.performUpdate('conversations', data) }}
-                            deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
-                            updateSequenceData={data => { this.performUpdate('sequences', data) }}
-                            options={options}
-                            key={gameItemIds.conversations} data={this.currentConversation}
-                        />
-                    },
-                    {
-                        label: 'Sprite Editor', content: <SpriteEditor
-                            updateData={data => { this.performUpdate('sprites', data) }}
-                            deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
-                            key={gameItemIds.sprites} data={this.currentSprite}
-                            options={options}
-                            spriteIds={listIds(gameDesign.sprites)}
-                        />
-                    },
-                    {
-                        label: 'interactions', content: <InteractionEditor
-                            changeInteraction={this.changeInteraction}
-                            deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
-                            gameDesign={gameDesign} />
-                    },
-                    {
-                        label: 'Sequences', content: <SequenceEditor
-                            key={gameItemIds.sequences}
-                            gameDesign={gameDesign}
-                            data={findById(gameItemIds.sequences, gameDesign.sequences)}
-                            updateData={data => { this.performUpdate('sequences', data) }}
-                            deleteData={index => { this.deleteArrayItem(index, 'sequences') }}
-                            options={options}
-                            sequenceId={gameItemIds.sequences} />
-                    },
-                    {
-                        label: 'endings', content: <EndingEditor
-                            key={gameItemIds.endings}
-                            gameDesign={gameDesign}
-                            data={findById(gameItemIds.endings, gameDesign.endings)}
-                            updateData={data => { this.performUpdate('endings', data) }}
-                            deleteData={index => { this.deleteArrayItem(index, 'endings') }}
-                            options={options}
-                        />
-                    },
-                    {
-                        label: 'verbs', content: <VerbEditor
-                            key={gameItemIds.verbs}
-                            gameDesign={gameDesign}
-                            data={findById(gameItemIds.verbs, gameDesign.verbs)}
-                            updateData={data => { this.performUpdate('verbs', data) }}
-                            deleteData={index => { this.deleteArrayItem(index, 'verbs') }}
-                            options={options}
-                        />
-                    },
-                    { label: 'Image uploader', content: <ImageAssetTool /> },
-                    { label: 'Sound uploader', content: <SoundAssetTool /> },
-                    {
-                        label: 'Test', content: (
-                            <div>
-                                <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset game test</button>
-                                <hr />
-                                <Game key={this.state.resetTimeStamp} startPaused
-                                    {...gameDesign} actorOrders={{}} gameNotBegun
-                                    showDebugLog={true} />
-                            </div>
-                        )
-                    }
-                ]} />
+                <TabMenu backgroundColor="none"
+                    key={this.state.undoTime}
+                    noButtons defaultOpenIndex={tabOpen} tabs={[
+                        {
+                            label: 'main', content: <Overview
+                                gameDesign={gameDesign}
+                                edit={(property, value) => { this.performUpdate(property, value) }} />
+                        },
+                        {
+                            label: 'Room Editor', content: <RoomEditor
+                                updateData={data => { this.performUpdate('rooms', data) }}
+                                deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
+                                existingRoomIds={listIds(gameDesign.rooms)}
+                                actors={gameDesign.actors}
+                                options={options}
+                                key={gameItemIds.rooms} data={this.currentRoom} />
+                        },
+                        {
+                            label: 'Items', content: <ItemEditor
+                                updateData={data => { this.performUpdate('items', data) }}
+                                deleteData={index => { this.deleteArrayItem(index, 'items') }}
+                                itemIds={listIds(gameDesign.items)}
+                                actorIds={listIds(gameDesign.actors)}
+                                options={options}
+                                key={gameItemIds.items} data={this.currentItem}
+                            />
+                        },
+                        {
+                            label: 'Actor Editor', content: <ActorEditor
+                                rooms={gameDesign.rooms}
+                                actors={gameDesign.actors}
+                                actorIds={listIds(gameDesign.actors)}
+                                updateData={data => { this.performUpdate('actors', data) }}
+                                deleteData={index => { this.deleteArrayItem(index, 'actors') }}
+                                options={options}
+                                key={gameItemIds.actors} data={this.currentActor}
+                            />
+                        },
+                        {
+                            label: 'Conversation Editor', content: <ConversationEditor
+                                sequenceIds={listIds(gameDesign.sequences)}
+                                conversations={gameDesign.conversations}
+                                gameDesign={gameDesign}
+                                updateData={data => { this.performUpdate('conversations', data) }}
+                                deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
+                                updateSequenceData={data => { this.performUpdate('sequences', data) }}
+                                options={options}
+                                key={gameItemIds.conversations} data={this.currentConversation}
+                            />
+                        },
+                        {
+                            label: 'Sprite Editor', content: <SpriteEditor
+                                updateData={data => { this.performUpdate('sprites', data) }}
+                                deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
+                                key={gameItemIds.sprites} data={this.currentSprite}
+                                options={options}
+                                spriteIds={listIds(gameDesign.sprites)}
+                            />
+                        },
+                        {
+                            label: 'interactions', content: <InteractionEditor
+                                changeInteraction={this.changeInteraction}
+                                deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
+                                gameDesign={gameDesign} />
+                        },
+                        {
+                            label: 'Sequences', content: <SequenceEditor
+                                key={gameItemIds.sequences}
+                                gameDesign={gameDesign}
+                                data={findById(gameItemIds.sequences, gameDesign.sequences)}
+                                updateData={data => { this.performUpdate('sequences', data) }}
+                                deleteData={index => { this.deleteArrayItem(index, 'sequences') }}
+                                options={options}
+                                sequenceId={gameItemIds.sequences} />
+                        },
+                        {
+                            label: 'endings', content: <EndingEditor
+                                key={gameItemIds.endings}
+                                gameDesign={gameDesign}
+                                data={findById(gameItemIds.endings, gameDesign.endings)}
+                                updateData={data => { this.performUpdate('endings', data) }}
+                                deleteData={index => { this.deleteArrayItem(index, 'endings') }}
+                                options={options}
+                            />
+                        },
+                        {
+                            label: 'verbs', content: <VerbEditor
+                                key={gameItemIds.verbs}
+                                gameDesign={gameDesign}
+                                data={findById(gameItemIds.verbs, gameDesign.verbs)}
+                                updateData={data => { this.performUpdate('verbs', data) }}
+                                deleteData={index => { this.deleteArrayItem(index, 'verbs') }}
+                                options={options}
+                            />
+                        },
+                        { label: 'Image uploader', content: <ImageAssetTool /> },
+                        { label: 'Sound uploader', content: <SoundAssetTool /> },
+                        {
+                            label: 'Test', content: (
+                                <div>
+                                    <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset game test</button>
+                                    <hr />
+                                    <Game key={this.state.resetTimeStamp} startPaused
+                                        {...gameDesign} actorOrders={{}} gameNotBegun
+                                        showDebugLog={true} />
+                                </div>
+                            )
+                        }
+                    ]} />
             </section>
-
         </main >
     }
 }
