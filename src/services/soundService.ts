@@ -32,11 +32,13 @@ function getMimeType(asset: SoundAsset): string | undefined {
 
 
 export class SoundService extends Service<SoundAsset> {
-    private soundDeck: SoundDeck
+    private soundDeck?: SoundDeck
 
     constructor() {
         super()
-        this.soundDeck = new SoundDeck()
+        if (typeof window !== 'undefined') {
+            this.soundDeck = new SoundDeck()
+        }
         this.setMaxListeners(20)
     }
 
@@ -45,7 +47,7 @@ export class SoundService extends Service<SoundAsset> {
 
         const itemArray = Array.isArray(items) ? items : [items];
         itemArray.forEach(soundAsset =>
-            this.soundDeck.defineSampleBuffer(soundAsset.id, soundAsset.href)
+            this.soundDeck?.defineSampleBuffer(soundAsset.id, soundAsset.href)
                 .then(success => {
                     console.log('soundService: load', soundAsset.id, success)
                     this.emit('load', soundAsset.id, success)
@@ -58,11 +60,12 @@ export class SoundService extends Service<SoundAsset> {
         loop?: boolean;
     }): SoundControl | null {
         const asset = this.get(soundId)
-        if (!asset) { return null }
+        if (!asset || !this.soundDeck) { return null }
         return this.soundDeck.playSample(asset.id, playOptions)
     }
 
     enable(): Promise<void> {
+        if (!this.soundDeck) { return Promise.resolve() }
         return this.soundDeck.enable()
             .then(() => {
                 this.emit('ready', this.isEnabled)
@@ -70,6 +73,7 @@ export class SoundService extends Service<SoundAsset> {
     }
 
     disable(): Promise<void> {
+        if (!this.soundDeck) { return Promise.resolve() }
         return this.soundDeck.disable()
             .then(() => {
                 this.emit('ready', this.isEnabled)
@@ -77,7 +81,7 @@ export class SoundService extends Service<SoundAsset> {
     }
 
     get isEnabled(): boolean {
-        return this.soundDeck.isEnabled
+        return this.soundDeck?.isEnabled || false
     }
 
     listHref(): string[] {
