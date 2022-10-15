@@ -38,6 +38,11 @@
     background-color: lightgray;
 }
 
+.button:focus {
+    outline: 2px solid black;
+    outline-offset: 1px;
+}
+
 .current.button:hover {
     background-color: rgb(100, 100, 100);
 }
