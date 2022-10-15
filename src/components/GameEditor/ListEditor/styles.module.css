@@ -1,4 +1,3 @@
-
 .mainList {
     list-style: none;
     padding: 0;
@@ -26,26 +25,3 @@
     display: flex;
 }
 
-.plusButton {
-    background-color: lightgreen;
-}
-
-.plusButton:hover {
-    background-color: palegreen;
-}
-
-.deleteButton {
-    background-color: red;
-}
-
-.deleteButton:hover {
-    background-color: pink;
-}
-
-.moveButton {
-    background-color: skyblue;
-}
-
-.moveButton:hover {
-    background-color: lightblue;
-}

@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, ComponentChild, h, Fragment } from "preact";
 import styles from './styles.module.css';
+import editorStyles from '../editorStyles.module.css'
+import { icons } from "../dataEditors";
+
 
 interface Props<T> {
     list: T[];
@@ -13,17 +16,12 @@ interface Props<T> {
     heavyBorders?: boolean;
 }
 
-const icons = {
-    UP: '🔼',
-    DOWN: '🔽',
-    INSERT: '➕',
-    DELETE: '❌',
-}
+
 const buttonStyle = {
-    UP: styles.moveButton,
-    DOWN: styles.moveButton,
-    INSERT: styles.plusButton,
-    DELETE: styles.deleteButton,
+    UP: [ editorStyles.moveButton],
+    DOWN: [editorStyles.moveButton],
+    INSERT: [editorStyles.plusButton],
+    DELETE: [editorStyles.deleteButton],
 }
 
 export class ListEditor<T> extends Component<Props<T>> {
@@ -71,7 +69,7 @@ export class ListEditor<T> extends Component<Props<T>> {
                 clickFunction = () => { this.handleMove(index, role) }
                 break
         }
-        return <button className={buttonStyle[role]} onClick={clickFunction}>{icons[role]}</button>
+        return <button className={buttonStyle[role].join(" ")} onClick={clickFunction}>{icons[role]}</button>
     }
 
     render() {
