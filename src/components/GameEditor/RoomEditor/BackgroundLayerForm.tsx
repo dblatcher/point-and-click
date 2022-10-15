@@ -6,6 +6,7 @@ import { BackgroundLayer } from "src";
 import { ParallaxInput, SelectInput } from "../formControls";
 import { icons } from "../dataEditors";
 import { listIds } from "../../../lib/util";
+import editorStyles from "../editorStyles.module.css";
 
 interface Props {
     imageAssets: Readonly<ImageAsset>[];
@@ -32,11 +33,13 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
             inputHandler={setParallax}
         />
 
-        <button onClick={() => {
-            if (!imageId) { return }
-            addNewLayer({ imageId, parallax })
-            setParallax(0)
-            setImageId('')
-        }}>{icons.INSERT} background</button>
+        <button
+            className={[editorStyles.button, editorStyles.plusButton].join(" ")}
+            onClick={() => {
+                if (!imageId) { return }
+                addNewLayer({ imageId, parallax })
+                setParallax(0)
+                setImageId('')
+            }}>{icons.INSERT} background</button>
     </div>
 }
