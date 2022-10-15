@@ -35,7 +35,11 @@
 }
 
 .button:hover {
-    background-color: gray;
+    background-color: lightgray;
+}
+
+.current.button:hover {
+    background-color: rgb(100, 100, 100);
 }
 
 .button span {
@@ -45,4 +49,11 @@
 
 .current.button span {
     background-color: rgba(12, 12, 12, 0.5);
+}
+
+.conversation.button {
+    display: block;
+    margin: .5em 0;
+    width: 100%;
+    text-align: left;
 }
