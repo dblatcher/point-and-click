@@ -146,7 +146,6 @@ export default class GamePlayer extends Component<Props, State> {
             reset={this.reset}
             load={this.load}
             key={timestamp}
-            currentConversationId='CHAT'
           />
         ) : (
           <div>
