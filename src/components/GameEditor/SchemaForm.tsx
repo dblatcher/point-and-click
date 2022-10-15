@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { z, ZodType } from "zod"
+import { z } from "zod"
 import { h, VNode } from "preact";
 import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, StringInput, TriStateInput } from "./formControls";
-import styles from './editorStyles.module.css';
+import editorStyles from './editorStyles.module.css';
 
 export interface FieldDef {
     key: string;
@@ -164,7 +164,7 @@ function SchemaField<T extends z.ZodRawShape>({
     }
 
     return (
-        <div className={styles.formRow}>
+        <div className={editorStyles.formRow}>
             {buildInput()}
             <span>{field.optional ? '(opt)' : '(req)'}</span>
         </div>

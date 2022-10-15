@@ -14,7 +14,7 @@ import { StorageMenu } from "../StorageMenu";
 import { ListEditor } from "../ListEditor";
 import { SelectInput, StringInput } from "../formControls";
 import { SequenceEditor } from "../SequenceEditor";
-import styles from "../editorStyles.module.css"
+import editorStyles from "../editorStyles.module.css"
 import { NewSequenceForm } from "./NewSequenceForm";
 
 type ExtraState = {
@@ -252,7 +252,7 @@ export class ConversationEditor extends Component<Props, State> {
         return (
             <article>
                 <h2>Conversation Editor</h2>
-                <section className={styles.row}>
+                <section className={editorStyles.row}>
                     <fieldset>
                         <legend>Conversation</legend>
                         <StringInput block
@@ -283,7 +283,7 @@ export class ConversationEditor extends Component<Props, State> {
                     />
                 </section>
 
-                <section className={styles.rowTopLeft}>
+                <section className={editorStyles.rowTopLeft}>
 
                     <fieldset>
                         <RecordEditor
@@ -322,7 +322,7 @@ export class ConversationEditor extends Component<Props, State> {
                                             }}
                                         />
                                         <button
-                                            className={styles.plusButton}
+                                            className={editorStyles.plusButton}
                                             style={{ width: '100%' }}
                                             onClick={() => { this.addNewChoice(branchKey) }}>
                                             add choice{icons.INSERT}

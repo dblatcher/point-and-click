@@ -15,7 +15,6 @@ import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } f
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { TabMenu } from "../../TabMenu";
-import styles from '../editorStyles.module.css';
 import { getBlankRoom } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
 import { ListEditor } from "../ListEditor";
@@ -23,6 +22,7 @@ import { ZoneSetEditor } from "./ZoneSetEditor";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
 import imageService from "../../../services/imageService";
 import { RoomEditorTreeMenu } from "./RoomEditorTreeMenu";
+import editorStyles from '../editorStyles.module.css';
 
 export type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -394,22 +394,22 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         return <article>
             <h2>Room Editor</h2>
 
-            <div className={styles.rowTopLeft}>
-                <fieldset className={styles.fieldset}>
+            <div className={editorStyles.rowTopLeft}>
+                <fieldset className={editorStyles.fieldset}>
                     <legend>Room</legend>
-                    <div className={styles.row}>
+                    <div className={editorStyles.row}>
                         <label >ID</label>
                         <input type="text" value={id} onInput={event => this.setStateWithAutosave({ id: eventToString(event) })} />
                     </div>
-                    <div className={styles.row}>
+                    <div className={editorStyles.row}>
                         <NumberInput label="height" value={height}
                             inputHandler={height => this.setStateWithAutosave({ height })} />
                     </div>
-                    <div className={styles.row}>
+                    <div className={editorStyles.row}>
                         <NumberInput label="width" value={width}
                             inputHandler={width => this.setStateWithAutosave({ width })} />
                     </div>
-                    <div className={styles.row}>
+                    <div className={editorStyles.row}>
                         <NumberInput label="Frame Width" value={frameWidth}
                             inputHandler={frameWidth => this.setStateWithAutosave({ frameWidth })} />
                     </div>
@@ -431,7 +431,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 />
             </div>
 
-            <div className={styles.rowTopLeft}>
+            <div className={editorStyles.rowTopLeft}>
                 <Preview
                     actors={actors}
                     roomData={this.state}
@@ -440,7 +440,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     handleRoomClick={this.handleRoomClick} />
             </div>
 
-            <div className={styles.container}>
+            <div className={editorStyles.container}>
                 <RoomEditorTreeMenu
                     roomEditorState={this.state}
                     handleTreeEntryClick={this.handleTreeEntryClick}

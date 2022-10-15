@@ -11,7 +11,7 @@ import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";
 import spriteService from "../../../services/spriteService";
 import { FramePicker } from "./FramePicker";
-import styles from '../editorStyles.module.css';
+import editorStyles from '../editorStyles.module.css';
 import { StorageMenu } from "../StorageMenu";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
 
@@ -197,16 +197,16 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         const overrideSprite = this.buildSprite()
         return <article>
             <h2>Sprite Editor</h2>
-            <div className={styles.container}>
+            <div className={editorStyles.container}>
 
-                <fieldset className={styles.fieldset}>
+                <fieldset className={editorStyles.fieldset}>
                     <legend>Sprite</legend>
-                    <div className={styles.row}>
+                    <div className={editorStyles.row}>
                         <StringInput label="sprite ID"
                             value={id}
                             inputHandler={value => this.changeValue('id', value)} />
                     </div>
-                    <div className={styles.row}>
+                    <div className={editorStyles.row}>
                         <label>Default Direction</label>
                         <select value={defaultDirection} onChange={event => this.changeValue('defaultDirection', eventToString(event))}>
                             {directions.map(direction => <option key={direction}>{direction}</option>)}
@@ -230,9 +230,9 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 />
             </div>
 
-            <div className={styles.container}>
+            <div className={editorStyles.container}>
                 <section>
-                    <fieldset className={styles.fieldset}>
+                    <fieldset className={editorStyles.fieldset}>
                         <legend>Pick Frame</legend>
                         <FramePicker
                             pickFrame={this.pickFrame}
@@ -246,7 +246,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 <section>
                     <fieldset>
                         <legend>
-                            <SelectInput block className={styles.row}
+                            <SelectInput block className={editorStyles.row}
                                 label={'Animation'}
                                 value={selectedAnimation || ''}
                                 items={Object.keys(this.state.animations)}

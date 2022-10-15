@@ -4,7 +4,7 @@ import { findById, listIds } from "../../../lib/util";
 import { Conversation } from "src";
 import { SelectInput } from "../formControls";
 import { ChoiceRefSet } from "src/definitions/Conversation";
-import styles from "../editorStyles.module.css"
+import editorStyles from "../editorStyles.module.css"
 import { icons } from "../dataEditors";
 
 interface Props {
@@ -75,7 +75,7 @@ export const ChoiceSelector: FunctionalComponent<Props> = ({
             />
 
             <button
-                className={styles.deleteButton}
+                className={editorStyles.deleteButton}
                 onClick={remove}>
                 {icons.DELETE}
             </button>

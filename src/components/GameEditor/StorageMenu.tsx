@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from "preact";
-import styles from "./editorStyles.module.css"
+import editorStyles from "./editorStyles.module.css"
 
 import { downloadJsonFile, } from "../../lib/files";
 import { DeleteButton } from "./formControls";
@@ -37,7 +37,7 @@ export const StorageMenu: FunctionalComponent<Props> = ({
     const showResetButton = data && !(options?.autoSave && originalId === currentId);
 
     return (
-        <fieldset className={styles.fieldset}>
+        <fieldset className={editorStyles.fieldset}>
             <legend>storage</legend>
             <div>
                 {(saveButton && data) && <button onClick={(): void => { downloadJsonFile(data, type) }}>Save to file</button>}

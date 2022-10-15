@@ -4,7 +4,7 @@ import { ClickEffect } from "./ClickEffect";
 import { Zone } from "src";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
 import { CheckBoxInput, OptionalStringInput } from "../formControls";
-import styles from '../editorStyles.module.css';
+import editorStyles from '../editorStyles.module.css';
 
 interface Props {
     zone: Zone;
@@ -18,7 +18,7 @@ interface Props {
 export function ZoneControl({ zone, index, change, remove, setClickEffect, type }: Props) {
     return (
         <article>
-            <div className={styles.rowTopLeft}>
+            <div className={editorStyles.rowTopLeft}>
                 <div style={{ marginRight: '.5em' }}>
                     <div>
                         <OptionalStringInput

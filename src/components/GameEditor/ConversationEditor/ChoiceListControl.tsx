@@ -3,7 +3,7 @@ import { FunctionalComponent, h } from "preact";
 import { Conversation } from "src";
 import { ChoiceRefSet } from "src/definitions/Conversation";
 import { ChoiceSelector } from "./ChoiceSelector";
-import styles from "../editorStyles.module.css"
+import editorStyles from "../editorStyles.module.css"
 import { icons } from "../dataEditors";
 
 interface Props {
@@ -42,7 +42,7 @@ export const ChoiceListControl: FunctionalComponent<Props> = ({
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <span>Add choice</span>
                 <button
-                    className={styles.plusButton}
+                    className={editorStyles.plusButton}
                     onClick={() => { add(property) }}>
                     {icons.INSERT}
                 </button>

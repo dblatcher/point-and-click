@@ -4,7 +4,7 @@ import { ItemData } from "src"
 import { SelectInput, StringInput } from "./formControls";
 import { ServiceItemSelector } from "./ServiceItemSelector";
 import imageService, { ImageAsset } from "../../services/imageService";
-import styles from "./editorStyles.module.css"
+import editorStyles from "./editorStyles.module.css"
 import { ItemMenu } from "../ItemMenu";
 import { cloneData } from "../../lib/clone";
 import { StorageMenu } from "./StorageMenu";
@@ -113,20 +113,20 @@ export class ItemEditor extends Component<Props, State> {
         return (
             <article>
                 <h2>Item Editor</h2>
-                <div class={styles.container}>
-                    <fieldset class={styles.fieldset}>
+                <div class={editorStyles.container}>
+                    <fieldset class={editorStyles.fieldset}>
                         <legend>Data</legend>
                         <StringInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="id" value={id}
                             inputHandler={(value) => changeValue('id', value)} />
                         <StringInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="name" value={name || ''}
                             inputHandler={(value) => changeValue('name', value)} />
 
                         <SelectInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="actorId"
                             emptyOptionLabel="[no Actor]"
                             items={this.props.actorIds}
@@ -149,13 +149,13 @@ export class ItemEditor extends Component<Props, State> {
                             <div>col: {this.state.col}</div>
                         )}
                     </fieldset>
-                    <fieldset class={styles.fieldset}>
+                    <fieldset class={editorStyles.fieldset}>
                         <legend>Button Preview</legend>
-                        <div className={styles.row}>
+                        <div className={editorStyles.row}>
                             <span>Selected:</span>
                             <ItemMenu items={[this.state]} currentItemId={id} select={() => true} />
                         </div>
-                        <div className={styles.row}>
+                        <div className={editorStyles.row}>
                             <span>Not Selected:</span>
                             <ItemMenu items={[this.state]} currentItemId={''} select={() => true} />
                         </div>
@@ -163,7 +163,7 @@ export class ItemEditor extends Component<Props, State> {
                 </div>
 
                 {(imageAsset?.rows || imageAsset?.cols) && (
-                    <div class={styles.container}>
+                    <div class={editorStyles.container}>
                         <FramePicker fixedSheet
                             sheetId={this.state.imageId}
                             row={this.state.row || 0}

@@ -4,7 +4,7 @@ import { ClickEffect } from "./ClickEffect";
 import { HotspotZone } from "src";
 import { OptionalNumberInput, ParallaxInput, StringInput } from "../formControls";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
-import styles from '../editorStyles.module.css';
+import editorStyles from '../editorStyles.module.css';
 
 
 interface Props {
@@ -20,25 +20,25 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
 
     return (
         <article>
-            <div className={styles.rowTopLeft}>
+            <div className={editorStyles.rowTopLeft}>
                 <div style={{ marginRight: '.5em' }}>
                     <StringInput
-                        block className={styles.row}
+                        block className={editorStyles.row}
                         label="id" value={id}
                         inputHandler={(value) => change(index, 'id', value, type)} />
                     <StringInput
-                        block className={styles.row}
+                        block className={editorStyles.row}
                         label="name" value={name || ''}
                         inputHandler={(value) => change(index, 'name', value, type)} />
                     <StringInput
-                        block className={styles.row}
+                        block className={editorStyles.row}
                         label="status" value={status || ''}
                         inputHandler={(value) => change(index, 'status', value, type)} />
                 </div>
 
                 <fieldset>
                     <legend>shape and position</legend>
-                    <div className={styles.row}>
+                    <div className={editorStyles.row}>
                         <ParallaxInput value={parallax}
                             inputHandler={value => { change(index, 'parallax', value, type) }} />
                     </div>

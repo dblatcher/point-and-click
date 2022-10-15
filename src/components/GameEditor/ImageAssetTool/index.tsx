@@ -10,7 +10,7 @@ import { OptionalNumberInput, SelectInput, TextInput, Warning } from "../formCon
 import { cloneData } from "../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "src/services/Service";
-import styles from "../editorStyles.module.css";
+import editorStyles from "../editorStyles.module.css";
 import imageService, {
   ImageAsset,
   ImageAssetCategory,
@@ -199,7 +199,7 @@ export class ImageAssetTool extends Component<{}, State> {
     return (
       <article>
         <h2>Image asset tool</h2>
-        <div className={styles.container}>
+        <div className={editorStyles.container}>
           <section>
             <ServiceItemSelector
               legend="assets"
@@ -207,11 +207,11 @@ export class ImageAssetTool extends Component<{}, State> {
               currentSelection={id}
               select={this.openFromService} />
 
-            <fieldset className={styles.fieldset}>
-              <div className={styles.row}>
+            <fieldset className={editorStyles.fieldset}>
+              <div className={editorStyles.row}>
                 <button onClick={this.zipImages}>zip all image assets</button>
               </div>
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <button onClick={this.loadFromZipFile}>
                   load assets from zip file
                 </button>
@@ -221,13 +221,13 @@ export class ImageAssetTool extends Component<{}, State> {
           </section>
 
           <section>
-            <fieldset className={styles.fieldset}>
+            <fieldset className={editorStyles.fieldset}>
               <legend>image properties</legend>
 
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <button onClick={this.loadFile}>select image file</button>
               </div>
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <TextInput
                   label="ID"
                   value={id}
@@ -235,7 +235,7 @@ export class ImageAssetTool extends Component<{}, State> {
                     this.changeValue("id", eventToString(event))
                   } />
               </div>
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <SelectInput
                   onSelect={(value) => this.changeValue("category", value)}
                   label="category"
@@ -245,7 +245,7 @@ export class ImageAssetTool extends Component<{}, State> {
               </div>
 
 
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <OptionalNumberInput label="rows" value={rows} min={1}
                   key={`${id}1`}
                   inputHandler={
@@ -259,7 +259,7 @@ export class ImageAssetTool extends Component<{}, State> {
                   }
                 />
               </div>
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <OptionalNumberInput label="widthScale" value={widthScale} step={.1}
                   key={`${id}3`}
                   inputHandler={
@@ -277,8 +277,8 @@ export class ImageAssetTool extends Component<{}, State> {
 
             </fieldset>
 
-            <fieldset className={styles.fieldset}>
-              <div className={styles.row}>
+            <fieldset className={editorStyles.fieldset}>
+              <div className={editorStyles.row}>
                 <button onClick={this.saveToService}>{saveButtonText}</button>
                 {saveWarning && <Warning>{saveWarning}</Warning>}
               </div>

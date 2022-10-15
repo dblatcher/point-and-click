@@ -12,7 +12,7 @@ import { cloneData } from "../../../lib/clone";
 import { getStatusSuggestions } from "../../../lib/animationFunctions";
 import soundService from "../../../services/soundService";
 import { getModification, SchemaForm } from "../SchemaForm";
-import styles from '../editorStyles.module.css';
+import editorStyles from '../editorStyles.module.css';
 
 interface Props {
     consequence: AnyConsequence;
@@ -86,11 +86,11 @@ export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameD
         updateProperty('orders', ordersCopy)
     }
 
-    return <div className={styles.formBlock}>
+    return <div className={editorStyles.formBlock}>
 
         <SelectInput value={consequence.type}
             block
-            className={styles.formRow}
+            className={editorStyles.formRow}
             label={'type'}
             items={optionListIds.type}
             descriptions={optionListDescriptions.type}

@@ -10,7 +10,7 @@ import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { ListEditor } from "../ListEditor";
 import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
-import styles from "../editorStyles.module.css"
+import editorStyles from "../editorStyles.module.css"
 import { SelectAndConfirmInput, StringInput } from "../formControls";
 import { TabMenu } from "../../TabMenu";
 import { DataItemEditorProps } from "../dataEditors";
@@ -202,8 +202,8 @@ export class SequenceEditor extends Component<Props, State> {
                     </>)
                     : (<>
                         <h2>Sequence Editor</h2>
-                        <div className={styles.rowTopLeft}>
-                            <fieldset className={styles.fieldset}>
+                        <div className={editorStyles.rowTopLeft}>
+                            <fieldset className={editorStyles.fieldset}>
                                 <legend>details</legend>
                                 <StringInput block label="id" value={id} // don't autosave when changing ID
                                     inputHandler={(id) => { this.setState({ id }) }}

@@ -2,7 +2,7 @@
 import { Component, h, Fragment } from "preact";
 import { GameDesign, Interaction } from "src";
 import { DeleteButton, SelectInput } from "../formControls";
-import styles from '../editorStyles.module.css';
+import editorStyles from '../editorStyles.module.css';
 import { cloneData } from "../../../lib/clone";
 import { InteractionForm } from "./InteractionForm";
 import { getTargetLists, getItemDescriptions } from "./getTargetLists";
@@ -92,7 +92,7 @@ export class InteractionEditor extends Component<Props, State> {
         return (
             <article>
                 <h2>Interactions</h2>
-                <table className={styles.interactionTable} style={{ display: interactionUnderConstruction ? 'none' : 'table' }}>
+                <table className={editorStyles.interactionTable} style={{ display: interactionUnderConstruction ? 'none' : 'table' }}>
                     <caption>{filteredInteractions.length}/{interactions.length} interactions</caption>
                     <thead>
                         <tr>

@@ -12,7 +12,7 @@ import { cloneData } from "../../../lib/clone";
 import { getStatusSuggestions } from "../../../lib/animationFunctions";
 import { findById, listIds } from "../../../lib/util";
 import { uploadJsonData } from "../../../lib/files";
-import styles from "../editorStyles.module.css"
+import editorStyles from "../editorStyles.module.css"
 import { PositionPreview } from "./PositionPreview";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
 import { RecordEditor } from "../RecordEditor";
@@ -214,25 +214,25 @@ export class ActorEditor extends Component<Props, State> {
             <article>
                 <h2>Actor Editor</h2>
 
-                <div className={styles.rowTopLeft}>
+                <div className={editorStyles.rowTopLeft}>
                     <fieldset>
                         <legend>Actor</legend>
 
                         <StringInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="id" value={id}
                             inputHandler={(value) => changeValue('id', value)} />
                         <StringInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="name" value={name || ''}
                             inputHandler={(value) => changeValue('name', value)} />
                         <StringInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="status" value={status || ''}
                             suggestions={this.statusSuggestions}
                             inputHandler={(value) => changeValue('status', value)} />
                         <CheckBoxInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="Is player actor" value={state.isPlayer}
                             inputHandler={value => { changeValue('isPlayer', value) }} />
 
@@ -244,12 +244,12 @@ export class ActorEditor extends Component<Props, State> {
                         </div>
 
                         <NumberInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="movement speed" value={state.speed || 1}
                             inputHandler={value => { changeValue('speed', value) }} />
 
                         <CheckBoxInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="Cannot interact with" value={state.noInteraction}
                             inputHandler={value => { changeValue('noInteraction', value) }} />
                     </fieldset>
@@ -273,14 +273,14 @@ export class ActorEditor extends Component<Props, State> {
                         </div>
 
                         <StringInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="filter" value={state.filter || ''}
                             inputHandler={(value) => changeValue('filter', value)} />
 
                         <SpritePreview data={this.previewData} />
 
                         <NumberInput
-                            block className={styles.row}
+                            block className={editorStyles.row}
                             label="display baseline" value={state.baseline || 0}
                             min={0} max={state.height}
                             inputHandler={value => { changeValue('baseline', value) }} />
@@ -319,7 +319,7 @@ export class ActorEditor extends Component<Props, State> {
                         options={this.props.options}
                     />
                 </div>
-                <div className={styles.rowTopLeft}>
+                <div className={editorStyles.rowTopLeft}>
                     <fieldset>
                         <legend>Position</legend>
                         <div>

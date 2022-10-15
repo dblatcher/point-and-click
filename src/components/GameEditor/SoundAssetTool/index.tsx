@@ -11,7 +11,7 @@ import { cloneData } from "../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "../../../services/Service";
 import { SoundToggle } from "../../../components/SoundToggle";
-import styles from "../editorStyles.module.css";
+import editorStyles from "../editorStyles.module.css";
 
 import soundService, {
   SoundAsset,
@@ -178,7 +178,7 @@ export class SoundAssetTool extends Component<{}, State> {
     return (
       <article>
         <h2>Sound asset tool</h2>
-        <div className={styles.container}>
+        <div className={editorStyles.container}>
           <section>
             <ServiceItemSelector
               legend="open asset"
@@ -186,11 +186,11 @@ export class SoundAssetTool extends Component<{}, State> {
               currentSelection={id}
               select={this.openFromService} />
 
-            <fieldset className={styles.fieldset}>
-              <div className={styles.row}>
+            <fieldset className={editorStyles.fieldset}>
+              <div className={editorStyles.row}>
                 <button onClick={this.zipSounds}>zip assets</button>
               </div>
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <button onClick={this.loadFromZipFile}>
                   load assets from zip file
                 </button>
@@ -200,13 +200,13 @@ export class SoundAssetTool extends Component<{}, State> {
           </section>
 
           <section>
-            <fieldset className={styles.fieldset}>
+            <fieldset className={editorStyles.fieldset}>
               <legend>sound properties</legend>
 
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <button onClick={this.loadFile}>select sound file</button>
               </div>
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <TextInput
                   label="ID"
                   value={id}
@@ -215,7 +215,7 @@ export class SoundAssetTool extends Component<{}, State> {
                   }
                 />
               </div>
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <SelectInput
                   onSelect={(value) => this.changeValue("category", value)}
                   label="category"
@@ -225,7 +225,7 @@ export class SoundAssetTool extends Component<{}, State> {
                 />
               </div>
 
-              <div className={styles.row}>
+              <div className={editorStyles.row}>
                 <button onClick={this.saveToService}>Save to service</button>
                 {saveWarning && <Warning>{saveWarning}</Warning>}
               </div>

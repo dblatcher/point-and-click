@@ -1,7 +1,7 @@
 import { FunctionalComponent, h, JSX } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 import { ImageAsset } from "../../services/imageService";
-import styles from './editorStyles.module.css';
+import editorStyles from './editorStyles.module.css';
 
 interface Props {
     imageAsset: ImageAsset;
@@ -61,7 +61,7 @@ export const SpriteSheetPreview: FunctionalComponent<Props> = ({ imageAsset, can
 
 
     return (
-        <figure className={styles.spriteSheetPreview} style={{ cursor: !!handleClick ? 'pointer' : undefined }}>
+        <figure className={editorStyles.spriteSheetPreview} style={{ cursor: !!handleClick ? 'pointer' : undefined }}>
             { <img src={imageAsset.href} />}
             <canvas ref={canvasRef}
                 onClick={handleClick}
