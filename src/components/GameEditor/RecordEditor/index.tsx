@@ -39,7 +39,7 @@ export class RecordEditor<T> extends Component<Props<T>, State> {
             <li key={key} className={styles.row}>
                 {renderKeys && <b>{key}</b>}
                 <button
-                    className={editorStyles.deleteButton}
+                    className={[editorStyles.button, editorStyles.deleteButton].join(" ")}
                     onClick={() => { setEntry(key, undefined) }}
                 >{icons.DELETE}</button>
                 {describeValue(key, value)}
@@ -62,7 +62,7 @@ export class RecordEditor<T> extends Component<Props<T>, State> {
                 suggestions={newKeySuggestions.filter(suggestion => !existingKeys.includes(suggestion))}
             />
             <button
-                className={editorStyles.plusButton}
+                className={[editorStyles.button, editorStyles.plusButton].join(" ")}
                 onClick={() => {
                     this.setState({ newKey: '' })
                     addEntry(newKey)

@@ -82,34 +82,35 @@
     color: black;
 }
 
-.plusButton {
-    background-color: lightgreen;
+.button {
+    border-radius: 8px;
+    border: 1px solid gray;
+    background-color: palegoldenrod;
 }
 
-.plusButton:not(:disabled) {
+.button:focus {
+    border: 1px solid black;
+    outline: 2px solid black;
+}
+
+.button:not(:disabled) {
     cursor: pointer;
 }
 
-.plusButton:not(:disabled):hover {
-    background-color: palegreen;
+.button:not(:disabled):hover {
+    filter: brightness(1.5);
 }
 
+.plusButton {
+    background-color: lightgreen;
+}
 
 .deleteButton {
     background-color: red;
 }
 
-.deleteButton:hover {
-    background-color: pink;
-}
-
-
 .moveButton {
     background-color: skyblue;
-}
-
-.moveButton:hover {
-    background-color: lightblue;
 }
 
 .flexList {

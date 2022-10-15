@@ -42,7 +42,7 @@ export const ChoiceListControl: FunctionalComponent<Props> = ({
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <span>Add choice</span>
                 <button
-                    className={editorStyles.plusButton}
+                    className={[editorStyles.button, editorStyles.plusButton].join(" ")}
                     onClick={() => { add(property) }}>
                     {icons.INSERT}
                 </button>

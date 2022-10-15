@@ -34,7 +34,7 @@ export const NewAnimationForm: FunctionalComponent<Props> = ({ existingKeys, sub
                 />
 
                 <button
-                    className={editorStyles.plusButton}
+                    className={[editorStyles.button, editorStyles.plusButton].join(" ")}
                     onClick={handleSubmit} disabled={keyAlreadyUsed || animationKey === ''}>{icons.INSERT}</button>
             </div>
             {warning && (

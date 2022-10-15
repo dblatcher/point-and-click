@@ -18,10 +18,10 @@ interface Props<T> {
 
 
 const buttonStyle = {
-    UP: [ editorStyles.moveButton],
-    DOWN: [editorStyles.moveButton],
-    INSERT: [editorStyles.plusButton],
-    DELETE: [editorStyles.deleteButton],
+    UP: [editorStyles.button, editorStyles.moveButton],
+    DOWN: [editorStyles.button, editorStyles.moveButton],
+    INSERT: [editorStyles.button, editorStyles.plusButton],
+    DELETE: [editorStyles.button, editorStyles.deleteButton],
 }
 
 export class ListEditor<T> extends Component<Props<T>> {

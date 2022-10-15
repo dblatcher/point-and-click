@@ -42,7 +42,7 @@ export const AnimationControl: FunctionalComponent<Props> = ({
     return (<>
         {animKey !== 'default' &&
             <DeleteButton
-                className={editorStyles.deleteButton}
+                className={[editorStyles.button, editorStyles.deleteButton].join(" ")}
                 label={`${icons.DELETE}Delete animation "${animKey}"`}
                 onClick={deleteAll} />
         }
@@ -50,7 +50,7 @@ export const AnimationControl: FunctionalComponent<Props> = ({
         <div>
             {directionsNotUsed.map(direction => (
                 <button
-                    className={editorStyles.plusButton}
+                    className={[editorStyles.button, editorStyles.plusButton].join(" ")}
                     key={direction} onClick={() => { addDirection(direction) }}>{icons.INSERT} direction {direction}</button>
             ))}
         </div>
@@ -68,7 +68,7 @@ export const AnimationControl: FunctionalComponent<Props> = ({
                             </strong>
                             {dirKey !== defaultDirection && (
                                 <DeleteButton noConfirmation
-                                    className={editorStyles.deleteButton}
+                                    className={[editorStyles.button, editorStyles.deleteButton].join(" ")}
                                     label={`${icons.DELETE} ${dirKey}`}
                                     onClick={() => { deleteDirection(dirKey) }} />
                             )}

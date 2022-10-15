@@ -84,7 +84,7 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({
                         {searchedList.map(id =>
                             <li key={id}>
                                 <button onClick={() => { handleSelect(id) }}>{id === currentSelection ? `** ${id} **` : id}</button>
-                                <button className={editorStyles.deleteButton} onClick={() => { handleDelete(id) }}>{icons.DELETE}</button>
+                                <button className={[editorStyles.button, editorStyles.deleteButton].join(" ")} onClick={() => { handleDelete(id) }}>{icons.DELETE}</button>
                             </li>
                         )}
                     </ul>

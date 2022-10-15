@@ -322,7 +322,7 @@ export class ConversationEditor extends Component<Props, State> {
                                             }}
                                         />
                                         <button
-                                            className={editorStyles.plusButton}
+                                            className={[editorStyles.button, editorStyles.plusButton].join(" ")}
                                             style={{ width: '100%' }}
                                             onClick={() => { this.addNewChoice(branchKey) }}>
                                             add choice{icons.INSERT}

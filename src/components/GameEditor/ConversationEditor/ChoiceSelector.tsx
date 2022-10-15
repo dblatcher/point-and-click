@@ -75,7 +75,7 @@ export const ChoiceSelector: FunctionalComponent<Props> = ({
             />
 
             <button
-                className={editorStyles.deleteButton}
+                className={[editorStyles.button, editorStyles.deleteButton].join(" ")}
                 onClick={remove}>
                 {icons.DELETE}
             </button>
