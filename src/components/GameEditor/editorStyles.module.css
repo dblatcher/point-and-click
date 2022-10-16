@@ -72,16 +72,6 @@
     left: 0;
 }
 
-.interactionTable thead td {
-    background-color: black;
-    color: white;
-}
-
-.interactionTable tbody td {
-    background-color: lightgray;
-    color: black;
-}
-
 .button {
     border-radius: 8px;
     border: 1px solid gray;
