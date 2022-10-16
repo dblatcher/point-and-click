@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h } from "preact";
+import { FunctionalComponent, h, Fragment } from "preact";
 import { Flag, FlagMap, FlagSchema } from "../../definitions/Flag";
 import { GameDesign } from "../../definitions/Game";
 import { makeNewFlag } from "./defaults";
@@ -30,15 +30,20 @@ export const FlagMapControl: FunctionalComponent<Props> = ({
 
     return <RecordEditor
         record={gameDesign.flagMap}
-        renderKeys={true}
         describeValue={(key, flag) => {
-            return <SchemaForm key={key}
-                schema={FlagSchema}
-                data={flag}
-                changeValue={(value,fieldDef) => {
-                    return setEntry(key, Object.assign({}, flag, getModification(value,fieldDef)))
-                }}
-            />
+            return <>
+                <b style={{
+                    marginLeft: '.5em',
+                    marginRight: 'auto',
+                }}>{key}</b>
+                <SchemaForm key={key}
+                    schema={FlagSchema}
+                    data={flag}
+                    changeValue={(value, fieldDef) => {
+                        return setEntry(key, Object.assign({}, flag, getModification(value, fieldDef)))
+                    }}
+                />
+            </>
         }}
         addEntry={addEntry}
         setEntry={setEntry}
