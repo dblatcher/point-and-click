@@ -57,6 +57,24 @@ export class InteractionEditor extends Component<Props, State> {
         return list
     }
 
+    get filteredTargets(): {
+        ids: string[]; descriptions: string[];
+    } {
+        const { gameDesign } = this.props
+        const interactions = this.filteredInteractions
+        const targetLists = getTargetLists(gameDesign)
+        const ids: string[] = []
+        const descriptions: string[] = []
+
+        targetLists.ids.forEach((id, index) => {
+            if (interactions.some(interaction => interaction.targetId === id)) {
+                ids.push(id)
+                descriptions.push(targetLists.descriptions[index])
+            }
+        })
+        return { ids, descriptions }
+    }
+
     saveInteraction(interaction: Interaction) {
         const { edittedIndex } = this.state
         const { changeInteraction } = this.props
@@ -72,8 +90,7 @@ export class InteractionEditor extends Component<Props, State> {
         const { gameDesign } = this.props
         const { interactions, verbs, items, rooms } = gameDesign
         const { verbFilter = '', itemFilter = '', targetFilter = '', roomFilter = '', interactionUnderConstruction, edittedIndex } = this.state
-        const { filteredInteractions } = this
-        const targetLists = getTargetLists(gameDesign)
+        const { filteredInteractions, filteredTargets } = this
 
         return (
             <article>
@@ -115,8 +132,8 @@ export class InteractionEditor extends Component<Props, State> {
                                     onSelect={targetFilter => { this.setState({ targetFilter }) }}
                                     emptyOptionLabel="[ANY Target]"
                                     value={targetFilter}
-                                    items={targetLists.ids}
-                                    descriptions={targetLists.descriptions}
+                                    items={filteredTargets.ids}
+                                    descriptions={filteredTargets.descriptions}
                                 />
                             </th>
                             <th>
@@ -154,7 +171,7 @@ export class InteractionEditor extends Component<Props, State> {
                             const falseFlagTitle = flagsThatMustBeFalse.join(", ")
 
                             const consequenceText = consequences.length ? `x${consequences.length}` : 'empty'
-                            const consequenceTitle = consequences.map(_=>_.type).join(", ")
+                            const consequenceTitle = consequences.map(_ => _.type).join(", ")
 
                             return (
                                 <tr key={index}>
