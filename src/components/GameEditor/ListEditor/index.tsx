@@ -14,6 +14,8 @@ interface Props<T> {
     noMoveButtons?: boolean;
     noDeleteButtons?: boolean;
     heavyBorders?: boolean;
+    insertText?: string;
+    deleteText?: string;
 }
 
 
@@ -56,20 +58,24 @@ export class ListEditor<T> extends Component<Props<T>> {
     }
 
     renderButton(role: 'UP' | 'DOWN' | 'INSERT' | 'DELETE', index: number) {
+        const { insertText, deleteText } = this.props
         let clickFunction = () => { console.log('invliad button typr') }
+        let buttonText = icons[role]
         switch (role) {
             case 'DELETE':
                 clickFunction = () => { this.handleDelete(index) }
+                if (deleteText) { buttonText = deleteText }
                 break
             case 'INSERT':
                 clickFunction = () => { this.handleInsert(index) }
+                if (insertText) { buttonText = insertText }
                 break
             case 'UP':
             case 'DOWN':
                 clickFunction = () => { this.handleMove(index, role) }
                 break
         }
-        return <button className={buttonStyle[role].join(" ")} onClick={clickFunction}>{icons[role]}</button>
+        return <button className={buttonStyle[role].join(" ")} onClick={clickFunction}>{buttonText}</button>
     }
 
     render() {

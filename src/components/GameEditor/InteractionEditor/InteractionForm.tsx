@@ -12,6 +12,7 @@ import { makeNewConsequence } from "../defaults";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
+import { icons } from "../dataEditors";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -199,6 +200,8 @@ export const InteractionForm: FunctionalComponent<Props> = ({ initialState, game
                         setInteraction(Object.assign({}, interaction))
                     }}
                     createItem={() => makeNewConsequence('order')}
+                    insertText={`${icons.INSERT} ADD NEW CONSEQUENCE`}
+                    deleteText={`${icons.DELETE} REMOVE CONSEQUENCE`}
                 />
             </fieldset>
 

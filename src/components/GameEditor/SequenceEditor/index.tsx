@@ -13,7 +13,7 @@ import { StorageMenu } from "../StorageMenu";
 import editorStyles from "../editorStyles.module.css"
 import { SelectAndConfirmInput, StringInput } from "../formControls";
 import { TabMenu } from "../../TabMenu";
-import { DataItemEditorProps } from "../dataEditors";
+import { DataItemEditorProps, icons } from "../dataEditors";
 import { getTargetLists } from "../InteractionEditor/getTargetLists";
 
 type Props = DataItemEditorProps<Sequence> & {
@@ -136,6 +136,8 @@ export class SequenceEditor extends Component<Props, State> {
                 )}
                 mutateList={newList => { this.changeOrderList(newList, stageIndex, actorId) }}
                 createItem={() => getDefaultOrder('act')}
+                insertText="insert order"
+                deleteText="remove order"
             />
         )
     }
@@ -174,6 +176,8 @@ export class SequenceEditor extends Component<Props, State> {
                                     createButton="END"
                                     noMoveButtons
                                     createItem={() => makeNewConsequence('changeStatus')}
+                                    insertText='add consequence'
+                                    deleteText="delete consequence"
                                 />
                             }
                         ]
@@ -234,6 +238,8 @@ export class SequenceEditor extends Component<Props, State> {
                     describeItem={this.renderStage}
                     mutateList={stages => { this.setStateWithAutosave({ stages }) }}
                     createItem={makeBlankStage}
+                    insertText={`${icons.INSERT} INSERT NEW STAGE`}
+                    deleteText={`${icons.DELETE} STAGE`}
                     heavyBorders={true}
                 />
             </article>
