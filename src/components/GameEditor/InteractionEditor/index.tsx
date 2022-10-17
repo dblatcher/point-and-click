@@ -14,6 +14,7 @@ interface Props {
     gameDesign: GameDesign;
     changeInteraction: { (data: Interaction, index?: number): void };
     deleteInteraction: { (index: number): void };
+    updateData: { (data: Interaction[]): void };
 }
 
 interface State {
@@ -34,6 +35,7 @@ export class InteractionEditor extends Component<Props, State> {
             interactionUnderConstruction: undefined,
         }
         this.saveInteraction = this.saveInteraction.bind(this)
+        this.changeOrder = this.changeOrder.bind(this)
     }
 
     get filteredInteractions(): Interaction[] {
@@ -84,6 +86,21 @@ export class InteractionEditor extends Component<Props, State> {
             edittedIndex: undefined,
             interactionUnderConstruction: undefined,
         })
+    }
+
+    changeOrder(index: number, direction: 'down' | 'up') {
+        const { updateData, gameDesign } = this.props
+        const { interactions } = gameDesign
+        const endPlace = interactions.length - 1;
+        const list = [...interactions]
+
+        const [movedItem] = list.splice(index, 1)
+        const newPlace = direction === 'down'
+            ? index < endPlace ? index + 1 : 0
+            : index > 0 ? index - 1 : endPlace
+
+        list.splice(newPlace, 0, movedItem)
+        return updateData(list)
     }
 
     render() {
@@ -191,6 +208,18 @@ export class InteractionEditor extends Component<Props, State> {
                                             onClick={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}>
                                             edit
                                         </button>
+                                    </td>
+                                    <td>
+                                        <button
+                                            className={[editorStyles.button, editorStyles.moveButton].join(" ")}
+                                            onClick={() => this.changeOrder(index, 'up')}
+                                        >{icons.UP}</button>
+                                    </td>
+                                    <td>
+                                        <button
+                                            className={[editorStyles.button, editorStyles.moveButton].join(" ")}
+                                            onClick={() => this.changeOrder(index, 'down')}
+                                        >{icons.DOWN}</button>
                                     </td>
                                     <td>
                                         <DeleteButton label={icons.DELETE}

@@ -190,7 +190,6 @@ export class GameEditor extends Component<Props, State>{
                         gameItemIds[property] = (data as GameDataItem).id
                         break
                     }
-
                 case 'verbs':
                     {
                         if (Array.isArray(data)) {
@@ -198,6 +197,13 @@ export class GameEditor extends Component<Props, State>{
                         } else {
                             addNewOrUpdate(data, gameDesign[property])
                             gameItemIds[property] = (data as GameDataItem).id
+                        }
+                        break
+                    }
+                case 'interactions':
+                    {
+                        if (Array.isArray(data)) {
+                            gameDesign.interactions = data as Interaction[]
                         }
                         break
                     }
@@ -445,6 +451,7 @@ export class GameEditor extends Component<Props, State>{
                             label: 'interactions', content: <InteractionEditor
                                 changeInteraction={this.changeInteraction}
                                 deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
+                                updateData={data => { this.performUpdate('interactions', data) }}
                                 gameDesign={gameDesign} />
                         },
                         {
