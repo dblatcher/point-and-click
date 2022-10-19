@@ -10,6 +10,7 @@ import { cloneData } from "../../lib/clone";
 import { StorageMenu } from "./StorageMenu";
 import { DataItemEditorProps } from "./dataEditors";
 import { FramePicker } from "./SpriteEditor/FramePicker";
+import { EditorHeading } from "./EditorHeading";
 
 type Props = DataItemEditorProps<ItemData> & {
     actorIds: string[];
@@ -112,7 +113,7 @@ export class ItemEditor extends Component<Props, State> {
 
         return (
             <article>
-                <h2>Item Editor</h2>
+                <EditorHeading heading="Item Editor" helpTopic="items"/>
                 <div class={editorStyles.container}>
                     <fieldset>
                         <legend>Data</legend>
