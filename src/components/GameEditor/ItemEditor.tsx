@@ -114,7 +114,7 @@ export class ItemEditor extends Component<Props, State> {
             <article>
                 <h2>Item Editor</h2>
                 <div class={editorStyles.container}>
-                    <fieldset class={editorStyles.fieldset}>
+                    <fieldset>
                         <legend>Data</legend>
                         <StringInput
                             block className={editorStyles.row}
@@ -149,17 +149,16 @@ export class ItemEditor extends Component<Props, State> {
                             <div>col: {this.state.col}</div>
                         )}
                     </fieldset>
-                    <fieldset class={editorStyles.fieldset}>
-                        <legend>Button Preview</legend>
-                        <div className={editorStyles.row}>
-                            <span>Selected:</span>
-                            <ItemMenu items={[this.state]} currentItemId={id} select={() => true} />
-                        </div>
-                        <div className={editorStyles.row}>
-                            <span>Not Selected:</span>
-                            <ItemMenu items={[this.state]} currentItemId={''} select={() => true} />
-                        </div>
-                    </fieldset>
+
+                    <StorageMenu
+                        data={this.state} type='ItemData'
+                        originalId={this.props.data?.id}
+                        existingIds={itemIds}
+                        reset={this.handleResetButton}
+                        deleteItem={this.props.deleteData}
+                        update={this.handleUpdateButton}
+                        options={this.props.options}
+                    />
                 </div>
 
                 {(imageAsset?.rows || imageAsset?.cols) && (
@@ -173,15 +172,19 @@ export class ItemEditor extends Component<Props, State> {
                     </div>
                 )}
 
-                <StorageMenu
-                    data={this.state} type='ItemData'
-                    originalId={this.props.data?.id}
-                    existingIds={itemIds}
-                    reset={this.handleResetButton}
-                    deleteItem={this.props.deleteData}
-                    update={this.handleUpdateButton}
-                    options={this.props.options}
-                />
+                <div class={editorStyles.container}>    
+                    <fieldset>
+                        <legend>Button Preview</legend>
+                        <div className={editorStyles.row}>
+                            <span>Selected:</span>
+                            <ItemMenu items={[this.state]} currentItemId={id} select={() => true} />
+                        </div>
+                        <div className={editorStyles.row}>
+                            <span>Not Selected:</span>
+                            <ItemMenu items={[this.state]} currentItemId={''} select={() => true} />
+                        </div>
+                    </fieldset>
+                </div>
 
             </article>
         )
