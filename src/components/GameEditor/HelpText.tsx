@@ -27,6 +27,30 @@ export const HelpText: FunctionalComponent<Props> = ({
                     </dl>
                 </article>
             )
+        case 'rooms':
+            return (
+                <article>
+                    <p>Rooms are the places of any sort where the story takes place. Actors can be placed, and moved within rooms.</p>
+                    <dl>
+                        <dt>height</dt>
+                        <dd>The height of the room.</dd>
+                        <dt>width</dt>
+                        <dd>The width of the room</dd>
+                        <dt>frameWidth</dt>
+                        <dd>The amount of the width of the room that is shown at once. If frameWidth=width, the whole room is seen at once.</dd>
+                        <dt>background</dt>
+                        <dd>Backgrounds...</dd>
+                        <dt>hotspots</dt>
+                        <dd>Areas of the room the player character can interact with</dd>
+                        <dt>walkableAreas</dt>
+                        <dd>Where actors can walk. If there are none, the whole room is considered walkable, except the obstacleAreas</dd>
+                        <dt>obstacleAreas</dt>
+                        <dd>Areas actors cannot walk. Places where obstacleAreas and walkableAreas overlap are NOT walkable.</dd>
+                        <dt>scaling</dt>
+                        <dd>How Actors in the room will be scaled up or down</dd>
+                    </dl>
+                </article>
+            )
         default:
             return (
                 <article>

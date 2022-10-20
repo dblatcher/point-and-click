@@ -17,6 +17,7 @@ import { PositionPreview } from "./PositionPreview";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
 import { RecordEditor } from "../RecordEditor";
 import { SoundValueForm } from "./SoundValueForm";
+import { EditorHeading } from "../EditorHeading";
 
 type ExtraState = {
 
@@ -212,8 +213,7 @@ export class ActorEditor extends Component<Props, State> {
 
         return (
             <article>
-                <h2>Actor Editor</h2>
-
+                <EditorHeading heading="Actor Editor" />
                 <div className={editorStyles.rowTopLeft}>
                     <fieldset>
                         <legend>Actor</legend>
@@ -254,6 +254,21 @@ export class ActorEditor extends Component<Props, State> {
                             inputHandler={value => { changeValue('noInteraction', value) }} />
                     </fieldset>
 
+                    <StorageMenu
+                        type="actorData"
+                        data={this.currentData}
+                        originalId={this.props.data?.id}
+                        existingIds={actorIds}
+                        reset={this.handleResetButton}
+                        update={this.handleUpdateButton}
+                        deleteItem={this.props.deleteData}
+                        saveButton={true}
+                        load={this.handleLoadButton}
+                        options={this.props.options}
+                    />
+                </div>
+
+                <div className={editorStyles.row}>
                     <fieldset>
                         <legend>Sprite</legend>
 
@@ -306,19 +321,8 @@ export class ActorEditor extends Component<Props, State> {
                             />
                         )}
                     </fieldset>
-                    <StorageMenu
-                        type="actorData"
-                        data={this.currentData}
-                        originalId={this.props.data?.id}
-                        existingIds={actorIds}
-                        reset={this.handleResetButton}
-                        update={this.handleUpdateButton}
-                        deleteItem={this.props.deleteData}
-                        saveButton={true}
-                        load={this.handleLoadButton}
-                        options={this.props.options}
-                    />
                 </div>
+
                 <div className={editorStyles.rowTopLeft}>
                     <fieldset>
                         <legend>Position</legend>

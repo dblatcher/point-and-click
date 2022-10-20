@@ -16,6 +16,7 @@ import { SelectInput, StringInput } from "../formControls";
 import { SequenceEditor } from "../SequenceEditor";
 import editorStyles from "../editorStyles.module.css"
 import { NewSequenceForm } from "./NewSequenceForm";
+import { EditorHeading } from "../EditorHeading";
 
 type ExtraState = {
     openBranchId?: string;
@@ -251,7 +252,7 @@ export class ConversationEditor extends Component<Props, State> {
 
         return (
             <article>
-                <h2>Conversation Editor</h2>
+                <EditorHeading heading="Conversation Editor" />
                 <section className={editorStyles.row}>
                     <fieldset>
                         <legend>Conversation</legend>

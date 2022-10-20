@@ -23,6 +23,7 @@ import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSet
 import imageService from "../../../services/imageService";
 import { RoomEditorTreeMenu } from "./RoomEditorTreeMenu";
 import editorStyles from '../editorStyles.module.css';
+import { EditorHeading } from "../EditorHeading";
 
 export type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -392,7 +393,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
 
         return <article>
-            <h2>Room Editor</h2>
+            <EditorHeading heading="Room Editor" helpTopic="rooms"/>
 
             <div className={editorStyles.rowTopLeft}>
                 <fieldset className={editorStyles.fieldset}>
