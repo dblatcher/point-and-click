@@ -51,6 +51,12 @@ export const HelpText: FunctionalComponent<Props> = ({
                     </dl>
                 </article>
             )
+        case 'verb menu':
+            return (
+                <article>
+                    <p>Use this control to change the order in which verbs will appear in the UI.</p>
+                </article>
+            )
         default:
             return (
                 <article>

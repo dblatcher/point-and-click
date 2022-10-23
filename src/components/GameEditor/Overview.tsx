@@ -6,6 +6,7 @@ import { SelectInput, StringInput } from "./formControls";
 import { FlagMapControl } from "./FlagMapControl";
 import { ListEditor } from "./ListEditor";
 import { VerbMenu } from "../VerbMenu";
+import { EditorHeading } from "./EditorHeading";
 
 interface Props {
   gameDesign: GameDesign;
@@ -19,8 +20,9 @@ export const Overview: FunctionalComponent<Props> = ({
 
   return (
     <article>
-      <h2>Main</h2>
 
+
+      <EditorHeading heading="main" />
       <section style={{ display: 'flex', flexWrap: 'wrap' }}>
 
         <fieldset>
@@ -65,13 +67,15 @@ export const Overview: FunctionalComponent<Props> = ({
         </ul>
       </section>
 
-      <fieldset style={{ maxWidth: '35em' }}>
-        <legend>Flags</legend>
+      <br />
+      <EditorHeading heading="Flags" />
+      <section style={{ maxWidth: '35em' }}>
         <FlagMapControl gameDesign={gameDesign} edit={edit} />
-      </fieldset>
+      </section>
 
-      <fieldset style={{ maxWidth: '35em' }}>
-        <legend>Verb Menu</legend>
+      <br />
+      <EditorHeading heading="Verb Menu" helpTopic="verb menu" />
+      <section style={{ maxWidth: '35em' }}>
 
         <ListEditor noDeleteButtons
           list={gameDesign.verbs}
@@ -81,12 +85,15 @@ export const Overview: FunctionalComponent<Props> = ({
           )}
         />
 
-        <VerbMenu
-          verbs={gameDesign.verbs}
-          currentVerbId={gameDesign.verbs[0] ? gameDesign.verbs[0].id : ''}
-          select={() => { }}
-        />
-      </fieldset>
+        <fieldset>
+          <legend>preview</legend>
+          <VerbMenu
+            verbs={gameDesign.verbs}
+            currentVerbId={gameDesign.verbs[0] ? gameDesign.verbs[0].id : ''}
+            select={() => { }}
+          />
+        </fieldset>
+      </section>
     </article>
   );
 };
