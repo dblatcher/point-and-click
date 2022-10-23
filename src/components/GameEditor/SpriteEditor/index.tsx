@@ -14,6 +14,7 @@ import { FramePicker } from "./FramePicker";
 import editorStyles from '../editorStyles.module.css';
 import { StorageMenu } from "../StorageMenu";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
+import { EditorHeading } from "../EditorHeading";
 
 type ExtraState = {
     selectedAnimation?: string;
@@ -196,7 +197,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         const { spriteIds } = this.props
         const overrideSprite = this.buildSprite()
         return <article>
-            <h2>Sprite Editor</h2>
+            <EditorHeading heading="Sprite Editor" />
             <div className={editorStyles.container}>
 
                 <fieldset className={editorStyles.fieldset}>

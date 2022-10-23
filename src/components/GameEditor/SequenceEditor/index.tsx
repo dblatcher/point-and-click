@@ -15,6 +15,7 @@ import { SelectAndConfirmInput, StringInput } from "../formControls";
 import { TabMenu } from "../../TabMenu";
 import { DataItemEditorProps, icons } from "../dataEditors";
 import { getTargetLists } from "../InteractionEditor/getTargetLists";
+import { EditorHeading } from "../EditorHeading";
 
 type Props = DataItemEditorProps<Sequence> & {
     gameDesign: GameDesign;
@@ -205,7 +206,7 @@ export class SequenceEditor extends Component<Props, State> {
                         />
                     </>)
                     : (<>
-                        <h2>Sequence Editor</h2>
+                        <EditorHeading heading="Sequence Editor" />
                         <div className={editorStyles.rowTopLeft}>
                             <fieldset className={editorStyles.fieldset}>
                                 <legend>details</legend>

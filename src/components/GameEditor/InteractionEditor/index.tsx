@@ -9,6 +9,7 @@ import { getTargetLists, getItemDescriptions } from "./getTargetLists";
 import editorStyles from '../editorStyles.module.css';
 import styles from './styles.module.css';
 import { icons } from "../dataEditors";
+import { EditorHeading } from "../EditorHeading";
 
 interface Props {
     gameDesign: GameDesign;
@@ -111,7 +112,7 @@ export class InteractionEditor extends Component<Props, State> {
 
         return (
             <article>
-                <h2>Interactions</h2>
+                <EditorHeading heading="Interactions" />
                 <table className={styles.interactionTable} style={{ display: interactionUnderConstruction ? 'none' : 'table' }}>
                     <caption>
                         <span>{filteredInteractions.length}/{interactions.length} interactions</span>

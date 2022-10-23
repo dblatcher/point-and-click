@@ -19,6 +19,7 @@ import imageService, {
 } from "../../../services/imageService";
 import { buildAssetZipBlob, readImageAssetFromZipFile } from "../../../lib/zipFiles";
 import { SpriteSheetPreview } from "../SpriteSheetPreview";
+import { EditorHeading } from "../EditorHeading";
 
 
 type State = {
@@ -198,7 +199,7 @@ export class ImageAssetTool extends Component<{}, State> {
 
     return (
       <article>
-        <h2>Image asset tool</h2>
+        <EditorHeading heading="Image asset tool" />
         <div className={editorStyles.container}>
           <section>
             <ServiceItemSelector

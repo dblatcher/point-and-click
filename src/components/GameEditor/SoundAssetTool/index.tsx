@@ -20,6 +20,7 @@ import soundService, {
 
 } from "../../../services/soundService";
 import { buildAssetZipBlob, readSoundAssetFromZipFile } from "../../../lib/zipFiles";
+import { EditorHeading } from "../EditorHeading";
 
 type State = {
   saveWarning?: string;
@@ -177,7 +178,7 @@ export class SoundAssetTool extends Component<{}, State> {
 
     return (
       <article>
-        <h2>Sound asset tool</h2>
+        <EditorHeading heading="Sound asset tool" />
         <div className={editorStyles.container}>
           <section>
             <ServiceItemSelector

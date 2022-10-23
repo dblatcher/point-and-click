@@ -9,6 +9,7 @@ import { FieldDef, SchemaForm, FieldValue, getModification } from "./SchemaForm"
 import { VerbSchema } from "../../definitions/Verb";
 import { DataItemEditorProps } from "./dataEditors";
 import { describeCommand, getDefaultResponseText, wildCard } from "../../lib/commandFunctions";
+import { EditorHeading } from "./EditorHeading";
 
 
 type Props = DataItemEditorProps<Verb> & {
@@ -89,8 +90,7 @@ export class VerbEditor extends Component<Props, State> {
 
         return (
             <article>
-                <h2>Verb Editor</h2>
-
+                <EditorHeading heading="Verb Editor" />
                 <StorageMenu
                     type="Verb"
                     update={() => updateData(this.currentData)}

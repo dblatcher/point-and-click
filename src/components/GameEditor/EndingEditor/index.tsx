@@ -10,6 +10,7 @@ import { EndingSchema } from "../../../definitions/Ending";
 import imageService from "../../../services/imageService";
 import { EndingScreen } from "../../EndingScreen";
 import { DataItemEditorProps } from "../dataEditors";
+import { EditorHeading } from "../EditorHeading";
 
 
 type Props = DataItemEditorProps<Ending> & {
@@ -62,7 +63,7 @@ export class EndingEditor extends Component<Props, State> {
 
         return (
             <article>
-                <h2>Ending Editor</h2>
+                <EditorHeading heading="Ending Editor" />
 
                 <StorageMenu
                     type="ending"
