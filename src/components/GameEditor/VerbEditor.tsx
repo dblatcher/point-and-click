@@ -24,7 +24,7 @@ type State = Verb & ExtraState
 const testTarget: CommandTarget = {
     type: 'hotspot',
     id: '(target)',
-    name: '(target)',
+    name: '{{target}}',
     parallax: 0,
     status: '',
     circle: 0,
@@ -34,7 +34,7 @@ const testTarget: CommandTarget = {
 const testItem: ItemData = {
     type: 'item',
     id: '(item)',
-    name: '(item)',
+    name: '{{item}}',
 }
 
 export class VerbEditor extends Component<Props, State> {
@@ -126,14 +126,19 @@ export class VerbEditor extends Component<Props, State> {
                 </div>
 
                 <fieldset style={{ position: 'relative', maxWidth: '100%' }}>
-                    <legend>Preview</legend>
-                    <p>COMMAND: <b>{describeCommand(this.testCommand, true)}</b></p>
-                    <p>{getDefaultResponseText(this.testCommand, false)}</p>
-                    <p>{getDefaultResponseText(this.testCommand, true)}</p>
+                    <legend>Samples</legend>
+                    <div>COMMAND: <b>{describeCommand(this.testCommand, true)}</b></div>
+                    <ul>
+                        <li>DEFAULT(reachable): {getDefaultResponseText(this.testCommand, false)}</li>
+                        <li>DEFAULT(unreachable):{getDefaultResponseText(this.testCommand, true)}</li>
+                    </ul>
 
                     {!!this.state.preposition && <>
-                        <p>COMMAND: <b>{describeCommand(this.testCommandWithItem, true)}</b></p>
-                        <p>{getDefaultResponseText(this.testCommandWithItem, false)}</p>
+                        <div>COMMAND: <b>{describeCommand(this.testCommandWithItem, true)}</b></div>
+                        <ul>
+                            <li>DEFAULT(reachable): {getDefaultResponseText(this.testCommandWithItem, false)}</li>
+                            <li>DEFAULT(unreachable): {getDefaultResponseText(this.testCommandWithItem, true)}</li>
+                        </ul>
                     </>}
                 </fieldset>
             </article>
