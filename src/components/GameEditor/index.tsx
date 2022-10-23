@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h } from "preact";
+import { Component, h, Fragment } from "preact";
 
 import { TreeMenu, Folder, Entry } from "./TreeMenu";
 import { Overview } from "./Overview";
@@ -32,6 +32,10 @@ import spriteService from "../../services/spriteService";
 
 import layoutStyles from "./editorLayoutStyles.module.css";
 import { CheckBoxInput } from "./formControls";
+import { VerbMenu } from "../VerbMenu";
+import { EditorHeading } from "./EditorHeading";
+import { ListEditor } from "./ListEditor";
+import { VerbMenuEditor } from "./VerbMenuEditor";
 
 
 export type EditorOptions = {
@@ -330,7 +334,7 @@ export class GameEditor extends Component<Props, State>{
                         onClick={this.undo}
                         disabled={history.length === 0}
                     >
-                        UNDO {history[history.length-1]?.label} [{history.length}]
+                        UNDO {history[history.length - 1]?.label} [{history.length}]
                     </button>
                 </div>
                 <hr />
@@ -475,14 +479,21 @@ export class GameEditor extends Component<Props, State>{
                             />
                         },
                         {
-                            label: 'verbs', content: <VerbEditor
-                                key={gameItemIds.verbs}
-                                gameDesign={gameDesign}
-                                data={findById(gameItemIds.verbs, gameDesign.verbs)}
-                                updateData={data => { this.performUpdate('verbs', data) }}
-                                deleteData={index => { this.deleteArrayItem(index, 'verbs') }}
-                                options={options}
-                            />
+                            label: 'verbs', content: <>
+                                <VerbEditor
+                                    key={gameItemIds.verbs}
+                                    gameDesign={gameDesign}
+                                    data={findById(gameItemIds.verbs, gameDesign.verbs)}
+                                    updateData={data => { this.performUpdate('verbs', data) }}
+                                    deleteData={index => { this.deleteArrayItem(index, 'verbs') }}
+                                    options={options}
+                                />
+                                <br />
+                                <VerbMenuEditor 
+                                    gameDesign={gameDesign}
+                                    updateData={data => { this.performUpdate('verbs', data) }}
+                                />
+                            </>
                         },
                         { label: 'Image uploader', content: <ImageAssetTool /> },
                         { label: 'Sound uploader', content: <SoundAssetTool /> },
