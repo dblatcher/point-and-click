@@ -443,18 +443,21 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             },
             {
                 label: 'Hotspots', content: (
-                    <TabMenu noButtons
-                        defaultOpenIndex={this.state.hotspotTab}
-                        tabs={hotspots.map((hotspot, index) => {
-                            return {
-                                label: hotspot.id, content: (
-                                    <HotspotControl hotspot={hotspot} index={index}
-                                        setClickEffect={this.setClickEffect}
-                                        change={this.changeZone}
-                                        remove={this.removeZone} />
-                                )
-                            }
-                        })} />
+                    <>
+                        {hotspots.length === 0 && <span>No <b>hotspots</b> for this room yet. Select a shape from the menu to the left to add one.</span>}
+                        <TabMenu noButtons
+                            defaultOpenIndex={this.state.hotspotTab}
+                            tabs={hotspots.map((hotspot, index) => {
+                                return {
+                                    label: hotspot.id, content: (
+                                        <HotspotControl hotspot={hotspot} index={index}
+                                            setClickEffect={this.setClickEffect}
+                                            change={this.changeZone}
+                                            remove={this.removeZone} />
+                                    )
+                                }
+                            })} />
+                    </>
                 )
             }
         ]
@@ -520,6 +523,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     handleRoomClick={this.handleRoomClick} />
             </div>
 
+            <hr />
             <div className={editorStyles.container}>
                 <RoomEditorTreeMenu
                     roomEditorState={this.state}

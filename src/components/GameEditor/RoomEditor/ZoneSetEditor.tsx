@@ -1,4 +1,4 @@
-import { h, FunctionComponent } from "preact";
+import { h, FunctionComponent, Fragment } from "preact";
 import { Zone } from "src";
 import { TabMenu } from "../../TabMenu";
 import { ClickEffect } from "./ClickEffect";
@@ -24,6 +24,8 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
 }: Props) => {
 
     return (
+        <>
+        {zones.length === 0 && <span>No <b>{type}s</b> for this room yet. Select a shape from the menu to the left to add one.</span>}
         <TabMenu noButtons
             defaultOpenIndex={openTab}
             tabs={
@@ -42,5 +44,6 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
                 })
             }
         />
+        </>
     )
 }
