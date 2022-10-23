@@ -32,9 +32,6 @@ import spriteService from "../../services/spriteService";
 
 import layoutStyles from "./editorLayoutStyles.module.css";
 import { CheckBoxInput } from "./formControls";
-import { VerbMenu } from "../VerbMenu";
-import { EditorHeading } from "./EditorHeading";
-import { ListEditor } from "./ListEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
 
 
