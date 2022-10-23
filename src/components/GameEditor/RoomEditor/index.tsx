@@ -14,7 +14,7 @@ import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
-import { TabMenu } from "../../TabMenu";
+import { TabMenu, type Tab } from "../../TabMenu";
 import { getBlankRoom } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
 import { ListEditor } from "../ListEditor";
@@ -381,19 +381,98 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
     }
 
+    buildTabs(): Tab[] {
+
+        const {
+            background, obstacleAreas = [], hotspots = [], walkableAreas = [],
+            scaling = [] } = this.state
+
+
+        const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
+
+        return [
+            {
+                label: 'Scaling', content: (
+                    <ScalingControl
+                        change={(scaling: ScaleLevel) => { this.setStateWithAutosave({ scaling }) }}
+                        scaling={scaling}
+                        height={this.state.height} />
+                )
+            },
+            {
+                label: 'Background', content: (<>
+                    <ListEditor
+                        list={background}
+                        mutateList={(background) => { this.setStateWithAutosave({ background }) }}
+                        describeItem={(layer, index) => (
+                            <BackgroundLayerControl index={index}
+                                imageAssets={imageAssets}
+                                layer={layer}
+                                change={this.changeBackground} />
+                        )}
+                    />
+                    <hr />
+                    <BackgroundLayerForm
+                        imageAssets={imageAssets}
+                        addNewLayer={this.addBackground} />
+                </>)
+            },
+            {
+                label: 'Obstacles', content: (
+                    <ZoneSetEditor
+                        zones={obstacleAreas}
+                        type='obstacle'
+                        setClickEffect={this.setClickEffect}
+                        change={this.changeZone}
+                        remove={this.removeZone}
+                        openTab={this.state.obstableTab}
+                    />
+                )
+            },
+            {
+                label: 'Walkables', content: (
+                    <ZoneSetEditor
+                        zones={walkableAreas}
+                        type='walkable'
+                        setClickEffect={this.setClickEffect}
+                        change={this.changeZone}
+                        remove={this.removeZone}
+                        openTab={this.state.walkableTab}
+                    />
+                )
+            },
+            {
+                label: 'Hotspots', content: (
+                    <TabMenu noButtons
+                        defaultOpenIndex={this.state.hotspotTab}
+                        tabs={hotspots.map((hotspot, index) => {
+                            return {
+                                label: hotspot.id, content: (
+                                    <HotspotControl hotspot={hotspot} index={index}
+                                        setClickEffect={this.setClickEffect}
+                                        change={this.changeZone}
+                                        remove={this.removeZone} />
+                                )
+                            }
+                        })} />
+                )
+            }
+        ]
+
+    }
+
     render() {
         const {
-            id, background, height, width, frameWidth, obstacleAreas = [], hotspots = [], walkableAreas = [],
-            scaling = [],
-            clickEffect, mainTab
+            id, height, width, frameWidth, clickEffect, mainTab
         } = this.state
 
         const { existingRoomIds = [], actors = [], options, deleteData } = this.props
 
-        const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
+        const tabs = this.buildTabs()
+
 
         return <article>
-            <EditorHeading heading="Room Editor" helpTopic="rooms"/>
+            <EditorHeading heading="Room Editor" helpTopic="rooms" />
 
             <div className={editorStyles.rowTopLeft}>
                 <fieldset className={editorStyles.fieldset}>
@@ -447,77 +526,13 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     handleTreeEntryClick={this.handleTreeEntryClick}
                     handleFolderClick={(mainTab) => { this.setState({ mainTab }) }}
                 />
-                <TabMenu noButtons
-                    containerStyle={{ flex: 1 }}
-                    defaultOpenIndex={mainTab}
-                    tabs={[
-                        {
-                            label: 'Scaling', content: (
-                                <ScalingControl
-                                    change={(scaling: ScaleLevel) => { this.setStateWithAutosave({ scaling }) }}
-                                    scaling={scaling}
-                                    height={this.state.height} />
-                            )
-                        },
-                        {
-                            label: 'Background', content: (<>
-                                <ListEditor
-                                    list={background}
-                                    mutateList={(background) => { this.setStateWithAutosave({ background }) }}
-                                    describeItem={(layer, index) => (
-                                        <BackgroundLayerControl index={index}
-                                            imageAssets={imageAssets}
-                                            layer={layer}
-                                            change={this.changeBackground} />
-                                    )}
-                                />
-                                <hr />
-                                <BackgroundLayerForm
-                                    imageAssets={imageAssets}
-                                    addNewLayer={this.addBackground} />
-                            </>)
-                        },
-                        {
-                            label: 'Obstacles', content: (
-                                <ZoneSetEditor
-                                    zones={obstacleAreas}
-                                    type='obstacle'
-                                    setClickEffect={this.setClickEffect}
-                                    change={this.changeZone}
-                                    remove={this.removeZone}
-                                    openTab={this.state.obstableTab}
-                                />
-                            )
-                        },
-                        {
-                            label: 'Walkables', content: (
-                                <ZoneSetEditor
-                                    zones={walkableAreas}
-                                    type='walkable'
-                                    setClickEffect={this.setClickEffect}
-                                    change={this.changeZone}
-                                    remove={this.removeZone}
-                                    openTab={this.state.walkableTab}
-                                />
-                            )
-                        },
-                        {
-                            label: 'Hotspots', content: (
-                                <TabMenu noButtons
-                                    defaultOpenIndex={this.state.hotspotTab}
-                                    tabs={hotspots.map((hotspot, index) => {
-                                        return {
-                                            label: hotspot.id, content: (
-                                                <HotspotControl hotspot={hotspot} index={index}
-                                                    setClickEffect={this.setClickEffect}
-                                                    change={this.changeZone}
-                                                    remove={this.removeZone} />
-                                            )
-                                        }
-                                    })} />
-                            )
-                        }
-                    ]} />
+                <div style={{ flex: 1 }}>
+                    <EditorHeading heading={tabs[mainTab]?.label || '?'} level={3} />
+                    <TabMenu noButtons
+                        containerStyle={{ flex: 1 }}
+                        defaultOpenIndex={mainTab}
+                        tabs={tabs} />
+                </div>
             </div>
         </article>
     }

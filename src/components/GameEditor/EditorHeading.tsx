@@ -9,11 +9,18 @@ const headerStyle = {
     borderBottom: '1px dashed black',
 }
 
-const mainHeaderStyle = {
+const h2MainHeaderStyle = {
     ...headerStyle,
     paddingBottom: '.25em',
     borderWidth: 2,
     marginBottom: '.75em',
+}
+
+const h3MainHeaderStyle = {
+    ...headerStyle,
+    paddingBottom: '.125em',
+    borderWidth: 1,
+    marginBottom: '.5em',
 }
 
 const asideStyle = {
@@ -29,25 +36,28 @@ const asideStyle = {
 interface Props {
     heading: string;
     helpTopic?: string;
+    level?: 2 | 3;
 }
 
 
 export const EditorHeading: FunctionalComponent<Props> = ({
-    heading, helpTopic
+    heading, helpTopic, level = 2
 }: Props) => {
 
     const [helpShowing, setHelpShowing] = useState(false)
 
     return (
-        <header style={mainHeaderStyle}>
-            <h2>{heading}</h2>
+        <header style={level === 2 ? h2MainHeaderStyle : h3MainHeaderStyle}>
+            {level === 2 && <h2>{heading}</h2>}
+            {level === 3 && <h3>{heading}</h3>}
             {helpTopic && (
                 <button onClick={(): void => { setHelpShowing(!helpShowing) }}>?</button>
             )}
             {(helpTopic && helpShowing) && (
                 <aside style={asideStyle}>
                     <header style={headerStyle}>
-                        <h3>{helpTopic}</h3>
+                        {level === 2 && <h3>{helpTopic}</h3>}
+                        {level === 3 && <h4>{helpTopic}</h4>}
                         <button onClick={(): void => { setHelpShowing(!helpShowing) }}>x</button>
                     </header>
                     <HelpText topic={helpTopic} />
