@@ -1,6 +1,7 @@
 import { FunctionalComponent, h, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { HelpText } from "./HelpText";
+import editorStyles from "./editorStyles.module.css"
 
 const headerStyle = {
     position: 'relative',
@@ -51,14 +52,20 @@ export const EditorHeading: FunctionalComponent<Props> = ({
             {level === 2 && <h2>{heading}</h2>}
             {level === 3 && <h3>{heading}</h3>}
             {helpTopic && (
-                <button onClick={(): void => { setHelpShowing(!helpShowing) }}>?</button>
+                <button
+                    className={[editorStyles.button, editorStyles.helpButton].join(" ")}
+                    onClick={(): void => { setHelpShowing(!helpShowing) }}
+                >?</button>
             )}
             {(helpTopic && helpShowing) && (
                 <aside style={asideStyle}>
                     <header style={headerStyle}>
                         {level === 2 && <h3>{helpTopic}</h3>}
                         {level === 3 && <h4>{helpTopic}</h4>}
-                        <button onClick={(): void => { setHelpShowing(!helpShowing) }}>x</button>
+                        <button
+                            className={[editorStyles.button, editorStyles.helpButton].join(" ")}
+                            onClick={(): void => { setHelpShowing(!helpShowing) }}
+                        >x</button>
                     </header>
                     <HelpText topic={helpTopic} />
                 </aside>

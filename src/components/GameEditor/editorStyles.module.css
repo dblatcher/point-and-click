@@ -103,6 +103,12 @@
     background-color: skyblue;
 }
 
+.helpButton {
+    background-color: lightblue;
+    padding: .25em .5em;
+    min-width: 1.5em;
+}
+
 .flexList {
     list-style: none;
     margin: 0;
