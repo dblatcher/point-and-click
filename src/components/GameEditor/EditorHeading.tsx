@@ -53,6 +53,7 @@ export const EditorHeading: FunctionalComponent<Props> = ({
             {level === 3 && <h3>{heading}</h3>}
             {helpTopic && (
                 <button
+                    aria-label={`open help text about ${helpTopic}`}
                     className={[editorStyles.button, editorStyles.helpButton].join(" ")}
                     onClick={(): void => { setHelpShowing(!helpShowing) }}
                 >?</button>
