@@ -259,7 +259,6 @@ export const buildGameZipBlob = async (
   }
 };
 
-// TO DO - include sounds
 export const readGameFromZipFile = async (
   file: File
 ): Promise<

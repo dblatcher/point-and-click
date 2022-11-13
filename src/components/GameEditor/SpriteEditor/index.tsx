@@ -171,7 +171,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     buildSprite(): Sprite {
-        // to do - get sheets from a sprite sheet service?
         return new Sprite(this.state)
     }
 
