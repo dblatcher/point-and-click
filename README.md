@@ -1,4 +1,5 @@
 # point-and-click
+Web based adventure game tool.
 
 ## CLI Commands
 
