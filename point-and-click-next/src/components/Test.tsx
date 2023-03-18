@@ -1,10 +1,10 @@
+import { GameDesignSchema, GameDesign } from "@/oldsrc/definitions/Game";
 import { FunctionComponent } from "react";
-
-import type { GameDesign } from "../../../src/definitions/Game"
 
 interface Props {
     gameDesign: GameDesign
 }
+
 
 export const Test: FunctionComponent<Props> = ({ gameDesign }: Props) => {
 
@@ -16,6 +16,7 @@ export const Test: FunctionComponent<Props> = ({ gameDesign }: Props) => {
             <p>
                 rooms : {gameDesign.rooms.length}
             </p>
+            <p>{GameDesignSchema.description}</p>
         </div>
     )
 }

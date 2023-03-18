@@ -25,8 +25,6 @@ export default function Home() {
         <div className={styles.center}>
           <Test gameDesign={prebuiltGameDesign} />
         </div>
-
-       
       </main>
     </>
   )

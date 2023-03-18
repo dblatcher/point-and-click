@@ -42,7 +42,7 @@ export const FixedGameInfoSchema = z.object({
 })
 export const GameDataSchema = GameContentsDataSchema.and(GameHappeningsSchema)
 const GameConditionSchema = GameContentsDataSchema.and(GameHappeningsSchema).and(FixedGameInfoSchema)
-export const GameDesignSchema = GameContentsDataSchema.and(FixedGameInfoSchema)
+export const GameDesignSchema = GameContentsDataSchema.and(FixedGameInfoSchema).describe('The game schema')
 
 //                  GameData GameCondition GameDesign GameContents
 // GameHappenings  |   x    |   x        |           |
