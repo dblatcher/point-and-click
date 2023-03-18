@@ -3,7 +3,6 @@ import Game from "@/oldsrc/components/Game";
 import { cloneData } from "@/oldsrc/lib/clone";
 import React from "react";
 import { LoadDesignButton } from "./LoadDesignButton";
-import { Test } from "./Test";
 
 
 type State = {
@@ -50,18 +49,12 @@ export class GameDesignLoader extends React.Component<{}, State> {
 
 
     render() {
-
-        const { design, gameCondition, } = this.state
-
+        const { gameCondition, } = this.state
         return <div>
             <LoadDesignButton onLoad={this.loadGameDesign} onError={(err: string) => { console.warn(err) }} />
 
-            {design && (
-                <Test gameDesign={design} />
-            )}
-
             {gameCondition && (
-                <Game {...gameCondition}/>
+                <Game {...gameCondition} />
             )}
         </div>
     }

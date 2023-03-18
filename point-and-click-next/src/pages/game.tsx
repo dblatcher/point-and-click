@@ -1,9 +1,10 @@
 import Head from 'next/head'
+import { GameDesignLoader } from '@/components/GameDesignLoader'
 import Link from 'next/link'
 
 
-export default function Home() {
-  return (
+export default function Game() {
+    return (
     <>
       <Head>
         <title>Create Next App</title>
@@ -12,11 +13,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1>Point and Click</h1>
-        <div>
-          <Link href={'./game'}>game</Link>
-        </div>
-
+        <Link href={'/'}>home</Link>
+        <GameDesignLoader />
       </main>
     </>
   )
