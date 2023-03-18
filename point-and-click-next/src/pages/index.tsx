@@ -5,6 +5,7 @@ import styles from '@/styles/Home.module.css'
 import { Test } from '@/components/Test'
 
 import { prebuiltGameDesign } from '@/data/fullGame' 
+import { GameDesignLoader } from '@/components/GameDesignLoader'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,6 +21,7 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.description}>
           point and click Next
+          <GameDesignLoader />
         </div>
 
         <div className={styles.center}>

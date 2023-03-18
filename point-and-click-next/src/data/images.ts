@@ -1,5 +1,5 @@
-import { findById } from "../src/lib/util"
-import { ImageAsset, ImageAssetCategory } from "src/services/imageService"
+import { findById } from "../oldsrc/lib/util"
+import { ImageAsset, ImageAssetCategory } from "../oldsrc/services/imageService"
 
 const backgroundPath = "./assets/backgrounds/"
 const backgroundFileNames = [
