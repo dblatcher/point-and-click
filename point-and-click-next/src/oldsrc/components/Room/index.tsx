@@ -1,4 +1,4 @@
-import {  CSSProperties, FunctionComponent, MouseEventHandler, ReactNode, useEffect, useRef, useState } from "react";
+import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode, useEffect, useRef, useState } from "react";
 import { CellMatrix } from "../../lib/pathfinding/cells";
 import { RoomData, HotspotZone } from "../../";
 import { getShift } from "../../lib/roomFunctions";
@@ -86,11 +86,11 @@ export const Room: FunctionComponent<Props> = ({
     const figureHeight = Math.min(parentHeight, maxHeight)
     const scale = Math.min(figureWidth / frameWidth, figureHeight / height)
 
-    const processRoomClick = (event: MouseEvent): void => {
-        return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
+    const processRoomClick: MouseEventHandler<HTMLElement> = (event) => {
+        return handleRoomClick(event.nativeEvent.offsetX / scale, event.nativeEvent.offsetY / scale)
     }
 
-    const figureInlineStyle:CSSProperties = {
+    const figureInlineStyle: CSSProperties = {
         width: `${frameWidth * scale}px`,
         height: `${height * scale}px`,
         position: 'relative',
@@ -101,7 +101,7 @@ export const Room: FunctionComponent<Props> = ({
         <figure ref={figureRef}
             className={styles.roomFigure}
             style={figureInlineStyle}
-            onClick={processRoomClick as unknown as MouseEventHandler}
+            onClick={processRoomClick}
         >
 
             <svg xmlns="http://www.w3.org/2000/svg"
