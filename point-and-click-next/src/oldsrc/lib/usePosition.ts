@@ -1,5 +1,7 @@
-import { StateUpdater, useState } from "preact/hooks";
+import { useState } from "react";
 
+
+type StateUpdater<T> = { (value: T): void }
 
 class Position {
     xState: number;

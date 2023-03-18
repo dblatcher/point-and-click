@@ -1,15 +1,14 @@
-import { h, ComponentChildren, FunctionComponent } from "preact";
+import {  CSSProperties, FunctionComponent, MouseEventHandler, ReactNode, useEffect, useRef, useState } from "react";
 import { CellMatrix } from "../../lib/pathfinding/cells";
-import { RoomData, HotspotZone } from "src";
+import { RoomData, HotspotZone } from "../../";
 import { getShift } from "../../lib/roomFunctions";
 import styles from './styles.module.css';
-import Hotspot from "./Hotspot";
+import Hotspot from "./HotSpot";
 import ZoneSvg from "../ZoneSvg";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import BackgroundShape from "./BackgroundShape";
 import { HandleHoverFunction, RoomContentItem } from "../Game";
 import { ActorFigure } from "../ActorFigure";
-import { useEffect, useRef, useState } from "preact/hooks";
 import { DialogueBubble } from "../DialogueBubble";
 
 interface Props {
@@ -31,7 +30,7 @@ interface Props {
     showCaption?: boolean;
     isPaused?: boolean;
     contents?: RoomContentItem[];
-    children?: ComponentChildren;
+    children?: ReactNode;
     forPreview?: boolean;
 }
 
@@ -91,7 +90,7 @@ export const Room: FunctionComponent<Props> = ({
         return handleRoomClick(event.offsetX / scale, event.offsetY / scale)
     }
 
-    const figureInlineStyle = {
+    const figureInlineStyle:CSSProperties = {
         width: `${frameWidth * scale}px`,
         height: `${height * scale}px`,
         position: 'relative',
@@ -102,7 +101,7 @@ export const Room: FunctionComponent<Props> = ({
         <figure ref={figureRef}
             className={styles.roomFigure}
             style={figureInlineStyle}
-            onClick={processRoomClick}
+            onClick={processRoomClick as unknown as MouseEventHandler}
         >
 
             <svg xmlns="http://www.w3.org/2000/svg"

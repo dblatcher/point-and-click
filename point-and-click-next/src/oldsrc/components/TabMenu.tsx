@@ -1,5 +1,4 @@
-import { h, FunctionalComponent, JSX } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { CSSProperties, FunctionComponent, useEffect, useState } from "react";
 import { clamp } from "../lib/util";
 
 export interface Tab {
@@ -13,10 +12,10 @@ interface Props {
     backgroundColor?: string;
     flex?: number;
     noButtons?: boolean;
-    containerStyle?: JSX.CSSProperties;
+    containerStyle?: CSSProperties;
 }
 
-const buttonStyle = (isOpen: boolean): JSX.CSSProperties => {
+const buttonStyle = (isOpen: boolean): CSSProperties => {
     return {
         color: isOpen ? 'white' : 'black',
         backgroundColor: isOpen ? 'black' : 'white',
@@ -25,7 +24,7 @@ const buttonStyle = (isOpen: boolean): JSX.CSSProperties => {
     }
 }
 
-const navStyle = (backgroundColor?: string): JSX.CSSProperties => {
+const navStyle = (backgroundColor?: string): CSSProperties => {
     return {
         display: 'flex',
         flexWrap: 'wrap',
@@ -34,7 +33,7 @@ const navStyle = (backgroundColor?: string): JSX.CSSProperties => {
     }
 }
 
-const tabStyle = (isOpen: boolean, backgroundColor?: string): JSX.CSSProperties => {
+const tabStyle = (isOpen: boolean, backgroundColor?: string): CSSProperties => {
     return {
         display: isOpen ? 'block' : 'none',
         backgroundColor,
@@ -42,7 +41,7 @@ const tabStyle = (isOpen: boolean, backgroundColor?: string): JSX.CSSProperties 
     }
 }
 
-export const TabMenu: FunctionalComponent<Props> = ({
+export const TabMenu: FunctionComponent<Props> = ({
     tabs,
     defaultOpenIndex = 0,
     backgroundColor,

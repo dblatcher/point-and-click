@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h } from "preact";
 import { Conversation, ConversationChoice } from "src"
 import uiStyles from './uiStyles.module.css';
 

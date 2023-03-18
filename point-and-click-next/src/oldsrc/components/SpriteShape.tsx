@@ -1,7 +1,7 @@
-import { h, JSX, FunctionalComponent } from "preact";
-import { RoomData, ActorData, Direction } from "src"
+import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
+import { RoomData, ActorData, Direction } from "../"
 import { placeOnScreen } from "../lib/roomFunctions";
-import { Sprite } from "../../src/lib/Sprite";
+import { Sprite } from "../lib/Sprite";
 import { HandleHoverFunction } from "./Game";
 
 
@@ -17,23 +17,23 @@ interface Props {
     height?: number;
     width?: number;
     filter?: string;
-    clickHandler?: JSX.MouseEventHandler<SVGElement>;
+    clickHandler?: MouseEventHandler<SVGElement>;
     handleHover?: HandleHoverFunction;
     hoverData?: ActorData;
     status?: string;
 }
 
 
-export const SpriteShape: FunctionalComponent<Props> = ({
+export const SpriteShape: FunctionComponent<Props> = ({
     roomData, viewAngle, x, y, height = 50, width = 50, animationName, frameIndex, spriteObject, direction, filter,
     clickHandler, handleHover, hoverData, status,
 }: Props) => {
     const [widthScale, heightScale] = spriteObject.getFrameScale(animationName, frameIndex, direction);
     const divStyle = Object.assign(spriteObject.getStyle(animationName, frameIndex, direction), { filter });
 
-    const svgStyle: JSX.CSSProperties = {
+    const svgStyle: CSSProperties = {
         overflow: 'hidden',
-        pointerEvents: clickHandler ? 'default' : 'none'
+        pointerEvents: clickHandler ? 'auto' : 'none'
     }
 
     const widthAdjustedByScale = width * widthScale

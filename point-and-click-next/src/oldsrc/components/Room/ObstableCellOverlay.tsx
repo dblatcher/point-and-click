@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from "preact";
+import {  FunctionComponent } from "react";
 import { CellMatrix } from "../../lib/pathfinding/cells";
 import { RoomData } from "src"
 import { getShift } from "../../lib/roomFunctions";
@@ -10,7 +10,7 @@ interface Props {
     cellMatrix: CellMatrix;
 }
 
-export const ObstacleCellOverlay: FunctionalComponent<Props> = ({ roomData, viewAngle, cellMatrix }: Props) => {
+export const ObstacleCellOverlay: FunctionComponent<Props> = ({ roomData, viewAngle, cellMatrix }: Props) => {
     const { frameWidth, height: roomHeight } = roomData
     const center = (frameWidth / 2) + getShift(viewAngle, 1, roomData)
     const left = center - roomData.width / 2

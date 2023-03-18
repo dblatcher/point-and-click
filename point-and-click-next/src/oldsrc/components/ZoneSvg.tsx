@@ -1,7 +1,6 @@
-import { FunctionalComponent, h, Fragment } from "preact";
+import { FunctionComponent, MouseEventHandler } from "react";
 import { polygonToPathD } from "../lib/polygonToPathD";
-import { Zone, HotspotZone } from "src"
-import { JSXInternal } from "preact/src/jsx";
+import { Zone, HotspotZone } from "../"
 import { HandleHoverFunction } from "./Game";
 
 interface Props {
@@ -32,14 +31,14 @@ const plotVertex = (point: [number, number], index: number) => (
     </g>
 )
 
-const ZoneSvg: FunctionalComponent<Props> = ({
+const ZoneSvg: FunctionComponent<Props> = ({
     zone, x, y, className, stopPropagation = true,
     markVertices = false,
     clickHandler, handleHover,
 }: Props) => {
     const { path, circle, rect, polygon } = zone
 
-    const processClick: JSXInternal.MouseEventHandler<SVGElement> = (event) => {
+    const processClick: MouseEventHandler<SVGElement> = (event) => {
         if (stopPropagation) { event.stopPropagation() }
         if (clickHandler) { clickHandler(zone) }
     }

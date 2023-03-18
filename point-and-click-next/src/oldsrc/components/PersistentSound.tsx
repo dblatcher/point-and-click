@@ -1,9 +1,8 @@
-import { FunctionalComponent } from "preact";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { SoundControl } from "physics-worlds";
-import { useCallback, useEffect, useState } from "preact/hooks";
 import { useInterval } from "../lib/useInterval"
 import soundService from "../services/soundService";
-import type { SoundValue } from "src";
+import type { SoundValue } from "../";
 
 interface Props {
     soundValue?: SoundValue;
@@ -11,7 +10,7 @@ interface Props {
     isPaused: boolean;
 }
 
-export const PersistentSound: FunctionalComponent<Props> = ({
+export const PersistentSound: FunctionComponent<Props> = ({
     soundValue,
     animationRate = 200,
     isPaused,

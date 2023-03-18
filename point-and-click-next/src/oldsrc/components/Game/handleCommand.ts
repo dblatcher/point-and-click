@@ -1,5 +1,5 @@
 import { GameProps, GameState, cellSize } from ".";
-import { Command, Interaction, ActorData, OrderConsequence } from "src";
+import { Command, Interaction, ActorData, OrderConsequence } from "../../";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "../DebugLog";
 import { findPath } from "../../lib/pathfinding/pathfind";

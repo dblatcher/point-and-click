@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from "preact"
+import {  FunctionComponent } from "react"
 import { Order, RoomData, ActorData } from "src"
 import { getScale } from "../lib/getScale"
 import { placeOnScreen } from "../lib/roomFunctions"
@@ -11,7 +11,7 @@ const bubbleStyle = {
     backgroundColor: 'rgba(255,255,255,.75)',
 }
 
-export const DialogueBubble: FunctionalComponent<{
+export const DialogueBubble: FunctionComponent<{
     roomData: RoomData;
     roomScale: number;
     actorData: ActorData;

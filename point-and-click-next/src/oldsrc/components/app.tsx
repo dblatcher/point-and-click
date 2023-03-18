@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from 'preact';
+import { h, FunctionComponent } from 'preact';
 import { Router } from 'preact-router';
 
 import Header from './header';
@@ -9,7 +9,7 @@ import PrebuiltGame from '../routes/prebuilt-game';
 import Editor from '../routes/editor'
 import PrebuiltEditor from '../routes/prebuilt-editor';
 
-const App: FunctionalComponent = () => (
+const App: FunctionComponent = () => (
 	<div id="app">
 		<Header />
 		<Router>

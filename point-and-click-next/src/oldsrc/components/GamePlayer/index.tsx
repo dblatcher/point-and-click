@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h, Fragment } from "preact";
-import { GameCondition, GameData, GameDesign } from "src";
+import { Component } from "react";
+import { GameCondition, GameData, GameDesign } from "../../";
 import Game from "../Game";
 import { cloneData } from "../../lib/clone";
 import { populateServices } from "../../services/populateServices";
 import { uploadFile } from "../../lib/files";
 import { readGameFromZipFile } from "../../lib/zipFiles";
 import { ImageAsset } from "../../services/imageService";
-import { SoundAsset } from "src/services/soundService";
+import { SoundAsset } from "../../services/soundService";
 
 interface Props {
   prebuiltGame?: GameDesign;

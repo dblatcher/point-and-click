@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h, Fragment } from "preact";
-import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "src";
+import { Component} from "react";
+import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "../../";
 //lib
 import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "../../lib/roomFunctions";
 import { clamp, findById } from "../../lib/util";

@@ -1,5 +1,5 @@
-import { FunctionalComponent, h } from "preact";
-import { Ending } from "src";
+import { FunctionComponent } from "react";
+import { Ending } from "../";
 import imageService from "../services/imageService";
 
 interface Props {
@@ -20,7 +20,7 @@ const baseFrameStyle = {
     padding: '20px',
 }
 
-export const EndingScreen: FunctionalComponent<Props> = ({ ending, inline }) => {
+export const EndingScreen: FunctionComponent<Props> = ({ ending, inline }) => {
 
     const articleStyle = inline ? {
         ...baseArticleStyle,

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h } from "preact";
-import { useEffect, useRef } from "preact/hooks";
-import { Order } from "src/definitions/Order";
+import { FunctionComponent, useEffect, useRef } from "react";
+import { Order } from "../../definitions/Order";
 import { GameCondition } from "../../definitions/Game";
 import styles from "./styles.module.css"
 
@@ -21,7 +20,7 @@ export const makeDebugEntry = (content: string, subject?: LogEntrySubject): LogE
     content, time: new Date(), subject
 })
 
-export const DebugLog: FunctionalComponent<Props> = ({
+export const DebugLog: FunctionComponent<Props> = ({
     condition, log
 }: Props) => {
 

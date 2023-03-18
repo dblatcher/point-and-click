@@ -1,6 +1,6 @@
-import { h, Fragment, FunctionalComponent, JSX } from "preact";
-import { useLayoutEffect, useState } from "preact/hooks";
-import { RoomData, Order, ActorData } from "src"
+import { FunctionComponent, useLayoutEffect, useState } from "react";
+
+import { RoomData, Order, ActorData } from "../"
 import { getScale } from "../lib/getScale";
 import { Sprite } from "../lib/Sprite";
 import { useInterval } from "../lib/useInterval"
@@ -9,7 +9,7 @@ import { SpriteShape } from "./SpriteShape";
 import spriteService from "../services/spriteService";
 import { HandleClickFunction, HandleHoverFunction } from "./Game";
 import { PersistentSound } from "./PersistentSound";
-import { SoundEffectMap, SoundValue } from "src/definitions/ActorData";
+import { SoundEffectMap, SoundValue } from "../definitions/ActorData";
 import { IntermitentSound } from "./IntermitentSound";
 
 interface Props {
@@ -56,7 +56,7 @@ const getSoundValue = (
 }
 
 
-export const ActorFigure: FunctionalComponent<Props> = ({
+export const ActorFigure: FunctionComponent<Props> = ({
     data,
     roomData,
     viewAngle,
@@ -99,8 +99,8 @@ export const ActorFigure: FunctionalComponent<Props> = ({
         }
     }
 
-    const processClick: JSX.MouseEventHandler<SVGElement> | undefined = clickHandler
-        ? (event): void => {
+    const processClick = clickHandler
+        ? (event: Event): void => {
             event.stopPropagation()
             clickHandler(data)
         }

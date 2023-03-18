@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h } from "preact";
 import imageService from "../services/imageService";
-import { ItemData } from "src"
+import { ItemData } from "../"
 import { HandleHoverFunction } from "./Game";
 import uiStyles from './uiStyles.module.css';
-import { JSXInternal } from "preact/src/jsx";
+import { CSSProperties } from "react";
 
 interface Props {
     items: ItemData[];
@@ -13,7 +12,7 @@ interface Props {
     handleHover?: HandleHoverFunction;
 }
 
-const buildBackground = (itemData: ItemData): JSXInternal.CSSProperties | undefined => {
+const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 
     const { imageId, row = 0, col = 0 } = itemData
 

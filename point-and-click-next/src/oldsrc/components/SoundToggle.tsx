@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h } from "preact"
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useState } from "react";
 import soundService from "../services/soundService";
 
 

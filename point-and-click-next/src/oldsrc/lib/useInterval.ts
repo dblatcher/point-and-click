@@ -1,4 +1,4 @@
-import { useEffect, useRef, useLayoutEffect } from "preact/hooks"
+import { useEffect, useRef, useLayoutEffect } from "react"
 
 const useIsomorphicLayoutEffect =
     typeof window !== 'undefined' ? useLayoutEffect : useEffect

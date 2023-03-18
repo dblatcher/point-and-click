@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h } from "preact"
-import { Verb } from "src"
+import { Verb } from "../"
 import uiStyles from './uiStyles.module.css';
 
 interface Props {

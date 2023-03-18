@@ -1,8 +1,7 @@
-import { FunctionalComponent } from "preact";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { SoundControl } from "physics-worlds";
-import { useCallback, useEffect, useState } from "preact/hooks";
 import soundService from "../services/soundService";
-import type { SoundValue } from "src";
+import type { SoundValue } from "../";
 
 interface Props {
     soundValue?: SoundValue;
@@ -10,7 +9,7 @@ interface Props {
     frameIndex?: number;
 }
 
-export const IntermitentSound: FunctionalComponent<Props> = ({
+export const IntermitentSound: FunctionComponent<Props> = ({
     soundValue,
     isPaused,
     frameIndex,

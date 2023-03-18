@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from "preact";
+import {  FunctionComponent } from "react";
 import { RoomData } from "src"
 import { HotspotZone } from "src"
 import { getShift } from "../../lib/roomFunctions";
@@ -18,7 +18,7 @@ interface Props {
     stopPropogation?: boolean;
 }
 
-const Hotspot: FunctionalComponent<Props> = ({
+const Hotspot: FunctionComponent<Props> = ({
     zone: hotspot, roomData, viewAngle, highlight, markVertices, stopPropogation = true,
     clickHandler, handleHover, flash = false,
 }: Props) => {
