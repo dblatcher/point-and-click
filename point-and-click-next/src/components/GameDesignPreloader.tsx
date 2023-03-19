@@ -1,4 +1,4 @@
-import { GameCondition, GameDesign } from "@/oldsrc";
+import { GameCondition, GameData, GameDesign } from "@/oldsrc";
 import Game from "@/oldsrc/components/Game";
 import { cloneData } from "@/oldsrc/lib/clone";
 import { ImageAsset } from "@/oldsrc/services/imageService";
@@ -26,7 +26,51 @@ export class GameDesignPreloader extends React.Component<Props, State> {
             timestamp: Date.now(),
         }
         this.reset = this.reset.bind(this)
+        this.save = this.save.bind(this)
+        this.load = this.load.bind(this)
     }
+
+    get storageKey(): string | undefined {
+        const { gameCondition } = this.state;
+        return gameCondition ? `POINT_AND_CLICK_${gameCondition.id}` : undefined;
+      }
+
+    save(data:GameData) {
+        if (!this.storageKey) {
+            return;
+          }
+          localStorage.setItem(this.storageKey, JSON.stringify(data));
+    }
+
+    load() {
+        if (!this.storageKey) {
+          return;
+        }
+        const jsonString = localStorage.getItem(this.storageKey);
+        if (!jsonString) {
+          console.error("NO SAVE FILE", this.storageKey);
+          return;
+        }
+    
+        try {
+          // TO DO - PARSE WITH SCHEMA!!
+          // CHECK GAME ID!!
+          const data = JSON.parse(jsonString) as GameData;
+          const loadedConditions = Object.assign(
+            {},
+            this.state.gameCondition,
+            data
+          );
+    
+          this.setState({
+            timestamp: Date.now(),
+            gameCondition: loadedConditions,
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
 
     reset() {
         this.setState({
@@ -56,10 +100,16 @@ export class GameDesignPreloader extends React.Component<Props, State> {
 
 
     render() {
-        const { gameCondition, } = this.state
+        const { gameCondition, timestamp } = this.state
+
         return <div>
             {gameCondition && (
-                <Game {...gameCondition} />
+                <Game 
+                    {...gameCondition} 
+                    load={this.load} 
+                    save={this.save} 
+                    reset={this.reset} 
+                    key={timestamp} />
             )}
         </div>
     }
