@@ -1,8 +1,8 @@
 import { AppBar, IconButton, Typography, Drawer, List, ListItem } from '@mui/material'
 import Toolbar from '@mui/material/Toolbar';
-import Link from 'next/link'
 import { useState } from 'react';
 import { LinkButton } from './LinkButton';
+import MenuIcon from '@mui/icons-material/Menu';
 
 
 export function AppHeader() {
@@ -13,10 +13,10 @@ export function AppHeader() {
         <AppBar component='header'>
             <Toolbar>
                 <IconButton onClick={() => { setDrawerOpen(!drawerOpen) }}>
-                    {drawerOpen ? 'o' : 'c'}
+                    <MenuIcon htmlColor='white' />
                 </IconButton>
                 <Typography component="div" sx={{ flexGrow: 1 }}>
-                    <Link href={'/'}>Point and Click</Link>
+                    Point and Click
                 </Typography>
             </Toolbar>
             <Drawer
