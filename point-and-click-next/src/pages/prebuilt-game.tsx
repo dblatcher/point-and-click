@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { GameDesignPreloader } from '@/components/GameDesignPreloader'
+import { GameDesignPlayer } from '@/components/GameDesignPlayer'
 import { prebuiltGameDesign } from '@/data/fullGame'
 import { imageAssets } from '@/data/images'
 import { soundAssets } from '@/data/sounds'
@@ -18,10 +18,10 @@ export default function GameLoaderPage() {
       </Head>
       <main>
         <Link href={'/'}>home</Link>
-        <GameDesignPreloader
-          prebuiltGame={prebuiltGameDesign}
-          prebuiltImageAssets={imageAssets}
-          prebuiltSoundAssets={soundAssets}
+        <GameDesignPlayer
+          gameDesign={prebuiltGameDesign}
+          imageAssets={imageAssets}
+          soundAssets={soundAssets}
         />
       </main>
     </>

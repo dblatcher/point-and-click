@@ -1,11 +1,12 @@
 import { GameDesign } from "@/oldsrc";
 import { uploadFile } from "@/oldsrc/lib/files";
 import { readGameFromZipFile } from "@/oldsrc/lib/zipFiles";
-import { populateServices } from "@/oldsrc/services/populateServices";
+import { ImageAsset } from "@/oldsrc/services/imageService";
+import { SoundAsset } from "@/oldsrc/services/soundService";
 import { FunctionComponent } from "react";
 
 interface Props {
-    onLoad: { (design: GameDesign): void }
+    onLoad: { (design: GameDesign, imageAssets: ImageAsset[], soundAssets: SoundAsset[]): void }
     onError: { (message: string): void }
 }
 
@@ -25,8 +26,7 @@ export const LoadDesignButton: FunctionComponent<Props> = ({ onLoad, onError }) 
         }
 
         const { gameDesign, imageAssets, soundAssets } = result.data;
-        populateServices(gameDesign, imageAssets, soundAssets);
-        onLoad(gameDesign)
+        onLoad(gameDesign, imageAssets, soundAssets)
     }
 
     return <button onClick={upload}>Load Design</button>

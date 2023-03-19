@@ -8,9 +8,9 @@ import React from "react";
 
 
 type Props = {
-    prebuiltGame: GameDesign;
-    prebuiltImageAssets: ImageAsset[];
-    prebuiltSoundAssets: SoundAsset[];
+    gameDesign: GameDesign;
+    imageAssets: ImageAsset[];
+    soundAssets: SoundAsset[];
 }
 
 type State = {
@@ -18,7 +18,7 @@ type State = {
     timestamp: number;
 }
 
-export class GameDesignPreloader extends React.Component<Props, State> {
+export class GameDesignPlayer extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
@@ -71,7 +71,6 @@ export class GameDesignPreloader extends React.Component<Props, State> {
         }
       }
 
-
     reset() {
         this.setState({
             gameCondition: this.getInitialGameCondition(),
@@ -80,14 +79,13 @@ export class GameDesignPreloader extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        const { prebuiltGame, prebuiltImageAssets, prebuiltSoundAssets } = this.props
-        populateServices(prebuiltGame, prebuiltImageAssets, prebuiltSoundAssets)
+        const { gameDesign, imageAssets, soundAssets } = this.props
+        populateServices(gameDesign, imageAssets, soundAssets)
         this.reset()
     }
 
     getInitialGameCondition(): GameCondition | undefined {
-        const loadedGameDesign = this.props.prebuiltGame
-
+        const loadedGameDesign = this.props.gameDesign
         if (loadedGameDesign) {
             return {
                 ...cloneData(loadedGameDesign),
@@ -101,7 +99,6 @@ export class GameDesignPreloader extends React.Component<Props, State> {
 
     render() {
         const { gameCondition, timestamp } = this.state
-
         return <div>
             {gameCondition && (
                 <Game 
