@@ -18,7 +18,7 @@ export function PageLayout({ children }: Props) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Box sx={{ display: 'flex' }} paddingTop={'2rem'}>
+            <Box sx={{ display: 'flex' }} paddingTop={'4rem'}>
                 <AppHeader />
                 <Box component='main' sx={{ width: '100%' }}>
                     {children}
