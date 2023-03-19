@@ -1,5 +1,4 @@
-import { FunctionalComponent, h, JSX } from "preact";
-import { useEffect, useRef } from "preact/hooks";
+import { FunctionComponent, useEffect, useRef, MouseEventHandler } from "react";
 import { ImageAsset } from "../../services/imageService";
 import editorStyles from './editorStyles.module.css';
 
@@ -7,10 +6,10 @@ interface Props {
     imageAsset: ImageAsset;
     canvasScale: number;
     highlight?: { row: number; col: number };
-    handleClick?: JSX.MouseEventHandler<HTMLCanvasElement>;
+    handleClick?: MouseEventHandler<HTMLCanvasElement>;
 }
 
-export const SpriteSheetPreview: FunctionalComponent<Props> = ({ imageAsset, canvasScale, handleClick, highlight }: Props) => {
+export const SpriteSheetPreview: FunctionComponent<Props> = ({ imageAsset, canvasScale, handleClick, highlight }: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
@@ -62,7 +61,7 @@ export const SpriteSheetPreview: FunctionalComponent<Props> = ({ imageAsset, can
 
     return (
         <figure className={editorStyles.spriteSheetPreview} style={{ cursor: !!handleClick ? 'pointer' : undefined }}>
-            { <img src={imageAsset.href} />}
+            { <img src={imageAsset.href} alt='sprite preview' />}
             <canvas ref={canvasRef}
                 onClick={handleClick}
                 height={canvasScale}

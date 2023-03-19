@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h } from "preact";
 import { ImageAsset } from "../../../services/imageService";
-import { BackgroundLayer } from "src";
+import { BackgroundLayer } from "../../../";
 import { clamp, listIds } from "../../../lib/util";
 import { ParallaxInput, SelectInput } from "../formControls";
 

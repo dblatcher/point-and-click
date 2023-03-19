@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent } from "react";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "../../../definitions/Consequence";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
 import { SelectInput } from "../formControls";
@@ -34,7 +34,7 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
     return { branchIdList, choiceRefList }
 }
 
-export const ConsequenceForm: FunctionalComponent<Props> = ({ consequence, gameDesign, update, immediateOnly }: Props) => {
+export const ConsequenceForm: FunctionComponent<Props> = ({ consequence, gameDesign, update, immediateOnly }: Props) => {
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
     const { ids: targetIdsWithoutItems, descriptions: targetDescriptionsWithoutItems } = getTargetLists(gameDesign, true)
 

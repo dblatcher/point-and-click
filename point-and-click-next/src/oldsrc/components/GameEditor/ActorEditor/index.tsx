@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h } from "preact";
+import { Component } from "react";
 import { ActorData, Direction, RoomData, Point } from "src";
 import { ActorDataSchema, SoundValue } from "../../../definitions/ActorData";
 import { directions } from "../../../definitions/SpriteSheet";

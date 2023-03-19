@@ -1,4 +1,4 @@
-import { Component, ComponentChild, h } from "preact";
+import { Component, ReactNode } from "react";
 import { StringInput } from "../formControls";
 import styles from './styles.module.css';
 import editorStyles from '../editorStyles.module.css';
@@ -7,7 +7,7 @@ import { icons } from "../dataEditors";
 
 interface Props<T> {
     record: Record<string, T | undefined>;
-    describeValue: { (key: string, value: T): ComponentChild };
+    describeValue: { (key: string, value: T): ReactNode };
     setEntry: { (key: string, value: T | undefined): void };
     addEntry: { (key: string): void };
     renderKeys?: boolean;

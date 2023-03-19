@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h, FunctionComponent } from "preact"
+import { FunctionComponent } from "react"
 import { findValueAsType } from "../../../lib/util";
 import { Order, orderTypes } from "../../../definitions/Order";
 import { getDefaultOrder } from "../defaults";

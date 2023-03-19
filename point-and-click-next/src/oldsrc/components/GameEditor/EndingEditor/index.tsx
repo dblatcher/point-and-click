@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h } from "preact";
-import { GameDesign, Ending } from "src";
+import { Component } from "react";
+import { GameDesign, Ending } from "../../../";
 import { cloneData } from "../../../lib/clone";
 import { makeBlankEnding } from "../defaults";
 import { StorageMenu } from "../StorageMenu";

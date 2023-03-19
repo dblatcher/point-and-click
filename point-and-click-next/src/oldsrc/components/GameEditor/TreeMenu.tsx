@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h, FunctionalComponent } from "preact";
+import { FunctionComponent } from "react";
 import styles from "./treeMenuStyles.module.css"
 
 export type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
@@ -42,7 +41,7 @@ interface Props {
     entryClick: EntryClickFunction;
 }
 
-export const TreeMenu: FunctionalComponent<Props> = ({ folders, folderClick, entryClick }: Props) => {
+export const TreeMenu: FunctionComponent<Props> = ({ folders, folderClick, entryClick }: Props) => {
 
     return (
         <section className={styles.treeMenu}>

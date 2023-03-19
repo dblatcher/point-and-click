@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h, Fragment } from "preact";
+import { Component } from "react";
 import { GameDesign, Interaction } from "src";
 import { DeleteButton, SelectInput } from "../formControls";
 import { cloneData } from "../../../lib/clone";

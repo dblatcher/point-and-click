@@ -1,5 +1,5 @@
-import { h, FunctionComponent, Fragment } from "preact";
-import { Zone } from "src";
+import { FunctionComponent } from "react";
+import { Zone } from "../../../";
 import { TabMenu } from "../../TabMenu";
 import { ClickEffect } from "./ClickEffect";
 import { ShapeChangeFunction, ValidShapeType } from "./ShapeControl";

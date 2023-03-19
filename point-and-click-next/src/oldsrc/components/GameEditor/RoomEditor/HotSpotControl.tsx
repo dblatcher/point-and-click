@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h } from "preact";
 import { ClickEffect } from "./ClickEffect";
-import { HotspotZone } from "src";
+import { HotspotZone } from "../../..";
 import { OptionalNumberInput, ParallaxInput, StringInput } from "../formControls";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
 import editorStyles from '../editorStyles.module.css';

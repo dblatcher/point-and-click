@@ -1,5 +1,4 @@
-import { ComponentChild, ComponentChildren, FunctionalComponent, Fragment, h, JSX } from "preact"
-import { useEffect, useRef, useState } from "preact/hooks";
+import { FunctionComponent, useEffect, useRef, useState, ReactNode, FormEventHandler, MouseEventHandler } from "react"
 import { eventToBoolean, eventToNumber, eventToString } from "../../lib/util";
 
 
@@ -8,7 +7,7 @@ type FieldProps = {
     className?: string;
     label?: string;
 }
-const FieldWrapper: FunctionalComponent<FieldProps & { children?: ComponentChildren }> = ({ children, block, className, label }) => {
+const FieldWrapper: FunctionComponent<FieldProps & { children?: ReactNode }> = ({ children, block, className, label }) => {
     return block
         ? <div className={className}>
             {label && <label>{label}</label>}
@@ -21,7 +20,7 @@ const FieldWrapper: FunctionalComponent<FieldProps & { children?: ComponentChild
 }
 
 
-export const ParallaxInput: FunctionalComponent<FieldProps & {
+export const ParallaxInput: FunctionComponent<FieldProps & {
     value: number;
     inputHandler: { (value: number): void };
 }> = (props) => {
@@ -35,7 +34,7 @@ export const ParallaxInput: FunctionalComponent<FieldProps & {
 }
 
 
-export const NumberInput: FunctionalComponent<FieldProps & {
+export const NumberInput: FunctionComponent<FieldProps & {
     value: number;
     inputHandler: { (value: number): void };
     max?: number;
@@ -47,8 +46,8 @@ export const NumberInput: FunctionalComponent<FieldProps & {
     const { type = 'number' } = props
     const width = type === 'range' ? '5rem' : '3rem';
 
-    const sendValue: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
-        props.inputHandler(eventToNumber(event))
+    const sendValue: FormEventHandler<HTMLInputElement> = (event) => {
+        props.inputHandler(eventToNumber(event.nativeEvent))
     }
 
     return <FieldWrapper {...props}>
@@ -64,7 +63,7 @@ export const NumberInput: FunctionalComponent<FieldProps & {
 }
 
 
-export const OptionalNumberInput: FunctionalComponent<FieldProps & {
+export const OptionalNumberInput: FunctionComponent<FieldProps & {
     value: number | undefined;
     inputHandler: { (value: number | undefined): void };
     max?: number;
@@ -74,12 +73,12 @@ export const OptionalNumberInput: FunctionalComponent<FieldProps & {
 
     const numberFieldRef = useRef<HTMLInputElement>(null)
 
-    const sendNumberValue: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
-        props.inputHandler(eventToNumber(event))
+    const sendNumberValue: FormEventHandler<HTMLInputElement> = (event) => {
+        props.inputHandler(eventToNumber(event.nativeEvent))
     }
 
-    const toggleUndefined: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
-        const { checked } = event.target as HTMLInputElement;
+    const toggleUndefined: FormEventHandler<HTMLInputElement> = (event) => {
+        const { checked } = event.nativeEvent.target as HTMLInputElement;
         if (checked) {
             return props.inputHandler(undefined)
         }
@@ -107,21 +106,21 @@ export const OptionalNumberInput: FunctionalComponent<FieldProps & {
     </FieldWrapper>
 }
 
-export const TextInput: FunctionalComponent<{
+export const TextInput: FunctionComponent<{
     label: string;
     value: string;
     type?: string;
-    onInput: JSX.EventHandler<JSX.TargetedEvent>;
+    onInput: FormEventHandler<HTMLInputElement>;
 }> = (props) => {
 
     const { label, type = 'text' } = props
     return <>
         <label>{label}</label>
-        <input {...props} type={type} />
+        <input {...props} type={type} onInput={props.onInput}/>
     </>
 }
 
-export const StringInput: FunctionalComponent<FieldProps & {
+export const StringInput: FunctionComponent<FieldProps & {
     value: string;
     type?: string;
     inputHandler: { (value: string): void };
@@ -135,7 +134,7 @@ export const StringInput: FunctionalComponent<FieldProps & {
         return <FieldWrapper {...props}>
             <textarea onInput={
                 (event): void => {
-                    inputHandler(eventToString(event))
+                    inputHandler(eventToString(event.nativeEvent))
                 }
             } >{value}</textarea>
         </FieldWrapper>
@@ -147,7 +146,7 @@ export const StringInput: FunctionalComponent<FieldProps & {
             type={type}
             list={datalistId}
             onInput={
-                (event): void => { inputHandler(eventToString(event)) }
+                (event): void => { inputHandler(eventToString(event.nativeEvent)) }
             } />
 
         {suggestions && (
@@ -160,7 +159,7 @@ export const StringInput: FunctionalComponent<FieldProps & {
     </FieldWrapper>
 }
 
-export const OptionalStringInput: FunctionalComponent<FieldProps & {
+export const OptionalStringInput: FunctionComponent<FieldProps & {
     value: string | undefined;
     type?: string;
     inputHandler: { (value: string | undefined): void };
@@ -168,12 +167,12 @@ export const OptionalStringInput: FunctionalComponent<FieldProps & {
     const { type = 'text', value, inputHandler } = props
     const textFieldRef = useRef<HTMLInputElement>(null)
 
-    const sendStringValue: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
-        inputHandler(eventToString(event))
+    const sendStringValue: FormEventHandler<HTMLInputElement> = (event) => {
+        inputHandler(eventToString(event.nativeEvent))
     }
 
-    const toggleUndefined: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
-        const { checked } = event.target as HTMLInputElement;
+    const toggleUndefined: FormEventHandler<HTMLInputElement> = (event) => {
+        const { checked } = event.nativeEvent.target as HTMLInputElement;
         if (checked) {
             return inputHandler(undefined)
         }
@@ -195,13 +194,13 @@ export const OptionalStringInput: FunctionalComponent<FieldProps & {
 
 }
 
-export const CheckBoxInput: FunctionalComponent<FieldProps & {
+export const CheckBoxInput: FunctionComponent<FieldProps & {
     value?: boolean;
     inputHandler: { (value: boolean): void };
 }> = (props) => {
 
-    const sendValue: JSX.EventHandler<JSX.TargetedEvent> = (event) => {
-        props.inputHandler(eventToBoolean(event))
+    const sendValue: FormEventHandler<HTMLInputElement> = (event) => {
+        props.inputHandler(eventToBoolean(event.nativeEvent))
     }
     return <FieldWrapper {...props}>
         <input type='checkbox'
@@ -211,7 +210,7 @@ export const CheckBoxInput: FunctionalComponent<FieldProps & {
     </FieldWrapper>
 }
 
-export const TriStateInput: FunctionalComponent<FieldProps & {
+export const TriStateInput: FunctionComponent<FieldProps & {
     name?: string;
     value: boolean | undefined;
     inputHandler: { (value: boolean | undefined): void };
@@ -243,9 +242,9 @@ export const TriStateInput: FunctionalComponent<FieldProps & {
     </FieldWrapper>
 }
 
-export const DeleteButton: FunctionalComponent<{
+export const DeleteButton: FunctionComponent<{
     label: string;
-    onClick: JSX.EventHandler<JSX.TargetedEvent>;
+    onClick: MouseEventHandler<HTMLButtonElement>;
     noConfirmation?: boolean;
     confirmationText?: string;
     className?: string;
@@ -281,7 +280,7 @@ export const DeleteButton: FunctionalComponent<{
     </div>
 }
 
-export const SelectInput: FunctionalComponent<FieldProps & {
+export const SelectInput: FunctionComponent<FieldProps & {
     value: string;
     onSelect: { (item: string): void };
     items: string[];
@@ -293,8 +292,8 @@ export const SelectInput: FunctionalComponent<FieldProps & {
     const { descriptions, items, haveEmptyOption, emptyOptionLabel } = props
 
     return <FieldWrapper {...props}>
-        <select value={props.value} readonly={true}
-            onChange={(event): void => { props.onSelect(eventToString(event)) }}>
+        <select value={props.value}
+            onChange={(event): void => { props.onSelect(eventToString(event.nativeEvent)) }}>
             {haveEmptyOption && <option value=''>{emptyOptionLabel || "(select)"}</option>}
             {items.map((item, index) =>
                 <option key={index} value={item}>
@@ -305,7 +304,7 @@ export const SelectInput: FunctionalComponent<FieldProps & {
     </FieldWrapper>
 }
 
-export const SelectAndConfirmInput: FunctionalComponent<FieldProps & {
+export const SelectAndConfirmInput: FunctionComponent<FieldProps & {
     onSelect: { (item: string): void };
     items: string[];
     descriptions?: string[];
@@ -325,8 +324,8 @@ export const SelectAndConfirmInput: FunctionalComponent<FieldProps & {
 
 }
 
-export const Warning: FunctionalComponent<{
-    children?: ComponentChild;
+export const Warning: FunctionComponent<{
+    children?: ReactNode;
 }> = (props) => {
     return (
         <>

@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h } from "preact";
 import { ClickEffect } from "./ClickEffect";
-import { Zone } from "src";
+import { Zone } from "../../../";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
 import { CheckBoxInput, OptionalStringInput } from "../formControls";
 import editorStyles from '../editorStyles.module.css';

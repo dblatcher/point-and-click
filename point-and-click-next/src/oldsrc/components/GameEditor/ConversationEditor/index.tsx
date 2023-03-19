@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h } from "preact";
+import { Component } from "react";
 import { GameDesign, Sequence } from "src";
 import { cloneData } from "../../../lib/clone";
 import { uploadJsonData } from "../../../lib/files";

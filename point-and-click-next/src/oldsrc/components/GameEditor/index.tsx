@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h, Fragment } from "preact";
+import { Component } from "react";
 
 import { TreeMenu, Folder, Entry } from "./TreeMenu";
 import { Overview } from "./Overview";

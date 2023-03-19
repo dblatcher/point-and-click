@@ -1,4 +1,4 @@
-import type { Component } from "preact";
+import type { Component } from "react";
 import type { GameDataItem } from "src";
 import type { EditorOptions } from ".";
 

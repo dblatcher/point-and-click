@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent } from "react";
 import { findById, listIds } from "../../../lib/util";
 import { Conversation } from "src";
 import { SelectInput } from "../formControls";
@@ -16,7 +16,7 @@ interface Props {
     openBranchId: string;
 }
 
-export const ChoiceSelector: FunctionalComponent<Props> = ({
+export const ChoiceSelector: FunctionComponent<Props> = ({
     refSet, change, remove, conversations, currentConversationId, openBranchId,
 }: Props) => {
 

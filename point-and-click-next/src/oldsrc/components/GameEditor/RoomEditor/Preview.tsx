@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h, Fragment, JSX } from "preact";
-import { RoomData, ActorData, HotspotZone } from "src";
+import { ChangeEventHandler, Component } from "react";
+import { RoomData, ActorData, HotspotZone } from "../../../";
 import { Room } from "../../Room";
 import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "../../../lib/util";
@@ -74,9 +73,9 @@ export class Preview extends Component<Props, State>{
 
     renderCheckBox(label: string, propery: keyof BooleanState) {
         const { state } = this
-        const setValue = (event: JSX.TargetedEvent<HTMLInputElement>) => {
+        const setValue:ChangeEventHandler<HTMLInputElement> = (event) => {
             const mod: Partial<BooleanState> = {}
-            mod[propery] = eventToBoolean(event);
+            mod[propery] = eventToBoolean(event.nativeEvent);
             this.setState(mod)
         }
         return (
@@ -174,14 +173,14 @@ export class Preview extends Component<Props, State>{
                         <div>
                             <label>View height</label>
                             <input type='range' value={maxHeight} max={1000} min={100} step={50}
-                                onChange={(event) => this.setState({ maxHeight: eventToNumber(event) })} />
+                                onChange={(event) => this.setState({ maxHeight: eventToNumber(event.nativeEvent) })} />
                             <span>{maxHeight}</span>
                         </div>
 
                         <div>
                             <label>view angle</label>
                             <input type='range' value={viewAngle} max={1} min={-1} step={.01}
-                                onChange={(event) => this.setState({ viewAngle: eventToNumber(event) })} />
+                                onChange={(event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) })} />
                             <span>{viewAngle}</span>
                         </div>
 
@@ -200,7 +199,7 @@ export class Preview extends Component<Props, State>{
                                 <input type='range'
                                     value={testActor.x}
                                     min={0} max={roomData.width} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'x')} />
+                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'x')} />
                                 <span>{testActor.x}</span>
                             </div>
                             <div>
@@ -208,7 +207,7 @@ export class Preview extends Component<Props, State>{
                                 <input type='range'
                                     value={testActor.y}
                                     min={0} max={roomData.height} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'y')} />
+                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'y')} />
                                 <span>{testActor.y}</span>
                             </div>
                             <div>
@@ -216,7 +215,7 @@ export class Preview extends Component<Props, State>{
                                 <input type='range'
                                     value={testActor.height}
                                     min={10} max={200} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'height')} />
+                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'height')} />
                                 <span>{testActor.height}</span>
                             </div>
                             <div>
@@ -224,7 +223,7 @@ export class Preview extends Component<Props, State>{
                                 <input type='range'
                                     value={testActor.width}
                                     min={10} max={200} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event), 'width')} />
+                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'width')} />
                                 <span>{testActor.width}</span>
                             </div>
                         </>)}
@@ -257,7 +256,7 @@ export class Preview extends Component<Props, State>{
                                 viewAngle={viewAngle}
                                 color={'red'}
                                 text={this.walkToPointLabel}
-                                { ...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
+                                {...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
                             />
                         )}
                     </Room>

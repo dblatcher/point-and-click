@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h, FunctionalComponent } from "preact";
+import { FunctionComponent } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { HotspotZone, Shape, Zone, ZoneType } from "src";
 import { ListEditor } from "../ListEditor";
@@ -17,7 +17,7 @@ interface Props {
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export const ShapeControl: FunctionalComponent<Props> = ({ shape, remove, index, change, setClickEffect, type }: Props) => {
+export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, change, setClickEffect, type }: Props) => {
     const { x, y, circle, rect, polygon } = shape
 
     function changeRect(value: number, coor: 'x' | 'y'): void {

@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, createRef, h, RefObject } from "preact";
+import { Component, createRef,  RefObject } from "react";
 import {
   fileToObjectUrl,
   makeDownloadFile,
@@ -212,7 +211,7 @@ export class SoundAssetTool extends Component<{}, State> {
                   label="ID"
                   value={id}
                   onInput={(event) =>
-                    this.changeValue("id", eventToString(event))
+                    this.changeValue("id", eventToString(event.nativeEvent))
                   }
                 />
               </div>

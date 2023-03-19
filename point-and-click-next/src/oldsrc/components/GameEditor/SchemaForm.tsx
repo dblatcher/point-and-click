@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { z } from "zod"
-import { h, VNode } from "preact";
+import { ReactNode } from "react";
 import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, StringInput, TriStateInput } from "./formControls";
 import editorStyles from './editorStyles.module.css';
 
@@ -70,7 +69,7 @@ function SchemaField<T extends z.ZodRawShape>({
     suggestions, stringInputType,
     showUnsupported = false,
     numberInputSettings = {}
-}: SchemaFieldProps<T>): VNode | null {
+}: SchemaFieldProps<T>) {
     const { key, optional, type, value } = field;
     const isSupported = ['ZodString', 'ZodBoolean', 'ZodNumber', 'ZodEnum'].includes(type)
     if (!isSupported && !showUnsupported) { return null }
@@ -83,7 +82,7 @@ function SchemaField<T extends z.ZodRawShape>({
             safeValue = value;
     }
 
-    function buildInput(): VNode | null {
+    function buildInput(): ReactNode | null {
 
         if (type === 'ZodString' && (typeof value === 'string' || typeof value === 'undefined')) {
             if (options) {
@@ -177,7 +176,7 @@ function SchemaField<T extends z.ZodRawShape>({
  */
 export function SchemaForm<T extends z.ZodRawShape>({
     schema, data, changeValue, options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {}
-}: Props<T>): VNode {
+}: Props<T>): ReactNode {
 
     const fields: FieldDef[] = []
     for (const key in schema.shape) {

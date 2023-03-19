@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { FunctionComponent, useEffect, useState } from "react";
 import { eventToString } from "../../lib/util";
 import { Service, ServiceItem } from "../../services/Service";
 import { icons } from "./dataEditors";
@@ -20,7 +18,7 @@ interface Props {
     currentSelection?: string;
 }
 
-export const ServiceItemSelector: FunctionalComponent<Props> = ({
+export const ServiceItemSelector: FunctionComponent<Props> = ({
     service, select, selectNone, legend, format = 'buttons', selectedItemId = '', filterItems, currentSelection
 }: Props) => {
 
@@ -64,8 +62,8 @@ export const ServiceItemSelector: FunctionalComponent<Props> = ({
             return (
                 <span updated-at={timestamp}>
                     <label>{legend}:</label>
-                    <select value={selectedItemId} readonly
-                        onChange={event => { handleSelect(eventToString(event)) }}>
+                    <select value={selectedItemId} 
+                        onChange={event => { handleSelect(eventToString(event.nativeEvent)) }}>
                         <option value=''>(select)</option>
                         {list.map(id =>
                             <option key={id} value={id}>{id}</option>

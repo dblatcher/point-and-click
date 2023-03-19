@@ -1,5 +1,4 @@
-import { FunctionalComponent, h, Fragment } from "preact";
-import { useState } from "preact/hooks";
+import { FunctionComponent, useState} from "react";
 import { HelpText } from "./HelpText";
 import editorStyles from "./editorStyles.module.css"
 
@@ -41,7 +40,7 @@ interface Props {
 }
 
 
-export const EditorHeading: FunctionalComponent<Props> = ({
+export const EditorHeading: FunctionComponent<Props> = ({
     heading, helpTopic, level = 2
 }: Props) => {
 

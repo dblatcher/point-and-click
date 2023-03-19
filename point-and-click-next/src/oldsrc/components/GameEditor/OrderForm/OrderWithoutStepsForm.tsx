@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h, Component } from "preact"
+import {  Component } from "react"
 import { GotoOrder, GotoOrderSchema, orderTypes, SayOrder, SayOrderSchema } from "../../../definitions/Order";
 import { SelectInput } from "../formControls";
 import { SchemaForm, getModification, FieldValue, FieldDef } from "../SchemaForm";

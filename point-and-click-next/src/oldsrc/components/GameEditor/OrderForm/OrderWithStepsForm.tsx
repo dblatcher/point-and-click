@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h, Component } from "preact"
+import {  Component } from "react"
 import { ActOrder, MoveOrder, orderTypes, stepSchama } from "../../../definitions/Order";
 import { SelectInput } from "../formControls";
 import { makeNewStep } from "../defaults";

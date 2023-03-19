@@ -1,11 +1,11 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent } from "react";
 
 interface Props {
     topic: string;
 }
 
 
-export const HelpText: FunctionalComponent<Props> = ({
+export const HelpText: FunctionComponent<Props> = ({
     topic
 }: Props) => {
 

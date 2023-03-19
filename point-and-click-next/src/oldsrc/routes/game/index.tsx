@@ -1,9 +1,9 @@
-import { h, FunctionalComponent } from "preact";
+import { h, FunctionComponent } from "preact";
 import style from "./style.css";
 
 import GamePlayer from "../../components/GamePlayer";
 
-const Game: FunctionalComponent = () => (
+const Game: FunctionComponent = () => (
   <div className={style.home}>
     <GamePlayer />
     <br />

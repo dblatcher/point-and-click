@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, ComponentChild, h, Fragment } from "preact";
+import { Component, ReactNode,  Fragment } from "react";
 import styles from './styles.module.css';
 import editorStyles from '../editorStyles.module.css'
 import { icons } from "../dataEditors";
@@ -7,7 +6,7 @@ import { icons } from "../dataEditors";
 
 interface Props<T> {
     list: T[];
-    describeItem: { (item: T, index: number): ComponentChild };
+    describeItem: { (item: T, index: number): ReactNode };
     mutateList: { (newList: T[]): void };
     createItem?: { (): T | undefined };
     createButton?: 'END';

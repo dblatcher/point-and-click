@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h, Fragment } from "preact";
+import { FunctionComponent} from "react";
 import { GameDesign, Verb } from "../../index";
 import { ListEditor } from "./ListEditor";
 import { VerbMenu } from "../VerbMenu";
@@ -11,7 +11,7 @@ interface Props {
     updateData: { (data: Verb[]): void };
 }
 
-export const VerbMenuEditor: FunctionalComponent<Props> = ({
+export const VerbMenuEditor: FunctionComponent<Props> = ({
     gameDesign,
     updateData,
 }: Props) => {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h, Fragment } from "preact";
+import { Component } from "react";
 import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage, ImmediateConsequence } from "src";
 import { ImmediateConsequenceSchema } from "../../../definitions/Consequence";
 import { cloneData } from "../../../lib/clone";

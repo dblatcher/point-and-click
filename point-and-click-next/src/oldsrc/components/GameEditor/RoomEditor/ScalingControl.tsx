@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h, FunctionalComponent } from "preact";
+import { FunctionComponent } from "react";
 import { ScaleLevel } from "src";
 import { NumberInput } from "../formControls";
 import { cloneData } from "../../../lib/clone"
@@ -12,7 +12,7 @@ interface Props {
     change: { (scaling: ScaleLevel): void };
 }
 
-export const ScalingControl: FunctionalComponent<Props> = ({ scaling, height, change }: Props) => {
+export const ScalingControl: FunctionComponent<Props> = ({ scaling, height, change }: Props) => {
 
     const handleAdjustment = (
         index: number, value: number, property: 'scale' | 'y'

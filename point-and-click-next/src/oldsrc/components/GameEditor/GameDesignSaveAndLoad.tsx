@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent, useState } from "react";
 import { GameDesign } from "../../definitions/Game";
 import { Warning } from "./formControls";
 import {
   makeDownloadFile,
   uploadFile,
 } from "../../lib/files";
-import { useState } from "preact/hooks";
 import { buildGameZipBlob, readGameFromZipFile } from "../../lib/zipFiles";
 import imageService from "../../services/imageService";
 import { populateServices } from "../../services/populateServices";
@@ -17,7 +15,7 @@ interface Props {
   loadNewGame: { (data: GameDesign): void };
 }
 
-export const GameDesignSaveAndLoad: FunctionalComponent<Props> = ({
+export const GameDesignSaveAndLoad: FunctionComponent<Props> = ({
   gameDesign,
   loadNewGame,
 }: Props) => {

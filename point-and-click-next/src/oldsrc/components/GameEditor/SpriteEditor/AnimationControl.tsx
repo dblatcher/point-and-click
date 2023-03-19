@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h, Fragment } from "preact";
+import { FunctionComponent} from "react";
 import { Sprite } from "../../../lib/Sprite";
 import { directions } from "../../../definitions/SpriteSheet";
 import { ActorData, Direction, SpriteFrame } from "src";
@@ -24,7 +24,7 @@ interface Props {
     pickFrame: { (row: number, col: number, sheetId?: string): void };
 }
 
-export const AnimationControl: FunctionalComponent<Props> = ({
+export const AnimationControl: FunctionComponent<Props> = ({
     animKey, animation, defaultDirection, overrideSprite, buildActorData, deleteAll, editCycle, selectedFrame, pickFrame
 }: Props) => {
 

@@ -1,4 +1,4 @@
-import { Component, h, Fragment } from "preact";
+import { Component } from "react";
 import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "src";
 import { RoomDataSchema } from "../../../definitions/RoomData";
 import { Point } from "../../../lib/pathfinding/geometry";

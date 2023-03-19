@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h, Fragment } from "preact";
-import { useState } from "preact/hooks";
-import { GameDesign, Interaction, AnyConsequence, Consequence } from "src";
+import { FunctionComponent, useState} from "react";
+import { GameDesign, Interaction, AnyConsequence, Consequence } from "../../../";
 import { InteractionSchema } from "../../../definitions/Interaction";
 import { cloneData } from "../../../lib/clone";
 import { listIds } from "../../../lib/util";
@@ -21,7 +19,7 @@ interface Props {
 }
 
 
-export const InteractionForm: FunctionalComponent<Props> = ({ initialState, gameDesign, confirm }: Props) => {
+export const InteractionForm: FunctionComponent<Props> = ({ initialState, gameDesign, confirm }: Props) => {
 
     const [interaction, setInteraction] = useState<Partial<Interaction>>(Object.assign({ consequences: [] }, cloneData(initialState)))
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)

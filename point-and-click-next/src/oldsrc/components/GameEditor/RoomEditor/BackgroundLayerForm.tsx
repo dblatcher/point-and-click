@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h } from "preact";
-import { useState } from "preact/hooks"
+import { useState } from "react"
 import { ImageAsset } from "../../../services/imageService";
-import { BackgroundLayer } from "src";
+import { BackgroundLayer } from "../../../";
 import { ParallaxInput, SelectInput } from "../formControls";
 import { icons } from "../dataEditors";
 import { listIds } from "../../../lib/util";

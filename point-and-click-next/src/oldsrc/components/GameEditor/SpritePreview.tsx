@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, h } from "preact";
+import { Component } from "react";
 import { RoomData, ActorData } from "src";
 import { Room } from "../Room";
 import HorizontalLine from "../HorizontalLine";

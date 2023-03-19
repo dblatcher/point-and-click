@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, createRef, h, RefObject } from "preact";
+import { Component, createRef, RefObject } from "react";
 import {
   fileToObjectUrl,
   makeDownloadFile,
@@ -9,7 +8,7 @@ import { eventToString } from "../../../lib/util";
 import { OptionalNumberInput, SelectInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import { ServiceItem } from "src/services/Service";
+import { ServiceItem } from "../../../services/Service";
 import editorStyles from "../editorStyles.module.css";
 import imageService, {
   ImageAsset,

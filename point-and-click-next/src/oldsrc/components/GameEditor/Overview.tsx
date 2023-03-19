@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent } from "react";
 import { listIds } from "../../lib/util";
 import { GameDesign } from "../../definitions/Game";
 import { SelectInput, StringInput } from "./formControls";
@@ -11,7 +11,7 @@ interface Props {
   edit: { (property: keyof GameDesign, value: unknown): void };
 }
 
-export const Overview: FunctionalComponent<Props> = ({
+export const Overview: FunctionComponent<Props> = ({
   gameDesign,
   edit,
 }: Props) => {

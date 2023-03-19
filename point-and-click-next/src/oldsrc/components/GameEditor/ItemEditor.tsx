@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { h, Component } from "preact"
-import { ItemData } from "src"
+import { Component } from "react"
+import { ItemData } from "../../"
 import { SelectInput, StringInput } from "./formControls";
 import { ServiceItemSelector } from "./ServiceItemSelector";
 import imageService, { ImageAsset } from "../../services/imageService";
@@ -113,7 +112,7 @@ export class ItemEditor extends Component<Props, State> {
 
         return (
             <article>
-                <EditorHeading heading="Item Editor" helpTopic="items"/>
+                <EditorHeading heading="Item Editor" helpTopic="items" />
                 <div class={editorStyles.container}>
                     <fieldset>
                         <legend>Data</legend>
@@ -173,7 +172,7 @@ export class ItemEditor extends Component<Props, State> {
                     </div>
                 )}
 
-                <div class={editorStyles.container}>    
+                <div class={editorStyles.container}>
                     <fieldset>
                         <legend>Button Preview</legend>
                         <div className={editorStyles.row}>

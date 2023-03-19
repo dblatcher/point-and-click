@@ -1,5 +1,5 @@
-import { FunctionalComponent, h, JSX } from "preact";
-import { SpriteFrame } from "src";
+import { FunctionComponent, CSSProperties } from "react";
+import { SpriteFrame } from "../../../";
 import imageService from "../../../services/imageService";
 
 
@@ -10,14 +10,14 @@ interface Props {
     frame: SpriteFrame;
 }
 
-export const FramePreview: FunctionalComponent<Props> = ({
+export const FramePreview: FunctionComponent<Props> = ({
     width, height, backgroundColor, frame
 }: Props) => {
 
-    const divStyle: JSX.CSSProperties = {
+    const divStyle: CSSProperties = {
         width, height, backgroundColor
     }
-    const figureStyle: JSX.CSSProperties = {
+    const figureStyle: CSSProperties = {
         width: '100%',
         height: '100%',
     }

@@ -1,4 +1,4 @@
-import { FunctionalComponent, h, Fragment, JSX } from "preact";
+import { FunctionComponent, MouseEventHandler } from "react";
 
 import imageService from "../../../services/imageService";
 
@@ -13,13 +13,13 @@ interface Props {
     fixedSheet?: boolean;
 }
 
-export const FramePicker: FunctionalComponent<Props> = ({ row, col, sheetId, pickFrame, fixedSheet = false }) => {
+export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickFrame, fixedSheet = false }) => {
 
     const image = sheetId ? imageService.get(sheetId) : undefined;
-    const handleClick = (event: JSX.TargetedEvent<HTMLCanvasElement, MouseEvent>): void => {
+    const handleClick:MouseEventHandler<HTMLCanvasElement> = (event): void => {
         if (!image) { return }
         const { cols = 1, rows = 1 } = image
-        const { offsetX, offsetY } = event
+        const { offsetX, offsetY } = event.nativeEvent
         const { clientWidth, clientHeight } = event.target as HTMLCanvasElement;
         const newCol = Math.floor(cols * (offsetX / clientWidth))
         const newRow = Math.floor(rows * (offsetY / clientHeight))

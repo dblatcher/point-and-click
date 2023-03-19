@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h, Fragment } from "preact";
+import { FunctionComponent} from "react";
 import { Flag, FlagMap, FlagSchema } from "../../definitions/Flag";
 import { GameDesign } from "../../definitions/Game";
 import { makeNewFlag } from "./defaults";
@@ -11,7 +11,7 @@ interface Props {
     edit: { (property: keyof GameDesign, value: unknown): void };
 }
 
-export const FlagMapControl: FunctionalComponent<Props> = ({
+export const FlagMapControl: FunctionComponent<Props> = ({
     gameDesign,
     edit,
 }: Props) => {

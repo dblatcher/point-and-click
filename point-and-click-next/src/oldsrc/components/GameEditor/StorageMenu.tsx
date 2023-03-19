@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent } from "react";
 import editorStyles from "./editorStyles.module.css"
 
 import { downloadJsonFile, } from "../../lib/files";
@@ -18,7 +18,7 @@ interface Props {
     options: EditorOptions;
 }
 
-export const StorageMenu: FunctionalComponent<Props> = ({
+export const StorageMenu: FunctionComponent<Props> = ({
     type, data, originalId, existingIds, reset, update, saveButton, load, deleteItem, options
 }: Props) => {
     const currentId = data?.id || '';

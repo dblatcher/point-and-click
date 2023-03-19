@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionalComponent, h } from "preact";
-import { useState } from "preact/hooks";
+import { FunctionComponent, useState } from "react";
 import { icons } from "../dataEditors";
 import { Warning, StringInput } from "../formControls";
 import editorStyles from '../editorStyles.module.css';
@@ -11,7 +9,7 @@ interface Props {
     submit: { (animationKey: string): void };
 }
 
-export const NewAnimationForm: FunctionalComponent<Props> = ({ existingKeys, submit }: Props) => {
+export const NewAnimationForm: FunctionComponent<Props> = ({ existingKeys, submit }: Props) => {
     const [animationKey, setAnimationKey] = useState<string>('')
     const keyAlreadyUsed = existingKeys.includes(animationKey)
     const warning = keyAlreadyUsed ? `There is already an animation called ${animationKey}` : undefined;

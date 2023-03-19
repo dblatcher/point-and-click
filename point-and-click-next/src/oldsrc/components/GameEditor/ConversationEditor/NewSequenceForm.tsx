@@ -1,6 +1,5 @@
-import { FunctionComponent, h } from 'preact'
-import { useState } from 'preact/hooks'
-import { Sequence } from 'src/definitions/Sequence'
+import { FunctionComponent, useState } from 'react';
+import { Sequence } from '../../../definitions/Sequence'
 import { icons } from '../dataEditors';
 import { makeBlankSequence } from '../defaults';
 import { StringInput } from '../formControls';

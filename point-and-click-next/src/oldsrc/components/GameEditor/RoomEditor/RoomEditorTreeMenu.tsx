@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact";
+import { FunctionComponent } from "react";
 import { Zone, SupportedZoneShape } from "../../../definitions/Zone";
 import { RoomEditorState } from ".";
 import { icons } from "../dataEditors";
@@ -90,7 +90,7 @@ type Props = {
     handleFolderClick: { (folderIndex: number): void };
 }
 
-export const RoomEditorTreeMenu: FunctionalComponent<Props> = ({
+export const RoomEditorTreeMenu: FunctionComponent<Props> = ({
     roomEditorState, handleTreeEntryClick, handleFolderClick
 }) => {
 

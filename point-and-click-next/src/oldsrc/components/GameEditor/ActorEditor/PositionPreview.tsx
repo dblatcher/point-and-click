@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionComponent, h } from "preact";
+import { FunctionComponent, useState } from "react";
 import { Room } from "../../Room";
 import { ActorData, RoomData } from "../../.."
 import { clamp } from "../../../lib/util";
 import { getTargetPoint, getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "../../../lib/roomFunctions";
 import { MarkerShape } from "../../MarkerShape";
-import { useState } from "preact/hooks";
 
 type PointRole = 'position' | 'walkTo';
 
