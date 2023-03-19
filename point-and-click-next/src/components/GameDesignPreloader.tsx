@@ -1,8 +1,9 @@
 import { GameCondition, GameDesign } from "@/oldsrc";
 import Game from "@/oldsrc/components/Game";
 import { cloneData } from "@/oldsrc/lib/clone";
-import imageService, { ImageAsset } from "@/oldsrc/services/imageService";
-import soundService, { SoundAsset } from "@/oldsrc/services/soundService";
+import { ImageAsset } from "@/oldsrc/services/imageService";
+import { populateServices } from "@/oldsrc/services/populateServices";
+import { SoundAsset } from "@/oldsrc/services/soundService";
 import React from "react";
 
 
@@ -29,15 +30,14 @@ export class GameDesignPreloader extends React.Component<Props, State> {
 
     reset() {
         this.setState({
-          gameCondition: this.getInitialGameCondition(),
-          timestamp: Date.now(),
+            gameCondition: this.getInitialGameCondition(),
+            timestamp: Date.now(),
         });
-      }
+    }
 
     componentDidMount(): void {
-        const {prebuiltImageAssets,prebuiltSoundAssets} =this.props
-        imageService.add(prebuiltImageAssets)
-        soundService.add(prebuiltSoundAssets)
+        const { prebuiltGame, prebuiltImageAssets, prebuiltSoundAssets } = this.props
+        populateServices(prebuiltGame, prebuiltImageAssets, prebuiltSoundAssets)
         this.reset()
     }
 
