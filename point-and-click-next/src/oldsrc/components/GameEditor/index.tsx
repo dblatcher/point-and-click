@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component } from "react";
 
 import { TreeMenu, Folder, Entry } from "./TreeMenu";
@@ -8,7 +7,7 @@ import { SpriteEditor } from "./SpriteEditor";
 import { TabMenu } from "../TabMenu";
 import { ActorEditor } from "./ActorEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
-import { ItemEditor } from "./itemEditor";
+import { ItemEditor } from "./ItemEditor";
 import { InteractionEditor } from "./InteractionEditor";
 import { ConversationEditor } from "./ConversationEditor";
 import { SequenceEditor } from "./SequenceEditor";
@@ -23,8 +22,8 @@ import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { prebuiltGameDesign } from '../../../data/fullGame';
 import { listIds, findById, findIndexById } from "../../lib/util";
 import { cloneData } from "../../lib/clone";
-import { GameDesign, GameDataItem, Interaction, Verb } from "src";
-import { FlagMap } from "src/definitions/Flag";
+import { GameDesign, GameDataItem, Interaction, Verb } from "../../";
+import { FlagMap } from "../../definitions/Flag";
 
 import { populateServicesForPreBuiltGame } from "../../services/populateServices";
 import imageService from "../../services/imageService";
