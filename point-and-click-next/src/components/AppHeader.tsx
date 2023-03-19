@@ -10,6 +10,7 @@ const navItems: { label: string, href: string }[] = [
     { label: 'homepage', href: '/' },
     { label: 'game loader', href: '/game-loader' },
     { label: 'prebuilt game', href: '/prebuilt-game' },
+    { label: 'game editor', href: '/editor' },
 ]
 
 export function AppHeader() {
