@@ -3,6 +3,7 @@ import { uploadFile } from "@/oldsrc/lib/files";
 import { readGameFromZipFile } from "@/oldsrc/lib/zipFiles";
 import { ImageAsset } from "@/oldsrc/services/imageService";
 import { SoundAsset } from "@/oldsrc/services/soundService";
+import { Button } from "@mui/material";
 import { FunctionComponent } from "react";
 
 interface Props {
@@ -29,5 +30,5 @@ export const LoadDesignButton: FunctionComponent<Props> = ({ onLoad, onError }) 
         onLoad(gameDesign, imageAssets, soundAssets)
     }
 
-    return <button onClick={upload}>Load Design</button>
+    return <Button onClick={upload}>Load Design</Button>
 }

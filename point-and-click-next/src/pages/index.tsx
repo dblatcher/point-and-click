@@ -1,5 +1,7 @@
+import AppHeader from '@/components/AppHeader'
+import { LinkButton } from '@/components/LinkButton'
+import { Box } from '@mui/material'
 import Head from 'next/head'
-import Link from 'next/link'
 
 
 export default function Home() {
@@ -11,15 +13,18 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <h1>Point and Click</h1>
-        <div>
-          <Link href={'./game-loader'}>game loader</Link>
-        </div>
-        <div>
-          <Link href={'./prebuilt-game'}>prebuilt game</Link>
-        </div>
-      </main>
+
+      <Box sx={{ display: 'flex' }} paddingTop={'2rem'}>
+        <AppHeader />
+        <Box component='main'>
+          <div>
+            <LinkButton href="./game-loader" variant='contained'>game loader</LinkButton>
+          </div>
+          <div>
+            <LinkButton href="./prebuilt-game" variant='contained'>prebuilt game</LinkButton>
+          </div>
+        </Box>
+      </Box>
     </>
   )
 }

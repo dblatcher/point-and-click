@@ -1,10 +1,11 @@
 import Head from 'next/head'
 import { GameDesignLoader } from '@/components/GameDesignLoader'
-import Link from 'next/link'
+import AppHeader from '@/components/AppHeader'
+import { Box } from '@mui/material'
 
 
 export default function GameLoaderPage() {
-    return (
+  return (
     <>
       <Head>
         <title>Create Next App</title>
@@ -12,10 +13,14 @@ export default function GameLoaderPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <Link href={'/'}>home</Link>
-        <GameDesignLoader />
-      </main>
+
+      <Box sx={{ display: 'flex' }} paddingTop={'2rem'}>
+        <AppHeader />
+        <Box component='main'>
+          <GameDesignLoader />
+        </Box>
+      </Box>
+
     </>
   )
 }

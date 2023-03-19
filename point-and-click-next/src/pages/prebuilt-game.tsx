@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import { GameDesignPlayer } from '@/components/GameDesignPlayer'
 import { prebuiltGameDesign } from '@/data/fullGame'
 import { imageAssets } from '@/data/images'
 import { soundAssets } from '@/data/sounds'
-
+import AppHeader from '@/components/AppHeader'
+import { Box } from '@mui/material'
 
 
 export default function GameLoaderPage() {
@@ -16,14 +16,18 @@ export default function GameLoaderPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <Link href={'/'}>home</Link>
-        <GameDesignPlayer
-          gameDesign={prebuiltGameDesign}
-          imageAssets={imageAssets}
-          soundAssets={soundAssets}
-        />
-      </main>
+
+
+      <Box sx={{ display: 'flex' }} paddingTop={'2rem'}>
+        <AppHeader />
+        <Box component='main'>
+          <GameDesignPlayer
+            gameDesign={prebuiltGameDesign}
+            imageAssets={imageAssets}
+            soundAssets={soundAssets}
+          />
+        </Box>
+      </Box>
     </>
   )
 }
