@@ -3,7 +3,7 @@ import { GameDesignLoader } from '@/components/GameDesignLoader'
 import Link from 'next/link'
 
 
-export default function Game() {
+export default function GameLoaderPage() {
     return (
     <>
       <Head>

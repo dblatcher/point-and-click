@@ -14,9 +14,11 @@ export default function Home() {
       <main>
         <h1>Point and Click</h1>
         <div>
-          <Link href={'./game'}>game</Link>
+          <Link href={'./game-loader'}>game loader</Link>
         </div>
-
+        <div>
+          <Link href={'./prebuilt-game'}>prebuilt game</Link>
+        </div>
       </main>
     </>
   )
