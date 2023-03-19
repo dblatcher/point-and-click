@@ -3,11 +3,19 @@ import Toolbar from '@mui/material/Toolbar';
 import { useState } from 'react';
 import { LinkButton } from './LinkButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useRouter } from 'next/router'
 
+
+const navItems: { label: string, href: string }[] = [
+    { label: 'homepage', href: '/' },
+    { label: 'game loader', href: '/game-loader' },
+    { label: 'prebuilt game', href: '/prebuilt-game' },
+]
 
 export function AppHeader() {
-
     const [drawerOpen, setDrawerOpen] = useState(false)
+    const router = useRouter()
+    const { pathname } = router
 
     return (
         <AppBar component='header'>
@@ -25,15 +33,16 @@ export function AppHeader() {
                 onClose={() => { setDrawerOpen(false) }}
             >
                 <List>
-                    <ListItem>
-                        <LinkButton href="/" sx={{ flex: 1 }}>home page</LinkButton>
-                    </ListItem>
-                    <ListItem>
-                        <LinkButton href="/game-loader" sx={{ flex: 1 }}>game loader</LinkButton>
-                    </ListItem>
-                    <ListItem>
-                        <LinkButton href="/prebuilt-game" sx={{ flex: 1 }}>prebuilt game</LinkButton>
-                    </ListItem>
+                    {navItems.map(item => (
+                        <ListItem key={item.href}>
+                            <LinkButton
+                                disabled={item.href === pathname}
+                                href={item.href}
+                                sx={{ flex: 1 }}>
+                                {item.label}
+                            </LinkButton>
+                        </ListItem>
+                    ))}
                 </List>
             </Drawer>
         </AppBar>
