@@ -101,7 +101,7 @@ export const OptionalNumberInput: FunctionComponent<FieldProps & {
         />
         <span>
             <label>undef:</label>
-            <input type="checkbox" checked={typeof props.value === 'undefined'} onChange={toggleUndefined} />
+            <input type="checkbox" defaultChecked={typeof props.value === 'undefined'} onChange={toggleUndefined} />
         </span>
     </FieldWrapper>
 }
@@ -116,7 +116,7 @@ export const TextInput: FunctionComponent<{
     const { label, type = 'text' } = props
     return <>
         <label>{label}</label>
-        <input {...props} type={type} onInput={props.onInput}/>
+        <input {...props} type={type} onInput={props.onInput} />
     </>
 }
 
@@ -132,11 +132,13 @@ export const StringInput: FunctionComponent<FieldProps & {
 
     if (type === 'textArea') {
         return <FieldWrapper {...props}>
-            <textarea onInput={
-                (event): void => {
-                    inputHandler(eventToString(event.nativeEvent))
+            <textarea
+                onInput={
+                    (event): void => {
+                        inputHandler(eventToString(event.nativeEvent))
+                    }
                 }
-            } >{value}</textarea>
+                value={value} />
         </FieldWrapper>
     }
 
@@ -205,7 +207,7 @@ export const CheckBoxInput: FunctionComponent<FieldProps & {
     return <FieldWrapper {...props}>
         <input type='checkbox'
             checked={props.value}
-            onInput={sendValue}
+            onChange={sendValue}
         />
     </FieldWrapper>
 }

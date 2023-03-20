@@ -60,7 +60,7 @@ export const ServiceItemSelector: FunctionComponent<Props> = ({
     switch (format) {
         case 'select':
             return (
-                <span updated-at={timestamp}>
+                <span>
                     <label>{legend}:</label>
                     <select value={selectedItemId} 
                         onChange={event => { handleSelect(eventToString(event.nativeEvent)) }}>
@@ -77,7 +77,7 @@ export const ServiceItemSelector: FunctionComponent<Props> = ({
             return <fieldset className={editorStyles.fieldset}>
                 <legend>{legend}</legend>
                 <StringInput label="search" block value={searchInput} inputHandler={setSearchInput} />
-                <div updated-at={timestamp}>
+                <div>
                     <ul className={editorStyles.flexList}>
                         {searchedList.map(id =>
                             <li key={id}>

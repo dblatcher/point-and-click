@@ -113,7 +113,7 @@ export class ItemEditor extends Component<Props, State> {
         return (
             <article>
                 <EditorHeading heading="Item Editor" helpTopic="items" />
-                <div class={editorStyles.container}>
+                <div className={editorStyles.container}>
                     <fieldset>
                         <legend>Data</legend>
                         <StringInput
@@ -162,7 +162,7 @@ export class ItemEditor extends Component<Props, State> {
                 </div>
 
                 {(imageAsset?.rows || imageAsset?.cols) && (
-                    <div class={editorStyles.container}>
+                    <div className={editorStyles.container}>
                         <FramePicker fixedSheet
                             sheetId={this.state.imageId}
                             row={this.state.row || 0}
@@ -172,7 +172,7 @@ export class ItemEditor extends Component<Props, State> {
                     </div>
                 )}
 
-                <div class={editorStyles.container}>
+                <div className={editorStyles.container}>
                     <fieldset>
                         <legend>Button Preview</legend>
                         <div className={editorStyles.row}>

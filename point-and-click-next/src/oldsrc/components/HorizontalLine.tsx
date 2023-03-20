@@ -17,15 +17,15 @@ const HorizontalLine: FunctionComponent<Props> = ({
         <line x1={0} y1={roomData.height - y} 
             x2={roomData.frameWidth} y2={roomData.height - y} 
             stroke={color} 
-            stroke-dasharray="4 3" />
+            strokeDasharray="4 3" />
         <text
             x={0}
             y={roomData.height - y}
             stroke={'white'}
             fill={'black'}
-            stroke-width={.25}
-            font-size={15}
-            font-family='monospace'
+            strokeWidth={.25}
+            fontSize={15}
+            fontFamily='monospace'
         >{textToDisplay}</text>
     </>
     )
