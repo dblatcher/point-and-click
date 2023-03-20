@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "src";
+import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "../../../";
 import { RoomDataSchema } from "../../../definitions/RoomData";
 import { Point } from "../../../lib/pathfinding/geometry";
 import { cloneData } from "../../../lib/clone";
@@ -9,12 +9,12 @@ import { uploadJsonData } from "../../../lib/files";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ShapeChangeFunction } from "./ShapeControl";
-import { HotspotControl } from "./HotspotControl";
+import { HotspotControl } from "./HotSpotControl";
 import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
-import { TabMenu, type Tab } from "../../TabMenu";
+import { TabSet, type Tab } from "../../TabSet";
 import { getBlankRoom } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
 import { ListEditor } from "../ListEditor";
@@ -374,7 +374,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     break;
                 }
                 case 'HOTSPOT':
-                    const zoneIndex = this.state.hotspots?.indexOf(data as HotspotZone)
+                    const zoneIndex = this.state.hotspots?.indexOf(data as HotspotZone) || 0
                     this.setState({ 'hotspotTab': zoneIndex })
                     break;
             }
@@ -445,8 +445,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 label: 'Hotspots', content: (
                     <>
                         {hotspots.length === 0 && <span>No <b>hotspots</b> for this room yet. Select a shape from the menu to the left to add one.</span>}
-                        <TabMenu noButtons
-                            defaultOpenIndex={this.state.hotspotTab}
+                        <TabSet
+                            openIndex={this.state.hotspotTab}
                             tabs={hotspots.map((hotspot, index) => {
                                 return {
                                     label: hotspot.id, content: (
@@ -482,7 +482,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     <legend>Room</legend>
                     <div className={editorStyles.row}>
                         <label >ID</label>
-                        <input type="text" value={id} onInput={event => this.setStateWithAutosave({ id: eventToString(event) })} />
+                        <input type="text" value={id} onInput={event => this.setStateWithAutosave({ id: eventToString(event.nativeEvent) })} />
                     </div>
                     <div className={editorStyles.row}>
                         <NumberInput label="height" value={height}
@@ -532,9 +532,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 />
                 <div style={{ flex: 1 }}>
                     <EditorHeading heading={tabs[mainTab]?.label || '?'} level={3} />
-                    <TabMenu noButtons
+                    <TabSet 
                         containerStyle={{ flex: 1 }}
-                        defaultOpenIndex={mainTab}
+                        openIndex={mainTab}
                         tabs={tabs} />
                 </div>
             </div>

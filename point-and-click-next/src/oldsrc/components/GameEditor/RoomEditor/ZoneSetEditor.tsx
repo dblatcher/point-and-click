@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { Zone } from "../../../";
-import { TabMenu } from "../../TabMenu";
+import { TabSet } from "../../TabSet";
 import { ClickEffect } from "./ClickEffect";
 import { ShapeChangeFunction, ValidShapeType } from "./ShapeControl";
 import { ZoneControl } from "./ZoneControl";
@@ -26,8 +26,8 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
     return (
         <>
         {zones.length === 0 && <span>No <b>{type}s</b> for this room yet. Select a shape from the menu to the left to add one.</span>}
-        <TabMenu noButtons
-            defaultOpenIndex={openTab}
+        <TabSet
+            openIndex={openTab}
             tabs={
                 zones.map((obstacle, index) => {
                     return {

@@ -11,7 +11,7 @@ import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
 import editorStyles from "../editorStyles.module.css"
 import { SelectAndConfirmInput, StringInput } from "../formControls";
-import { TabMenu } from "../../TabMenu";
+import { TabSet } from "../../TabSet";
 import { DataItemEditorProps, icons } from "../dataEditors";
 import { getTargetLists } from "../InteractionEditor/getTargetLists";
 import { EditorHeading } from "../EditorHeading";
@@ -154,7 +154,9 @@ export class SequenceEditor extends Component<Props, State> {
                     onSelect={value => { this.changeOrderList([getDefaultOrder('say')], stageIndex, value) }}
                 />
 
-                <TabMenu backgroundColor="none"
+                {/* TO DO - add state for switching stages since tabmenu doesn't work */}
+                <TabSet backgroundColor="none"
+                    openIndex={0}
                     tabs={
                         [
                             ...Object.entries(actorOrders).map(([actorId, orders]) => ({
