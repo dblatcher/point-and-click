@@ -1,12 +1,10 @@
+import EditorLoader from '@/components/EditorLoader'
 import { PageLayout } from '@/components/PageLayout'
-import { GameEditor } from '../oldsrc/components/GameEditor'
 
 export default function GameEditorPage() {
   return (
     <PageLayout>
-
-      <GameEditor />
-
+      <EditorLoader />
     </PageLayout>
   )
 }

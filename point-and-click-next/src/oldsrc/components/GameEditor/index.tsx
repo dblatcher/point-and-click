@@ -91,7 +91,7 @@ function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[
     return list
 }
 
-export class GameEditor extends Component<Props, State>{
+export default class GameEditor extends Component<Props, State>{
 
     constructor(props: Props) {
         super(props)
