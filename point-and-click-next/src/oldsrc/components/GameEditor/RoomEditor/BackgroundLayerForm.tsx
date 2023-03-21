@@ -3,7 +3,7 @@ import { ImageAsset } from "../../../services/imageService";
 import { BackgroundLayer } from "../../../";
 import { ParallaxInput, SelectInput } from "../formControls";
 import { icons } from "../dataEditors";
-import { listIds } from "../../../lib/util";
+import { listIds } from "../../../../lib/util";
 import editorStyles from "../editorStyles.module.css";
 
 interface Props {

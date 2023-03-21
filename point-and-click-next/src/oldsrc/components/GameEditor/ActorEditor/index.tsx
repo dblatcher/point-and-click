@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component } from "react";
-import { ActorData, Direction, RoomData, Point } from "src";
+import { ActorData, Direction, RoomData, Point } from "@/oldsrc";
 import { ActorDataSchema, SoundValue } from "../../../definitions/ActorData";
 import { directions } from "../../../definitions/SpriteSheet";
 import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, StringInput } from "../formControls";
@@ -8,10 +7,10 @@ import { ServiceItemSelector } from "../ServiceItemSelector";
 import spriteService from "../../../services/spriteService";
 import { SpritePreview } from "../SpritePreview";
 import { StorageMenu } from "../StorageMenu";
-import { cloneData } from "../../../lib/clone";
-import { getStatusSuggestions } from "../../../lib/animationFunctions";
-import { findById, listIds } from "../../../lib/util";
-import { uploadJsonData } from "../../../lib/files";
+import { cloneData } from "../../../../lib/clone";
+import { getStatusSuggestions } from "@/lib/animationFunctions";
+import { findById, listIds } from "../../../../lib/util";
+import { uploadJsonData } from "../../../../lib/files";
 import editorStyles from "../editorStyles.module.css"
 import { PositionPreview } from "./PositionPreview";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";

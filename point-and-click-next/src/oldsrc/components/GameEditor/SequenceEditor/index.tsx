@@ -1,9 +1,9 @@
 import { Component } from "react";
 import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage, ImmediateConsequence } from "../../../";
 import { ImmediateConsequenceSchema } from "../../../definitions/Consequence";
-import { cloneData } from "../../../lib/clone";
-import { getStatusSuggestions } from "../../../lib/animationFunctions";
-import { listIds } from "../../../lib/util";
+import { cloneData } from "../../../../lib/clone";
+import { getStatusSuggestions } from "@/lib/animationFunctions";
+import { listIds } from "../../../../lib/util";
 import { getDefaultOrder, makeBlankSequence, makeBlankStage, makeNewConsequence } from "../defaults";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { ListEditor } from "../ListEditor";

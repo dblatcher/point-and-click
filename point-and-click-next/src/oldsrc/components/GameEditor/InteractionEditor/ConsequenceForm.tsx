@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionComponent } from "react";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "../../../definitions/Consequence";
-import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "src";
+import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "@/oldsrc";
 import { SelectInput } from "../formControls";
-import { findById, listIds } from "../../../lib/util";
+import { findById, listIds } from "../../../../lib/util";
 import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions, getZoneRefsOrIds } from "./getTargetLists";
 import { OrderForm } from "../OrderForm";
 import { ListEditor } from "../ListEditor";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
-import { cloneData } from "../../../lib/clone";
-import { getStatusSuggestions } from "../../../lib/animationFunctions";
+import { cloneData } from "../../../../lib/clone";
+import { getStatusSuggestions } from "@/lib/animationFunctions";
 import soundService from "../../../services/soundService";
 import { getModification, SchemaForm } from "../SchemaForm";
 import editorStyles from '../editorStyles.module.css';

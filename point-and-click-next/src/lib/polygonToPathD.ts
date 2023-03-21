@@ -1,4 +1,4 @@
-import { Polygon } from "../definitions/Zone"
+import { Polygon } from "../oldsrc/definitions/Zone"
 
 export function polygonToPathD(polygon: Polygon): string {
     let output = ''

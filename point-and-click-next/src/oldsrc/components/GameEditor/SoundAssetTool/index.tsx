@@ -3,10 +3,10 @@ import {
   fileToObjectUrl,
   makeDownloadFile,
   uploadFile,
-} from "../../../lib/files";
-import { eventToString } from "../../../lib/util";
+} from "../../../../lib/files";
+import { eventToString } from "../../../../lib/util";
 import { SelectInput, TextInput, Warning } from "../formControls";
-import { cloneData } from "../../../lib/clone";
+import { cloneData } from "../../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "../../../services/Service";
 import { SoundToggle } from "../../../components/SoundToggle";
@@ -18,7 +18,7 @@ import soundService, {
   soundAssetCategories,
 
 } from "../../../services/soundService";
-import { buildAssetZipBlob, readSoundAssetFromZipFile } from "../../../lib/zipFiles";
+import { buildAssetZipBlob, readSoundAssetFromZipFile } from "../../../../lib/zipFiles";
 import { EditorHeading } from "../EditorHeading";
 
 type State = {

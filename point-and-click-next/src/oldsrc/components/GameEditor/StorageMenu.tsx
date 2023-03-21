@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import editorStyles from "./editorStyles.module.css"
 
-import { downloadJsonFile, } from "../../lib/files";
+import { downloadJsonFile, } from "../../../lib/files";
 import { DeleteButton } from "./formControls";
 import { EditorOptions } from ".";
 

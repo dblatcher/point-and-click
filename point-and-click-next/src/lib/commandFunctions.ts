@@ -1,4 +1,4 @@
-import { Command, Interaction, RoomData, FlagMap, CommandTarget, GameContents } from "src";
+import { Command, Interaction, RoomData, FlagMap, CommandTarget, GameContents } from "@/oldsrc";
 
 import { findById } from "./util";
 

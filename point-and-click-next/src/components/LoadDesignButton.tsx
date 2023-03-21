@@ -1,6 +1,6 @@
 import { GameDesign } from "@/oldsrc";
-import { uploadFile } from "@/oldsrc/lib/files";
-import { readGameFromZipFile } from "@/oldsrc/lib/zipFiles";
+import { uploadFile } from "@/lib/files";
+import { readGameFromZipFile } from "@/lib/zipFiles";
 import { ImageAsset } from "@/oldsrc/services/imageService";
 import { SoundAsset } from "@/oldsrc/services/soundService";
 import { Button } from "@mui/material";

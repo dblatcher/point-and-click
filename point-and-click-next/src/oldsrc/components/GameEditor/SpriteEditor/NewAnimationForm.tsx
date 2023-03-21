@@ -2,7 +2,7 @@ import { FunctionComponent, useState } from "react";
 import { icons } from "../dataEditors";
 import { Warning, StringInput } from "../formControls";
 import editorStyles from '../editorStyles.module.css';
-import { Sprite } from "../../../lib/Sprite";
+import { Sprite } from "../../../../lib/Sprite";
 
 interface Props {
     existingKeys: string[];

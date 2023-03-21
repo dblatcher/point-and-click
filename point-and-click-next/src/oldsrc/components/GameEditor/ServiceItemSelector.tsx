@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from "react";
-import { eventToString } from "../../lib/util";
+import { eventToString } from "../../../lib/util";
 import { Service, ServiceItem } from "../../services/Service";
 import { icons } from "./dataEditors";
 

@@ -1,11 +1,11 @@
 import { Component } from "react";
 import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "../../../";
 import { RoomDataSchema } from "../../../definitions/RoomData";
-import { Point } from "../../../lib/pathfinding/geometry";
-import { cloneData } from "../../../lib/clone";
-import { eventToString } from "../../../lib/util";
-import { getShift, locateClickInWorld } from "../../../lib/roomFunctions";
-import { uploadJsonData } from "../../../lib/files";
+import { Point } from "../../../../lib/pathfinding/geometry";
+import { cloneData } from "../../../../lib/clone";
+import { eventToString } from "../../../../lib/util";
+import { getShift, locateClickInWorld } from "../../../../lib/roomFunctions";
+import { uploadJsonData } from "../../../../lib/files";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ShapeChangeFunction } from "./ShapeControl";

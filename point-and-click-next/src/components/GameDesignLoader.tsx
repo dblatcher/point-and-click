@@ -1,5 +1,5 @@
 import { GameCondition, GameDesign } from "@/oldsrc";
-import { cloneData } from "@/oldsrc/lib/clone";
+import { cloneData } from "@/lib/clone";
 import { ImageAsset } from "@/oldsrc/services/imageService";
 import { SoundAsset } from "@/oldsrc/services/soundService";
 import { Snackbar, Alert } from "@mui/material";

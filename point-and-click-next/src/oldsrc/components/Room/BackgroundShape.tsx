@@ -1,6 +1,6 @@
 import imageService from "../../services/imageService";
 import { BackgroundLayer, RoomData } from "../../"
-import { getLayerWidth, getShift } from "../../lib/roomFunctions";
+import { getLayerWidth, getShift } from "../../../lib/roomFunctions";
 
 interface Props {
     layer: BackgroundLayer;

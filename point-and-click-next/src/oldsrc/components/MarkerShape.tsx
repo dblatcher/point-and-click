@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { RoomData } from "../"
-import { placeOnScreen } from "../lib/roomFunctions";
+import { placeOnScreen } from "../../lib/roomFunctions";
 
 interface Props {
     roomData: RoomData;

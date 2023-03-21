@@ -1,9 +1,9 @@
 import { Component } from "react";
 import { GameDesign, Ending } from "../../../";
-import { cloneData } from "../../../lib/clone";
+import { cloneData } from "../../../../lib/clone";
 import { makeBlankEnding } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
-import { listIds } from "../../../lib/util";
+import { listIds } from "../../../../lib/util";
 import { FieldDef, SchemaForm, FieldValue, getModification } from "../SchemaForm";
 import { EndingSchema } from "../../../definitions/Ending";
 import imageService from "../../../services/imageService";

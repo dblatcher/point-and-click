@@ -1,9 +1,9 @@
 import { FunctionComponent, useLayoutEffect, useState } from "react";
 
 import { RoomData, Order, ActorData } from "../"
-import { getScale } from "../lib/getScale";
-import { Sprite } from "../lib/Sprite";
-import { useInterval } from "../lib/useInterval"
+import { getScale } from "../../lib/getScale";
+import { Sprite } from "../../lib/Sprite";
+import { useInterval } from "../../lib/useInterval"
 
 import { SpriteShape } from "./SpriteShape";
 import spriteService from "../services/spriteService";

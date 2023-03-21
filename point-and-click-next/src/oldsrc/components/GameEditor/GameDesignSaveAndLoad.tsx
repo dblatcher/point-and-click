@@ -4,8 +4,8 @@ import { Warning } from "./formControls";
 import {
   makeDownloadFile,
   uploadFile,
-} from "../../lib/files";
-import { buildGameZipBlob, readGameFromZipFile } from "../../lib/zipFiles";
+} from "../../../lib/files";
+import { buildGameZipBlob, readGameFromZipFile } from "../../../lib/zipFiles";
 import imageService from "../../services/imageService";
 import { populateServices } from "../../services/populateServices";
 import soundService from "../../services/soundService";

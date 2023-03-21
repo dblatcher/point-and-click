@@ -1,13 +1,13 @@
 import JSZip from "jszip";
-import { GameDesignSchema } from "../definitions/Game";
-import { GameDesign } from "../";
+import { GameDesignSchema } from "../oldsrc/definitions/Game";
+import { GameDesign } from "../oldsrc";
 import {
   ImageAsset,
   ImageAssetSchema,
   ImageService,
-} from "../services/imageService";
+} from "../oldsrc/services/imageService";
 import { dataToBlob, fileToObjectUrl } from "./files";
-import { SoundAsset, SoundAssetSchema, SoundService } from "../services/soundService";
+import { SoundAsset, SoundAssetSchema, SoundService } from "../oldsrc/services/soundService";
 
 type ZipActionFailure = {
   success: false;
