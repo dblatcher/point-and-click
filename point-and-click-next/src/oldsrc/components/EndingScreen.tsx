@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { Ending } from "../";
-import imageService from "../services/imageService";
+import imageService from "../../services/imageService";
 
 interface Props {
     ending: Ending;

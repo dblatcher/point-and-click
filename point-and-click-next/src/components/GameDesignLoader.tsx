@@ -1,7 +1,7 @@
 import { GameCondition, GameDesign } from "@/oldsrc";
 import { cloneData } from "@/lib/clone";
-import { ImageAsset } from "@/oldsrc/services/imageService";
-import { SoundAsset } from "@/oldsrc/services/soundService";
+import { ImageAsset } from "@/services/imageService";
+import { SoundAsset } from "@/services/soundService";
 import { Snackbar, Alert } from "@mui/material";
 import React from "react";
 import { GameDesignPlayer } from "./GameDesignPlayer";

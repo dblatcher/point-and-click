@@ -6,9 +6,9 @@ import {
   uploadFile,
 } from "../../../lib/files";
 import { buildGameZipBlob, readGameFromZipFile } from "../../../lib/zipFiles";
-import imageService from "../../services/imageService";
-import { populateServices } from "../../services/populateServices";
-import soundService from "../../services/soundService";
+import imageService from "../../../services/imageService";
+import { populateServices } from "../../../services/populateServices";
+import soundService from "../../../services/soundService";
 
 interface Props {
   gameDesign: GameDesign;

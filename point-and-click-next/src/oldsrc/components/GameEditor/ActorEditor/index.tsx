@@ -4,7 +4,7 @@ import { ActorDataSchema, SoundValue } from "../../../definitions/ActorData";
 import { directions } from "../../../definitions/SpriteSheet";
 import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, StringInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import spriteService from "../../../services/spriteService";
+import spriteService from "../../../../services/spriteService";
 import { SpritePreview } from "../SpritePreview";
 import { StorageMenu } from "../StorageMenu";
 import { cloneData } from "../../../../lib/clone";

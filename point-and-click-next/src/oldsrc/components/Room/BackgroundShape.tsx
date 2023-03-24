@@ -1,4 +1,4 @@
-import imageService from "../../services/imageService";
+import imageService from "../../../services/imageService";
 import { BackgroundLayer, RoomData } from "../../"
 import { getLayerWidth, getShift } from "../../../lib/roomFunctions";
 

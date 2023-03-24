@@ -5,9 +5,9 @@ import {
   ImageAsset,
   ImageAssetSchema,
   ImageService,
-} from "../oldsrc/services/imageService";
+} from "../services/imageService";
 import { dataToBlob, fileToObjectUrl } from "./files";
-import { SoundAsset, SoundAssetSchema, SoundService } from "../oldsrc/services/soundService";
+import { SoundAsset, SoundAssetSchema, SoundService } from "../services/soundService";
 
 type ZipActionFailure = {
   success: false;

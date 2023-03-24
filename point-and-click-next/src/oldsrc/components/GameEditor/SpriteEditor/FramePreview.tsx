@@ -1,6 +1,6 @@
 import { FunctionComponent, CSSProperties } from "react";
 import { SpriteFrame } from "../../../";
-import imageService from "../../../services/imageService";
+import imageService from "../../../../services/imageService";
 
 
 interface Props {

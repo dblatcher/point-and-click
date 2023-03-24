@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import imageService from "../services/imageService";
+import imageService from "../../services/imageService";
 import { ItemData } from "../"
 import { HandleHoverFunction } from "./Game";
 import uiStyles from './uiStyles.module.css';

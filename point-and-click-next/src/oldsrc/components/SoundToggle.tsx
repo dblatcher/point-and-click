@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import soundService from "../services/soundService";
+import soundService from "../../services/soundService";
 
 
 interface Props {

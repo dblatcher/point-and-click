@@ -1,6 +1,6 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { SoundControl } from "physics-worlds";
-import soundService from "../services/soundService";
+import soundService from "../../services/soundService";
 import type { SoundValue } from "../";
 
 interface Props {

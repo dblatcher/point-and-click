@@ -1,9 +1,9 @@
 import { GameCondition, GameData, GameDesign } from "@/oldsrc";
 import Game from "@/oldsrc/components/Game";
 import { cloneData } from "@/lib/clone";
-import { ImageAsset } from "@/oldsrc/services/imageService";
-import { populateServices } from "@/oldsrc/services/populateServices";
-import { SoundAsset } from "@/oldsrc/services/soundService";
+import { ImageAsset } from "@/services/imageService";
+import { populateServices } from "@/services/populateServices";
+import { SoundAsset } from "@/services/soundService";
 import React from "react";
 
 

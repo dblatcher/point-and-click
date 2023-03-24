@@ -1,8 +1,8 @@
 import { GameDesign } from "@/oldsrc";
 import { uploadFile } from "@/lib/files";
 import { readGameFromZipFile } from "@/lib/zipFiles";
-import { ImageAsset } from "@/oldsrc/services/imageService";
-import { SoundAsset } from "@/oldsrc/services/soundService";
+import { ImageAsset } from "@/services/imageService";
+import { SoundAsset } from "@/services/soundService";
 import { Button } from "@mui/material";
 import { FunctionComponent } from "react";
 

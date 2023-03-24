@@ -8,14 +8,14 @@ import { eventToString } from "../../../../lib/util";
 import { OptionalNumberInput, SelectInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import { ServiceItem } from "../../../services/Service";
+import { ServiceItem } from "../../../../services/Service";
 import editorStyles from "../editorStyles.module.css";
 import imageService, {
   ImageAsset,
   ImageAssetCategory,
   imageAssetCategories,
 
-} from "../../../services/imageService";
+} from "../../../../services/imageService";
 import { buildAssetZipBlob, readImageAssetFromZipFile } from "../../../../lib/zipFiles";
 import { SpriteSheetPreview } from "../SpriteSheetPreview";
 import { EditorHeading } from "../EditorHeading";
