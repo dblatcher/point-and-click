@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionComponent } from "react";
 import { ClickEffect } from "./ClickEffect";
-import { HotspotZone, Shape, Zone, ZoneType } from "src";
+import { HotspotZone, Shape, Zone, ZoneType } from "@/oldsrc";
 import { ListEditor } from "../ListEditor";
 import { NumberInput } from "../formControls";
 

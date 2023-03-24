@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionComponent } from "react";
-import { ScaleLevel } from "src";
+import { ScaleLevel } from "@/oldsrc";
 import { NumberInput } from "../formControls";
 import { cloneData } from "../../../../lib/clone"
 import { ListEditor } from "../ListEditor";

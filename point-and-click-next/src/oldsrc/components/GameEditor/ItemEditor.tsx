@@ -1,5 +1,5 @@
 import { Component } from "react"
-import { ItemData } from "../../"
+import { ItemData } from "@/oldsrc"
 import { SelectInput, StringInput } from "./formControls";
 import { ServiceItemSelector } from "./ServiceItemSelector";
 import imageService, { ImageAsset } from "@/services/imageService";

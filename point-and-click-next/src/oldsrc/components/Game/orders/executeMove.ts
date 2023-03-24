@@ -1,4 +1,4 @@
-import { Direction, ActorData, MoveOrder } from "src";
+import { Direction, ActorData, MoveOrder } from "@/oldsrc";
 import { Point } from "../../../../lib/pathfinding/geometry";
 import spriteService from "@/services/spriteService";
 

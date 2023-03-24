@@ -1,4 +1,4 @@
-import { ActOrder } from "src";
+import { ActOrder } from "@/oldsrc";
 
 
 export function executeAction(actOrder: ActOrder): void {

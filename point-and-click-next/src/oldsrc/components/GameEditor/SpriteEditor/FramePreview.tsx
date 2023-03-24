@@ -1,5 +1,5 @@
 import { FunctionComponent, CSSProperties } from "react";
-import { SpriteFrame } from "../../../";
+import { SpriteFrame } from "@/oldsrc";
 import imageService from "@/services/imageService";
 
 

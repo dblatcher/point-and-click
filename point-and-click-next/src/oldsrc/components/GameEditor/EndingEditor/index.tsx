@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { GameDesign, Ending } from "../../../";
+import { GameDesign, Ending } from "@/oldsrc";
 import { cloneData } from "../../../../lib/clone";
 import { makeBlankEnding } from "../defaults";
 import { StorageMenu } from "../StorageMenu";

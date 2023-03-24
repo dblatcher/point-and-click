@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Conversation, ConversationChoice } from "src"
+import { Conversation, ConversationChoice } from "@/oldsrc"
 import uiStyles from './uiStyles.module.css';
 
 interface Props {

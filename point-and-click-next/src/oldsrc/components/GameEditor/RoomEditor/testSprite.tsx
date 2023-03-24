@@ -1,4 +1,4 @@
-import { ActorData, SpriteData  } from "src"
+import { ActorData, SpriteData  } from "@/oldsrc"
 import { Point } from "../../../../lib/pathfinding/geometry";
 import { Sprite } from "../../../../lib/Sprite";
 import spriteService from "@/services/spriteService";

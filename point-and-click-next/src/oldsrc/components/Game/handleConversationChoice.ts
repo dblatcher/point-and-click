@@ -1,4 +1,4 @@
-import { Conversation, ConversationChoice, Sequence } from "../../";
+import { Conversation, ConversationChoice, Sequence } from "@/oldsrc";
 import { cloneData } from "../../../lib/clone";
 import { GameState } from ".";
 import { findById } from "../../../lib/util";

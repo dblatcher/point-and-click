@@ -1,5 +1,5 @@
 import { FunctionComponent, useState} from "react";
-import { GameDesign, Interaction, AnyConsequence, Consequence } from "../../../";
+import { GameDesign, Interaction, AnyConsequence, Consequence } from "@/oldsrc";
 import { InteractionSchema } from "../../../definitions/Interaction";
 import { cloneData } from "../../../../lib/clone";
 import { listIds } from "../../../../lib/util";

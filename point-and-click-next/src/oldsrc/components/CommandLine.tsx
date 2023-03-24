@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { ItemData, CommandTarget, Verb } from "../";
+import { ItemData, CommandTarget, Verb } from "@/oldsrc";
 import uiStyles from './uiStyles.module.css';
 
 interface Props {

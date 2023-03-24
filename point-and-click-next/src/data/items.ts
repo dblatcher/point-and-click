@@ -1,4 +1,4 @@
-import { ItemData } from "src";
+import { ItemData } from "@/oldsrc";
 
 
 export const items: ItemData[] = [

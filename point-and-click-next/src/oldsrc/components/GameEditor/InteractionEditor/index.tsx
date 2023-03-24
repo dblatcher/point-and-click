@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component } from "react";
-import { GameDesign, Interaction } from "src";
+import { GameDesign, Interaction } from "@/oldsrc";
 import { DeleteButton, SelectInput } from "../formControls";
 import { cloneData } from "../../../../lib/clone";
 import { listIds } from "../../../../lib/util";

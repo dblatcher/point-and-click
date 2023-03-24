@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { Ending } from "../";
+import { Ending } from "@/oldsrc";
 import imageService from "@/services/imageService";
 
 interface Props {

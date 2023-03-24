@@ -1,4 +1,4 @@
-import { GameDesign, ZoneType, RoomData, Zone } from "src";
+import { GameDesign, ZoneType, RoomData, Zone } from "@/oldsrc";
 import { findById } from "../../../../lib/util";
 
 const emoji = {

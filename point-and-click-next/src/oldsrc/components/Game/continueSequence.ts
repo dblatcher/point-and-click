@@ -1,5 +1,5 @@
 import { GameProps, GameState } from ".";
-import { Order, ActorData } from "../../";
+import { Order, ActorData } from "@/oldsrc";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";

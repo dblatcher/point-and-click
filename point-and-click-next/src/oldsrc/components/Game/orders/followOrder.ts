@@ -1,5 +1,5 @@
 import { cellSize, GameState } from "..";
-import { ActorData, MoveOrder, Order } from "../../../";
+import { ActorData, MoveOrder, Order } from "@/oldsrc";
 import { CellMatrix } from "../../../../lib/pathfinding/cells";
 import { Point } from "../../../../lib/pathfinding/geometry";
 import { findPath } from "../../../../lib/pathfinding/pathfind";

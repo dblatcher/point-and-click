@@ -1,4 +1,4 @@
-import { SupportedZoneShape } from "src"
+import { SupportedZoneShape } from "@/oldsrc"
 
 export type NewObstableEffect = {
     type: 'OBSTACLE';

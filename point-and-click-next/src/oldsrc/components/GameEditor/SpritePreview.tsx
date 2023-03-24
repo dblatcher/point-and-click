@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component } from "react";
-import { RoomData, ActorData } from "src";
+import { RoomData, ActorData } from "@/oldsrc";
 import { Room } from "../Room";
 import HorizontalLine from "../HorizontalLine";
 import { Sprite } from "../../../lib/Sprite";

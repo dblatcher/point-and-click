@@ -1,5 +1,5 @@
 import { ChangeEventHandler, Component } from "react";
-import { RoomData, ActorData, HotspotZone } from "../../../";
+import { RoomData, ActorData, HotspotZone } from "@/oldsrc";
 import { Room } from "../../Room";
 import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "../../../../lib/util";

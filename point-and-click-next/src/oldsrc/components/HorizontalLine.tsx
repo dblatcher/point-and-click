@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { RoomData } from "../"
+import { RoomData } from "@/oldsrc"
 
 interface Props {
     roomData: RoomData;

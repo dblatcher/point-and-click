@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Verb } from "../"
+import { Verb } from "@/oldsrc"
 import uiStyles from './uiStyles.module.css';
 
 interface Props {

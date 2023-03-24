@@ -1,6 +1,6 @@
 import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode, useEffect, useRef, useState } from "react";
 import { CellMatrix } from "../../../lib/pathfinding/cells";
-import { RoomData, HotspotZone } from "../../";
+import { RoomData, HotspotZone } from "@/oldsrc";
 import { getShift } from "../../../lib/roomFunctions";
 import styles from './styles.module.css';
 import Hotspot from "./HotSpot";

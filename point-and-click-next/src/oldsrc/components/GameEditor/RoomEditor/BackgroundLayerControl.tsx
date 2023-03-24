@@ -1,5 +1,5 @@
 import { ImageAsset } from "@/services/imageService";
-import { BackgroundLayer } from "../../../";
+import { BackgroundLayer } from "@/oldsrc";
 import { clamp, listIds } from "../../../../lib/util";
 import { ParallaxInput, SelectInput } from "../formControls";
 

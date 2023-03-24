@@ -1,6 +1,6 @@
 import { FunctionComponent, MouseEventHandler } from "react";
 import { polygonToPathD } from "../../lib/polygonToPathD";
-import { Zone, HotspotZone } from "../"
+import { Zone, HotspotZone } from "@/oldsrc"
 import { HandleHoverFunction } from "./Game";
 
 interface Props {

@@ -1,4 +1,4 @@
-import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Order, OrderType } from "src";
+import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Order, OrderType } from "@/oldsrc";
 import { Flag } from "src/definitions/Flag";
 import { ActStep, MoveStep } from "src/definitions/Order";
 

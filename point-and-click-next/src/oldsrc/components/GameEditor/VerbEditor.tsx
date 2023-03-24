@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component } from "react";
-import { GameDesign, Verb, Command, CommandTarget, ItemData } from "src";
+import { GameDesign, Verb, Command, CommandTarget, ItemData } from "@/oldsrc";
 import { cloneData } from "../../../lib/clone";
 import { makeBlankVerb } from "./defaults";
 import { StorageMenu } from "./StorageMenu";

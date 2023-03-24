@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { RoomData } from "../"
+import { RoomData } from "@/oldsrc"
 import { placeOnScreen } from "../../lib/roomFunctions";
 
 interface Props {

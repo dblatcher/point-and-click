@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component } from "react";
-import { GameCondition, GameData, GameDesign } from "../../";
+import { GameCondition, GameData, GameDesign } from "@/oldsrc";
 import Game from "../Game";
 import { cloneData } from "../../../lib/clone";
 import { populateServices } from "@/services/populateServices";

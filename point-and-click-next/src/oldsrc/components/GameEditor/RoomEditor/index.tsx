@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "../../../";
+import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "@/oldsrc";
 import { RoomDataSchema } from "../../../definitions/RoomData";
 import { Point } from "../../../../lib/pathfinding/geometry";
 import { cloneData } from "../../../../lib/clone";
