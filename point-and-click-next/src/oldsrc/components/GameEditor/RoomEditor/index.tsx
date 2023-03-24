@@ -20,7 +20,7 @@ import { StorageMenu } from "../StorageMenu";
 import { ListEditor } from "../ListEditor";
 import { ZoneSetEditor } from "./ZoneSetEditor";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
-import imageService from "../../../../services/imageService";
+import imageService from "@/services/imageService";
 import { RoomEditorTreeMenu } from "./RoomEditorTreeMenu";
 import editorStyles from '../editorStyles.module.css';
 import { EditorHeading } from "../EditorHeading";

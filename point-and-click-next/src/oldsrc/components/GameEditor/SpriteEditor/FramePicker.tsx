@@ -1,6 +1,6 @@
 import { FunctionComponent, MouseEventHandler } from "react";
 
-import imageService from "../../../../services/imageService";
+import imageService from "@/services/imageService";
 
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { SpriteSheetPreview } from "../SpriteSheetPreview";

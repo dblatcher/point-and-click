@@ -1,4 +1,4 @@
-import { ImageAsset } from "../../../../services/imageService";
+import { ImageAsset } from "@/services/imageService";
 import { BackgroundLayer } from "../../../";
 import { clamp, listIds } from "../../../../lib/util";
 import { ParallaxInput, SelectInput } from "../formControls";

@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useRef, MouseEventHandler } from "react";
-import { ImageAsset } from "../../../services/imageService";
+import { ImageAsset } from "@/services/imageService";
 import editorStyles from './editorStyles.module.css';
 
 interface Props {

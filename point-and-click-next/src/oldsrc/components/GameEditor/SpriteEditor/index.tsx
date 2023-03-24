@@ -9,7 +9,7 @@ import { ActorData, Direction, SpriteData, SpriteFrame, Animation } from "src"
 import { SelectInput, StringInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";
-import spriteService from "../../../../services/spriteService";
+import spriteService from "@/services/spriteService";
 import { FramePicker } from "./FramePicker";
 import editorStyles from '../editorStyles.module.css';
 import { StorageMenu } from "../StorageMenu";

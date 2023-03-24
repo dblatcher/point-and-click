@@ -8,7 +8,7 @@ import { eventToString } from "../../../../lib/util";
 import { SelectInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "../../../../lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import { ServiceItem } from "../../../../services/Service";
+import { ServiceItem } from "@/services/Service";
 import { SoundToggle } from "../../../components/SoundToggle";
 import editorStyles from "../editorStyles.module.css";
 
@@ -17,7 +17,7 @@ import soundService, {
   SoundAssetCategory,
   soundAssetCategories,
 
-} from "../../../../services/soundService";
+} from "@/services/soundService";
 import { buildAssetZipBlob, readSoundAssetFromZipFile } from "../../../../lib/zipFiles";
 import { EditorHeading } from "../EditorHeading";
 

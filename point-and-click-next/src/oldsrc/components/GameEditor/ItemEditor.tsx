@@ -2,7 +2,7 @@ import { Component } from "react"
 import { ItemData } from "../../"
 import { SelectInput, StringInput } from "./formControls";
 import { ServiceItemSelector } from "./ServiceItemSelector";
-import imageService, { ImageAsset } from "../../../services/imageService";
+import imageService, { ImageAsset } from "@/services/imageService";
 import editorStyles from "./editorStyles.module.css"
 import { ItemMenu } from "../ItemMenu";
 import { cloneData } from "../../../lib/clone";

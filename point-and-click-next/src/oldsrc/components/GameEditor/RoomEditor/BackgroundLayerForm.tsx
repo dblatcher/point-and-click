@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ImageAsset } from "../../../../services/imageService";
+import { ImageAsset } from "@/services/imageService";
 import { BackgroundLayer } from "../../../";
 import { ParallaxInput, SelectInput } from "../formControls";
 import { icons } from "../dataEditors";

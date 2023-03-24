@@ -6,7 +6,7 @@ import { StorageMenu } from "../StorageMenu";
 import { listIds } from "../../../../lib/util";
 import { FieldDef, SchemaForm, FieldValue, getModification } from "../SchemaForm";
 import { EndingSchema } from "../../../definitions/Ending";
-import imageService from "../../../../services/imageService";
+import imageService from "@/services/imageService";
 import { EndingScreen } from "../../EndingScreen";
 import { DataItemEditorProps } from "../dataEditors";
 import { EditorHeading } from "../EditorHeading";

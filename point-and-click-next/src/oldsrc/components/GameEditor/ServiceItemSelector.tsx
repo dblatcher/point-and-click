@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { eventToString } from "../../../lib/util";
-import { Service, ServiceItem } from "../../../services/Service";
+import { Service, ServiceItem } from "@/services/Service";
 import { icons } from "./dataEditors";
 
 import editorStyles from "./editorStyles.module.css"

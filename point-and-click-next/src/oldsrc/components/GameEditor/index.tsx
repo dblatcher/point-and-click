@@ -25,9 +25,9 @@ import { cloneData } from "../../../lib/clone";
 import { GameDesign, GameDataItem, Interaction, Verb } from "../../";
 import { FlagMap } from "../../definitions/Flag";
 
-import { populateServicesForPreBuiltGame } from "../../../services/populateServices";
-import imageService from "../../../services/imageService";
-import spriteService from "../../../services/spriteService";
+import { populateServicesForPreBuiltGame } from "@/services/populateServices";
+import imageService from "@/services/imageService";
+import spriteService from "@/services/spriteService";
 
 import layoutStyles from "./editorLayoutStyles.module.css";
 import { CheckBoxInput } from "./formControls";

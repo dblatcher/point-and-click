@@ -4,7 +4,7 @@ import { cloneData } from "../../../lib/clone"
 import { changeRoom } from "../../../lib/changeRoom"
 import { findById } from "../../../lib/util"
 import { generateCellMatrix } from "../../../lib/pathfinding/cells"
-import soundService from "../../../services/soundService"
+import soundService from "@/services/soundService"
 
 
 export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {

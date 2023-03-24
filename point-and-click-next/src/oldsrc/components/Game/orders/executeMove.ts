@@ -1,6 +1,6 @@
 import { Direction, ActorData, MoveOrder } from "src";
 import { Point } from "../../../../lib/pathfinding/geometry";
-import spriteService from "../../../../services/spriteService";
+import spriteService from "@/services/spriteService";
 
 function getAvailableDirections(actor: ActorData, animationName?: string): Direction[] {
     const sprite = spriteService.get(actor.sprite);
