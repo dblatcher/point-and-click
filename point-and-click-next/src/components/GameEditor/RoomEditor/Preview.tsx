@@ -1,6 +1,6 @@
 import { ChangeEventHandler, Component } from "react";
 import { RoomData, ActorData, HotspotZone } from "@/oldsrc";
-import { Room } from "@/oldsrc/components/Room";
+import { Room } from "@/components/svg/Room";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { ClickEffect } from "./ClickEffect";

@@ -14,7 +14,7 @@ import { doPendingInteraction, handleCommand } from "./handleCommand";
 import { continueSequence } from "./continueSequence";
 import { handleConversationChoice } from "./handleConversationChoice";
 // component
-import { Room } from "../Room";
+import { Room } from "../../../components/svg/Room";
 import { VerbMenu } from "../VerbMenu";
 import { ItemMenu } from "../../../components/GameEditor/ItemMenu";
 import { CommandLine } from "../CommandLine";

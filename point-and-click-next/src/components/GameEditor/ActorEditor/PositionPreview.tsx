@@ -1,5 +1,5 @@
 import { FunctionComponent, useState } from "react";
-import { Room } from "@/oldsrc/components/Room";
+import { Room } from "@/components/svg/Room";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { ActorData, RoomData } from "@/oldsrc"
 import { clamp } from "@/lib/util";
