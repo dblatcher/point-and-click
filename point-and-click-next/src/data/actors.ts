@@ -1,4 +1,4 @@
-import { ActorData } from "../src/definitions/ActorData"
+import { ActorData } from "@/oldsrc"
 
 export const initialActors: ActorData[] = [
     {

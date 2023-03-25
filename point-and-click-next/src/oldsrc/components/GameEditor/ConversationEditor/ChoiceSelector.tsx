@@ -2,8 +2,8 @@
 import { FunctionComponent } from "react";
 import { findById, listIds } from "@/lib/util";
 import { Conversation } from "@/oldsrc";
+import { ChoiceRefSet } from "@/oldsrc/definitions/Conversation";
 import { SelectInput } from "../formControls";
-import { ChoiceRefSet } from "src/definitions/Conversation";
 import editorStyles from "../editorStyles.module.css"
 import { icons } from "../dataEditors";
 

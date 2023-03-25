@@ -1,4 +1,4 @@
-import { SpriteData } from "../../src/definitions/SpriteSheet";
+import { SpriteData } from "@/oldsrc/definitions/SpriteSheet";
 
 export const data: SpriteData = {
     id: 'tube',

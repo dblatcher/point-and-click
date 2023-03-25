@@ -1,7 +1,6 @@
-
 import { FunctionComponent } from "react";
 import { Conversation } from "@/oldsrc";
-import { ChoiceRefSet } from "src/definitions/Conversation";
+import { ChoiceRefSet } from "@/oldsrc/definitions/Conversation";
 import { ChoiceSelector } from "./ChoiceSelector";
 import editorStyles from "../editorStyles.module.css"
 import { icons } from "../dataEditors";

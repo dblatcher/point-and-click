@@ -1,4 +1,4 @@
-import { Sequence } from "../../src/definitions/Sequence";
+import { Sequence } from "@/oldsrc/definitions/Sequence";
 
 export const DIALOGUE: Sequence = {
     id: "DIALOGUE",

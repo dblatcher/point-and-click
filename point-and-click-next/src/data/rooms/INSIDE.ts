@@ -1,4 +1,4 @@
-import { RoomData } from "../../src/definitions/RoomData"
+import { RoomData } from "@/oldsrc/definitions/RoomData"
 
 export const INSIDE: RoomData = {
   id: "INSIDE",

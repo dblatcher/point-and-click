@@ -1,4 +1,4 @@
-import { Sequence } from "../../src/definitions/Sequence";
+import { Sequence } from "@/oldsrc/definitions/Sequence";
 
 export const PUT_OUT_FIRE: Sequence = {
     id: "PUT_OUT_FIRE",

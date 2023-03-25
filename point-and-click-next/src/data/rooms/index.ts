@@ -1,4 +1,4 @@
-import { RoomData } from '../../src/definitions/RoomData';
+import { RoomData } from '@/oldsrc/definitions/RoomData';
 import testRoomImport from './OUTSIDE.room.json';
 import { INSIDE } from './INSIDE';
 import testRoomImport3 from './test-room-3.json';

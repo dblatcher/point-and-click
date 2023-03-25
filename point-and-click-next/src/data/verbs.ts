@@ -1,4 +1,4 @@
-import { Verb } from "../src/definitions/Verb";
+import { Verb } from "@/oldsrc";
 
 export const verbs: Verb[] = [
     { id: 'WALK', label: 'walk to', isMoveVerb: true },
