@@ -30,5 +30,5 @@ export const LoadDesignButton: FunctionComponent<Props> = ({ onLoad, onError }) 
         onLoad(gameDesign, imageAssets, soundAssets)
     }
 
-    return <Button onClick={upload}>Load Design</Button>
+    return <Button variant="contained" onClick={upload}>Select Game Design file</Button>
 }

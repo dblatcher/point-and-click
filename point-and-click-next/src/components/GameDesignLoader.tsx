@@ -2,11 +2,11 @@ import { GameCondition, GameDesign } from "@/oldsrc";
 import { cloneData } from "@/lib/clone";
 import { ImageAsset } from "@/services/imageService";
 import { SoundAsset } from "@/services/soundService";
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, Card, Grid } from "@mui/material";
 import React from "react";
 import { GameDesignPlayer } from "./GameDesignPlayer";
 import { LoadDesignButton } from "./LoadDesignButton";
-
+import SelectADesignContent from "@/content/selectADesign.mdx"
 
 type State = {
     design?: GameDesign
@@ -82,9 +82,25 @@ export class GameDesignLoader extends React.Component<{}, State> {
         const { design, imageAssets = [], soundAssets = [], loadingSuccessMessage, loadingErrorMessage } = this.state
 
         return <div>
-            <LoadDesignButton 
-                onLoad={this.loadGameDesign} 
-                onError={this.handleLoadFail} />
+
+            {!design && (
+                <>
+                    <Grid container spacing={2} padding={2}
+                        justifyContent="center"
+                        alignItems="center">
+                        <Grid item xs={3}>
+                            <LoadDesignButton
+                                onLoad={this.loadGameDesign}
+                                onError={this.handleLoadFail} />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Card sx={{ fontFamily: 'arial', padding: 2 }}>
+                                <SelectADesignContent />
+                            </Card>
+                        </Grid>
+                    </Grid>
+                </>
+            )}
 
             {design && (
                 <GameDesignPlayer

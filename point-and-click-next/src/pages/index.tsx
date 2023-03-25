@@ -11,16 +11,19 @@ export default function Home() {
       <Grid container spacing={2} padding={2}
         justifyContent="center"
         alignItems="center">
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Card sx={{ fontFamily: 'arial', padding: 2 }}>
           <Content />
         </Card>
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <LinkButton href="./game-loader" variant='contained'>game loader</LinkButton>
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <LinkButton href="./prebuilt-game" variant='contained'>prebuilt game</LinkButton>
+      </Grid>
+      <Grid item xs={2}>
+        <LinkButton href="./editor" variant='contained'>create game</LinkButton>
       </Grid>
     </Grid>
 
