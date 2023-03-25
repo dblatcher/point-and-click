@@ -2,11 +2,13 @@ import { GameCondition, GameDesign } from "@/oldsrc";
 import { cloneData } from "@/lib/clone";
 import { ImageAsset } from "@/services/imageService";
 import { SoundAsset } from "@/services/soundService";
-import { Snackbar, Alert, Card, Grid } from "@mui/material";
+import { Snackbar, Alert, Card, Grid, Typography } from "@mui/material";
 import React from "react";
 import { GameDesignPlayer } from "./GameDesignPlayer";
 import { LoadDesignButton } from "./LoadDesignButton";
 import SelectADesignContent from "@/content/selectADesign.mdx"
+import CastleLifeBlurb from "@/content/castleLifeBlurb.mdx"
+import { DesignCard } from "./DesignCard";
 
 type State = {
     design?: GameDesign
@@ -97,6 +99,20 @@ export class GameDesignLoader extends React.Component<{}, State> {
                             <Card sx={{ fontFamily: 'arial', padding: 2 }}>
                                 <SelectADesignContent />
                             </Card>
+                        </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2} padding={2}
+                        justifyContent="center"
+                        alignItems="center">
+                        <Grid item xs={9}>
+                            <DesignCard title="Castle Life"
+                                downloadUrl="/assets/castle-life.game.zip"
+                                imageUrl="/assets/sword.png"
+                                content={<Typography fontFamily={'arial'}>
+                                    <CastleLifeBlurb />
+                                </Typography>
+                                } />
                         </Grid>
                     </Grid>
                 </>
