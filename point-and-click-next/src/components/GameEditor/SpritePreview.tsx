@@ -1,8 +1,7 @@
-
 import { Component } from "react";
 import { RoomData, ActorData } from "@/oldsrc";
 import { Room } from "@/oldsrc/components/Room";
-import HorizontalLine from "@/oldsrc/components/HorizontalLine";
+import HorizontalLine from "@/components/svg/HorizontalLine";
 import { Sprite } from "@/lib/Sprite";
 
 const makeRoomData: { (actorData: ActorData): RoomData } = (actorData) => ({

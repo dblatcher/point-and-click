@@ -4,12 +4,12 @@ import { RoomData, HotspotZone } from "@/oldsrc";
 import { getShift } from "@/lib/roomFunctions";
 import styles from './styles.module.css';
 import Hotspot from "./HotSpot";
-import ZoneSvg from "../ZoneSvg";
+import ZoneSvg from "@/components/svg/ZoneSvg";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import BackgroundShape from "./BackgroundShape";
 import { HandleHoverFunction, RoomContentItem } from "../Game";
-import { ActorFigure } from "../ActorFigure";
-import { DialogueBubble } from "../DialogueBubble";
+import { ActorFigure } from "@/components/svg/ActorFigure";
+import { DialogueBubble } from "@/components/svg/DialogueBubble";
 
 interface Props {
     data: RoomData;

@@ -1,8 +1,8 @@
 import { ChangeEventHandler, Component } from "react";
 import { RoomData, ActorData, HotspotZone } from "@/oldsrc";
 import { Room } from "@/oldsrc/components/Room";
-import { MarkerShape } from "@/oldsrc/components/MarkerShape";
-import HorizontalLine from "@/oldsrc/components/HorizontalLine";
+import { MarkerShape } from "@/components/svg/MarkerShape";
+import HorizontalLine from "@/components/svg/HorizontalLine";
 import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "@/lib/util";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";

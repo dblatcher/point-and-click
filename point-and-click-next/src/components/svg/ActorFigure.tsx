@@ -7,10 +7,10 @@ import { useInterval } from "@/lib/useInterval"
 
 import { SpriteShape } from "./SpriteShape";
 import spriteService from "@/services/spriteService";
-import { HandleClickFunction, HandleHoverFunction } from "./Game";
-import { PersistentSound } from "./PersistentSound";
-import { SoundEffectMap, SoundValue } from "../definitions/ActorData";
-import { IntermitentSound } from "./IntermitentSound";
+import { HandleClickFunction, HandleHoverFunction } from "../../oldsrc/components/Game";
+import { PersistentSound } from "../../oldsrc/components/PersistentSound";
+import { SoundEffectMap, SoundValue } from "../../oldsrc/definitions/ActorData";
+import { IntermitentSound } from "../../oldsrc/components/IntermitentSound";
 
 interface Props {
     roomData: RoomData;
