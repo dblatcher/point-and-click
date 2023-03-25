@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import {  Component } from "react"
 import { ActOrder, MoveOrder, orderTypes, stepSchama } from "../../../definitions/Order";
 import { SelectInput } from "../formControls";

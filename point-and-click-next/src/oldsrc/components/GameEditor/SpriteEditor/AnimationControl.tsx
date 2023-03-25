@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { FunctionComponent} from "react";
 import { Sprite } from "@/lib/Sprite";
 import { directions } from "../../../definitions/SpriteSheet";

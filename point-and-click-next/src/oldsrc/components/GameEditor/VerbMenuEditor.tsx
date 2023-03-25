@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { FunctionComponent} from "react";
 import { GameDesign, Verb } from "../../index";
 import { ListEditor } from "./ListEditor";

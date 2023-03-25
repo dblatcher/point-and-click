@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { Component } from "react";
 import { directions, SpriteDataSchema } from "../../../definitions/SpriteSheet";
 import { cloneData } from "@/lib/clone";

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { Component } from "react";
 import { GameCondition, GameData, GameDesign } from "@/oldsrc";
 import Game from "../Game";

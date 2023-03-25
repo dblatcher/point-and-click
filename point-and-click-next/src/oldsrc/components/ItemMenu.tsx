@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import imageService from "@/services/imageService";
 import { ItemData } from "@/oldsrc"
 import { HandleHoverFunction } from "./Game";

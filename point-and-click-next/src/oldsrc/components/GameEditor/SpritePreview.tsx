@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { Component } from "react";
 import { RoomData, ActorData } from "@/oldsrc";
 import { Room } from "../Room";

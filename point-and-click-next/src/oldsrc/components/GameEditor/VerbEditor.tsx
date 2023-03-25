@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { Component } from "react";
 import { GameDesign, Verb, Command, CommandTarget, ItemData } from "@/oldsrc";
 import { cloneData } from "@/lib/clone";

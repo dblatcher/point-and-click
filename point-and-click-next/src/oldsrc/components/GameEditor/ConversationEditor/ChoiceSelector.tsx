@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { FunctionComponent } from "react";
 import { findById, listIds } from "@/lib/util";
 import { Conversation } from "@/oldsrc";

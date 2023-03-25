@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { FunctionComponent} from "react";
 import { Flag, FlagMap, FlagSchema } from "../../definitions/Flag";
 import { GameDesign } from "../../definitions/Game";

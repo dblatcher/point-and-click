@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { FunctionComponent } from "react";
 import { Conversation } from "@/oldsrc";
 import { ChoiceRefSet } from "src/definitions/Conversation";

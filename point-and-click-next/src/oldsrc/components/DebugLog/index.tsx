@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { FunctionComponent, useEffect, useRef } from "react";
 import { Order } from "../../definitions/Order";
 import { GameCondition } from "../../definitions/Game";

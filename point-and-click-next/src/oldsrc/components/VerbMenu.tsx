@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { Verb } from "@/oldsrc"
 import uiStyles from './uiStyles.module.css';
 

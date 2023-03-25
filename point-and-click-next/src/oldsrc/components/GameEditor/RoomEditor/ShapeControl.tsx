@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { FunctionComponent } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { HotspotZone, Shape, Zone, ZoneType } from "@/oldsrc";
