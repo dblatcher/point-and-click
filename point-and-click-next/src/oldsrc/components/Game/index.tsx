@@ -16,7 +16,7 @@ import { handleConversationChoice } from "./handleConversationChoice";
 // component
 import { Room } from "../Room";
 import { VerbMenu } from "../VerbMenu";
-import { ItemMenu } from "../ItemMenu";
+import { ItemMenu } from "../../../components/GameEditor/ItemMenu";
 import { CommandLine } from "../CommandLine";
 import { ConversationMenu } from "../ConversationMenu";
 import { EndingScreen } from "../EndingScreen";

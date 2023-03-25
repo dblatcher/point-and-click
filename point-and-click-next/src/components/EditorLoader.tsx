@@ -2,7 +2,7 @@ import { Grid, Skeleton } from '@mui/material'
 import dynamic from 'next/dynamic'
 
 
-const DynamicComponent = dynamic(() => import('../oldsrc/components/GameEditor'), {
+const DynamicComponent = dynamic(() => import('@/components/GameEditor'), {
   loading: () => (<>
     <Grid container spacing={2} padding={2}>
       <Grid item xs={3}>
