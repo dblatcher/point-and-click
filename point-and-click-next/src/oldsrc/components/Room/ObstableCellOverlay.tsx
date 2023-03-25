@@ -1,7 +1,7 @@
 import {  FunctionComponent } from "react";
-import { CellMatrix } from "../../../lib/pathfinding/cells";
+import { CellMatrix } from "@/lib/pathfinding/cells";
 import { RoomData } from "@/oldsrc"
-import { getShift } from "../../../lib/roomFunctions";
+import { getShift } from "@/lib/roomFunctions";
 
 
 interface Props {

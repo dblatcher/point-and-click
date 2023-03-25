@@ -3,7 +3,7 @@ import { Component } from "react";
 import { RoomData, ActorData } from "@/oldsrc";
 import { Room } from "../Room";
 import HorizontalLine from "../HorizontalLine";
-import { Sprite } from "../../../lib/Sprite";
+import { Sprite } from "@/lib/Sprite";
 
 const makeRoomData: { (actorData: ActorData): RoomData } = (actorData) => ({
     height: actorData.height  + 10,

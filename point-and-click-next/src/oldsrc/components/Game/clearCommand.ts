@@ -1,4 +1,4 @@
-import { findById } from "../../../lib/util"
+import { findById } from "@/lib/util"
 import { GameState } from "."
 
 export function removeHoverTargetIfGone(state: GameState): GameState {

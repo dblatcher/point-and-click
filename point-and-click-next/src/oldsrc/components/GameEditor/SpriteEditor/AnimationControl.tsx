@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionComponent} from "react";
-import { Sprite } from "../../../../lib/Sprite";
+import { Sprite } from "@/lib/Sprite";
 import { directions } from "../../../definitions/SpriteSheet";
 import { ActorData, Direction, SpriteFrame } from "@/oldsrc";
 import { SpritePreview } from "../SpritePreview";

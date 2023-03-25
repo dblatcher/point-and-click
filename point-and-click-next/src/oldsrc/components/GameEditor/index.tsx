@@ -20,8 +20,8 @@ import Game from "../Game";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 
 import { prebuiltGameDesign } from '../../../data/fullGame';
-import { listIds, findById, findIndexById } from "../../../lib/util";
-import { cloneData } from "../../../lib/clone";
+import { listIds, findById, findIndexById } from "@/lib/util";
+import { cloneData } from "@/lib/clone";
 import { GameDesign, GameDataItem, Interaction, Verb } from "@/oldsrc";
 import { FlagMap } from "../../definitions/Flag";
 

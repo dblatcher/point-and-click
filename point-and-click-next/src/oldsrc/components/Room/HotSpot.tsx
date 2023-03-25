@@ -1,7 +1,7 @@
 import {  FunctionComponent } from "react";
 import { RoomData } from "@/oldsrc"
 import { HotspotZone } from "@/oldsrc"
-import { getShift } from "../../../lib/roomFunctions";
+import { getShift } from "@/lib/roomFunctions";
 import { HandleHoverFunction } from "../Game";
 import ZoneSvg from "../ZoneSvg";
 import styles from './styles.module.css';

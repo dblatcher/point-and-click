@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FunctionComponent } from "react";
-import { listIds } from "../../../lib/util";
+import { listIds } from "@/lib/util";
 import { GameDesign } from "../../definitions/Game";
 import { SelectInput, StringInput } from "./formControls";
 import { FlagMapControl } from "./FlagMapControl";

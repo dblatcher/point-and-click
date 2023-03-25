@@ -1,7 +1,7 @@
 import { Conversation, ConversationChoice, Sequence } from "@/oldsrc";
-import { cloneData } from "../../../lib/clone";
+import { cloneData } from "@/lib/clone";
 import { GameState } from ".";
-import { findById } from "../../../lib/util";
+import { findById } from "@/lib/util";
 import { ChoiceRefSet } from "../../definitions/Conversation";
 
 

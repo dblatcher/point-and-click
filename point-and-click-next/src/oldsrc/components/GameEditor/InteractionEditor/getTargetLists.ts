@@ -1,5 +1,5 @@
 import { GameDesign, ZoneType, RoomData, Zone } from "@/oldsrc";
-import { findById } from "../../../../lib/util";
+import { findById } from "@/lib/util";
 
 const emoji = {
     ACTOR: '🚶',

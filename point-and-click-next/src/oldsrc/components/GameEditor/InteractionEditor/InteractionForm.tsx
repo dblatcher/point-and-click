@@ -1,9 +1,9 @@
 import { FunctionComponent, useState} from "react";
 import { GameDesign, Interaction, AnyConsequence, Consequence } from "@/oldsrc";
 import { InteractionSchema } from "../../../definitions/Interaction";
-import { cloneData } from "../../../../lib/clone";
-import { listIds } from "../../../../lib/util";
-import { findTarget } from "../../../../lib/commandFunctions";
+import { cloneData } from "@/lib/clone";
+import { listIds } from "@/lib/util";
+import { findTarget } from "@/lib/commandFunctions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { CheckBoxInput, SelectAndConfirmInput, SelectInput, StringInput } from "../formControls";
 import { makeNewConsequence } from "../defaults";

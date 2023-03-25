@@ -1,8 +1,8 @@
 import {  FunctionComponent } from "react"
 import { Order, RoomData, ActorData } from "@/oldsrc"
-import { getScale } from "../../lib/getScale"
-import { placeOnScreen } from "../../lib/roomFunctions"
-import { clamp } from "../../lib/util"
+import { getScale } from "@/lib/getScale"
+import { placeOnScreen } from "@/lib/roomFunctions"
+import { clamp } from "@/lib/util"
 
 const bubbleStyle = {
     border: '1px inset black',

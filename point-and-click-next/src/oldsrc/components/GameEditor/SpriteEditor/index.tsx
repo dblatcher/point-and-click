@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component } from "react";
 import { directions, SpriteDataSchema } from "../../../definitions/SpriteSheet";
-import { cloneData } from "../../../../lib/clone";
-import { Sprite } from "../../../../lib/Sprite";
-import { uploadJsonData } from "../../../../lib/files";
-import { eventToString } from "../../../../lib/util";
+import { cloneData } from "@/lib/clone";
+import { Sprite } from "@/lib/Sprite";
+import { uploadJsonData } from "@/lib/files";
+import { eventToString } from "@/lib/util";
 import { ActorData, Direction, SpriteData, SpriteFrame, Animation } from "@/oldsrc"
 import { SelectInput, StringInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";

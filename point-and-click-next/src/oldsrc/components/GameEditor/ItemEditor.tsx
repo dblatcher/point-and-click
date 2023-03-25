@@ -5,7 +5,7 @@ import { ServiceItemSelector } from "./ServiceItemSelector";
 import imageService, { ImageAsset } from "@/services/imageService";
 import editorStyles from "./editorStyles.module.css"
 import { ItemMenu } from "../ItemMenu";
-import { cloneData } from "../../../lib/clone";
+import { cloneData } from "@/lib/clone";
 import { StorageMenu } from "./StorageMenu";
 import { DataItemEditorProps } from "./dataEditors";
 import { FramePicker } from "./SpriteEditor/FramePicker";

@@ -2,10 +2,10 @@
 import { Component } from "react";
 import { GameCondition, GameData, GameDesign } from "@/oldsrc";
 import Game from "../Game";
-import { cloneData } from "../../../lib/clone";
+import { cloneData } from "@/lib/clone";
 import { populateServices } from "@/services/populateServices";
-import { uploadFile } from "../../../lib/files";
-import { readGameFromZipFile } from "../../../lib/zipFiles";
+import { uploadFile } from "@/lib/files";
+import { readGameFromZipFile } from "@/lib/zipFiles";
 import { ImageAsset } from "@/services/imageService";
 import { SoundAsset } from "@/services/soundService";
 

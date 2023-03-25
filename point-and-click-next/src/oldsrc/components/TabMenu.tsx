@@ -1,5 +1,5 @@
 import { CSSProperties, FunctionComponent, useEffect, useState } from "react";
-import { clamp } from "../../lib/util";
+import { clamp } from "@/lib/util";
 
 export interface Tab {
     label: string;

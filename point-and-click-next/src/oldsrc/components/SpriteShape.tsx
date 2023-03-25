@@ -1,7 +1,7 @@
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { RoomData, ActorData, Direction } from "@/oldsrc"
-import { placeOnScreen } from "../../lib/roomFunctions";
-import { Sprite } from "../../lib/Sprite";
+import { placeOnScreen } from "@/lib/roomFunctions";
+import { Sprite } from "@/lib/Sprite";
 import { HandleHoverFunction } from "./Game";
 
 

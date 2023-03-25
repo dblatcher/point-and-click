@@ -1,7 +1,7 @@
 import imageService, { ImageAsset } from "./imageService";
 import soundService, { SoundAsset } from "./soundService";
 import spriteService from "./spriteService";
-import { Sprite } from "../lib/Sprite";
+import { Sprite } from "@/lib/Sprite";
 import { imageAssets } from "../data/images";
 import { soundAssets } from "../data/sounds";
 import { prebuiltGameDesign } from "../data/fullGame";

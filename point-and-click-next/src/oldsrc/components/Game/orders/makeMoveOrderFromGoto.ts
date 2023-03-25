@@ -1,8 +1,8 @@
 import { ActorData, GotoOrder, MoveOrder } from "@/oldsrc";
-import { findTarget } from "../../../../lib/commandFunctions";
-import { getTargetPoint } from "../../../../lib/roomFunctions";
+import { findTarget } from "@/lib/commandFunctions";
+import { getTargetPoint } from "@/lib/roomFunctions";
 import { GameState } from "..";
-import { findById } from "../../../../lib/util";
+import { findById } from "@/lib/util";
 
 
 const makeEmptyMoveOrder = (): MoveOrder => ({

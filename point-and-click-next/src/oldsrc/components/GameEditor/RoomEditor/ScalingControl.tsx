@@ -2,9 +2,9 @@
 import { FunctionComponent } from "react";
 import { ScaleLevel } from "@/oldsrc";
 import { NumberInput } from "../formControls";
-import { cloneData } from "../../../../lib/clone"
+import { cloneData } from "@/lib/clone"
 import { ListEditor } from "../ListEditor";
-import { clamp } from "../../../../lib/util";
+import { clamp } from "@/lib/util";
 
 interface Props {
     scaling: ScaleLevel;

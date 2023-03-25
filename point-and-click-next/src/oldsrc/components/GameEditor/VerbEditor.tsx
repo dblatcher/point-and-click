@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component } from "react";
 import { GameDesign, Verb, Command, CommandTarget, ItemData } from "@/oldsrc";
-import { cloneData } from "../../../lib/clone";
+import { cloneData } from "@/lib/clone";
 import { makeBlankVerb } from "./defaults";
 import { StorageMenu } from "./StorageMenu";
-import { listIds } from "../../../lib/util";
+import { listIds } from "@/lib/util";
 import { FieldDef, SchemaForm, FieldValue, getModification } from "./SchemaForm";
 import { VerbSchema } from "../../definitions/Verb";
 import { DataItemEditorProps } from "./dataEditors";
-import { describeCommand, getDefaultResponseText, wildCard } from "../../../lib/commandFunctions";
+import { describeCommand, getDefaultResponseText, wildCard } from "@/lib/commandFunctions";
 import { EditorHeading } from "./EditorHeading";
 
 

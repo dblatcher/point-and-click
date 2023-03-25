@@ -3,10 +3,10 @@ import {
   fileToObjectUrl,
   makeDownloadFile,
   uploadFile,
-} from "../../../../lib/files";
-import { eventToString } from "../../../../lib/util";
+} from "@/lib/files";
+import { eventToString } from "@/lib/util";
 import { OptionalNumberInput, SelectInput, TextInput, Warning } from "../formControls";
-import { cloneData } from "../../../../lib/clone";
+import { cloneData } from "@/lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "@/services/Service";
 import editorStyles from "../editorStyles.module.css";
@@ -16,7 +16,7 @@ import imageService, {
   imageAssetCategories,
 
 } from "@/services/imageService";
-import { buildAssetZipBlob, readImageAssetFromZipFile } from "../../../../lib/zipFiles";
+import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
 import { SpriteSheetPreview } from "../SpriteSheetPreview";
 import { EditorHeading } from "../EditorHeading";
 

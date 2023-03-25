@@ -2,11 +2,11 @@
 import { Component} from "react";
 import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "@/oldsrc";
 //lib
-import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "../../../lib/roomFunctions";
-import { clamp, findById } from "../../../lib/util";
-import { cloneData } from "../../../lib/clone";
-import { Sprite } from "../../../lib/Sprite";
-import { CellMatrix, generateCellMatrix } from "../../../lib/pathfinding/cells";
+import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "@/lib/roomFunctions";
+import { clamp, findById } from "@/lib/util";
+import { cloneData } from "@/lib/clone";
+import { Sprite } from "@/lib/Sprite";
+import { CellMatrix, generateCellMatrix } from "@/lib/pathfinding/cells";
 // state logic
 import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";

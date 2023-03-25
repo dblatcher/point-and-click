@@ -2,8 +2,8 @@
 import { Component } from "react";
 import { GameDesign, Interaction } from "@/oldsrc";
 import { DeleteButton, SelectInput } from "../formControls";
-import { cloneData } from "../../../../lib/clone";
-import { listIds } from "../../../../lib/util";
+import { cloneData } from "@/lib/clone";
+import { listIds } from "@/lib/util";
 import { InteractionForm } from "./InteractionForm";
 import { getTargetLists, getItemDescriptions } from "./getTargetLists";
 import editorStyles from '../editorStyles.module.css';

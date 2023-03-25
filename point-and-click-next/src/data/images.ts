@@ -1,4 +1,4 @@
-import { findById } from "../lib/util"
+import { findById } from "@/lib/util"
 import { ImageAsset, ImageAssetCategory } from "@/services/imageService"
 
 const backgroundPath = "./assets/backgrounds/"
