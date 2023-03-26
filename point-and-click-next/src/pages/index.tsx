@@ -1,8 +1,10 @@
-import { Card, Grid, useTheme } from '@mui/material'
+import { Card, Grid, Typography } from '@mui/material'
 import { LinkButton } from '@/components/LinkButton'
 import { PageLayout } from '@/components/PageLayout'
 
-import Content from '@/content/homepage.mdx'
+import content from "@/content/homepage.md";
+import { MarkDown } from '@/components/MarkDown';
+
 
 export default function Home() {
   return (
@@ -12,11 +14,11 @@ export default function Home() {
         justifyContent="center"
         alignItems="center">
         <Grid item xs={4}>
-          <Card sx={{ 
-              fontFamily: 'arial', 
-              padding: 2, 
-            }}>
-            <Content />
+          <Card sx={{
+            fontFamily: 'arial',
+            padding: 2,
+          }}>
+            <MarkDown content={content} />
           </Card>
         </Grid>
         <Grid item xs={2}>

@@ -9,13 +9,13 @@ export const redTheme = createTheme({
             contrastText: '#ffa'
         },
         secondary: {
-            main: '#0a0',
-            light: '#4a4',
+            main: '#0c0',
+            light: '#7c7',
             dark: '#080',
             contrastText: '#faa'
         },
     },
     typography: {
-        fontFamily:'cursive'
+        fontFamily:'arial'
     }
 })

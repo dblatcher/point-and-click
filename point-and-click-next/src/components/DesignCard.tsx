@@ -1,6 +1,6 @@
 import { Card, Link, Typography, Avatar, Grid, useTheme } from "@mui/material"
 import DownloadIcon from '@mui/icons-material/Download';
-import { ReactNode } from "@mdx-js/react/lib";
+import { ReactNode } from "react";
 
 interface Props {
     title: string,
@@ -15,18 +15,19 @@ export const DesignCard = ({ title, downloadUrl, imageUrl, content }: Props) => 
     const theme = useTheme();
     return (
         <Card sx={{
-            backgroundColor: theme.palette.primary.light
+            backgroundColor: theme.palette.secondary.light,
+            fontFamily: theme.typography.fontFamily,
         }}>
             <Grid container spacing={1} padding={1} alignItems={'center'} justifyContent={'space-between'}>
                 <Grid item xs={1}>
-                    {imageUrl && <Avatar src={imageUrl} alt='' sx={{ bgcolor:theme.palette.secondary.dark }} />}
+                    {imageUrl && <Avatar src={imageUrl} alt='' sx={{ bgcolor:theme.palette.primary.dark }} />}
                 </Grid>
                 <Grid item xs={10}>
-                    <Typography variant={'h2'}>{title}</Typography>
+                    <Typography variant="h4">{title}</Typography>
                 </Grid>
                 <Grid item xs={1}>
                     <Link href={downloadUrl} download title={`download ${title}`}>
-                        <DownloadIcon color={'secondary'}/>
+                        <DownloadIcon color={'primary'}/>
                     </Link>
                 </Grid>
             </Grid>
