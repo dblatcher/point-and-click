@@ -11,7 +11,7 @@ import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
 import editorStyles from "../editorStyles.module.css"
 import { SelectAndConfirmInput, StringInput } from "../formControls";
-import { TabSet } from "@/oldsrc/components/TabSet";
+import { TabSet } from "@/components/GameEditor/TabSet";
 import { DataItemEditorProps, icons } from "../dataEditors";
 import { getTargetLists } from "../InteractionEditor/getTargetLists";
 import { EditorHeading } from "../EditorHeading";

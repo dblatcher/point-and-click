@@ -2,7 +2,7 @@
 import imageService from "@/services/imageService";
 import { ItemData } from "@/oldsrc"
 import { HandleHoverFunction } from "../../oldsrc/components/Game";
-import uiStyles from '../../oldsrc/components/uiStyles.module.css';
+import uiStyles from '@/components/game-ui/uiStyles.module.css';
 import { CSSProperties } from "react";
 
 interface Props {

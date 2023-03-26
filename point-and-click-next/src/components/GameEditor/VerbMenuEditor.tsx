@@ -2,7 +2,7 @@
 import { FunctionComponent} from "react";
 import { GameDesign, Verb } from "@/oldsrc";
 import { ListEditor } from "./ListEditor";
-import { VerbMenu } from "@/oldsrc/components/VerbMenu";
+import { VerbMenu } from "@/components/game-ui/VerbMenu";
 import { EditorHeading } from "./EditorHeading";
 
 

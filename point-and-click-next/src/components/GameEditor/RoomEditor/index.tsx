@@ -14,7 +14,7 @@ import { NumberInput, Warning } from "../formControls";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
-import { TabSet, type Tab } from "@/oldsrc/components/TabSet";
+import { TabSet, type Tab } from "@/components/GameEditor/TabSet";
 import { getBlankRoom } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
 import { ListEditor } from "../ListEditor";

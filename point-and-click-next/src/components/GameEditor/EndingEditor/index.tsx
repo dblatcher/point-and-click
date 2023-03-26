@@ -7,7 +7,7 @@ import { listIds } from "@/lib/util";
 import { FieldDef, SchemaForm, FieldValue, getModification } from "../SchemaForm";
 import { EndingSchema } from "@/oldsrc/definitions/Ending";
 import imageService from "@/services/imageService";
-import { EndingScreen } from "@/oldsrc/components/EndingScreen";
+import { EndingScreen } from "@/components/game-ui/EndingScreen";
 import { DataItemEditorProps } from "../dataEditors";
 import { EditorHeading } from "../EditorHeading";
 

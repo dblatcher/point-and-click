@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { Zone } from "@/oldsrc";
-import { TabSet } from "@/oldsrc/components/TabSet";
+import { TabSet } from "@/components/GameEditor/TabSet";
 import { ClickEffect } from "./ClickEffect";
 import { ShapeChangeFunction, ValidShapeType } from "./ShapeControl";
 import { ZoneControl } from "./ZoneControl";

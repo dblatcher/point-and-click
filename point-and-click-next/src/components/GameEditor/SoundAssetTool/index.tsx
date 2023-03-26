@@ -9,7 +9,7 @@ import { SelectInput, TextInput, Warning } from "../formControls";
 import { cloneData } from "@/lib/clone";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "@/services/Service";
-import { SoundToggle } from "@/oldsrc/components/SoundToggle";
+import { SoundToggle } from "@/components/game-ui/SoundToggle";
 import editorStyles from "../editorStyles.module.css";
 
 import soundService, {

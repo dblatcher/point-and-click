@@ -4,7 +4,7 @@ import { TreeMenu, Folder, Entry } from "./TreeMenu";
 import { Overview } from "./Overview";
 import { RoomEditor } from "./RoomEditor";
 import { SpriteEditor } from "./SpriteEditor";
-import { TabSet } from "@/oldsrc/components/TabSet";
+import { TabSet } from "@/components/GameEditor/TabSet";
 import { ActorEditor } from "./ActorEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
 import { ItemEditor } from "./ItemEditor";

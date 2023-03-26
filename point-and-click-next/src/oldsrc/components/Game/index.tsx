@@ -15,13 +15,13 @@ import { continueSequence } from "./continueSequence";
 import { handleConversationChoice } from "./handleConversationChoice";
 // component
 import { Room } from "../../../components/svg/Room";
-import { VerbMenu } from "../VerbMenu";
-import { ItemMenu } from "../../../components/GameEditor/ItemMenu";
-import { CommandLine } from "../CommandLine";
-import { ConversationMenu } from "../ConversationMenu";
-import { EndingScreen } from "../EndingScreen";
+import { VerbMenu } from "../../../components/game-ui/VerbMenu";
+import { ItemMenu } from "../../../components/game-ui/ItemMenu";
+import { CommandLine } from "../../../components/game-ui/CommandLine";
+import { ConversationMenu } from "../../../components/game-ui/ConversationMenu";
+import { EndingScreen } from "../../../components/game-ui/EndingScreen";
 import { DebugLog, makeDebugEntry, type LogEntry } from "../DebugLog";
-import { SoundToggle } from "../SoundToggle";
+import { SoundToggle } from "../../../components/game-ui/SoundToggle";
 
 
 export type GameProps = Readonly<{
