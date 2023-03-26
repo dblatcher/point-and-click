@@ -1,5 +1,5 @@
 
-import { Component} from "react";
+import { Component, FunctionComponent } from "react";
 import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "@/oldsrc";
 //lib
 import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "@/lib/roomFunctions";
@@ -30,6 +30,17 @@ export type GameProps = Readonly<{
     load?: { (): void };
     showDebugLog?: boolean;
     startPaused?: boolean;
+    CommandLineComponent?: FunctionComponent<{
+        verb?: Verb;
+        item?: ItemData;
+        target?: CommandTarget;
+        hoverTarget?: CommandTarget;
+    }>
+    VerbMenuComponent?: FunctionComponent<{
+        verbs: Verb[];
+        currentVerbId: string;
+        select: { (verb: Verb): void };
+    }>
 } & GameCondition>
 
 export type GameState = GameData & {
@@ -258,6 +269,10 @@ export default class Game extends Component<GameProps, GameState> {
 
     render() {
         const { verbs = [], save, reset, load, showDebugLog } = this.props
+        const { 
+            CommandLineComponent = CommandLine,
+            VerbMenuComponent = VerbMenu,
+        } = this.props
         const { viewAngle, isPaused,
             actors, currentVerbId, currentItemId, items,
             actorOrders, sequenceRunning, hoverTarget
@@ -326,13 +341,13 @@ export default class Game extends Component<GameProps, GameState> {
                 {this.ending && <EndingScreen ending={this.ending} />}
 
                 {(!sequenceRunning && !currentConversation && !this.ending) && <>
-                    <CommandLine
+                    <CommandLineComponent
                         verb={this.currentVerb}
                         item={this.currentItem}
                         hoverTarget={hoverTarget}
                     />
 
-                    <VerbMenu
+                    <VerbMenuComponent
                         verbs={verbs}
                         currentVerbId={currentVerbId}
                         select={(verb: Verb) => { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }}

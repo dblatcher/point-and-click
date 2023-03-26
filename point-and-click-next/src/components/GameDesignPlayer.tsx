@@ -5,6 +5,8 @@ import { ImageAsset } from "@/services/imageService";
 import { populateServices } from "@/services/populateServices";
 import { SoundAsset } from "@/services/soundService";
 import React from "react";
+import { CommandLine } from "./game-mui-ux/CommandLine";
+import { VerbMenu } from "./game-mui-ux/VerbMenu";
 
 
 type Props = {
@@ -106,7 +108,11 @@ export class GameDesignPlayer extends React.Component<Props, State> {
                     load={this.load} 
                     save={this.save} 
                     reset={this.reset} 
-                    key={timestamp} />
+                    key={timestamp} 
+                    
+                    CommandLineComponent={CommandLine}
+                    VerbMenuComponent={VerbMenu}
+                    />
             )}
         </div>
     }
