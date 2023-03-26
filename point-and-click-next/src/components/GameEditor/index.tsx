@@ -15,7 +15,7 @@ import { GameDesignSaveAndLoad } from "./GameDesignSaveAndLoad";
 import { SoundAssetTool } from "./SoundAssetTool";
 import { EndingEditor } from "./EndingEditor";
 import { VerbEditor } from "./VerbEditor";
-import Game from "@/oldsrc/components/Game";
+import Game from "@/components/game";
 
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 

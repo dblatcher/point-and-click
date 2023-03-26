@@ -14,14 +14,14 @@ import { doPendingInteraction, handleCommand } from "./handleCommand";
 import { continueSequence } from "./continueSequence";
 import { handleConversationChoice } from "./handleConversationChoice";
 // component
-import { Room } from "../../../components/svg/Room";
-import { VerbMenu } from "../../../components/game-ui/VerbMenu";
-import { ItemMenu } from "../../../components/game-ui/ItemMenu";
-import { CommandLine } from "../../../components/game-ui/CommandLine";
-import { ConversationMenu } from "../../../components/game-ui/ConversationMenu";
-import { EndingScreen } from "../../../components/game-ui/EndingScreen";
-import { DebugLog, makeDebugEntry, type LogEntry } from "../DebugLog";
-import { SoundToggle } from "../../../components/game-ui/SoundToggle";
+import { Room } from "../svg/Room";
+import { VerbMenu } from "../game-ui/VerbMenu";
+import { ItemMenu } from "../game-ui/ItemMenu";
+import { CommandLine } from "../game-ui/CommandLine";
+import { ConversationMenu } from "../game-ui/ConversationMenu";
+import { EndingScreen } from "../game-ui/EndingScreen";
+import { DebugLog, makeDebugEntry, type LogEntry } from "../../oldsrc/components/DebugLog";
+import { SoundToggle } from "../game-ui/SoundToggle";
 
 
 export type GameProps = Readonly<{

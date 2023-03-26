@@ -7,7 +7,7 @@ import { useInterval } from "@/lib/useInterval"
 
 import { SpriteShape } from "./SpriteShape";
 import spriteService from "@/services/spriteService";
-import { HandleClickFunction, HandleHoverFunction } from "../../oldsrc/components/Game";
+import { HandleClickFunction, HandleHoverFunction } from "../game";
 import { PersistentSound } from "../../oldsrc/components/PersistentSound";
 import { SoundEffectMap, SoundValue } from "../../oldsrc/definitions/ActorData";
 import { IntermitentSound } from "../../oldsrc/components/IntermitentSound";

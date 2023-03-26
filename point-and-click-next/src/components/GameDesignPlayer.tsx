@@ -1,5 +1,5 @@
 import { GameCondition, GameData, GameDesign } from "@/oldsrc";
-import Game from "@/oldsrc/components/Game";
+import Game from "@/components/game";
 import { cloneData } from "@/lib/clone";
 import { ImageAsset } from "@/services/imageService";
 import { populateServices } from "@/services/populateServices";

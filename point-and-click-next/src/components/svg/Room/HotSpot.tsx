@@ -2,7 +2,7 @@ import {  FunctionComponent } from "react";
 import { RoomData } from "@/oldsrc"
 import { HotspotZone } from "@/oldsrc"
 import { getShift } from "@/lib/roomFunctions";
-import { HandleHoverFunction } from "../../../oldsrc/components/Game";
+import { HandleHoverFunction } from "../../game";
 import ZoneSvg from "@/components/svg/ZoneSvg";
 import styles from './styles.module.css';
 

@@ -1,7 +1,7 @@
 
 import imageService from "@/services/imageService";
 import { ItemData } from "@/oldsrc"
-import { HandleHoverFunction } from "../../oldsrc/components/Game";
+import { HandleHoverFunction } from "../game";
 import uiStyles from '@/components/game-ui/uiStyles.module.css';
 import { CSSProperties } from "react";
 

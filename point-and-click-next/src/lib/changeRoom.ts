@@ -1,4 +1,4 @@
-import { cellSize, GameState } from "../oldsrc/components/Game";
+import { cellSize, GameState } from "../components/game";
 import { generateCellMatrix } from "./pathfinding/cells";
 import { Point } from "./pathfinding/geometry";
 

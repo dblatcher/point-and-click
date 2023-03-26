@@ -7,7 +7,7 @@ import Hotspot from "./HotSpot";
 import ZoneSvg from "@/components/svg/ZoneSvg";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import BackgroundShape from "./BackgroundShape";
-import { HandleHoverFunction, RoomContentItem } from "../../../oldsrc/components/Game";
+import { HandleHoverFunction, RoomContentItem } from "../../game";
 import { ActorFigure } from "@/components/svg/ActorFigure";
 import { DialogueBubble } from "@/components/svg/DialogueBubble";
 
