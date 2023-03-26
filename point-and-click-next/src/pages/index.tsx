@@ -1,4 +1,4 @@
-import { Card, Grid } from '@mui/material'
+import { Card, Grid, useTheme } from '@mui/material'
 import { LinkButton } from '@/components/LinkButton'
 import { PageLayout } from '@/components/PageLayout'
 
@@ -12,20 +12,23 @@ export default function Home() {
         justifyContent="center"
         alignItems="center">
         <Grid item xs={4}>
-          <Card sx={{ fontFamily: 'arial', padding: 2 }}>
-          <Content />
-        </Card>
+          <Card sx={{ 
+              fontFamily: 'arial', 
+              padding: 2, 
+            }}>
+            <Content />
+          </Card>
+        </Grid>
+        <Grid item xs={2}>
+          <LinkButton href="./game-loader" variant='contained'>game loader</LinkButton>
+        </Grid>
+        <Grid item xs={2}>
+          <LinkButton href="./prebuilt-game" variant='contained'>prebuilt game</LinkButton>
+        </Grid>
+        <Grid item xs={2}>
+          <LinkButton href="./editor" variant='contained'>create game</LinkButton>
+        </Grid>
       </Grid>
-      <Grid item xs={2}>
-        <LinkButton href="./game-loader" variant='contained'>game loader</LinkButton>
-      </Grid>
-      <Grid item xs={2}>
-        <LinkButton href="./prebuilt-game" variant='contained'>prebuilt game</LinkButton>
-      </Grid>
-      <Grid item xs={2}>
-        <LinkButton href="./editor" variant='contained'>create game</LinkButton>
-      </Grid>
-    </Grid>
 
     </PageLayout >
   )

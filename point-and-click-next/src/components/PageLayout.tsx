@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import { AppHeader } from '@/components/AppHeader'
-import { Box } from '@mui/material'
+import { Box, ThemeProvider } from '@mui/material'
 import { ReactNode } from 'react'
+import { redTheme } from '@/theme'
 
 
 interface Props {
@@ -18,12 +19,14 @@ export function PageLayout({ children }: Props) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Box sx={{ display: 'flex' }} paddingTop={'4rem'}>
-                <AppHeader />
-                <Box component='main' sx={{ width: '100%' }}>
-                    {children}
+            <ThemeProvider theme={redTheme}>
+                <Box sx={{ display: 'flex' }} paddingTop={'4rem'}>
+                    <AppHeader />
+                    <Box component='main' sx={{ width: '100%' }}>
+                        {children}
+                    </Box>
                 </Box>
-            </Box>
+            </ThemeProvider>
         </>
     )
 }

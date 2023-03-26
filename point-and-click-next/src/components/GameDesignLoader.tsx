@@ -96,7 +96,7 @@ export class GameDesignLoader extends React.Component<{}, State> {
                                 onError={this.handleLoadFail} />
                         </Grid>
                         <Grid item xs={6}>
-                            <Card sx={{ fontFamily: 'arial', padding: 2 }}>
+                            <Card sx={{ padding: 2 }}>
                                 <SelectADesignContent />
                             </Card>
                         </Grid>
@@ -109,9 +109,10 @@ export class GameDesignLoader extends React.Component<{}, State> {
                             <DesignCard title="Castle Life"
                                 downloadUrl="/assets/castle-life.game.zip"
                                 imageUrl="/assets/sword.png"
-                                content={<Typography fontFamily={'arial'}>
-                                    <CastleLifeBlurb />
-                                </Typography>
+                                content={
+                                    <Typography>
+                                        <CastleLifeBlurb />
+                                    </Typography>
                                 } />
                         </Grid>
                     </Grid>
