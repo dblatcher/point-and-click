@@ -15,7 +15,6 @@ export default function Home() {
         alignItems="center">
         <Grid item xs={4}>
           <Card sx={{
-            fontFamily: 'arial',
             padding: 2,
           }}>
             <MarkDown content={content} />
