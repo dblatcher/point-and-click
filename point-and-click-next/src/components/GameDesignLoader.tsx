@@ -8,8 +8,9 @@ import { GameDesignPlayer } from "./GameDesignPlayer";
 import { LoadDesignButton } from "./LoadDesignButton";
 import { DesignCard } from "./DesignCard";
 import selectADesignContent from "@/content/selectADesign.md";
-import castleLifeBlurb from "@/content/castleLifeBlurb.md";
+
 import { MarkDown } from "./MarkDown";
+import { GameList } from "./GameList";
 
 type State = {
     design?: GameDesign
@@ -102,19 +103,7 @@ export class GameDesignLoader extends React.Component<{}, State> {
                             </Card>
                         </Grid>
                     </Grid>
-
-                    <Grid container spacing={2} padding={2}
-                        justifyContent="center"
-                        alignItems="center">
-                        <Grid item xs={9}>
-                            <DesignCard title="Castle Life"
-                                downloadUrl="/assets/castle-life.game.zip"
-                                imageUrl="/assets/sword.png"
-                                content={
-                                    <MarkDown content={castleLifeBlurb} />
-                                } />
-                        </Grid>
-                    </Grid>
+                    <GameList />
                 </>
             )}
 
