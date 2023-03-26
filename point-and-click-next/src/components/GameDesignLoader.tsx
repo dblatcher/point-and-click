@@ -6,7 +6,6 @@ import { Snackbar, Alert, Card, Grid } from "@mui/material";
 import React from "react";
 import { GameDesignPlayer } from "./GameDesignPlayer";
 import { LoadDesignButton } from "./LoadDesignButton";
-import { DesignCard } from "./DesignCard";
 import selectADesignContent from "@/content/selectADesign.md";
 
 import { MarkDown } from "./MarkDown";
