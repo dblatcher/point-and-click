@@ -8,6 +8,7 @@ import React from "react";
 import { CommandLine } from "./game-mui-ux/CommandLine";
 import { VerbMenu } from "./game-mui-ux/VerbMenu";
 import { ItemMenu } from "./game-mui-ux/ItemMenu";
+import { SaveMenu } from "./game-mui-ux/SaveMenu";
 
 
 type Props = {
@@ -114,6 +115,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
                     CommandLineComponent={CommandLine}
                     VerbMenuComponent={VerbMenu}
                     ItemMenuComponent={ItemMenu}
+                    SaveMenuComponent={SaveMenu}
                     />
             )}
         </div>

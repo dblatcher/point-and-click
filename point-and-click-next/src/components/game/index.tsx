@@ -22,6 +22,7 @@ import { ConversationMenu } from "../game-ui/ConversationMenu";
 import { EndingScreen } from "../game-ui/EndingScreen";
 import { DebugLog, makeDebugEntry, type LogEntry } from "../../oldsrc/components/DebugLog";
 import { SoundToggle } from "../game-ui/SoundToggle";
+import { SaveMenu } from "../game-ui/SaveMenu";
 
 
 export type GameProps = Readonly<{
@@ -46,6 +47,11 @@ export type GameProps = Readonly<{
         currentItemId?: string;
         select: { (item: ItemData): void };
         handleHover?: HandleHoverFunction;
+    }>
+    SaveMenuComponent?: FunctionComponent<{
+        save?: { (): void };
+        reset?: { (): void };
+        load?: { (): void };
     }>
 } & GameCondition>
 
@@ -279,6 +285,7 @@ export default class Game extends Component<GameProps, GameState> {
             CommandLineComponent = CommandLine,
             VerbMenuComponent = VerbMenu,
             ItemMenuComponent = ItemMenu,
+            SaveMenuComponent = SaveMenu,
         } = this.props
         const { viewAngle, isPaused,
             actors, currentVerbId, currentItemId, items,
@@ -311,16 +318,12 @@ export default class Game extends Component<GameProps, GameState> {
                     log={this.state.debugLog} />
             )}
             <main>
-                {!!save &&
-                    <button onClick={() => { save(this.saveData) }}>SAVE</button>
-                }
-                {!!reset &&
-                    <button onClick={() => { reset() }}>RESET</button>
-                }
-                {!!load &&
-                    <button onClick={() => { load() }}>LOAD</button>
-                }
 
+                <SaveMenuComponent
+                    load={load ? () => { load() } : undefined}
+                    reset={reset ? () => { reset() } : undefined}
+                    save={save ? () => { save(this.saveData) } : undefined}
+                />
                 <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>
                 <SoundToggle />
 
