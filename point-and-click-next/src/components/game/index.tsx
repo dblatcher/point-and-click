@@ -41,6 +41,12 @@ export type GameProps = Readonly<{
         currentVerbId: string;
         select: { (verb: Verb): void };
     }>
+    ItemMenuComponent?: FunctionComponent<{
+        items: ItemData[];
+        currentItemId?: string;
+        select: { (item: ItemData): void };
+        handleHover?: HandleHoverFunction;
+    }>
 } & GameCondition>
 
 export type GameState = GameData & {
@@ -269,9 +275,10 @@ export default class Game extends Component<GameProps, GameState> {
 
     render() {
         const { verbs = [], save, reset, load, showDebugLog } = this.props
-        const { 
+        const {
             CommandLineComponent = CommandLine,
             VerbMenuComponent = VerbMenu,
+            ItemMenuComponent = ItemMenu,
         } = this.props
         const { viewAngle, isPaused,
             actors, currentVerbId, currentItemId, items,
@@ -353,7 +360,7 @@ export default class Game extends Component<GameProps, GameState> {
                         select={(verb: Verb) => { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }}
                     />
 
-                    <ItemMenu
+                    <ItemMenuComponent
                         items={items.filter(_ => _.actorId === player?.id)}
                         currentItemId={currentItemId}
                         select={(item: ItemData) => { this.handleTargetClick(item) }}
