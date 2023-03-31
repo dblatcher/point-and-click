@@ -19,11 +19,13 @@ export function VerbMenu({ verbs, currentVerbId, select }: Props) {
 
             <Grid container spacing={1} component={Card} padding={1}>
                 {verbs.map(verb => (
-                    <Grid item key={verb.id} flex={1} xs={3} sx={{ display: 'flex' }} >
+                    <Grid item key={verb.id} flex={1} xs={3}  sx={{ display: 'flex' }} >
                         <Button
                             sx={{
-                                flex: 1
+                                flex: 1,
+                                lineHeight:1,
                             }}
+                            size="small"
                             color={'secondary'}
                             variant={currentVerbId === verb.id ? 'contained' : 'outlined'}
                             onClick={() => { select(verb) }}
