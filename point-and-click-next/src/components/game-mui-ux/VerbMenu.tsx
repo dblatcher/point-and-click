@@ -17,13 +17,14 @@ export function VerbMenu({ verbs, currentVerbId, select }: Props) {
     return (
         <Container maxWidth={'sm'} sx={{ padding: 1 }}>
 
-            <Grid container spacing={1} component={Card} padding={1}>
+            <Grid container component={Card} padding={1}>
                 {verbs.map(verb => (
                     <Grid item key={verb.id} flex={1} xs={3}  sx={{ display: 'flex' }} >
                         <Button
                             sx={{
                                 flex: 1,
                                 lineHeight:1,
+                                minHeight:'2rem',
                             }}
                             size="small"
                             color={'secondary'}

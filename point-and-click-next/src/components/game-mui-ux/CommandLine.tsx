@@ -34,12 +34,12 @@ export function CommandLine({ verb, item, target, hoverTarget }: Props) {
 
     return (
         <Container maxWidth={'sm'} sx={{ padding: 1 }}>
-            <Card sx={{ padding: 1 }}>
-                <Typography component={'span'} variant="overline">
+            <Card sx={{ padding: .5, height:'2.5em' }}>
+                <Typography component={'span'}>
                     {text}
                 </Typography>
                 {!target && (
-                    <Typography component={'span'} variant="overline" color={theme.palette.primary.main}>
+                    <Typography component={'span'} color={theme.palette.primary.main}>
                         {' '}{hoverText}
                     </Typography>
                 )}
