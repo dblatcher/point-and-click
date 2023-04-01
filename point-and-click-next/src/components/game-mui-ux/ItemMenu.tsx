@@ -5,6 +5,7 @@ import { HandleHoverFunction } from "../game";
 import { CSSProperties } from "react";
 import { Button, Card, Container, Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
 
 interface Props {
     items: ItemData[];
@@ -23,11 +24,13 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 
     const { href: imageUrl, cols, rows } = asset
 
+    const common = {
+        backgroundImage: `url(${imageUrl})`,
+    }
+
     if (typeof cols === 'undefined' && typeof rows === 'undefined') {
         return {
-            backgroundImage: `url(${imageUrl})`,
-            width: '100%',
-            height: '100%',
+            ...common,
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
@@ -35,12 +38,10 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
     }
 
     return {
-        backgroundImage: `url(${imageUrl})`,
+        ...common,
         backgroundPositionX: `${-100 * col}%`,
         backgroundPositionY: `${-100 * row}%`,
         backgroundSize: `${100 * (cols || 1)}% ${100 * (rows || 1)}%`,
-        width: '100%',
-        height: '100%',
     }
 }
 
@@ -49,29 +50,29 @@ export function ItemMenu({ items, currentItemId, select, handleHover }: Props) {
     return (
         <Container maxWidth={'sm'} sx={{ padding: 1 }}>
 
-            <Grid container spacing={1} component={Card} paddingRight={1} paddingBottom={1}>
+            <Grid container component={Card} alignItems={'stretch'}>
                 {items.map(item => {
                     const imageBackground = buildBackground(item);
+                    const initialLetter = item.name ? item.name.charAt(0) : item.id.charAt(0);
                     return (
-                        <Grid item key={item.id} alignItems='stretch' xs={3} sm={2}>
+                        <Grid item key={item.id} xs={3} sm={2}>
                             <Button
+                                fullWidth
                                 color='secondary'
-                                sx={{ ...imageBackground, minHeight: '3rem', }}
-                                variant={currentItemId === item.id ? 'contained' : 'outlined'}
+                                size="small"
+                                variant={currentItemId === item.id ? 'contained' : 'text'}
                                 onClick={() => { select(item) }}
                                 onMouseEnter={handleHover ? () => { handleHover(item, 'enter') } : undefined}
                                 onMouseLeave={handleHover ? () => { handleHover(item, 'leave') } : undefined}
                             >
-                                {!imageBackground && (
-                                    <Typography component={'span'}>{item.name || item.id}</Typography>
-                                )}
+                                <Avatar sx={{ ...imageBackground }}>{imageBackground ? '' : initialLetter}</Avatar>
                             </Button>
                         </Grid>
                     )
                 })}
 
                 {items.length == 0 && (
-                    <Grid item  alignItems='stretch' xs={12} >
+                    <Grid item alignItems='stretch' xs={12} >
                         <Typography component={'span'}>no items</Typography>
                     </Grid>
                 )}
