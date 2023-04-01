@@ -23,6 +23,7 @@ import { EndingScreen } from "../game-ui/EndingScreen";
 import { DebugLog, makeDebugEntry, type LogEntry } from "../../oldsrc/components/DebugLog";
 import { SoundToggle } from "../game-ui/SoundToggle";
 import { SaveMenu } from "../game-ui/SaveMenu";
+import { UiComponentSet } from "./uiComponentSet";
 
 
 export type GameProps = Readonly<{
@@ -31,28 +32,7 @@ export type GameProps = Readonly<{
     load?: { (): void };
     showDebugLog?: boolean;
     startPaused?: boolean;
-    CommandLineComponent?: FunctionComponent<{
-        verb?: Verb;
-        item?: ItemData;
-        target?: CommandTarget;
-        hoverTarget?: CommandTarget;
-    }>
-    VerbMenuComponent?: FunctionComponent<{
-        verbs: Verb[];
-        currentVerbId: string;
-        select: { (verb: Verb): void };
-    }>
-    ItemMenuComponent?: FunctionComponent<{
-        items: ItemData[];
-        currentItemId?: string;
-        select: { (item: ItemData): void };
-        handleHover?: HandleHoverFunction;
-    }>
-    SaveMenuComponent?: FunctionComponent<{
-        save?: { (): void };
-        reset?: { (): void };
-        load?: { (): void };
-    }>
+    uiComponents?: UiComponentSet;
 } & GameCondition>
 
 export type GameState = GameData & {
@@ -280,13 +260,13 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     render() {
-        const { verbs = [], save, reset, load, showDebugLog } = this.props
+        const { verbs = [], save, reset, load, showDebugLog, uiComponents = {} } = this.props
         const {
             CommandLineComponent = CommandLine,
             VerbMenuComponent = VerbMenu,
             ItemMenuComponent = ItemMenu,
             SaveMenuComponent = SaveMenu,
-        } = this.props
+        } = uiComponents 
         const { viewAngle, isPaused,
             actors, currentVerbId, currentItemId, items,
             actorOrders, sequenceRunning, hoverTarget
