@@ -6,13 +6,13 @@ export const redTheme = createTheme({
             main: '#f00',
             light: '#f55',
             dark: '#a00',
-            contrastText: '#ffa'
+            contrastText: '#fff',
         },
         secondary: {
             main: '#0c0',
             light: '#7c7',
             dark: '#080',
-            contrastText: '#faa'
+            contrastText: '#fff',
         },
     },
     typography: {
