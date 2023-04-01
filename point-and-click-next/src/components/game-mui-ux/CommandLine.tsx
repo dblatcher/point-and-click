@@ -13,7 +13,6 @@ interface Props {
 }
 
 export function CommandLine({ verb, item, target, hoverTarget }: Props) {
-
     const theme = useTheme()
     const Bold = (props: { text: string }) => <b style={{ color: theme.palette.primary.main }}>{props.text}{' '}</b>
     const hoverText = hoverTarget ? hoverTarget.name || hoverTarget.id : '..?'
@@ -25,10 +24,12 @@ export function CommandLine({ verb, item, target, hoverTarget }: Props) {
                     {verb && (
                         <span>{verb.label}{' '}</span>
                     )}
-                    {(verb && item) && <>
+                    {(verb && item) && (
                         <Bold text={item.name || item.id} />
+                    )}
+                    {(verb?.preposition && item) && (
                         <span>{verb.preposition}{' '}</span>
-                    </>}
+                    )}
                     {(verb && target) && (
                         <span>{target.name || target.id}{' '}</span>
                     )}
