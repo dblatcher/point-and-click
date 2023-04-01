@@ -98,6 +98,7 @@ export const Room: FunctionComponent<Props> = ({
     }
 
     return (
+        <div>
         <figure ref={figureRef}
             className={styles.roomFigure}
             style={figureInlineStyle}
@@ -204,6 +205,7 @@ export const Room: FunctionComponent<Props> = ({
                 <figcaption className={styles.roomCaption}>{id}</figcaption>
             )}
         </figure>
+        </div>
     )
 
 }

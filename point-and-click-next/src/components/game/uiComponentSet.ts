@@ -1,4 +1,4 @@
-import { Verb, ItemData, CommandTarget } from "@/oldsrc";
+import { Verb, ItemData, CommandTarget, Conversation, ConversationChoice } from "@/oldsrc";
 import { FunctionComponent } from "react";
 import { HandleHoverFunction } from ".";
 
@@ -24,10 +24,15 @@ export type SaveMenuComponent = FunctionComponent<{
     reset?: { (): void };
     load?: { (): void };
 }>
+export type ConversationMenuComponent = FunctionComponent<{
+    conversation: Conversation;
+    select: { (choice: ConversationChoice): void };
+}>
 
 export type UiComponentSet = {
     CommandLineComponent?: CommandLineComponent;
     VerbMenuComponent?: VerbMenuComponent
     ItemMenuComponent?: ItemMenuComponent;
     SaveMenuComponent?: SaveMenuComponent;
+    ConversationMenuComponent?: ConversationMenuComponent;
 }

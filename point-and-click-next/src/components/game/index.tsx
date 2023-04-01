@@ -1,5 +1,5 @@
 
-import { Component, FunctionComponent } from "react";
+import { Component } from "react";
 import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "@/oldsrc";
 //lib
 import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "@/lib/roomFunctions";
@@ -266,7 +266,8 @@ export default class Game extends Component<GameProps, GameState> {
             VerbMenuComponent = VerbMenu,
             ItemMenuComponent = ItemMenu,
             SaveMenuComponent = SaveMenu,
-        } = uiComponents 
+            ConversationMenuComponent = ConversationMenu,
+        } = uiComponents
         const { viewAngle, isPaused,
             actors, currentVerbId, currentItemId, items,
             actorOrders, sequenceRunning, hoverTarget
@@ -321,14 +322,14 @@ export default class Game extends Component<GameProps, GameState> {
                     />
                 }
 
+                {this.ending && <EndingScreen ending={this.ending} />}
+
                 {(!sequenceRunning && currentConversation) && (
-                    <ConversationMenu
+                    <ConversationMenuComponent
                         conversation={currentConversation}
                         select={this.handleConversationClick}
                     />
                 )}
-
-                {this.ending && <EndingScreen ending={this.ending} />}
 
                 {(!sequenceRunning && !currentConversation && !this.ending) && <>
                     <CommandLineComponent
