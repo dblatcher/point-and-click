@@ -48,7 +48,7 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 export function ItemMenu({ items, currentItemId, select, handleHover }: Props) {
 
     return (
-        <Container maxWidth={'sm'} sx={{ padding: 1 }}>
+        <Container maxWidth={'sm'} sx={{ paddingY: .5 }}>
 
             <Grid container component={Card} alignItems={'stretch'}>
                 {items.map(item => {

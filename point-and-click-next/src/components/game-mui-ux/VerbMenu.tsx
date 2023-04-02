@@ -15,9 +15,9 @@ interface Props {
 export function VerbMenu({ verbs, currentVerbId, select }: Props) {
 
     return (
-        <Container maxWidth={'sm'} sx={{ padding: 1 }}>
+        <Container maxWidth={'sm'} sx={{ paddingY: .5 }}>
 
-            <Grid container component={Card} padding={1}>
+            <Grid container component={Card}>
                 {verbs.map(verb => (
                     <Grid item key={verb.id} flex={1} xs={3}  sx={{ display: 'flex' }} >
                         <Button
@@ -25,6 +25,7 @@ export function VerbMenu({ verbs, currentVerbId, select }: Props) {
                                 flex: 1,
                                 lineHeight:1,
                                 minHeight:'2rem',
+                                borderRadius:0,
                             }}
                             size="small"
                             color={'secondary'}

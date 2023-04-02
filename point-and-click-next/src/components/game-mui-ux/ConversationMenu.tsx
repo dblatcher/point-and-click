@@ -13,7 +13,7 @@ export function ConversationMenu({ conversation, select, }: Props) {
     const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
 
     return (
-        <Container maxWidth={'sm'} sx={{ padding: 1 }}>
+        <Container maxWidth={'sm'} sx={{ paddingY: .5 }}>
             <Card sx={{ padding: 1 }} component='nav'>
                 <ButtonGroup orientation="vertical" fullWidth>
                     {branch && branch.choices.filter(_ => !_.disabled).map((choice, index) => (
