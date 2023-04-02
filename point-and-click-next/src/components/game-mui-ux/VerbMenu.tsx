@@ -1,18 +1,12 @@
 
-import { Verb } from "@/oldsrc"
 import { Button } from "@mui/material";
 import Card from "@mui/material/Card";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
+import { VerbMenuProps } from "../game/uiComponentSet";
 
 
-interface Props {
-    verbs: Verb[];
-    currentVerbId: string;
-    select: { (verb: Verb): void };
-}
-
-export function VerbMenu({ verbs, currentVerbId, select }: Props) {
+export function VerbMenu({ verbs, currentVerbId, select }: VerbMenuProps) {
 
     return (
         <Container maxWidth={'sm'} sx={{ paddingY: .5 }}>

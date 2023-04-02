@@ -1,18 +1,12 @@
 
-import { ItemData, CommandTarget, Verb } from "@/oldsrc";
 import { useTheme } from "@mui/material";
 import { Card } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/system";
+import { CommandLineProps } from "../game/uiComponentSet";
 
-interface Props {
-    verb?: Verb;
-    item?: ItemData;
-    target?: CommandTarget;
-    hoverTarget?: CommandTarget;
-}
 
-export function CommandLine({ verb, item, target, hoverTarget }: Props) {
+export function CommandLine({ verb, item, target, hoverTarget }: CommandLineProps) {
     const theme = useTheme()
     const Bold = (props: { text: string }) => <b style={{ color: theme.palette.primary.main }}>{props.text}{' '}</b>
     const hoverText = hoverTarget ? hoverTarget.name || hoverTarget.id : '..?'

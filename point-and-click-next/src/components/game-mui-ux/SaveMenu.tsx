@@ -4,14 +4,9 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import IconButton from "@mui/material/IconButton";
 import { useState } from "react"
 import SaveIcon from '@mui/icons-material/Save';
+import { SaveMenuProps } from "../game/uiComponentSet";
 
-interface Props {
-    save?: { (): void };
-    reset?: { (): void };
-    load?: { (): void };
-}
-
-export const SaveMenu = ({ save, reset, load }: Props) => {
+export const SaveMenu = ({ save, reset, load }: SaveMenuProps) => {
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
@@ -20,7 +15,7 @@ export const SaveMenu = ({ save, reset, load }: Props) => {
 
     return <>
         <IconButton onClick={open}>
-            <SaveIcon/>         
+            <SaveIcon/>
         </IconButton>
         <Dialog open={isDrawerOpen} onClose={close}>
             <Box padding={1}>

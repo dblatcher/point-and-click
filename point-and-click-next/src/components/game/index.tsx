@@ -55,15 +55,12 @@ export type RoomContentItem = {
     overrideSprite?: Sprite;
 }
 
-
 export const cellSize = 5
 // use true for debugging only- slows program!
 const renderCells = false
 const TIMER_SPEED = 10
 
 export default class Game extends Component<GameProps, GameState> {
-
-    refs!: {}
 
     constructor(props: GameProps) {
         super(props)
@@ -86,14 +83,10 @@ export default class Game extends Component<GameProps, GameState> {
         const items = props.items.map(cloneData);
         const conversations = props.conversations.map(cloneData);
         const flagMap = cloneData(props.flagMap);
-
-
-
         const openingSequenceInProps = findById(props.openingSequenceId, props.sequences)
         const openingSequenceCopy = (openingSequenceInProps && props.gameNotBegun)
             ? cloneData(openingSequenceInProps)
             : undefined
-
 
         return {
             viewAngle: 0,

@@ -1,18 +1,12 @@
 
 import imageService from "@/services/imageService";
 import { ItemData } from "@/oldsrc"
-import { HandleHoverFunction } from "../game";
 import { CSSProperties } from "react";
 import { Button, Card, Container, Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
+import { ItemMenuProps } from "../game/uiComponentSet";
 
-interface Props {
-    items: ItemData[];
-    currentItemId?: string;
-    select: { (item: ItemData): void };
-    handleHover?: HandleHoverFunction;
-}
 
 const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 
@@ -45,7 +39,7 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
     }
 }
 
-export function ItemMenu({ items, currentItemId, select, handleHover }: Props) {
+export function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
 
     return (
         <Container maxWidth={'sm'} sx={{ paddingY: .5 }}>

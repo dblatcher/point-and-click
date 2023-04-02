@@ -1,14 +1,9 @@
-import { Conversation, ConversationChoice } from "@/oldsrc"
 import { Container, Card, Button } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import { ConversationMenuProps } from "../game/uiComponentSet";
 
 
-interface Props {
-    conversation: Conversation;
-    select: { (choice: ConversationChoice): void };
-}
-
-export function ConversationMenu({ conversation, select, }: Props) {
+export function ConversationMenu({ conversation, select, }: ConversationMenuProps) {
 
     const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
 
