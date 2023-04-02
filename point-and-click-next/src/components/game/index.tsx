@@ -24,6 +24,7 @@ import { DebugLog, makeDebugEntry, type LogEntry } from "../../oldsrc/components
 import { SoundToggle } from "../game-ui/SoundToggle";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { UiComponentSet } from "./uiComponentSet";
+import { boolean } from "zod";
 
 
 export type GameProps = Readonly<{
@@ -298,8 +299,9 @@ export default class Game extends Component<GameProps, GameState> {
                     load={load ? () => { load() } : undefined}
                     reset={reset ? () => { reset() } : undefined}
                     save={save ? () => { save(this.saveData) } : undefined}
+                    isPaused={isPaused}
+                    setIsPaused={(isPaused) => { this.setState({ isPaused }) }}
                 />
-                <button onClick={() => { this.setState({ isPaused: !isPaused }) }}>{isPaused ? 'resume' : 'pause'}</button>
                 <SoundToggle />
 
                 {currentRoom &&

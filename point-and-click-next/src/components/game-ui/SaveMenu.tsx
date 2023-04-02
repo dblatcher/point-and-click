@@ -1,11 +1,6 @@
+import { SaveMenuProps } from "../game/uiComponentSet";
 
-interface Props {
-    save?: { (): void };
-    reset?: { (): void };
-    load?: { (): void };
-}
-
-export const SaveMenu = ({ save, reset, load }: Props) => {
+export const SaveMenu = ({ save, reset, load, isPaused, setIsPaused }: SaveMenuProps) => {
 
     return <>
         {!!save &&
@@ -17,6 +12,6 @@ export const SaveMenu = ({ save, reset, load }: Props) => {
         {!!load &&
             <button onClick={load}>LOAD</button>
         }
+        <button onClick={() => { setIsPaused(!isPaused) }}>{isPaused ? 'resume' : 'pause'}</button>
     </>
-
 }

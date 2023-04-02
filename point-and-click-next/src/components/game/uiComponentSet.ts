@@ -2,7 +2,7 @@ import { Verb, ItemData, CommandTarget, Conversation, ConversationChoice } from 
 import { FunctionComponent, ReactNode } from "react";
 import { HandleHoverFunction } from ".";
 
-export type CommandLineProps ={
+export type CommandLineProps = {
     verb?: Verb;
     item?: ItemData;
     target?: CommandTarget;
@@ -23,12 +23,14 @@ export type SaveMenuProps = {
     save?: { (): void };
     reset?: { (): void };
     load?: { (): void };
+    isPaused: boolean;
+    setIsPaused: { (isPaused: boolean): void };
 }
 export type ConversationMenuProps = {
     conversation: Conversation;
     select: { (choice: ConversationChoice): void };
 }
-export type RoomWrapperProps= {
+export type RoomWrapperProps = {
     children: ReactNode;
 }
 
@@ -38,5 +40,5 @@ export type UiComponentSet = {
     ItemMenuComponent?: FunctionComponent<ItemMenuProps>;
     SaveMenuComponent?: FunctionComponent<SaveMenuProps>;
     ConversationMenuComponent?: FunctionComponent<ConversationMenuProps>;
-    RoomWrapperComponent?:FunctionComponent<RoomWrapperProps>;
+    RoomWrapperComponent?: FunctionComponent<RoomWrapperProps>;
 }
