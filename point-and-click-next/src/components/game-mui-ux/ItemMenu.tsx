@@ -2,10 +2,9 @@
 import imageService from "@/services/imageService";
 import { ItemData } from "@/oldsrc"
 import { CSSProperties } from "react";
-import { Button, Card, Container, Grid } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
+import { Button, Card, Grid, Typography, Avatar } from "@mui/material";
 import { ItemMenuProps } from "../game/uiComponentSet";
+import { UiContainer } from "./UiContainer";
 
 
 const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
@@ -42,8 +41,7 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 export function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
 
     return (
-        <Container maxWidth={'sm'} sx={{ paddingY: .5 }}>
-
+        <UiContainer>
             <Grid container component={Card} alignItems={'stretch'}>
                 {items.map(item => {
                     const imageBackground = buildBackground(item);
@@ -71,6 +69,6 @@ export function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenu
                     </Grid>
                 )}
             </Grid>
-        </Container>
+        </UiContainer>
     )
 }

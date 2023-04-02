@@ -1,16 +1,15 @@
 
 import { Button } from "@mui/material";
 import Card from "@mui/material/Card";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { VerbMenuProps } from "../game/uiComponentSet";
+import { UiContainer } from "./UiContainer";
 
 
 export function VerbMenu({ verbs, currentVerbId, select }: VerbMenuProps) {
 
     return (
-        <Container maxWidth={'sm'} sx={{ paddingY: .5 }}>
-
+        <UiContainer>
             <Grid container component={Card}>
                 {verbs.map(verb => (
                     <Grid item key={verb.id} flex={1} xs={3}  sx={{ display: 'flex' }} >
@@ -29,12 +28,8 @@ export function VerbMenu({ verbs, currentVerbId, select }: VerbMenuProps) {
                             {verb.label}
                         </Button>
                     </Grid>
-
                 ))}
-
             </Grid>
-
-
-        </Container>
+        </UiContainer>
     )
 }

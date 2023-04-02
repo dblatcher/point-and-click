@@ -1,5 +1,5 @@
 
-import { Component } from "react";
+import { Component, Fragment } from "react";
 import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "@/oldsrc";
 //lib
 import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "@/lib/roomFunctions";
@@ -260,6 +260,7 @@ export default class Game extends Component<GameProps, GameState> {
             ItemMenuComponent = ItemMenu,
             SaveMenuComponent = SaveMenu,
             ConversationMenuComponent = ConversationMenu,
+            RoomWrapperComponent = Fragment,
         } = uiComponents
         const { viewAngle, isPaused,
             actors, currentVerbId, currentItemId, items,
@@ -302,17 +303,19 @@ export default class Game extends Component<GameProps, GameState> {
                 <SoundToggle />
 
                 {currentRoom &&
-                    <Room
-                        data={currentRoom}
-                        maxWidth={600} maxHeight={400}
-                        isPaused={isPaused}
-                        viewAngle={viewAngle}
-                        handleRoomClick={this.handleRoomClick}
-                        handleHotspotClick={this.handleTargetClick}
-                        handleHover={this.handleHover}
-                        contents={contentList}
-                        obstacleCells={renderCells ? this.state.cellMatrix : undefined}
-                    />
+                    <RoomWrapperComponent>
+                        <Room
+                            data={currentRoom}
+                            maxWidth={600} maxHeight={400}
+                            isPaused={isPaused}
+                            viewAngle={viewAngle}
+                            handleRoomClick={this.handleRoomClick}
+                            handleHotspotClick={this.handleTargetClick}
+                            handleHover={this.handleHover}
+                            contents={contentList}
+                            obstacleCells={renderCells ? this.state.cellMatrix : undefined}
+                        />
+                    </RoomWrapperComponent>
                 }
 
                 {this.ending && <EndingScreen ending={this.ending} />}

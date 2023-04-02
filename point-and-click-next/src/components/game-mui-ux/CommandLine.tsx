@@ -2,8 +2,8 @@
 import { useTheme } from "@mui/material";
 import { Card } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { Container } from "@mui/system";
 import { CommandLineProps } from "../game/uiComponentSet";
+import { UiContainer } from "./UiContainer";
 
 
 export function CommandLine({ verb, item, target, hoverTarget }: CommandLineProps) {
@@ -12,7 +12,7 @@ export function CommandLine({ verb, item, target, hoverTarget }: CommandLineProp
     const hoverText = hoverTarget ? hoverTarget.name || hoverTarget.id : '..?'
 
     return (
-        <Container maxWidth={'sm'} sx={{ paddingY: .5 }}>
+        <UiContainer>
             <Card sx={{ padding: .5, height: '2.5em' }}>
                 <Typography component={'div'} sx={{ lineHeight: 1 }}>
                     {verb && (
@@ -32,6 +32,6 @@ export function CommandLine({ verb, item, target, hoverTarget }: CommandLineProp
                     )}
                 </Typography>
             </Card>
-        </Container>
+        </UiContainer>
     )
 }

@@ -1,5 +1,5 @@
 import { Verb, ItemData, CommandTarget, Conversation, ConversationChoice } from "@/oldsrc";
-import { FunctionComponent } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import { HandleHoverFunction } from ".";
 
 export type CommandLineProps ={
@@ -28,6 +28,9 @@ export type ConversationMenuProps = {
     conversation: Conversation;
     select: { (choice: ConversationChoice): void };
 }
+export type RoomWrapperProps= {
+    children: ReactNode;
+}
 
 export type UiComponentSet = {
     CommandLineComponent?: FunctionComponent<CommandLineProps>;
@@ -35,4 +38,5 @@ export type UiComponentSet = {
     ItemMenuComponent?: FunctionComponent<ItemMenuProps>;
     SaveMenuComponent?: FunctionComponent<SaveMenuProps>;
     ConversationMenuComponent?: FunctionComponent<ConversationMenuProps>;
+    RoomWrapperComponent?:FunctionComponent<RoomWrapperProps>;
 }
