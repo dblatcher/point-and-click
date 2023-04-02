@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import soundService from "@/services/soundService";
 
+import VolumeMute from '@mui/icons-material/VolumeMute'
+import VolumeUp from '@mui/icons-material/VolumeUp'
+import { IconButton } from "@mui/material";
+
 export function SoundToggle() {
 
     const [isOn, setIsOn] = useState(soundService.isEnabled)
@@ -24,9 +28,8 @@ export function SoundToggle() {
     }
 
     return (
-        <button onClick={toggle}>
-            SOUND
-            {isOn ? '🔊' : '🔈'}
-        </button>
+        <IconButton onClick={toggle}>
+            {isOn ? <VolumeUp /> : <VolumeMute />}
+        </IconButton>
     )
 }

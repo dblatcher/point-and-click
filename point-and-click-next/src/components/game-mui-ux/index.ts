@@ -4,6 +4,7 @@ import { ConversationMenu } from "./ConversationMenu";
 import { ItemMenu } from "./ItemMenu";
 import { RoomWrapper } from "./RoomWrapper";
 import { SaveMenu } from "./SaveMenu";
+import { SoundToggle } from "./SoundToggle";
 import { VerbMenu } from "./VerbMenu";
 
 export const materialUiComponents: UiComponentSet = {
@@ -13,4 +14,5 @@ export const materialUiComponents: UiComponentSet = {
     SaveMenuComponent: SaveMenu,
     ConversationMenuComponent: ConversationMenu,
     RoomWrapperComponent: RoomWrapper,
+    SoundToggleComponent: SoundToggle,
 }

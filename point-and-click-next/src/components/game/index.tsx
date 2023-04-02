@@ -261,6 +261,7 @@ export default class Game extends Component<GameProps, GameState> {
             SaveMenuComponent = SaveMenu,
             ConversationMenuComponent = ConversationMenu,
             RoomWrapperComponent = Fragment,
+            SoundToggleComponent = SoundToggle,
         } = uiComponents
         const { viewAngle, isPaused,
             actors, currentVerbId, currentItemId, items,
@@ -301,7 +302,7 @@ export default class Game extends Component<GameProps, GameState> {
                     isPaused={isPaused}
                     setIsPaused={(isPaused) => { this.setState({ isPaused }) }}
                 />
-                <SoundToggle />
+                <SoundToggleComponent />
 
                 {currentRoom &&
                     <RoomWrapperComponent>

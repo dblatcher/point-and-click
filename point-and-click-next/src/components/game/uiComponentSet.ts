@@ -41,4 +41,5 @@ export type UiComponentSet = {
     SaveMenuComponent?: FunctionComponent<SaveMenuProps>;
     ConversationMenuComponent?: FunctionComponent<ConversationMenuProps>;
     RoomWrapperComponent?: FunctionComponent<RoomWrapperProps>;
+    SoundToggleComponent?: FunctionComponent<{}>;
 }
