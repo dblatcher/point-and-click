@@ -6,6 +6,7 @@ import { populateServices } from "@/services/populateServices";
 import { SoundAsset } from "@/services/soundService";
 import React from "react";
 import { materialUiComponents } from "./game-mui-ux";
+import FullScreenWrapper from "./FullScreenWrapper";
 
 
 type Props = {
@@ -100,7 +101,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
   render() {
     const { gameCondition, timestamp } = this.state
-    return <div>
+    return <FullScreenWrapper>
       {gameCondition && (
         <Game
           {...gameCondition}
@@ -112,7 +113,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
           uiComponents={materialUiComponents}
         />
       )}
-    </div>
+    </FullScreenWrapper>
   }
 
 }
