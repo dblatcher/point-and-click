@@ -1,16 +1,11 @@
 
 import imageService from "@/services/imageService";
 import { ItemData } from "@/oldsrc"
-import { HandleHoverFunction } from "../game";
 import uiStyles from '@/components/game-ui/uiStyles.module.css';
-import { CSSProperties } from "react";
+import { CSSProperties, memo } from "react";
+import { ItemMenuProps, itemMenuPropsAreEqual } from '@/components/game/uiComponentSet'
 
-interface Props {
-    items: ItemData[];
-    currentItemId?: string;
-    select: { (item: ItemData): void };
-    handleHover?: HandleHoverFunction;
-}
+
 
 const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 
@@ -43,38 +38,40 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
     }
 }
 
-export function ItemMenu({ items, currentItemId, select, handleHover }: Props) {
-    const buttonOffClassNames = [uiStyles.button].join(" ")
-    const buttonOnClassNames = [uiStyles.button, uiStyles.current].join(" ")
+export const ItemMenu = memo(
+    function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
+        const buttonOffClassNames = [uiStyles.button].join(" ")
+        const buttonOnClassNames = [uiStyles.button, uiStyles.current].join(" ")
+        return (
+            <div className={uiStyles.frame}>
+                <nav className={[uiStyles.contents, uiStyles.menu].join(" ")}>
+                    {items.map(item => {
+                        const backgroundStyle = buildBackground(item);
+                        const classNames = currentItemId === item.id
+                            ? buttonOnClassNames
+                            : buttonOffClassNames
 
-    return (
-        <div className={uiStyles.frame}>
-            <nav className={[uiStyles.contents, uiStyles.menu].join(" ")}>
-                {items.map(item => {
-                    const backgroundStyle = buildBackground(item);
-                    const classNames = currentItemId === item.id
-                        ? buttonOnClassNames
-                        : buttonOffClassNames
-
-                    return (
-                        <button key={item.id} className={classNames}
-                            style={{
-                                position: 'relative',
-                                minHeight: '4rem',
-                            }}
-                            onClick={() => { select(item) }}
-                            onMouseEnter={handleHover ? () => { handleHover(item, 'enter') } : undefined}
-                            onMouseLeave={handleHover ? () => { handleHover(item, 'leave') } : undefined}
-                        >
-                            {backgroundStyle ?
-                                <div style={backgroundStyle} />
-                                :
-                                <span>{item.name || item.id}</span>
-                            }
-                        </button>
-                    )
-                })}
-            </nav>
-        </div>
-    )
-}
+                        return (
+                            <button key={item.id} className={classNames}
+                                style={{
+                                    position: 'relative',
+                                    minHeight: '4rem',
+                                }}
+                                onClick={() => { select(item) }}
+                                onMouseEnter={handleHover ? () => { handleHover(item, 'enter') } : undefined}
+                                onMouseLeave={handleHover ? () => { handleHover(item, 'leave') } : undefined}
+                            >
+                                {backgroundStyle ?
+                                    <div style={backgroundStyle} />
+                                    :
+                                    <span>{item.name || item.id}</span>
+                                }
+                            </button>
+                        )
+                    })}
+                </nav>
+            </div>
+        )
+    },
+    itemMenuPropsAreEqual
+)

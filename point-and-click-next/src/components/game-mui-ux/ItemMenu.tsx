@@ -1,9 +1,9 @@
 
 import imageService from "@/services/imageService";
 import { ItemData } from "@/oldsrc"
-import { CSSProperties } from "react";
+import { CSSProperties, memo } from "react";
 import { Button, Card, Grid, Typography, Avatar } from "@mui/material";
-import { ItemMenuProps } from "../game/uiComponentSet";
+import { ItemMenuProps, itemMenuPropsAreEqual } from "../game/uiComponentSet";
 import { UiContainer } from "./UiContainer";
 
 
@@ -38,37 +38,38 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
     }
 }
 
-export function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
 
-    return (
-        <UiContainer>
-            <Grid container component={Card} alignItems={'stretch'}>
-                {items.map(item => {
-                    const imageBackground = buildBackground(item);
-                    const initialLetter = item.name ? item.name.charAt(0) : item.id.charAt(0);
-                    return (
-                        <Grid item key={item.id} xs={3} sm={2}>
-                            <Button
-                                fullWidth
-                                color='secondary'
-                                size="small"
-                                variant={currentItemId === item.id ? 'contained' : 'text'}
-                                onClick={() => { select(item) }}
-                                onMouseEnter={handleHover ? () => { handleHover(item, 'enter') } : undefined}
-                                onMouseLeave={handleHover ? () => { handleHover(item, 'leave') } : undefined}
-                            >
-                                <Avatar sx={{ ...imageBackground }}>{imageBackground ? '' : initialLetter}</Avatar>
-                            </Button>
+export const ItemMenu = memo(
+    function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
+        return (
+            <UiContainer>
+                <Grid container component={Card} alignItems={'stretch'}>
+                    {items.map(item => {
+                        const imageBackground = buildBackground(item);
+                        const initialLetter = item.name ? item.name.charAt(0) : item.id.charAt(0);
+                        return (
+                            <Grid item key={item.id} xs={3} sm={2}>
+                                <Button
+                                    fullWidth
+                                    color='secondary'
+                                    size="small"
+                                    variant={currentItemId === item.id ? 'contained' : 'text'}
+                                    onClick={() => { select(item) }}
+                                    onMouseEnter={handleHover ? () => { handleHover(item, 'enter') } : undefined}
+                                    onMouseLeave={handleHover ? () => { handleHover(item, 'leave') } : undefined}
+                                >
+                                    <Avatar sx={{ ...imageBackground }}>{imageBackground ? '' : initialLetter}</Avatar>
+                                </Button>
+                            </Grid>
+                        )
+                    })}
+
+                    {items.length == 0 && (
+                        <Grid item alignItems='stretch' xs={12} >
+                            <Typography component={'span'}>no items</Typography>
                         </Grid>
-                    )
-                })}
-
-                {items.length == 0 && (
-                    <Grid item alignItems='stretch' xs={12} >
-                        <Typography component={'span'}>no items</Typography>
-                    </Grid>
-                )}
-            </Grid>
-        </UiContainer>
-    )
-}
+                    )}
+                </Grid>
+            </UiContainer>
+        )
+    }, itemMenuPropsAreEqual)

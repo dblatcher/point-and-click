@@ -1,5 +1,5 @@
 import { Verb, ItemData, CommandTarget, Conversation, ConversationChoice } from "@/oldsrc";
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent, NamedExoticComponent, ReactNode } from "react";
 import { HandleHoverFunction } from ".";
 
 export type CommandLineProps = {
@@ -19,6 +19,12 @@ export type ItemMenuProps = {
     select: { (item: ItemData): void };
     handleHover?: HandleHoverFunction;
 }
+
+const itemsToIdString = (items: ItemData[]): string => items.map(item => item.id).join()
+export const itemMenuPropsAreEqual = (prevProps: ItemMenuProps, nextProps: ItemMenuProps): boolean => {
+    return prevProps.currentItemId === nextProps.currentItemId && itemsToIdString(prevProps.items) === itemsToIdString(nextProps.items)
+}
+
 export type SaveMenuProps = {
     save?: { (): void };
     reset?: { (): void };
@@ -37,7 +43,7 @@ export type RoomWrapperProps = {
 export type UiComponentSet = {
     CommandLineComponent?: FunctionComponent<CommandLineProps>;
     VerbMenuComponent?: FunctionComponent<VerbMenuProps>;
-    ItemMenuComponent?: FunctionComponent<ItemMenuProps>;
+    ItemMenuComponent?: NamedExoticComponent<ItemMenuProps>;
     SaveMenuComponent?: FunctionComponent<SaveMenuProps>;
     ConversationMenuComponent?: FunctionComponent<ConversationMenuProps>;
     RoomWrapperComponent?: FunctionComponent<RoomWrapperProps>;
