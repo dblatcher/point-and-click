@@ -1,15 +1,9 @@
-
-import { Verb } from "@/oldsrc"
+import { memo } from 'react'
 import uiStyles from './uiStyles.module.css';
+import { VerbMenuProps, verbMenuPropsAreEqual } from "../game/uiComponentSet";
 
-interface Props {
-    verbs: Verb[];
-    currentVerbId: string;
-    select: { (verb: Verb): void };
-}
 
-export function VerbMenu({ verbs, currentVerbId, select }: Props) {
-
+export const VerbMenu = memo ( function VerbMenu({ verbs, currentVerbId, select }: VerbMenuProps) {
     return (
         <div className={uiStyles.frame}>
             <nav className={[uiStyles.contents, uiStyles.menu].join(" ")}>
@@ -21,4 +15,4 @@ export function VerbMenu({ verbs, currentVerbId, select }: Props) {
             </nav>
         </div>
     )
-}
+}, verbMenuPropsAreEqual)
