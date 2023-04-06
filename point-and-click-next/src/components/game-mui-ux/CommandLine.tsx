@@ -1,16 +1,15 @@
-
+import { memo } from 'react'
 import { useTheme } from "@mui/material";
 import { Card } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { CommandLineProps } from "../game/uiComponentSet";
+import { CommandLineProps, commandLinePropsAreEqual } from "../game/uiComponentSet";
 import { UiContainer } from "./UiContainer";
 
 
-export function CommandLine({ verb, item, target, hoverTarget }: CommandLineProps) {
+export const CommandLine = memo(function CommandLine({ verb, item, target, hoverTarget }: CommandLineProps) {
     const theme = useTheme()
     const Bold = (props: { text: string }) => <b style={{ color: theme.palette.primary.main }}>{props.text}{' '}</b>
     const hoverText = hoverTarget ? hoverTarget.name || hoverTarget.id : '..?'
-
     return (
         <UiContainer>
             <Card sx={{ padding: .5, height: '2.5em' }}>
@@ -34,4 +33,4 @@ export function CommandLine({ verb, item, target, hoverTarget }: CommandLineProp
             </Card>
         </UiContainer>
     )
-}
+}, commandLinePropsAreEqual)

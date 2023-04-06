@@ -8,6 +8,13 @@ export type CommandLineProps = {
     target?: CommandTarget;
     hoverTarget?: CommandTarget;
 }
+export const commandLinePropsAreEqual = (prevProps: CommandLineProps, nextProps: CommandLineProps): boolean => {
+    return prevProps.verb === nextProps.verb &&
+     prevProps.item === nextProps.item &&
+     prevProps.target === nextProps.target &&
+     prevProps.hoverTarget === nextProps.hoverTarget
+}
+
 export type VerbMenuProps = {
     verbs: Verb[];
     currentVerbId: string;
