@@ -2,7 +2,7 @@ import { UiComponentSet } from "../game/uiComponentSet";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
 import { ItemMenu } from "./ItemMenu";
-import { RoomWrapper } from "./RoomWrapper";
+import { Layout } from "./Layout";
 import { SaveMenu } from "./SaveMenu";
 import { SoundToggle } from "./SoundToggle";
 import { VerbMenu } from "./VerbMenu";
@@ -13,6 +13,6 @@ export const materialUiComponents: UiComponentSet = {
     ItemMenuComponent: ItemMenu,
     SaveMenuComponent: SaveMenu,
     ConversationMenuComponent: ConversationMenu,
-    RoomWrapperComponent: RoomWrapper,
     SoundToggleComponent: SoundToggle,
+    GameLayoutComponent: Layout,
 }

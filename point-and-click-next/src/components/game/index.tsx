@@ -24,6 +24,7 @@ import { DebugLog, makeDebugEntry, type LogEntry } from "../../oldsrc/components
 import { SoundToggle } from "../game-ui/SoundToggle";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { UiComponentSet } from "./uiComponentSet";
+import { Layout } from "../game-ui/Layout";
 
 
 export type GameProps = Readonly<{
@@ -260,8 +261,8 @@ export default class Game extends Component<GameProps, GameState> {
             ItemMenuComponent = ItemMenu,
             SaveMenuComponent = SaveMenu,
             ConversationMenuComponent = ConversationMenu,
-            RoomWrapperComponent = Fragment,
             SoundToggleComponent = SoundToggle,
+            GameLayoutComponent = Layout,
         } = uiComponents
         const { viewAngle, isPaused,
             actors, currentVerbId, currentItemId, items,
@@ -281,7 +282,7 @@ export default class Game extends Component<GameProps, GameState> {
             clickHandler: (data.isPlayer || data.noInteraction) ? undefined : this.handleTargetClick
         }))
 
-        return (<>
+        return <>
             {showDebugLog && (
                 <DebugLog
                     condition={{
@@ -293,64 +294,64 @@ export default class Game extends Component<GameProps, GameState> {
                     }}
                     log={this.state.debugLog} />
             )}
-            <main>
-
-                <SaveMenuComponent
-                    load={load ? () => { load() } : undefined}
-                    reset={reset ? () => { reset() } : undefined}
-                    save={save ? () => { save(this.saveData) } : undefined}
-                    isPaused={isPaused}
-                    setIsPaused={(isPaused) => { this.setState({ isPaused }) }}
-                />
-                <SoundToggleComponent />
-
-                {currentRoom &&
-                    <RoomWrapperComponent>
-                        <Room
-                            data={currentRoom}
-                            maxWidth={600} maxHeight={400}
-                            isPaused={isPaused}
-                            viewAngle={viewAngle}
-                            handleRoomClick={this.handleRoomClick}
-                            handleHotspotClick={this.handleTargetClick}
-                            handleHover={this.handleHover}
-                            contents={contentList}
-                            obstacleCells={renderCells ? this.state.cellMatrix : undefined}
-                        />
-                    </RoomWrapperComponent>
-                }
-
-                {this.ending && <EndingScreen ending={this.ending} />}
-
-                {(!sequenceRunning && currentConversation) && (
-                    <ConversationMenuComponent
-                        conversation={currentConversation}
-                        select={this.handleConversationClick}
-                    />
-                )}
-
-                {(!sequenceRunning && !currentConversation && !this.ending) && <>
-                    <CommandLineComponent
-                        verb={this.currentVerb}
-                        item={this.currentItem}
-                        hoverTarget={hoverTarget}
-                    />
-
+            <GameLayoutComponent
+                isConversationRunning={!!currentConversation}
+                isSequenceRunning={!!sequenceRunning}
+                isGameEnded={!!this.ending}
+                itemMenu={<ItemMenuComponent
+                    items={items.filter(_ => _.actorId === player?.id)}
+                    currentItemId={currentItemId}
+                    select={(item: ItemData) => { this.handleTargetClick(item) }}
+                    handleHover={this.handleHover}
+                />}
+                commandLine={<CommandLineComponent
+                    verb={this.currentVerb}
+                    item={this.currentItem}
+                    hoverTarget={hoverTarget}
+                />}
+                verbMenu={
                     <VerbMenuComponent
                         verbs={verbs}
                         currentVerbId={currentVerbId}
                         select={(verb: Verb) => { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }}
                     />
-
-                    <ItemMenuComponent
-                        items={items.filter(_ => _.actorId === player?.id)}
-                        currentItemId={currentItemId}
-                        select={(item: ItemData) => { this.handleTargetClick(item) }}
-                        handleHover={this.handleHover}
+                }
+                conversationMenu={
+                    currentConversation && (
+                        <ConversationMenuComponent
+                            conversation={currentConversation}
+                            select={this.handleConversationClick}
+                        />
+                    )
+                }
+                endingScreen={this.ending && <EndingScreen ending={this.ending} />}
+                saveMenu={
+                    <SaveMenuComponent
+                        load={load ? () => { load() } : undefined}
+                        reset={reset ? () => { reset() } : undefined}
+                        save={save ? () => { save(this.saveData) } : undefined}
+                        isPaused={isPaused}
+                        setIsPaused={(isPaused) => { this.setState({ isPaused }) }}
                     />
-                </>}
-            </main>
+                }
+                soundToggle={<SoundToggleComponent />}
+            >
+                {currentRoom && (
+                    <Room
+                        data={currentRoom}
+                        maxWidth={600} maxHeight={400}
+                        isPaused={isPaused}
+                        viewAngle={viewAngle}
+                        handleRoomClick={this.handleRoomClick}
+                        handleHotspotClick={this.handleTargetClick}
+                        handleHover={this.handleHover}
+                        contents={contentList}
+                        obstacleCells={renderCells ? this.state.cellMatrix : undefined}
+                    />
+                )
+                }
+            </GameLayoutComponent>
         </>
-        )
+
     }
 }

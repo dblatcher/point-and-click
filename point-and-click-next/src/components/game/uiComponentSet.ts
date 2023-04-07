@@ -1,5 +1,5 @@
 import { Verb, ItemData, CommandTarget, Conversation, ConversationChoice } from "@/oldsrc";
-import { FunctionComponent, NamedExoticComponent, ReactNode } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import { HandleHoverFunction } from ".";
 
 export type CommandLineProps = {
@@ -10,9 +10,9 @@ export type CommandLineProps = {
 }
 export const commandLinePropsAreEqual = (prevProps: CommandLineProps, nextProps: CommandLineProps): boolean => {
     return prevProps.verb === nextProps.verb &&
-     prevProps.item === nextProps.item &&
-     prevProps.target === nextProps.target &&
-     prevProps.hoverTarget === nextProps.hoverTarget
+        prevProps.item === nextProps.item &&
+        prevProps.target === nextProps.target &&
+        prevProps.hoverTarget === nextProps.hoverTarget
 }
 
 export type VerbMenuProps = {
@@ -46,16 +46,27 @@ export type ConversationMenuProps = {
     conversation: Conversation;
     select: { (choice: ConversationChoice): void };
 }
-export type RoomWrapperProps = {
+
+export type GameLayoutProps = {
     children: ReactNode;
+    commandLine: ReactNode;
+    verbMenu: ReactNode;
+    itemMenu: ReactNode;
+    conversationMenu: ReactNode;
+    endingScreen: ReactNode;
+    saveMenu: ReactNode;
+    soundToggle: ReactNode;
+    isSequenceRunning: boolean;
+    isConversationRunning: boolean,
+    isGameEnded: boolean,
 }
 
 export type UiComponentSet = {
     CommandLineComponent?: FunctionComponent<CommandLineProps>;
     VerbMenuComponent?: FunctionComponent<VerbMenuProps>;
-    ItemMenuComponent?: NamedExoticComponent<ItemMenuProps>;
+    ItemMenuComponent?: FunctionComponent<ItemMenuProps>;
     SaveMenuComponent?: FunctionComponent<SaveMenuProps>;
     ConversationMenuComponent?: FunctionComponent<ConversationMenuProps>;
-    RoomWrapperComponent?: FunctionComponent<RoomWrapperProps>;
     SoundToggleComponent?: FunctionComponent<{}>;
+    GameLayoutComponent?: FunctionComponent<GameLayoutProps>;
 }
