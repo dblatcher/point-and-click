@@ -1,4 +1,4 @@
-import { Box, Card, useTheme } from "@mui/material";
+import { Box, Card, Container, Grid, useTheme } from "@mui/material";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { UiContainer } from "./UiContainer";
 
@@ -10,27 +10,27 @@ export const Layout = ({
     isConversationRunning, isGameEnded, isSequenceRunning
 }: GameLayoutProps) => {
     const theme = useTheme()
-    return (<UiContainer>
-        <Card sx={{ padding: 1, background: theme.palette.primary.light }}>
-            {soundToggle}
-            {children}
+    return (
+        <Container maxWidth={'md'} sx={{ paddingY: .5 }}>
+            <Card sx={{ padding: 1, background: theme.palette.primary.light }}>
+                {soundToggle}
+                {children}
+                {isGameEnded && endingScreen}
 
-            {isGameEnded && endingScreen}
-
-            <Box sx={{ minHeight: 200 }}>
-                {isConversationRunning ? (
-                    <>
-                        {!isSequenceRunning && conversationMenu}
-                    </>
-                ) : (
-                    <>
-                        {commandLine}
-                        {verbMenu}
-                        {itemMenu}
-                    </>
-                )}
-            </Box>
-        </Card>
-        {saveMenu}
-    </UiContainer>)
+                <Box sx={{ minHeight: 200 }}>
+                    {isConversationRunning ? (
+                        <>
+                            {!isSequenceRunning && conversationMenu}
+                        </>
+                    ) : (
+                        <>
+                            {commandLine}
+                            {verbMenu}
+                            {itemMenu}
+                        </>
+                    )}
+                </Box>
+            </Card>
+            {saveMenu}
+        </Container>)
 }

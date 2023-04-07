@@ -1,7 +1,6 @@
-import { Card, Button } from "@mui/material";
+import { Card, Button, Box } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { ConversationMenuProps } from "../game/uiComponentSet";
-import { UiContainer } from "./UiContainer";
 
 
 export function ConversationMenu({ conversation, select, }: ConversationMenuProps) {
@@ -9,8 +8,7 @@ export function ConversationMenu({ conversation, select, }: ConversationMenuProp
     const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
 
     return (
-        <UiContainer>
-            <Card sx={{ padding: 1 }} component='nav'>
+        <Box marginY={1} component={Card}>
                 <ButtonGroup orientation="vertical" fullWidth>
                     {branch && branch.choices.filter(_ => !_.disabled).map((choice, index) => (
                         <Button
@@ -23,7 +21,6 @@ export function ConversationMenu({ conversation, select, }: ConversationMenuProp
                         </Button>
                     ))}
                 </ButtonGroup>
-            </Card>
-        </UiContainer>
+        </Box>
     )
 }
