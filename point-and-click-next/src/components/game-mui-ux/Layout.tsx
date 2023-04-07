@@ -1,6 +1,5 @@
-import { Box, Card, Container, Grid, useTheme } from "@mui/material";
+import { Box, Card, Container, useTheme } from "@mui/material";
 import { GameLayoutProps } from "../game/uiComponentSet";
-import { UiContainer } from "./UiContainer";
 
 
 export const Layout = ({
