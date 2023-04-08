@@ -7,7 +7,7 @@ import { VerbMenuProps, verbMenuPropsAreEqual } from "../game/uiComponentSet";
 
 export const VerbMenu = memo(function VerbMenu({ verbs, currentVerbId, select }: VerbMenuProps) {
     return (
-        <Grid container component={Card} my={1}>
+        <Grid container mb={1}>
             {verbs.map(verb => (
                 <Grid item key={verb.id} flex={1} xs={3} sx={{ display: 'flex' }} >
                     <Button

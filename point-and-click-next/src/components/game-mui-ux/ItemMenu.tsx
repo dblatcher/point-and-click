@@ -2,7 +2,7 @@
 import imageService from "@/services/imageService";
 import { ItemData } from "@/oldsrc"
 import { CSSProperties, memo } from "react";
-import { Button, Card, Grid, Typography, Avatar } from "@mui/material";
+import { Button, Grid, Typography, Avatar } from "@mui/material";
 import { ItemMenuProps, itemMenuPropsAreEqual } from "../game/uiComponentSet";
 
 
@@ -41,14 +41,13 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 export const ItemMenu = memo(
     function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
         return (
-            <Grid container component={Card} alignItems={'stretch'} my={1}>
+            <Grid container alignItems={'stretch'} mb={1}>
                 {items.map(item => {
                     const imageBackground = buildBackground(item);
                     const initialLetter = item.name ? item.name.charAt(0) : item.id.charAt(0);
                     return (
-                        <Grid item key={item.id} xs={3} sm={2}>
+                        <Grid item key={item.id} xs={2} sm={1.5} md={1}>
                             <Button
-                                fullWidth
                                 color='secondary'
                                 size="small"
                                 variant={currentItemId === item.id ? 'contained' : 'text'}
@@ -62,7 +61,7 @@ export const ItemMenu = memo(
                     )
                 })}
 
-                {items.length == 0 && (
+                {items.length === 0 && (
                     <Grid item alignItems='stretch' xs={12} >
                         <Typography component={'span'}>no items</Typography>
                     </Grid>
