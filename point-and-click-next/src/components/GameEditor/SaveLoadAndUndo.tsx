@@ -8,7 +8,10 @@ import { buildGameZipBlob, readGameFromZipFile } from "@/lib/zipFiles";
 import imageService from "@/services/imageService";
 import { populateServices } from "@/services/populateServices";
 import soundService from "@/services/soundService";
-import { Button, Alert, ButtonGroup } from "@mui/material"
+import { Alert, ButtonGroup, IconButton, Tooltip, Badge } from "@mui/material"
+import Download from "@mui/icons-material/Download"
+import Upload from "@mui/icons-material/Upload"
+import Undo from "@mui/icons-material/Undo"
 
 interface Props {
   gameDesign: GameDesign;
@@ -60,22 +63,38 @@ export const SaveLoadAndUndo: FunctionComponent<Props> = ({
     populateServices(result.data.gameDesign, result.data.imageAssets, result.data.soundAssets)
   };
 
-  return (<>
-    <ButtonGroup orientation="vertical">
-      <Button onClick={downloadAll} fullWidth>
-        Save game to zip file
-      </Button>
-      <Button onClick={uploadAll} fullWidth>
-        Load game from zip file
-      </Button>
+  const undoLabel = history.length > 0 ? `undo ${history[history.length - 1]?.label}` : 'undo'
+  const saveLabel = 'Save game to zip file'
+  const loadLabel = 'Load game from zip file'
 
-      <Button
-        fullWidth
-        onClick={undo}
-        disabled={history.length === 0}
-      >
-        UNDO {history[history.length - 1]?.label} [{history.length}]
-      </Button>
+  return (<>
+    <ButtonGroup orientation="horizontal">
+      <Tooltip title={saveLabel}>
+        <IconButton
+          aria-label={saveLabel}
+          onClick={downloadAll}
+        >
+          <Download />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title={loadLabel}>
+        <IconButton
+          aria-label={loadLabel}
+          onClick={uploadAll}
+        >
+          <Upload />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title={undoLabel}>
+        <IconButton aria-label={undoLabel} onClick={undo}>
+          <Badge badgeContent={history.length} color='primary'>
+            <Undo />
+          </Badge>
+        </IconButton>
+      </Tooltip>
+
     </ButtonGroup>
     {downloadAllError && (
       <Alert severity="error">{downloadAllError}</Alert>
