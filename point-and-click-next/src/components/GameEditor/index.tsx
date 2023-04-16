@@ -29,9 +29,8 @@ import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import imageService from "@/services/imageService";
 import spriteService from "@/services/spriteService";
 
-import { CheckBoxInput } from "./formControls";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { Container, Stack, Box, Typography, Divider, Button } from "@mui/material";
+import { Container, Stack, Box, Typography, Divider } from "@mui/material";
 import { OptionsMenu } from "./OptionsMenu";
 
 
@@ -314,6 +313,7 @@ export default class GameEditor extends Component<Props, State>{
             makeFolder('verbs', gameDesign.verbs, gameItemIds.verbs),
             makeFolder('images'),
             makeFolder('sounds'),
+            makeFolder('test'),
         ]
 
         return <Container maxWidth='xl'>
@@ -329,11 +329,6 @@ export default class GameEditor extends Component<Props, State>{
                     divider={<Divider orientation="horizontal" flexItem />}
                     width={250}
                 >
-
-                    <Typography variant="h2" noWrap gutterBottom sx={{ fontSize: '200%', paddingTop: 1 }}>
-                        {gameDesign.id}
-                    </Typography>
-
                     <Stack direction={'row'}>
                         <SaveLoadAndUndo
                             gameDesign={gameDesign}
@@ -344,20 +339,20 @@ export default class GameEditor extends Component<Props, State>{
                         <OptionsMenu options={this.state.options} setOptions={options => { this.setState({ options }) }} />
                     </Stack>
 
-                    <Box>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            onClick={() => this.setState({ tabOpen: tabs.indexOf("test"), resetTimeStamp: Date.now() })}
-                        >
-                            Test Game
-                        </Button>
-                    </Box>
+                    <Typography variant="h2" noWrap gutterBottom sx={{ fontSize: '175%', paddingTop: 1 }}>
+                        {gameDesign.id}
+                    </Typography>
 
                     <TreeMenu folders={folders}
                         folderClick={(folderId) => {
                             const folderIndex = tabs.indexOf(folderId);
-                            this.setState({ tabOpen: folderIndex, gameItemIds: {} })
+                            this.setState(state => {
+                                return {
+                                    tabOpen: folderIndex,
+                                    gameItemIds: {},
+                                    resetTimeStamp: folderId == 'test' ? Date.now() : state.resetTimeStamp
+                                }
+                            })
                         }}
                         entryClick={(folderId, data, isForNew) => {
                             const folderIndex = tabs.indexOf(folderId);
