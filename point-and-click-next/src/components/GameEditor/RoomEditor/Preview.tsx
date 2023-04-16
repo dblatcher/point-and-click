@@ -18,7 +18,7 @@ type BooleanState = {
 
 type State = BooleanState & {
     viewAngle: number;
-    maxHeight: number;
+    maxWidth: number;
     testActor: ActorData;
 };
 
@@ -59,7 +59,7 @@ export class Preview extends Component<Props, State>{
         super(props)
         this.state = {
             viewAngle: 0,
-            maxHeight: 400,
+            maxWidth: 400,
             showObstacleAreas: true,
             highlightHotspots: true,
             showScaleLines: false,
@@ -141,7 +141,7 @@ export class Preview extends Component<Props, State>{
 
     render() {
         const {
-            viewAngle, maxHeight, showObstacleAreas, highlightHotspots,
+            viewAngle, maxWidth, showObstacleAreas, highlightHotspots,
             testActor, showTestActor, showRealActors,
             showScaleLines,
         } = this.state
@@ -167,14 +167,14 @@ export class Preview extends Component<Props, State>{
             <>
                 <section style={{
                     display: 'flex',
-                    flexDirection: 'column',
+                    flexDirection: 'row',
                 }}>
                     <fieldset>
                         <div>
-                            <label>View height</label>
-                            <input type='range' value={maxHeight} max={1000} min={100} step={50}
-                                onChange={(event) => this.setState({ maxHeight: eventToNumber(event.nativeEvent) })} />
-                            <span>{maxHeight}</span>
+                            <label>Preview Width</label>
+                            <input type='range' value={maxWidth} max={1000} min={100} step={50}
+                                onChange={(event) => this.setState({ maxWidth: eventToNumber(event.nativeEvent) })} />
+                            <span>{maxWidth}</span>
                         </div>
 
                         <div>
@@ -233,7 +233,7 @@ export class Preview extends Component<Props, State>{
                 <section style={{ position: 'relative' }}>
                     <Room data={roomData} noResize forPreview
                         showObstacleAreas={showObstacleAreas}
-                        maxWidth={1000} maxHeight={maxHeight}
+                        maxWidth={maxWidth} maxHeight={1000}
                         viewAngle={viewAngle}
                         highlightHotspots={highlightHotspots}
                         handleRoomClick={processClick}

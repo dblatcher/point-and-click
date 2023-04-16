@@ -514,15 +514,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 />
             </div>
 
-            <div className={editorStyles.rowTopLeft}>
-                <Preview
-                    actors={actors}
-                    roomData={this.state}
-                    clickEffect={clickEffect}
-                    activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
-                    handleRoomClick={this.handleRoomClick} />
-            </div>
-
             <hr />
             <div className={editorStyles.container}>
                 <RoomEditorTreeMenu
@@ -538,6 +529,17 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         tabs={tabs} />
                 </div>
             </div>
+
+            
+                <Preview
+                    actors={actors}
+                    roomData={this.state}
+                    clickEffect={clickEffect}
+                    activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
+                    handleRoomClick={this.handleRoomClick} />
+            
+
+
         </article>
     }
 }
