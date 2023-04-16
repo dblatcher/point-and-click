@@ -1,5 +1,5 @@
 
-import { FunctionComponent} from "react";
+import { FunctionComponent } from "react";
 import { Flag, FlagMap, FlagSchema } from "@/oldsrc/definitions/Flag";
 import { GameDesign } from "@/oldsrc/definitions/Game";
 import { makeNewFlag } from "./defaults";
@@ -28,24 +28,26 @@ export const FlagMapControl: FunctionComponent<Props> = ({
         return edit('flagMap', Object.assign({}, gameDesign.flagMap, mod))
     }
 
-    return <RecordEditor
-        record={gameDesign.flagMap}
-        describeValue={(key, flag) => {
-            return <>
-                <b style={{
-                    marginLeft: '.5em',
-                    marginRight: 'auto',
-                }}>{key}</b>
-                <SchemaForm key={key}
-                    schema={FlagSchema}
-                    data={flag}
-                    changeValue={(value, fieldDef) => {
-                        return setEntry(key, Object.assign({}, flag, getModification(value, fieldDef)))
-                    }}
-                />
-            </>
-        }}
-        addEntry={addEntry}
-        setEntry={setEntry}
-    />;
+    return <section style={{ maxWidth: '35em' }}>
+        <RecordEditor
+            record={gameDesign.flagMap}
+            describeValue={(key, flag) => {
+                return <>
+                    <b style={{
+                        marginLeft: '.5em',
+                        marginRight: 'auto',
+                    }}>{key}</b>
+                    <SchemaForm key={key}
+                        schema={FlagSchema}
+                        data={flag}
+                        changeValue={(value, fieldDef) => {
+                            return setEntry(key, Object.assign({}, flag, getModification(value, fieldDef)))
+                        }}
+                    />
+                </>
+            }}
+            addEntry={addEntry}
+            setEntry={setEntry}
+        />
+    </section>;
 };

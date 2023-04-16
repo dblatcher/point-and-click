@@ -1,5 +1,6 @@
 
 import { FunctionComponent } from "react";
+import { Table, TableBody, TableCell, TableRow, Stack, Box } from "@mui/material"
 import { listIds } from "@/lib/util";
 import { GameDesign } from "@/oldsrc/definitions/Game";
 import { SelectInput, StringInput } from "./formControls";
@@ -17,14 +18,11 @@ export const Overview: FunctionComponent<Props> = ({
 }: Props) => {
 
   return (
-    <article>
-
-
+    <Stack>
       <EditorHeading heading="main" />
-      <section style={{ display: 'flex', flexWrap: 'wrap' }}>
+      <Stack direction={'row'} spacing={1} paddingY={1}>
 
-        <fieldset>
-
+        <Box>
           <StringInput block
             value={gameDesign.id}
             label="Game ID"
@@ -52,25 +50,41 @@ export const Overview: FunctionComponent<Props> = ({
               edit("openingSequenceId", value);
             }}
           />
-        </fieldset>
-        <ul>
-          <li>rooms: {gameDesign.rooms.length}</li>
-          <li>items: {gameDesign.items.length}</li>
-          <li>actors: {gameDesign.actors.length}</li>
-          <li>conversations: {gameDesign.conversations.length}</li>
-          <li>sprites: {gameDesign.sprites.length}</li>
-          <li>interactions: {gameDesign.interactions.length}</li>
-          <li>sequences: {gameDesign.sequences.length}</li>
-          <li>endings: {gameDesign.endings.length}</li>
-        </ul>
-      </section>
+        </Box>
 
-      <br />
+        <Table size="small" sx={{ width: 'unset' }}>
+          <TableBody>
+            <TableRow>
+              <TableCell>rooms</TableCell><TableCell>{gameDesign.rooms.length}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>items</TableCell><TableCell>{gameDesign.items.length}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>actors</TableCell><TableCell>{gameDesign.actors.length}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>conversations</TableCell><TableCell>{gameDesign.conversations.length}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>sprites</TableCell><TableCell>{gameDesign.sprites.length}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>interactions</TableCell><TableCell>{gameDesign.interactions.length}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>sequences</TableCell><TableCell>{gameDesign.sequences.length}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>endings</TableCell><TableCell>{gameDesign.endings.length}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </Stack>
+
       <EditorHeading heading="Flags" />
-      <section style={{ maxWidth: '35em' }}>
-        <FlagMapControl gameDesign={gameDesign} edit={edit} />
-      </section>
+      <FlagMapControl gameDesign={gameDesign} edit={edit} />
 
-    </article>
+    </Stack>
   );
 };
