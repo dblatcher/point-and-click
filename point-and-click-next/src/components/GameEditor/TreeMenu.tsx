@@ -33,7 +33,7 @@ export const TreeMenu: FunctionComponent<Props> = ({ folders, folderClick, entry
             }}>
                 <AccordionSummary sx={{
                     backgroundColor: folder.open ? theme.palette.primary.main : undefined,
-                    color: folder.open ? theme.palette.primary.contrastText : undefined
+                    color: folder.open ? theme.palette.primary.contrastText : undefined,
                 }}
                 >
                     <Typography>
@@ -43,16 +43,18 @@ export const TreeMenu: FunctionComponent<Props> = ({ folders, folderClick, entry
 
                 {folder.entries && (
 
-                    <AccordionDetails>
+                    <AccordionDetails sx={{
+                        padding:0.5
+                    }}>
                         {folder.entries?.map(entry => (
-                            <div key={folder.id + entry.data.id}>
-                                <Button
-                                    fullWidth
-                                    variant={entry.active ? 'contained' : 'outlined'}
-                                    onClick={() => { entryClick(folder.id, entry.data, entry.isForNew) }}>
-                                    <span>{entry.label || entry.data.id}</span>
-                                </Button>
-                            </div>
+                            <Button
+                                key={folder.id + entry.data.id}
+                                fullWidth
+                                size="small"
+                                variant={entry.active ? 'contained' : 'outlined'}
+                                onClick={() => { entryClick(folder.id, entry.data, entry.isForNew) }}>
+                                <span>{entry.label || entry.data.id}</span>
+                            </Button>
                         ))}
                     </AccordionDetails>
                 )}

@@ -1,6 +1,5 @@
 import { FunctionComponent, useState } from "react";
 import { GameDesign } from "@/oldsrc/definitions/Game";
-import { Warning } from "./formControls";
 import {
   makeDownloadFile,
   uploadFile,
@@ -9,6 +8,7 @@ import { buildGameZipBlob, readGameFromZipFile } from "@/lib/zipFiles";
 import imageService from "@/services/imageService";
 import { populateServices } from "@/services/populateServices";
 import soundService from "@/services/soundService";
+import { Button, Alert, Snackbar } from "@mui/material"
 
 interface Props {
   gameDesign: GameDesign;
@@ -57,17 +57,19 @@ export const GameDesignSaveAndLoad: FunctionComponent<Props> = ({
   };
 
   return (
-    <section>
-      <div>
-        <button onClick={downloadAll}>
-          Save game to zip file
-        </button>
-        {downloadAllError && <Warning>{downloadAllError}</Warning>}
-      </div>
-      <div>
-        <button onClick={uploadAll}>Load game from zip file</button>
-        {uploadAllError && <Warning>{uploadAllError}</Warning>}
-      </div>
-    </section>
+    <>
+      <Button onClick={downloadAll} fullWidth>
+        Save game to zip file
+      </Button>
+      {downloadAllError && (
+        <Alert severity="error">{downloadAllError}</Alert>
+      )}
+      <Button onClick={uploadAll} fullWidth>
+        Load game from zip file
+      </Button>
+      {uploadAllError && (
+        <Alert severity="error">{uploadAllError}</Alert>
+      )}
+    </>
   );
 };

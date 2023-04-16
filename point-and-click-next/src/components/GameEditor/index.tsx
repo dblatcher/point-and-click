@@ -31,7 +31,7 @@ import spriteService from "@/services/spriteService";
 
 import { CheckBoxInput } from "./formControls";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { Container, Stack, Box } from "@mui/material";
+import { Container, Stack, Box, Typography, Divider, Button } from "@mui/material";
 
 
 export type EditorOptions = {
@@ -316,24 +316,37 @@ export default class GameEditor extends Component<Props, State>{
         ]
 
         return <Container maxWidth='xl'>
-            <Stack direction={'row'} spacing={1} component={'main'}>
-                <Box component={'nav'} maxWidth='sm'>
-                    <h2>{gameDesign.id}</h2>
+            <Stack
+                direction={'row'}
+                spacing={1}
+                component={'main'}
+                divider={<Divider orientation="vertical" flexItem />}
+            >
+                <Stack
+                    component={'nav'}
+                    spacing={1}
+                    divider={<Divider orientation="horizontal" flexItem />}
+                    width={250}
+                >
 
-                    <GameDesignSaveAndLoad
-                        gameDesign={gameDesign}
-                        loadNewGame={this.loadNewGame}
-                    />
-                    <hr />
-                    <div>
-                        <button
+                    <Typography variant="h2" noWrap gutterBottom sx={{ fontSize: '200%', paddingTop: 1 }}>
+                        {gameDesign.id}
+                    </Typography>
+
+
+                    <Box>
+                        <GameDesignSaveAndLoad
+                            gameDesign={gameDesign}
+                            loadNewGame={this.loadNewGame}
+                        />
+                        <Button
+                            fullWidth
                             onClick={this.undo}
                             disabled={history.length === 0}
                         >
                             UNDO {history[history.length - 1]?.label} [{history.length}]
-                        </button>
-                    </div>
-                    <hr />
+                        </Button>
+                    </Box>
 
                     <TreeMenu folders={folders}
                         folderClick={(folderId) => {
@@ -363,14 +376,18 @@ export default class GameEditor extends Component<Props, State>{
                         }}
                     />
 
-                    <hr />
+                    <Box>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            onClick={() => this.setState({ tabOpen: tabs.indexOf("test"), resetTimeStamp: Date.now() })}
+                        >
+                            Test Game
+                        </Button>
+                    </Box>
 
-                    <div>
-                        <button onClick={() => this.setState({ tabOpen: tabs.indexOf("test"), resetTimeStamp: Date.now() })}>Test Game</button>
-                    </div>
 
-                    <hr />
-                    <div>
+                    <Box>
                         <h3>options</h3>
 
                         <div>
@@ -385,8 +402,8 @@ export default class GameEditor extends Component<Props, State>{
                             />
                             {this.state.options.autoSave.toString()}
                         </div>
-                    </div>
-                </Box>
+                    </Box>
+                </Stack>
                 <Box component={'section'} flex={1}>
                     <TabSet backgroundColor="none"
                         key={this.state.undoTime}
