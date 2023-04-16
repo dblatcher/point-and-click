@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import styles from "./treeMenuStyles.module.css"
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Button, Box, useTheme } from "@mui/material";
 
 export type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
 export type FolderClickFunction = { (folderId: string): void }
@@ -18,23 +18,6 @@ export interface Folder {
     entries?: Entry[];
 }
 
-const folderStyle: h.JSX.CSSProperties = {
-    listStyle: 'none',
-    fontFamily: 'monospace',
-}
-
-
-const getFolderClass = (folder: Folder): string => (
-    folder.entries
-        ? folder.open ? [styles.button, styles.open].join(" ") : styles.button
-        : folder.open ? [styles.button, styles.active].join(" ") : styles.button
-)
-
-const getEntryClass = (entry: Entry): string => (
-    entry.active ? [styles.button, styles.active].join(" ") : styles.button
-)
-
-
 interface Props {
     folders: Folder[];
     folderClick: FolderClickFunction;
@@ -42,37 +25,39 @@ interface Props {
 }
 
 export const TreeMenu: FunctionComponent<Props> = ({ folders, folderClick, entryClick }: Props) => {
+    const theme = useTheme()
+    return (<Box>
+        {folders.map((folder, index) => (
+            <Accordion disableGutters key={index} expanded={folder.open} onChange={() => {
+                folderClick(folder.id)
+            }}>
+                <AccordionSummary sx={{
+                    backgroundColor: folder.open ? theme.palette.primary.main : undefined,
+                    color: folder.open ? theme.palette.primary.contrastText : undefined
+                }}
+                >
+                    <Typography>
+                        {folder.label ?? folder.id}
+                    </Typography>
+                </AccordionSummary>
 
-    return (
-        <section className={styles.treeMenu}>
-            <ul>
-                {folders.map(folder => (
-                    <li key={folder.id} style={folderStyle}>
-                        <div>
-                            <button
-                                className={getFolderClass(folder)}
-                                onClick={() => { folderClick(folder.id) }}>
-                                <b>❯</b>
-                                <span>{folder.label || folder.id}</span>
-                            </button>
-                            {!!(folder.open && folder.entries?.length) &&
-                                <ul className={styles.entryList}>
-                                    {folder.entries?.map(entry => (
-                                        <li key={folder.id + entry.data.id} className={styles.row}>
-                                            <button
-                                                className={getEntryClass(entry)}
-                                                onClick={() => { entryClick(folder.id, entry.data, entry.isForNew) }}>
-                                                <b>❯</b>
-                                                <span>{entry.label || entry.data.id}</span>
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            }
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </section>
+                {folder.entries && (
+
+                    <AccordionDetails>
+                        {folder.entries?.map(entry => (
+                            <div key={folder.id + entry.data.id}>
+                                <Button
+                                    fullWidth
+                                    variant={entry.active ? 'contained' : 'outlined'}
+                                    onClick={() => { entryClick(folder.id, entry.data, entry.isForNew) }}>
+                                    <span>{entry.label || entry.data.id}</span>
+                                </Button>
+                            </div>
+                        ))}
+                    </AccordionDetails>
+                )}
+            </Accordion>
+        ))}
+    </Box>
     )
 }
