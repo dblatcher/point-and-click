@@ -523,23 +523,19 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 />
                 <div style={{ flex: 1 }}>
                     <EditorHeading heading={tabs[mainTab]?.label || '?'} level={3} />
-                    <TabSet 
+                    <TabSet
                         containerStyle={{ flex: 1 }}
                         openIndex={mainTab}
                         tabs={tabs} />
                 </div>
             </div>
 
-            
-                <Preview
-                    actors={actors}
-                    roomData={this.state}
-                    clickEffect={clickEffect}
-                    activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
-                    handleRoomClick={this.handleRoomClick} />
-            
-
-
+            <Preview
+                actors={actors}
+                roomData={this.state}
+                clickEffect={clickEffect}
+                activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
+                handleRoomClick={this.handleRoomClick} />
         </article>
     }
 }

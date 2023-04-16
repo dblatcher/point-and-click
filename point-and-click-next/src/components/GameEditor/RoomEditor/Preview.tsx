@@ -73,7 +73,7 @@ export class Preview extends Component<Props, State>{
 
     renderCheckBox(label: string, propery: keyof BooleanState) {
         const { state } = this
-        const setValue:ChangeEventHandler<HTMLInputElement> = (event) => {
+        const setValue: ChangeEventHandler<HTMLInputElement> = (event) => {
             const mod: Partial<BooleanState> = {}
             mod[propery] = eventToBoolean(event.nativeEvent);
             this.setState(mod)
@@ -230,7 +230,13 @@ export class Preview extends Component<Props, State>{
 
                     </fieldset>
                 </section>
-                <section style={{ position: 'relative' }}>
+                <section style={{
+                    marginTop: '5px',
+                    position: 'relative',
+                    border: '5px dotted red', 
+                    display: 'inline-block', 
+                    background: 'black'
+                }}>
                     <Room data={roomData} noResize forPreview
                         showObstacleAreas={showObstacleAreas}
                         maxWidth={maxWidth} maxHeight={1000}
