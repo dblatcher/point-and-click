@@ -54,7 +54,7 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, c
                         list={polygon}
                         mutateList={polygon => change(index, 'polygon', polygon, type)}
                         describeItem={(point, index) => (
-                            <li key={index}>[ {point[0]}, {point[1]} ]</li>
+                            <div key={index}>[ {point[0]}, {point[1]} ]</div>
                         )}
                     />
                     <button onClick={() => {
