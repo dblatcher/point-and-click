@@ -11,7 +11,7 @@ import { ItemEditor } from "./ItemEditor";
 import { InteractionEditor } from "./InteractionEditor";
 import { ConversationEditor } from "./ConversationEditor";
 import { SequenceEditor } from "./SequenceEditor";
-import { GameDesignSaveAndLoad } from "./GameDesignSaveAndLoad";
+import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { SoundAssetTool } from "./SoundAssetTool";
 import { EndingEditor } from "./EndingEditor";
 import { VerbEditor } from "./VerbEditor";
@@ -334,19 +334,14 @@ export default class GameEditor extends Component<Props, State>{
                     </Typography>
 
 
-                    <Box>
-                        <GameDesignSaveAndLoad
+
+                        <SaveLoadAndUndo
                             gameDesign={gameDesign}
                             loadNewGame={this.loadNewGame}
+                            history={history}
+                            undo={this.undo}
                         />
-                        <Button
-                            fullWidth
-                            onClick={this.undo}
-                            disabled={history.length === 0}
-                        >
-                            UNDO {history[history.length - 1]?.label} [{history.length}]
-                        </Button>
-                    </Box>
+
 
                     <TreeMenu folders={folders}
                         folderClick={(folderId) => {
