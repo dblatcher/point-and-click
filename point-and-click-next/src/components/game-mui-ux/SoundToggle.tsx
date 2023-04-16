@@ -28,7 +28,7 @@ export function SoundToggle() {
     }
 
     return (
-        <IconButton onClick={toggle}>
+        <IconButton onClick={toggle} color='primary'>
             {isOn ? <VolumeUp /> : <VolumeMute />}
         </IconButton>
     )

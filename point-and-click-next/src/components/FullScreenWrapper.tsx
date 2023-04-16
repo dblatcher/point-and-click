@@ -1,13 +1,26 @@
-import { CSSProperties, useEffect, useRef, useState, ReactNode } from "react"
+import { useEffect, useRef, useState, ReactNode, memo } from "react"
 import FullScreen from "@mui/icons-material/Fullscreen"
-import { IconButton } from "@mui/material";
+import { IconButton, IconButtonProps, } from "@mui/material";
 import Box from "@mui/material/Box";
 
-export default function FullScreenWrapper(props: {
+const defaultIconButtonProps: IconButtonProps = {
+    sx: {
+        position: 'absolute',
+        top: 0,
+        right: 16,
+        zIndex: 1000,
+    },
+    color: "primary"
+}
+
+export const FullScreenWrapper = memo(function FullScreenWrapper(props: {
     children: ReactNode
+    iconButtonProps?: IconButtonProps
 }) {
     const wrapper = useRef<HTMLDivElement>(null);
     const [isFullScreen, setIsFullScreen] = useState(false)
+
+    const iconButtonProps = props.iconButtonProps ?? defaultIconButtonProps
 
     function requestFullScreen() {
         wrapper.current?.requestFullscreen()
@@ -31,16 +44,10 @@ export default function FullScreenWrapper(props: {
         {props.children}
         {!isFullScreen && (
             <IconButton
-                sx={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 16,
-                    zIndex: 1000,
-                }}
-                color="primary"
+                {...iconButtonProps}
                 onClick={requestFullScreen}>
                 <FullScreen />
             </IconButton>
         )}
     </Box>
-}
+})
