@@ -32,6 +32,7 @@ import spriteService from "@/services/spriteService";
 import { CheckBoxInput } from "./formControls";
 import { VerbMenuEditor } from "./VerbMenuEditor";
 import { Container, Stack, Box, Typography, Divider, Button } from "@mui/material";
+import { OptionsMenu } from "./OptionsMenu";
 
 
 export type EditorOptions = {
@@ -333,15 +334,25 @@ export default class GameEditor extends Component<Props, State>{
                         {gameDesign.id}
                     </Typography>
 
-
-
+                    <Stack direction={'row'}>
                         <SaveLoadAndUndo
                             gameDesign={gameDesign}
                             loadNewGame={this.loadNewGame}
                             history={history}
                             undo={this.undo}
                         />
+                        <OptionsMenu options={this.state.options} setOptions={options => { this.setState({ options }) }} />
+                    </Stack>
 
+                    <Box>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            onClick={() => this.setState({ tabOpen: tabs.indexOf("test"), resetTimeStamp: Date.now() })}
+                        >
+                            Test Game
+                        </Button>
+                    </Box>
 
                     <TreeMenu folders={folders}
                         folderClick={(folderId) => {
@@ -371,34 +382,8 @@ export default class GameEditor extends Component<Props, State>{
                         }}
                     />
 
-                    <Box>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            onClick={() => this.setState({ tabOpen: tabs.indexOf("test"), resetTimeStamp: Date.now() })}
-                        >
-                            Test Game
-                        </Button>
-                    </Box>
-
-
-                    <Box>
-                        <h3>options</h3>
-
-                        <div>
-                            <CheckBoxInput
-                                label="autosave"
-                                value={this.state.options.autoSave}
-                                inputHandler={value => this.setState(state => {
-                                    const { options } = state
-                                    options.autoSave = value
-                                    return { options }
-                                })}
-                            />
-                            {this.state.options.autoSave.toString()}
-                        </div>
-                    </Box>
                 </Stack>
+
                 <Box component={'section'} flex={1}>
                     <TabSet backgroundColor="none"
                         key={this.state.undoTime}
