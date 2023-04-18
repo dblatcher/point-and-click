@@ -10,6 +10,8 @@ import { StorageMenu } from "./StorageMenu";
 import { DataItemEditorProps } from "./dataEditors";
 import { FramePicker } from "./SpriteEditor/FramePicker";
 import { EditorHeading } from "./EditorHeading";
+import { Box, Stack } from "@mui/material";
+import { EditorBox } from "./EditorBox";
 
 type Props = DataItemEditorProps<ItemData> & {
     actorIds: string[];
@@ -111,11 +113,10 @@ export class ItemEditor extends Component<Props, State> {
         const imageAsset = imageId ? imageService.get(imageId) : undefined
 
         return (
-            <article>
+            <Box component='article'>
                 <EditorHeading heading="Item Editor" helpTopic="items" />
-                <div className={editorStyles.container}>
-                    <fieldset>
-                        <legend>Data</legend>
+                <Stack direction={'row'} spacing={1}>
+                    <EditorBox title="Data">
                         <StringInput
                             block className={editorStyles.row}
                             label="id" value={id}
@@ -148,7 +149,7 @@ export class ItemEditor extends Component<Props, State> {
                         {imageAsset?.cols && (
                             <div>col: {this.state.col}</div>
                         )}
-                    </fieldset>
+                    </EditorBox>
 
                     <StorageMenu
                         data={this.state} type='ItemData'
@@ -159,22 +160,21 @@ export class ItemEditor extends Component<Props, State> {
                         update={this.handleUpdateButton}
                         options={this.props.options}
                     />
-                </div>
+                </Stack>
 
                 {(imageAsset?.rows || imageAsset?.cols) && (
-                    <div className={editorStyles.container}>
+                    <Stack direction={'row'}>
                         <FramePicker fixedSheet
                             sheetId={this.state.imageId}
                             row={this.state.row || 0}
                             col={this.state.col || 0}
                             pickFrame={this.changeFrame}
                         />
-                    </div>
+                    </Stack>
                 )}
 
-                <div className={editorStyles.container}>
-                    <fieldset>
-                        <legend>Button Preview</legend>
+                <Stack direction={'row'}>
+                    <EditorBox title="Button Preview">
                         <div className={editorStyles.row}>
                             <span>Selected:</span>
                             <ItemMenu items={[this.state]} currentItemId={id} select={() => true} />
@@ -183,10 +183,10 @@ export class ItemEditor extends Component<Props, State> {
                             <span>Not Selected:</span>
                             <ItemMenu items={[this.state]} currentItemId={''} select={() => true} />
                         </div>
-                    </fieldset>
-                </div>
+                    </EditorBox>
+                </Stack>
 
-            </article>
+            </Box>
         )
     }
 }

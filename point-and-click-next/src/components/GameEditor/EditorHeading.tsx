@@ -31,7 +31,7 @@ export const EditorHeading: FunctionComponent<Props> = ({
                     </IconButton>
                 )}
             </Stack>
-            <Divider />
+            <Divider sx={{marginY:1}}/>
 
             <Dialog open={!!(helpTopic && helpShowing)} onClose={() => { setHelpShowing(false) }}>
                 <DialogTitle>

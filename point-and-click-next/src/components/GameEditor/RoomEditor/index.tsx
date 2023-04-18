@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { Divider, Stack, Box } from "@mui/material";
 import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "@/oldsrc";
 import { RoomDataSchema } from "@/oldsrc/definitions/RoomData";
 import { Point } from "@/lib/pathfinding/geometry";
@@ -24,6 +25,7 @@ import imageService from "@/services/imageService";
 import { RoomEditorTreeMenu } from "./RoomEditorTreeMenu";
 import editorStyles from '../editorStyles.module.css';
 import { EditorHeading } from "../EditorHeading";
+import { EditorBox } from "../EditorBox";
 
 export type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -470,16 +472,13 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         } = this.state
 
         const { existingRoomIds = [], actors = [], options, deleteData } = this.props
-
         const tabs = this.buildTabs()
-
 
         return <article>
             <EditorHeading heading="Room Editor" helpTopic="rooms" />
 
-            <div className={editorStyles.rowTopLeft}>
-                <fieldset className={editorStyles.fieldset}>
-                    <legend>Room</legend>
+            <Stack direction={'row'} spacing={1}>
+                <EditorBox title="room">
                     <div className={editorStyles.row}>
                         <label >ID</label>
                         <input type="text" value={id} onInput={event => this.setStateWithAutosave({ id: eventToString(event.nativeEvent) })} />
@@ -499,7 +498,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     {frameWidth > width && (
                         <Warning>frame width is bigger than room width</Warning>
                     )}
-                </fieldset>
+                </EditorBox>
+
                 <StorageMenu
                     type="room"
                     data={this.currentData}
@@ -512,23 +512,24 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     load={this.handleLoadButton}
                     options={options}
                 />
-            </div>
+            </Stack>
 
-            <hr />
-            <div className={editorStyles.container}>
+            <Divider sx={{ marginY: 1 }} />
+
+            <Stack direction={'row'} spacing={1}>
                 <RoomEditorTreeMenu
                     roomEditorState={this.state}
                     handleTreeEntryClick={this.handleTreeEntryClick}
                     handleFolderClick={(mainTab) => { this.setState({ mainTab }) }}
                 />
-                <div style={{ flex: 1 }}>
+                <Box flex={1}>
                     <EditorHeading heading={tabs[mainTab]?.label || '?'} level={3} />
                     <TabSet
                         containerStyle={{ flex: 1 }}
                         openIndex={mainTab}
                         tabs={tabs} />
-                </div>
-            </div>
+                </Box>
+            </Stack>
 
             <Preview
                 actors={actors}

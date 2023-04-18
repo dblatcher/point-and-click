@@ -1,9 +1,10 @@
 import { FunctionComponent } from "react";
-import editorStyles from "./editorStyles.module.css"
-
+import { Button, ButtonGroup } from "@mui/material"
 import { downloadJsonFile, } from "@/lib/files";
 import { DeleteButton } from "./formControls";
 import { EditorOptions } from ".";
+import { EditorBox } from "./EditorBox";
+
 
 interface Props {
     type: string;
@@ -30,32 +31,34 @@ export const StorageMenu: FunctionComponent<Props> = ({
             : `Add new ${type} ${currentId}`
 
     const indexOfOriginalId = originalId ? existingIds.indexOf(originalId) : -1
-    const showDeleteButton =  originalId === currentId && indexOfOriginalId !== -1 && !!deleteItem
+    const showDeleteButton = originalId === currentId && indexOfOriginalId !== -1 && !!deleteItem
     const deleteButtonText = `Delete ${type} ${currentId}`
 
     const showUpdateButton = !options?.autoSave || !existingIds.includes(currentId)
     const showResetButton = data && !(options?.autoSave && originalId === currentId);
 
     return (
-        <fieldset className={editorStyles.fieldset}>
-            <legend>storage</legend>
-            <div>
-                {(saveButton && data) && <button onClick={(): void => { downloadJsonFile(data, type) }}>Save to file</button>}
-                {load && <button onClick={load}>Load from file</button>}
-            </div>
-            <div>
-                {showResetButton && <button onClick={reset}>Reset</button>}
-
-                {showUpdateButton && <button onClick={update}>
-                    {updateButtonText}
-                </button>}
-            </div>
+        <EditorBox title="storage" themePalette="secondary">
+            <ButtonGroup orientation="vertical" fullWidth>
+                {(saveButton && data) &&
+                    <Button size="small" onClick={(): void => { downloadJsonFile(data, type) }}>Save to file</Button>
+                }
+                {load &&
+                    <Button size="small" onClick={load}>Load from file</Button>
+                }
+                {showResetButton &&
+                    <Button size="small" onClick={reset}>Reset</Button>
+                }
+                {showUpdateButton &&
+                    <Button size="small" onClick={update}>{updateButtonText}</Button>
+                }
+            </ButtonGroup>
 
             {showDeleteButton &&
                 <DeleteButton label={deleteButtonText}
                     onClick={(): void => { deleteItem(indexOfOriginalId) }}
                 />
             }
-        </fieldset>
+        </EditorBox>
     )
 }
