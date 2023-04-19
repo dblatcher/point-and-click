@@ -7,6 +7,8 @@ import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "@/lib/util";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { makeTestActor } from "./testSprite";
+import { Grid, Stack } from "@mui/material";
+import { EditorBox } from "../EditorBox";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -164,118 +166,119 @@ export class Preview extends Component<Props, State>{
         }
 
         return (
-            <>
-                <section style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                }}>
-                    <fieldset>
-                        <div>
-                            <label>Preview Width</label>
-                            <input type='range' value={maxWidth} max={1000} min={100} step={50}
-                                onChange={(event) => this.setState({ maxWidth: eventToNumber(event.nativeEvent) })} />
-                            <span>{maxWidth}</span>
-                        </div>
-
-                        <div>
-                            <label>view angle</label>
-                            <input type='range' value={viewAngle} max={1} min={-1} step={.01}
-                                onChange={(event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) })} />
-                            <span>{viewAngle}</span>
-                        </div>
-
-                        {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
-                        {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
-                        {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
-
-                    </fieldset>
-
-                    <fieldset>
-                        {this.renderCheckBox('Show Actors in room', 'showRealActors')}
-                        {this.renderCheckBox('Show Test Actor', 'showTestActor')}
-                        {showTestActor && (<>
+            <Grid container spacing={1}>
+                <Grid item>
+                    <Stack width={225} spacing={1}>
+                        <EditorBox title="preview">
                             <div>
-                                <label>X</label>
-                                <input type='range'
-                                    value={testActor.x}
-                                    min={0} max={roomData.width} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'x')} />
-                                <span>{testActor.x}</span>
+                                <label>Width</label>
+                                <input type='range' value={maxWidth} max={800} min={100} step={50}
+                                    onChange={(event) => this.setState({ maxWidth: eventToNumber(event.nativeEvent) })} />
+                                <span>{maxWidth}</span>
                             </div>
-                            <div>
-                                <label>Y</label>
-                                <input type='range'
-                                    value={testActor.y}
-                                    min={0} max={roomData.height} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'y')} />
-                                <span>{testActor.y}</span>
-                            </div>
-                            <div>
-                                <label>base height</label>
-                                <input type='range'
-                                    value={testActor.height}
-                                    min={10} max={200} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'height')} />
-                                <span>{testActor.height}</span>
-                            </div>
-                            <div>
-                                <label>base width</label>
-                                <input type='range'
-                                    value={testActor.width}
-                                    min={10} max={200} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'width')} />
-                                <span>{testActor.width}</span>
-                            </div>
-                        </>)}
 
-                    </fieldset>
-                </section>
-                <section style={{
-                    marginTop: '5px',
-                    position: 'relative',
-                    border: '5px dotted red', 
-                    display: 'inline-block', 
-                    background: 'black'
-                }}>
-                    <Room data={roomData} noResize forPreview
-                        showObstacleAreas={showObstacleAreas}
-                        maxWidth={maxWidth} maxHeight={1000}
-                        viewAngle={viewAngle}
-                        highlightHotspots={highlightHotspots}
-                        handleRoomClick={processClick}
-                        markHotspotVertices={this.hotspotsToMark}
-                        markObstacleVertices={this.obstaclesToMark}
-                        flashHotspot={activeHotspotIndex}
-                        markWalkableVertices={this.walkablesToMark}
-                        contents={contents}
-                    >
-                        {showScaleLines && scaling.map((yAndScale, index) => (
-                            <HorizontalLine key={index}
-                                y={yAndScale[0]}
-                                text={`scale: ${yAndScale[1]}`}
-                                roomData={roomData} />
-                        ))}
+                            <div>
+                                <label>view angle</label>
+                                <input type='range' value={viewAngle} max={1} min={-1} step={.01}
+                                    onChange={(event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) })} />
+                                <span>{viewAngle}</span>
+                            </div>
 
-                        {this.hotspotToHaveMarkWalkToPoint && (
-                            <MarkerShape
-                                roomData={roomData}
-                                viewAngle={viewAngle}
-                                color={'red'}
-                                text={this.walkToPointLabel}
-                                {...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
-                            />
-                        )}
-                    </Room>
-                    <p style={{
-                        position: 'absolute',
-                        right: 0, top: 0,
-                        margin: "0 1em",
-                        padding: "0 .25em",
-                        color: 'white',
-                        backgroundColor: 'rgba(0,0,0,.5)'
-                    }}>{getClickCaption(clickEffect)}</p>
-                </section>
-            </>
+                            {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
+                            {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
+                            {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
+                            {this.renderCheckBox('Show Actors', 'showRealActors')}
+                        </EditorBox>
+
+                        <EditorBox title="Test Actor">
+                            {this.renderCheckBox('Show', 'showTestActor')}
+                            {showTestActor && (<>
+                                <div>
+                                    <label>X</label>
+                                    <input type='range'
+                                        value={testActor.x}
+                                        min={0} max={roomData.width} step={10}
+                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'x')} />
+                                    <span>{testActor.x}</span>
+                                </div>
+                                <div>
+                                    <label>Y</label>
+                                    <input type='range'
+                                        value={testActor.y}
+                                        min={0} max={roomData.height} step={10}
+                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'y')} />
+                                    <span>{testActor.y}</span>
+                                </div>
+                                <div>
+                                    <label>base height</label>
+                                    <input type='range'
+                                        value={testActor.height}
+                                        min={10} max={200} step={10}
+                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'height')} />
+                                    <span>{testActor.height}</span>
+                                </div>
+                                <div>
+                                    <label>base width</label>
+                                    <input type='range'
+                                        value={testActor.width}
+                                        min={10} max={200} step={10}
+                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'width')} />
+                                    <span>{testActor.width}</span>
+                                </div>
+                            </>)}
+
+                        </EditorBox>
+                    </Stack>
+                </Grid>
+                <Grid item>
+                    <section style={{
+                        marginTop: '5px',
+                        position: 'relative',
+                        border: '5px dotted red',
+                        display: 'inline-block',
+                        background: 'black'
+                    }}>
+                        <Room data={roomData} noResize forPreview
+                            showObstacleAreas={showObstacleAreas}
+                            maxWidth={maxWidth} maxHeight={1000}
+                            viewAngle={viewAngle}
+                            highlightHotspots={highlightHotspots}
+                            handleRoomClick={processClick}
+                            markHotspotVertices={this.hotspotsToMark}
+                            markObstacleVertices={this.obstaclesToMark}
+                            flashHotspot={activeHotspotIndex}
+                            markWalkableVertices={this.walkablesToMark}
+                            contents={contents}
+                        >
+                            {showScaleLines && scaling.map((yAndScale, index) => (
+                                <HorizontalLine key={index}
+                                    y={yAndScale[0]}
+                                    text={`scale: ${yAndScale[1]}`}
+                                    roomData={roomData} />
+                            ))}
+
+                            {this.hotspotToHaveMarkWalkToPoint && (
+                                <MarkerShape
+                                    roomData={roomData}
+                                    viewAngle={viewAngle}
+                                    color={'red'}
+                                    text={this.walkToPointLabel}
+                                    {...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
+                                />
+                            )}
+                        </Room>
+                        <p style={{
+                            position: 'absolute',
+                            right: 0, top: 0,
+                            margin: "0 1em",
+                            padding: "0 .25em",
+                            color: 'white',
+                            backgroundColor: 'rgba(0,0,0,.5)'
+                        }}>{getClickCaption(clickEffect)}</p>
+                    </section>
+                </Grid>
+            </Grid>
+
         )
     }
 }

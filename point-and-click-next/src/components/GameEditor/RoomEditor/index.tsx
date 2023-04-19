@@ -516,12 +516,21 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
             <Divider sx={{ marginY: 1 }} />
 
+            <Preview
+                actors={actors}
+                roomData={this.state}
+                clickEffect={clickEffect}
+                activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
+                handleRoomClick={this.handleRoomClick} />
+
             <Stack direction={'row'} spacing={1}>
-                <RoomEditorTreeMenu
-                    roomEditorState={this.state}
-                    handleTreeEntryClick={this.handleTreeEntryClick}
-                    handleFolderClick={(mainTab) => { this.setState({ mainTab }) }}
-                />
+                <Box sx={{ width: 225 }}>
+                    <RoomEditorTreeMenu
+                        roomEditorState={this.state}
+                        handleTreeEntryClick={this.handleTreeEntryClick}
+                        handleFolderClick={(mainTab) => { this.setState({ mainTab }) }}
+                    />
+                </Box>
                 <Box flex={1}>
                     <EditorHeading heading={tabs[mainTab]?.label || '?'} level={3} />
                     <TabSet
@@ -531,12 +540,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 </Box>
             </Stack>
 
-            <Preview
-                actors={actors}
-                roomData={this.state}
-                clickEffect={clickEffect}
-                activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
-                handleRoomClick={this.handleRoomClick} />
+
         </article>
     }
 }
