@@ -11,10 +11,12 @@ import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
 import editorStyles from "../editorStyles.module.css"
 import { SelectAndConfirmInput, StringInput } from "../formControls";
-import { TabSet } from "@/components/GameEditor/TabSet";
+import { TabMenu } from "@/components/GameEditor/TabMenu";
 import { DataItemEditorProps, icons } from "../dataEditors";
 import { getTargetLists } from "../InteractionEditor/getTargetLists";
 import { EditorHeading } from "../EditorHeading";
+import { Typography } from "@mui/material";
+
 
 type Props = DataItemEditorProps<Sequence> & {
     gameDesign: GameDesign;
@@ -122,7 +124,8 @@ export class SequenceEditor extends Component<Props, State> {
         const { gameDesign } = this.props
         const { ids: targetIds, descriptions } = getTargetLists(gameDesign, true)
 
-        return (
+        return (<>
+            <Typography>{actorId}</Typography>
             <ListEditor
                 list={orders}
                 describeItem={(order, orderIndex) => (
@@ -139,6 +142,7 @@ export class SequenceEditor extends Component<Props, State> {
                 insertText="insert order"
                 deleteText="remove order"
             />
+        </>
         )
     }
 
@@ -155,8 +159,9 @@ export class SequenceEditor extends Component<Props, State> {
                 />
 
                 {/* TO DO - add state for switching stages since tabmenu doesn't work */}
-                <TabSet backgroundColor="none"
-                    openIndex={0}
+
+                <TabMenu backgroundColor="none"
+                    defaultOpenIndex={0}
                     tabs={
                         [
                             ...Object.entries(actorOrders).map(([actorId, orders]) => ({
@@ -165,22 +170,26 @@ export class SequenceEditor extends Component<Props, State> {
                             })),
                             {
                                 label: `consequences [${immediateConsequences.length}]`,
-                                content: <ListEditor list={immediateConsequences}
-                                    mutateList={(newList) => { this.changeConsequenceList(newList, stageIndex) }}
-                                    describeItem={(consequence, consequenceIndex) => (
-                                        <ConsequenceForm immediateOnly={true}
-                                            key={consequenceIndex}
-                                            consequence={consequence as AnyConsequence}
-                                            gameDesign={gameDesign}
-                                            update={(consequence) => { this.changeConsequence(consequence, stageIndex, consequenceIndex) }}
-                                        />
-                                    )}
-                                    createButton="END"
-                                    noMoveButtons
-                                    createItem={() => makeNewConsequence('changeStatus')}
-                                    insertText='add consequence'
-                                    deleteText="delete consequence"
-                                />
+                                content: (<>
+                                    <Typography>Consequences</Typography>
+                                    <ListEditor list={immediateConsequences}
+                                        mutateList={(newList) => { this.changeConsequenceList(newList, stageIndex) }}
+                                        describeItem={(consequence, consequenceIndex) => (
+                                            <ConsequenceForm immediateOnly={true}
+                                                key={consequenceIndex}
+                                                consequence={consequence as AnyConsequence}
+                                                gameDesign={gameDesign}
+                                                update={(consequence) => { this.changeConsequence(consequence, stageIndex, consequenceIndex) }}
+                                            />
+                                        )}
+                                        createButton="END"
+                                        noMoveButtons
+                                        createItem={() => makeNewConsequence('changeStatus')}
+                                        insertText='add consequence'
+                                        deleteText="delete consequence"
+                                    />
+                                </>
+                                )
                             }
                         ]
                     }

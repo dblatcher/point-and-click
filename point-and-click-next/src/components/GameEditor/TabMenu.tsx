@@ -1,5 +1,5 @@
-import { CSSProperties, FunctionComponent, useEffect, useState } from "react";
-import { clamp } from "@/lib/util";
+import { CSSProperties, FunctionComponent, useState } from "react";
+import { Box, Tabs, Tab as Ttab } from "@mui/material";
 
 export interface Tab {
     label: string;
@@ -12,25 +12,6 @@ interface Props {
     backgroundColor?: string;
     flex?: number;
     noButtons?: boolean;
-    containerStyle?: CSSProperties;
-}
-
-const buttonStyle = (isOpen: boolean): CSSProperties => {
-    return {
-        color: isOpen ? 'white' : 'black',
-        backgroundColor: isOpen ? 'black' : 'white',
-        margin: 0,
-        cursor: 'pointer',
-    }
-}
-
-const navStyle = (backgroundColor?: string): CSSProperties => {
-    return {
-        display: 'flex',
-        flexWrap: 'wrap',
-        backgroundColor,
-        padding: 5,
-    }
 }
 
 const tabStyle = (isOpen: boolean, backgroundColor?: string): CSSProperties => {
@@ -45,31 +26,34 @@ export const TabMenu: FunctionComponent<Props> = ({
     tabs,
     defaultOpenIndex = 0,
     backgroundColor,
-    noButtons,
-    containerStyle,
 }: Props) => {
     const [selectedTabIndex, setSelectedTabIndex] = useState<number>(defaultOpenIndex)
-    useEffect(() => {
-        setSelectedTabIndex(defaultOpenIndex)
-    }, [defaultOpenIndex, tabs.length])
-    setSelectedTabIndex(clamp(selectedTabIndex, tabs.length - 1))
 
-    return <section style={containerStyle}>
-        {!noButtons &&
-            <nav style={navStyle(backgroundColor)}>
-                {tabs.map((tab, index) =>
-                    <button key={index} style={buttonStyle(index === selectedTabIndex)}
-                        onClick={(): void => { setSelectedTabIndex(index) }}>
-                        {tab.label}
-                    </button>
-                )}
-            </nav>
-        }
-        {tabs.map((tab, index) => (
-            <div key={index} style={tabStyle(index === selectedTabIndex, backgroundColor)}>
-                {tab.content}
-            </div>
-        ))}
-    </section>
+    return (
+        <Box sx={{
+            border: '1px solid black',
+        }}>
+
+            <Tabs value={selectedTabIndex}>
+                {tabs.map((tab, index) => (
+                    <Ttab
+                        label={tab.label}
+                        key={index}
+                        value={index}
+                        onClick={(): void => { setSelectedTabIndex(index) }}
+                    />
+                ))}
+            </Tabs>
+            <Box sx={{
+                paddingX: 1
+            }}>
+                {tabs.map((tab, index) => (
+                    <div key={index} style={tabStyle(index === selectedTabIndex, backgroundColor)}>
+                        {tab.content}
+                    </div>
+                ))}
+            </Box>
+        </Box>
+    )
 
 }
