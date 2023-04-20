@@ -91,12 +91,14 @@ export class Preview extends Component<Props, State>{
         )
     }
 
-    renderSlider(label: string, value: number, max: number, min: number, step: number, onChange: ChangeEventHandler<HTMLInputElement>) {
+    renderSlider(label: string, value: number, max: number, min: number, step: number, onChange: ChangeEventHandler<HTMLInputElement>, disabled = false) {
 
         return (
             <div>
                 <label>{label}</label>
-                <input type='range' value={value} max={max} min={min} step={step}
+                <input type='range' value={value} 
+                    max={max} min={min} step={step}
+                    disabled={disabled}
                     onChange={onChange} />
                 <span>{value}</span>
             </div>
@@ -200,38 +202,23 @@ export class Preview extends Component<Props, State>{
                     <MenuInButton buttonText="Test Actor" buttonId="test-actor">
                         <Stack padding={1}>
                             {this.renderCheckBox('Show', 'showTestActor')}
-                            <div>
-                                <label>X</label>
-                                <input type='range' disabled={!showTestActor}
-                                    value={testActor.x}
-                                    min={0} max={roomData.width} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'x')} />
-                                <span>{testActor.x}</span>
-                            </div>
-                            <div>
-                                <label>Y</label>
-                                <input type='range' disabled={!showTestActor}
-                                    value={testActor.y}
-                                    min={0} max={roomData.height} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'y')} />
-                                <span>{testActor.y}</span>
-                            </div>
-                            <div>
-                                <label>base height</label>
-                                <input type='range' disabled={!showTestActor}
-                                    value={testActor.height}
-                                    min={10} max={200} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'height')} />
-                                <span>{testActor.height}</span>
-                            </div>
-                            <div>
-                                <label>base width</label>
-                                <input type='range' disabled={!showTestActor}
-                                    value={testActor.width}
-                                    min={10} max={200} step={10}
-                                    onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'width')} />
-                                <span>{testActor.width}</span>
-                            </div>
+
+                            {this.renderSlider('X', testActor.x, roomData.width, 0, 10,
+                                (event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'x'),
+                                !showTestActor
+                            )}
+                            {this.renderSlider('Y', testActor.y, roomData.height, 0, 10,
+                                (event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'y'),
+                                !showTestActor
+                            )}
+                            {this.renderSlider('base height', testActor.height, 200, 10, 10,
+                                (event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'height'),
+                                !showTestActor
+                            )}
+                            {this.renderSlider('base width', testActor.width, 200, 10, 10,
+                                (event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'width'),
+                                !showTestActor
+                            )}
                         </Stack>
                     </MenuInButton>
                 </ButtonGroup>
