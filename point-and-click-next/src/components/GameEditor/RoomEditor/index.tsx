@@ -474,7 +474,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const { existingRoomIds = [], actors = [], options, deleteData } = this.props
         const tabs = this.buildTabs()
 
-        return <article>
+        return <Stack component={'article'} spacing={1}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" />
 
             <Stack direction={'row'} spacing={1}>
@@ -514,8 +514,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 />
             </Stack>
 
-            <Divider sx={{ marginY: 1 }} />
-
             <Preview
                 actors={actors}
                 roomData={this.state}
@@ -539,8 +537,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         tabs={tabs} />
                 </Box>
             </Stack>
-
-
-        </article>
+        </Stack>
     }
 }

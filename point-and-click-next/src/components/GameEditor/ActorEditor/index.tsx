@@ -17,6 +17,8 @@ import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSet
 import { RecordEditor } from "../RecordEditor";
 import { SoundValueForm } from "./SoundValueForm";
 import { EditorHeading } from "../EditorHeading";
+import { Stack } from "@mui/material";
+import { EditorBox } from "../EditorBox";
 
 type ExtraState = {
 
@@ -211,12 +213,11 @@ export class ActorEditor extends Component<Props, State> {
         const { actorIds } = this.props
 
         return (
-            <article>
+            <Stack component='article' spacing={1}>
                 <EditorHeading heading="Actor Editor" />
-                <div className={editorStyles.rowTopLeft}>
-                    <fieldset>
-                        <legend>Actor</legend>
+                <Stack direction={'row'} spacing={1}>
 
+                    <EditorBox title="Actor">
                         <StringInput
                             block className={editorStyles.row}
                             label="id" value={id}
@@ -251,7 +252,7 @@ export class ActorEditor extends Component<Props, State> {
                             block className={editorStyles.row}
                             label="Cannot interact with" value={state.noInteraction}
                             inputHandler={value => { changeValue('noInteraction', value) }} />
-                    </fieldset>
+                    </EditorBox>
 
                     <StorageMenu
                         type="actorData"
@@ -265,12 +266,10 @@ export class ActorEditor extends Component<Props, State> {
                         load={this.handleLoadButton}
                         options={this.props.options}
                     />
-                </div>
+                </Stack>
 
-                <div className={editorStyles.row}>
-                    <fieldset>
-                        <legend>Sprite</legend>
-
+                <Stack direction={'row'} spacing={1}>
+                    <EditorBox title="Sprite">
                         <ServiceItemSelector legend="choose sprite"
                             selectedItemId={spriteId}
                             format='select'
@@ -299,10 +298,9 @@ export class ActorEditor extends Component<Props, State> {
                             min={0} max={state.height}
                             inputHandler={value => { changeValue('baseline', value) }} />
 
-                    </fieldset>
+                    </EditorBox>
 
-                    <fieldset>
-                        <legend>Sounds</legend>
+                    <EditorBox title="Sounds">
                         {soundEffectMap && (
                             <RecordEditor
                                 record={soundEffectMap}
@@ -319,12 +317,11 @@ export class ActorEditor extends Component<Props, State> {
                                 newKeySuggestions={this.statusSuggestions}
                             />
                         )}
-                    </fieldset>
-                </div>
+                    </EditorBox>
+                </Stack>
 
-                <div className={editorStyles.rowTopLeft}>
-                    <fieldset>
-                        <legend>Position</legend>
+                <Stack direction={'row'} spacing={1}>
+                    <EditorBox title="Position">
                         <div>
                             <SelectInput label="roomId"
                                 emptyOptionLabel="[no room]"
@@ -354,15 +351,16 @@ export class ActorEditor extends Component<Props, State> {
                             block
                             value={walkToY} label="Y: "
                             inputHandler={value => { changeValue('walkToY', value) }} />
-                    </fieldset>
+                    </EditorBox>
+
                     <PositionPreview
                         actorData={this.state}
                         otherActors={this.otherActorsInRoom}
                         roomData={this.state.room ? findById(this.state.room, this.props.rooms) : undefined}
                         reportClick={this.handlePreviewClick}
                     />
-                </div>
-            </article>
+                </Stack>
+            </Stack>
         )
     }
 }

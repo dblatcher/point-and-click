@@ -113,7 +113,7 @@ export class ItemEditor extends Component<Props, State> {
         const imageAsset = imageId ? imageService.get(imageId) : undefined
 
         return (
-            <Box component='article'>
+            <Stack component='article' spacing={1}>
                 <EditorHeading heading="Item Editor" helpTopic="items" />
                 <Stack direction={'row'} spacing={1}>
                     <EditorBox title="Data">
@@ -186,7 +186,7 @@ export class ItemEditor extends Component<Props, State> {
                     </EditorBox>
                 </Stack>
 
-            </Box>
+            </Stack>
         )
     }
 }
