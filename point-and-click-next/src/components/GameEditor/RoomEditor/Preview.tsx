@@ -7,8 +7,9 @@ import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "@/lib/util";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { makeTestActor } from "./testSprite";
-import { Grid, Stack } from "@mui/material";
+import { Grid, Stack, MenuItem } from "@mui/material";
 import { EditorBox } from "../EditorBox";
+import MenuInButton from "@/components/MenuInButton";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -169,6 +170,46 @@ export class Preview extends Component<Props, State>{
             <Grid container spacing={1}>
                 <Grid item>
                     <Stack width={225} spacing={1}>
+                        <MenuInButton buttonText="Test Actor" buttonId="test-actor">
+
+                            <Stack padding={1}>
+                                {this.renderCheckBox('Show', 'showTestActor')}
+                                <div>
+                                    <label>X</label>
+                                    <input type='range' disabled={!showTestActor}
+                                        value={testActor.x}
+                                        min={0} max={roomData.width} step={10}
+                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'x')} />
+                                    <span>{testActor.x}</span>
+                                </div>
+                                <div>
+                                    <label>Y</label>
+                                    <input type='range' disabled={!showTestActor}
+                                        value={testActor.y}
+                                        min={0} max={roomData.height} step={10}
+                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'y')} />
+                                    <span>{testActor.y}</span>
+                                </div>
+                                <div>
+                                    <label>base height</label>
+                                    <input type='range' disabled={!showTestActor}
+                                        value={testActor.height}
+                                        min={10} max={200} step={10}
+                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'height')} />
+                                    <span>{testActor.height}</span>
+                                </div>
+                                <div>
+                                    <label>base width</label>
+                                    <input type='range' disabled={!showTestActor}
+                                        value={testActor.width}
+                                        min={10} max={200} step={10}
+                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'width')} />
+                                    <span>{testActor.width}</span>
+                                </div>
+
+                            </Stack>
+
+                        </MenuInButton>
                         <EditorBox title="preview">
                             <div>
                                 <label>Width</label>
@@ -190,44 +231,6 @@ export class Preview extends Component<Props, State>{
                             {this.renderCheckBox('Show Actors', 'showRealActors')}
                         </EditorBox>
 
-                        <EditorBox title="Test Actor">
-                            {this.renderCheckBox('Show', 'showTestActor')}
-                            {showTestActor && (<>
-                                <div>
-                                    <label>X</label>
-                                    <input type='range'
-                                        value={testActor.x}
-                                        min={0} max={roomData.width} step={10}
-                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'x')} />
-                                    <span>{testActor.x}</span>
-                                </div>
-                                <div>
-                                    <label>Y</label>
-                                    <input type='range'
-                                        value={testActor.y}
-                                        min={0} max={roomData.height} step={10}
-                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'y')} />
-                                    <span>{testActor.y}</span>
-                                </div>
-                                <div>
-                                    <label>base height</label>
-                                    <input type='range'
-                                        value={testActor.height}
-                                        min={10} max={200} step={10}
-                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'height')} />
-                                    <span>{testActor.height}</span>
-                                </div>
-                                <div>
-                                    <label>base width</label>
-                                    <input type='range'
-                                        value={testActor.width}
-                                        min={10} max={200} step={10}
-                                        onChange={(event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'width')} />
-                                    <span>{testActor.width}</span>
-                                </div>
-                            </>)}
-
-                        </EditorBox>
                     </Stack>
                 </Grid>
                 <Grid item>
