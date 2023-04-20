@@ -7,9 +7,7 @@ import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "@/lib/util";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { makeTestActor } from "./testSprite";
-import { Grid, Stack, MenuItem, ButtonGroup, Checkbox } from "@mui/material";
-import { EditorBox } from "../EditorBox";
-import MenuInButton from "@/components/MenuInButton";
+import { Stack, Checkbox, Accordion, AccordionSummary, AccordionDetails, Box, Typography } from "@mui/material";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -83,21 +81,21 @@ export class Preview extends Component<Props, State>{
         }
         return (
             <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                <label>{label}</label>
-                <Checkbox checked={!!state[propery]} onChange={setValue} size="small"/>
+                <Typography component={'label'} variant="body2">{label}</Typography>
+                <Checkbox checked={!!state[propery]} onChange={setValue} size="small" />
             </Stack>
         )
     }
 
     renderSlider(label: string, value: number, max: number, min: number, step: number, onChange: ChangeEventHandler<HTMLInputElement>, disabled = false) {
         return (
-            <Stack direction={'row'} justifyContent={'space-between'}>
-                <label>{label}</label>
+            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+                <Typography component={'label'} variant="body2">{label}</Typography>
                 <input type='range' value={value}
                     max={max} min={min} step={step}
                     disabled={disabled}
                     onChange={onChange} />
-                <span>{value}</span>
+                <Typography component={'span'} variant="body2">{value}</Typography>
             </Stack>
         )
     }
@@ -179,25 +177,30 @@ export class Preview extends Component<Props, State>{
 
         return (
 
-            <Stack spacing={1} alignItems={'flex-start'}>
-                <ButtonGroup>
-                    <MenuInButton buttonText="view" buttonId="view-options">
-                        <Stack padding={1}>
-                            {this.renderSlider('Width', maxWidth, 800, 100, 25,
+            <Stack spacing={1} alignItems={'flex-start'} direction={'row'} width={225}>
+                <Box>
+                    <Accordion disableGutters>
+                        <AccordionSummary>
+                            <Typography>View</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {this.renderSlider('width', maxWidth, 800, 100, 25,
                                 (event) => this.setState({ maxWidth: eventToNumber(event.nativeEvent) }))
                             }
-                            {this.renderSlider('view angle', viewAngle, 1, -1, .01,
+                            {this.renderSlider('angle', viewAngle, 1, -1, .01,
                                 (event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) }))
                             }
                             {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
                             {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
                             {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
                             {this.renderCheckBox('Show Actors', 'showRealActors')}
-                        </Stack>
-                    </MenuInButton>
-
-                    <MenuInButton buttonText="Test Actor" buttonId="test-actor">
-                        <Stack padding={1}>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion disableGutters>
+                        <AccordionSummary>
+                            <Typography>Test Actor</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
                             {this.renderCheckBox('Show', 'showTestActor')}
 
                             {this.renderSlider('X', testActor.x, roomData.width, 0, 10,
@@ -216,12 +219,12 @@ export class Preview extends Component<Props, State>{
                                 (event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'width'),
                                 !showTestActor
                             )}
-                        </Stack>
-                    </MenuInButton>
-                </ButtonGroup>
 
+                        </AccordionDetails>
+                    </Accordion>
+                </Box>
 
-                <section style={{
+                <Box sx={{
                     marginTop: '5px',
                     position: 'relative',
                     border: '5px dotted red',
@@ -265,7 +268,7 @@ export class Preview extends Component<Props, State>{
                         color: 'white',
                         backgroundColor: 'rgba(0,0,0,.5)'
                     }}>{getClickCaption(clickEffect)}</p>
-                </section>
+                </Box>
             </Stack>
 
         )
