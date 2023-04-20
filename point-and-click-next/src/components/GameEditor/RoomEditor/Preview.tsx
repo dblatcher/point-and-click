@@ -7,7 +7,7 @@ import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "@/lib/util";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { makeTestActor } from "./testSprite";
-import { Grid, Stack, MenuItem, ButtonGroup } from "@mui/material";
+import { Grid, Stack, MenuItem, ButtonGroup, Checkbox } from "@mui/material";
 import { EditorBox } from "../EditorBox";
 import MenuInButton from "@/components/MenuInButton";
 
@@ -82,26 +82,23 @@ export class Preview extends Component<Props, State>{
             this.setState(mod)
         }
         return (
-            <div>
+            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
                 <label>{label}</label>
-                <input type='checkbox' checked={!!state[propery]}
-                    onChange={setValue} />
-                <span>{state[propery] ? 'YES' : 'NO'}</span>
-            </div>
+                <Checkbox checked={!!state[propery]} onChange={setValue} size="small"/>
+            </Stack>
         )
     }
 
     renderSlider(label: string, value: number, max: number, min: number, step: number, onChange: ChangeEventHandler<HTMLInputElement>, disabled = false) {
-
         return (
-            <div>
+            <Stack direction={'row'} justifyContent={'space-between'}>
                 <label>{label}</label>
-                <input type='range' value={value} 
+                <input type='range' value={value}
                     max={max} min={min} step={step}
                     disabled={disabled}
                     onChange={onChange} />
                 <span>{value}</span>
-            </div>
+            </Stack>
         )
     }
 

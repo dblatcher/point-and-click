@@ -9,7 +9,7 @@ interface Props {
     children: React.ReactNode
 }
 
-export default function MenuInButton({ children,buttonId, buttonText }: Props) {
+export default function MenuInButton({ children, buttonId, buttonText }: Props) {
 
     const menuId = `${buttonId}-menu`
 
@@ -42,7 +42,7 @@ export default function MenuInButton({ children,buttonId, buttonText }: Props) {
                     'aria-labelledby': buttonId,
                 }}
             >
-                {children}
+                    {children}
                 <MenuItem onClick={handleClose}>CLOSE</MenuItem>
             </Menu>
         </div>
