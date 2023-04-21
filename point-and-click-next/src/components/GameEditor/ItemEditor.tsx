@@ -111,6 +111,7 @@ export class ItemEditor extends Component<Props, State> {
         const { itemIds } = this.props
 
         const imageAsset = imageId ? imageService.get(imageId) : undefined
+        const imageKey = `${this.state.imageId}-${this.state.row}-${this.state.col}`
 
         return (
             <Stack component='article' spacing={1}>
@@ -177,11 +178,11 @@ export class ItemEditor extends Component<Props, State> {
                     <EditorBox title="Button Preview">
                         <div className={editorStyles.row}>
                             <span>Selected:</span>
-                            <ItemMenu items={[this.state]} currentItemId={id} select={() => true} />
+                            <ItemMenu key={imageKey} items={[this.state]} currentItemId={id} select={() => true} />
                         </div>
                         <div className={editorStyles.row}>
                             <span>Not Selected:</span>
-                            <ItemMenu items={[this.state]} currentItemId={''} select={() => true} />
+                            <ItemMenu key={imageKey} items={[this.state]} currentItemId={''} select={() => true} />
                         </div>
                     </EditorBox>
                 </Stack>
