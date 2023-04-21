@@ -9,13 +9,13 @@ import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { ListEditor } from "../ListEditor";
 import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
-import editorStyles from "../editorStyles.module.css"
 import { SelectAndConfirmInput, StringInput } from "../formControls";
 import { TabMenu } from "@/components/GameEditor/TabMenu";
 import { DataItemEditorProps, icons } from "../dataEditors";
 import { getTargetLists } from "../InteractionEditor/getTargetLists";
 import { EditorHeading } from "../EditorHeading";
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Typography, Stack } from "@mui/material";
+import { EditorBox } from "../EditorBox";
 
 
 type Props = DataItemEditorProps<Sequence> & {
@@ -147,11 +147,15 @@ export class SequenceEditor extends Component<Props, State> {
     renderStage(stage: Stage, stageIndex: number) {
         const { gameDesign } = this.props
         const { immediateConsequences = [], actorOrders = {} } = stage
+        const orderCount = Object.values(actorOrders).flat().length
         return (
             <section key={stageIndex} style={{ width: '100%' }}>
                 <Accordion disableGutters>
                     <AccordionSummary>
-                        <h3>stage {stageIndex + 1}</h3>
+                        <Stack direction={'row'} justifyContent={'space-between'} flex={1}>
+                            <Typography>Stage {stageIndex + 1}</Typography>
+                            <Typography component={'i'}>{orderCount} orders, {immediateConsequences.length} consequences</Typography>
+                        </Stack>
                     </AccordionSummary>
                     <AccordionDetails>
                         <SelectAndConfirmInput
@@ -159,9 +163,6 @@ export class SequenceEditor extends Component<Props, State> {
                             items={listIds(gameDesign.actors).filter(id => !Object.keys(actorOrders).includes(id))}
                             onSelect={value => { this.changeOrderList([getDefaultOrder('say')], stageIndex, value) }}
                         />
-
-
-                        {/* TO DO - add state for switching stages since tabmenu doesn't work */}
 
                         <TabMenu backgroundColor="none"
                             defaultOpenIndex={0}
@@ -220,9 +221,8 @@ export class SequenceEditor extends Component<Props, State> {
                     </>)
                     : (<>
                         <EditorHeading heading="Sequence Editor" />
-                        <div className={editorStyles.rowTopLeft}>
-                            <fieldset className={editorStyles.fieldset}>
-                                <legend>details</legend>
+                        <Stack direction='row' spacing={1}>
+                            <EditorBox title="details">
                                 <StringInput block label="id" value={id} // don't autosave when changing ID
                                     inputHandler={(id) => { this.setState({ id }) }}
                                 />
@@ -231,7 +231,7 @@ export class SequenceEditor extends Component<Props, State> {
                                         this.setStateWithAutosave({ description })
                                     }}
                                 />
-                            </fieldset>
+                            </EditorBox>
 
                             <StorageMenu
                                 type='sequence'
@@ -243,7 +243,7 @@ export class SequenceEditor extends Component<Props, State> {
                                 deleteItem={deleteData}
                                 options={options}
                             />
-                        </div>
+                        </Stack>
                     </>)}
 
 
@@ -254,7 +254,6 @@ export class SequenceEditor extends Component<Props, State> {
                     createItem={makeBlankStage}
                     insertText={`${icons.INSERT} INSERT NEW STAGE`}
                     deleteText={`${icons.DELETE} STAGE`}
-                    heavyBorders={true}
                 />
             </article>
         )

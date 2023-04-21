@@ -1,5 +1,5 @@
-import { CSSProperties, FunctionComponent, useState } from "react";
-import { Box, Tabs, Tab as Ttab } from "@mui/material";
+import { CSSProperties, FunctionComponent, ReactNode, useState, } from "react";
+import { Box, Paper, Tabs, Tab as Ttab, useTheme } from "@mui/material";
 
 export interface Tab {
     label: string;
@@ -22,6 +22,15 @@ const tabStyle = (isOpen: boolean, backgroundColor?: string): CSSProperties => {
     }
 }
 
+const Frame = (props: { children: ReactNode }) => {
+    const theme = useTheme()
+    return <Paper
+        sx={{ padding: .5, backgroundColor: theme.palette.grey[100] }}
+        elevation={2}>
+        {props.children}
+    </Paper>
+}
+
 export const TabMenu: FunctionComponent<Props> = ({
     tabs,
     defaultOpenIndex = 0,
@@ -30,10 +39,7 @@ export const TabMenu: FunctionComponent<Props> = ({
     const [selectedTabIndex, setSelectedTabIndex] = useState<number>(defaultOpenIndex)
 
     return (
-        <Box sx={{
-            border: '1px solid black',
-        }}>
-
+        <Box component={Frame}>
             <Tabs value={selectedTabIndex}>
                 {tabs.map((tab, index) => (
                     <Ttab
