@@ -176,17 +176,14 @@ export class ItemEditor extends Component<Props, State> {
 
                 <Stack direction={'row'}>
                     <EditorBox title="Button Preview">
-                        <div className={editorStyles.row}>
+                        <Stack>
                             <span>Selected:</span>
                             <ItemMenu key={imageKey} items={[this.state]} currentItemId={id} select={() => true} />
-                        </div>
-                        <div className={editorStyles.row}>
                             <span>Not Selected:</span>
                             <ItemMenu key={imageKey} items={[this.state]} currentItemId={''} select={() => true} />
-                        </div>
+                        </Stack>
                     </EditorBox>
                 </Stack>
-
             </Stack>
         )
     }
