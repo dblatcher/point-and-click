@@ -10,6 +10,7 @@ import editorStyles from '../editorStyles.module.css';
 import styles from './styles.module.css';
 import { icons } from "../dataEditors";
 import { EditorHeading } from "../EditorHeading";
+import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 
 interface Props {
     gameDesign: GameDesign;
@@ -104,6 +105,13 @@ export class InteractionEditor extends Component<Props, State> {
         return updateData(list)
     }
 
+    get dialogTitle() {
+        const { interactionUnderConstruction: interaction } = this.state
+        if (!interaction) { return '' }
+        const { verbId, targetId, itemId } = interaction
+        return `${verbId} ${targetId} ${itemId ? `with ${itemId}` : ''}`
+    }
+
     render() {
         const { gameDesign } = this.props
         const { interactions, verbs, items, rooms } = gameDesign
@@ -113,7 +121,7 @@ export class InteractionEditor extends Component<Props, State> {
         return (
             <article>
                 <EditorHeading heading="Interactions" />
-                <table className={styles.interactionTable} style={{ display: interactionUnderConstruction ? 'none' : 'table' }}>
+                <table className={styles.interactionTable}>
                     <caption>
                         <span>{filteredInteractions.length}/{interactions.length} interactions</span>
                         <button
@@ -234,24 +242,25 @@ export class InteractionEditor extends Component<Props, State> {
                     </tbody>
                 </table>
 
-                <section style={{ display: interactionUnderConstruction ? 'block' : 'none' }}>
-                    <h3>edit</h3>
+                <Dialog open={!!interactionUnderConstruction} scroll="paper" fullWidth maxWidth={'lg'}>
+                    <DialogTitle>edit: {this.dialogTitle}</DialogTitle>
+                    <DialogContent>
+                        {interactionUnderConstruction &&
+                            <InteractionForm key={edittedIndex}
+                                confirm={this.saveInteraction}
+                                gameDesign={this.props.gameDesign}
+                                initialState={interactionUnderConstruction} />
+                       }
 
-                    {interactionUnderConstruction &&
-                        <InteractionForm key={edittedIndex}
-                            confirm={this.saveInteraction}
-                            gameDesign={this.props.gameDesign}
-                            initialState={interactionUnderConstruction} />
-                    }
-
-                    <DeleteButton label="Cancel" confirmationText="really?"
-                        onClick={() => {
-                            this.setState({
-                                edittedIndex: undefined,
-                                interactionUnderConstruction: undefined
-                            })
-                        }} />
-                </section>
+                        <DeleteButton label="Cancel" confirmationText="really?"
+                            onClick={() => {
+                                this.setState({
+                                    edittedIndex: undefined,
+                                    interactionUnderConstruction: undefined
+                                })
+                            }} />
+                    </DialogContent>
+                </Dialog>
 
             </article >
         )
