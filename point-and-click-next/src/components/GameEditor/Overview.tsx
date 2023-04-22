@@ -1,6 +1,6 @@
 
 import { FunctionComponent } from "react";
-import { Table, TableBody, TableCell, TableRow, Stack, Box } from "@mui/material"
+import { Table, TableBody, TableCell, TableRow, Stack, Box, Paper, TableContainer } from "@mui/material"
 import { listIds } from "@/lib/util";
 import { GameDesign } from "@/oldsrc/definitions/Game";
 import { SelectInput, StringInput } from "./formControls";
@@ -52,34 +52,36 @@ export const Overview: FunctionComponent<Props> = ({
           />
         </Box>
 
-        <Table size="small" sx={{ width: 'unset' }}>
-          <TableBody>
-            <TableRow>
-              <TableCell>rooms</TableCell><TableCell>{gameDesign.rooms.length}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>items</TableCell><TableCell>{gameDesign.items.length}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>actors</TableCell><TableCell>{gameDesign.actors.length}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>conversations</TableCell><TableCell>{gameDesign.conversations.length}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>sprites</TableCell><TableCell>{gameDesign.sprites.length}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>interactions</TableCell><TableCell>{gameDesign.interactions.length}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>sequences</TableCell><TableCell>{gameDesign.sequences.length}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>endings</TableCell><TableCell>{gameDesign.endings.length}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <TableContainer component={Paper} sx={{ width: 'unset' }}>
+          <Table size="small"  >
+            <TableBody>
+              <TableRow>
+                <TableCell>rooms</TableCell><TableCell>{gameDesign.rooms.length}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>items</TableCell><TableCell>{gameDesign.items.length}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>actors</TableCell><TableCell>{gameDesign.actors.length}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>conversations</TableCell><TableCell>{gameDesign.conversations.length}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>sprites</TableCell><TableCell>{gameDesign.sprites.length}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>interactions</TableCell><TableCell>{gameDesign.interactions.length}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>sequences</TableCell><TableCell>{gameDesign.sequences.length}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>endings</TableCell><TableCell>{gameDesign.endings.length}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Stack>
 
       <EditorHeading heading="Flags" />
