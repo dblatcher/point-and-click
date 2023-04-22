@@ -1,6 +1,6 @@
-import { Alert, Button, ButtonGroup } from "@mui/material";
+import { defaultTheme } from "@/theme";
+import { Alert, Button, ThemeProvider, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { MouseEventHandler, useState } from "react";
-
 
 interface Props {
     label: string;
@@ -19,34 +19,39 @@ export const ButtonWithConfirm = ({ label, onClick, noConfirmation, confirmation
 
     const warningText = confirmationText || `Are you sure you want to ${label}?`
 
-    if (!showConfirmation) {
-        return (
+    return (
+        <>
             <Button
                 color="warning"
                 onClick={handleFirstButton}
             >
                 {label}
             </Button>
-        )
-    }
 
-    return <ButtonGroup>
-        <Alert severity="warning">
-            {warningText}
-        </Alert>
-
-        <Button
-            onClick={(): void => { setShowConfirmation(false); }}
-        >
-            no
-        </Button>
-        <Button color='warning'
-            onClick={(event): void => {
-                setShowConfirmation(false);
-                onClick.bind(undefined as never)(event);
-            }}
-        >
-            yes
-        </Button>
-    </ButtonGroup>
+            <ThemeProvider theme={defaultTheme}>
+                <Dialog open={showConfirmation} onClose={(): void => { setShowConfirmation(false); }}>
+                    <DialogTitle>
+                        <Alert severity="warning">
+                            {warningText}
+                        </Alert>
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button
+                            onClick={(): void => { setShowConfirmation(false); }}
+                        >
+                            no
+                        </Button>
+                        <Button color='warning'
+                            onClick={(event): void => {
+                                setShowConfirmation(false);
+                                onClick.bind(undefined as never)(event);
+                            }}
+                        >
+                            yes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </ThemeProvider>
+        </>
+    )
 }

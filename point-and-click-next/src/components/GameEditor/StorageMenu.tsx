@@ -1,9 +1,9 @@
 import { FunctionComponent } from "react";
 import { Button, ButtonGroup } from "@mui/material"
 import { downloadJsonFile, } from "@/lib/files";
-import { DeleteButton } from "./formControls";
 import { EditorOptions } from ".";
 import { EditorBox } from "./EditorBox";
+import { ButtonWithConfirm } from "./ButtonWithConfirm";
 
 
 interface Props {
@@ -52,13 +52,13 @@ export const StorageMenu: FunctionComponent<Props> = ({
                 {showUpdateButton &&
                     <Button size="small" onClick={update}>{updateButtonText}</Button>
                 }
+                {showDeleteButton &&
+                    <ButtonWithConfirm label={deleteButtonText}
+                        onClick={(): void => { deleteItem(indexOfOriginalId) }}
+                    />
+                }
             </ButtonGroup>
 
-            {showDeleteButton &&
-                <DeleteButton label={deleteButtonText}
-                    onClick={(): void => { deleteItem(indexOfOriginalId) }}
-                />
-            }
         </EditorBox>
     )
 }
