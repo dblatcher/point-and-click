@@ -6,6 +6,7 @@ import { GameDesign } from "@/oldsrc/definitions/Game";
 import { SelectInput, StringInput } from "./formControls";
 import { FlagMapControl } from "./FlagMapControl";
 import { EditorHeading } from "./EditorHeading";
+import { EditorBox } from "./EditorBox";
 
 interface Props {
   gameDesign: GameDesign;
@@ -22,7 +23,7 @@ export const Overview: FunctionComponent<Props> = ({
       <EditorHeading heading="main" />
       <Stack direction={'row'} spacing={1} paddingY={1}>
 
-        <Box>
+        <EditorBox title="attributes">
           <StringInput block
             value={gameDesign.id}
             label="Game ID"
@@ -50,7 +51,7 @@ export const Overview: FunctionComponent<Props> = ({
               edit("openingSequenceId", value);
             }}
           />
-        </Box>
+        </EditorBox>
 
         <TableContainer component={Paper} sx={{ width: 'unset' }}>
           <Table size="small"  >
