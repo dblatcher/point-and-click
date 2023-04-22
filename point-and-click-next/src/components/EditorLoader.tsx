@@ -1,21 +1,34 @@
-import { Grid, Skeleton } from '@mui/material'
+import { Container, Divider, Box, Skeleton, Stack } from '@mui/material'
 import dynamic from 'next/dynamic'
 
 
 const DynamicComponent = dynamic(() => import('@/components/GameEditor'), {
   loading: () => (<>
-    <Grid container spacing={2} padding={2}>
-      <Grid item xs={3}>
-        <Skeleton variant='text' width={'100%'} sx={{ fontSize: '2rem' }} />
-        <Skeleton variant='text' width={'100%'} sx={{ fontSize: '1rem' }} />
-        <Skeleton variant='text' width={'100%'} sx={{ fontSize: '1rem' }} />
-        <Skeleton variant='rounded' width={'100%'} height={300} />
-      </Grid>
-      <Grid item xs={9}>
-        <Skeleton variant='text' width={'100%'} sx={{ fontSize: '2rem' }} />
-        <Skeleton variant='rounded' width={'100%'} height={200} />
-      </Grid>
-    </Grid>
+
+    <Container maxWidth='xl'>
+      <Stack
+        direction={'row'}
+        spacing={1}
+        component={'main'}
+        divider={<Divider orientation="vertical" flexItem />}
+      >
+        <Stack
+          component={'nav'}
+          spacing={1}
+          divider={<Divider orientation="horizontal" flexItem />}
+          width={250}
+        >
+          <Skeleton variant='text' width={'100%'} sx={{ fontSize: 50 }} />
+          <Skeleton variant='text' width={'100%'} sx={{ fontSize: 75 }} />
+          <Skeleton variant='rounded' width={'100%'} height={500} />
+        </Stack>
+
+        <Box component={'section'} flex={1}>
+          <Skeleton variant='text' width={'100%'} sx={{ fontSize: 50 }} />
+          <Skeleton variant='rounded' width={'100%'} height={650} />
+        </Box>
+      </Stack>
+    </Container>
   </>
   ),
   ssr: false,
