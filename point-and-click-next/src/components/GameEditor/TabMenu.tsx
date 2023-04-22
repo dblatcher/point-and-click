@@ -3,7 +3,7 @@ import { Box, Paper, Tabs, Tab as Ttab, useTheme } from "@mui/material";
 
 export interface Tab {
     label: string;
-    content: JSX.Element;
+    content: ReactNode;
 }
 
 interface Props {

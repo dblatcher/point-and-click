@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Divider, Stack, Box } from "@mui/material";
+import { Stack, Box } from "@mui/material";
 import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "@/oldsrc";
 import { RoomDataSchema } from "@/oldsrc/definitions/RoomData";
 import { Point } from "@/lib/pathfinding/geometry";
@@ -22,10 +22,12 @@ import { ListEditor } from "../ListEditor";
 import { ZoneSetEditor } from "./ZoneSetEditor";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
 import imageService from "@/services/imageService";
-import { RoomEditorTreeMenu } from "./RoomEditorTreeMenu";
 import editorStyles from '../editorStyles.module.css';
 import { EditorHeading } from "../EditorHeading";
 import { EditorBox } from "../EditorBox";
+import { TabMenu } from "../TabMenu";
+import { NewZoneButtons } from "./NewZoneButtons";
+import { ZonePicker } from "./ZonePicker";
 
 export type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -384,12 +386,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     buildTabs(): Tab[] {
-
         const {
             background, obstacleAreas = [], hotspots = [], walkableAreas = [],
             scaling = [] } = this.state
-
-
         const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
 
         return [
@@ -428,6 +427,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         change={this.changeZone}
                         remove={this.removeZone}
                         openTab={this.state.obstableTab}
+                        selectZone={this.handleTreeEntryClick}
+                        clickEffect={this.state.clickEffect}
                     />
                 )
             },
@@ -440,25 +441,42 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         change={this.changeZone}
                         remove={this.removeZone}
                         openTab={this.state.walkableTab}
+                        selectZone={this.handleTreeEntryClick}
+                        clickEffect={this.state.clickEffect}
                     />
                 )
             },
             {
                 label: 'Hotspots', content: (
                     <>
-                        {hotspots.length === 0 && <span>No <b>hotspots</b> for this room yet. Select a shape from the menu to the left to add one.</span>}
-                        <TabSet
-                            openIndex={this.state.hotspotTab}
-                            tabs={hotspots.map((hotspot, index) => {
-                                return {
-                                    label: hotspot.id, content: (
-                                        <HotspotControl hotspot={hotspot} index={index}
-                                            setClickEffect={this.setClickEffect}
-                                            change={this.changeZone}
-                                            remove={this.removeZone} />
-                                    )
-                                }
-                            })} />
+                        <Stack direction={'row'}>
+                            <ZonePicker
+                                type={'hotspot'}
+                                zones={hotspots}
+                                openTab={this.state.hotspotTab}
+                                selectZone={this.handleTreeEntryClick}
+                            />
+                            <Box>
+                                {hotspots.length === 0 && <span>No <b>hotspots</b> for this room yet. Select a shape from the buttons below to add one.</span>}
+                                <TabSet
+                                    openIndex={this.state.hotspotTab}
+                                    tabs={hotspots.map((hotspot, index) => {
+                                        return {
+                                            label: hotspot.id, content: (
+                                                <HotspotControl hotspot={hotspot} index={index}
+                                                    setClickEffect={this.setClickEffect}
+                                                    change={this.changeZone}
+                                                    remove={this.removeZone} />
+                                            )
+                                        }
+                                    })} />
+
+                            </Box>
+                        </Stack>
+                        <NewZoneButtons
+                            type="hotspot"
+                            clickEffect={this.state.clickEffect}
+                            selectZone={this.handleTreeEntryClick} />
                     </>
                 )
             }
@@ -475,7 +493,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const tabs = this.buildTabs()
 
         return <Stack component={'article'} spacing={1}>
-            <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id}/>
+            <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
 
             <Stack direction={'row'} spacing={1}>
                 <EditorBox title="room">
@@ -521,22 +539,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
                 handleRoomClick={this.handleRoomClick} />
 
-            <Stack direction={'row'} spacing={1}>
-                <Box sx={{ width: 225 }}>
-                    <RoomEditorTreeMenu
-                        roomEditorState={this.state}
-                        handleTreeEntryClick={this.handleTreeEntryClick}
-                        handleFolderClick={(mainTab) => { this.setState({ mainTab }) }}
-                    />
-                </Box>
-                <Box flex={1}>
-                    <EditorHeading heading={tabs[mainTab]?.label || '?'} level={3} />
-                    <TabSet
-                        containerStyle={{ flex: 1 }}
-                        openIndex={mainTab}
-                        tabs={tabs} />
-                </Box>
-            </Stack>
+            <TabMenu tabs={tabs} />
         </Stack>
     }
 }
