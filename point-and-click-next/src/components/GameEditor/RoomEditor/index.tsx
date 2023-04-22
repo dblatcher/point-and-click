@@ -475,7 +475,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const tabs = this.buildTabs()
 
         return <Stack component={'article'} spacing={1}>
-            <EditorHeading heading="Room Editor" helpTopic="rooms" />
+            <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id}/>
 
             <Stack direction={'row'} spacing={1}>
                 <EditorBox title="room">
