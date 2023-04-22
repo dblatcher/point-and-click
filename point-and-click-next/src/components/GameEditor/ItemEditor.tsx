@@ -178,9 +178,9 @@ export class ItemEditor extends Component<Props, State> {
                     <EditorBox title="Button Preview">
                         <Stack>
                             <span>Selected:</span>
-                            <ItemMenu key={imageKey} items={[this.state]} currentItemId={id} select={() => true} />
+                            <ItemMenu key={`${imageKey}-selected`} items={[this.state]} currentItemId={id} select={() => true} />
                             <span>Not Selected:</span>
-                            <ItemMenu key={imageKey} items={[this.state]} currentItemId={''} select={() => true} />
+                            <ItemMenu key={`${imageKey}-not-selected`} items={[this.state]} currentItemId={''} select={() => true} />
                         </Stack>
                     </EditorBox>
                 </Stack>
