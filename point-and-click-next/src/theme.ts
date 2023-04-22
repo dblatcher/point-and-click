@@ -19,3 +19,5 @@ export const redTheme = createTheme({
         fontFamily:'arial'
     }
 })
+
+export const defaultTheme = createTheme({})
