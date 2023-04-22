@@ -196,7 +196,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         const { spriteIds } = this.props
         const overrideSprite = this.buildSprite()
         return <article>
-            <EditorHeading heading="Sprite Editor" />
+            <EditorHeading heading="Sprite Editor" itemId={this.props.data?.id ?? '[new]'}/>
             <div className={editorStyles.container}>
 
                 <fieldset className={editorStyles.fieldset}>

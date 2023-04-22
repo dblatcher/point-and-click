@@ -252,7 +252,7 @@ export class ConversationEditor extends Component<Props, State> {
 
         return (
             <article>
-                <EditorHeading heading="Conversation Editor" />
+                <EditorHeading heading={`Conversation Editor`} itemId={id}/>
                 <section className={editorStyles.row}>
                     <fieldset>
                         <legend>Conversation</legend>

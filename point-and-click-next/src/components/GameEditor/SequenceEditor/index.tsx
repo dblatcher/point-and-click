@@ -220,7 +220,7 @@ export class SequenceEditor extends Component<Props, State> {
                         />
                     </>)
                     : (<>
-                        <EditorHeading heading="Sequence Editor" />
+                        <EditorHeading heading="Sequence Editor" itemId={data?.id ?? '[new]'} />
                         <Stack direction='row' spacing={1}>
                             <EditorBox title="details">
                                 <StringInput block label="id" value={id} // don't autosave when changing ID

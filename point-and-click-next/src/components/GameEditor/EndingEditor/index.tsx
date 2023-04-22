@@ -62,7 +62,7 @@ export class EndingEditor extends Component<Props, State> {
 
         return (
             <article>
-                <EditorHeading heading="Ending Editor" />
+                <EditorHeading heading="Ending Editor" itemId={this.props.data?.id}/>
 
                 <StorageMenu
                     type="ending"

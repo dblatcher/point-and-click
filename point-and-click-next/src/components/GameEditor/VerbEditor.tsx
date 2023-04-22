@@ -90,7 +90,7 @@ export class VerbEditor extends Component<Props, State> {
 
         return (
             <article>
-                <EditorHeading heading="Verb Editor" />
+                <EditorHeading heading="Verb Editor" itemId={this.initialState.id}/>
                 <StorageMenu
                     type="Verb"
                     update={() => updateData(this.currentData)}

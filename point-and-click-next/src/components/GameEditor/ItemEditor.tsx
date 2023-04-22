@@ -115,7 +115,7 @@ export class ItemEditor extends Component<Props, State> {
 
         return (
             <Stack component='article' spacing={1}>
-                <EditorHeading heading="Item Editor" helpTopic="items" />
+                <EditorHeading heading="Item Editor" helpTopic="items" itemId={id} />
                 <Stack direction={'row'} spacing={1}>
                     <EditorBox title="Data">
                         <StringInput

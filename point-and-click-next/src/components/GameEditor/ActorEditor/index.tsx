@@ -214,7 +214,7 @@ export class ActorEditor extends Component<Props, State> {
 
         return (
             <Stack component='article' spacing={1}>
-                <EditorHeading heading="Actor Editor" />
+                <EditorHeading heading="Actor Editor" itemId={this.state.id}/>
                 <Stack direction={'row'} spacing={1}>
 
                     <EditorBox title="Actor">
