@@ -1,31 +1,33 @@
 import { Component } from "react";
-import { Stack, Box } from "@mui/material";
+import { Stack, Box, Container } from "@mui/material";
 import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
+import imageService from "@/services/imageService";
+import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
+import { getBlankRoom } from "../defaults";
+import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
+import editorStyles from '../editorStyles.module.css';
+// lib
 import { Point } from "@/lib/pathfinding/geometry";
 import { cloneData } from "@/lib/clone";
 import { eventToString } from "@/lib/util";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { uploadJsonData } from "@/lib/files";
+// components
+import { NumberInput, Warning } from "../formControls";
+import { TabSet, type Tab } from "@/components/GameEditor/TabSet";
+import { StorageMenu } from "../StorageMenu";
+import { ListEditor } from "../ListEditor";
+import { EditorHeading } from "../EditorHeading";
+import { TabMenu } from "../TabMenu";
+// subcomponents
+import { HotspotControl } from "./HotSpotControl";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ShapeChangeFunction } from "./ShapeControl";
-import { HotspotControl } from "./HotSpotControl";
-import { NumberInput, Warning } from "../formControls";
-import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
-import { TabSet, type Tab } from "@/components/GameEditor/TabSet";
-import { getBlankRoom } from "../defaults";
-import { StorageMenu } from "../StorageMenu";
-import { ListEditor } from "../ListEditor";
 import { ZoneSetEditor } from "./ZoneSetEditor";
-import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
-import imageService from "@/services/imageService";
-import editorStyles from '../editorStyles.module.css';
-import { EditorHeading } from "../EditorHeading";
-import { EditorBox } from "../EditorBox";
-import { TabMenu } from "../TabMenu";
 import { NewZoneButtons } from "./NewZoneButtons";
 import { ZonePicker } from "./ZonePicker";
 
@@ -219,8 +221,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
         this.setStateWithAutosave({ obstacleAreas, hotspots, walkableAreas })
     }
-    changeZone: ShapeChangeFunction = (index, propery, newValue, type) => {
 
+    changeZone: ShapeChangeFunction = (index, propery, newValue, type) => {
         this.setStateWithAutosave(state => {
             const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = state
             function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
@@ -388,10 +390,38 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     buildTabs(): Tab[] {
         const {
             background, obstacleAreas = [], hotspots = [], walkableAreas = [],
-            scaling = [] } = this.state
+            scaling = [],
+            width, frameWidth, id, height
+        } = this.state
+        const { existingRoomIds = [], options, deleteData } = this.props
         const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
 
         return [
+            {
+                label: 'Room', content: (
+                    <Container maxWidth="xs">
+                        <div className={editorStyles.row}>
+                            <label >ID</label>
+                            <input type="text" value={id} onInput={event => this.setStateWithAutosave({ id: eventToString(event.nativeEvent) })} />
+                        </div>
+                        <div className={editorStyles.row}>
+                            <NumberInput label="height" value={height}
+                                inputHandler={height => this.setStateWithAutosave({ height })} />
+                        </div>
+                        <div className={editorStyles.row}>
+                            <NumberInput label="width" value={width}
+                                inputHandler={width => this.setStateWithAutosave({ width })} />
+                        </div>
+                        <div className={editorStyles.row}>
+                            <NumberInput label="Frame Width" value={frameWidth}
+                                inputHandler={frameWidth => this.setStateWithAutosave({ frameWidth })} />
+                        </div>
+                        {frameWidth > width && (
+                            <Warning>frame width is bigger than room width</Warning>
+                        )}
+                    </Container>
+                )
+            },
             {
                 label: 'Scaling', content: (
                     <ScalingControl
@@ -479,58 +509,38 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                             selectZone={this.handleTreeEntryClick} />
                     </>
                 )
+            },
+            {
+                label: 'storage', content: (
+                    <Container maxWidth="xs">
+                        <StorageMenu
+                            type="room"
+                            data={this.currentData}
+                            originalId={this.props.data?.id}
+                            existingIds={existingRoomIds}
+                            reset={this.handleResetButton}
+                            update={this.handleUpdateButton}
+                            deleteItem={deleteData}
+                            saveButton={true}
+                            load={this.handleLoadButton}
+                            options={options}
+                        />
+                    </Container>
+                )
             }
         ]
 
     }
 
     render() {
-        const {
-            id, height, width, frameWidth, clickEffect, mainTab
-        } = this.state
-
-        const { existingRoomIds = [], actors = [], options, deleteData } = this.props
+        const { id, clickEffect } = this.state
+        const { actors = [] } = this.props
         const tabs = this.buildTabs()
 
         return <Stack component={'article'} spacing={1}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
 
-            <Stack direction={'row'} spacing={1}>
-                <EditorBox title="room">
-                    <div className={editorStyles.row}>
-                        <label >ID</label>
-                        <input type="text" value={id} onInput={event => this.setStateWithAutosave({ id: eventToString(event.nativeEvent) })} />
-                    </div>
-                    <div className={editorStyles.row}>
-                        <NumberInput label="height" value={height}
-                            inputHandler={height => this.setStateWithAutosave({ height })} />
-                    </div>
-                    <div className={editorStyles.row}>
-                        <NumberInput label="width" value={width}
-                            inputHandler={width => this.setStateWithAutosave({ width })} />
-                    </div>
-                    <div className={editorStyles.row}>
-                        <NumberInput label="Frame Width" value={frameWidth}
-                            inputHandler={frameWidth => this.setStateWithAutosave({ frameWidth })} />
-                    </div>
-                    {frameWidth > width && (
-                        <Warning>frame width is bigger than room width</Warning>
-                    )}
-                </EditorBox>
-
-                <StorageMenu
-                    type="room"
-                    data={this.currentData}
-                    originalId={this.props.data?.id}
-                    existingIds={existingRoomIds}
-                    reset={this.handleResetButton}
-                    update={this.handleUpdateButton}
-                    deleteItem={deleteData}
-                    saveButton={true}
-                    load={this.handleLoadButton}
-                    options={options}
-                />
-            </Stack>
+            <TabMenu tabs={tabs} />
 
             <Preview
                 actors={actors}
@@ -538,8 +548,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 clickEffect={clickEffect}
                 activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
                 handleRoomClick={this.handleRoomClick} />
-
-            <TabMenu tabs={tabs} />
         </Stack>
     }
 }
