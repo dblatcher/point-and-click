@@ -1,5 +1,5 @@
-import { type RoomData } from "../../oldsrc/definitions/RoomData"
-import { type Zone } from "../../oldsrc/definitions/Zone"
+import { type RoomData } from "../../definitions/RoomData"
+import { type Zone } from "../../definitions/Zone"
 import { Circle, isPointInsideCircle, isPointInsidePolygon, isPointInsideRectangle, Point, Rectangle } from "./geometry"
 
 type CellMatrix = (0 | 1)[][]

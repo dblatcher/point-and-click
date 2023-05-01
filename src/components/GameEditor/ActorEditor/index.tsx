@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { ActorData, Direction, RoomData, Point } from "@/oldsrc";
-import { ActorDataSchema, SoundValue } from "@/oldsrc/definitions/ActorData";
-import { directions } from "@/oldsrc/definitions/SpriteSheet";
+import { ActorDataSchema, SoundValue } from "@/definitions/ActorData";
+import { directions } from "@/definitions/SpriteSheet";
 import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, StringInput } from "../formControls";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import spriteService from "@/services/spriteService";

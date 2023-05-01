@@ -1,4 +1,4 @@
-import { SpriteData, Direction, SpriteFrame, Animation } from "../oldsrc/definitions/SpriteSheet"
+import { SpriteData, Direction, SpriteFrame, Animation } from "../definitions/SpriteSheet"
 import imageService, { ImageAsset } from "@/services/imageService";
 
 

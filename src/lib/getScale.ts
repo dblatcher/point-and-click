@@ -1,4 +1,4 @@
-import { ScaleLevel } from "../oldsrc/definitions/RoomData";
+import { ScaleLevel } from "../definitions/RoomData";
 
 export const getScale = (y: number, scaleLevel?: ScaleLevel): number => {
 

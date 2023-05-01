@@ -1,6 +1,6 @@
 
 import {  Component } from "react"
-import { ActOrder, MoveOrder, orderTypes, stepSchama } from "@/oldsrc/definitions/Order";
+import { ActOrder, MoveOrder, orderTypes, stepSchama } from "@/definitions/Order";
 import { SelectInput } from "../formControls";
 import { makeNewStep } from "../defaults";
 import { ListEditor } from "../ListEditor";

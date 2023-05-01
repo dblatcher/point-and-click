@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/oldsrc/definitions/Consequence";
+import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
 import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "@/oldsrc";
 import { SelectInput } from "../formControls";
 import { findById, listIds } from "@/lib/util";

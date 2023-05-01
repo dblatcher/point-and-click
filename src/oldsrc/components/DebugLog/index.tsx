@@ -1,7 +1,7 @@
 
 import { FunctionComponent, useEffect, useRef } from "react";
-import { Order } from "../../definitions/Order";
-import { GameCondition } from "../../definitions/Game";
+import { Order } from "../../../definitions/Order";
+import { GameCondition } from "../../../definitions/Game";
 import styles from "./styles.module.css"
 
 interface Props {

@@ -6,7 +6,7 @@ import { makeBlankVerb } from "./defaults";
 import { StorageMenu } from "./StorageMenu";
 import { listIds } from "@/lib/util";
 import { FieldDef, SchemaForm, FieldValue, getModification } from "./SchemaForm";
-import { VerbSchema } from "@/oldsrc/definitions/Verb";
+import { VerbSchema } from "@/definitions/Verb";
 import { DataItemEditorProps } from "./dataEditors";
 import { describeCommand, getDefaultResponseText, wildCard } from "@/lib/commandFunctions";
 import { EditorHeading } from "./EditorHeading";

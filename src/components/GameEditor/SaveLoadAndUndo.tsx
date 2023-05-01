@@ -1,5 +1,5 @@
 import { FunctionComponent, useState } from "react";
-import { GameDesign } from "@/oldsrc/definitions/Game";
+import { GameDesign } from "@/definitions/Game";
 import {
   makeDownloadFile,
   uploadFile,

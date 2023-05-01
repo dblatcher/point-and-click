@@ -5,7 +5,7 @@ import { Sprite } from "@/lib/Sprite";
 import { imageAssets } from "../data/images";
 import { soundAssets } from "../data/sounds";
 import { prebuiltGameDesign } from "../data/fullGame";
-import { GameDesign } from "../oldsrc/definitions/Game";
+import { GameDesign } from "../definitions/Game";
 
 export function populateServicesForPreBuiltGame(): void {
   const sprites = prebuiltGameDesign.sprites.map((data) => new Sprite(data));

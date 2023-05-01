@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { SoundValue, SoundValueSchema } from "@/oldsrc/definitions/ActorData";
+import { SoundValue, SoundValueSchema } from "@/definitions/ActorData";
 import soundService from "@/services/soundService";
 import { getModification, SchemaForm } from "../SchemaForm";
 

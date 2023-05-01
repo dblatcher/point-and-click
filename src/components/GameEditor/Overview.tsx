@@ -2,7 +2,7 @@
 import { FunctionComponent } from "react";
 import { Table, TableBody, TableCell, TableRow, Stack, Box, Paper, TableContainer } from "@mui/material"
 import { listIds } from "@/lib/util";
-import { GameDesign } from "@/oldsrc/definitions/Game";
+import { GameDesign } from "@/definitions/Game";
 import { SelectInput, StringInput } from "./formControls";
 import { FlagMapControl } from "./FlagMapControl";
 import { EditorHeading } from "./EditorHeading";

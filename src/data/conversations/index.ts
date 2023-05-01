@@ -1,4 +1,4 @@
-import { Conversation } from '@/oldsrc/definitions/Conversation'
+import { Conversation } from '@/definitions/Conversation'
 
 const chat: Conversation = {
     id: 'CHAT',

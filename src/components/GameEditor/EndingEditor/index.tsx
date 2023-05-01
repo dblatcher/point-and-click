@@ -5,7 +5,7 @@ import { makeBlankEnding } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
 import { listIds } from "@/lib/util";
 import { FieldDef, SchemaForm, FieldValue, getModification } from "../SchemaForm";
-import { EndingSchema } from "@/oldsrc/definitions/Ending";
+import { EndingSchema } from "@/definitions/Ending";
 import imageService from "@/services/imageService";
 import { EndingScreen } from "@/components/game-ui/EndingScreen";
 import { DataItemEditorProps } from "../dataEditors";

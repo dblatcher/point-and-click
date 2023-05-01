@@ -4,7 +4,7 @@ import { GameDesign, Sequence } from "@/oldsrc";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import { listIds, findById } from "@/lib/util";
-import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationChoiceSchema, ChoiceRefSet } from "@/oldsrc/definitions/Conversation";
+import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationChoiceSchema, ChoiceRefSet } from "@/definitions/Conversation";
 import { getModification, SchemaForm, type FieldDef, type FieldValue } from "../SchemaForm";
 import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
 import { DataItemEditorProps, icons } from "../dataEditors"

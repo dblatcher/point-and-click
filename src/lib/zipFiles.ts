@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import { GameDesignSchema } from "../oldsrc/definitions/Game";
+import { GameDesignSchema } from "../definitions/Game";
 import { GameDesign } from "../oldsrc";
 import {
   ImageAsset,

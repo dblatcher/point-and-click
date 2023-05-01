@@ -8,7 +8,7 @@ import { conversations } from './conversations';
 import { spriteDataList } from './sprites'
 import { endings } from './endings'
 import { flagMap } from './flags'
-import { GameDesign } from "../oldsrc/definitions/Game";
+import { GameDesign } from "../definitions/Game";
 
 const player = actors.find(actor => actor.isPlayer)
 const startingRoom = rooms.find(room => room.id === player?.room) || rooms[0]

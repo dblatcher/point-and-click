@@ -1,6 +1,6 @@
 
 import {  Component } from "react"
-import { GotoOrder, GotoOrderSchema, orderTypes, SayOrder, SayOrderSchema } from "@/oldsrc/definitions/Order";
+import { GotoOrder, GotoOrderSchema, orderTypes, SayOrder, SayOrderSchema } from "@/definitions/Order";
 import { SelectInput } from "../formControls";
 import { SchemaForm, getModification, FieldValue, FieldDef } from "../SchemaForm";
 

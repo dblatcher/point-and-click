@@ -1,7 +1,7 @@
 
 import { FunctionComponent } from "react";
-import { Flag, FlagMap, FlagSchema } from "@/oldsrc/definitions/Flag";
-import { GameDesign } from "@/oldsrc/definitions/Game";
+import { Flag, FlagMap, FlagSchema } from "@/definitions/Flag";
+import { GameDesign } from "@/definitions/Game";
 import { makeNewFlag } from "./defaults";
 import { RecordEditor } from "./RecordEditor";
 import { getModification, SchemaForm } from "./SchemaForm";

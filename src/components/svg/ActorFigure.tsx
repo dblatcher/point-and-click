@@ -9,7 +9,7 @@ import { SpriteShape } from "./SpriteShape";
 import spriteService from "@/services/spriteService";
 import { HandleClickFunction, HandleHoverFunction } from "../game";
 import { PersistentSound } from "../../oldsrc/components/PersistentSound";
-import { SoundEffectMap, SoundValue } from "../../oldsrc/definitions/ActorData";
+import { SoundEffectMap, SoundValue } from "../../definitions/ActorData";
 import { IntermitentSound } from "../../oldsrc/components/IntermitentSound";
 
 interface Props {

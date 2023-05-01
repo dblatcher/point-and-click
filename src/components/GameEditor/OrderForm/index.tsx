@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react"
 import { findValueAsType } from "@/lib/util";
-import { Order, orderTypes } from "@/oldsrc/definitions/Order";
+import { Order, orderTypes } from "@/definitions/Order";
 import { getDefaultOrder } from "../defaults";
 import { OrderWithoutStepsForm } from "./OrderWithoutStepsForm";
 import { OrderWithStepsForm } from "./OrderWithStepsForm";

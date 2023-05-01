@@ -1,4 +1,4 @@
-import { Sequence } from "@/oldsrc/definitions/Sequence";
+import { Sequence } from "@/definitions/Sequence";
 
 const CHAT_HELLO_0: Sequence = {
     id: "CHAT_HELLO_0",

@@ -1,4 +1,4 @@
-import { FlagMap } from '@/oldsrc/definitions/Flag'
+import { FlagMap } from '@/definitions/Flag'
 
 export const flagMap: FlagMap = {
  testFlag : {

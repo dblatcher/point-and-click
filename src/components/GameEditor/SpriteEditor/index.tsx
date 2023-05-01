@@ -1,6 +1,6 @@
 
 import { Component } from "react";
-import { directions, SpriteDataSchema } from "@/oldsrc/definitions/SpriteSheet";
+import { directions, SpriteDataSchema } from "@/definitions/SpriteSheet";
 import { cloneData } from "@/lib/clone";
 import { Sprite } from "@/lib/Sprite";
 import { uploadJsonData } from "@/lib/files";
