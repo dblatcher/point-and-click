@@ -33,9 +33,8 @@ export class RecordEditor<T> extends Component<Props<T>, State> {
         if (!value) { return null }
 
         return (
-            <Paper component={'li'} >
+            <Paper component={'li'} key={key}>
                 <Stack direction={'row'} alignItems={'flex-start'} justifyContent={'space-between'} spacing={1} padding={1}>
-
                     <IconButton color="error"
                         onClick={() => { setEntry(key, undefined) }}
                     ><DeleteIcon /></IconButton>
@@ -53,23 +52,21 @@ export class RecordEditor<T> extends Component<Props<T>, State> {
         return (
             <Stack component={'ul'} sx={{ margin: 0, padding: 0, listStyle: 'none' }} spacing={1}>
                 {Object.entries(record).map(this.renderEntry)}
-                <Paper component={'li'}>
-                    <Box padding={1}>
-                        <StringInput value={newKey}
-                            label={addEntryLabel || 'add entry'}
-                            inputHandler={newKey => this.setState({ newKey })}
-                            suggestions={newKeySuggestions.filter(suggestion => !existingKeys.includes(suggestion))}
-                        />
+                <Box component={'li'} display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+                    <StringInput value={newKey}
+                        label={addEntryLabel || 'add entry'}
+                        inputHandler={newKey => this.setState({ newKey })}
+                        suggestions={newKeySuggestions.filter(suggestion => !existingKeys.includes(suggestion))}
+                    />
 
-                        <IconButton color="success" disabled={!newKey}
-                            onClick={() => {
-                                if (!newKey) { return }
-                                this.setState({ newKey: '' })
-                                addEntry(newKey)
-                            }}
-                        ><AddIcon /></IconButton>
-                    </Box>
-                </Paper>
+                    <IconButton color="success" disabled={!newKey}
+                        onClick={() => {
+                            if (!newKey) { return }
+                            this.setState({ newKey: '' })
+                            addEntry(newKey)
+                        }}
+                    ><AddIcon /></IconButton>
+                </Box>
             </Stack>
         )
     }

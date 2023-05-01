@@ -11,7 +11,7 @@ import { OrderForm } from "../OrderForm";
 import { StorageMenu } from "../StorageMenu";
 import { SelectAndConfirmInput, StringInput } from "../formControls";
 import { TabMenu } from "@/components/GameEditor/TabMenu";
-import { DataItemEditorProps, icons } from "../dataEditors";
+import { DataItemEditorProps } from "../dataEditors";
 import { getTargetLists } from "../InteractionEditor/getTargetLists";
 import { EditorHeading } from "../EditorHeading";
 import { Accordion, AccordionDetails, AccordionSummary, Typography, Stack } from "@mui/material";
@@ -252,8 +252,8 @@ export class SequenceEditor extends Component<Props, State> {
                     describeItem={this.renderStage}
                     mutateList={stages => { this.setStateWithAutosave({ stages }) }}
                     createItem={makeBlankStage}
-                    insertText={`${icons.INSERT} INSERT NEW STAGE`}
-                    deleteText={`${icons.DELETE} STAGE`}
+                    insertText={`INSERT NEW STAGE`}
+                    deleteText={`REMOVE STAGE`}
                 />
             </article>
         )

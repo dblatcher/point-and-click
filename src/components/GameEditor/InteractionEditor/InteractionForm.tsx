@@ -11,8 +11,7 @@ import { makeNewConsequence } from "../defaults";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { ListEditor } from "../ListEditor";
 import { ConsequenceForm } from "./ConsequenceForm";
-import { icons } from "../dataEditors";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, ButtonGroup, ThemeProvider } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, ThemeProvider } from "@mui/material";
 import { defaultTheme } from "@/theme";
 
 interface Props {
@@ -198,7 +197,7 @@ export const InteractionForm: FunctionComponent<Props> = ({ initialState, gameDe
 
                         <ListEditor
                             list={consequences}
-                            heavyBorders={true}
+                            darkItembackground={true}
                             createButton="END"
                             noMoveButtons={true}
                             describeItem={(consequence, index) => (
@@ -212,8 +211,8 @@ export const InteractionForm: FunctionComponent<Props> = ({ initialState, gameDe
                                 setInteraction(Object.assign({}, interaction))
                             }}
                             createItem={() => makeNewConsequence('order')}
-                            insertText={`${icons.INSERT} ADD NEW CONSEQUENCE`}
-                            deleteText={`${icons.DELETE} REMOVE CONSEQUENCE`}
+                            insertText={`ADD NEW CONSEQUENCE`}
+                            deleteText={`REMOVE CONSEQUENCE`}
                         />
                     </fieldset>
 

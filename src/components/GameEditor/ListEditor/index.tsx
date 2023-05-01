@@ -1,7 +1,10 @@
-import { Component, ReactNode,  Fragment } from "react";
-import styles from './styles.module.css';
-import editorStyles from '../editorStyles.module.css'
-import { icons } from "../dataEditors";
+import { Component, ReactNode, Fragment } from "react";
+import { Box, Paper, Stack, Button, ButtonGroup } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add"
+import DeleteIcon from "@mui/icons-material/Delete"
+import ArrowCircleUp from "@mui/icons-material/ArrowCircleUp"
+import ArrowCircleDown from "@mui/icons-material/ArrowCircleDown"
+import { redTheme } from "@/theme";
 
 
 interface Props<T> {
@@ -12,18 +15,11 @@ interface Props<T> {
     createButton?: 'END';
     noMoveButtons?: boolean;
     noDeleteButtons?: boolean;
-    heavyBorders?: boolean;
+    darkItembackground?: boolean;
     insertText?: string;
     deleteText?: string;
 }
 
-
-const buttonStyle = {
-    UP: [editorStyles.button, editorStyles.moveButton],
-    DOWN: [editorStyles.button, editorStyles.moveButton],
-    INSERT: [editorStyles.button, editorStyles.plusButton],
-    DELETE: [editorStyles.button, editorStyles.deleteButton],
-}
 
 export class ListEditor<T> extends Component<Props<T>> {
 
@@ -56,49 +52,59 @@ export class ListEditor<T> extends Component<Props<T>> {
         mutateList(listCopy)
     }
 
-    renderButton(role: 'UP' | 'DOWN' | 'INSERT' | 'DELETE', index: number) {
+    renderButton(role: 'UP' | 'DOWN' | 'INSERT' | 'DELETE', index: number, fullWidthInsert = false) {
         const { insertText, deleteText } = this.props
-        let clickFunction = () => { console.log('invliad button typr') }
-        let buttonText = icons[role]
         switch (role) {
-            case 'DELETE':
-                clickFunction = () => { this.handleDelete(index) }
-                if (deleteText) { buttonText = deleteText }
-                break
-            case 'INSERT':
-                clickFunction = () => { this.handleInsert(index) }
-                if (insertText) { buttonText = insertText }
-                break
+            case 'DELETE': return (
+                <Button size='small'
+                    color={'error'}
+                    onClick={() => { this.handleDelete(index) }}
+                    startIcon={<DeleteIcon />}
+                >{deleteText}
+                </Button>
+            )
+            case 'INSERT': return (
+                <Button size='small'
+                    fullWidth={fullWidthInsert}
+                    variant={fullWidthInsert ? 'outlined' : 'text'}
+                    color={'success'}
+                    onClick={() => { this.handleInsert(index) }}
+                    startIcon={<AddIcon />}
+                >{insertText}
+                </Button>
+            )
             case 'UP':
-            case 'DOWN':
-                clickFunction = () => { this.handleMove(index, role) }
-                break
+            case 'DOWN': return (
+                <Button size='small'
+                    color={'info'}
+                    onClick={() => { this.handleMove(index, role) }}
+                    startIcon={role === 'UP' ? <ArrowCircleUp /> : <ArrowCircleDown />}
+                />
+            )
         }
-        return <button className={buttonStyle[role].join(" ")} onClick={clickFunction}>{buttonText}</button>
     }
 
     render() {
-        const { list, describeItem, createItem, createButton, noMoveButtons, heavyBorders = false, noDeleteButtons } = this.props
-        const listStyle = heavyBorders ? [styles.mainList, styles.heavyList].join(" ") : [styles.mainList].join(" ")
+        const { list, describeItem, createItem, createButton, noMoveButtons, darkItembackground = false, noDeleteButtons } = this.props
+
+        const theme = redTheme
+        const paperStyle = {
+            backgroundColor: darkItembackground ? theme.palette.grey[200] : undefined
+        }
 
         return (
-            <ul className={listStyle}>
+            <Stack component={'ul'} sx={{ margin: 0, padding: 0, listStyle: 'none' }} spacing={1}>
                 {list.map((item, index) => (
                     <Fragment key={index}>
                         {(!!createItem && createButton !== 'END') && (
-                            <li>
-                                <div className={styles.row}>
-                                    <div>{''}</div>
-                                    <nav className={styles.buttonSet}>
-                                        {this.renderButton('INSERT', index)}
-                                    </nav>
-                                </div>
-                            </li>
+                            <Box component={'li'}>
+                                {this.renderButton('INSERT', index, true)}
+                            </Box>
                         )}
-                        <li>
-                            <div className={styles.row}>
+                        <Paper component={'li'} sx={paperStyle}>
+                            <Stack direction={'row'} alignItems={'flex-start'} justifyContent={'space-between'} spacing={1} padding={1}>
                                 {describeItem(item, index)}
-                                <nav className={styles.buttonSet}>
+                                <ButtonGroup>
                                     {!noMoveButtons && <>
                                         {this.renderButton('UP', index)}
                                         {this.renderButton('DOWN', index)}
@@ -106,22 +112,17 @@ export class ListEditor<T> extends Component<Props<T>> {
                                     {!noDeleteButtons && <>
                                         {this.renderButton('DELETE', index)}
                                     </>}
-                                </nav>
-                            </div>
-                        </li>
+                                </ButtonGroup>
+                            </Stack>
+                        </Paper>
                     </Fragment>
                 ))}
                 {!!createItem && (
-                    <li>
-                        <div className={styles.row}>
-                            <div>{''}</div>
-                            <nav className={styles.buttonSet}>
-                                {this.renderButton('INSERT', list.length)}
-                            </nav>
-                        </div>
-                    </li>
+                    <Box component={'li'}>
+                        {this.renderButton('INSERT', list.length, true)}
+                    </Box>
                 )}
-            </ul>
+            </Stack>
         )
     }
 }
