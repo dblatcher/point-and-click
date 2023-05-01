@@ -8,9 +8,9 @@ import { useInterval } from "@/lib/useInterval"
 import { SpriteShape } from "./SpriteShape";
 import spriteService from "@/services/spriteService";
 import { HandleClickFunction, HandleHoverFunction } from "../game";
-import { PersistentSound } from "../../oldsrc/components/PersistentSound";
+import { PersistentSound } from "@/components/sound/PersistentSound";
+import { IntermitentSound } from "@/components/sound/IntermitentSound";
 import { SoundEffectMap, SoundValue } from "../../definitions/ActorData";
-import { IntermitentSound } from "../../oldsrc/components/IntermitentSound";
 
 interface Props {
     roomData: RoomData;
