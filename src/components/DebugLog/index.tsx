@@ -1,24 +1,13 @@
 
 import { FunctionComponent, useEffect, useRef } from "react";
-import { Order } from "../../../definitions/Order";
-import { GameCondition } from "../../../definitions/Game";
+import { GameCondition, Order } from "@/definitions";
+import { type LogEntry } from "@/lib/inGameDebugging";
 import styles from "./styles.module.css"
 
 interface Props {
     condition: GameCondition;
     log: LogEntry[];
 }
-
-type LogEntrySubject = "command" | "order" | 'pathfinding';
-export type LogEntry = {
-    content: string;
-    time: Date;
-    subject?: LogEntrySubject
-};
-
-export const makeDebugEntry = (content: string, subject?: LogEntrySubject): LogEntry => ({
-    content, time: new Date(), subject
-})
 
 export const DebugLog: FunctionComponent<Props> = ({
     condition, log
@@ -107,7 +96,7 @@ export const DebugLog: FunctionComponent<Props> = ({
                             {Object.entries(condition.flagMap).map(entry => {
                                 if (!entry || !entry[1]) { return null }
                                 const [flagKey, flag] = entry;
-                                return <tr>
+                                return <tr key={flagKey}>
                                     <td>{flagKey}</td>
                                     <td>{flag?.value ? 'TRUE' : 'FALSE'}</td>
                                     <td>{flag?.description}</td>

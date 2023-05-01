@@ -1,5 +1,5 @@
 
-import { Component, Fragment } from "react";
+import { Component } from "react";
 import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "@/definitions";
 //lib
 import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "@/lib/roomFunctions";
@@ -7,20 +7,21 @@ import { clamp, findById } from "@/lib/util";
 import { cloneData } from "@/lib/clone";
 import { Sprite } from "@/lib/Sprite";
 import { CellMatrix, generateCellMatrix } from "@/lib/pathfinding/cells";
+import { makeDebugEntry, type LogEntry } from "@/lib/inGameDebugging";
 // state logic
 import { followOrder } from "./orders/followOrder";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { doPendingInteraction, handleCommand } from "./handleCommand";
 import { continueSequence } from "./continueSequence";
 import { handleConversationChoice } from "./handleConversationChoice";
-// component
+// components
 import { Room } from "../svg/Room";
+import { DebugLog } from "../DebugLog";
 import { VerbMenu } from "../game-ui/VerbMenu";
 import { ItemMenu } from "../game-ui/ItemMenu";
 import { CommandLine } from "../game-ui/CommandLine";
 import { ConversationMenu } from "../game-ui/ConversationMenu";
 import { EndingScreen } from "../game-ui/EndingScreen";
-import { DebugLog, makeDebugEntry, type LogEntry } from "../../oldsrc/components/DebugLog";
 import { SoundToggle } from "../game-ui/SoundToggle";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { UiComponentSet } from "./uiComponentSet";

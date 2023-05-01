@@ -2,7 +2,7 @@ import { cellSize, GameState } from ".";
 import { MoveOrder } from "@/definitions";
 import { Point } from "@/lib/pathfinding/geometry";
 import { findPath } from "@/lib/pathfinding/pathfind";
-import { makeDebugEntry } from "../../oldsrc/components/DebugLog";
+import { makeDebugEntry } from "@/lib/inGameDebugging";
 
 export function issueMoveOrder(
     destination: Point,

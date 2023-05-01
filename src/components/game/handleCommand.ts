@@ -1,7 +1,7 @@
 import { GameProps, GameState, cellSize } from ".";
 import { Command, Interaction, ActorData, OrderConsequence } from "@/definitions";
 import { makeConsequenceExecutor } from "./executeConsequence";
-import { makeDebugEntry } from "../../oldsrc/components/DebugLog";
+import { makeDebugEntry } from "@/lib/inGameDebugging";
 import { findPath } from "@/lib/pathfinding/pathfind";
 import { findById } from "@/lib/util";
 import { getDefaultResponseText, matchInteraction, describeCommand } from "@/lib/commandFunctions";
