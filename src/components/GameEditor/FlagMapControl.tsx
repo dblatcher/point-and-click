@@ -29,14 +29,10 @@ export const FlagMapControl: FunctionComponent<Props> = ({
     }
 
     return <section style={{ maxWidth: '35em' }}>
-        <RecordEditor
+        <RecordEditor renderKeys
             record={gameDesign.flagMap}
             describeValue={(key, flag) => {
                 return <>
-                    <b style={{
-                        marginLeft: '.5em',
-                        marginRight: 'auto',
-                    }}>{key}</b>
                     <SchemaForm key={key}
                         schema={FlagSchema}
                         data={flag}

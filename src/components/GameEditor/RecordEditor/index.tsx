@@ -1,9 +1,8 @@
 import { Component, ReactNode } from "react";
+import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add"
+import DeleteIcon from "@mui/icons-material/Delete"
 import { StringInput } from "../formControls";
-import styles from './styles.module.css';
-import editorStyles from '../editorStyles.module.css';
-import { icons } from "../dataEditors";
-
 
 interface Props<T> {
     record: Record<string, T | undefined>;
@@ -23,9 +22,7 @@ export class RecordEditor<T> extends Component<Props<T>, State> {
 
     constructor(props: Props<T>) {
         super(props)
-        this.state = {
-
-        }
+        this.state = {}
         this.renderEntry = this.renderEntry.bind(this)
     }
 
@@ -36,14 +33,16 @@ export class RecordEditor<T> extends Component<Props<T>, State> {
         if (!value) { return null }
 
         return (
-            <li key={key} className={styles.row}>
-                {renderKeys && <b>{key}</b>}
-                <button
-                    className={[editorStyles.button, editorStyles.deleteButton].join(" ")}
-                    onClick={() => { setEntry(key, undefined) }}
-                >{icons.DELETE}</button>
-                {describeValue(key, value)}
-            </li>
+            <Paper component={'li'} >
+                <Stack direction={'row'} alignItems={'flex-start'} justifyContent={'space-between'} spacing={1} padding={1}>
+
+                    <IconButton color="error"
+                        onClick={() => { setEntry(key, undefined) }}
+                    ><DeleteIcon /></IconButton>
+                    {renderKeys && <Typography component={'b'} sx={{ fontWeight: 700 }}>{key}</Typography>}
+                    {describeValue(key, value)}
+                </Stack>
+            </Paper>
         )
     }
 
@@ -51,23 +50,27 @@ export class RecordEditor<T> extends Component<Props<T>, State> {
         const { record, addEntry, addEntryLabel, newKeySuggestions = [] } = this.props
         const { newKey = '' } = this.state
         const existingKeys = Object.keys(record)
-        return <div>
-            <ul className={styles.mainList}>
+        return (
+            <Stack component={'ul'} sx={{ margin: 0, padding: 0, listStyle: 'none' }} spacing={1}>
                 {Object.entries(record).map(this.renderEntry)}
-            </ul>
-            <hr />
-            <StringInput value={newKey}
-                label={addEntryLabel || 'add entry'}
-                inputHandler={newKey => this.setState({ newKey })}
-                suggestions={newKeySuggestions.filter(suggestion => !existingKeys.includes(suggestion))}
-            />
-            <button
-                className={[editorStyles.button, editorStyles.plusButton].join(" ")}
-                onClick={() => {
-                    this.setState({ newKey: '' })
-                    addEntry(newKey)
-                }}
-            >{icons.INSERT}</button>
-        </div>
+                <Paper component={'li'}>
+                    <Box padding={1}>
+                        <StringInput value={newKey}
+                            label={addEntryLabel || 'add entry'}
+                            inputHandler={newKey => this.setState({ newKey })}
+                            suggestions={newKeySuggestions.filter(suggestion => !existingKeys.includes(suggestion))}
+                        />
+
+                        <IconButton color="success" disabled={!newKey}
+                            onClick={() => {
+                                if (!newKey) { return }
+                                this.setState({ newKey: '' })
+                                addEntry(newKey)
+                            }}
+                        ><AddIcon /></IconButton>
+                    </Box>
+                </Paper>
+            </Stack>
+        )
     }
 }
