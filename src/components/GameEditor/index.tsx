@@ -58,7 +58,7 @@ type State = {
     undoTime: number;
 };
 
-type Props = {
+export type Props = {
     usePrebuiltGame?: boolean;
 }
 
