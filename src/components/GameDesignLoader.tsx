@@ -1,4 +1,4 @@
-import { GameCondition, GameDesign } from "@/oldsrc";
+import { GameCondition, GameDesign } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { ImageAsset } from "@/services/imageService";
 import { SoundAsset } from "@/services/soundService";

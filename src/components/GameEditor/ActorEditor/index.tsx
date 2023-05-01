@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { ActorData, Direction, RoomData, Point } from "@/oldsrc";
+import { ActorData, Direction, RoomData, Point } from "@/definitions";
 import { ActorDataSchema, SoundValue } from "@/definitions/ActorData";
 import { directions } from "@/definitions/SpriteSheet";
 import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, StringInput } from "../formControls";

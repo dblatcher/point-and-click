@@ -1,4 +1,4 @@
-import { ActorData, SpriteData } from "@/oldsrc"
+import { ActorData, SpriteData } from "@/definitions"
 import { Sprite } from "./Sprite"
 import { findById, deduplicateStringArray } from "./util"
 

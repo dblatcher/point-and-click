@@ -1,6 +1,6 @@
 
 import { FunctionComponent} from "react";
-import { GameDesign, Verb } from "@/oldsrc";
+import { GameDesign, Verb } from "@/definitions";
 import { ListEditor } from "./ListEditor";
 import { VerbMenu } from "@/components/game-ui/VerbMenu";
 import { EditorHeading } from "./EditorHeading";

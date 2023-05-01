@@ -1,5 +1,5 @@
 import { ClickEffect } from "./ClickEffect";
-import { Zone } from "@/oldsrc";
+import { Zone } from "@/definitions";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
 import { CheckBoxInput, OptionalStringInput } from "../formControls";
 import editorStyles from '../editorStyles.module.css';

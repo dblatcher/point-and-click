@@ -1,5 +1,5 @@
 
-import { ItemData, CommandTarget, Verb } from "@/oldsrc";
+import { ItemData, CommandTarget, Verb } from "@/definitions";
 import uiStyles from './uiStyles.module.css';
 
 interface Props {

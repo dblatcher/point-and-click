@@ -1,5 +1,5 @@
 import { cellSize, GameProps, GameState } from "."
-import { CommandTarget, ActorData, Consequence, Order } from "@/oldsrc"
+import { CommandTarget, ActorData, Consequence, Order } from "@/definitions"
 import { cloneData } from "@/lib/clone"
 import { changeRoom } from "@/lib/changeRoom"
 import { findById } from "@/lib/util"

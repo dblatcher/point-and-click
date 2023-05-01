@@ -1,5 +1,5 @@
 import type { Component } from "react";
-import type { GameDataItem } from "@/oldsrc";
+import type { GameDataItem } from "@/definitions";
 import type { EditorOptions } from ".";
 
 export type DataItemEditorProps<ItemType extends GameDataItem> = {

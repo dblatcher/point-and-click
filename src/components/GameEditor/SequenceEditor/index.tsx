@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage, ImmediateConsequence } from "@/oldsrc";
+import { AnyConsequence, Consequence, GameDesign, Order, Sequence, Stage, ImmediateConsequence } from "@/definitions";
 import { ImmediateConsequenceSchema } from "@/definitions/Consequence";
 import { cloneData } from "@/lib/clone";
 import { getStatusSuggestions } from "@/lib/animationFunctions";

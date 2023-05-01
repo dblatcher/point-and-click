@@ -1,6 +1,6 @@
 import {  FunctionComponent } from "react";
 import { CellMatrix } from "@/lib/pathfinding/cells";
-import { RoomData } from "@/oldsrc"
+import { RoomData } from "@/definitions"
 import { getShift } from "@/lib/roomFunctions";
 
 

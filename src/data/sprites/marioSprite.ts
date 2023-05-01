@@ -1,4 +1,4 @@
-import { SpriteData } from "@/oldsrc";
+import { SpriteData } from "@/definitions";
 
 export const data: SpriteData = {
     id: 'mario',

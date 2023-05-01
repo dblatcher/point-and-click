@@ -1,5 +1,5 @@
 
-import { Conversation, ConversationChoice } from "@/oldsrc"
+import { Conversation, ConversationChoice } from "@/definitions"
 import uiStyles from './uiStyles.module.css';
 
 interface Props {

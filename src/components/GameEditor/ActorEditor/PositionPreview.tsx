@@ -1,7 +1,7 @@
 import { FunctionComponent, useState } from "react";
 import { Room } from "@/components/svg/Room";
 import { MarkerShape } from "@/components/svg/MarkerShape";
-import { ActorData, RoomData } from "@/oldsrc"
+import { ActorData, RoomData } from "@/definitions"
 import { clamp } from "@/lib/util";
 import { getTargetPoint, getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 

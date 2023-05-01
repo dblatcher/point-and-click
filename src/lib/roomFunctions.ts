@@ -1,4 +1,4 @@
-import { RoomData, ActorData, HotspotZone } from "../oldsrc";
+import { RoomData, ActorData, HotspotZone } from "../definitions";
 
 export const putActorsInDisplayOrder = (a: ActorData, b: ActorData) => (b.y + (b.baseline ? b.baseline : 0)) - (a.y + (a.baseline ? a.baseline : 0))
 

@@ -1,5 +1,5 @@
 import { cellSize, GameState } from ".";
-import { MoveOrder } from "@/oldsrc";
+import { MoveOrder } from "@/definitions";
 import { Point } from "@/lib/pathfinding/geometry";
 import { findPath } from "@/lib/pathfinding/pathfind";
 import { makeDebugEntry } from "../../oldsrc/components/DebugLog";

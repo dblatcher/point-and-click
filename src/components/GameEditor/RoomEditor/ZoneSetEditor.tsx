@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { HotspotZone, Zone } from "@/oldsrc";
+import { HotspotZone, Zone } from "@/definitions";
 import { TabSet } from "@/components/GameEditor/TabSet";
 import { ClickEffect } from "./ClickEffect";
 import { ShapeChangeFunction, ValidShapeType } from "./ShapeControl";

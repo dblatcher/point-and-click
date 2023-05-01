@@ -1,4 +1,4 @@
-import { GameDesign } from "@/oldsrc";
+import { GameDesign } from "@/definitions";
 import { uploadFile } from "@/lib/files";
 import { readGameFromZipFile } from "@/lib/zipFiles";
 import { ImageAsset } from "@/services/imageService";

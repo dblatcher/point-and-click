@@ -1,4 +1,4 @@
-import { ActorData, GotoOrder, MoveOrder } from "@/oldsrc";
+import { ActorData, GotoOrder, MoveOrder } from "@/definitions";
 import { findTarget } from "@/lib/commandFunctions";
 import { getTargetPoint } from "@/lib/roomFunctions";
 import { GameState } from "..";

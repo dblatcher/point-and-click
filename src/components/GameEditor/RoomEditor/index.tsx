@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { Stack, Box } from "@mui/material";
-import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "@/oldsrc";
+import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import { Point } from "@/lib/pathfinding/geometry";
 import { cloneData } from "@/lib/clone";

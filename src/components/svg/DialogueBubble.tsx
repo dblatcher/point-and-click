@@ -1,5 +1,5 @@
 import {  FunctionComponent } from "react"
-import { Order, RoomData, ActorData } from "@/oldsrc"
+import { Order, RoomData, ActorData } from "@/definitions"
 import { getScale } from "@/lib/getScale"
 import { placeOnScreen } from "@/lib/roomFunctions"
 import { clamp } from "@/lib/util"

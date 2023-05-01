@@ -5,7 +5,7 @@ import { cloneData } from "@/lib/clone";
 import { Sprite } from "@/lib/Sprite";
 import { uploadJsonData } from "@/lib/files";
 import { eventToString } from "@/lib/util";
-import { ActorData, Direction, SpriteData, SpriteFrame, Animation } from "@/oldsrc"
+import { ActorData, Direction, SpriteData, SpriteFrame, Animation } from "@/definitions"
 import { SelectInput, StringInput } from "../formControls";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { AnimationControl } from "./AnimationControl";

@@ -1,4 +1,4 @@
-import { ItemData } from "@/oldsrc";
+import { ItemData } from "@/definitions";
 
 
 export const items: ItemData[] = [

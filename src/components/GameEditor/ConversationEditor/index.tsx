@@ -1,6 +1,6 @@
 
 import { Component } from "react";
-import { GameDesign, Sequence } from "@/oldsrc";
+import { GameDesign, Sequence } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import { listIds, findById } from "@/lib/util";

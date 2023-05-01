@@ -1,7 +1,7 @@
 
 import { FunctionComponent } from "react";
 import { findById, listIds } from "@/lib/util";
-import { Conversation } from "@/oldsrc";
+import { Conversation } from "@/definitions";
 import { ChoiceRefSet } from "@/definitions/Conversation";
 import { SelectInput } from "../formControls";
 import editorStyles from "../editorStyles.module.css"

@@ -1,6 +1,6 @@
 
 import imageService from "@/services/imageService";
-import { ItemData } from "@/oldsrc"
+import { ItemData } from "@/definitions"
 import uiStyles from '@/components/game-ui/uiStyles.module.css';
 import { CSSProperties, memo } from "react";
 import { ItemMenuProps, itemMenuPropsAreEqual } from '@/components/game/uiComponentSet'

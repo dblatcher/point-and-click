@@ -1,7 +1,7 @@
 
 import { FunctionComponent } from "react";
 import { ClickEffect } from "./ClickEffect";
-import { HotspotZone, Shape, Zone, ZoneType } from "@/oldsrc";
+import { HotspotZone, Shape, Zone, ZoneType } from "@/definitions";
 import { ListEditor } from "../ListEditor";
 import { NumberInput } from "../formControls";
 

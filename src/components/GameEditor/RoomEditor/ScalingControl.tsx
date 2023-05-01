@@ -1,6 +1,6 @@
 
 import { FunctionComponent } from "react";
-import { ScaleLevel } from "@/oldsrc";
+import { ScaleLevel } from "@/definitions";
 import { NumberInput } from "../formControls";
 import { cloneData } from "@/lib/clone"
 import { ListEditor } from "../ListEditor";

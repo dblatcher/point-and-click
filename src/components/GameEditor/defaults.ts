@@ -1,4 +1,4 @@
-import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Flag, Order, OrderType } from "@/oldsrc";
+import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Flag, Order, OrderType } from "@/definitions";
 import { ActStep, MoveStep } from "@/definitions/Order";
 
 const DEFAULT_TALK_TIME = 250;

@@ -1,4 +1,4 @@
-import { Verb, ItemData, CommandTarget, Conversation, ConversationChoice } from "@/oldsrc";
+import { Verb, ItemData, CommandTarget, Conversation, ConversationChoice } from "@/definitions";
 import { FunctionComponent, ReactNode } from "react";
 import { HandleHoverFunction } from ".";
 

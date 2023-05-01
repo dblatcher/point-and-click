@@ -1,4 +1,4 @@
-import { HotspotZone, Zone } from "@/oldsrc";
+import { HotspotZone, Zone } from "@/definitions";
 import { Tab, Tabs } from "@mui/material";
 import { FunctionComponent } from "react";
 

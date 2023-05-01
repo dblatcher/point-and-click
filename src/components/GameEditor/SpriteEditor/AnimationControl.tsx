@@ -2,7 +2,7 @@
 import { FunctionComponent} from "react";
 import { Sprite } from "@/lib/Sprite";
 import { directions } from "@/definitions/SpriteSheet";
-import { ActorData, Direction, SpriteFrame } from "@/oldsrc";
+import { ActorData, Direction, SpriteFrame } from "@/definitions";
 import { SpritePreview } from "../SpritePreview";
 import { DeleteButton } from "../formControls";
 import { ListEditor } from "../ListEditor";

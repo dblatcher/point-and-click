@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { ImageAsset } from "@/services/imageService";
-import { BackgroundLayer } from "@/oldsrc";
+import { BackgroundLayer } from "@/definitions";
 import { ParallaxInput, SelectInput } from "../formControls";
 import { icons } from "../dataEditors";
 import { listIds } from "@/lib/util";

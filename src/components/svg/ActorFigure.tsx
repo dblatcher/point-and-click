@@ -1,6 +1,6 @@
 import { FunctionComponent, useLayoutEffect, useState } from "react";
 
-import { RoomData, Order, ActorData } from "@/oldsrc"
+import { RoomData, Order, ActorData } from "@/definitions"
 import { getScale } from "@/lib/getScale";
 import { Sprite } from "@/lib/Sprite";
 import { useInterval } from "@/lib/useInterval"

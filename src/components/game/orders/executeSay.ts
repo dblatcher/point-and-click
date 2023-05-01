@@ -1,4 +1,4 @@
-import { SayOrder } from "@/oldsrc";
+import { SayOrder } from "@/definitions";
 
 
 export function exectuteSay(sayOrder: SayOrder): void {

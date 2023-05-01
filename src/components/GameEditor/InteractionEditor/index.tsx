@@ -1,6 +1,6 @@
 
 import { Component } from "react";
-import { GameDesign, Interaction } from "@/oldsrc";
+import { GameDesign, Interaction } from "@/definitions";
 import { DeleteButton, SelectInput } from "../formControls";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";

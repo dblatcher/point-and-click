@@ -1,6 +1,6 @@
 
 import { Component } from "react";
-import { GameDesign, Verb, Command, CommandTarget, ItemData } from "@/oldsrc";
+import { GameDesign, Verb, Command, CommandTarget, ItemData } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { makeBlankVerb } from "./defaults";
 import { StorageMenu } from "./StorageMenu";

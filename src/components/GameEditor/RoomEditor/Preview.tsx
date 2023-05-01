@@ -1,5 +1,5 @@
 import { ChangeEventHandler, Component } from "react";
-import { RoomData, ActorData, HotspotZone } from "@/oldsrc";
+import { RoomData, ActorData, HotspotZone } from "@/definitions";
 import { Room } from "@/components/svg/Room";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import HorizontalLine from "@/components/svg/HorizontalLine";

@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { RoomData, ActorData } from "@/oldsrc";
+import { RoomData, ActorData } from "@/definitions";
 import { Room } from "@/components/svg/Room";
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { Sprite } from "@/lib/Sprite";

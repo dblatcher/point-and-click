@@ -1,4 +1,4 @@
-import { Ending } from "@/oldsrc"
+import { Ending } from "@/definitions"
 
 export const endings: Ending[] = [
     {
