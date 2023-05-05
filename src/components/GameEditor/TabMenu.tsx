@@ -1,13 +1,13 @@
 import { CSSProperties, FunctionComponent, ReactNode, useState, } from "react";
-import { Box, Paper, Tabs, Tab as Ttab, useTheme } from "@mui/material";
+import { Box, Paper, Tabs, Tab, useTheme } from "@mui/material";
 
-export interface Tab {
+export interface TabContents {
     label: string;
     content: ReactNode;
 }
 
 interface Props {
-    tabs: Tab[];
+    tabs: TabContents[];
     defaultOpenIndex?: number;
     backgroundColor?: string;
     flex?: number;
@@ -42,7 +42,7 @@ export const TabMenu: FunctionComponent<Props> = ({
         <Box component={Frame}>
             <Tabs value={selectedTabIndex}>
                 {tabs.map((tab, index) => (
-                    <Ttab
+                    <Tab
                         label={tab.label}
                         key={index}
                         value={index}

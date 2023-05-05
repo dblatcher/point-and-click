@@ -164,7 +164,7 @@ export class SequenceEditor extends Component<Props, State> {
                             onSelect={value => { this.changeOrderList([getDefaultOrder('say')], stageIndex, value) }}
                         />
 
-                        <TabMenu backgroundColor="none"
+                        <TabMenu
                             defaultOpenIndex={0}
                             tabs={
                                 [
