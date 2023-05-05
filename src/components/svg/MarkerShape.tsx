@@ -29,15 +29,15 @@ export const MarkerShape: FunctionComponent<Props> = ({
             y={displayY - height} >
             <line
                 x1={0} x2={0} y1={0} y2={height}
-                stroke={'black'} stroke-width={3} />
+                stroke={'black'} strokeWidth={3} />
             <line
                 x1={-CROSS_SIZE} y1={height - CROSS_SIZE}
                 x2={CROSS_SIZE} y2={height + CROSS_SIZE}
-                stroke={'black'} stroke-width={3} />
+                stroke={'black'} strokeWidth={3} />
             <line
                 x1={CROSS_SIZE} y1={height - CROSS_SIZE}
                 x2={-CROSS_SIZE} y2={height + CROSS_SIZE}
-                stroke={'black'} stroke-width={3} />
+                stroke={'black'} strokeWidth={3} />
             <line
                 x1={0} x2={0} y1={0} y2={height}
                 stroke={'white'} />
@@ -53,9 +53,9 @@ export const MarkerShape: FunctionComponent<Props> = ({
             <text
                 stroke={'white'}
                 fill={'black'}
-                stroke-width={.25}
-                font-size={15}
-                font-family='monospace'
+                strokeWidth={.25}
+                fontSize={15}
+                fontFamily='monospace'
             >{textToDisplay}</text>
         </svg>
     )
