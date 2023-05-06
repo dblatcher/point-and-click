@@ -1,8 +1,12 @@
 import { z } from "zod"
 import { ReactNode } from "react";
-import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, StringInput, TriStateInput } from "../GameEditor/formControls";
+import { 
+    CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, TriStateInput,
+    // StringInput
+} from "../GameEditor/formControls";
 import editorStyles from '../GameEditor/editorStyles.module.css';
 import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
+import { StringInput } from "./StringInput";
 
 interface SchemaFieldProps<T> {
     field: FieldDef;

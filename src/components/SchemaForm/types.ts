@@ -12,3 +12,10 @@ export type NumberInputSettings = {
     max?: number;
     step?: number;
 }
+
+export type FieldProps = {
+	label?: string;
+	error?: string;
+	optional?: boolean;
+	readOnly?: boolean;
+};
