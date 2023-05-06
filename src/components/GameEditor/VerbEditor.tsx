@@ -5,7 +5,7 @@ import { cloneData } from "@/lib/clone";
 import { makeBlankVerb } from "./defaults";
 import { StorageMenu } from "./StorageMenu";
 import { listIds } from "@/lib/util";
-import { FieldDef, SchemaForm, FieldValue, getModification } from "./SchemaForm";
+import { FieldDef, SchemaForm, FieldValue, getModification } from "@/components/SchemaForm";
 import { VerbSchema } from "@/definitions/Verb";
 import { DataItemEditorProps } from "./dataEditors";
 import { describeCommand, getDefaultResponseText, wildCard } from "@/lib/commandFunctions";

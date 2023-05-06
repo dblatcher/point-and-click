@@ -10,7 +10,7 @@ import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { cloneData } from "@/lib/clone";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import soundService from "@/services/soundService";
-import { getModification, SchemaForm } from "../SchemaForm";
+import { getModification, SchemaForm } from "@/components/SchemaForm";
 import editorStyles from '../editorStyles.module.css';
 
 interface Props {

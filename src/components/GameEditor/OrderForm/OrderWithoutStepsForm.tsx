@@ -2,7 +2,7 @@
 import {  Component } from "react"
 import { GotoOrder, GotoOrderSchema, orderTypes, SayOrder, SayOrderSchema } from "@/definitions/Order";
 import { SelectInput } from "../formControls";
-import { SchemaForm, getModification, FieldValue, FieldDef } from "../SchemaForm";
+import { SchemaForm, getModification, FieldValue, FieldDef } from "@/components/SchemaForm";
 
 
 type OrderWithoutSteps = SayOrder | GotoOrder

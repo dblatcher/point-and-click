@@ -4,7 +4,7 @@ import { ActOrder, MoveOrder, orderTypes, stepSchama } from "@/definitions/Order
 import { SelectInput } from "../formControls";
 import { makeNewStep } from "../defaults";
 import { ListEditor } from "../ListEditor";
-import { FieldDef, FieldValue, getModification, SchemaForm } from "../SchemaForm";
+import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm";
 
 type OrderWithSteps =  MoveOrder | ActOrder
 

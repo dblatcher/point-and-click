@@ -4,7 +4,7 @@ import { cloneData } from "@/lib/clone";
 import { makeBlankEnding } from "../defaults";
 import { StorageMenu } from "../StorageMenu";
 import { listIds } from "@/lib/util";
-import { FieldDef, SchemaForm, FieldValue, getModification } from "../SchemaForm";
+import { FieldDef, SchemaForm, FieldValue, getModification } from "@/components/SchemaForm";
 import { EndingSchema } from "@/definitions/Ending";
 import imageService from "@/services/imageService";
 import { EndingScreen } from "@/components/game-ui/EndingScreen";

@@ -4,7 +4,7 @@ import { Flag, FlagMap, FlagSchema } from "@/definitions/Flag";
 import { GameDesign } from "@/definitions/Game";
 import { makeNewFlag } from "./defaults";
 import { RecordEditor } from "./RecordEditor";
-import { getModification, SchemaForm } from "./SchemaForm";
+import { getModification, SchemaForm } from "@/components/SchemaForm";
 
 interface Props {
     gameDesign: GameDesign;
