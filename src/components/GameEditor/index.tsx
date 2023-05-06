@@ -381,7 +381,10 @@ export default class GameEditor extends Component<Props, State>{
 
                 <Box component={'section'} flex={1}>
                     <TabSet backgroundColor="none"
-                        key={this.state.undoTime}
+                        // ISSUE - re-rendering on undo clears the subcomponent state in TabMenus,
+                        // making the UI switch to the first horizontal tag
+                        // EG ActorEditor
+                        key={this.state.undoTime}  
                         openIndex={tabOpen} tabs={[
                             {
                                 label: 'main', content: <Overview

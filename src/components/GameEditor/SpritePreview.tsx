@@ -46,11 +46,11 @@ export class SpritePreview extends Component<Props, State>{
         return (
             <Room data={roomData}
                 showObstacleAreas={false}
+                noResize
                 forPreview
                 maxWidth={maxWidth}
                 viewAngle={0}
                 highlightHotspots={false}
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
                 handleRoomClick={() => { }}
                 contents={[{ overrideSprite, data: modifiedActorData, }]}
             >
