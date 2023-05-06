@@ -370,14 +370,14 @@ export class ActorEditor extends Component<Props, State> {
                 ]} />
 
 
-                <Stack direction={'row'} spacing={1}>
-                    <PositionPreview
-                        actorData={this.state}
-                        otherActors={this.otherActorsInRoom}
-                        roomData={this.state.room ? findById(this.state.room, this.props.rooms) : undefined}
-                        reportClick={this.handlePreviewClick}
-                    />
-                </Stack>
+
+                <PositionPreview
+                    actorData={this.state}
+                    otherActors={this.otherActorsInRoom}
+                    roomData={this.state.room ? findById(this.state.room, this.props.rooms) : undefined}
+                    reportClick={this.handlePreviewClick}
+                />
+
             </Stack>
         )
     }
