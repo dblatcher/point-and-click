@@ -2,13 +2,16 @@ import { z } from "zod"
 import { ReactNode } from "react";
 import {
     // CheckBoxInput, 
-    NumberInput, OptionalNumberInput, SelectInput, TriStateInput,
+    NumberInput, OptionalNumberInput, 
+    TriStateInput,
+    // SelectInput, 
     // StringInput
 } from "../GameEditor/formControls";
 import editorStyles from '../GameEditor/editorStyles.module.css';
 import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
 import { StringInput } from "./StringInput";
 import { BooleanInput } from "./BooleanInput";
+import { SelectInput } from "./SelectInput";
 
 interface SchemaFieldProps<T> {
     field: FieldDef;
@@ -47,11 +50,10 @@ export function SchemaField<T extends z.ZodRawShape>({
             if (options) {
                 return <SelectInput label={key}
                     value={value || ''}
-                    onSelect={value => change(value, field)}
-                    items={options}
+                    inputHandler={value => change(value, field)}
+                    options={options}
+                    optional={optional}
                     descriptions={optionDescriptions}
-                    haveEmptyOption={optional}
-                    emptyOptionLabel={`[no ${key}]`}
                 />
             }
 
@@ -102,8 +104,10 @@ export function SchemaField<T extends z.ZodRawShape>({
             if ((typeof value === 'string')) {
                 return <SelectInput label={key}
                     value={value}
-                    onSelect={value => change(value, field)}
-                    items={field.enumOptions}
+                    inputHandler={value => change(value, field)}
+                    options={field.enumOptions}
+                    optional={optional}
+                    descriptions={optionDescriptions}
                 />
             }
         }
