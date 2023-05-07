@@ -1,12 +1,14 @@
 import { z } from "zod"
 import { ReactNode } from "react";
-import { 
-    CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, TriStateInput,
+import {
+    // CheckBoxInput, 
+    NumberInput, OptionalNumberInput, SelectInput, TriStateInput,
     // StringInput
 } from "../GameEditor/formControls";
 import editorStyles from '../GameEditor/editorStyles.module.css';
 import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
 import { StringInput } from "./StringInput";
+import { BooleanInput } from "./BooleanInput";
 
 interface SchemaFieldProps<T> {
     field: FieldDef;
@@ -64,8 +66,8 @@ export function SchemaField<T extends z.ZodRawShape>({
 
         if (type === 'ZodBoolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {
             if (noTriState || !optional) {
-                return <CheckBoxInput label={key}
-                    value={value}
+                return <BooleanInput label={key}
+                    value={value ?? false}
                     inputHandler={(value): void => { change(value, field) }}
                 />
 
