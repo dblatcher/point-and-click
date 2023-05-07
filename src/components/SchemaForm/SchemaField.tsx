@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import {
     // CheckBoxInput, 
     // NumberInput, 
-    OptionalNumberInput, 
+    // OptionalNumberInput, 
     TriStateInput,
     // SelectInput, 
     // StringInput
@@ -14,6 +14,7 @@ import { StringInput } from "./StringInput";
 import { BooleanInput } from "./BooleanInput";
 import { SelectInput } from "./SelectInput";
 import { NumberInput } from "./NumberInput";
+import { OptionalNumberInput } from "./OptionalNumberInput";
 
 interface SchemaFieldProps<T> {
     field: FieldDef;

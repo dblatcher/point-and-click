@@ -1,0 +1,81 @@
+import {
+    FormControlLabel,
+    FormGroup,
+    Stack,
+    Switch,
+    TextField,
+} from '@mui/material';
+import type { FormEventHandler, FunctionComponent } from 'react';
+import { useState } from 'react';
+import type { FieldProps } from './types';
+import { eventToNumber } from './util';
+
+/**
+ * Note - Material UI TextFields do not support the 'step' attribute.
+ * The prop will have no effect, but is retained so this implementation
+ * wors with the SchemaFieldProps interface.
+ */
+export const OptionalNumberInput: FunctionComponent<
+    FieldProps & {
+        value: number | undefined;
+        inputHandler: { (value: number | undefined): void };
+        max?: number;
+        min?: number;
+        /**Material UI TextFields do not support the 'step' attribute */
+        step?: number;
+    }
+> = (props) => {
+    const { value, label, min, max } = props;
+    const [storedNumber, setStoredNumber] = useState(value ?? 0);
+
+    const sendNumberValue: FormEventHandler<HTMLInputElement> = (event) => {
+        const newValue = eventToNumber(event);
+        if (typeof min === 'number' && newValue < min) {
+            return;
+        }
+        if (typeof max === 'number' && newValue > max) {
+            return;
+        }
+        setStoredNumber(newValue);
+        props.inputHandler(eventToNumber(event));
+    };
+
+    const toggleUndefined: FormEventHandler<HTMLInputElement> = (event) => {
+        const { checked } = event.target as HTMLInputElement;
+        if (checked) {
+            return props.inputHandler(undefined);
+        }
+
+        props.inputHandler(storedNumber);
+    };
+
+    return (
+        <Stack direction='row' alignItems={'center'} spacing={1}>
+            <TextField
+                label={label}
+                size='small'
+                variant='standard'
+                type={'number'}
+                value={props.value ?? storedNumber}
+                onInput={sendNumberValue}
+                helperText={props.error}
+                error={!!props.error}
+                required={false}
+                disabled={typeof props.value === 'undefined' || props.readOnly}
+            />
+            <FormGroup>
+                <FormControlLabel
+                    labelPlacement='top'
+                    control={
+                        <Switch
+                            size='small'
+                            checked={typeof props.value === 'undefined'}
+                            onChange={toggleUndefined}
+                        />
+                    }
+                    label={typeof props.value === 'undefined' ? 'not set' : 'number'}
+                />
+            </FormGroup>
+        </Stack>
+    );
+};
