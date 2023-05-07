@@ -1,12 +1,7 @@
 import { z } from "zod"
 import { ReactNode } from "react";
 import {
-    // CheckBoxInput, 
-    // NumberInput, 
-    // OptionalNumberInput, 
-    TriStateInput,
-    // SelectInput, 
-    // StringInput
+    TriStateInput, 
 } from "../GameEditor/formControls";
 import editorStyles from '../GameEditor/editorStyles.module.css';
 import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
@@ -15,6 +10,9 @@ import { BooleanInput } from "./BooleanInput";
 import { SelectInput } from "./SelectInput";
 import { NumberInput } from "./NumberInput";
 import { OptionalNumberInput } from "./OptionalNumberInput";
+
+// noTriState is set by default in SchemaForm, so no implementation of the
+// TriStateInput is currently needed
 
 interface SchemaFieldProps<T> {
     field: FieldDef;
