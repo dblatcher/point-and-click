@@ -10,6 +10,7 @@ import imageService from "@/services/imageService";
 import { EndingScreen } from "@/components/game-ui/EndingScreen";
 import { DataItemEditorProps } from "../dataEditors";
 import { EditorHeading } from "../EditorHeading";
+import { Container, Typography } from "@mui/material";
 
 
 type Props = DataItemEditorProps<Ending> & {
@@ -49,7 +50,7 @@ export class EndingEditor extends Component<Props, State> {
         return this.setState(getModification(value, field), () => {
             if (options.autoSave && property !== 'id') {
                 const isExistingId = listIds(gameDesign.endings).includes(this.state.id)
-                if ( data && isExistingId) {
+                if (data && isExistingId) {
                     updateData(this.currentData)
                 }
             }
@@ -62,7 +63,7 @@ export class EndingEditor extends Component<Props, State> {
 
         return (
             <article>
-                <EditorHeading heading="Ending Editor" itemId={this.props.data?.id}/>
+                <EditorHeading heading="Ending Editor" itemId={this.props.data?.id} />
 
                 <StorageMenu
                     type="ending"
@@ -75,21 +76,32 @@ export class EndingEditor extends Component<Props, State> {
                     options={options}
                 />
 
-                <fieldset style={{ maxWidth: '25rem' }}>
-                    <SchemaForm
-                        data={this.currentData}
-                        schema={EndingSchema}
-                        changeValue={(value, field) => { this.handleUpdate(value, field) }}
-                        options={{
-                            imageId: imageService.list()
-                        }}
-                    />
-                </fieldset>
+                <SchemaForm
+                    formLegend="Ending Config"
+                    data={this.currentData}
+                    schema={EndingSchema}
+                    changeValue={(value, field) => { this.handleUpdate(value, field) }}
+                    options={{
+                        imageId: imageService.list()
+                    }}
+                    fieldWrapperProps={{
+                        spacing: 2,
+                    }}
+                    containerProps={{
+                        padding: 1,
+                        marginY: 1,
+                        maxWidth: 'sm',
+                        sx: {
+                            backgroundColor: 'grey.100',
+                        }
+                    }}
+                />
 
-                <fieldset style={{ position: 'relative', maxWidth: '100%' }}>
-                    <legend>Preview</legend>
+                <Container>
+                    <Typography variant="h5" component='p'>Preview</Typography>
                     <EndingScreen ending={this.currentData} inline={true} />
-                </fieldset>
+                </Container>
+
             </article>
         )
     }

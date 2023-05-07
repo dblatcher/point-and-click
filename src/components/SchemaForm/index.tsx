@@ -1,12 +1,13 @@
 import { z } from "zod"
 import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
 import { SchemaField } from "./SchemaField"
-import { Stack } from "@mui/material"
+import { Stack, Typography, StackProps, TypographyProps, } from "@mui/material"
 
 export type { FieldValue, FieldDef, NumberInputSettings }
 export { getModification } from "./getModification"
 
 interface Props<T extends z.ZodRawShape> {
+    formLegend?: string
     schema: z.ZodObject<T>;
     data: Record<string, unknown>;
     changeValue: { (value: FieldValue, field: FieldDef): void };
@@ -14,6 +15,9 @@ interface Props<T extends z.ZodRawShape> {
     optionDescriptions?: Partial<Record<keyof T, string[]>>;
     suggestions?: Partial<Record<keyof T, string[]>>;
     numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
+    containerProps?: Partial<StackProps>
+    legendProps?: Omit<Partial<TypographyProps>, 'component' | 'children' | 'ref'>
+    fieldWrapperProps?: Omit<Partial<StackProps>, 'component' | 'children' | 'ref'>
 }
 
 
@@ -22,7 +26,10 @@ interface Props<T extends z.ZodRawShape> {
  * and required string enums.
  */
 export function SchemaForm<T extends z.ZodRawShape>({
-    schema, data, changeValue, options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {}
+    formLegend, schema, data,
+    changeValue,
+    options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {},
+    containerProps: containerProps = {}, legendProps = {}, fieldWrapperProps = {}
 }: Props<T>) {
 
     const fields: FieldDef[] = []
@@ -45,18 +52,23 @@ export function SchemaForm<T extends z.ZodRawShape>({
         })
     }
 
-    return <Stack component={'article'} spacing={1}>
-        {fields.map(field =>
-            <SchemaField key={field.key}
-                noTriState
-                options={options[field.key]}
-                optionDescriptions={optionDescriptions[field.key]}
-                suggestions={suggestions[field.key]}
-                numberInputSettings={numberConfig[field.key]}
-                change={changeValue}
-                field={field}
-                stringInputType={field.key === 'text' ? 'textArea' : undefined}
-            />
-        )}
+
+
+    return <Stack component={'article'} {...containerProps}  >
+        {formLegend && <Typography variant='h5' component={'legend'} {...legendProps}>{formLegend}</Typography>}
+        <Stack {...fieldWrapperProps}>
+            {fields.map(field =>
+                <SchemaField key={field.key}
+                    noTriState
+                    options={options[field.key]}
+                    optionDescriptions={optionDescriptions[field.key]}
+                    suggestions={suggestions[field.key]}
+                    numberInputSettings={numberConfig[field.key]}
+                    change={changeValue}
+                    field={field}
+                    stringInputType={field.key === 'text' ? 'textArea' : undefined}
+                />
+            )}
+        </Stack>
     </Stack>
 }

@@ -29,18 +29,39 @@ export const FlagMapControl: FunctionComponent<Props> = ({
     }
 
     return <section style={{ maxWidth: '35em' }}>
-        <RecordEditor renderKeys
+        <RecordEditor
             record={gameDesign.flagMap}
             describeValue={(key, flag) => {
-                return <>
-                    <SchemaForm key={key}
-                        schema={FlagSchema}
-                        data={flag}
-                        changeValue={(value, fieldDef) => {
-                            return setEntry(key, Object.assign({}, flag, getModification(value, fieldDef)))
-                        }}
-                    />
-                </>
+                return <SchemaForm key={key}
+                    formLegend={key}
+                    schema={FlagSchema}
+                    data={flag}
+                    changeValue={(value, fieldDef) => {
+                        return setEntry(key, Object.assign({}, flag, getModification(value, fieldDef)))
+                    }}
+                    containerProps={{
+                        flex: 1,
+                        spacing: 0,
+                        sx: {
+                            borderColor: 'primary.light',
+                            borderWidth: 1,
+                            borderStyle: 'solid'
+                        }
+                    }}
+                    legendProps={{
+                        variant:'caption',
+                        sx: {
+                            padding: 1,
+                            backgroundColor: 'primary.light',
+                            color: 'primary.contrastText',
+                        }
+                    }}
+                    fieldWrapperProps={{
+                        sx: {
+                            padding: 1
+                        }
+                    }}
+                />
             }}
             addEntry={addEntry}
             setEntry={setEntry}
