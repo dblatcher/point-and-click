@@ -31,6 +31,7 @@ export const SelectInput: FunctionComponent<
             <Select 
             size='small'
             variant='standard'
+            required={!optional}
             value={valueAsString} label={label} onChange={handleChange}>
                 {optional && <MenuItem value={EMPTY_STRING}>[none]</MenuItem>}
                 {options.map((option, index) => (

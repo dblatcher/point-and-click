@@ -1,9 +1,7 @@
 import { z } from "zod"
-import { ReactNode } from "react";
 import {
-    TriStateInput, 
+    TriStateInput,
 } from "../GameEditor/formControls";
-import editorStyles from '../GameEditor/editorStyles.module.css';
 import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
 import { StringInput } from "./StringInput";
 import { BooleanInput } from "./BooleanInput";
@@ -45,91 +43,77 @@ export function SchemaField<T extends z.ZodRawShape>({
             safeValue = value;
     }
 
-    function buildInput(): ReactNode | null {
-
-        if (type === 'ZodString' && (typeof value === 'string' || typeof value === 'undefined')) {
-            if (options) {
-                return <SelectInput label={key}
-                    value={value || ''}
-                    inputHandler={value => change(value, field)}
-                    options={options}
-                    optional={optional}
-                    descriptions={optionDescriptions}
-                />
-            }
-
-            return <StringInput label={key}
+    if (type === 'ZodString' && (typeof value === 'string' || typeof value === 'undefined')) {
+        if (options) {
+            return <SelectInput label={key}
                 value={value || ''}
-                type={stringInputType}
-                suggestions={suggestions}
-                inputHandler={(value) => { change(value, field) }}
+                inputHandler={value => change(value, field)}
+                options={options}
+                optional={optional}
+                descriptions={optionDescriptions}
             />
-
         }
 
-        if (type === 'ZodBoolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {
-            if (noTriState || !optional) {
-                return <BooleanInput label={key}
-                    value={value ?? false}
-                    inputHandler={(value): void => { change(value, field) }}
-                />
+        return <StringInput label={key}
+            value={value || ''}
+            type={stringInputType}
+            suggestions={suggestions}
+            inputHandler={(value) => { change(value, field) }}
+        />
+    }
 
-            }
-            return <TriStateInput label={key}
-                value={value}
+    if (type === 'ZodBoolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {
+        if (noTriState || !optional) {
+            return <BooleanInput label={key}
+                value={value ?? false}
                 inputHandler={(value): void => { change(value, field) }}
             />
         }
-
-        if (type === 'ZodNumber') {
-
-            if (typeof value === 'number' || typeof value === 'undefined') {
-                return field.optional ? (
-                    <OptionalNumberInput label={key}
-                        {...numberInputSettings}
-                        value={value}
-                        inputHandler={(value) => { change(value, field) }}
-                    />
-                ) : (
-                    <NumberInput label={key}
-                        {...numberInputSettings}
-                        value={value || 0}
-                        inputHandler={(value) => { change(value, field) }}
-                    />
-                )
-            }
-        }
-
-        if (type === 'ZodEnum' && !optional && field.enumOptions) {
-
-            if ((typeof value === 'string')) {
-                return <SelectInput label={key}
-                    value={value}
-                    inputHandler={value => change(value, field)}
-                    options={field.enumOptions}
-                    optional={optional}
-                    descriptions={optionDescriptions}
-                />
-            }
-        }
-
-        if (showUnsupported) {
-            return (
-                <div key={key}>
-                    <b>UNSUPPORTED | </b>
-                    {key} |{type}
-                    <b>{safeValue?.toString()}</b>
-                </div>
-            )
-        }
-
-        return null
+        return <TriStateInput label={key}
+            value={value}
+            inputHandler={(value): void => { change(value, field) }}
+        />
     }
 
-    return (
-        <div className={editorStyles.formRow}>
-            {buildInput()}
-            <span>{field.optional ? '(opt)' : '(req)'}</span>
-        </div>
-    )
+    if (type === 'ZodNumber') {
+        if (typeof value === 'number' || typeof value === 'undefined') {
+            return field.optional ? (
+                <OptionalNumberInput label={key}
+                    {...numberInputSettings}
+                    value={value}
+                    inputHandler={(value) => { change(value, field) }}
+                />
+            ) : (
+                <NumberInput label={key}
+                    {...numberInputSettings}
+                    value={value || 0}
+                    inputHandler={(value) => { change(value, field) }}
+                />
+            )
+        }
+    }
+
+    if (type === 'ZodEnum' && !optional && field.enumOptions) {
+        if ((typeof value === 'string')) {
+            return <SelectInput label={key}
+                value={value}
+                inputHandler={value => change(value, field)}
+                options={field.enumOptions}
+                optional={optional}
+                descriptions={optionDescriptions}
+            />
+        }
+    }
+
+    if (showUnsupported) {
+        return (
+            <div key={key}>
+                <b>UNSUPPORTED | </b>
+                {key} |{type}
+                <b>{safeValue?.toString()}</b>
+            </div>
+        )
+    }
+
+    return null
 }
