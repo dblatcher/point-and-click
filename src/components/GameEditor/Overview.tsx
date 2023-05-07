@@ -1,17 +1,23 @@
-
 import { FunctionComponent } from "react";
-import { Table, TableBody, TableCell, TableRow, Stack, Box, Paper, TableContainer } from "@mui/material"
+import { Table, TableBody, TableCell, TableRow, Stack, Paper, TableContainer } from "@mui/material"
 import { listIds } from "@/lib/util";
-import { GameDesign } from "@/definitions/Game";
-import { SelectInput, StringInput } from "./formControls";
+import { GameDesign, GameContentsDataSchema, FixedGameInfoSchema } from "@/definitions/Game";
 import { FlagMapControl } from "./FlagMapControl";
 import { EditorHeading } from "./EditorHeading";
 import { EditorBox } from "./EditorBox";
+import { SchemaForm } from "@/components/SchemaForm";
 
 interface Props {
   gameDesign: GameDesign;
   edit: { (property: keyof GameDesign, value: unknown): void };
 }
+
+const formSchema = GameContentsDataSchema.pick({
+  id: true,
+  currentRoomId: true,
+}).merge(FixedGameInfoSchema.pick({
+  openingSequenceId: true
+}))
 
 export const Overview: FunctionComponent<Props> = ({
   gameDesign,
@@ -24,32 +30,27 @@ export const Overview: FunctionComponent<Props> = ({
       <Stack direction={'row'} spacing={1} paddingY={1}>
 
         <EditorBox title="attributes">
-          <StringInput block
-            value={gameDesign.id}
-            label="Game ID"
-            inputHandler={(value) => {
-              edit("id", value);
+          <SchemaForm
+            schema={formSchema}
+            data={gameDesign}
+            changeValue={(value, field) => {
+              switch (field.key) {
+                case 'id':
+                case 'currentRoomId':
+                case 'openingSequenceId':
+                  edit(field.key, value)
+              }
             }}
-          />
-
-          <SelectInput block
-            value={gameDesign.currentRoomId}
-            label={"Starting Room"}
-            items={listIds(gameDesign.rooms)}
-            onSelect={(value) => {
-              edit("currentRoomId", value);
+            fieldAliases={{
+              id: 'Game ID',
+              currentRoomId: 'Starting Room',
+              openingSequenceId: 'Opening Sequence',
             }}
-          />
-
-          <SelectInput block
-            value={gameDesign.openingSequenceId || ''}
-            label={"OpeningSequence"}
-            haveEmptyOption={true}
-            emptyOptionLabel="[none]"
-            items={listIds(gameDesign.sequences)}
-            onSelect={(value) => {
-              edit("openingSequenceId", value);
+            options={{
+              currentRoomId: listIds(gameDesign.rooms),
+              openingSequenceId: listIds(gameDesign.sequences)
             }}
+            fieldWrapperProps={{ spacing: 2 }}
           />
         </EditorBox>
 

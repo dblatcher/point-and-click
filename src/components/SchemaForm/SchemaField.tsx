@@ -31,7 +31,7 @@ export function SchemaField<T extends z.ZodRawShape>({
     showUnsupported = false,
     numberInputSettings = {}
 }: SchemaFieldProps<T>) {
-    const { key, optional, type, value } = field;
+    const { key, optional, type, value, alias } = field;
     const isSupported = ['ZodString', 'ZodBoolean', 'ZodNumber', 'ZodEnum'].includes(type)
     if (!isSupported && !showUnsupported) { return null }
 
@@ -45,7 +45,7 @@ export function SchemaField<T extends z.ZodRawShape>({
 
     if (type === 'ZodString' && (typeof value === 'string' || typeof value === 'undefined')) {
         if (options) {
-            return <SelectInput label={key}
+            return <SelectInput label={alias ?? key}
                 value={value || ''}
                 inputHandler={value => change(value, field)}
                 options={options}
@@ -54,7 +54,7 @@ export function SchemaField<T extends z.ZodRawShape>({
             />
         }
 
-        return <StringInput label={key}
+        return <StringInput label={alias ?? key}
             value={value || ''}
             type={stringInputType}
             suggestions={suggestions}
@@ -64,12 +64,12 @@ export function SchemaField<T extends z.ZodRawShape>({
 
     if (type === 'ZodBoolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {
         if (noTriState || !optional) {
-            return <BooleanInput label={key}
+            return <BooleanInput label={alias ?? key}
                 value={value ?? false}
                 inputHandler={(value): void => { change(value, field) }}
             />
         }
-        return <TriStateInput label={key}
+        return <TriStateInput label={alias ?? key}
             value={value}
             inputHandler={(value): void => { change(value, field) }}
         />
@@ -78,13 +78,13 @@ export function SchemaField<T extends z.ZodRawShape>({
     if (type === 'ZodNumber') {
         if (typeof value === 'number' || typeof value === 'undefined') {
             return field.optional ? (
-                <OptionalNumberInput label={key}
+                <OptionalNumberInput label={alias ?? key}
                     {...numberInputSettings}
                     value={value}
                     inputHandler={(value) => { change(value, field) }}
                 />
             ) : (
-                <NumberInput label={key}
+                <NumberInput label={alias ?? key}
                     {...numberInputSettings}
                     value={value || 0}
                     inputHandler={(value) => { change(value, field) }}
@@ -95,7 +95,7 @@ export function SchemaField<T extends z.ZodRawShape>({
 
     if (type === 'ZodEnum' && !optional && field.enumOptions) {
         if ((typeof value === 'string')) {
-            return <SelectInput label={key}
+            return <SelectInput label={alias ?? key}
                 value={value}
                 inputHandler={value => change(value, field)}
                 options={field.enumOptions}

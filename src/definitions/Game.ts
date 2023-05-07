@@ -21,7 +21,7 @@ const GameHappeningsSchema = z.object({
     gameNotBegun: z.boolean(),
 })
 
-const GameContentsDataSchema = z.object({
+export const GameContentsDataSchema = z.object({
     rooms: RoomDataSchema.array(),
     items: ItemDataSchema.array(),
     actors: ActorDataSchema.array(),

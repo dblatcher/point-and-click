@@ -12,6 +12,7 @@ interface Props<T extends z.ZodRawShape> {
     data: Record<string, unknown>;
     changeValue: { (value: FieldValue, field: FieldDef): void };
     options?: Partial<Record<keyof T, string[]>>;
+    fieldAliases?: Partial<Record<keyof T, string>>;
     optionDescriptions?: Partial<Record<keyof T, string[]>>;
     suggestions?: Partial<Record<keyof T, string[]>>;
     numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
@@ -28,7 +29,7 @@ interface Props<T extends z.ZodRawShape> {
 export function SchemaForm<T extends z.ZodRawShape>({
     formLegend, schema, data,
     changeValue,
-    options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {},
+    options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {}, fieldAliases = {},
     containerProps: containerProps = {}, legendProps = {}, fieldWrapperProps = {}
 }: Props<T>) {
 
@@ -45,6 +46,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
 
         fields.push({
             key,
+            alias: fieldAliases[key],
             optional: zod.isOptional(),
             type,
             value: data[key],
@@ -56,7 +58,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
 
     return <Stack component={'article'} {...containerProps}  >
         {formLegend && <Typography variant='h5' component={'legend'} {...legendProps}>{formLegend}</Typography>}
-        <Stack {...fieldWrapperProps}>
+        <Stack spacing={1} {...fieldWrapperProps}>
             {fields.map(field =>
                 <SchemaField key={field.key}
                     noTriState

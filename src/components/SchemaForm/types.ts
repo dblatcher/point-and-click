@@ -1,5 +1,6 @@
 export interface FieldDef {
     key: string;
+    alias?: string;
     optional: boolean;
     type: string;
     value: unknown;
@@ -14,8 +15,8 @@ export type NumberInputSettings = {
 }
 
 export type FieldProps = {
-	label?: string;
-	error?: string;
-	optional?: boolean;
-	readOnly?: boolean;
+    label?: string;
+    error?: string;
+    optional?: boolean;
+    readOnly?: boolean;
 };
