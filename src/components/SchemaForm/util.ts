@@ -10,3 +10,8 @@ export function eventToBoolean(
 export function eventToString(event: FormEvent, defaultValue = ''): string {
 	return (event.target as HTMLInputElement).value;
 }
+
+export function eventToNumber(event: FormEvent, defaultValue = 0): number {
+	const numericalValue = Number((event.target as HTMLInputElement).value);
+	return isNaN(numericalValue) ? defaultValue : numericalValue;
+}

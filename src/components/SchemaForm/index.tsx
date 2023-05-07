@@ -1,6 +1,7 @@
 import { z } from "zod"
 import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
 import { SchemaField } from "./SchemaField"
+import { Stack } from "@mui/material"
 
 export type { FieldValue, FieldDef, NumberInputSettings }
 export { getModification } from "./getModification"
@@ -44,7 +45,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
         })
     }
 
-    return <article>
+    return <Stack component={'article'} spacing={1}>
         {fields.map(field =>
             <SchemaField key={field.key}
                 noTriState
@@ -57,5 +58,5 @@ export function SchemaForm<T extends z.ZodRawShape>({
                 stringInputType={field.key === 'text' ? 'textArea' : undefined}
             />
         )}
-    </article>
+    </Stack>
 }

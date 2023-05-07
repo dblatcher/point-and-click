@@ -2,7 +2,8 @@ import { z } from "zod"
 import { ReactNode } from "react";
 import {
     // CheckBoxInput, 
-    NumberInput, OptionalNumberInput, 
+    // NumberInput, 
+    OptionalNumberInput, 
     TriStateInput,
     // SelectInput, 
     // StringInput
@@ -12,6 +13,7 @@ import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
 import { StringInput } from "./StringInput";
 import { BooleanInput } from "./BooleanInput";
 import { SelectInput } from "./SelectInput";
+import { NumberInput } from "./NumberInput";
 
 interface SchemaFieldProps<T> {
     field: FieldDef;
