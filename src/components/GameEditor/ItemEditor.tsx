@@ -7,10 +7,10 @@ import editorStyles from "./editorStyles.module.css"
 import { ItemMenu } from "../game-ui/ItemMenu";
 import { cloneData } from "@/lib/clone";
 import { StorageMenu } from "./StorageMenu";
-import { DataItemEditorProps } from "./dataEditors";
+import { DataItemEditorProps, EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "./dataEditors";
 import { FramePicker } from "./SpriteEditor/FramePicker";
 import { EditorHeading } from "./EditorHeading";
-import { Box, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { EditorBox } from "./EditorBox";
 
 type Props = DataItemEditorProps<ItemData> & {
@@ -30,6 +30,7 @@ const makeNewItem: { (): ItemData } = () => (
 
 export class ItemEditor extends Component<Props, State> {
 
+    setStateWithAutosave: EnhancedSetStateFunction<State>
     constructor(props: Props) {
         super(props)
 
@@ -42,25 +43,15 @@ export class ItemEditor extends Component<Props, State> {
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.changeValue = this.changeValue.bind(this)
-        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
+        this.setStateWithAutosave = higherLevelSetStateWithAutosave(this).bind(this)
         this.changeFrame = this.changeFrame.bind(this)
     }
 
-    setStateWithAutosave(input: Partial<State> | { (state: State): Partial<State> }, callback?: { (): void }) {
-        const { options, data, updateData, itemIds = [] } = this.props
-
-        if (!options.autoSave) {
-            return this.setState(input, callback)
-        }
-
-        return this.setState(input, () => {
-            if (data && itemIds.includes(this.state.id)) {
-                updateData(this.state)
-            }
-            if (callback) {
-                callback()
-            }
-        })
+    get currentData() {
+        return this.state
+    }
+    get existingIds() {
+        return this.props.itemIds
     }
 
     handleResetButton() {
