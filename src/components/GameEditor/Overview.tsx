@@ -1,11 +1,11 @@
-import { FunctionComponent } from "react";
-import { Table, TableBody, TableCell, TableRow, Stack, Paper, TableContainer } from "@mui/material"
-import { listIds } from "@/lib/util";
-import { GameDesign, GameContentsDataSchema, FixedGameInfoSchema } from "@/definitions/Game";
-import { FlagMapControl } from "./FlagMapControl";
-import { EditorHeading } from "./EditorHeading";
-import { EditorBox } from "./EditorBox";
 import { SchemaForm } from "@/components/SchemaForm";
+import { FixedGameInfoSchema, GameContentsDataSchema, GameDesign } from "@/definitions/Game";
+import { listIds } from "@/lib/util";
+import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
+import { FunctionComponent } from "react";
+import { EditorBox } from "./EditorBox";
+import { EditorHeading } from "./EditorHeading";
+import { FlagMapControl } from "./FlagMapControl";
 
 interface Props {
   gameDesign: GameDesign;

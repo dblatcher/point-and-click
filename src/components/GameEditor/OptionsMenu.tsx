@@ -1,8 +1,7 @@
-import { Dialog, DialogTitle, DialogContent, IconButton, Tooltip, Switch, FormGroup, FormControlLabel, Typography } from '@mui/material'
-import { CheckBoxInput } from './formControls'
-import { EditorOptions } from '.'
-import { useState } from 'react'
 import Settings from '@mui/icons-material/Settings'
+import { Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup, IconButton, Switch, Tooltip } from '@mui/material'
+import { useState } from 'react'
+import { EditorOptions } from '.'
 
 interface Props {
     options: EditorOptions
