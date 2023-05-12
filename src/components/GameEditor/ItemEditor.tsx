@@ -1,24 +1,24 @@
-import { Component } from "react"
-import { ItemData } from "@/definitions"
-import { SelectInput, StringInput } from "./formControls";
-import { ServiceItemSelector } from "./ServiceItemSelector";
-import imageService, { ImageAsset } from "@/services/imageService";
-import editorStyles from "./editorStyles.module.css"
-import { ItemMenu } from "../game-ui/ItemMenu";
+import { ItemData } from "@/definitions";
 import { cloneData } from "@/lib/clone";
+import imageService, { ImageAsset } from "@/services/imageService";
+import { Stack, Dialog, Button, DialogContent, DialogActions, DialogTitle, Typography } from "@mui/material";
+import { Component } from "react";
+import { SelectInput } from "../SchemaForm/SelectInput";
+import { ItemMenu } from "../game-ui/ItemMenu";
+import { EditorBox } from "./EditorBox";
+import { EditorHeading } from "./EditorHeading";
+import { ServiceItemSelector } from "./ServiceItemSelector";
+import { FramePicker } from "./SpriteEditor/FramePicker";
 import { StorageMenu } from "./StorageMenu";
 import { DataItemEditorProps, EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "./dataEditors";
-import { FramePicker } from "./SpriteEditor/FramePicker";
-import { EditorHeading } from "./EditorHeading";
-import { Stack } from "@mui/material";
-import { EditorBox } from "./EditorBox";
+import { StringInput } from "../SchemaForm/StringInput";
 
 type Props = DataItemEditorProps<ItemData> & {
     actorIds: string[];
     itemIds: string[];
 }
 type State = ItemData & {
-
+    dialogOpen: boolean
 }
 
 const makeNewItem: { (): ItemData } = () => (
@@ -37,7 +37,8 @@ export class ItemEditor extends Component<Props, State> {
         const initialData = props.data ? cloneData(props.data) : makeNewItem();
 
         this.state = {
-            ...initialData
+            ...initialData,
+            dialogOpen: false,
         }
 
         this.handleResetButton = this.handleResetButton.bind(this)
@@ -47,8 +48,9 @@ export class ItemEditor extends Component<Props, State> {
         this.changeFrame = this.changeFrame.bind(this)
     }
 
-    get currentData() {
-        return this.state
+    get currentData(): ItemData {
+        const { id, type, name, status, actorId, imageId, col, row } = this.state
+        return { id, type, name, status, actorId, imageId, col, row }
     }
     get existingIds() {
         return this.props.itemIds
@@ -66,7 +68,7 @@ export class ItemEditor extends Component<Props, State> {
     }
 
     changeValue(propery: keyof ItemData, newValue: string | undefined) {
-        const modification: Partial<State> = {}
+        const modification: Partial<ItemData> = {}
         switch (propery) {
             case 'id':
                 if (typeof newValue === 'string') {
@@ -109,38 +111,36 @@ export class ItemEditor extends Component<Props, State> {
                 <EditorHeading heading="Item Editor" helpTopic="items" itemId={id} />
                 <Stack direction={'row'} spacing={1}>
                     <EditorBox title="Data">
-                        <StringInput
-                            block className={editorStyles.row}
-                            label="id" value={id}
-                            inputHandler={(value) => changeValue('id', value)} />
-                        <StringInput
-                            block className={editorStyles.row}
-                            label="name" value={name || ''}
-                            inputHandler={(value) => changeValue('name', value)} />
+                        <Stack spacing={2}>
+                            <StringInput
+                                label="id" value={id}
+                                inputHandler={(value) => changeValue('id', value)} />
+                            <StringInput
+                                label="name" value={name || ''}
+                                inputHandler={(value) => changeValue('name', value)} />
+                            <SelectInput
+                                label="actorId"
+                                optional
+                                options={this.props.actorIds}
+                                value={actorId}
+                                inputHandler={id => { changeValue('actorId', id) }} />
 
-                        <SelectInput
-                            block className={editorStyles.row}
-                            label="actorId"
-                            emptyOptionLabel="[no Actor]"
-                            items={this.props.actorIds}
-                            value={actorId}
-                            haveEmptyOption={true}
-                            onSelect={id => { changeValue('actorId', id) }} />
+                            <Button
+                                onClick={() => { this.setState({ dialogOpen: true }) }}
+                                variant="outlined"
+                            >
+                                pick icon
+                            </Button>
+                        </Stack>
+                    </EditorBox>
 
-                        <ServiceItemSelector legend='picture'
-                            format="select"
-                            filterItems={item => (item as ImageAsset).category === 'item' || (item as ImageAsset).category === 'any'}
-                            select={item => changeValue('imageId', item.id)}
-                            selectNone={() => changeValue('imageId', undefined)}
-                            service={imageService}
-                            selectedItemId={this.state.imageId} />
-
-                        {imageAsset?.rows && (
-                            <div>row: {this.state.row}</div>
-                        )}
-                        {imageAsset?.cols && (
-                            <div>col: {this.state.col}</div>
-                        )}
+                    <EditorBox title="Button Preview">
+                        <Stack sx={{maxWidth:'10rem'}}>
+                            <Typography variant="caption">Selected:</Typography>
+                            <ItemMenu key={`${imageKey}-selected`} items={[this.state]} currentItemId={id} select={() => true} />
+                            <Typography variant="caption">Not Selected:</Typography>
+                            <ItemMenu key={`${imageKey}-not-selected`} items={[this.state]} currentItemId={''} select={() => true} />
+                        </Stack>
                     </EditorBox>
 
                     <StorageMenu
@@ -154,27 +154,32 @@ export class ItemEditor extends Component<Props, State> {
                     />
                 </Stack>
 
-                {(imageAsset?.rows || imageAsset?.cols) && (
-                    <Stack direction={'row'}>
+                <Dialog
+                    open={this.state.dialogOpen}
+                    onClose={() => { this.setState({ dialogOpen: false }) }}
+                >
+                    <DialogTitle>
+                        Pick Icon for {this.state.id}
+                    </DialogTitle>
+                    <DialogContent>
+                        <ServiceItemSelector legend='image asset'
+                            format="select"
+                            filterItems={item => (item as ImageAsset).category === 'item' || (item as ImageAsset).category === 'any'}
+                            select={item => changeValue('imageId', item.id)}
+                            selectNone={() => changeValue('imageId', undefined)}
+                            service={imageService}
+                            selectedItemId={this.state.imageId} />
                         <FramePicker fixedSheet
                             sheetId={this.state.imageId}
                             row={this.state.row || 0}
                             col={this.state.col || 0}
                             pickFrame={this.changeFrame}
                         />
-                    </Stack>
-                )}
-
-                <Stack direction={'row'}>
-                    <EditorBox title="Button Preview">
-                        <Stack>
-                            <span>Selected:</span>
-                            <ItemMenu key={`${imageKey}-selected`} items={[this.state]} currentItemId={id} select={() => true} />
-                            <span>Not Selected:</span>
-                            <ItemMenu key={`${imageKey}-not-selected`} items={[this.state]} currentItemId={''} select={() => true} />
-                        </Stack>
-                    </EditorBox>
-                </Stack>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => { this.setState({ dialogOpen: false }) }}>done</Button>
+                    </DialogActions>
+                </Dialog>
             </Stack>
         )
     }

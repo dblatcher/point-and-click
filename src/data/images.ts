@@ -46,7 +46,7 @@ const buildAssets = (filenames: string[], path: string, category: ImageAssetCate
 
 const imageAssets: ImageAsset[] = [
     ...buildAssets(backgroundFileNames, backgroundPath, 'background'),
-    ...buildAssets(itemFileNames, itemPath, 'spriteSheet', 'ITEM_'),
+    ...buildAssets(itemFileNames, itemPath, 'any', 'ITEM_'),
     ...buildAssets(actorSpriteFileNames, actorSpritePath, 'spriteSheet'),
     ...buildAssets(thingSpriteFileNames, thingSpritePath, 'spriteSheet'),
 ]
@@ -65,6 +65,7 @@ setFrameProperties("skinner-1-r.png", { cols: 12, rows: 1 });
 setFrameProperties("skinner-2-l.png", { cols: 5, rows: 1, widthScale:1.75 });
 setFrameProperties("skinner-2-r.png", { cols: 5, rows: 1, widthScale:1.75 });
 setFrameProperties("Fire.png", { cols: 4, rows: 2 });
+setFrameProperties("boy.png", { cols: 4, rows: 4, category:'any'});
 
 
 export { imageAssets };
