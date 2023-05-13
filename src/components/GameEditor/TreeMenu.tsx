@@ -1,5 +1,6 @@
 import { FunctionComponent } from "react";
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Button, Box, useTheme } from "@mui/material";
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, useTheme, List, ListItemButton, ListItemText } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
 export type FolderClickFunction = { (folderId: string): void }
@@ -28,13 +29,17 @@ export const TreeMenu: FunctionComponent<Props> = ({ folders, folderClick, entry
     const theme = useTheme()
     return (<Box>
         {folders.map((folder, index) => (
-            <Accordion disableGutters key={index} expanded={folder.open} onChange={() => {
-                folderClick(folder.id)
-            }}>
-                <AccordionSummary sx={{
-                    backgroundColor: folder.open ? theme.palette.primary.main : undefined,
-                    color: folder.open ? theme.palette.primary.contrastText : undefined,
-                }}
+            <Accordion
+                disableGutters key={index}
+                expanded={folder.open}
+                onChange={() => { folderClick(folder.id) }
+                }>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    sx={{
+                        backgroundColor: folder.open ? theme.palette.primary.main : undefined,
+                        color: folder.open ? theme.palette.primary.contrastText : undefined,
+                    }}
                 >
                     <Typography>
                         {folder.label ?? folder.id}
@@ -42,20 +47,19 @@ export const TreeMenu: FunctionComponent<Props> = ({ folders, folderClick, entry
                 </AccordionSummary>
 
                 {folder.entries && (
-
                     <AccordionDetails sx={{
-                        padding:0.5
+                        padding: 0
                     }}>
-                        {folder.entries?.map(entry => (
-                            <Button
-                                key={folder.id + entry.data.id}
-                                fullWidth
-                                size="small"
-                                variant={entry.active ? 'contained' : 'outlined'}
-                                onClick={() => { entryClick(folder.id, entry.data, entry.isForNew) }}>
-                                <span>{entry.label || entry.data.id}</span>
-                            </Button>
-                        ))}
+                        <List dense>
+                            {folder.entries?.map(entry => (
+                                <ListItemButton
+                                    key={folder.id + entry.data.id}
+                                    selected={entry.active}
+                                    onClick={() => { entryClick(folder.id, entry.data, entry.isForNew) }}>
+                                    <ListItemText primary={entry.label || entry.data.id} />
+                                </ListItemButton>
+                            ))}
+                        </List>
                     </AccordionDetails>
                 )}
             </Accordion>
