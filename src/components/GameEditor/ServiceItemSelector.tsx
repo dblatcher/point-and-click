@@ -1,11 +1,11 @@
 import { FunctionComponent, useEffect, useState } from "react";
-import { eventToString } from "@/lib/util";
 import { Service, ServiceItem } from "@/services/Service";
-import { icons } from "./dataEditors";
 
-import editorStyles from "./editorStyles.module.css"
-import { StringInput } from "./formControls";
-
+import { StringInput } from "../SchemaForm/StringInput";
+import { SelectInput } from "../SchemaForm/SelectInput";
+import { Box, List, IconButton, ListItemButton, ListItemText } from "@mui/material";
+import { EditorBox } from "./EditorBox";
+import DeleteIcon from "@mui/icons-material/Delete"
 
 interface Props {
     service: Service<ServiceItem>;
@@ -60,33 +60,32 @@ export const ServiceItemSelector: FunctionComponent<Props> = ({
     switch (format) {
         case 'select':
             return (
-                <span>
-                    <label>{legend}:</label>
-                    <select value={selectedItemId} 
-                        onChange={event => { handleSelect(eventToString(event.nativeEvent)) }}>
-                        <option value=''>(select)</option>
-                        {list.map(id =>
-                            <option key={id} value={id}>{id}</option>
-                        )}
-                    </select>
-                </span>
+                <Box padding={1}>
+                    <SelectInput label={legend}
+                        optional options={list}
+                        value={selectedItemId}
+                        inputHandler={value => { handleSelect(value ?? '') }} />
+                </Box>
+
             )
         case 'buttons':
         default:
-
-            return <fieldset className={editorStyles.fieldset}>
-                <legend>{legend}</legend>
-                <StringInput label="search" block value={searchInput} inputHandler={setSearchInput} />
-                <div>
-                    <ul className={editorStyles.flexList}>
+            return (
+                <EditorBox title={legend}>
+                    <StringInput label="search" value={searchInput} inputHandler={setSearchInput} />
+                    <List dense>
                         {searchedList.map(id =>
-                            <li key={id}>
-                                <button onClick={() => { handleSelect(id) }}>{id === currentSelection ? `** ${id} **` : id}</button>
-                                <button className={[editorStyles.button, editorStyles.deleteButton].join(" ")} onClick={() => { handleDelete(id) }}>{icons.DELETE}</button>
-                            </li>
+                            <ListItemButton
+                                selected={id === currentSelection}
+                                key={id} onClick={() => { handleSelect(id) }}>
+                                <ListItemText primary={id} />
+                                <IconButton edge="end" aria-label="delete" onClick={() => { handleDelete(id) }}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </ListItemButton>
                         )}
-                    </ul>
-                </div>
-            </fieldset>
+                    </List>
+                </EditorBox>
+            )
     }
 }
