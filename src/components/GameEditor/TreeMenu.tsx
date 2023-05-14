@@ -1,5 +1,6 @@
 import { FunctionComponent } from "react";
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, useTheme, List, ListItemButton, ListItemText } from "@mui/material";
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, useTheme, List, ListItemButton, ListItemText, ListItemIcon } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
@@ -27,7 +28,7 @@ interface Props {
 
 export const TreeMenu: FunctionComponent<Props> = ({ folders, folderClick, entryClick }: Props) => {
     const theme = useTheme()
-    return (<Box sx={{overflowY:'auto'}}>
+    return (<Box sx={{ overflowY: 'auto' }}>
         {folders.map((folder, index) => (
             <Accordion
                 disableGutters key={index}
@@ -56,7 +57,13 @@ export const TreeMenu: FunctionComponent<Props> = ({ folders, folderClick, entry
                                     key={folder.id + entry.data.id}
                                     selected={entry.active}
                                     onClick={() => { entryClick(folder.id, entry.data, entry.isForNew) }}>
-                                    <ListItemText primary={entry.label || entry.data.id} />
+
+                                    {entry.isForNew && (
+                                        <ListItemIcon>
+                                            <AddIcon />
+                                        </ListItemIcon>
+                                    )}
+                                    <ListItemText inset={!entry.isForNew} primary={entry.label || entry.data.id} />
                                 </ListItemButton>
                             ))}
                         </List>

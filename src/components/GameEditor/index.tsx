@@ -286,11 +286,10 @@ export default class GameEditor extends Component<Props, State>{
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
             if (entries) {
-
                 entries.push({
                     data: { id: '' },
                     active: !entryId,
-                    label: `➕ NEW`,
+                    label: '[add new]',
                     isForNew: true
                 })
             }
