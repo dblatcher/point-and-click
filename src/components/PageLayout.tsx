@@ -13,7 +13,7 @@ const standardOuterBoxProps: BoxProps = {
     display: 'flex', paddingTop: '4rem',
 }
 const standardInnerBoxProps: BoxProps = {
-    sx: { width: '100%' }, flex: 1, flexGrow: 0,
+    sx: { width: '100%' }, flexBasis: "100%",
 }
 
 const noPageScrollOuterBoxProps: BoxProps = {
