@@ -5,6 +5,9 @@ import { LinkButton } from './LinkButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useRouter } from 'next/router'
 
+interface Props {
+    position?: "fixed" | "relative" | "absolute" | "sticky" | "static" | undefined
+}
 
 const navItems: { label: string, href: string }[] = [
     { label: 'homepage', href: '/' },
@@ -13,13 +16,13 @@ const navItems: { label: string, href: string }[] = [
     { label: 'game editor', href: '/editor' },
 ]
 
-export function AppHeader() {
+export function AppHeader({ position }: Props) {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const router = useRouter()
     const { pathname } = router
 
     return (
-        <AppBar component='header'>
+        <AppBar component='header' position={position}>
             <Toolbar>
                 <IconButton onClick={() => { setDrawerOpen(!drawerOpen) }}>
                     <MenuIcon htmlColor='white' />

@@ -1,14 +1,31 @@
 import Head from 'next/head'
 import { AppHeader } from '@/components/AppHeader'
-import { Box } from '@mui/material'
+import { Box, BoxProps } from '@mui/material'
 import { ReactNode } from 'react'
 
 
 interface Props {
     children: ReactNode
+    noPageScroll?: boolean
 }
 
-export function PageLayout({ children }: Props) {
+const standardOuterBoxProps: BoxProps = {
+    display: 'flex', paddingTop: '4rem',
+}
+const standardInnerBoxProps: BoxProps = {
+    sx: { width: '100%' },
+}
+
+const noPageScrollOuterBoxProps: BoxProps = {
+    display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden',
+}
+const noPageScrollInnerBoxProps: BoxProps = {
+    sx: { width: '100%' }, flex: 1,
+}
+
+export function PageLayout({ children, noPageScroll }: Props) {
+    const outerBoxProps = noPageScroll ? noPageScrollOuterBoxProps : standardOuterBoxProps;
+    const innerBoxProps = noPageScroll ? noPageScrollInnerBoxProps : standardInnerBoxProps;
     return (
         <>
             <Head>
@@ -18,9 +35,9 @@ export function PageLayout({ children }: Props) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Box sx={{ display: 'flex' }} paddingTop={'4rem'}>
-                <AppHeader />
-                <Box component='main' sx={{ width: '100%' }}>
+            <Box {...outerBoxProps}>
+                <AppHeader position={noPageScroll ? 'relative' : undefined} />
+                <Box {...innerBoxProps}>
                     {children}
                 </Box>
             </Box>
