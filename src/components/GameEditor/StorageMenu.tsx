@@ -50,7 +50,7 @@ export const StorageMenu: FunctionComponent<Props> = ({
                     <Button size="small" onClick={reset}>Reset</Button>
                 }
                 {showUpdateButton &&
-                    <Button size="small" onClick={update}>{updateButtonText}</Button>
+                    <Button variant="contained" size="small" onClick={update}>{updateButtonText}</Button>
                 }
                 {showDeleteButton &&
                     <ButtonWithConfirm label={deleteButtonText}
