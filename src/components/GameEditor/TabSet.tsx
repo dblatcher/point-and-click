@@ -1,41 +1,46 @@
-import { CSSProperties, FunctionComponent, ReactNode } from "react";
+import { Box } from "@mui/material";
+import { FunctionComponent, ReactNode } from "react";
 
-export interface Tab {
+export interface TabSetItem {
     label: string;
     content: ReactNode;
 }
 
 interface Props {
-    tabs: Tab[];
+    tabs: TabSetItem[];
     openIndex: number;
-    backgroundColor?: string;
-    flex?: number;
-    containerStyle?: CSSProperties;
-}
-
-const tabStyle = (isOpen: boolean, backgroundColor?: string): CSSProperties => {
-    return {
-        display: isOpen ? 'block' : 'none',
-        backgroundColor,
-        padding: 5,
-    }
+    onlyRenderOpenTab?: boolean;
 }
 
 export const TabSet: FunctionComponent<Props> = ({
     tabs,
     openIndex,
-    backgroundColor,
-    containerStyle,
+    onlyRenderOpenTab,
 }: Props) => {
 
+    if (onlyRenderOpenTab) {
+        const openTab = tabs[openIndex]
+        if (!openTab) { return null }
+        return (
+            <Box
+                padding={1}
+                component={'section'}
+            >
+                {openTab.content}
+            </Box>
+        )
+    }
 
-    return <section style={containerStyle}>
-
+    return <>
         {tabs.map((tab, index) => (
-            <div key={index} style={tabStyle(index === openIndex, backgroundColor)}>
+            <Box
+                key={index}
+                padding={1}
+                component={'section'}
+                display={index === openIndex ? 'block' : 'none'}
+            >
                 {tab.content}
-            </div>
+            </Box>
         ))}
-    </section>
-
+    </>
 }

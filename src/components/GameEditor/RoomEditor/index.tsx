@@ -15,7 +15,7 @@ import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { uploadJsonData } from "@/lib/files";
 // components
 import { NumberInput, Warning } from "../formControls";
-import { TabSet, type Tab } from "@/components/GameEditor/TabSet";
+import { TabSet, type TabSetItem } from "@/components/GameEditor/TabSet";
 import { StorageMenu } from "../StorageMenu";
 import { ListEditor } from "../ListEditor";
 import { EditorHeading } from "../EditorHeading";
@@ -387,7 +387,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
     }
 
-    buildTabs(): Tab[] {
+    buildTabs(): TabSetItem[] {
         const {
             background, obstacleAreas = [], hotspots = [], walkableAreas = [],
             scaling = [],

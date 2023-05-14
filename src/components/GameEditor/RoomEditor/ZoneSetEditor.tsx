@@ -20,7 +20,7 @@ interface Props {
     clickEffect?: ClickEffect;
 }
 
-const getZoneLabel = (zone: Zone, type: string, index: number) => 'id' in zone ? zone.id : zone.ref || `${type} #${index}`
+const getZoneLabel = (zone: Zone, type: string, index: number): string => 'id' in zone && typeof zone.id === 'string' ? zone.id : zone.ref || `${type} #${index}`
 
 export const ZoneSetEditor: FunctionComponent<Props> = ({
     type,

@@ -385,7 +385,8 @@ export default class GameEditor extends Component<Props, State>{
                 </Stack>
 
                 <Box component={'section'} flex={1} sx={{ overflowY: 'auto' }}>
-                    <TabSet backgroundColor="none"
+                    <TabSet
+                        onlyRenderOpenTab
                         // ISSUE - re-rendering on undo clears the subcomponent state in TabMenus,
                         // making the UI switch to the first horizontal tag
                         // EG ActorEditor
