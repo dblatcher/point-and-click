@@ -13,14 +13,14 @@ const standardOuterBoxProps: BoxProps = {
     display: 'flex', paddingTop: '4rem',
 }
 const standardInnerBoxProps: BoxProps = {
-    sx: { width: '100%' },
+    sx: { width: '100%' }, flex: 1, flexGrow: 0,
 }
 
 const noPageScrollOuterBoxProps: BoxProps = {
     display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden',
 }
 const noPageScrollInnerBoxProps: BoxProps = {
-    sx: { width: '100%' }, flex: 1,
+    sx: { width: '100%', flexBasis: '100%', flexGrow: 0, overflow: 'hidden' }, display: 'flex', flexDirection: 'column',
 }
 
 export function PageLayout({ children, noPageScroll }: Props) {
@@ -35,9 +35,9 @@ export function PageLayout({ children, noPageScroll }: Props) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Box {...outerBoxProps}>
+            <Box {...outerBoxProps} className='LAYOUT_OUTER'>
                 <AppHeader position={noPageScroll ? 'relative' : undefined} />
-                <Box {...innerBoxProps}>
+                <Box {...innerBoxProps} className='LAYOUT_INNER'>
                     {children}
                 </Box>
             </Box>
