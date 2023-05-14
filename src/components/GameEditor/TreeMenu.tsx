@@ -27,7 +27,7 @@ interface Props {
 
 export const TreeMenu: FunctionComponent<Props> = ({ folders, folderClick, entryClick }: Props) => {
     const theme = useTheme()
-    return (<Box>
+    return (<Box sx={{overflowY:'auto'}}>
         {folders.map((folder, index) => (
             <Accordion
                 disableGutters key={index}

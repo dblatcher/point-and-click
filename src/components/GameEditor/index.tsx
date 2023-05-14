@@ -316,17 +316,24 @@ export default class GameEditor extends Component<Props, State>{
             makeFolder('test'),
         ]
 
-        return <Container maxWidth='xl'>
+        return <Container maxWidth='xl'
+            component={'main'}
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+            }}>
             <Stack
                 direction={'row'}
                 spacing={1}
-                component={'main'}
+                sx={{
+                    overflow: 'hidden',
+                }}
                 divider={<Divider orientation="vertical" flexItem />}
             >
                 <Stack
                     component={'nav'}
                     spacing={1}
-                    divider={<Divider orientation="horizontal" flexItem />}
                     width={250}
                 >
                     <Stack direction={'row'}>
@@ -339,7 +346,7 @@ export default class GameEditor extends Component<Props, State>{
                         <OptionsMenu options={this.state.options} setOptions={options => { this.setState({ options }) }} />
                     </Stack>
 
-                    <Typography variant="h2" noWrap gutterBottom sx={{ fontSize: '175%', paddingTop: 1 }}>
+                    <Typography variant="h2" noWrap gutterBottom sx={{ fontSize: '175%', paddingTop: 1, flexShrink: 0 }}>
                         {gameDesign.id}
                     </Typography>
 
@@ -376,15 +383,14 @@ export default class GameEditor extends Component<Props, State>{
                             })
                         }}
                     />
-
                 </Stack>
 
-                <Box component={'section'} flex={1}>
+                <Box component={'section'} flex={1} sx={{ overflowY: 'auto' }}>
                     <TabSet backgroundColor="none"
                         // ISSUE - re-rendering on undo clears the subcomponent state in TabMenus,
                         // making the UI switch to the first horizontal tag
                         // EG ActorEditor
-                        key={this.state.undoTime}  
+                        key={this.state.undoTime}
                         openIndex={tabOpen} tabs={[
                             {
                                 label: 'main', content: <Overview

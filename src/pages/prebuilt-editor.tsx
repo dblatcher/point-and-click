@@ -3,7 +3,7 @@ import { PageLayout } from '@/components/PageLayout'
 
 export default function GameEditorPage() {
   return (
-    <PageLayout>
+    <PageLayout noPageScroll>
       <EditorLoader usePrebuiltGame />
     </PageLayout>
   )
