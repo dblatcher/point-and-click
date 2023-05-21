@@ -1,4 +1,4 @@
-import { SoundControl, SoundDeck } from "physics-worlds";
+import { SoundControl, SoundDeck } from "sound-deck";
 import Zod, { object, string } from "zod";
 import { Service } from "./Service";
 

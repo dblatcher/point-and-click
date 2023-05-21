@@ -1,5 +1,5 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
-import { SoundControl } from "physics-worlds";
+import { SoundControl } from "sound-deck";
 import { useInterval } from "@/lib/useInterval"
 import soundService from "@/services/soundService";
 import type { SoundValue } from "@/definitions";
