@@ -1,12 +1,11 @@
 import { Component } from "react";
-import { Stack, Box, Container } from "@mui/material";
+import { Stack, Box, Container, Alert } from "@mui/material";
 import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import imageService from "@/services/imageService";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
 import { getBlankRoom } from "../defaults";
 import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
-import editorStyles from '../editorStyles.module.css';
 // lib
 import { Point } from "@/lib/pathfinding/geometry";
 import { cloneData } from "@/lib/clone";
@@ -30,6 +29,7 @@ import { ScalingControl } from "./ScalingControl";
 import { ZoneSetEditor } from "./ZoneSetEditor";
 import { NewZoneButtons } from "./NewZoneButtons";
 import { ZonePicker } from "./ZonePicker";
+import { SchemaForm, getModification } from "@/components/SchemaForm";
 
 export type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -391,7 +391,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const {
             background, obstacleAreas = [], hotspots = [], walkableAreas = [],
             scaling = [],
-            width, frameWidth, id, height
+            width, frameWidth,
         } = this.state
         const { existingRoomIds = [], options, deleteData } = this.props
         const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
@@ -399,25 +399,23 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         return [
             {
                 label: 'Room', content: (
-                    <Container maxWidth="xs">
-                        <div className={editorStyles.row}>
-                            <label >ID</label>
-                            <input type="text" value={id} onInput={event => this.setStateWithAutosave({ id: eventToString(event.nativeEvent) })} />
-                        </div>
-                        <div className={editorStyles.row}>
-                            <NumberInput label="height" value={height}
-                                inputHandler={height => this.setStateWithAutosave({ height })} />
-                        </div>
-                        <div className={editorStyles.row}>
-                            <NumberInput label="width" value={width}
-                                inputHandler={width => this.setStateWithAutosave({ width })} />
-                        </div>
-                        <div className={editorStyles.row}>
-                            <NumberInput label="Frame Width" value={frameWidth}
-                                inputHandler={frameWidth => this.setStateWithAutosave({ frameWidth })} />
-                        </div>
+                    <Container maxWidth="sm">
+                        <SchemaForm
+                            schema={RoomDataSchema.pick({
+                                id: true,
+                                height: true,
+                                width: true,
+                                frameWidth: true,
+                            })}
+                            data={this.state}
+                            changeValue={(value, fieldDef,) => {
+                                this.setStateWithAutosave(
+                                    getModification(value, fieldDef)
+                                )
+                            }}
+                        />
                         {frameWidth > width && (
-                            <Warning>frame width is bigger than room width</Warning>
+                            <Alert severity="warning">frame width is bigger than room width</Alert>
                         )}
                     </Container>
                 )
@@ -431,7 +429,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 )
             },
             {
-                label: 'Background', content: (<>
+                label: 'Background', content: (<Stack spacing={4}>
                     <ListEditor
                         list={background}
                         mutateList={(background) => { this.setStateWithAutosave({ background }) }}
@@ -442,11 +440,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                 change={this.changeBackground} />
                         )}
                     />
-                    <hr />
                     <BackgroundLayerForm
                         imageAssets={imageAssets}
                         addNewLayer={this.addBackground} />
-                </>)
+                </Stack>)
             },
             {
                 label: 'Obstacles', content: (

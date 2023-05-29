@@ -1,10 +1,11 @@
 
 import { FunctionComponent } from "react";
 import { ScaleLevel } from "@/definitions";
-import { NumberInput } from "../formControls";
+import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { cloneData } from "@/lib/clone"
 import { ListEditor } from "../ListEditor";
 import { clamp } from "@/lib/util";
+import { Stack } from "@mui/material";
 
 interface Props {
     scaling: ScaleLevel;
@@ -33,14 +34,16 @@ export const ScalingControl: FunctionComponent<Props> = ({ scaling, height, chan
             list={scaling}
             describeItem={(level, index) => {
                 const [y, scale] = level
-                return <div key={index}>
-                    <NumberInput label="Y" value={y}
-                        inputHandler={(value) => handleAdjustment(index, value, 'y')}
-                        max={height} min={0} step={5} />
-                    <NumberInput label="scale" value={scale}
-                        inputHandler={(value) => handleAdjustment(index, value, 'scale')}
-                        max={5} min={0} step={.1} />
-                </div>
+                return (
+                    <Stack key={index} direction={'row'} spacing={2}>
+                        <NumberInput label="Y" value={y}
+                            inputHandler={(value) => handleAdjustment(index, value, 'y')}
+                            max={height} min={0} step={5} />
+                        <NumberInput label="scale" value={scale}
+                            inputHandler={(value) => handleAdjustment(index, value, 'scale')}
+                            max={5} min={0} step={.1} />
+                    </Stack>
+                )
             }}
             mutateList={change}
             createItem={addNew}
