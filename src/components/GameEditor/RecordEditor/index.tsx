@@ -1,8 +1,8 @@
 import { ReactNode, useState } from "react";
-import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
+import { Box, IconButton, Paper, Stack, Typography, PaperProps } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add"
 import DeleteIcon from "@mui/icons-material/Delete"
-import { StringInput } from "../formControls";
+import { StringInput } from "@/components/SchemaForm/StringInput";
 
 interface Props<T> {
     record: Record<string, T | undefined>;
@@ -14,14 +14,15 @@ interface Props<T> {
     newKeySuggestions?: string[];
 };
 
+const PaperLi = (props: PaperProps) => <Paper {...props} component={'li'}>{props.children}</Paper>
 
 export const RecordEditor = <T,>({
-    record, 
-    addEntry, 
-    addEntryLabel, 
-    newKeySuggestions = [], 
-    describeValue, 
-    setEntry, 
+    record,
+    addEntry,
+    addEntryLabel,
+    newKeySuggestions = [],
+    describeValue,
+    setEntry,
     renderKeys = false
 }: Props<T>) => {
     const [newKey, setNewKey] = useState('')
@@ -43,13 +44,13 @@ export const RecordEditor = <T,>({
                     </Paper>
                 )
             })}
-            <Box component={'li'} display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+            <Box component={PaperLi} display={'flex'} justifyContent={'flex-end'} alignItems={'center'} padding={1}>
                 <StringInput value={newKey}
                     label={addEntryLabel || 'add entry'}
                     inputHandler={newKey => setNewKey(newKey)}
                     suggestions={newKeySuggestions.filter(suggestion => !existingKeys.includes(suggestion))}
                 />
-                <IconButton color="success" disabled={!newKey}
+                <IconButton color="primary" disabled={!newKey}
                     onClick={() => {
                         if (!newKey) { return }
                         setNewKey('')
