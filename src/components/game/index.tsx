@@ -26,6 +26,7 @@ import { SoundToggle } from "../game-ui/SoundToggle";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { UiComponentSet } from "./uiComponentSet";
 import { Layout } from "../game-ui/Layout";
+import { GameStateProvider } from "./game-state-context";
 
 
 export type GameProps = Readonly<{
@@ -283,18 +284,8 @@ export default class Game extends Component<GameProps, GameState> {
             clickHandler: (data.isPlayer || data.noInteraction) ? undefined : this.handleTargetClick
         }))
 
-        return <>
-            {showDebugLog && (
-                <DebugLog
-                    condition={{
-                        verbs,
-                        sequences: this.props.sequences,
-                        sprites: this.props.sprites,
-                        endings: this.props.endings,
-                        ...this.state,
-                    }}
-                    log={this.state.debugLog} />
-            )}
+        return <GameStateProvider value={this.state}>
+            {showDebugLog && (<DebugLog />)}
             <GameLayoutComponent
                 isConversationRunning={!!currentConversation}
                 isSequenceRunning={!!sequenceRunning}
@@ -352,7 +343,7 @@ export default class Game extends Component<GameProps, GameState> {
                 )
                 }
             </GameLayoutComponent>
-        </>
+        </GameStateProvider>
 
     }
 }

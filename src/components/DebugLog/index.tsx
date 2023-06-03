@@ -1,17 +1,14 @@
 
-import { FunctionComponent, useEffect, useRef } from "react";
-import { GameCondition, Order } from "@/definitions";
-import { type LogEntry } from "@/lib/inGameDebugging";
-import styles from "./styles.module.css"
+import { Order } from "@/definitions";
+import { useEffect, useRef } from "react";
+import { useGameState } from "../game/game-state-context";
+import styles from "./styles.module.css";
 
-interface Props {
-    condition: GameCondition;
-    log: LogEntry[];
-}
 
-export const DebugLog: FunctionComponent<Props> = ({
-    condition, log
-}: Props) => {
+export const DebugLog = () => {
+
+    const state = useGameState()
+    const log = state.debugLog
 
     const listRef = useRef<HTMLUListElement>(null)
     useEffect(() => {
@@ -20,7 +17,7 @@ export const DebugLog: FunctionComponent<Props> = ({
         listElement.scrollTo({ left: 0, top: listElement.scrollHeight })
     }, [log.length])
 
-    const actorsInRoom = condition.actors.filter(_ => _.room === condition.currentRoomId)
+    const actorsInRoom = state.actors.filter(_ => _.room === state.currentRoomId)
 
     const describeOrder = (order?: Order): [string, string] => {
         if (!order) { return ["", ""] }
@@ -31,7 +28,7 @@ export const DebugLog: FunctionComponent<Props> = ({
         return [order.type, currentStep?.animation || ""]
     }
     const getOrderDescrition = (actorId: string): [string, string] => {
-        const { sequenceRunning, actorOrders } = condition
+        const { sequenceRunning, actorOrders } = state
         if (sequenceRunning && sequenceRunning.stages.length > 0) {
             const [currentStage] = sequenceRunning.stages;
 
@@ -53,15 +50,13 @@ export const DebugLog: FunctionComponent<Props> = ({
         <aside>
             <div className={styles.layout}>
                 <section className={styles.statusSection}>
-                    <p>room:{condition.currentRoomId}</p>
-                    <p>sequence:{condition.sequenceRunning?.id}</p>
-                    <p>conversation:{condition.currentConversationId}</p>
+                    <p>room:{state.currentRoomId}</p>
+                    <p>sequence:{state.sequenceRunning?.id}</p>
+                    <p>conversation:{state.currentConversationId}</p>
                 </section>
             </div>
             <div className={styles.layout}>
                 <div>
-
-
                     <table className={styles.actorTable}>
                         <thead>
                             <tr>
@@ -93,7 +88,7 @@ export const DebugLog: FunctionComponent<Props> = ({
                             </tr>
                         </thead>
                         <tbody>
-                            {Object.entries(condition.flagMap).map(entry => {
+                            {Object.entries(state.flagMap).map(entry => {
                                 if (!entry || !entry[1]) { return null }
                                 const [flagKey, flag] = entry;
                                 return <tr key={flagKey}>
