@@ -1,32 +1,33 @@
 
+import { ActorData, CommandTarget, Conversation, ConversationChoice, Ending, GameCondition, GameData, ItemData, Order, RoomData, Verb } from "@/definitions";
 import { Component } from "react";
-import { GameData, GameCondition, RoomData, ActorData, Verb, CommandTarget, ItemData, Order, Conversation, ConversationChoice, Ending } from "@/definitions";
 //lib
-import { getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "@/lib/roomFunctions";
-import { clamp, findById } from "@/lib/util";
-import { cloneData } from "@/lib/clone";
 import { Sprite } from "@/lib/Sprite";
-import { CellMatrix, generateCellMatrix } from "@/lib/pathfinding/cells";
+import { cloneData } from "@/lib/clone";
 import { makeDebugEntry, type LogEntry } from "@/lib/inGameDebugging";
+import { CellMatrix, generateCellMatrix } from "@/lib/pathfinding/cells";
+import { buildContentsList } from "@/lib/put-contents-in-order";
+import { getViewAngleCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
+import { clamp, findById } from "@/lib/util";
 // state logic
-import { followOrder } from "./orders/followOrder";
-import { issueMoveOrder } from "./issueMoveOrder";
-import { doPendingInteraction, handleCommand } from "./handleCommand";
 import { continueSequence } from "./continueSequence";
+import { doPendingInteraction, handleCommand } from "./handleCommand";
 import { handleConversationChoice } from "./handleConversationChoice";
+import { issueMoveOrder } from "./issueMoveOrder";
+import { followOrder } from "./orders/followOrder";
 // components
-import { Room } from "../svg/Room";
 import { DebugLog } from "../DebugLog";
-import { VerbMenu } from "../game-ui/VerbMenu";
-import { ItemMenu } from "../game-ui/ItemMenu";
 import { CommandLine } from "../game-ui/CommandLine";
 import { ConversationMenu } from "../game-ui/ConversationMenu";
 import { EndingScreen } from "../game-ui/EndingScreen";
-import { SoundToggle } from "../game-ui/SoundToggle";
-import { SaveMenu } from "../game-ui/SaveMenu";
-import { UiComponentSet } from "./uiComponentSet";
+import { ItemMenu } from "../game-ui/ItemMenu";
 import { Layout } from "../game-ui/Layout";
+import { SaveMenu } from "../game-ui/SaveMenu";
+import { SoundToggle } from "../game-ui/SoundToggle";
+import { VerbMenu } from "../game-ui/VerbMenu";
+import { Room } from "../svg/Room";
 import { GameStateProvider } from "./game-state-context";
+import { UiComponentSet } from "./uiComponentSet";
 
 
 export type GameProps = Readonly<{
@@ -267,22 +268,13 @@ export default class Game extends Component<GameProps, GameState> {
             GameLayoutComponent = Layout,
         } = uiComponents
         const { viewAngle, isPaused,
-            actors, currentVerbId, currentItemId, items,
-            actorOrders, sequenceRunning, hoverTarget
+            currentVerbId, currentItemId, items,
+            sequenceRunning, hoverTarget
         } = this.state
         const { currentRoom, player, currentConversation } = this
 
-        const actorOrderMap = sequenceRunning ? sequenceRunning.stages[0].actorOrders || {} : actorOrders;
 
-        const actorsInOrder = actors
-            .filter(_ => _.room === currentRoom?.id)
-            .sort(putActorsInDisplayOrder)
-
-        const contentList: RoomContentItem[] = actorsInOrder.map(data => ({
-            data,
-            orders: actorOrderMap[data.id],
-            clickHandler: (data.isPlayer || data.noInteraction) ? undefined : this.handleTargetClick
-        }))
+        const contentList = buildContentsList(this.state, this.handleTargetClick)
 
         return <GameStateProvider value={this.state}>
             {showDebugLog && (<DebugLog />)}
