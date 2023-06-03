@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react'
 import { GameState } from '.'
+import { findById } from '@/lib/util'
 
 const gameStateContext = createContext<GameState>(
     {
@@ -30,11 +31,12 @@ export const useGameState = () => {
 
 export const useGameStateDerivations = () => {
     const gameState = useContext(gameStateContext)
-    const { currentConversationId, conversations, endingId, sequenceRunning } = gameState
+    const { currentConversationId, conversations, endingId, sequenceRunning, items, currentItemId } = gameState
 
     return {
-        isConversationRunning: !!currentConversationId && conversations.some(conversation => conversation.id === currentConversationId),
+        isConversationRunning: !!findById(currentConversationId, conversations),
         isGameEnded: !!endingId,
         isSequenceRunning: !!sequenceRunning,
+        currentItem: findById(currentItemId, items),
     }
 }
