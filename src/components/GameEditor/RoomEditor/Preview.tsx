@@ -8,6 +8,7 @@ import { eventToBoolean, eventToNumber } from "@/lib/util";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { makeTestActor } from "./testSprite";
 import { Stack, Checkbox, Accordion, AccordionSummary, AccordionDetails, Box, Typography } from "@mui/material";
+import { RangeInput } from "./RangeInput";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -87,19 +88,6 @@ export class Preview extends Component<Props, State>{
         )
     }
 
-    renderSlider(label: string, value: number, max: number, min: number, step: number, onChange: ChangeEventHandler<HTMLInputElement>, disabled = false) {
-        return (
-            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                <Typography component={'label'} variant="body2">{label}</Typography>
-                <input type='range' value={value}
-                    max={max} min={min} step={step}
-                    disabled={disabled}
-                    onChange={onChange} />
-                <Typography component={'span'} variant="body2">{value}</Typography>
-            </Stack>
-        )
-    }
-
     changeActorNumberProperty(value: number, property: 'x' | 'y' | 'height' | 'width') {
         this.setState(
             (state) => {
@@ -175,6 +163,10 @@ export class Preview extends Component<Props, State>{
             contents.push({ data: testActor })
         }
 
+        const testActorChange = (key: 'x' | 'y' | 'height' | 'width'): ChangeEventHandler<HTMLInputElement> =>
+            (event) =>
+                this.changeActorNumberProperty(eventToNumber(event.nativeEvent), key)
+
         return (
 
             <Stack spacing={1} alignItems={'flex-start'} direction={'row'} width={225}>
@@ -184,12 +176,22 @@ export class Preview extends Component<Props, State>{
                             <Typography>View</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                            {this.renderSlider('width', maxWidth, 800, 100, 25,
-                                (event) => this.setState({ maxWidth: eventToNumber(event.nativeEvent) }))
-                            }
-                            {this.renderSlider('angle', viewAngle, 1, -1, .01,
-                                (event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) }))
-                            }
+                            <RangeInput
+                                label="width"
+                                value={maxWidth}
+                                max={800} min={100} step={25}
+                                onChange={
+                                    (event) => this.setState({ maxWidth: eventToNumber(event.nativeEvent) })
+                                } />
+                            <RangeInput
+                                label="angle"
+                                value={viewAngle}
+                                formattedValue={`${Math.sign(viewAngle) !== -1 ? '+' : '-'}${Math.abs(viewAngle).toFixed(2)}`}
+                                max={1} min={-1} step={.01}
+                                onChange={
+                                    (event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) })
+                                } />
+
                             {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
                             {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
                             {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
@@ -202,24 +204,34 @@ export class Preview extends Component<Props, State>{
                         </AccordionSummary>
                         <AccordionDetails>
                             {this.renderCheckBox('Show', 'showTestActor')}
-
-                            {this.renderSlider('X', testActor.x, roomData.width, 0, 10,
-                                (event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'x'),
-                                !showTestActor
-                            )}
-                            {this.renderSlider('Y', testActor.y, roomData.height, 0, 10,
-                                (event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'y'),
-                                !showTestActor
-                            )}
-                            {this.renderSlider('base height', testActor.height, 200, 10, 10,
-                                (event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'height'),
-                                !showTestActor
-                            )}
-                            {this.renderSlider('base width', testActor.width, 200, 10, 10,
-                                (event) => this.changeActorNumberProperty(eventToNumber(event.nativeEvent), 'width'),
-                                !showTestActor
-                            )}
-
+                            <RangeInput
+                                label="X"
+                                value={testActor.x}
+                                max={roomData.width}
+                                onChange={testActorChange('x')}
+                                disabled={!showTestActor}
+                            />
+                            <RangeInput
+                                label="Y"
+                                value={testActor.y}
+                                max={roomData.height}
+                                onChange={testActorChange('y')}
+                                disabled={!showTestActor}
+                            />
+                            <RangeInput
+                                label="base height"
+                                value={testActor.height}
+                                max={200} min={10}
+                                onChange={testActorChange('height')}
+                                disabled={!showTestActor}
+                            />
+                            <RangeInput
+                                label="base width"
+                                value={testActor.width}
+                                max={200} min={10}
+                                onChange={testActorChange('width')}
+                                disabled={!showTestActor}
+                            />
                         </AccordionDetails>
                     </Accordion>
                 </Box>
