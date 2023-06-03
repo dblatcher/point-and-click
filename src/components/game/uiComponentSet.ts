@@ -1,19 +1,7 @@
-import { Verb, ItemData, CommandTarget, Conversation, ConversationChoice } from "@/definitions";
+import { Verb, ItemData, Conversation, ConversationChoice } from "@/definitions";
 import { FunctionComponent, ReactNode } from "react";
 import { HandleHoverFunction } from ".";
 
-export type CommandLineProps = {
-    verb?: Verb;
-    item?: ItemData;
-    target?: CommandTarget;
-    hoverTarget?: CommandTarget;
-}
-export const commandLinePropsAreEqual = (prevProps: CommandLineProps, nextProps: CommandLineProps): boolean => {
-    return prevProps.verb === nextProps.verb &&
-        prevProps.item === nextProps.item &&
-        prevProps.target === nextProps.target &&
-        prevProps.hoverTarget === nextProps.hoverTarget
-}
 
 export type VerbMenuProps = {
     verbs: Verb[];
@@ -59,7 +47,7 @@ export type GameLayoutProps = {
 }
 
 export type UiComponentSet = {
-    CommandLineComponent?: FunctionComponent<CommandLineProps>;
+    CommandLineComponent?: FunctionComponent<{}>;
     VerbMenuComponent?: FunctionComponent<VerbMenuProps>;
     ItemMenuComponent?: FunctionComponent<ItemMenuProps>;
     SaveMenuComponent?: FunctionComponent<SaveMenuProps>;

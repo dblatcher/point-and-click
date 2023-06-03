@@ -28,6 +28,7 @@ import { VerbMenu } from "../game-ui/VerbMenu";
 import { Room } from "../svg/Room";
 import { GameStateProvider } from "./game-state-context";
 import { UiComponentSet } from "./uiComponentSet";
+import { GameInfoProvider } from "./game-info-provider";
 
 
 export type GameProps = Readonly<{
@@ -269,70 +270,69 @@ export default class Game extends Component<GameProps, GameState> {
         } = uiComponents
         const { viewAngle, isPaused,
             currentVerbId, currentItemId, items,
-            hoverTarget
         } = this.state
         const { currentRoom, player, currentConversation } = this
 
 
         const contentList = buildContentsList(this.state, this.handleTargetClick)
 
-        return <GameStateProvider value={this.state}>
-            {showDebugLog && (<DebugLog />)}
-            <GameLayoutComponent
-                itemMenu={<ItemMenuComponent
-                    items={items.filter(_ => _.actorId === player?.id)}
-                    currentItemId={currentItemId}
-                    select={(item: ItemData) => { this.handleTargetClick(item) }}
-                    handleHover={this.handleHover}
-                />}
-                commandLine={<CommandLineComponent
-                    verb={this.currentVerb}
-                    item={this.currentItem}
-                    hoverTarget={hoverTarget}
-                />}
-                verbMenu={
-                    <VerbMenuComponent
-                        verbs={verbs}
-                        currentVerbId={currentVerbId}
-                        select={(verb: Verb) => { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }}
-                    />
-                }
-                conversationMenu={
-                    currentConversation && (
-                        <ConversationMenuComponent
-                            conversation={currentConversation}
-                            select={this.handleConversationClick}
-                        />
-                    )
-                }
-                endingScreen={this.ending && <EndingScreen ending={this.ending} />}
-                saveMenu={
-                    <SaveMenuComponent
-                        load={load ? () => { load() } : undefined}
-                        reset={reset ? () => { reset() } : undefined}
-                        save={save ? () => { save(this.saveData) } : undefined}
-                        isPaused={isPaused}
-                        setIsPaused={(isPaused) => { this.setState({ isPaused }) }}
-                    />
-                }
-                soundToggle={<SoundToggleComponent />}
-            >
-                {currentRoom && (
-                    <Room
-                        data={currentRoom}
-                        maxWidth={600} maxHeight={400}
-                        isPaused={isPaused}
-                        viewAngle={viewAngle}
-                        handleRoomClick={this.handleRoomClick}
-                        handleHotspotClick={this.handleTargetClick}
-                        handleHover={this.handleHover}
-                        contents={contentList}
-                        obstacleCells={renderCells ? this.state.cellMatrix : undefined}
-                    />
-                )
-                }
-            </GameLayoutComponent>
-        </GameStateProvider>
+        return (
+            <GameStateProvider value={this.state}>
+                <GameInfoProvider value={{ ...this.props, verb: this.currentVerb }}>
+                    {showDebugLog && (<DebugLog />)}
+                    <GameLayoutComponent
+                        itemMenu={<ItemMenuComponent
+                            items={items.filter(_ => _.actorId === player?.id)}
+                            currentItemId={currentItemId}
+                            select={(item: ItemData) => { this.handleTargetClick(item) }}
+                            handleHover={this.handleHover}
+                        />}
+                        commandLine={<CommandLineComponent />}
+                        verbMenu={
+                            <VerbMenuComponent
+                                verbs={verbs}
+                                currentVerbId={currentVerbId}
+                                select={(verb: Verb) => { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }}
+                            />
+                        }
+                        conversationMenu={
+                            currentConversation && (
+                                <ConversationMenuComponent
+                                    conversation={currentConversation}
+                                    select={this.handleConversationClick}
+                                />
+                            )
+                        }
+                        endingScreen={this.ending && <EndingScreen ending={this.ending} />}
+                        saveMenu={
+                            <SaveMenuComponent
+                                load={load ? () => { load() } : undefined}
+                                reset={reset ? () => { reset() } : undefined}
+                                save={save ? () => { save(this.saveData) } : undefined}
+                                isPaused={isPaused}
+                                setIsPaused={(isPaused) => { this.setState({ isPaused }) }}
+                            />
+                        }
+                        soundToggle={<SoundToggleComponent />}
+                    >
+                        {currentRoom && (
+                            <Room
+                                data={currentRoom}
+                                maxWidth={600} maxHeight={400}
+                                isPaused={isPaused}
+                                viewAngle={viewAngle}
+                                handleRoomClick={this.handleRoomClick}
+                                handleHotspotClick={this.handleTargetClick}
+                                handleHover={this.handleHover}
+                                contents={contentList}
+                                obstacleCells={renderCells ? this.state.cellMatrix : undefined}
+                            />
+                        )
+                        }
+                    </GameLayoutComponent>
+                </GameInfoProvider>
+            </GameStateProvider>
+        )
 
     }
 }
