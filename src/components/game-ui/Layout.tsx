@@ -1,11 +1,13 @@
+import { useGameStateDerivations } from "../game/game-state-context";
 import { GameLayoutProps } from "../game/uiComponentSet";
 
 
 export const Layout = ({
     children,
     verbMenu, itemMenu, commandLine, conversationMenu, saveMenu, soundToggle, endingScreen,
-    isConversationRunning, isGameEnded, isSequenceRunning
 }: GameLayoutProps) => {
+    const { isConversationRunning, isGameEnded, isSequenceRunning } = useGameStateDerivations()
+
     return (<main>
         {saveMenu}
         {soundToggle}

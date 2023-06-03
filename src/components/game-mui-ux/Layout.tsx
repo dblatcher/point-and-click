@@ -1,15 +1,17 @@
 import { Card, Container, Grid, useTheme } from "@mui/material";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { FullScreenWrapper } from "../FullScreenWrapper";
+import { useGameStateDerivations } from "../game/game-state-context";
 
 
 export const Layout = ({
     children,
     verbMenu, itemMenu, commandLine, conversationMenu, endingScreen,
     saveMenu, soundToggle,
-    isConversationRunning, isGameEnded, isSequenceRunning
 }: GameLayoutProps) => {
     const theme = useTheme()
+    const { isConversationRunning, isGameEnded,isSequenceRunning } = useGameStateDerivations()
+
     return (
         <Container maxWidth={'md'} sx={{ paddingY: .5, marginY: 2 }}>
             <FullScreenWrapper iconButtonProps={{

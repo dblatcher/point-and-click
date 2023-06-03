@@ -269,7 +269,7 @@ export default class Game extends Component<GameProps, GameState> {
         } = uiComponents
         const { viewAngle, isPaused,
             currentVerbId, currentItemId, items,
-            sequenceRunning, hoverTarget
+            hoverTarget
         } = this.state
         const { currentRoom, player, currentConversation } = this
 
@@ -279,9 +279,6 @@ export default class Game extends Component<GameProps, GameState> {
         return <GameStateProvider value={this.state}>
             {showDebugLog && (<DebugLog />)}
             <GameLayoutComponent
-                isConversationRunning={!!currentConversation}
-                isSequenceRunning={!!sequenceRunning}
-                isGameEnded={!!this.ending}
                 itemMenu={<ItemMenuComponent
                     items={items.filter(_ => _.actorId === player?.id)}
                     currentItemId={currentItemId}

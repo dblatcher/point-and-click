@@ -56,9 +56,6 @@ export type GameLayoutProps = {
     endingScreen: ReactNode;
     saveMenu: ReactNode;
     soundToggle: ReactNode;
-    isSequenceRunning: boolean;
-    isConversationRunning: boolean,
-    isGameEnded: boolean,
 }
 
 export type UiComponentSet = {
