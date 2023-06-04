@@ -17,13 +17,11 @@ import { issueMoveOrder } from "./issueMoveOrder";
 import { followOrder } from "./orders/followOrder";
 // components
 import { DebugLog } from "../DebugLog";
-import { CommandLine } from "../game-ui/CommandLine";
 import { ConversationMenu } from "../game-ui/ConversationMenu";
 import { EndingWrapper } from "../game-ui/EndingScreen";
 import { ItemMenu } from "../game-ui/ItemMenu";
 import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
-import { SoundToggle } from "../game-ui/SoundToggle";
 import { VerbMenu } from "../game-ui/VerbMenu";
 import { Room } from "../svg/Room";
 import { GameStateProvider } from "./game-state-context";
@@ -266,12 +264,10 @@ export default class Game extends Component<GameProps, GameState> {
     render() {
         const { save, reset, load, showDebugLog, uiComponents = {} } = this.props
         const {
-            CommandLineComponent = CommandLine,
             VerbMenuComponent = VerbMenu,
             ItemMenuComponent = ItemMenu,
             SaveMenuComponent = SaveMenu,
             ConversationMenuComponent = ConversationMenu,
-            SoundToggleComponent = SoundToggle,
             GameLayoutComponent = Layout,
         } = uiComponents
         const { viewAngle, isPaused } = this.state
@@ -288,7 +284,6 @@ export default class Game extends Component<GameProps, GameState> {
                             select={this.handleTargetClick}
                             handleHover={this.handleHover}
                         />}
-                        commandLine={<CommandLineComponent />}
                         verbMenu={<VerbMenuComponent select={this.handleVerbSelect} />}
                         conversationMenu={<ConversationMenuComponent select={this.handleConversationClick} />}
                         endingScreen={<EndingWrapper />}
@@ -301,7 +296,6 @@ export default class Game extends Component<GameProps, GameState> {
                                 setIsPaused={(isPaused) => { this.setState({ isPaused }) }}
                             />
                         }
-                        soundToggle={<SoundToggleComponent />}
                     >
                         {currentRoom && (
                             <Room

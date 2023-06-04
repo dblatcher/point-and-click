@@ -33,18 +33,14 @@ export type SaveMenuProps = {
 
 export type GameLayoutProps = {
     children: ReactNode;
-    commandLine: ReactNode;
     verbMenu: ReactNode;
     itemMenu: ReactNode;
     conversationMenu: ReactNode;
     endingScreen: ReactNode;
     saveMenu: ReactNode;
-    soundToggle: ReactNode;
 }
 
 export type UiComponentSet = {
-    CommandLineComponent?: FunctionComponent<{}>;
-    SoundToggleComponent?: FunctionComponent<{}>;
     VerbMenuComponent?: FunctionComponent<{
         select: { (verb: Verb): void };
     }>;

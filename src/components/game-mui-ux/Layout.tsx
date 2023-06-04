@@ -2,15 +2,17 @@ import { Card, Container, Grid, useTheme } from "@mui/material";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { FullScreenWrapper } from "../FullScreenWrapper";
 import { useGameStateDerivations } from "../game/game-state-context";
+import { SoundToggle } from "./SoundToggle";
+import { CommandLine } from "./CommandLine";
 
 
 export const Layout = ({
     children,
-    verbMenu, itemMenu, commandLine, conversationMenu, endingScreen,
-    saveMenu, soundToggle,
+    verbMenu, itemMenu, conversationMenu, endingScreen,
+    saveMenu,
 }: GameLayoutProps) => {
     const theme = useTheme()
-    const { isConversationRunning, isGameEnded,isSequenceRunning } = useGameStateDerivations()
+    const { isConversationRunning, isGameEnded, isSequenceRunning } = useGameStateDerivations()
 
     return (
         <Container maxWidth={'md'} sx={{ paddingY: .5, marginY: 2 }}>
@@ -27,7 +29,7 @@ export const Layout = ({
                 <Container maxWidth={'md'} >
                     <Card sx={{ padding: 1, background: theme.palette.secondary.light }}>
                         <Grid container>
-                            <Grid item xs={1}>{soundToggle}</Grid>
+                            <Grid item xs={1}><SoundToggle /></Grid>
                             <Grid item xs={10}>{children}</Grid>
                             <Grid item xs={1} />
                         </Grid>
@@ -37,7 +39,7 @@ export const Layout = ({
                                     {!isSequenceRunning && conversationMenu}
                                 </>
                             ) : (<>
-                                {commandLine}
+                                <CommandLine />
                                 {verbMenu}
                                 {itemMenu}
                             </>)}

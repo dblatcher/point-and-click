@@ -1,16 +1,18 @@
 import { useGameStateDerivations } from "../game/game-state-context";
 import { GameLayoutProps } from "../game/uiComponentSet";
+import { CommandLine } from "./CommandLine";
+import { SoundToggle } from "./SoundToggle";
 
 
 export const Layout = ({
     children,
-    verbMenu, itemMenu, commandLine, conversationMenu, saveMenu, soundToggle, endingScreen,
+    verbMenu, itemMenu, conversationMenu, saveMenu, endingScreen,
 }: GameLayoutProps) => {
     const { isConversationRunning, isGameEnded, isSequenceRunning } = useGameStateDerivations()
 
     return (<main>
         {saveMenu}
-        {soundToggle}
+        <SoundToggle />
         {children}
         {isGameEnded && endingScreen}
         {isConversationRunning ? (
@@ -19,7 +21,7 @@ export const Layout = ({
             </>
         ) : (
             <>
-                {commandLine}
+                <CommandLine />
                 {verbMenu}
                 {itemMenu}
             </>
