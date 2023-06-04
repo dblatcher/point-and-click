@@ -80,6 +80,7 @@ export default class Game extends Component<GameProps, GameState> {
         this.makeActorsAct = this.makeActorsAct.bind(this)
         this.centerViewOnPLayer = this.centerViewOnPLayer.bind(this)
         this.handleHover = this.handleHover.bind(this)
+        this.handleVerbSelect = this.handleVerbSelect.bind(this)
     }
 
     getInitialGameState(props: GameProps): GameState {
@@ -233,6 +234,8 @@ export default class Game extends Component<GameProps, GameState> {
         )
     }
 
+    handleVerbSelect(verb: Verb) { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }
+
     handleConversationClick(choice: ConversationChoice) {
         if (!this.isActive) { return }
         this.setState(handleConversationChoice(choice, this.props.sequences))
@@ -258,7 +261,7 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     render() {
-        const { verbs = [], save, reset, load, showDebugLog, uiComponents = {} } = this.props
+        const { save, reset, load, showDebugLog, uiComponents = {} } = this.props
         const {
             CommandLineComponent = CommandLine,
             VerbMenuComponent = VerbMenu,
@@ -268,11 +271,8 @@ export default class Game extends Component<GameProps, GameState> {
             SoundToggleComponent = SoundToggle,
             GameLayoutComponent = Layout,
         } = uiComponents
-        const { viewAngle, isPaused,
-            currentVerbId, currentItemId, items,
-        } = this.state
+        const { viewAngle, isPaused, currentItemId, items } = this.state
         const { currentRoom, player, currentConversation } = this
-
 
         const contentList = buildContentsList(this.state, this.handleTargetClick)
 
@@ -284,15 +284,13 @@ export default class Game extends Component<GameProps, GameState> {
                         itemMenu={<ItemMenuComponent
                             items={items.filter(_ => _.actorId === player?.id)}
                             currentItemId={currentItemId}
-                            select={(item: ItemData) => { this.handleTargetClick(item) }}
+                            select={this.handleTargetClick}
                             handleHover={this.handleHover}
                         />}
                         commandLine={<CommandLineComponent />}
                         verbMenu={
                             <VerbMenuComponent
-                                verbs={verbs}
-                                currentVerbId={currentVerbId}
-                                select={(verb: Verb) => { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }}
+                                select={this.handleVerbSelect}
                             />
                         }
                         conversationMenu={

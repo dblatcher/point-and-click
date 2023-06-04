@@ -48,7 +48,7 @@ export type GameLayoutProps = {
 
 export type UiComponentSet = {
     CommandLineComponent?: FunctionComponent<{}>;
-    VerbMenuComponent?: FunctionComponent<VerbMenuProps>;
+    VerbMenuComponent?: FunctionComponent<{ select: { (verb: Verb): void }; }>;
     ItemMenuComponent?: FunctionComponent<ItemMenuProps>;
     SaveMenuComponent?: FunctionComponent<SaveMenuProps>;
     ConversationMenuComponent?: FunctionComponent<ConversationMenuProps>;
