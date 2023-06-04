@@ -27,7 +27,7 @@ export function CommandLine() {
         <div className={uiStyles.frame}>
             <p className={uiStyles.contents}>
                 <span>{text}</span>
-                {!hoverTarget && (
+                {hoverText && (
                     <span style={{ color: 'red' }}>{' '}{hoverText}</span>
                 )}
             </p>
