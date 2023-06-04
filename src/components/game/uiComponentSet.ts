@@ -1,4 +1,4 @@
-import { Verb, ItemData, Conversation, ConversationChoice } from "@/definitions";
+import { Verb, ItemData, ConversationChoice } from "@/definitions";
 import { FunctionComponent, ReactNode } from "react";
 import { HandleHoverFunction } from ".";
 
@@ -30,10 +30,6 @@ export type SaveMenuProps = {
     isPaused: boolean;
     setIsPaused: { (isPaused: boolean): void };
 }
-export type ConversationMenuProps = {
-    conversation: Conversation;
-    select: { (choice: ConversationChoice): void };
-}
 
 export type GameLayoutProps = {
     children: ReactNode;
@@ -48,15 +44,17 @@ export type GameLayoutProps = {
 
 export type UiComponentSet = {
     CommandLineComponent?: FunctionComponent<{}>;
-    VerbMenuComponent?: FunctionComponent<{ 
-        select: { (verb: Verb): void }; 
+    SoundToggleComponent?: FunctionComponent<{}>;
+    VerbMenuComponent?: FunctionComponent<{
+        select: { (verb: Verb): void };
     }>;
     ItemMenuComponent?: FunctionComponent<{
         select: { (item: ItemData): void };
         handleHover?: HandleHoverFunction;
     }>;
     SaveMenuComponent?: FunctionComponent<SaveMenuProps>;
-    ConversationMenuComponent?: FunctionComponent<ConversationMenuProps>;
-    SoundToggleComponent?: FunctionComponent<{}>;
+    ConversationMenuComponent?: FunctionComponent<{
+        select: { (choice: ConversationChoice): void };
+    }>;
     GameLayoutComponent?: FunctionComponent<GameLayoutProps>;
 }

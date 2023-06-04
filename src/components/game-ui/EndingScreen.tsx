@@ -1,6 +1,17 @@
 import { FunctionComponent } from "react";
 import { Ending } from "@/definitions";
 import imageService from "@/services/imageService";
+import { useGameInfo } from "../game/game-info-provider";
+
+
+export const EndingWrapper = () => {
+    const { ending } = useGameInfo()
+    if (!ending) {
+        return null
+    }
+
+    return <EndingScreen ending={ending} />
+}
 
 interface Props {
     ending: Ending;
@@ -14,7 +25,7 @@ const baseArticleStyle = {
 const baseFrameStyle = {
     display: 'flex',
     flexDirection: 'column',
-    alignItems:'center',
+    alignItems: 'center',
     backgroundColor: 'black',
     color: 'red',
     padding: '20px',

@@ -35,9 +35,11 @@ export const useGameStateDerivations = () => {
 
     const player = actors.find(actor => actor.isPlayer)
     const inventory = items.filter(item => item.actorId === player?.id)
+    const currentConversation = findById(currentConversationId, conversations)
 
     return {
-        isConversationRunning: !!findById(currentConversationId, conversations),
+        currentConversation,
+        isConversationRunning: !!currentConversation,
         isGameEnded: !!endingId,
         isSequenceRunning: !!sequenceRunning,
         currentItem: findById(currentItemId, items),

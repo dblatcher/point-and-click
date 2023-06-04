@@ -19,7 +19,7 @@ import { followOrder } from "./orders/followOrder";
 import { DebugLog } from "../DebugLog";
 import { CommandLine } from "../game-ui/CommandLine";
 import { ConversationMenu } from "../game-ui/ConversationMenu";
-import { EndingScreen } from "../game-ui/EndingScreen";
+import { EndingWrapper } from "../game-ui/EndingScreen";
 import { ItemMenu } from "../game-ui/ItemMenu";
 import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
@@ -234,7 +234,10 @@ export default class Game extends Component<GameProps, GameState> {
         )
     }
 
-    handleVerbSelect(verb: Verb) { this.setState({ currentVerbId: verb.id, currentItemId: undefined }) }
+    handleVerbSelect(verb: Verb) {
+        if (!this.isActive) { return }
+        this.setState({ currentVerbId: verb.id, currentItemId: undefined })
+    }
 
     handleConversationClick(choice: ConversationChoice) {
         if (!this.isActive) { return }
@@ -271,14 +274,14 @@ export default class Game extends Component<GameProps, GameState> {
             SoundToggleComponent = SoundToggle,
             GameLayoutComponent = Layout,
         } = uiComponents
-        const { viewAngle, isPaused, currentItemId, items } = this.state
-        const { currentRoom, player, currentConversation } = this
+        const { viewAngle, isPaused } = this.state
+        const { currentRoom, ending } = this
 
         const contentList = buildContentsList(this.state, this.handleTargetClick)
 
         return (
             <GameStateProvider value={this.state}>
-                <GameInfoProvider value={{ ...this.props, verb: this.currentVerb }}>
+                <GameInfoProvider value={{ ...this.props, verb: this.currentVerb, ending }}>
                     {showDebugLog && (<DebugLog />)}
                     <GameLayoutComponent
                         itemMenu={<ItemMenuComponent
@@ -286,20 +289,9 @@ export default class Game extends Component<GameProps, GameState> {
                             handleHover={this.handleHover}
                         />}
                         commandLine={<CommandLineComponent />}
-                        verbMenu={
-                            <VerbMenuComponent
-                                select={this.handleVerbSelect}
-                            />
-                        }
-                        conversationMenu={
-                            currentConversation && (
-                                <ConversationMenuComponent
-                                    conversation={currentConversation}
-                                    select={this.handleConversationClick}
-                                />
-                            )
-                        }
-                        endingScreen={this.ending && <EndingScreen ending={this.ending} />}
+                        verbMenu={<VerbMenuComponent select={this.handleVerbSelect} />}
+                        conversationMenu={<ConversationMenuComponent select={this.handleConversationClick} />}
+                        endingScreen={<EndingWrapper />}
                         saveMenu={
                             <SaveMenuComponent
                                 load={load ? () => { load() } : undefined}

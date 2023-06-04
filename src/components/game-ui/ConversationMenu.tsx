@@ -1,14 +1,16 @@
 
-import { Conversation, ConversationChoice } from "@/definitions"
+import { ConversationChoice } from "@/definitions"
 import uiStyles from './uiStyles.module.css';
+import { useGameStateDerivations } from "../game/game-state-context";
 
 interface Props {
-    conversation: Conversation;
     select: { (choice: ConversationChoice): void };
 }
 
-export function ConversationMenu({ conversation, select, }: Props) {
+export function ConversationMenu({ select, }: Props) {
+    const { currentConversation: conversation } = useGameStateDerivations()
 
+    if (!conversation) { return null }
     const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
 
     return (

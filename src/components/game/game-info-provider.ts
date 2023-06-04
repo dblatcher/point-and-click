@@ -1,8 +1,8 @@
 import { createContext, useContext } from 'react'
 import { FixedGameInfo } from '@/definitions/Game'
-import { Verb } from '@/definitions'
+import { Ending, Verb } from '@/definitions'
 
-const gameInfoContext = createContext<FixedGameInfo & { verb?: Verb }>(
+const gameInfoContext = createContext<FixedGameInfo & { verb?: Verb, ending?:Ending }>(
     {
         verbs: [],
         sequences: [],
