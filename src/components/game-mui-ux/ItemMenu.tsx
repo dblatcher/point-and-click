@@ -4,7 +4,17 @@ import { ItemData } from "@/definitions"
 import { CSSProperties, memo } from "react";
 import { Button, Grid, Typography, Avatar } from "@mui/material";
 import { ItemMenuProps, itemMenuPropsAreEqual } from "../game/uiComponentSet";
+import { HandleHoverFunction } from "../game";
+import { useGameStateDerivations } from "../game/game-state-context";
 
+
+export const ItemMenu = (props: {
+    select: { (item: ItemData): void };
+    handleHover?: HandleHoverFunction;
+}) => {
+    const { inventory, currentItem } = useGameStateDerivations()
+    return <ItemMenuInner {...props} items={inventory} currentItemId={currentItem?.id} />
+}
 
 const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 
@@ -38,7 +48,7 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 }
 
 
-export const ItemMenu = memo(
+export const ItemMenuInner = memo(
     function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
         return (
             <Grid container alignItems={'stretch'} mb={1}>

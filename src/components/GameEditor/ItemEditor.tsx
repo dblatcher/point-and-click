@@ -4,7 +4,7 @@ import imageService, { ImageAsset } from "@/services/imageService";
 import { Stack, Dialog, Button, DialogContent, DialogActions, DialogTitle, Typography } from "@mui/material";
 import { Component } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
-import { ItemMenu } from "../game-ui/ItemMenu";
+import { ItemMenuInner } from "../game-ui/ItemMenu";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { ServiceItemSelector } from "./ServiceItemSelector";
@@ -137,9 +137,9 @@ export class ItemEditor extends Component<Props, State> {
                     <EditorBox title="Button Preview">
                         <Stack sx={{maxWidth:'10rem'}}>
                             <Typography variant="caption">Selected:</Typography>
-                            <ItemMenu key={`${imageKey}-selected`} items={[this.state]} currentItemId={id} select={() => true} />
+                            <ItemMenuInner key={`${imageKey}-selected`} items={[this.state]} currentItemId={id} select={() => true} />
                             <Typography variant="caption">Not Selected:</Typography>
-                            <ItemMenu key={`${imageKey}-not-selected`} items={[this.state]} currentItemId={''} select={() => true} />
+                            <ItemMenuInner key={`${imageKey}-not-selected`} items={[this.state]} currentItemId={''} select={() => true} />
                         </Stack>
                     </EditorBox>
 

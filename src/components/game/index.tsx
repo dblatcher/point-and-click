@@ -282,8 +282,6 @@ export default class Game extends Component<GameProps, GameState> {
                     {showDebugLog && (<DebugLog />)}
                     <GameLayoutComponent
                         itemMenu={<ItemMenuComponent
-                            items={items.filter(_ => _.actorId === player?.id)}
-                            currentItemId={currentItemId}
                             select={this.handleTargetClick}
                             handleHover={this.handleHover}
                         />}

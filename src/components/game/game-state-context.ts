@@ -31,12 +31,17 @@ export const useGameState = () => {
 
 export const useGameStateDerivations = () => {
     const gameState = useContext(gameStateContext)
-    const { currentConversationId, conversations, endingId, sequenceRunning, items, currentItemId } = gameState
+    const { currentConversationId, conversations, endingId, sequenceRunning, items, currentItemId, actors } = gameState
+
+    const player = actors.find(actor => actor.isPlayer)
+    const inventory = items.filter(item => item.actorId === player?.id)
 
     return {
         isConversationRunning: !!findById(currentConversationId, conversations),
         isGameEnded: !!endingId,
         isSequenceRunning: !!sequenceRunning,
         currentItem: findById(currentItemId, items),
+        player,
+        inventory,
     }
 }
