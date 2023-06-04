@@ -1,29 +1,35 @@
 import { useGameStateDerivations } from "../game/game-state-context";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { CommandLine } from "./CommandLine";
+import { ConversationMenu } from "./ConversationMenu";
+import { EndingWrapper } from "./EndingScreen";
+import { ItemMenu } from "./ItemMenu";
 import { SoundToggle } from "./SoundToggle";
+import { VerbMenu } from "./VerbMenu";
 
 
 export const Layout = ({
     children,
-    verbMenu, itemMenu, conversationMenu, saveMenu, endingScreen,
+    selectVerb, selectConversation, selectItem, handleHover,
+
+    saveMenu,
 }: GameLayoutProps) => {
-    const { isConversationRunning, isGameEnded, isSequenceRunning } = useGameStateDerivations()
+    const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
 
     return (<main>
         {saveMenu}
         <SoundToggle />
         {children}
-        {isGameEnded && endingScreen}
+        <EndingWrapper />
         {isConversationRunning ? (
             <>
-                {!isSequenceRunning && conversationMenu}
+                {!isSequenceRunning && <ConversationMenu select={selectConversation} />}
             </>
         ) : (
             <>
                 <CommandLine />
-                {verbMenu}
-                {itemMenu}
+                <VerbMenu select={selectVerb} />
+                <ItemMenu handleHover={handleHover} select={selectItem} />
             </>
         )}
     </main>)

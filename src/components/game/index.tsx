@@ -17,12 +17,8 @@ import { issueMoveOrder } from "./issueMoveOrder";
 import { followOrder } from "./orders/followOrder";
 // components
 import { DebugLog } from "../DebugLog";
-import { ConversationMenu } from "../game-ui/ConversationMenu";
-import { EndingWrapper } from "../game-ui/EndingScreen";
-import { ItemMenu } from "../game-ui/ItemMenu";
 import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
-import { VerbMenu } from "../game-ui/VerbMenu";
 import { Room } from "../svg/Room";
 import { GameStateProvider } from "./game-state-context";
 import { UiComponentSet } from "./uiComponentSet";
@@ -264,10 +260,7 @@ export default class Game extends Component<GameProps, GameState> {
     render() {
         const { save, reset, load, showDebugLog, uiComponents = {} } = this.props
         const {
-            VerbMenuComponent = VerbMenu,
-            ItemMenuComponent = ItemMenu,
             SaveMenuComponent = SaveMenu,
-            ConversationMenuComponent = ConversationMenu,
             GameLayoutComponent = Layout,
         } = uiComponents
         const { viewAngle, isPaused } = this.state
@@ -280,13 +273,10 @@ export default class Game extends Component<GameProps, GameState> {
                 <GameInfoProvider value={{ ...this.props, verb: this.currentVerb, ending }}>
                     {showDebugLog && (<DebugLog />)}
                     <GameLayoutComponent
-                        itemMenu={<ItemMenuComponent
-                            select={this.handleTargetClick}
-                            handleHover={this.handleHover}
-                        />}
-                        verbMenu={<VerbMenuComponent select={this.handleVerbSelect} />}
-                        conversationMenu={<ConversationMenuComponent select={this.handleConversationClick} />}
-                        endingScreen={<EndingWrapper />}
+                        selectVerb={this.handleVerbSelect}
+                        selectConversation={this.handleConversationClick}
+                        selectItem={this.handleTargetClick}
+                        handleHover={this.handleHover}
                         saveMenu={
                             <SaveMenuComponent
                                 load={load ? () => { load() } : undefined}

@@ -33,24 +33,14 @@ export type SaveMenuProps = {
 
 export type GameLayoutProps = {
     children: ReactNode;
-    verbMenu: ReactNode;
-    itemMenu: ReactNode;
-    conversationMenu: ReactNode;
-    endingScreen: ReactNode;
     saveMenu: ReactNode;
+    selectVerb: { (verb: Verb): void };
+    selectConversation: { (choice: ConversationChoice): void };
+    selectItem: { (item: ItemData): void };
+    handleHover?: HandleHoverFunction;
 }
 
 export type UiComponentSet = {
-    VerbMenuComponent?: FunctionComponent<{
-        select: { (verb: Verb): void };
-    }>;
-    ItemMenuComponent?: FunctionComponent<{
-        select: { (item: ItemData): void };
-        handleHover?: HandleHoverFunction;
-    }>;
     SaveMenuComponent?: FunctionComponent<SaveMenuProps>;
-    ConversationMenuComponent?: FunctionComponent<{
-        select: { (choice: ConversationChoice): void };
-    }>;
     GameLayoutComponent?: FunctionComponent<GameLayoutProps>;
 }

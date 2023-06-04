@@ -4,15 +4,19 @@ import { FullScreenWrapper } from "../FullScreenWrapper";
 import { useGameStateDerivations } from "../game/game-state-context";
 import { SoundToggle } from "./SoundToggle";
 import { CommandLine } from "./CommandLine";
+import { VerbMenu } from "./VerbMenu";
+import { ConversationMenu } from "./ConversationMenu";
+import { ItemMenu } from "./ItemMenu";
+import { EndingWrapper } from "../game-ui/EndingScreen";
 
 
 export const Layout = ({
     children,
-    verbMenu, itemMenu, conversationMenu, endingScreen,
+    selectVerb, selectConversation, selectItem, handleHover,
     saveMenu,
 }: GameLayoutProps) => {
     const theme = useTheme()
-    const { isConversationRunning, isGameEnded, isSequenceRunning } = useGameStateDerivations()
+    const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
 
     return (
         <Container maxWidth={'md'} sx={{ paddingY: .5, marginY: 2 }}>
@@ -36,16 +40,16 @@ export const Layout = ({
                         <Card sx={{ marginY: 1, padding: 1, background: theme.palette.grey[50] }}>
                             {isConversationRunning ? (
                                 <>
-                                    {!isSequenceRunning && conversationMenu}
+                                    {!isSequenceRunning && <ConversationMenu select={selectConversation} />}
                                 </>
                             ) : (<>
                                 <CommandLine />
-                                {verbMenu}
-                                {itemMenu}
+                                <VerbMenu select={selectVerb} />
+                                <ItemMenu handleHover={handleHover} select={selectItem}/>
                             </>)}
                         </Card>
                     </Card>
-                    {isGameEnded && endingScreen}
+                    <EndingWrapper />
                     {saveMenu}
                 </Container>
             </FullScreenWrapper>
