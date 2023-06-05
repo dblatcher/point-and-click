@@ -5,13 +5,14 @@ import { ImageAsset } from "@/services/imageService";
 import { populateServices } from "@/services/populateServices";
 import { SoundAsset } from "@/services/soundService";
 import React from "react";
-import { materialUiComponents } from "./game-mui-ux";
+import { UiComponentSet } from "./game/uiComponentSet";
 
 
 type Props = {
   gameDesign: GameDesign;
   imageAssets: ImageAsset[];
   soundAssets: SoundAsset[];
+  uiComponents?: UiComponentSet;
 }
 
 type State = {
@@ -100,6 +101,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
   render() {
     const { gameCondition, timestamp } = this.state
+    const { uiComponents } = this.props
     return <>
       {gameCondition && (
         <Game
@@ -109,7 +111,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
           reset={this.reset}
           key={timestamp}
 
-          uiComponents={materialUiComponents}
+          uiComponents={uiComponents}
         />
       )}
     </>

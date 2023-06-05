@@ -10,6 +10,7 @@ import selectADesignContent from "@/content/selectADesign.md";
 
 import { MarkDown } from "./MarkDown";
 import { GameList } from "./GameList";
+import { materialUiComponents } from "./game-mui-ux";
 
 type State = {
     design?: GameDesign
@@ -111,6 +112,7 @@ export class GameDesignLoader extends React.Component<{}, State> {
                     gameDesign={design}
                     imageAssets={imageAssets}
                     soundAssets={soundAssets}
+                    uiComponents={materialUiComponents}
                 />
             )}
 
