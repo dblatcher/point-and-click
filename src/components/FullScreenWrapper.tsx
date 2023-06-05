@@ -40,7 +40,7 @@ export const FullScreenWrapper = memo(function FullScreenWrapper(props: {
         }
     })
 
-    return <Box ref={wrapper} sx={{ position: 'relative' }}>
+    return <Box ref={wrapper} sx={{ position: 'relative' }} display={'flex'} flexDirection={'row'} justifyContent={'center'}>
         {props.children}
         {!isFullScreen && (
             <IconButton
