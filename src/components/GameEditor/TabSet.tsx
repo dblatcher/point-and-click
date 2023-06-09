@@ -10,12 +10,14 @@ interface Props {
     tabs: TabSetItem[];
     openIndex: number;
     onlyRenderOpenTab?: boolean;
+    fullHeight?: boolean;
 }
 
 export const TabSet: FunctionComponent<Props> = ({
     tabs,
     openIndex,
     onlyRenderOpenTab,
+    fullHeight = false,
 }: Props) => {
 
     if (onlyRenderOpenTab) {
@@ -25,6 +27,10 @@ export const TabSet: FunctionComponent<Props> = ({
             <Box
                 padding={1}
                 component={'section'}
+                sx={{
+                    height: fullHeight ? '100%' : undefined,
+                    boxSizing: 'border-box',
+                }}
             >
                 {openTab.content}
             </Box>
