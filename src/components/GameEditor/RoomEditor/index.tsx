@@ -534,17 +534,19 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const { actors = [] } = this.props
         const tabs = this.buildTabs()
 
-        return <Stack component={'article'} spacing={1}>
+        return <Stack component={'article'} spacing={1} height={'100%'}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
 
             <TabMenu tabs={tabs} />
 
-            <Preview
-                actors={actors}
-                roomData={this.state}
-                clickEffect={clickEffect}
-                activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
-                handleRoomClick={this.handleRoomClick} />
+            
+                <Preview
+                    actors={actors}
+                    roomData={this.state}
+                    clickEffect={clickEffect}
+                    activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
+                    handleRoomClick={this.handleRoomClick} />
+            
         </Stack>
     }
 }

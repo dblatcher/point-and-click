@@ -7,7 +7,7 @@ import { ClickEffect } from "./ClickEffect";
 import { eventToBoolean, eventToNumber } from "@/lib/util";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { makeTestActor } from "./testSprite";
-import { Stack, Checkbox, Accordion, AccordionSummary, AccordionDetails, Box, Typography } from "@mui/material";
+import { Stack, Checkbox, Box, Typography, Drawer, Button } from "@mui/material";
 import { RangeInput } from "./RangeInput";
 
 type BooleanState = {
@@ -22,6 +22,7 @@ type State = BooleanState & {
     viewAngle: number;
     maxWidth: number;
     testActor: ActorData;
+    drawerOpen: boolean;
 };
 
 type Props = {
@@ -61,13 +62,14 @@ export class Preview extends Component<Props, State>{
         super(props)
         this.state = {
             viewAngle: 0,
-            maxWidth: 400,
+            maxWidth: 500,
             showObstacleAreas: true,
             highlightHotspots: true,
             showScaleLines: false,
             showTestActor: false,
             showRealActors: true,
             testActor: makeTestActor({ x: props.roomData.width / 2, y: 20 }),
+            drawerOpen: false,
         }
 
         this.changeActorNumberProperty = this.changeActorNumberProperty.bind(this)
@@ -168,80 +170,19 @@ export class Preview extends Component<Props, State>{
                 this.changeActorNumberProperty(eventToNumber(event.nativeEvent), key)
 
         return (
-
-            <Stack spacing={1} alignItems={'flex-start'} direction={'row'} width={225}>
-                <Box>
-                    <Accordion disableGutters>
-                        <AccordionSummary>
-                            <Typography>View</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <RangeInput
-                                label="width"
-                                value={maxWidth}
-                                max={800} min={100} step={25}
-                                onChange={
-                                    (event) => this.setState({ maxWidth: eventToNumber(event.nativeEvent) })
-                                } />
-                            <RangeInput
-                                label="angle"
-                                value={viewAngle}
-                                formattedValue={`${Math.sign(viewAngle) !== -1 ? '+' : '-'}${Math.abs(viewAngle).toFixed(2)}`}
-                                max={1} min={-1} step={.01}
-                                onChange={
-                                    (event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) })
-                                } />
-
-                            {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
-                            {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
-                            {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
-                            {this.renderCheckBox('Show Actors', 'showRealActors')}
-                        </AccordionDetails>
-                    </Accordion>
-                    <Accordion disableGutters>
-                        <AccordionSummary>
-                            <Typography>Test Actor</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            {this.renderCheckBox('Show', 'showTestActor')}
-                            <RangeInput
-                                label="X"
-                                value={testActor.x}
-                                max={roomData.width}
-                                onChange={testActorChange('x')}
-                                disabled={!showTestActor}
-                            />
-                            <RangeInput
-                                label="Y"
-                                value={testActor.y}
-                                max={roomData.height}
-                                onChange={testActorChange('y')}
-                                disabled={!showTestActor}
-                            />
-                            <RangeInput
-                                label="base height"
-                                value={testActor.height}
-                                max={200} min={10}
-                                onChange={testActorChange('height')}
-                                disabled={!showTestActor}
-                            />
-                            <RangeInput
-                                label="base width"
-                                value={testActor.width}
-                                max={200} min={10}
-                                onChange={testActorChange('width')}
-                                disabled={!showTestActor}
-                            />
-                        </AccordionDetails>
-                    </Accordion>
-                </Box>
+            <Box
+                display={'flex'}
+                flexDirection={'column'}
+                justifyContent={'flex-end'}
+                alignItems={'center'}
+                flexBasis={'100%'}
+                position={'relative'}
+                boxSizing={'border-box'}
+            >
 
                 <Box sx={{
-                    marginTop: '5px',
                     position: 'relative',
-                    border: '5px dotted red',
                     display: 'inline-block',
-                    background: 'black'
                 }}>
                     <Room data={roomData} noResize forPreview
                         showObstacleAreas={showObstacleAreas}
@@ -272,17 +213,97 @@ export class Preview extends Component<Props, State>{
                             />
                         )}
                     </Room>
-                    <p style={{
-                        position: 'absolute',
-                        right: 0, top: 0,
-                        margin: "0 1em",
-                        padding: "0 .25em",
-                        color: 'white',
-                        backgroundColor: 'rgba(0,0,0,.5)'
-                    }}>{getClickCaption(clickEffect)}</p>
                 </Box>
-            </Stack>
 
+                {clickEffect && (
+                    <Typography
+                        variant='overline'
+                        padding={1}
+                        sx={{
+                            position: 'absolute',
+                            right: 0, top: 0,
+                            color: 'white',
+                            backgroundColor: 'rgba(0,0,0,.5)'
+                        }}>{getClickCaption(clickEffect)}</Typography>
+                )}
+
+                <Button
+                    sx={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                    }}
+                    onClick={() => { this.setState({ drawerOpen: !this.state.drawerOpen }) }}
+                    variant="contained"
+                >menu</Button>
+
+                <Drawer open={this.state.drawerOpen} anchor="right" variant="persistent">
+                    <Box padding={1}>
+                        <Typography>Preview window</Typography>
+                        <RangeInput
+                            label="width"
+                            value={maxWidth}
+                            max={800} min={100} step={25}
+                            onChange={
+                                (event) => this.setState({ maxWidth: eventToNumber(event.nativeEvent) })
+                            } />
+                        <RangeInput
+                            label="angle"
+                            value={viewAngle}
+                            formattedValue={`${Math.sign(viewAngle) !== -1 ? '+' : '-'}${Math.abs(viewAngle).toFixed(2)}`}
+                            max={1} min={-1} step={.01}
+                            onChange={
+                                (event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) })
+                            } />
+
+                        {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
+                        {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
+                        {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
+                        {this.renderCheckBox('Show Actors', 'showRealActors')}
+                    </Box>
+
+                    <Box padding={1}>
+                        <Typography>Test Actor</Typography>
+                        {this.renderCheckBox('Show', 'showTestActor')}
+                        <RangeInput
+                            label="X"
+                            value={testActor.x}
+                            max={roomData.width}
+                            onChange={testActorChange('x')}
+                            disabled={!showTestActor}
+                        />
+                        <RangeInput
+                            label="Y"
+                            value={testActor.y}
+                            max={roomData.height}
+                            onChange={testActorChange('y')}
+                            disabled={!showTestActor}
+                        />
+                        <RangeInput
+                            label="base height"
+                            value={testActor.height}
+                            max={200} min={10}
+                            onChange={testActorChange('height')}
+                            disabled={!showTestActor}
+                        />
+                        <RangeInput
+                            label="base width"
+                            value={testActor.width}
+                            max={200} min={10}
+                            onChange={testActorChange('width')}
+                            disabled={!showTestActor}
+                        />
+                    </Box>
+
+                    <Box padding={1}>
+                        <Button
+                            fullWidth
+                            onClick={() => { this.setState({ drawerOpen: false }) }}
+                            variant="contained"
+                        >close menu</Button>
+                    </Box>
+                </Drawer>
+            </Box>
         )
     }
 }
