@@ -4,7 +4,7 @@ import { TabSet } from "@/components/GameEditor/TabSet";
 import { ClickEffect } from "./ClickEffect";
 import { ShapeChangeFunction, ValidShapeType } from "./ShapeControl";
 import { ZoneControl } from "./ZoneControl";
-import { Stack } from "@mui/material";
+import { Stack, Alert } from "@mui/material";
 import { NewZoneButtons } from "./NewZoneButtons";
 import { ZonePicker } from "./ZonePicker";
 
@@ -35,7 +35,11 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
 
     return (
         <>
-            {zones.length === 0 && <span>No <b>{type}s</b> for this room yet. Select a shape from the buttons below to add one.</span>}
+            {zones.length === 0 && (
+                <Alert severity="info">
+                    No <b>{type}s</b> for this room yet. Select a shape from the buttons below to add one.
+                </Alert>
+            )}
 
             <Stack direction={'row'}>
                 <ZonePicker

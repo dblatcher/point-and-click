@@ -1,11 +1,10 @@
 
-import { FunctionComponent } from "react";
 import { ScaleLevel } from "@/definitions";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { cloneData } from "@/lib/clone"
 import { ListEditor } from "../ListEditor";
 import { clamp } from "@/lib/util";
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 
 interface Props {
     scaling: ScaleLevel;
@@ -13,7 +12,7 @@ interface Props {
     change: { (scaling: ScaleLevel): void };
 }
 
-export const ScalingControl: FunctionComponent<Props> = ({ scaling, height, change }: Props) => {
+export const ScalingControl = ({ scaling, height, change }: Props) => {
 
     const handleAdjustment = (
         index: number, value: number, property: 'scale' | 'y'
@@ -32,16 +31,22 @@ export const ScalingControl: FunctionComponent<Props> = ({ scaling, height, chan
     return (
         <ListEditor
             list={scaling}
+            stackSx={{maxWidth:300}}
             describeItem={(level, index) => {
                 const [y, scale] = level
                 return (
                     <Stack key={index} direction={'row'} spacing={2}>
-                        <NumberInput label="Y" value={y}
-                            inputHandler={(value) => handleAdjustment(index, value, 'y')}
-                            max={height} min={0} step={5} />
-                        <NumberInput label="scale" value={scale}
-                            inputHandler={(value) => handleAdjustment(index, value, 'scale')}
-                            max={5} min={0} step={.1} />
+                        <Box>
+                            <NumberInput label="Y" value={y}
+                                inputHandler={(value) => handleAdjustment(index, value, 'y')}
+                                max={height} min={0} step={5} />
+                        </Box>
+
+                        <Box>
+                            <NumberInput label="scale" value={scale}
+                                inputHandler={(value) => handleAdjustment(index, value, 'scale')}
+                                max={5} min={0} step={.1} />
+                        </Box>
                     </Stack>
                 )
             }}

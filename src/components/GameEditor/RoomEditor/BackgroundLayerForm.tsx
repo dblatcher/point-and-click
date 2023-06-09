@@ -4,7 +4,7 @@ import { BackgroundLayer } from "@/definitions";
 import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/imageService";
 import AddIcon from "@mui/icons-material/Add";
-import { Button, Stack } from "@mui/material";
+import { Box, Button, Stack, Paper } from "@mui/material";
 import { useState } from "react";
 
 interface Props {
@@ -12,13 +12,16 @@ interface Props {
     addNewLayer: { (backgroundLayer: BackgroundLayer): void };
 }
 
+
+
 export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
 
     const [imageId, setImageId] = useState<string | undefined>(undefined);
     const [parallax, setParallax] = useState<number>(0);
 
     return (
-        <Stack spacing={2} alignItems={'flex-end'}>
+
+        <Paper sx={{ padding: 1 }}>
             <Stack direction="row" spacing={2} flex={1} alignSelf={'stretch'}>
 
                 <SelectInput
@@ -28,23 +31,27 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
                     optional
                 />
 
-                <NumberInput value={parallax}
-                    inputHandler={setParallax}
-                    label="parallax"
-                    max={2} min={0} step={.05}
-                />
+                <Box maxWidth={100}>
+                    <NumberInput value={parallax}
+                        inputHandler={setParallax}
+                        label="parallax"
+                        max={2} min={0} step={.05}
+                    />
+                </Box>
 
+                <Button
+                    size="small"
+                    sx={{ flexShrink: 0 }}
+                    variant="contained"
+                    disabled={!imageId}
+                    onClick={() => {
+                        if (!imageId) { return }
+                        addNewLayer({ imageId, parallax })
+                        setParallax(0)
+                        setImageId('')
+                    }}
+                    startIcon={<AddIcon />}>add new</Button>
             </Stack>
-            <Button
-                variant="contained"
-                disabled={!imageId}
-                onClick={() => {
-                    if (!imageId) { return }
-                    addNewLayer({ imageId, parallax })
-                    setParallax(0)
-                    setImageId('')
-                }}
-                startIcon={<AddIcon />}>add new background</Button>
-        </Stack>
+        </Paper>
     )
 }

@@ -429,7 +429,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 )
             },
             {
-                label: 'Background', content: (<Stack spacing={4}>
+                label: 'Background', content: (<Stack spacing={2}>
                     <ListEditor
                         list={background}
                         mutateList={(background) => { this.setStateWithAutosave({ background }) }}
@@ -484,7 +484,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                 selectZone={this.handleTreeEntryClick}
                             />
                             <Box>
-                                {hotspots.length === 0 && <span>No <b>hotspots</b> for this room yet. Select a shape from the buttons below to add one.</span>}
+                                {hotspots.length === 0 && (
+                                    <Alert severity="info">
+                                        No <b>hotspots</b> for this room yet. Select a shape from the buttons below to add one.
+                                    </Alert>
+                                )}
                                 <TabSet
                                     openIndex={this.state.hotspotTab}
                                     tabs={hotspots.map((hotspot, index) => {

@@ -1,5 +1,5 @@
 import { Component, ReactNode, Fragment } from "react";
-import { Box, Paper, Stack, Button, ButtonGroup } from "@mui/material";
+import { Box, Paper, Stack, Button, ButtonGroup, StackProps } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add"
 import DeleteIcon from "@mui/icons-material/Delete"
 import ArrowCircleUp from "@mui/icons-material/ArrowCircleUp"
@@ -18,6 +18,7 @@ interface Props<T> {
     darkItembackground?: boolean;
     insertText?: string;
     deleteText?: string;
+    stackSx?: StackProps['sx'];
 }
 
 
@@ -85,7 +86,7 @@ export class ListEditor<T> extends Component<Props<T>> {
     }
 
     render() {
-        const { list, describeItem, createItem, createButton, noMoveButtons, darkItembackground = false, noDeleteButtons } = this.props
+        const { list, describeItem, createItem, createButton, noMoveButtons, darkItembackground = false, noDeleteButtons, stackSx = {} } = this.props
 
         const theme = redTheme
         const paperStyle = {
@@ -93,7 +94,7 @@ export class ListEditor<T> extends Component<Props<T>> {
         }
 
         return (
-            <Stack component={'ul'} sx={{ margin: 0, padding: 0, listStyle: 'none' }} spacing={1}>
+            <Stack component={'ul'} sx={{ margin: 0, padding: 0, listStyle: 'none', ...stackSx }} spacing={1}>
                 {list.map((item, index) => (
                     <Fragment key={index}>
                         {(!!createItem && createButton !== 'END') && (

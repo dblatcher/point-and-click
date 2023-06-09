@@ -1,7 +1,8 @@
 import { ClickEffect } from "./ClickEffect";
 import { Zone } from "@/definitions";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
-import { CheckBoxInput, OptionalStringInput } from "../formControls";
+import { OptionalStringInput } from "../formControls";
+import { BooleanInput } from "../../SchemaForm/BooleanInput";
 import editorStyles from '../editorStyles.module.css';
 
 interface Props {
@@ -25,9 +26,9 @@ export function ZoneControl({ zone, index, change, remove, setClickEffect, type 
                             inputHandler={value => change(index, 'ref', value, type)} />
                     </div>
                     <div>
-                        <CheckBoxInput
+                        <BooleanInput
                             label="disabled: "
-                            value={zone.disabled}
+                            value={!!zone.disabled}
                             inputHandler={value => change(index, 'disabled', value, type)} />
                     </div>
                 </div>

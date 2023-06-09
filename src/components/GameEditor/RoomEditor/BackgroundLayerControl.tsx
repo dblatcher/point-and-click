@@ -3,7 +3,7 @@ import { BackgroundLayer } from "@/definitions";
 import { clamp, listIds } from "@/lib/util";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 
 
 interface Props {
@@ -25,10 +25,12 @@ export function BackgroundLayerControl({ layer, index, imageAssets, change }: Pr
                 change(index, 'imageId', value)
             }}
         />
-        <NumberInput value={parallax}
-            inputHandler={(value) => { change(index, 'parallax', clamp(value, 2, 0)) }}
-            label="parallax"
-            max={2} min={0} step={.05}
-        />
+        <Box maxWidth={100}>
+            <NumberInput value={parallax}
+                inputHandler={(value) => { change(index, 'parallax', clamp(value, 2, 0)) }}
+                label="parallax"
+                max={2} min={0} step={.05}
+            />
+        </Box>
     </Stack>
 }

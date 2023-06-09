@@ -3,7 +3,8 @@ import { FunctionComponent } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { HotspotZone, Shape, Zone, ZoneType } from "@/definitions";
 import { ListEditor } from "../ListEditor";
-import { NumberInput } from "../formControls";
+import { NumberInput } from "@/components/SchemaForm/NumberInput";
+import { Stack, Button, Typography } from "@mui/material";
 
 export type ValidShapeType = ZoneType;
 export type ShapeChangeFunction = { (index: number, propery: Exclude<keyof HotspotZone | keyof Zone, 'type'>, newValue: unknown, type: ValidShapeType): void }
@@ -31,25 +32,25 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, c
 
     return (
         <div>
-            <span>
+            <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
                 <NumberInput label="X" value={x} inputHandler={value => { change(index, 'x', value, type) }} />
                 <NumberInput label="Y" value={y} inputHandler={value => { change(index, 'y', value, type) }} />
-                <button onClick={() => { remove(index, type) }}>delete</button>
-            </span>
+                <Button onClick={() => { remove(index, type) }}>delete</Button>
+            </Stack>
             {circle && (
-                <div>
+                <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
                     <NumberInput label="Radius" value={circle} inputHandler={value => { change(index, 'circle', value, type) }} />
-                </div>
+                </Stack>
             )}
             {rect && (
-                <div>
+                <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
                     <NumberInput label="width" value={rect[0]} inputHandler={value => { changeRect(value, 'x') }} />
                     <NumberInput label="height" value={rect[1]} inputHandler={value => { changeRect(value, 'y') }} />
-                </div>
+                </Stack>
             )}
             {polygon && (
                 <div>
-                    <label>points: </label>
+                    <Typography variant='overline'>points: </Typography>
                     <ListEditor
                         list={polygon}
                         mutateList={polygon => change(index, 'polygon', polygon, type)}
@@ -57,12 +58,12 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, c
                             <div key={index}>[ {point[0]}, {point[1]} ]</div>
                         )}
                     />
-                    <button onClick={() => {
+                    <Button onClick={() => {
                         setClickEffect({
                             type: type === 'hotspot' ? 'POLYGON_POINT_HOTSPOT' : 'POLYGON_POINT_OBSTACLE',
                             index
                         })
-                    }}>add points</button>
+                    }}>add points</Button>
                 </div>
             )}
         </div>
