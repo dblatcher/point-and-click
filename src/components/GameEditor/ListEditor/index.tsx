@@ -19,6 +19,7 @@ interface Props<T> {
     insertText?: string;
     deleteText?: string;
     stackSx?: StackProps['sx'];
+    tight?: boolean;
 }
 
 
@@ -86,7 +87,44 @@ export class ListEditor<T> extends Component<Props<T>> {
     }
 
     render() {
-        const { list, describeItem, createItem, createButton, noMoveButtons, darkItembackground = false, noDeleteButtons, stackSx = {} } = this.props
+        const {
+            list, describeItem, createItem, createButton, noMoveButtons, darkItembackground = false, noDeleteButtons,
+            stackSx = {}, tight = false,
+        } = this.props
+
+
+        if (tight) {
+            return (
+                <Stack component={'ul'} sx={{ margin: 0, padding: 0, listStyle: 'none', ...stackSx }}>
+                    {list.map((item, index) => (
+                        <Fragment key={index}>
+                            {(!!createItem && createButton !== 'END') && (
+                                <Box component={'li'}>
+                                    {this.renderButton('INSERT', index, true)}
+                                </Box>
+                            )}
+                            <Stack component={'li'} direction={'row'} alignItems={'center'} justifyContent={'space-between'} spacing={1} paddingBottom={1}>
+                                {describeItem(item, index)}
+                                <ButtonGroup>
+                                    {!noMoveButtons && <>
+                                        {this.renderButton('UP', index)}
+                                        {this.renderButton('DOWN', index)}
+                                    </>}
+                                    {!noDeleteButtons && <>
+                                        {this.renderButton('DELETE', index)}
+                                    </>}
+                                </ButtonGroup>
+                            </Stack>
+                        </Fragment>
+                    ))}
+                    {!!createItem && (
+                        <Box component={'li'}>
+                            {this.renderButton('INSERT', list.length, true)}
+                        </Box>
+                    )}
+                </Stack>
+            )
+        }
 
         const theme = redTheme
         const paperStyle = {

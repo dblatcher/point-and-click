@@ -51,14 +51,15 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, c
             {polygon && (
                 <div>
                     <Typography variant='overline'>points: </Typography>
-                    <ListEditor
+                    <ListEditor tight
                         list={polygon}
                         mutateList={polygon => change(index, 'polygon', polygon, type)}
                         describeItem={(point, index) => (
                             <div key={index}>[ {point[0]}, {point[1]} ]</div>
                         )}
                     />
-                    <Button onClick={() => {
+                    <Button variant="outlined" size="small"
+                    onClick={() => {
                         setClickEffect({
                             type: type === 'hotspot' ? 'POLYGON_POINT_HOTSPOT' : 'POLYGON_POINT_OBSTACLE',
                             index
