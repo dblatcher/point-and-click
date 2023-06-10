@@ -483,7 +483,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                                 openTab={this.state.hotspotTab}
                                 selectZone={this.handleTreeEntryClick}
                             />
-                            <Box>
+                            <Box flexShrink={1}>
                                 {hotspots.length === 0 && (
                                     <Alert severity="info">
                                         No <b>hotspots</b> for this room yet. Select a shape from the buttons below to add one.

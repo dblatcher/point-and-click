@@ -1,9 +1,13 @@
+import { NumberInput } from "@/components/SchemaForm/NumberInput";
+import { OptionalNumberInput, } from "@/components/SchemaForm/OptionalNumberInput";
+import { StringInput } from "@/components/SchemaForm/StringInput";
+import { HotspotZone } from "@/definitions";
+import { clamp } from "@/lib/util";
+import { Box, Button, Grid } from "@mui/material";
+import { EditorBox } from "../EditorBox";
 import { ClickEffect } from "./ClickEffect";
-import { HotspotZone } from "../../..";
-import { OptionalNumberInput, ParallaxInput, StringInput } from "../formControls";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
-import editorStyles from '../editorStyles.module.css';
-
+import DeleteIcon from "@mui/icons-material/Delete"
 
 interface Props {
     hotspot: HotspotZone;
@@ -17,53 +21,63 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
     const { parallax, type, walkToX, walkToY, id, status, name } = hotspot
 
     return (
-        <article>
-            <div className={editorStyles.rowTopLeft}>
-                <div style={{ marginRight: '.5em' }}>
-                    <StringInput
-                        block className={editorStyles.row}
-                        label="id" value={id}
-                        inputHandler={(value) => change(index, 'id', value, type)} />
-                    <StringInput
-                        block className={editorStyles.row}
-                        label="name" value={name || ''}
-                        inputHandler={(value) => change(index, 'name', value, type)} />
-                    <StringInput
-                        block className={editorStyles.row}
-                        label="status" value={status || ''}
-                        inputHandler={(value) => change(index, 'status', value, type)} />
+        <Grid container component={'article'} spacing={2}>
+            <Grid item xs={12}>
+                <StringInput
+                    label="id" value={id}
+                    inputHandler={(value) => change(index, 'id', value, type)} />
+                <StringInput
+                    label="name" value={name || ''}
+                    inputHandler={(value) => change(index, 'name', value, type)} />
+                <StringInput
+                    label="status" value={status || ''}
+                    inputHandler={(value) => change(index, 'status', value, type)} />
+                <Button
+                    sx={{ marginTop: 1 }}
+                    variant="contained"
+                    startIcon={<DeleteIcon />}
+                    onClick={() => { remove(index, 'hotspot') }}
+                >delete hotspot
+                </Button>
+            </Grid>
 
-                    <button onClick={() => { remove(index, 'hotspot') }}>delete</button>
-                </div>
 
-                <fieldset>
-                    <legend>shape and position</legend>
-                    <div className={editorStyles.row}>
-                        <ParallaxInput value={parallax}
-                            inputHandler={value => { change(index, 'parallax', value, type) }} />
-                    </div>
+
+            <Grid item xs={6}>
+                <EditorBox title="shape and position">
+                    <Box maxWidth={100}>
+                        <NumberInput value={parallax}
+                            inputHandler={(value) => { change(index, 'parallax', clamp(value, 2, 0), type) }}
+                            label="parallax"
+                            max={2} min={0} step={.05}
+                        />
+                    </Box>
                     <ShapeControl
                         shape={hotspot} index={index}
                         setClickEffect={setClickEffect}
                         type='hotspot'
                         change={change}
                         remove={remove} />
-                </fieldset>
+                </EditorBox>
+            </Grid>
 
-                <fieldset>
-                    <legend>walk to point</legend>
+            <Grid item xs={5}>
+                <EditorBox title="walk to point">
                     <OptionalNumberInput
-                        block
                         value={walkToX} label="X: "
                         inputHandler={value => { change(index, 'walkToX', value, type) }} />
                     <OptionalNumberInput
-                        block
                         value={walkToY} label="Y: "
                         inputHandler={value => { change(index, 'walkToY', value, type) }} />
-                    <button onClick={() => { setClickEffect({ type: 'HOTSPOT_WALKTO_POINT', index }) }}>select point</button>
-                </fieldset>
-            </div>
-        </article>
+                    <Button 
+                        variant="outlined"
+                        onClick={() => { setClickEffect({ type: 'HOTSPOT_WALKTO_POINT', index }) }}
+                    >select point</Button>
+                </EditorBox>
+            </Grid>
+
+
+        </Grid >
     )
 
 }
