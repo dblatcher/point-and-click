@@ -1,6 +1,5 @@
 import { FunctionComponent, useState } from "react";
 import { HelpText } from "./HelpText";
-import editorStyles from "./editorStyles.module.css"
 import { Typography, IconButton, Stack, Dialog, DialogTitle, DialogContent, Divider, Box } from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
 
@@ -33,7 +32,6 @@ export const EditorHeading: FunctionComponent<Props> = ({
                 {helpTopic && (
                     <IconButton
                         aria-label={`open help text about ${helpTopic}`}
-                        className={[editorStyles.button, editorStyles.helpButton].join(" ")}
                         onClick={(): void => { setHelpShowing(!helpShowing) }}
                     >
                         <HelpIcon />
