@@ -430,7 +430,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             },
             {
                 label: 'Background', content: (<Stack spacing={2}>
-                    <ListEditor
+                    <ListEditor tight
                         list={background}
                         mutateList={(background) => { this.setStateWithAutosave({ background }) }}
                         describeItem={(layer, index) => (
