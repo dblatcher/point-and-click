@@ -1,16 +1,11 @@
 import { SchemaForm } from "@/components/SchemaForm";
-import { FixedGameInfoSchema, GameContentsDataSchema, GameDesign } from "@/definitions/Game";
+import { FixedGameInfoSchema, GameContentsDataSchema } from "@/definitions/Game";
 import { listIds } from "@/lib/util";
 import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
-import { FunctionComponent } from "react";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
-
-interface Props {
-  gameDesign: GameDesign;
-  edit: { (property: keyof GameDesign, value: unknown): void };
-}
+import { useGameDesign } from "./game-design-context";
 
 const formSchema = GameContentsDataSchema.pick({
   id: true,
@@ -19,10 +14,8 @@ const formSchema = GameContentsDataSchema.pick({
   openingSequenceId: true
 }))
 
-export const Overview: FunctionComponent<Props> = ({
-  gameDesign,
-  edit,
-}: Props) => {
+export const Overview = () => {
+  const { gameDesign, performUpdate } = useGameDesign()
 
   return (
     <Stack>
@@ -38,7 +31,7 @@ export const Overview: FunctionComponent<Props> = ({
                 case 'id':
                 case 'currentRoomId':
                 case 'openingSequenceId':
-                  edit(field.key, value)
+                  performUpdate(field.key, value)
               }
             }}
             fieldAliases={{
@@ -87,7 +80,7 @@ export const Overview: FunctionComponent<Props> = ({
       </Stack>
 
       <EditorHeading heading="Flags" />
-      <FlagMapControl gameDesign={gameDesign} edit={edit} />
+      <FlagMapControl />
 
     </Stack>
   );

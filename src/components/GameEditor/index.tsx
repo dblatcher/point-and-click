@@ -283,6 +283,7 @@ export default class GameEditor extends Component<Props, State>{
         const {
             gameDesign, tabOpen, options, gameItemIds, history,
         } = this.state
+        const { performUpdate } = this
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
@@ -317,7 +318,10 @@ export default class GameEditor extends Component<Props, State>{
         ]
 
         return (
-            <GameDesignProvider value={this.state.gameDesign} >
+            <GameDesignProvider value={{
+                gameDesign: this.state.gameDesign,
+                performUpdate,
+            }} >
                 <Container maxWidth='xl'
                     component={'main'}
                     sx={{
@@ -397,9 +401,7 @@ export default class GameEditor extends Component<Props, State>{
                                 key={this.state.undoTime}
                                 openIndex={tabOpen} tabs={[
                                     {
-                                        label: 'main', content: <Overview
-                                            gameDesign={gameDesign}
-                                            edit={(property, value) => { this.performUpdate(property, value) }} />
+                                        label: 'main', content: <Overview />
                                     },
                                     {
                                         label: 'Room Editor', content: <RoomEditor
@@ -490,10 +492,7 @@ export default class GameEditor extends Component<Props, State>{
                                                 options={options}
                                             />
                                             <br />
-                                            <VerbMenuEditor
-                                                gameDesign={gameDesign}
-                                                updateData={data => { this.performUpdate('verbs', data) }}
-                                            />
+                                            <VerbMenuEditor />
                                         </>
                                     },
                                     { label: 'Image uploader', content: <ImageAssetTool /> },

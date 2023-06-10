@@ -1,42 +1,36 @@
 
-import { FunctionComponent} from "react";
-import { GameDesign, Verb } from "@/definitions";
-import { ListEditor } from "./ListEditor";
-import { VerbMenu } from "@/components/game-ui/VerbMenu";
+import { VerbMenuInner } from "@/components/game-ui/VerbMenu";
+import { listIds } from "@/lib/util";
+import { Paper, Stack, Typography } from "@mui/material";
+import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
+import { ListEditor } from "./ListEditor";
+import { useGameDesign } from "./game-design-context";
 
 
-interface Props {
-    gameDesign: GameDesign;
-    updateData: { (data: Verb[]): void };
-}
 
-export const VerbMenuEditor: FunctionComponent<Props> = ({
-    gameDesign,
-    updateData,
-}: Props) => {
-
+export const VerbMenuEditor = () => {
+    const { gameDesign, performUpdate } = useGameDesign()
+    const updateData = (data: unknown) => { performUpdate('verbs', data) }
     return (<>
         <EditorHeading heading="Verb Menu" helpTopic="verb menu" />
-        <section style={{ maxWidth: '35em' }}>
-
+        <Stack direction="row" justifyContent="space-between">
             <ListEditor noDeleteButtons
                 list={gameDesign.verbs}
                 mutateList={(list) => { updateData(list) }}
                 describeItem={(verb, index) => (
-                    <span key={index}>{verb.id} : {verb.label}</span>
+                    <Typography key={index}>{verb.id} : {verb.label}</Typography>
                 )}
             />
-
-            <fieldset>
-                <legend>preview</legend>
-                <VerbMenu
-                    verbs={gameDesign.verbs}
-                    currentVerbId={gameDesign.verbs[0] ? gameDesign.verbs[0].id : ''}
-                    select={() => { }}
-                />
-            </fieldset>
-        </section>
-
+            <EditorBox title="Preview">
+                <Paper>
+                    <VerbMenuInner key={listIds(gameDesign.verbs).join()}
+                        verbs={gameDesign.verbs}
+                        currentVerbId={gameDesign.verbs[0] ? gameDesign.verbs[0].id : ''}
+                        select={() => { }}
+                    />
+                </Paper>
+            </EditorBox>
+        </Stack>
     </>)
 }

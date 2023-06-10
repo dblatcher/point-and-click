@@ -1,31 +1,23 @@
 
-import { FunctionComponent } from "react";
+import { SchemaForm, getModification } from "@/components/SchemaForm";
 import { Flag, FlagMap, FlagSchema } from "@/definitions/Flag";
-import { GameDesign } from "@/definitions/Game";
-import { makeNewFlag } from "./defaults";
 import { RecordEditor } from "./RecordEditor";
-import { getModification, SchemaForm } from "@/components/SchemaForm";
+import { makeNewFlag } from "./defaults";
+import { useGameDesign } from "./game-design-context";
 
-interface Props {
-    gameDesign: GameDesign;
-    edit: { (property: keyof GameDesign, value: unknown): void };
-}
-
-export const FlagMapControl: FunctionComponent<Props> = ({
-    gameDesign,
-    edit,
-}: Props) => {
+export const FlagMapControl = () => {
+    const { gameDesign, performUpdate } = useGameDesign()
 
     const addEntry = (key: string) => {
         const mod: Partial<FlagMap> = {}
         mod[key] = makeNewFlag()
-        return edit('flagMap', Object.assign({}, gameDesign.flagMap, mod))
+        return performUpdate('flagMap', { ...gameDesign.flagMap, ...mod })
     }
 
     const setEntry = (key: string, value: Flag | undefined) => {
         const mod: Partial<FlagMap> = {}
         mod[key] = value
-        return edit('flagMap', Object.assign({}, gameDesign.flagMap, mod))
+        return performUpdate('flagMap', { ...gameDesign.flagMap, ...mod })
     }
 
     return <RecordEditor

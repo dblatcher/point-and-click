@@ -12,7 +12,7 @@ export const VerbMenu = (props: { select: { (verb: Verb): void }; }) => {
     return <VerbMenuInner select={props.select} verbs={verbs} currentVerbId={currentVerbId} />
 }
 
-const VerbMenuInner = memo ( function VerbMenu({ verbs, currentVerbId, select }: VerbMenuProps) {
+export const VerbMenuInner = memo ( function VerbMenu({ verbs, currentVerbId, select }: VerbMenuProps) {
     return (
         <div className={uiStyles.frame}>
             <nav className={[uiStyles.contents, uiStyles.menu].join(" ")}>

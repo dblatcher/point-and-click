@@ -31,7 +31,7 @@ export const ChoiceEditor = ({
     addSequence, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem
 }: Props) => {
 
-    const design = useGameDesign()
+    const { gameDesign: design } = useGameDesign()
     const { id, branches } = conversation
 
     return (<Stack spacing={2}>
