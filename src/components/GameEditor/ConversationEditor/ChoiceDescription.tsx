@@ -15,18 +15,18 @@ interface Props {
 
 export const ChoiceDescription = ({ choice, openEditor }: Props) => {
 
-    return <Stack spacing={1} flex={1} direction={'row'} justifyContent={'flex-end'}>
-        {choice.ref && (
-            <Box>
-                <Typography component={'span'} variant="caption">REF=</Typography>
-                <Typography component={'b'}>{choice.ref}</Typography>
-            </Box>
-        )}
+    return <Stack spacing={1} flex={1} direction={'row'} justifyContent={'flex-start'}>
+        <Button variant="outlined" onClick={openEditor}>edit</Button>
         <Box sx={{ backgroundColor: 'primary.light', color:'primary.contrastText' }} padding={1}>
             <Typography component={'q'}>
                 {choice.text ? truncateLine(choice.text, 40) : "[no text]"}
             </Typography>
         </Box>
-        <Button variant="outlined" onClick={openEditor}>edit</Button>
+        {choice.ref && (
+            <Stack>
+                <Typography component={'span'} variant="caption">REF</Typography>
+                <Typography component={'b'}>{choice.ref}</Typography>
+            </Stack>
+        )}
     </Stack>
 }

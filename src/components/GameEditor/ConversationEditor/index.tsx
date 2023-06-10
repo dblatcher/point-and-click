@@ -6,7 +6,7 @@ import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice, Con
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { Component } from "react";
 import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
@@ -14,11 +14,11 @@ import { ListEditor } from "../ListEditor";
 import { RecordEditor } from "../RecordEditor";
 import { SequenceEditor } from "../SequenceEditor";
 import { StorageMenu } from "../StorageMenu";
-import { DataItemEditorProps, icons } from "../dataEditors";
+import { DataItemEditorProps } from "../dataEditors";
 import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
-import editorStyles from "../editorStyles.module.css";
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ChoiceDescription } from "./ChoiceDescription";
+import AddIcon from "@mui/icons-material/Add"
 
 type ExtraState = {
     openBranchId?: string;
@@ -302,9 +302,8 @@ export class ConversationEditor extends Component<Props, State> {
                         addEntryLabel={'new branch'}
                         describeValue={(branchKey, branch) => {
                             return (
-                                <div key={branchKey}>
-                                    <span>Branch: <strong>{branchKey}</strong></span>
-                                    <ListEditor
+                                <EditorBox key={branchKey} title={`Branch: ${branchKey}`}>
+                                    <ListEditor tight
                                         list={branch.choices}
                                         describeItem={(choice, choiceIndex) => {
                                             return (
@@ -322,13 +321,14 @@ export class ConversationEditor extends Component<Props, State> {
                                             this.mutateChoiceList(branchKey, newList)
                                         }}
                                     />
-                                    <button
-                                        className={[editorStyles.button, editorStyles.plusButton].join(" ")}
-                                        style={{ width: '100%' }}
-                                        onClick={() => { this.addNewChoice(branchKey) }}>
-                                        add choice{icons.INSERT}
-                                    </button>
-                                </div>
+                                    <Button
+                                        size="small"
+                                        variant="contained"
+                                        fullWidth
+                                        startIcon={<AddIcon />}
+                                        onClick={() => { this.addNewChoice(branchKey) }}
+                                    >Add choice</Button>
+                                </EditorBox>
                             )
                         }}
                         setEntry={this.changeBranch}
@@ -363,7 +363,7 @@ export class ConversationEditor extends Component<Props, State> {
                     <DialogActions>
                         <Button
                             variant="outlined"
-                            disabled ={!choice?.sequence}
+                            disabled={!choice?.sequence}
                             onClick={() => { this.setState({ sequenceDialogOpen: true }) }}>edit sequence</Button>
                         <Button
                             variant="contained"
