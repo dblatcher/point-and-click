@@ -12,11 +12,13 @@ import { ChoiceListControl } from "./ChoiceListControl";
 import { RecordEditor } from "../RecordEditor";
 import { StorageMenu } from "../StorageMenu";
 import { ListEditor } from "../ListEditor";
-import { SelectInput, StringInput } from "../formControls";
+import { SelectInput, StringInput } from "@/components/SchemaForm/inputs";
 import { SequenceEditor } from "../SequenceEditor";
 import editorStyles from "../editorStyles.module.css"
 import { NewSequenceForm } from "./NewSequenceForm";
 import { EditorHeading } from "../EditorHeading";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Box } from "@mui/material";
+import { EditorBox } from "../EditorBox";
 
 type ExtraState = {
     openBranchId?: string;
@@ -47,7 +49,7 @@ export class ConversationEditor extends Component<Props, State> {
         const initialState = props.data ? cloneData(props.data) : makeBlankConversation()
         this.state = {
             ...initialState,
-            openBranchId: initialState.defaultBranch,
+            openBranchId: undefined,
             activeChoiceIndex: 0,
         }
 
@@ -179,6 +181,7 @@ export class ConversationEditor extends Component<Props, State> {
             const choice = choices[activeChoiceIndex]
             if (!choice) { return {} }
 
+            console.log('mod', getModification(value, field))
             Object.assign(choice, getModification(value, field))
             return { branches }
         })
@@ -252,24 +255,28 @@ export class ConversationEditor extends Component<Props, State> {
 
         return (
             <article>
-                <EditorHeading heading={`Conversation Editor`} itemId={id}/>
-                <section className={editorStyles.row}>
-                    <fieldset>
-                        <legend>Conversation</legend>
-                        <StringInput block
-                            label="id"
-                            value={state.id || ''}
-                            inputHandler={value => { this.changeValue('id', value) }} />
-                        <SelectInput block
-                            label="defaultBranch"
-                            value={defaultBranch}
-                            items={Object.keys(branches)}
-                            onSelect={(item: string) => { this.changeValue('defaultBranch', item) }} />
-                        <SelectInput block
-                            label="currentBranch" value={currentBranch || ''} items={Object.keys(branches)}
-                            haveEmptyOption={true} emptyOptionLabel="(choose branch)"
-                            onSelect={(item: string) => { this.changeValue('currentBranch', item) }} />
-                    </fieldset>
+                <EditorHeading heading={`Conversation Editor`} itemId={id} />
+
+
+                <Stack spacing={2} direction={'row'}>
+                    <EditorBox title={'Conversation'}>
+                        <Stack spacing={2} minWidth={'md'}>
+                            <StringInput
+                                label="id"
+                                value={state.id || ''}
+                                inputHandler={value => { this.changeValue('id', value) }} />
+                            <SelectInput
+                                label="defaultBranch"
+                                value={defaultBranch}
+                                options={Object.keys(branches)}
+                                inputHandler={(item) => { if (item) { this.changeValue('defaultBranch', item) } }} />
+                            <SelectInput
+                                label="currentBranch" value={currentBranch || ''} options={Object.keys(branches)}
+                                optional
+                                inputHandler={(item) => { if (item) { this.changeValue('defaultBranch', item) } }} />
+                        </Stack>
+                    </EditorBox>
+
                     <StorageMenu
                         type="conversation"
                         data={this.currentData}
@@ -282,134 +289,162 @@ export class ConversationEditor extends Component<Props, State> {
                         load={this.handleLoadButton}
                         options={options}
                     />
-                </section>
+                </Stack>
 
-                <section className={editorStyles.rowTopLeft}>
 
-                    <fieldset>
-                        <RecordEditor
-                            record={branches}
-                            addEntryLabel={'new branch'}
-                            describeValue={(branchKey, branch) => {
-                                return (
-                                    <div key={branchKey}>
-                                        <span>Branch: <strong>{branchKey}</strong></span>
-                                        <ListEditor
-                                            list={branch.choices}
-                                            describeItem={(choice, choiceIndex) => {
-                                                return (
-                                                    <div key={choiceIndex}>
-                                                        <button
-                                                            onClick={() => {
-                                                                this.setState({
-                                                                    openBranchId: branchKey,
-                                                                    activeChoiceIndex: choiceIndex,
-                                                                })
-                                                            }
-                                                            }
-                                                            style={{
-                                                                textAlign: 'left',
-                                                                minWidth: '12em',
-                                                                padding: 2,
-                                                                fontWeight: choiceIndex === activeChoiceIndex && branchKey === openBranchId ? 700 : 400,
-                                                            }}>
-                                                            {choice.text ? truncateLine(choice.text, 25) : "[no text]"}
-                                                        </button>
-                                                    </div>
-                                                )
-                                            }}
-                                            mutateList={newList => {
-                                                this.mutateChoiceList(branchKey, newList)
-                                            }}
+                <Box display={'flex'} >
+                    <RecordEditor
+                        record={branches}
+                        addEntryLabel={'new branch'}
+                        describeValue={(branchKey, branch) => {
+                            return (
+                                <div key={branchKey}>
+                                    <span>Branch: <strong>{branchKey}</strong></span>
+                                    <ListEditor
+                                        list={branch.choices}
+                                        describeItem={(choice, choiceIndex) => {
+                                            return (
+                                                <div key={choiceIndex}>
+                                                    <button
+                                                        onClick={() => {
+                                                            this.setState({
+                                                                openBranchId: branchKey,
+                                                                activeChoiceIndex: choiceIndex,
+                                                            })
+                                                        }
+                                                        }
+                                                        style={{
+                                                            textAlign: 'left',
+                                                            minWidth: '12em',
+                                                            padding: 2,
+                                                            fontWeight: choiceIndex === activeChoiceIndex && branchKey === openBranchId ? 700 : 400,
+                                                        }}>
+                                                        {choice.text ? truncateLine(choice.text, 25) : "[no text]"}
+                                                    </button>
+                                                </div>
+                                            )
+                                        }}
+                                        mutateList={newList => {
+                                            this.mutateChoiceList(branchKey, newList)
+                                        }}
+                                    />
+                                    <button
+                                        className={[editorStyles.button, editorStyles.plusButton].join(" ")}
+                                        style={{ width: '100%' }}
+                                        onClick={() => { this.addNewChoice(branchKey) }}>
+                                        add choice{icons.INSERT}
+                                    </button>
+                                </div>
+                            )
+                        }}
+                        setEntry={this.changeBranch}
+                        addEntry={(key) => {
+                            this.addNewBranch(key)
+                        }}
+                    />
+                </Box>
+
+                <Dialog open={!!choice} maxWidth={'lg'}>
+                    <DialogTitle>
+                        Branch {'"'}{openBranchId}{'"'} : choice #{activeChoiceIndex}
+                    </DialogTitle>
+                    <DialogContent>
+
+
+                        {choice && (<>
+
+                            <Stack spacing={2}>
+                                <SchemaForm key={`schema-${id}-${openBranchId}-${activeChoiceIndex}`}
+                                    schema={ConversationChoiceSchema.omit({
+                                        'sequence': true
+                                    })}
+                                    data={choice}
+                                    changeValue={this.handleChoiceChange}
+                                    options={{
+                                        nextBranch: Object.keys(this.state.branches),
+                                    }}
+                                />
+
+                                <ChoiceListControl key={`disablesChoices-${id}-${openBranchId}-${activeChoiceIndex}`}
+                                    choices={choice.disablesChoices || []}
+                                    property="disablesChoices"
+                                    conversations={conversations}
+                                    currentConversationId={id}
+                                    openBranchId={openBranchId || ''}
+                                    add={this.addChoiceListItem}
+                                    change={this.updateChoiceListItem}
+                                    remove={this.removeChoiceListItem}
+                                />
+                                <ChoiceListControl key={`enablesChoice-s${id}-${openBranchId}-${activeChoiceIndex}`}
+                                    choices={choice.enablesChoices || []}
+                                    property="enablesChoices"
+                                    conversations={conversations}
+                                    currentConversationId={id}
+                                    openBranchId={openBranchId || ''}
+                                    add={this.addChoiceListItem}
+                                    change={this.updateChoiceListItem}
+                                    remove={this.removeChoiceListItem}
+                                />
+
+                                <Stack direction={'row'} spacing={2} justifyContent={'space-between'}>
+                                    <SelectInput key={`sequence-${id}-${openBranchId}-${activeChoiceIndex}`}
+                                        value={choice.sequence}
+                                        options={sequenceIds}
+                                        label="sequence"
+                                        inputHandler={(value) => {
+                                            this.handleChoiceChange(value, {
+                                                key: 'sequence',
+                                                optional: true,
+                                                type: 'ZodString',
+                                                value: choice.sequence
+                                            })
+                                        }}
+                                    />
+
+                                    <NewSequenceForm
+                                        suggestedIds={[
+                                            `${id}-${openBranchId}-${activeChoiceIndex}`,
+                                        ]}
+                                        existingIds={listIds(gameDesign.sequences)}
+                                        addSequence={(sequence) => {
+                                            this.setStateWithAutosave(state => {
+                                                const { choice } = this.getBranchAndChoice(state)
+                                                if (choice) {
+                                                    choice.sequence = sequence.id
+                                                }
+                                                return state
+                                            }, () => {
+                                                updateSequenceData(sequence)
+                                            })
+                                        }}
+                                    />
+
+                                </Stack>
+
+                            </Stack>
+
+                            <section style={{ marginTop: '1em' }}>
+                                {choice && choice.sequence && (
+                                    <fieldset>
+                                        <SequenceEditor key={choice.sequence} isSubSection
+                                            sequenceId={choice.sequence}
+                                            data={findById(choice.sequence, gameDesign.sequences)}
+                                            updateData={updateSequenceData}
+                                            deleteData={(index) => { console.log('delete squence', index) }}
+                                            gameDesign={gameDesign}
+                                            options={options}
                                         />
-                                        <button
-                                            className={[editorStyles.button, editorStyles.plusButton].join(" ")}
-                                            style={{ width: '100%' }}
-                                            onClick={() => { this.addNewChoice(branchKey) }}>
-                                            add choice{icons.INSERT}
-                                        </button>
-                                    </div>
-                                )
-                            }}
-                            setEntry={this.changeBranch}
-                            addEntry={(key) => {
-                                this.addNewBranch(key)
-                            }}
-                        />
-                    </fieldset>
-
-                    {choice && (
-                        <fieldset>
-                            <SchemaForm key={`schema-${id}-${openBranchId}-${activeChoiceIndex}`}
-                                schema={ConversationChoiceSchema}
-                                data={choice}
-                                changeValue={this.handleChoiceChange}
-                                options={{
-                                    sequence: sequenceIds,
-                                    nextBranch: Object.keys(this.state.branches),
-                                }}
-                            />
-
-                            <hr />
-                            <NewSequenceForm
-                                suggestedIds={[
-                                    `${id}-${openBranchId}-${activeChoiceIndex}`,
-                                ]}
-                                existingIds={listIds(gameDesign.sequences)}
-                                addSequence={(sequence) => {
-                                    this.setStateWithAutosave(state => {
-                                        const { choice } = this.getBranchAndChoice(state)
-                                        if (choice) {
-                                            choice.sequence = sequence.id
-                                        }
-                                        return state
-                                    }, () => {
-                                        updateSequenceData(sequence)
-                                    })
-                                }}
-                            />
-
-                            <ChoiceListControl key={`disablesChoices-${id}-${openBranchId}-${activeChoiceIndex}`}
-                                choices={choice.disablesChoices || []}
-                                property="disablesChoices"
-                                conversations={conversations}
-                                currentConversationId={id}
-                                openBranchId={openBranchId || ''}
-                                add={this.addChoiceListItem}
-                                change={this.updateChoiceListItem}
-                                remove={this.removeChoiceListItem}
-                            />
-                            <ChoiceListControl key={`enablesChoice-s${id}-${openBranchId}-${activeChoiceIndex}`}
-                                choices={choice.enablesChoices || []}
-                                property="enablesChoices"
-                                conversations={conversations}
-                                currentConversationId={id}
-                                openBranchId={openBranchId || ''}
-                                add={this.addChoiceListItem}
-                                change={this.updateChoiceListItem}
-                                remove={this.removeChoiceListItem}
-                            />
-
-
-
-                        </fieldset>
-                    )}
-                </section>
-
-                <section style={{ marginTop: '1em' }}>
-                    {choice && choice.sequence && (
-                        <fieldset>
-                            <SequenceEditor key={choice.sequence} isSubSection
-                                sequenceId={choice.sequence}
-                                data={findById(choice.sequence, gameDesign.sequences)}
-                                updateData={updateSequenceData}
-                                deleteData={(index) => { console.log('delete squence', index) }}
-                                gameDesign={gameDesign}
-                                options={options}
-                            />
-                        </fieldset>
-                    )}
-                </section>
+                                    </fieldset>
+                                )}
+                            </section>
+                        </>)}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            variant="contained"
+                            onClick={() => { this.setState({ activeChoiceIndex: undefined }) }}>close</Button>
+                    </DialogActions>
+                </Dialog>
             </article>
         )
     }
