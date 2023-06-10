@@ -1,25 +1,25 @@
-import { Component } from "react";
-import { ActorData, Direction, RoomData, Point } from "@/definitions";
+import { SchemaForm } from "@/components/SchemaForm";
+import { ActorData, Direction, Point, RoomData } from "@/definitions";
 import { ActorDataSchema, SoundValue } from "@/definitions/ActorData";
 import { directions } from "@/definitions/SpriteSheet";
-import { CheckBoxInput, NumberInput, OptionalNumberInput, SelectInput, StringInput } from "../formControls";
-import { ServiceItemSelector } from "../ServiceItemSelector";
+import { getStatusSuggestions } from "@/lib/animationFunctions";
+import { cloneData } from "@/lib/clone";
+import { uploadJsonData } from "@/lib/files";
+import { findById, listIds } from "@/lib/util";
 import spriteService from "@/services/spriteService";
+import { Box, Stack, Typography } from "@mui/material";
+import { Component } from "react";
+import { EditorHeading } from "../EditorHeading";
+import { RecordEditor } from "../RecordEditor";
+import { ServiceItemSelector } from "../ServiceItemSelector";
 import { SpritePreview } from "../SpritePreview";
 import { StorageMenu } from "../StorageMenu";
-import { cloneData } from "@/lib/clone";
-import { getStatusSuggestions } from "@/lib/animationFunctions";
-import { findById, listIds } from "@/lib/util";
-import { uploadJsonData } from "@/lib/files";
-import editorStyles from "../editorStyles.module.css"
-import { PositionPreview } from "./PositionPreview";
-import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
-import { RecordEditor } from "../RecordEditor";
-import { SoundValueForm } from "./SoundValueForm";
-import { EditorHeading } from "../EditorHeading";
-import { Stack, Box } from "@mui/material";
-import { EditorBox } from "../EditorBox";
 import { TabMenu } from "../TabMenu";
+import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
+import editorStyles from "../editorStyles.module.css";
+import { NumberInput, OptionalNumberInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
+import { PositionPreview } from "./PositionPreview";
+import { SoundValueForm } from "./SoundValueForm";
 
 type ExtraState = {
 
@@ -220,23 +220,28 @@ export class ActorEditor extends Component<Props, State> {
                 <TabMenu tabs={[
                     {
                         label: 'Actor', content: <Box maxWidth={'sm'}>
-                            <StringInput
-                                block className={editorStyles.row}
-                                label="id" value={id}
-                                inputHandler={(value) => changeValue('id', value)} />
-                            <StringInput
-                                block className={editorStyles.row}
-                                label="name" value={name || ''}
-                                inputHandler={(value) => changeValue('name', value)} />
-                            <StringInput
-                                block className={editorStyles.row}
-                                label="status" value={status || ''}
-                                suggestions={this.statusSuggestions}
-                                inputHandler={(value) => changeValue('status', value)} />
-                            <CheckBoxInput
-                                block className={editorStyles.row}
-                                label="Is player actor" value={state.isPlayer}
-                                inputHandler={value => { changeValue('isPlayer', value) }} />
+                            <SchemaForm
+                                schema={ActorDataSchema.pick({
+                                    id: true,
+                                    name: true,
+                                    status: true,
+                                    isPlayer: true,
+                                    speed: true,
+                                    noInteraction: true,
+                                })}
+                                suggestions={{
+                                    status: this.statusSuggestions,
+                                }}
+                                fieldAliases={{
+                                    speed: 'movement speed',
+                                    isPlayer: 'is player actor',
+                                    noInteraction: 'cannot interact with',
+                                }}
+                                data={state}
+                                changeValue={(value, fieldDef) => {
+                                    changeValue(fieldDef.key as keyof ActorData, value)
+                                }}
+                            />
 
                             <div>
                                 <StringInput
@@ -244,24 +249,12 @@ export class ActorEditor extends Component<Props, State> {
                                     inputHandler={value => { changeValue('dialogueColor', value) }} />
                                 <span>{state.dialogueColor}</span>
                             </div>
-
-                            <NumberInput
-                                block className={editorStyles.row}
-                                label="movement speed" value={state.speed || 1}
-                                inputHandler={value => { changeValue('speed', value) }} />
-
-                            <CheckBoxInput
-                                block className={editorStyles.row}
-                                label="Cannot interact with" value={state.noInteraction}
-                                inputHandler={value => { changeValue('noInteraction', value) }} />
                         </Box>
                     },
                     {
                         label: 'sprite', content: (
                             <Stack direction={'row'} spacing={3}>
-                                <Box>
-
-
+                                <Stack spacing={2}>
                                     <ServiceItemSelector legend="choose sprite"
                                         selectedItemId={spriteId}
                                         format='select'
@@ -270,26 +263,23 @@ export class ActorEditor extends Component<Props, State> {
                                             item => this.setStateWithAutosave({ sprite: item.id })
                                         } />
 
-                                    <div>
+
+                                    <Stack direction={'row'} spacing={2}>
                                         <NumberInput label="width" value={width}
                                             inputHandler={(value) => changeValue('width', value)} />
                                         <NumberInput label="height" value={height}
                                             inputHandler={(value) => changeValue('height', value)} />
-                                    </div>
+                                    </Stack>
 
                                     <StringInput
-                                        block className={editorStyles.row}
                                         label="filter" value={state.filter || ''}
                                         inputHandler={(value) => changeValue('filter', value)} />
                                     <NumberInput
-                                        block className={editorStyles.row}
                                         label="display baseline" value={state.baseline || 0}
                                         min={0} max={state.height}
                                         inputHandler={value => { changeValue('baseline', value) }} />
-                                </Box>
+                                </Stack>
                                 <SpritePreview data={this.previewData} />
-
-
                             </Stack>
                         )
                     },
@@ -318,37 +308,35 @@ export class ActorEditor extends Component<Props, State> {
                     },
                     {
                         label: 'position', content: (
-                            <>
-                                <div>
-                                    <SelectInput label="roomId"
-                                        emptyOptionLabel="[no room]"
-                                        items={listIds(this.props.rooms)}
-                                        value={state.room || ''}
-                                        haveEmptyOption={true}
-                                        onSelect={roomId => { changeValue('room', roomId) }} />
-                                </div>
-                                <SelectInput label="direction" value={state.direction || 'left'} items={directions}
-                                    onSelect={(item: string) => { changeValue('direction', item) }} />
-
-                                <div>
+                            <Stack spacing={2}>
+                                <SelectInput label="roomId"
+                                    options={listIds(this.props.rooms)}
+                                    value={state.room || ''}
+                                    optional={true}
+                                    inputHandler={roomId => { changeValue('room', roomId) }} />
+                                <Stack direction={'row'} spacing={2} maxWidth={300}>
                                     <NumberInput
                                         label="x" value={state.x}
                                         inputHandler={value => { changeValue('x', value) }} />
                                     <NumberInput
                                         label="y" value={state.y}
                                         inputHandler={value => { changeValue('y', value) }} />
-                                </div>
+                                    <SelectInput label="direction"
+                                        value={state.direction || 'left'}
+                                        options={directions}
+                                        inputHandler={(item) => { changeValue('direction', item) }} />
+                                </Stack>
 
-                                <span>walk to point</span>
-                                <OptionalNumberInput
-                                    block
-                                    value={walkToX} label="X: "
-                                    inputHandler={value => { changeValue('walkToX', value) }} />
-                                <OptionalNumberInput
-                                    block
-                                    value={walkToY} label="Y: "
-                                    inputHandler={value => { changeValue('walkToY', value) }} />
-                            </>
+                                <Stack direction={'row'} spacing={2}>
+                                    <Typography variant="caption">walk to point</Typography>
+                                    <OptionalNumberInput
+                                        value={walkToX} label="X: "
+                                        inputHandler={value => { changeValue('walkToX', value) }} />
+                                    <OptionalNumberInput
+                                        value={walkToY} label="Y: "
+                                        inputHandler={value => { changeValue('walkToY', value) }} />
+                                </Stack>
+                            </Stack>
                         )
                     },
                     {
