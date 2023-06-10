@@ -31,11 +31,10 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, c
     }
 
     return (
-        <div>
+        <Stack spacing={2}>
             <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
                 <NumberInput label="X" value={x} inputHandler={value => { change(index, 'x', value, type) }} />
                 <NumberInput label="Y" value={y} inputHandler={value => { change(index, 'y', value, type) }} />
-                <Button onClick={() => { remove(index, type) }}>delete</Button>
             </Stack>
             {circle && (
                 <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
@@ -59,14 +58,14 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, c
                         )}
                     />
                     <Button variant="outlined" size="small"
-                    onClick={() => {
-                        setClickEffect({
-                            type: type === 'hotspot' ? 'POLYGON_POINT_HOTSPOT' : 'POLYGON_POINT_OBSTACLE',
-                            index
-                        })
-                    }}>add points</Button>
+                        onClick={() => {
+                            setClickEffect({
+                                type: type === 'hotspot' ? 'POLYGON_POINT_HOTSPOT' : 'POLYGON_POINT_OBSTACLE',
+                                index
+                            })
+                        }}>add points</Button>
                 </div>
             )}
-        </div>
+        </Stack>
     )
 }

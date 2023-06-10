@@ -32,6 +32,8 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
                         block className={editorStyles.row}
                         label="status" value={status || ''}
                         inputHandler={(value) => change(index, 'status', value, type)} />
+
+                    <button onClick={() => { remove(index, 'hotspot') }}>delete</button>
                 </div>
 
                 <fieldset>
@@ -58,7 +60,7 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
                         block
                         value={walkToY} label="Y: "
                         inputHandler={value => { change(index, 'walkToY', value, type) }} />
-                    <button onClick={()=>{ setClickEffect({type:'HOTSPOT_WALKTO_POINT', index})}}>select point</button>
+                    <button onClick={() => { setClickEffect({ type: 'HOTSPOT_WALKTO_POINT', index }) }}>select point</button>
                 </fieldset>
             </div>
         </article>
