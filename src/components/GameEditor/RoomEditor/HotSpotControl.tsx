@@ -41,8 +41,6 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
                 </Button>
             </Grid>
 
-
-
             <Grid item xs={6}>
                 <EditorBox title="shape and position">
                     <Box maxWidth={100}>
@@ -75,8 +73,6 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
                     >select point</Button>
                 </EditorBox>
             </Grid>
-
-
         </Grid >
     )
 
