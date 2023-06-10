@@ -23,6 +23,7 @@ import { ChoiceDescription } from "./ChoiceDescription";
 type ExtraState = {
     openBranchId?: string;
     activeChoiceIndex?: number;
+    sequenceDialogOpen: boolean;
 }
 
 type State = Conversation & ExtraState;
@@ -43,6 +44,7 @@ export class ConversationEditor extends Component<Props, State> {
             ...initialState,
             openBranchId: undefined,
             activeChoiceIndex: 0,
+            sequenceDialogOpen: false,
         }
 
         this.handleLoadButton = this.handleLoadButton.bind(this)
@@ -336,7 +338,11 @@ export class ConversationEditor extends Component<Props, State> {
                     />
                 </Box>
 
-                <Dialog open={!!choice} maxWidth={'lg'}>
+                <Dialog
+                    open={!!choice}
+                    maxWidth={'lg'}
+                    onClose={() => { this.setState({ activeChoiceIndex: undefined }) }}
+                >
                     <DialogTitle>
                         Branch {'"'}{openBranchId}{'"'} : choice #{activeChoiceIndex}
                     </DialogTitle>
@@ -352,27 +358,41 @@ export class ConversationEditor extends Component<Props, State> {
                                     handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence
                                 }}
                             />
-
-                            <section style={{ marginTop: '1em' }}>
-                                {choice && choice.sequence && (
-                                    <fieldset>
-                                        <SequenceEditor key={choice.sequence} isSubSection
-                                            sequenceId={choice.sequence}
-                                            data={findById(choice.sequence, gameDesign.sequences)}
-                                            updateData={updateSequenceData}
-                                            deleteData={(index) => { console.log('delete squence', index) }}
-                                            gameDesign={gameDesign}
-                                            options={options}
-                                        />
-                                    </fieldset>
-                                )}
-                            </section>
                         </>)}
                     </DialogContent>
                     <DialogActions>
                         <Button
+                            variant="outlined"
+                            disabled ={!choice?.sequence}
+                            onClick={() => { this.setState({ sequenceDialogOpen: true }) }}>edit sequence</Button>
+                        <Button
                             variant="contained"
                             onClick={() => { this.setState({ activeChoiceIndex: undefined }) }}>close</Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    open={this.state.sequenceDialogOpen}
+                    onClose={() => { this.setState({ sequenceDialogOpen: false }) }}
+                    maxWidth={'xl'}
+                >
+
+                    {choice && choice.sequence && (
+                        <DialogContent>
+                            <SequenceEditor key={choice.sequence} isSubSection
+                                sequenceId={choice.sequence}
+                                data={findById(choice.sequence, gameDesign.sequences)}
+                                updateData={updateSequenceData}
+                                deleteData={(index) => { console.log('delete squence', index) }}
+                                gameDesign={gameDesign}
+                                options={options}
+                            />
+                        </DialogContent>
+                    )}
+                    <DialogActions>
+                        <Button
+                            variant="contained"
+                            onClick={() => { this.setState({ sequenceDialogOpen: false }) }}>close</Button>
                     </DialogActions>
                 </Dialog>
             </Stack>
