@@ -1,24 +1,24 @@
 
-import { Component } from "react";
+import { getModification, type FieldDef, type FieldValue } from "@/components/SchemaForm";
+import { SelectInput, StringInput } from "@/components/SchemaForm/inputs";
 import { GameDesign, Sequence } from "@/definitions";
+import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice, ConversationSchema } from "@/definitions/Conversation";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
-import { listIds, findById } from "@/lib/util";
-import { Conversation, ConversationBranch, ConversationChoice, ConversationSchema, ConversationChoiceSchema, ChoiceRefSet } from "@/definitions/Conversation";
-import { getModification, SchemaForm, type FieldDef, type FieldValue } from "@/components/SchemaForm";
-import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
-import { DataItemEditorProps, icons } from "../dataEditors"
-import { ChoiceListControl } from "./ChoiceListControl";
-import { RecordEditor } from "../RecordEditor";
-import { StorageMenu } from "../StorageMenu";
-import { ListEditor } from "../ListEditor";
-import { SelectInput, StringInput } from "@/components/SchemaForm/inputs";
-import { SequenceEditor } from "../SequenceEditor";
-import editorStyles from "../editorStyles.module.css"
-import { NewSequenceForm } from "./NewSequenceForm";
-import { EditorHeading } from "../EditorHeading";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Box } from "@mui/material";
+import { findById, listIds } from "@/lib/util";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
+import { Component } from "react";
 import { EditorBox } from "../EditorBox";
+import { EditorHeading } from "../EditorHeading";
+import { ListEditor } from "../ListEditor";
+import { RecordEditor } from "../RecordEditor";
+import { SequenceEditor } from "../SequenceEditor";
+import { StorageMenu } from "../StorageMenu";
+import { DataItemEditorProps, icons } from "../dataEditors";
+import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
+import editorStyles from "../editorStyles.module.css";
+import { ChoiceEditor } from "./ChoiceEditor";
+import { ChoiceDescription } from "./ChoiceDescription";
 
 type ExtraState = {
     openBranchId?: string;
@@ -32,14 +32,6 @@ type Props = DataItemEditorProps<Conversation> & {
     sequenceIds: string[];
     gameDesign: GameDesign;
     updateSequenceData: { (data: Sequence): void };
-}
-
-
-function truncateLine(text: string, length: number) {
-    if (text.length <= length) {
-        return text
-    }
-    return `${text.substring(0, length - 3)}...`;
 }
 
 export class ConversationEditor extends Component<Props, State> {
@@ -60,6 +52,7 @@ export class ConversationEditor extends Component<Props, State> {
         this.updateChoiceListItem = this.updateChoiceListItem.bind(this)
         this.addChoiceListItem = this.addChoiceListItem.bind(this)
         this.removeChoiceListItem = this.removeChoiceListItem.bind(this)
+        this.addSequence = this.addSequence.bind(this)
         this.addNewBranch = this.addNewBranch.bind(this)
         this.addNewChoice = this.addNewChoice.bind(this)
         this.changeBranch = this.changeBranch.bind(this)
@@ -181,7 +174,6 @@ export class ConversationEditor extends Component<Props, State> {
             const choice = choices[activeChoiceIndex]
             if (!choice) { return {} }
 
-            console.log('mod', getModification(value, field))
             Object.assign(choice, getModification(value, field))
             return { branches }
         })
@@ -235,6 +227,18 @@ export class ConversationEditor extends Component<Props, State> {
         })
     }
 
+    addSequence(sequence: Sequence) {
+        this.setStateWithAutosave(state => {
+            const { choice } = this.getBranchAndChoice(state)
+            if (choice) {
+                choice.sequence = sequence.id
+            }
+            return state
+        }, () => {
+            this.props.updateSequenceData(sequence)
+        })
+    }
+
     getBranchAndChoice(state: State): { branch?: ConversationBranch; choice?: ConversationChoice } {
         const { activeChoiceIndex, openBranchId, branches } = state
         const result: { branch?: ConversationBranch; choice?: ConversationChoice } = {}
@@ -248,16 +252,14 @@ export class ConversationEditor extends Component<Props, State> {
     }
 
     render() {
-        const { state } = this
+        const { state, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence } = this
         const { branches, defaultBranch, currentBranch, openBranchId, id, activeChoiceIndex } = this.state
-        const { conversations, sequenceIds, deleteData, options, gameDesign, updateSequenceData } = this.props
+        const { conversations, deleteData, options, gameDesign, updateSequenceData } = this.props
         const { choice } = this.getBranchAndChoice(state)
 
         return (
-            <article>
+            <Stack component={'article'} spacing={2}>
                 <EditorHeading heading={`Conversation Editor`} itemId={id} />
-
-
                 <Stack spacing={2} direction={'row'}>
                     <EditorBox title={'Conversation'}>
                         <Stack spacing={2} minWidth={'md'}>
@@ -304,24 +306,14 @@ export class ConversationEditor extends Component<Props, State> {
                                         list={branch.choices}
                                         describeItem={(choice, choiceIndex) => {
                                             return (
-                                                <div key={choiceIndex}>
-                                                    <button
-                                                        onClick={() => {
-                                                            this.setState({
-                                                                openBranchId: branchKey,
-                                                                activeChoiceIndex: choiceIndex,
-                                                            })
-                                                        }
-                                                        }
-                                                        style={{
-                                                            textAlign: 'left',
-                                                            minWidth: '12em',
-                                                            padding: 2,
-                                                            fontWeight: choiceIndex === activeChoiceIndex && branchKey === openBranchId ? 700 : 400,
-                                                        }}>
-                                                        {choice.text ? truncateLine(choice.text, 25) : "[no text]"}
-                                                    </button>
-                                                </div>
+                                                <ChoiceDescription
+                                                    choice={choice}
+                                                    openEditor={() => {
+                                                        this.setState(
+                                                            { openBranchId: branchKey, activeChoiceIndex: choiceIndex }
+                                                        )
+                                                    }}
+                                                />
                                             )
                                         }}
                                         mutateList={newList => {
@@ -349,79 +341,17 @@ export class ConversationEditor extends Component<Props, State> {
                         Branch {'"'}{openBranchId}{'"'} : choice #{activeChoiceIndex}
                     </DialogTitle>
                     <DialogContent>
-
-
                         {choice && (<>
-
-                            <Stack spacing={2}>
-                                <SchemaForm key={`schema-${id}-${openBranchId}-${activeChoiceIndex}`}
-                                    schema={ConversationChoiceSchema.omit({
-                                        'sequence': true
-                                    })}
-                                    data={choice}
-                                    changeValue={this.handleChoiceChange}
-                                    options={{
-                                        nextBranch: Object.keys(this.state.branches),
-                                    }}
-                                />
-
-                                <ChoiceListControl key={`disablesChoices-${id}-${openBranchId}-${activeChoiceIndex}`}
-                                    choices={choice.disablesChoices || []}
-                                    property="disablesChoices"
-                                    conversations={conversations}
-                                    currentConversationId={id}
-                                    openBranchId={openBranchId || ''}
-                                    add={this.addChoiceListItem}
-                                    change={this.updateChoiceListItem}
-                                    remove={this.removeChoiceListItem}
-                                />
-                                <ChoiceListControl key={`enablesChoice-s${id}-${openBranchId}-${activeChoiceIndex}`}
-                                    choices={choice.enablesChoices || []}
-                                    property="enablesChoices"
-                                    conversations={conversations}
-                                    currentConversationId={id}
-                                    openBranchId={openBranchId || ''}
-                                    add={this.addChoiceListItem}
-                                    change={this.updateChoiceListItem}
-                                    remove={this.removeChoiceListItem}
-                                />
-
-                                <Stack direction={'row'} spacing={2} justifyContent={'space-between'}>
-                                    <SelectInput key={`sequence-${id}-${openBranchId}-${activeChoiceIndex}`}
-                                        value={choice.sequence}
-                                        options={sequenceIds}
-                                        label="sequence"
-                                        inputHandler={(value) => {
-                                            this.handleChoiceChange(value, {
-                                                key: 'sequence',
-                                                optional: true,
-                                                type: 'ZodString',
-                                                value: choice.sequence
-                                            })
-                                        }}
-                                    />
-
-                                    <NewSequenceForm
-                                        suggestedIds={[
-                                            `${id}-${openBranchId}-${activeChoiceIndex}`,
-                                        ]}
-                                        existingIds={listIds(gameDesign.sequences)}
-                                        addSequence={(sequence) => {
-                                            this.setStateWithAutosave(state => {
-                                                const { choice } = this.getBranchAndChoice(state)
-                                                if (choice) {
-                                                    choice.sequence = sequence.id
-                                                }
-                                                return state
-                                            }, () => {
-                                                updateSequenceData(sequence)
-                                            })
-                                        }}
-                                    />
-
-                                </Stack>
-
-                            </Stack>
+                            <ChoiceEditor
+                                key={`choice-editor-${openBranchId}-${activeChoiceIndex}`}
+                                choice={choice}
+                                conversation={this.state}
+                                openBranchId={openBranchId ?? ''}
+                                activeChoiceIndex={activeChoiceIndex ?? -1}
+                                {...{
+                                    handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence
+                                }}
+                            />
 
                             <section style={{ marginTop: '1em' }}>
                                 {choice && choice.sequence && (
@@ -445,7 +375,7 @@ export class ConversationEditor extends Component<Props, State> {
                             onClick={() => { this.setState({ activeChoiceIndex: undefined }) }}>close</Button>
                     </DialogActions>
                 </Dialog>
-            </article>
+            </Stack>
         )
     }
 }
