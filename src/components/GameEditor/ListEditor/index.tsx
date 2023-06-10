@@ -2,8 +2,8 @@ import { Component, ReactNode, Fragment } from "react";
 import { Box, Paper, Stack, Button, ButtonGroup, StackProps } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add"
 import DeleteIcon from "@mui/icons-material/Delete"
-import ArrowCircleUp from "@mui/icons-material/ArrowCircleUp"
-import ArrowCircleDown from "@mui/icons-material/ArrowCircleDown"
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { redTheme } from "@/theme";
 
 
@@ -80,7 +80,7 @@ export class ListEditor<T> extends Component<Props<T>> {
                 <Button size='small'
                     color={'info'}
                     onClick={() => { this.handleMove(index, role) }}
-                    startIcon={role === 'UP' ? <ArrowCircleUp /> : <ArrowCircleDown />}
+                    startIcon={role === 'UP' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
                 />
             )
         }
