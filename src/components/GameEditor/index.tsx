@@ -283,7 +283,7 @@ export default class GameEditor extends Component<Props, State>{
         const {
             gameDesign, tabOpen, options, gameItemIds, history,
         } = this.state
-        const { performUpdate } = this
+        const { performUpdate, deleteArrayItem } = this
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
@@ -321,6 +321,8 @@ export default class GameEditor extends Component<Props, State>{
             <GameDesignProvider value={{
                 gameDesign: this.state.gameDesign,
                 performUpdate,
+                deleteArrayItem,
+                options,
             }} >
                 <Container maxWidth='xl'
                     component={'main'}
@@ -483,13 +485,8 @@ export default class GameEditor extends Component<Props, State>{
                                     },
                                     {
                                         label: 'verbs', content: <>
-                                            <VerbEditor
-                                                key={gameItemIds.verbs}
-                                                gameDesign={gameDesign}
+                                            <VerbEditor key={gameItemIds.verbs}
                                                 data={findById(gameItemIds.verbs, gameDesign.verbs)}
-                                                updateData={data => { this.performUpdate('verbs', data) }}
-                                                deleteData={index => { this.deleteArrayItem(index, 'verbs') }}
-                                                options={options}
                                             />
                                             <br />
                                             <VerbMenuEditor />

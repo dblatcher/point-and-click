@@ -1,25 +1,20 @@
 
-import { Component } from "react";
-import { GameDesign, Verb, Command, CommandTarget, ItemData } from "@/definitions";
-import { cloneData } from "@/lib/clone";
-import { makeBlankVerb } from "./defaults";
-import { StorageMenu } from "./StorageMenu";
-import { listIds } from "@/lib/util";
-import { FieldDef, SchemaForm, FieldValue, getModification } from "@/components/SchemaForm";
+import { FieldDef, FieldValue, SchemaForm, getModification } from "@/components/SchemaForm";
+import { Command, CommandTarget, ItemData, Verb } from "@/definitions";
 import { VerbSchema } from "@/definitions/Verb";
-import { DataItemEditorProps } from "./dataEditors";
+import { cloneData } from "@/lib/clone";
 import { describeCommand, getDefaultResponseText, wildCard } from "@/lib/commandFunctions";
+import { listIds } from "@/lib/util";
+import { useState } from "react";
 import { EditorHeading } from "./EditorHeading";
+import { StorageMenu } from "./StorageMenu";
+import { makeBlankVerb } from "./defaults";
+import { useGameDesign } from "./game-design-context";
 
 
-type Props = DataItemEditorProps<Verb> & {
-    gameDesign: GameDesign;
+type Props = {
+    data?: Verb,
 }
-
-type ExtraState = {
-
-}
-type State = Verb & ExtraState
 
 const testTarget: CommandTarget = {
     type: 'hotspot',
@@ -37,111 +32,103 @@ const testItem: ItemData = {
     name: '{{item}}',
 }
 
-export class VerbEditor extends Component<Props, State> {
+export const VerbEditor = (props: Props) => {
+    const { gameDesign, performUpdate, deleteArrayItem, options } = useGameDesign()
+    const { data } = props
 
-    constructor(props: Props) {
-        super(props)
-        this.state = this.initialState
-    }
+    const updateData = (data: Verb) => { performUpdate('verbs', data) }
+    const deleteData = (index: number) => { deleteArrayItem(index, 'verbs') }
 
-    get initialState(): Verb {
-        const { data } = this.props
-        return data ? {
-            ...cloneData(data)
-        } : makeBlankVerb()
-    }
+    const [verbState, setVerbState] = useState<Verb>(data ? {
+        ...cloneData(data)
+    } : makeBlankVerb())
 
-    get currentData(): Verb {
-        const Verb = cloneData(this.state) as State;
-        return Verb
-    }
 
-    handleUpdate(value: FieldValue, field: FieldDef): void {
-        const { options, data, updateData, gameDesign } = this.props
+    const initialData = data ? {
+        ...cloneData(data)
+    } : makeBlankVerb();
+
+    const handleUpdate = (value: FieldValue, field: FieldDef): void => {
         const property = field.key as keyof Verb;
 
-        return this.setState(getModification(value, field), () => {
-            if (options.autoSave && property !== 'id') {
-                const isExistingId = listIds(gameDesign.verbs).includes(this.state.id)
-                if (data && isExistingId) {
-                    updateData(this.currentData)
-                }
+        const mod = getModification(value, field) as Partial<Verb>
+        const updatedState = { ...verbState, ...mod }
+        setVerbState(updatedState)
+
+
+        if (options.autoSave && property !== 'id') {
+            const isExistingId = listIds(gameDesign.verbs).includes(verbState.id)
+            if (data && isExistingId) {
+                updateData(updatedState)
             }
-        })
-    }
-
-    get testCommand(): Command {
-        return {
-            verb: this.state,
-            target: testTarget,
         }
     }
 
-    get testCommandWithItem(): Command {
-        return {
-            verb: this.state,
-            target: testTarget,
-            item: testItem,
-        }
+    const testCommandWithItem: Command = {
+        verb: verbState,
+        target: testTarget,
+        item: testItem,
+    }
+    const testCommand: Command = {
+        verb: verbState,
+        target: testTarget,
     }
 
-    render() {
-        const { gameDesign, updateData, options } = this.props
 
-        return (
-            <article>
-                <EditorHeading heading="Verb Editor" itemId={this.initialState.id}/>
-                <StorageMenu
-                    type="Verb"
-                    update={() => updateData(this.currentData)}
-                    deleteItem={this.props.deleteData}
-                    existingIds={listIds(gameDesign.verbs)}
-                    data={this.currentData}
-                    originalId={this.props.data?.id}
-                    reset={() => this.setState(this.initialState)}
-                    options={options}
-                />
+    return (
 
-                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                    <fieldset style={{ maxWidth: '25rem' }}>
-                        <SchemaForm
-                            data={this.currentData}
-                            schema={VerbSchema}
-                            changeValue={(value, field) => { this.handleUpdate(value, field) }}
-                        />
-                    </fieldset>
-                    <fieldset>
-                        <table>
-                            <caption>wildcards</caption>
-                            <tbody>
-                                {Object.entries(wildCard).map(([key, value]) => (
-                                    <tr key={key}>
-                                        <th>{key}</th>
-                                        <td>{value}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </fieldset>
-                </div>
+        <article>
+            <EditorHeading heading="Verb Editor" itemId={initialData.id} />
+            <StorageMenu
+                type="Verb"
+                update={() => updateData(cloneData(verbState))}
+                deleteItem={deleteData}
+                existingIds={listIds(gameDesign.verbs)}
+                data={cloneData(verbState)}
+                originalId={props.data?.id}
+                reset={() => { setVerbState(initialData) }}
+                options={options}
+            />
 
-                <fieldset style={{ position: 'relative', maxWidth: '100%' }}>
-                    <legend>Samples</legend>
-                    <div>COMMAND: <b>{describeCommand(this.testCommand, true)}</b></div>
-                    <ul>
-                        <li>DEFAULT(reachable): {getDefaultResponseText(this.testCommand, false)}</li>
-                        <li>DEFAULT(unreachable):{getDefaultResponseText(this.testCommand, true)}</li>
-                    </ul>
-
-                    {!!this.state.preposition && <>
-                        <div>COMMAND: <b>{describeCommand(this.testCommandWithItem, true)}</b></div>
-                        <ul>
-                            <li>DEFAULT(reachable): {getDefaultResponseText(this.testCommandWithItem, false)}</li>
-                            <li>DEFAULT(unreachable): {getDefaultResponseText(this.testCommandWithItem, true)}</li>
-                        </ul>
-                    </>}
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                <fieldset style={{ maxWidth: '25rem' }}>
+                    <SchemaForm
+                        data={verbState}
+                        schema={VerbSchema}
+                        changeValue={(value, field) => { handleUpdate(value, field) }}
+                    />
                 </fieldset>
-            </article>
-        )
-    }
+                <fieldset>
+                    <table>
+                        <caption>wildcards</caption>
+                        <tbody>
+                            {Object.entries(wildCard).map(([key, value]) => (
+                                <tr key={key}>
+                                    <th>{key}</th>
+                                    <td>{value}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+
+            <fieldset style={{ position: 'relative', maxWidth: '100%' }}>
+                <legend>Samples</legend>
+                <div>COMMAND: <b>{describeCommand(testCommand, true)}</b></div>
+                <ul>
+                    <li>DEFAULT(reachable): {getDefaultResponseText(testCommand, false)}</li>
+                    <li>DEFAULT(unreachable):{getDefaultResponseText(testCommand, true)}</li>
+                </ul>
+
+                {!!verbState.preposition && <>
+                    <div>COMMAND: <b>{describeCommand(testCommandWithItem, true)}</b></div>
+                    <ul>
+                        <li>DEFAULT(reachable): {getDefaultResponseText(testCommandWithItem, false)}</li>
+                        <li>DEFAULT(unreachable): {getDefaultResponseText(testCommandWithItem, true)}</li>
+                    </ul>
+                </>}
+            </fieldset>
+        </article>
+    )
 }
