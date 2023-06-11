@@ -1,13 +1,14 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, BoxProps, Typography, useTheme } from '@mui/material';
 import { ReactNode } from 'react'
 
 interface Props {
     title?: string;
     children: ReactNode;
-    themePalette?: 'primary' | 'secondary'
+    themePalette?: 'primary' | 'secondary';
+    boxProps?: BoxProps;
 }
 
-export const EditorBox = ({ title, children, themePalette = 'primary' }: Props) => {
+export const EditorBox = ({ title, children, themePalette = 'primary', boxProps = {} }: Props) => {
 
     const theme = useTheme()
     const colorScheme = theme.palette[themePalette]
@@ -18,7 +19,9 @@ export const EditorBox = ({ title, children, themePalette = 'primary' }: Props) 
                 borderColor: colorScheme.light,
                 borderWidth: 1,
                 borderStyle: 'solid',
-            }}>
+            }}
+            {...boxProps}
+        >
             {title && (
                 <Typography component={'div'}
                     variant='overline'

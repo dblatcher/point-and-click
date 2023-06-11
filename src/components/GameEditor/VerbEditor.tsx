@@ -10,6 +10,9 @@ import { EditorHeading } from "./EditorHeading";
 import { StorageMenu } from "./StorageMenu";
 import { makeBlankVerb } from "./defaults";
 import { useGameDesign } from "./game-design-context";
+import { Box, Stack, Typography } from "@mui/material";
+import { EditorBox } from "./EditorBox";
+import { StringInput } from "../SchemaForm/StringInput";
 
 
 type Props = {
@@ -43,6 +46,9 @@ export const VerbEditor = (props: Props) => {
         ...cloneData(data)
     } : makeBlankVerb())
 
+    const [sampleTargetName, setSampleTargetName] = useState('TARGET')
+    const [sampleItemName, setSampleItemName] = useState('ITEM')
+
 
     const initialData = data ? {
         ...cloneData(data)
@@ -65,70 +71,92 @@ export const VerbEditor = (props: Props) => {
     }
 
     const testCommandWithItem: Command = {
-        verb: verbState,
-        target: testTarget,
-        item: testItem,
+        verb: { ...verbState, preposition: verbState.preposition || '[WITH]' },
+        target: { ...testTarget, name: sampleTargetName },
+        item: { ...testItem, name: sampleItemName },
     }
     const testCommand: Command = {
         verb: verbState,
-        target: testTarget,
+        target: { ...testTarget, name: sampleTargetName },
     }
 
 
     return (
 
-        <article>
+        <Stack spacing={2}>
             <EditorHeading heading="Verb Editor" itemId={initialData.id} />
-            <StorageMenu
-                type="Verb"
-                update={() => updateData(cloneData(verbState))}
-                deleteItem={deleteData}
-                existingIds={listIds(gameDesign.verbs)}
-                data={cloneData(verbState)}
-                originalId={props.data?.id}
-                reset={() => { setVerbState(initialData) }}
-                options={options}
-            />
-
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                <fieldset style={{ maxWidth: '25rem' }}>
+            <Stack direction={'row'} spacing={2}>
+                <EditorBox title="Verb config" boxProps={{ flexBasis: 400 }}>
                     <SchemaForm
                         data={verbState}
                         schema={VerbSchema}
                         changeValue={(value, field) => { handleUpdate(value, field) }}
                     />
-                </fieldset>
-                <fieldset>
-                    <table>
-                        <caption>wildcards</caption>
-                        <tbody>
-                            {Object.entries(wildCard).map(([key, value]) => (
-                                <tr key={key}>
-                                    <th>{key}</th>
-                                    <td>{value}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </fieldset>
-            </div>
+                </EditorBox>
+                <Stack spacing={2}>
+                    <StorageMenu
+                        type="Verb"
+                        update={() => updateData(cloneData(verbState))}
+                        deleteItem={deleteData}
+                        existingIds={listIds(gameDesign.verbs)}
+                        data={cloneData(verbState)}
+                        originalId={props.data?.id}
+                        reset={() => { setVerbState(initialData) }}
+                        options={options}
+                    />
+                    <EditorBox title="wildcards for default responses">
+                        <table>
+                            <tbody>
+                                {Object.entries(wildCard).map(([key, value]) => (
+                                    <tr key={key}>
+                                        <th>{key}</th>
+                                        <td>{value}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </EditorBox>
+                </Stack>
+            </Stack>
 
-            <fieldset style={{ position: 'relative', maxWidth: '100%' }}>
-                <legend>Samples</legend>
-                <div>COMMAND: <b>{describeCommand(testCommand, true)}</b></div>
-                <ul>
-                    <li>DEFAULT(reachable): {getDefaultResponseText(testCommand, false)}</li>
-                    <li>DEFAULT(unreachable):{getDefaultResponseText(testCommand, true)}</li>
-                </ul>
+            <EditorBox title="Default Responses">
+                <Stack direction={'row'} spacing={2}>
+                    <Box sx={{ flexBasis: 300 }}>
+                        <StringInput
+                            label="sample target name"
+                            value={sampleTargetName}
+                            inputHandler={setSampleTargetName}
+                            suggestions={['TARGET', 'door', 'statue', 'window', 'hillside', 'axe', 'pair of wax lips', 'banana tree']}
+                        />
+                        <StringInput
+                            label="sample item name"
+                            value={sampleItemName}
+                            inputHandler={setSampleItemName}
+                            suggestions={['ITEM', 'key', 'oily rag', 'pair of scissors', 'ancient artifact']}
+                        />
+                    </Box>
+                    <Box>
+                        <Stack direction={'row'} spacing={4}>
+                            <Typography fontWeight={700}>{describeCommand(testCommand, true)} (reachable)</Typography>
+                            <Typography variant="overline" component={'q'}>{getDefaultResponseText(testCommand, false)}</Typography>
+                        </Stack>
+                        <Stack direction={'row'} spacing={4}>
+                            <Typography fontWeight={700}>{describeCommand(testCommand, true)} (unreachable)</Typography>
+                            <Typography variant="overline" component={'q'}>{getDefaultResponseText(testCommand, true)}</Typography>
+                        </Stack>
+                        <Stack direction={'row'} spacing={4}>
+                            <Typography fontWeight={700}>{describeCommand(testCommandWithItem, true)} (reachable)</Typography>
+                            <Typography variant="overline" component={'q'}>{getDefaultResponseText(testCommandWithItem, false)}</Typography>
+                        </Stack>
+                        <Stack direction={'row'} spacing={4}>
+                            <Typography fontWeight={700}>{describeCommand(testCommandWithItem, true)} (unreachable)</Typography>
+                            <Typography variant="overline" component={'q'}>{getDefaultResponseText(testCommandWithItem, true)}</Typography>
+                        </Stack>
+                    </Box>
+                </Stack>
+            </EditorBox>
 
-                {!!verbState.preposition && <>
-                    <div>COMMAND: <b>{describeCommand(testCommandWithItem, true)}</b></div>
-                    <ul>
-                        <li>DEFAULT(reachable): {getDefaultResponseText(testCommandWithItem, false)}</li>
-                        <li>DEFAULT(unreachable): {getDefaultResponseText(testCommandWithItem, true)}</li>
-                    </ul>
-                </>}
-            </fieldset>
-        </article>
+
+        </Stack>
     )
 }
