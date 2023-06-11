@@ -1,4 +1,5 @@
 import { SchemaForm } from "@/components/SchemaForm";
+import { NumberInput, OptionalNumberInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
 import { ActorData, Direction, Point, RoomData } from "@/definitions";
 import { ActorDataSchema, SoundValue } from "@/definitions/ActorData";
 import { directions } from "@/definitions/SpriteSheet";
@@ -16,8 +17,6 @@ import { SpritePreview } from "../SpritePreview";
 import { StorageMenu } from "../StorageMenu";
 import { TabMenu } from "../TabMenu";
 import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
-import editorStyles from "../editorStyles.module.css";
-import { NumberInput, OptionalNumberInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
 import { PositionPreview } from "./PositionPreview";
 import { SoundValueForm } from "./SoundValueForm";
 

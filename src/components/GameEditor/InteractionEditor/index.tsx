@@ -10,7 +10,6 @@ import editorStyles from '../editorStyles.module.css';
 import styles from './styles.module.css';
 import { icons } from "../dataEditors";
 import { EditorHeading } from "../EditorHeading";
-import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 
 interface Props {
     gameDesign: GameDesign;
