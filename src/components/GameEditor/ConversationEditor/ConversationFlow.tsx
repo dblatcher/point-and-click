@@ -1,9 +1,10 @@
 import { Conversation, ConversationBranch } from "@/definitions"
-import { Box, Button, Stack, Typography, Card } from "@mui/material"
+import { Box, Button, Stack, Typography, Card, ButtonGroup } from "@mui/material"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { LineBetweenNodes } from "./LineBetweenNodes"
 import { EditorBox } from "../EditorBox"
 import AddIcon from "@mui/icons-material/Add"
+import { ChoiceDescription } from "./ChoiceDescription"
 
 interface Props {
     conversation: Conversation
@@ -74,18 +75,18 @@ type BranchBoxProps = {
 const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialog }: BranchBoxProps) => {
     return (
         <div data-branch-identifier={branchKey}>
-            <EditorBox title={branchKey} >
+            <EditorBox title={`Branch: ${branchKey}`} >
                 {branch.choices.map((choice, index) => (
-                    <Box key={index} data-choice-identifier={`${branchKey}-${index}`} marginBottom={1}>
-                        <Button onClick={() => { openEditor(branchKey, index) }}>edit</Button>
-                        <Typography component={'span'}>
-                            {choice.text}
-                        </Typography>
-                        {choice.end && "👋"}
-                    </Box>
+                    <div key={index} data-choice-identifier={`${branchKey}-${index}`}>
+                        <ChoiceDescription
+                            choice={choice}
+                            openEditor={() => { openEditor(branchKey, index) }} />
+                    </div>
                 ))}
-                <Button onClick={() => { openOrderDialog(branchKey) }}>change order</Button>
-                <Button variant="outlined" startIcon={<AddIcon />} onClick={() => { addNewChoice(branchKey) }}>Add new choice</Button>
+                <ButtonGroup sx={{ marginY: 1 }} fullWidth>
+                    <Button onClick={() => { openOrderDialog(branchKey) }}>change order</Button>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={() => { addNewChoice(branchKey) }}>Add choice</Button>
+                </ButtonGroup>
             </EditorBox>
         </div>)
 }
@@ -114,12 +115,12 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
 
     const { current: containerElement } = containerRef
 
-    return (<>
-        <Typography>Conversation: {id}</Typography>
+    return (
         <Box
             ref={containerRef} position={'relative'}
         >
             <Card sx={{ padding: 1 }}>
+                <Typography>Conversation: {id}</Typography>
                 <Stack spacing={2}>
                     {heirarchy.map((rank, rankIndex) => (
                         <Stack key={rankIndex} direction={'row'} spacing={2} justifyContent={rankIndex === 0 ? 'center' : 'space-between'}>
@@ -150,7 +151,6 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                 )}
 
             </Card>
-        </Box >
-    </>
+        </Box>
     )
 }

@@ -1,5 +1,9 @@
 import { ConversationChoice } from "@/definitions";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import LogOut from '@mui/icons-material/Logout';
+import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
+import RepeatOneIcon from '@mui/icons-material/RepeatOne';
+import EditIcon from '@mui/icons-material/Edit';
 
 function truncateLine(text: string, length: number) {
     if (text.length <= length) {
@@ -15,15 +19,29 @@ interface Props {
 
 export const ChoiceDescription = ({ choice, openEditor }: Props) => {
 
-    return <Stack spacing={1} flex={1} direction={'row'} justifyContent={'flex-start'}>
+    return (
+        <Stack
+            spacing={1}
+            flex={1}
+            paddingBottom={1}
+            direction={'row'}
+            justifyContent={'flex-start'}
+            alignItems={'center'}
+        >
+            {openEditor && (
+                <IconButton color="primary" onClick={openEditor} aria-label="edit">
+                    <EditIcon />
+                </IconButton>
+            )}
+            <Box sx={{ backgroundColor: 'secondary.light', color: 'secondary.contrastText' }} padding={1}>
+                <Typography component={'q'}>
+                    {choice.text ? truncateLine(choice.text, 40) : "[no text]"}
+                </Typography>
 
-        {openEditor && (
-            <Button variant="outlined" onClick={openEditor}>edit</Button>
-        )}
-        <Box sx={{ backgroundColor: 'secondary.light', color: 'secondary.contrastText' }} padding={1}>
-            <Typography component={'q'}>
-                {choice.text ? truncateLine(choice.text, 40) : "[no text]"}
-            </Typography>
-        </Box>
-    </Stack>
+            </Box>
+            {choice.end && <Tooltip title='ends conversation'>< LogOut /></Tooltip>}
+            {choice.disabled && <Tooltip title='starts disabled'>< SpeakerNotesOffIcon /></Tooltip>}
+            {choice.once && <Tooltip title='can say only once'>< RepeatOneIcon /></Tooltip>}
+        </Stack>
+    )
 }

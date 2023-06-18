@@ -324,7 +324,7 @@ export class ConversationEditor extends Component<Props, State> {
                         {(branchInOrderDialog && editOrderDialogBranchId) &&
                             <ListEditor tight
                                 list={branchInOrderDialog.choices}
-                                describeItem={(choices) => {
+                                describeItem={(choice) => {
                                     return (
                                         <ChoiceDescription choice={choice} />
                                     )
