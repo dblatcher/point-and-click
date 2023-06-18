@@ -13,7 +13,21 @@ const chat: Conversation = {
                     sequence: "CHAT_HELLO_0",
                 },
                 {
+                    text: 'hello there, lets talk about fish',
+                    nextBranch: 'fish',
+                    sequence: "CHAT_HELLO_2",
+                },
+                {
                     text: 'good bye',
+                    end: true,
+                    sequence: "CHAT_HELLO_1"
+                },
+            ]
+        },
+        fish: {
+            choices: [
+                {
+                    text: 'forget about fish. good bye',
                     end: true,
                     sequence: "CHAT_HELLO_1"
                 },

@@ -19,6 +19,7 @@ import { makeBlankConversation, makeBlankConversationChoice } from "../defaults"
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ChoiceDescription } from "./ChoiceDescription";
 import AddIcon from "@mui/icons-material/Add"
+import { ConversationFlow } from "./ConversationFlow";
 
 type ExtraState = {
     openBranchId?: string;
@@ -337,6 +338,8 @@ export class ConversationEditor extends Component<Props, State> {
                         }}
                     />
                 </Box>
+
+                <ConversationFlow conversation={this.currentData} />
 
                 <Dialog
                     open={!!choice}

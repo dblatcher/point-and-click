@@ -10,14 +10,17 @@ function truncateLine(text: string, length: number) {
 
 interface Props {
     choice: ConversationChoice
-    openEditor: { (): void }
+    openEditor?: { (): void }
 }
 
 export const ChoiceDescription = ({ choice, openEditor }: Props) => {
 
     return <Stack spacing={1} flex={1} direction={'row'} justifyContent={'flex-start'}>
-        <Button variant="outlined" onClick={openEditor}>edit</Button>
-        <Box sx={{ backgroundColor: 'primary.light', color:'primary.contrastText' }} padding={1}>
+
+        {openEditor && (
+            <Button variant="outlined" onClick={openEditor}>edit</Button>
+        )}
+        <Box sx={{ backgroundColor: 'primary.light', color: 'primary.contrastText' }} padding={1}>
             <Typography component={'q'}>
                 {choice.text ? truncateLine(choice.text, 40) : "[no text]"}
             </Typography>

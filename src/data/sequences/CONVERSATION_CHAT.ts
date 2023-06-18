@@ -34,6 +34,26 @@ const CHAT_HELLO_1: Sequence = {
     ]
 }
 
+const CHAT_HELLO_2: Sequence = {
+    id: "CHAT_HELLO_2",
+    stages: [
+        {
+            actorOrders: {
+                PLAYER: [
+                    { type: 'say', text: 'hello there, lets talk about fish', time: 100 },
+                ]
+            }
+        },
+        {
+            actorOrders: {
+                MARIO: [
+                    { type: 'say', text: 'fish?', time: 100 },
+                ]
+            }
+        },
+    ]
+}
+
 const CHAT_TOOLS_0: Sequence = {
     id: "CHAT_TOOLS_0",
     stages: [
@@ -114,5 +134,5 @@ const CHAT_TOOLS_3: Sequence = {
 }
 
 export {
-    CHAT_HELLO_0, CHAT_HELLO_1, CHAT_TOOLS_0, CHAT_TOOLS_1, CHAT_TOOLS_2, CHAT_TOOLS_3
+    CHAT_HELLO_0, CHAT_HELLO_1, CHAT_HELLO_2, CHAT_TOOLS_0, CHAT_TOOLS_1, CHAT_TOOLS_2, CHAT_TOOLS_3
 }
