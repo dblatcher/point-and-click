@@ -29,7 +29,7 @@ const determineCoordinates = (startNode: Element, endNode: Element, container: H
     if (goingUp) {
         endY += branchBox.height
     }
-    const lineToTopRight = (goingRight && goingUp) || (!goingRight && !goingUp)
+    const lineToTopRight = startX > endX != startY > endY
 
     const w = Math.abs(startX - endX)
     const h = Math.abs(startY - endY)

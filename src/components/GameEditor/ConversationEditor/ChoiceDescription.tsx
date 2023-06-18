@@ -33,7 +33,7 @@ export const ChoiceDescription = ({ choice, openEditor }: Props) => {
                     <EditIcon />
                 </IconButton>
             )}
-            <Box sx={{ backgroundColor: 'secondary.light', color: 'secondary.contrastText' }} padding={1}>
+            <Box sx={{ backgroundColor: 'secondary.dark', color: 'secondary.contrastText', borderRadius:4 }} paddingY={1} paddingX={3}>
                 <Typography component={'q'}>
                     {choice.text ? truncateLine(choice.text, 40) : "[no text]"}
                 </Typography>

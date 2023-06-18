@@ -121,9 +121,25 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
         >
             <Card sx={{ padding: 1 }}>
                 <Typography>Conversation: {id}</Typography>
+                {containerElement && (
+                    <Fragment key={JSON.stringify(conversation)}>
+                        {nodePairs.map((pair, index) => (
+                            <LineBetweenNodes key={index}
+                                startNode={pair[0]}
+                                endNode={pair[1]}
+                                container={containerElement}
+                            />
+                        ))}
+                    </Fragment>
+                )}
                 <Stack spacing={2}>
                     {heirarchy.map((rank, rankIndex) => (
-                        <Stack key={rankIndex} direction={'row'} spacing={2} justifyContent={rankIndex === 0 ? 'center' : 'space-between'}>
+                        <Stack key={rankIndex} 
+                            direction={'row'} 
+                            spacing={2} 
+                            justifyContent={rankIndex === 0 ? 'center' : 'space-between'}
+                            alignItems={'flex-start'}
+                        >
                             {rank.map(([branchKey, branch], itemIndex) => {
                                 return (
                                     <BranchBox
@@ -137,19 +153,6 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                         </Stack>
                     ))}
                 </Stack>
-
-                {containerElement && (
-                    <Fragment key={JSON.stringify(conversation)}>
-                        {nodePairs.map((pair, index) => (
-                            <LineBetweenNodes key={index}
-                                startNode={pair[0]}
-                                endNode={pair[1]}
-                                container={containerElement}
-                            />
-                        ))}
-                    </Fragment>
-                )}
-
             </Card>
         </Box>
     )
