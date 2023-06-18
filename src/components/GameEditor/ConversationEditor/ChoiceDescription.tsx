@@ -20,16 +20,10 @@ export const ChoiceDescription = ({ choice, openEditor }: Props) => {
         {openEditor && (
             <Button variant="outlined" onClick={openEditor}>edit</Button>
         )}
-        <Box sx={{ backgroundColor: 'primary.light', color: 'primary.contrastText' }} padding={1}>
+        <Box sx={{ backgroundColor: 'secondary.light', color: 'secondary.contrastText' }} padding={1}>
             <Typography component={'q'}>
                 {choice.text ? truncateLine(choice.text, 40) : "[no text]"}
             </Typography>
         </Box>
-        {choice.ref && (
-            <Stack>
-                <Typography component={'span'} variant="caption">REF</Typography>
-                <Typography component={'b'}>{choice.ref}</Typography>
-            </Stack>
-        )}
     </Stack>
 }

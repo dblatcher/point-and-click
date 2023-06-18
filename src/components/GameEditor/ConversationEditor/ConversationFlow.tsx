@@ -3,11 +3,13 @@ import { Box, Button, Stack, Typography, Card } from "@mui/material"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { LineBetweenNodes } from "./LineBetweenNodes"
 import { EditorBox } from "../EditorBox"
+import AddIcon from "@mui/icons-material/Add"
 
 interface Props {
     conversation: Conversation
     openEditor: { (branchKey: string, choiceIndex: number): void }
     addNewChoice: { (branchKey: string): void }
+    openOrderDialog: { (branchKey: string): void }
 }
 
 
@@ -66,9 +68,10 @@ type BranchBoxProps = {
     branchKey: string;
     openEditor: { (brandId: string, choiceIndex: number): void };
     addNewChoice: { (branchKey: string): void }
+    openOrderDialog: { (branchKey: string): void }
 }
 
-const BranchBox = ({ branch, branchKey, openEditor, addNewChoice }: BranchBoxProps) => {
+const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialog }: BranchBoxProps) => {
     return (
         <div data-branch-identifier={branchKey}>
             <EditorBox title={branchKey} >
@@ -81,13 +84,14 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice }: BranchBoxPro
                         {choice.end && "👋"}
                     </Box>
                 ))}
-                <Button onClick={() => { addNewChoice(branchKey) }}>Add new choice</Button>
+                <Button onClick={() => { openOrderDialog(branchKey) }}>change order</Button>
+                <Button variant="outlined" startIcon={<AddIcon />} onClick={() => { addNewChoice(branchKey) }}>Add new choice</Button>
             </EditorBox>
         </div>)
 }
 
 
-export const ConversationFlow = ({ conversation, openEditor, addNewChoice }: Props) => {
+export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openOrderDialog }: Props) => {
     const [nodePairs, setNodePairs] = useState<[Element, Element][]>([])
     const containerRef = useRef<HTMLElement>()
     const { id } = conversation
@@ -124,6 +128,7 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice }: Pro
                                     <BranchBox
                                         openEditor={openEditor}
                                         addNewChoice={addNewChoice}
+                                        openOrderDialog={openOrderDialog}
                                         key={`${rankIndex}-${itemIndex}`}
                                         branch={branch} branchKey={branchKey} />
                                 )

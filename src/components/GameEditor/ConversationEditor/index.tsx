@@ -6,25 +6,24 @@ import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice, Con
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { Component } from "react";
 import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
 import { ListEditor } from "../ListEditor";
-import { RecordEditor } from "../RecordEditor";
 import { SequenceEditor } from "../SequenceEditor";
 import { StorageMenu } from "../StorageMenu";
 import { DataItemEditorProps } from "../dataEditors";
 import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
-import { ChoiceEditor } from "./ChoiceEditor";
 import { ChoiceDescription } from "./ChoiceDescription";
-import AddIcon from "@mui/icons-material/Add"
+import { ChoiceEditor } from "./ChoiceEditor";
 import { ConversationFlow } from "./ConversationFlow";
 
 type ExtraState = {
     openBranchId?: string;
     activeChoiceIndex?: number;
-    sequenceDialogOpen: boolean;
+    sequenceDialogOpen?: boolean;
+    editOrderDialogBranchId?: string;
 }
 
 type State = Conversation & ExtraState;
@@ -67,6 +66,9 @@ export class ConversationEditor extends Component<Props, State> {
     get currentData(): Conversation {
         const conversation = cloneData(this.state) as State;
         delete conversation.openBranchId
+        delete conversation.activeChoiceIndex
+        delete conversation.sequenceDialogOpen
+        delete conversation.editOrderDialogBranchId
         return conversation
     }
 
@@ -256,9 +258,11 @@ export class ConversationEditor extends Component<Props, State> {
 
     render() {
         const { state, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence } = this
-        const { branches, defaultBranch, currentBranch, openBranchId, id, activeChoiceIndex } = this.state
+        const { branches, defaultBranch, currentBranch, openBranchId, id, activeChoiceIndex, editOrderDialogBranchId } = this.state
         const { conversations, deleteData, options, gameDesign, updateSequenceData } = this.props
         const { choice } = this.getBranchAndChoice(state)
+
+        const branchInOrderDialog = editOrderDialogBranchId ? branches[editOrderDialogBranchId] : undefined
 
         return (
             <Stack component={'article'} spacing={2}>
@@ -296,57 +300,42 @@ export class ConversationEditor extends Component<Props, State> {
                     />
                 </Stack>
 
-
-                <Box display={'flex'} >
-                    <RecordEditor
-                        record={branches}
-                        addEntryLabel={'new branch'}
-                        describeValue={(branchKey, branch) => {
-                            return (
-                                <EditorBox key={branchKey} title={`Branch: ${branchKey}`}>
-                                    <ListEditor tight
-                                        list={branch.choices}
-                                        describeItem={(choice, choiceIndex) => {
-                                            return (
-                                                <ChoiceDescription
-                                                    choice={choice}
-                                                    openEditor={() => {
-                                                        this.setState(
-                                                            { openBranchId: branchKey, activeChoiceIndex: choiceIndex }
-                                                        )
-                                                    }}
-                                                />
-                                            )
-                                        }}
-                                        mutateList={newList => {
-                                            this.mutateChoiceList(branchKey, newList)
-                                        }}
-                                    />
-                                    <Button
-                                        size="small"
-                                        variant="contained"
-                                        fullWidth
-                                        startIcon={<AddIcon />}
-                                        onClick={() => { this.addNewChoice(branchKey) }}
-                                    >Add choice</Button>
-                                </EditorBox>
-                            )
-                        }}
-                        setEntry={this.changeBranch}
-                        addEntry={(key) => {
-                            this.addNewBranch(key)
-                        }}
-                    />
-                </Box>
-
-                <ConversationFlow conversation={this.currentData}
+                <ConversationFlow conversation={this.currentData} key={JSON.stringify(this.currentData)}
                     openEditor={(branchKey, choiceIndex) => {
                         this.setState(
                             { openBranchId: branchKey, activeChoiceIndex: choiceIndex }
                         )
-                    }} 
+                    }}
+                    openOrderDialog={(branchKey) => {
+                        this.setState(
+                            { editOrderDialogBranchId: branchKey }
+                        )
+                    }}
                     addNewChoice={this.addNewChoice}
                 />
+
+                <Dialog open={!!this.state.editOrderDialogBranchId}
+                    onClose={() => { this.setState({ editOrderDialogBranchId: undefined }) }}
+                >
+                    <DialogTitle>Edit Order: {editOrderDialogBranchId}</DialogTitle>
+
+                    <DialogContent>
+
+                        {(branchInOrderDialog && editOrderDialogBranchId) &&
+                            <ListEditor tight
+                                list={branchInOrderDialog.choices}
+                                describeItem={(choices) => {
+                                    return (
+                                        <ChoiceDescription choice={choice} />
+                                    )
+                                }}
+                                mutateList={newList => {
+                                    this.mutateChoiceList(editOrderDialogBranchId, newList)
+                                }}
+                            />
+                        }
+                    </DialogContent>
+                </Dialog>
 
                 <Dialog
                     open={!!choice}
@@ -382,7 +371,7 @@ export class ConversationEditor extends Component<Props, State> {
                 </Dialog>
 
                 <Dialog
-                    open={this.state.sequenceDialogOpen}
+                    open={!!this.state.sequenceDialogOpen}
                     onClose={() => { this.setState({ sequenceDialogOpen: false }) }}
                     maxWidth={'xl'}
                 >
