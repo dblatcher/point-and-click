@@ -1,6 +1,6 @@
 import { Conversation, ConversationBranch } from "@/definitions"
 import { Box, Stack, Typography } from "@mui/material"
-import { useEffect, useRef, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import { LineBetweenNodes } from "./LineBetweenNodes"
 
 interface Props {
@@ -85,7 +85,6 @@ export const ConversationFlow = ({ conversation }: Props) => {
     useEffect(() => {
         const pairs: [Element, Element][] = []
         const connections = getConnections(conversation)
-
         connections.forEach(connection => {
             const [choiceIdentifier, branchIdentifier] = connection
             const choiceBox = document.querySelector(`[data-choice-identifier=${choiceIdentifier}]`)
@@ -94,9 +93,7 @@ export const ConversationFlow = ({ conversation }: Props) => {
                 pairs.push([choiceBox, branchBox])
             }
         })
-
         setNodePairs(pairs)
-
     }, [conversation])
 
     const { current: containerElement } = containerRef
@@ -113,7 +110,7 @@ export const ConversationFlow = ({ conversation }: Props) => {
 
             <Stack spacing={2}>
                 {heirarchy.map((rank, rankIndex) => (
-                    <Stack key={rankIndex} direction={'row'} spacing={2} justifyContent={'space-around'}>
+                    <Stack key={rankIndex} direction={'row'} spacing={2} justifyContent={rankIndex === 0 ? 'center' : 'space-between'}>
                         {rank.map(([branchKey, branch], itemIndex) => {
                             return (
                                 <BranchBox key={`${rankIndex}-${itemIndex}`} branch={branch} branchKey={branchKey} />
@@ -124,7 +121,7 @@ export const ConversationFlow = ({ conversation }: Props) => {
             </Stack>
 
             {containerElement && (
-                <>
+                <Fragment key={JSON.stringify(conversation)}>
                     {nodePairs.map((pair, index) => (
                         <LineBetweenNodes key={index} 
                             startNode={pair[0]} 
@@ -132,7 +129,7 @@ export const ConversationFlow = ({ conversation }: Props) => {
                             container={containerElement} 
                         />
                     ))}
-                </>
+                </Fragment>
             )}
 
         </Box >

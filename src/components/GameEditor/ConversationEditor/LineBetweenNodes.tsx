@@ -51,7 +51,6 @@ export const LineBetweenNodes = ({ startNode, endNode, container }: { startNode:
             window.removeEventListener('resize', updateCoords)
         }
     })
-
     const { w, h, l, t, lineToTopRight, endX: endX, endY: endY } = coords
 
     return (<>
