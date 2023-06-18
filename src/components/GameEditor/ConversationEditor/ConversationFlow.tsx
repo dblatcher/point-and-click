@@ -1,10 +1,13 @@
 import { Conversation, ConversationBranch } from "@/definitions"
-import { Box, Stack, Typography } from "@mui/material"
+import { Box, Button, Stack, Typography, Card } from "@mui/material"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { LineBetweenNodes } from "./LineBetweenNodes"
+import { EditorBox } from "../EditorBox"
 
 interface Props {
     conversation: Conversation
+    openEditor: { (branchKey: string, choiceIndex: number): void }
+    addNewChoice: { (branchKey: string): void }
 }
 
 
@@ -57,27 +60,36 @@ const getConnections = (conversation: Conversation): [string, string][] => {
     return connections
 }
 
-const BranchBox = ({ branch, branchKey }: { branch: ConversationBranch, branchKey: string }) => {
-    return <Box sx={{ backgroundColor: 'secondary.light' }} data-branch-identifier={branchKey}>
-        <Typography variant="h4">{branchKey}</Typography>
-        {branch.choices.map((choice, index) => (
-            <Box key={index} data-choice-identifier={`${branchKey}-${index}`} paddingY={1}>
-                <Typography component={'span'}>
-                    {choice.text}
-                </Typography>
-                {choice.end && "👋"}
-            </Box>
-        ))}
-    </Box>
+
+type BranchBoxProps = {
+    branch: ConversationBranch;
+    branchKey: string;
+    openEditor: { (brandId: string, choiceIndex: number): void };
+    addNewChoice: { (branchKey: string): void }
+}
+
+const BranchBox = ({ branch, branchKey, openEditor, addNewChoice }: BranchBoxProps) => {
+    return (
+        <div data-branch-identifier={branchKey}>
+            <EditorBox title={branchKey} >
+                {branch.choices.map((choice, index) => (
+                    <Box key={index} data-choice-identifier={`${branchKey}-${index}`} marginBottom={1}>
+                        <Button onClick={() => { openEditor(branchKey, index) }}>edit</Button>
+                        <Typography component={'span'}>
+                            {choice.text}
+                        </Typography>
+                        {choice.end && "👋"}
+                    </Box>
+                ))}
+                <Button onClick={() => { addNewChoice(branchKey) }}>Add new choice</Button>
+            </EditorBox>
+        </div>)
 }
 
 
-export const ConversationFlow = ({ conversation }: Props) => {
-
+export const ConversationFlow = ({ conversation, openEditor, addNewChoice }: Props) => {
     const [nodePairs, setNodePairs] = useState<[Element, Element][]>([])
-
     const containerRef = useRef<HTMLElement>()
-
     const { id } = conversation
     const heirarchy = getHeirarchy(conversation)
 
@@ -101,37 +113,38 @@ export const ConversationFlow = ({ conversation }: Props) => {
     return (<>
         <Typography>Conversation: {id}</Typography>
         <Box
-            ref={containerRef}
-            sx={{
-                border: '1px dotted black',
-                position: 'relative',
-                minHeight: '20rem',
-            }}>
-
-            <Stack spacing={2}>
-                {heirarchy.map((rank, rankIndex) => (
-                    <Stack key={rankIndex} direction={'row'} spacing={2} justifyContent={rankIndex === 0 ? 'center' : 'space-between'}>
-                        {rank.map(([branchKey, branch], itemIndex) => {
-                            return (
-                                <BranchBox key={`${rankIndex}-${itemIndex}`} branch={branch} branchKey={branchKey} />
-                            )
-                        })}
-                    </Stack>
-                ))}
-            </Stack>
-
-            {containerElement && (
-                <Fragment key={JSON.stringify(conversation)}>
-                    {nodePairs.map((pair, index) => (
-                        <LineBetweenNodes key={index} 
-                            startNode={pair[0]} 
-                            endNode={pair[1]} 
-                            container={containerElement} 
-                        />
+            ref={containerRef} position={'relative'}
+        >
+            <Card sx={{ padding: 1 }}>
+                <Stack spacing={2}>
+                    {heirarchy.map((rank, rankIndex) => (
+                        <Stack key={rankIndex} direction={'row'} spacing={2} justifyContent={rankIndex === 0 ? 'center' : 'space-between'}>
+                            {rank.map(([branchKey, branch], itemIndex) => {
+                                return (
+                                    <BranchBox
+                                        openEditor={openEditor}
+                                        addNewChoice={addNewChoice}
+                                        key={`${rankIndex}-${itemIndex}`}
+                                        branch={branch} branchKey={branchKey} />
+                                )
+                            })}
+                        </Stack>
                     ))}
-                </Fragment>
-            )}
+                </Stack>
 
+                {containerElement && (
+                    <Fragment key={JSON.stringify(conversation)}>
+                        {nodePairs.map((pair, index) => (
+                            <LineBetweenNodes key={index}
+                                startNode={pair[0]}
+                                endNode={pair[1]}
+                                container={containerElement}
+                            />
+                        ))}
+                    </Fragment>
+                )}
+
+            </Card>
         </Box >
     </>
     )

@@ -339,7 +339,14 @@ export class ConversationEditor extends Component<Props, State> {
                     />
                 </Box>
 
-                <ConversationFlow conversation={this.currentData} />
+                <ConversationFlow conversation={this.currentData}
+                    openEditor={(branchKey, choiceIndex) => {
+                        this.setState(
+                            { openBranchId: branchKey, activeChoiceIndex: choiceIndex }
+                        )
+                    }} 
+                    addNewChoice={this.addNewChoice}
+                />
 
                 <Dialog
                     open={!!choice}
