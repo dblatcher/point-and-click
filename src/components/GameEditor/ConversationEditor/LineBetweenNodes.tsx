@@ -56,12 +56,12 @@ export const LineBetweenNodes = ({ startNode, endNode, container }: { startNode:
     return (<>
         <div style={{
             position: 'absolute',
-            zIndex: 1000,
             width: w,
             height: h,
             left: l,
             top: t,
             overflow: "visible",
+            pointerEvents: 'none',
         }}>
             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
                 preserveAspectRatio='none'
@@ -88,6 +88,7 @@ export const LineBetweenNodes = ({ startNode, endNode, container }: { startNode:
             left: endX - 10,
             top: endY - 10,
             overflow: "visible",
+            pointerEvents: 'none',
         }}>
             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
                 style={{
