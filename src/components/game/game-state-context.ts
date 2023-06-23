@@ -20,6 +20,8 @@ const gameStateContext = createContext<GameState>(
         debugLog: [],
         flagMap: {},
         gameNotBegun: false,
+        roomHeight: 400,
+        roomWidth: 800,
     }
 )
 

@@ -43,6 +43,9 @@ export type GameState = GameData & {
     currentItemId?: string;
     hoverTarget?: CommandTarget;
     debugLog: LogEntry[];
+
+    roomWidth: number;
+    roomHeight: number;
 }
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
@@ -105,6 +108,9 @@ export default class Game extends Component<GameProps, GameState> {
             debugLog: [makeDebugEntry(`Running: ${props.id}`)],
             flagMap,
             gameNotBegun: false,
+
+            roomHeight: 400,
+            roomWidth: 800,
         }
     }
 
@@ -263,7 +269,7 @@ export default class Game extends Component<GameProps, GameState> {
             SaveMenuComponent = SaveMenu,
             GameLayoutComponent = Layout,
         } = uiComponents
-        const { viewAngle, isPaused } = this.state
+        const { viewAngle, isPaused, roomHeight, roomWidth } = this.state
         const { currentRoom, ending } = this
 
         const contentList = buildContentsList(this.state, this.handleTargetClick)
@@ -290,7 +296,8 @@ export default class Game extends Component<GameProps, GameState> {
                         {currentRoom && (
                             <Room
                                 data={currentRoom}
-                                maxWidth={600} maxHeight={400}
+                                maxWidth={roomWidth} 
+                                maxHeight={roomHeight}
                                 isPaused={isPaused}
                                 viewAngle={viewAngle}
                                 handleRoomClick={this.handleRoomClick}
