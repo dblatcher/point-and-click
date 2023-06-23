@@ -8,12 +8,12 @@ import { materialUiComponents } from '@/components/game-mui-ux'
 
 export default function GameLoaderPage() {
   return (
-    <PageLayout>
+    <PageLayout noPageScroll>
       <GameDesignPlayer
         gameDesign={prebuiltGameDesign}
         imageAssets={imageAssets}
         soundAssets={soundAssets}
-        uiComponents={materialUiComponents}
+        // uiComponents={materialUiComponents}
       />
     </PageLayout>
   )

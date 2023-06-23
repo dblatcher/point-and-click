@@ -4,7 +4,7 @@ import { PageLayout } from '@/components/PageLayout'
 
 export default function GameLoaderPage() {
   return (
-    <PageLayout>
+    <PageLayout noPageScroll>
       <GameDesignLoader />
     </PageLayout>
   )
