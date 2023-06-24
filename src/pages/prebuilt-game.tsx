@@ -13,7 +13,7 @@ export default function GameLoaderPage() {
         gameDesign={prebuiltGameDesign}
         imageAssets={imageAssets}
         soundAssets={soundAssets}
-        // uiComponents={materialUiComponents}
+        uiComponents={materialUiComponents}
       />
     </PageLayout>
   )
