@@ -38,6 +38,7 @@ export type GameLayoutProps = {
     selectConversation: { (choice: ConversationChoice): void };
     selectItem: { (item: ItemData): void };
     handleHover?: HandleHoverFunction;
+    setScreenSize: { (roomWidth?: number, roomHeight?: number): void }
 }
 
 export type UiComponentSet = {

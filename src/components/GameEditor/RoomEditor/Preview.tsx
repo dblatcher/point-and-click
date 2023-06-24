@@ -184,7 +184,7 @@ export class Preview extends Component<Props, State>{
                     position: 'relative',
                     display: 'inline-block',
                 }}>
-                    <Room data={roomData} noResize forPreview
+                    <Room data={roomData} forPreview
                         showObstacleAreas={showObstacleAreas}
                         maxWidth={maxWidth} maxHeight={1000}
                         viewAngle={viewAngle}

@@ -78,6 +78,7 @@ export default class Game extends Component<GameProps, GameState> {
         this.centerViewOnPLayer = this.centerViewOnPLayer.bind(this)
         this.handleHover = this.handleHover.bind(this)
         this.handleVerbSelect = this.handleVerbSelect.bind(this)
+        this.setScreenSize = this.setScreenSize.bind(this)
     }
 
     getInitialGameState(props: GameProps): GameState {
@@ -263,6 +264,10 @@ export default class Game extends Component<GameProps, GameState> {
         }
     }
 
+    setScreenSize(roomWidth=this.state.roomWidth, roomHeight = this.state.roomHeight) {
+        this.setState({ roomWidth, roomHeight })
+    }
+
     render() {
         const { save, reset, load, showDebugLog, uiComponents = {} } = this.props
         const {
@@ -283,6 +288,7 @@ export default class Game extends Component<GameProps, GameState> {
                         selectConversation={this.handleConversationClick}
                         selectItem={this.handleTargetClick}
                         handleHover={this.handleHover}
+                        setScreenSize={this.setScreenSize}
                         saveMenu={
                             <SaveMenuComponent
                                 load={load ? () => { load() } : undefined}
@@ -296,7 +302,7 @@ export default class Game extends Component<GameProps, GameState> {
                         {currentRoom && (
                             <Room
                                 data={currentRoom}
-                                maxWidth={roomWidth} 
+                                maxWidth={roomWidth}
                                 maxHeight={roomHeight}
                                 isPaused={isPaused}
                                 viewAngle={viewAngle}

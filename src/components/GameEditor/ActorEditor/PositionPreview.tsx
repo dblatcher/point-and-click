@@ -56,6 +56,7 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
                             reportClick({ x: Math.round(point.x), y: Math.round(point.y) }, role)
                         }}
                         maxWidth={previewWidth}
+                        maxHeight={previewWidth}
                         forPreview={true}
                     >
                         <MarkerShape
