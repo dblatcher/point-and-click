@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import soundService from "@/services/soundService";
-
 import VolumeMute from '@mui/icons-material/VolumeMute'
 import VolumeUp from '@mui/icons-material/VolumeUp'
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
 
-export function SoundToggle() {
+interface Props {
+    buttonType?: 'IconButton' | 'Button'
+    color?: "secondary" | "inherit" | "primary" | "error" | "info" | "success" | "warning"
+}
+
+export function SoundToggle({ buttonType = 'IconButton', color = 'primary' }: Props) {
 
     const [isOn, setIsOn] = useState(soundService.isEnabled)
 
@@ -27,9 +31,18 @@ export function SoundToggle() {
         soundService.enable()
     }
 
-    return (
-        <IconButton onClick={toggle} color='primary'>
-            {isOn ? <VolumeUp /> : <VolumeMute />}
-        </IconButton>
-    )
+    switch (buttonType) {
+        case "IconButton":
+            return (
+                <IconButton onClick={toggle} color={color}>
+                    {isOn ? <VolumeUp /> : <VolumeMute />}
+                </IconButton>
+            )
+        case "Button":
+            return (
+                <Button onClick={toggle} color={color} startIcon={isOn ? <VolumeUp /> : <VolumeMute />}>
+                    Sound
+                </Button>
+            )
+    }
 }

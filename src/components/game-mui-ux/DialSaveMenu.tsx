@@ -1,20 +1,15 @@
-import { Dialog, Box, SpeedDialIcon } from "@mui/material";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import IconButton from "@mui/material/IconButton";
-import { useState } from "react"
-import SaveIcon from '@mui/icons-material/Save';
-import LoadIcon from '@mui/icons-material/Restore';
 import PauseIcon from '@mui/icons-material/Pause';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import PlayIcon from '@mui/icons-material/PlayArrow';
-import { SaveMenuProps } from "../game/uiComponentSet";
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import LoadIcon from '@mui/icons-material/Restore';
+import SaveIcon from '@mui/icons-material/Save';
+import { Dialog, SpeedDialIcon } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
+import { SaveMenuProps } from "../game/uiComponentSet";
 
-export const SaveMenu = ({ save, reset, load, isPaused, setIsPaused }: SaveMenuProps) => {
-
-
+export const DialSaveMenu = ({ save, reset, load, isPaused, setIsPaused }: SaveMenuProps) => {
 
     return <>
         <SpeedDial ariaLabel="save and pause menu"

@@ -7,7 +7,6 @@ import { GameLayoutProps } from "../game/uiComponentSet";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
 import { ItemMenu } from "./ItemMenu";
-import { SoundToggle } from "./SoundToggle";
 import { VerbMenu } from "./VerbMenu";
 
 
@@ -19,13 +18,18 @@ export const BigLayout = ({
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
     const [drawerOpen, setDrawerOpen] = useState(false)
 
+    // TO DO - the resize handler could use the size of the container div instead of the whole document body
     return (
-        <ResizeWatcher resizeHandler={()=> {
+        <ResizeWatcher resizeHandler={() => {
             if (document) {
-                setScreenSize(document.body.clientWidth, document.body.clientHeight - 150)
+                setScreenSize(document.body.clientWidth - 20, document.body.clientHeight - 150)
             }
         }}>
-            <CommandLine />
+            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} paddingX={2}>
+                <CommandLine />
+                {saveMenu}
+            </Stack>
+
             <div
                 style={{
                     flex: '1',
@@ -38,23 +42,20 @@ export const BigLayout = ({
 
             {(!drawerOpen && !isConversationRunning) &&
                 <Box sx={{ position: 'absolute', bottom: 0, left: 0, width: '100%' }}>
-                    <Button variant="contained" size="large" fullWidth
+                    <Button variant="contained" size="large" fullWidth color="secondary"
                         onClick={() => { setDrawerOpen(!drawerOpen) }}>OPEN</Button>
                 </Box>
             }
 
             <Drawer open={isConversationRunning && !isSequenceRunning} anchor="bottom" variant="persistent" PaperProps={{ sx: { padding: 1 } }}>
                 <Container maxWidth={'lg'}>
-                    < ConversationMenu select={selectConversation} />
+                    <ConversationMenu select={selectConversation} />
                 </Container>
             </Drawer>
 
             <Drawer open={drawerOpen && !isConversationRunning} anchor="bottom" variant="persistent" PaperProps={{ sx: { padding: 1 } }}>
+                <Button variant="contained" onClick={() => { setDrawerOpen(!drawerOpen) }} color="secondary">CLOSE</Button>
                 <Container maxWidth={'md'}>
-                    <Stack direction={'row'}>
-                        <SoundToggle />
-                        <Button variant="contained" onClick={() => { setDrawerOpen(!drawerOpen) }}>CLOSE</Button>
-                    </Stack>
                     {isConversationRunning ? (
                         <>
                             {!isSequenceRunning && <ConversationMenu select={selectConversation} />}
@@ -66,7 +67,7 @@ export const BigLayout = ({
                 </Container>
             </Drawer>
             <EndingWrapper />
-            {saveMenu}
+
         </ResizeWatcher>
     )
 }
