@@ -17,8 +17,9 @@ export const DialogueBubble: FunctionComponent<{
     actorData: ActorData;
     orders?: Order[];
     viewAngle: number;
+    fontFamily?: string;
 }> = (props) => {
-    const { roomData, roomScale, orders, actorData, viewAngle } = props
+    const { roomData, roomScale, orders, actorData, viewAngle, fontFamily } = props
 
     const spriteScale = getScale(actorData.y, roomData.scaling)
     const y = actorData.y + (actorData.height * spriteScale)
@@ -60,6 +61,7 @@ export const DialogueBubble: FunctionComponent<{
                 textAlign,
                 fontSize,
                 height,
+                fontFamily,
             }}>
                 <span
                     style={{

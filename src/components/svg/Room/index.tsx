@@ -31,6 +31,7 @@ interface Props {
     contents?: RoomContentItem[];
     children?: ReactNode;
     forPreview?: boolean;
+    fontFamily?: string;
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -52,6 +53,7 @@ export const Room: FunctionComponent<Props> = ({
     isPaused = false,
     contents = [],
     forPreview = false,
+    fontFamily,
     children,
 }: Props) => {
     const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], } = data;
@@ -169,7 +171,9 @@ export const Room: FunctionComponent<Props> = ({
                         actorData={entry.data}
                         orders={entry.orders || []}
                         viewAngle={viewAngle}
-                        roomData={data} roomScale={scale} />
+                        roomData={data} roomScale={scale}
+                        fontFamily={fontFamily}
+                    />
                 ))}
 
                 {children}
