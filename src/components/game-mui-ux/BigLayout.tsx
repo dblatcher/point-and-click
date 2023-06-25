@@ -28,10 +28,9 @@ export const BigLayout = ({
                 console.log('no ref')
             }
         }}>
-            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} paddingX={2}>
-                <CommandLine />
+            <Box position={'fixed'} top={0} right={0}>
                 {saveMenu}
-            </Stack>
+            </Box>
 
             <div
                 ref={containerRef}
@@ -45,6 +44,10 @@ export const BigLayout = ({
             </div>
 
             <Box>
+                <CommandLine boxProps={{
+                    paddingX: 4,
+                    paddingY: 1,
+                }}/>
                 <Button variant="contained" size="large" fullWidth color="secondary" disabled={isConversationRunning}
                     onClick={() => { setDrawerOpen(!drawerOpen) }}>OPEN</Button>
             </Box>
@@ -56,6 +59,10 @@ export const BigLayout = ({
             </Drawer>
 
             <Drawer open={drawerOpen && !isConversationRunning} anchor="bottom" variant="persistent" PaperProps={{ sx: { padding: 1 } }}>
+                <CommandLine boxProps={{
+                    paddingX: 3,
+                    paddingBottom: 1,
+                }} />
                 <Button variant="contained" onClick={() => { setDrawerOpen(!drawerOpen) }} color="secondary">CLOSE</Button>
                 <Container maxWidth={'md'}>
                     {isConversationRunning ? (
