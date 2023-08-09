@@ -20,6 +20,7 @@ export const FramePreview: FunctionComponent<Props> = ({
     const figureStyle: CSSProperties = {
         width: '100%',
         height: '100%',
+        margin: 0,
     }
 
     const image = imageService.get(frame.imageId)
