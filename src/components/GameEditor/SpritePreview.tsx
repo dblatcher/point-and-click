@@ -7,6 +7,7 @@ type Props = {
     data: ActorData;
     overrideSprite?: Sprite;
     scale?: number;
+    noBaseLine?: boolean;
 }
 
 const makeRoomData = (data: ActorData, scale: number): RoomData => ({
@@ -17,7 +18,7 @@ const makeRoomData = (data: ActorData, scale: number): RoomData => ({
     background: []
 })
 
-export const SpritePreview = ({ data, overrideSprite, scale = 1 }: Props) => {
+export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine }: Props) => {
     const maxWidth = 100 * scale
     const roomData = makeRoomData(data, scale)
     const modifiedActorData: ActorData = {
@@ -36,7 +37,9 @@ export const SpritePreview = ({ data, overrideSprite, scale = 1 }: Props) => {
             handleRoomClick={() => { }}
             contents={[{ overrideSprite, data: modifiedActorData, }]}
         >
-            <HorizontalLine roomData={roomData} y={data.baseline || 0} />
+            {!noBaseLine && (
+                <HorizontalLine roomData={roomData} y={data.baseline || 0} />
+            )}
         </Room>
     )
 }

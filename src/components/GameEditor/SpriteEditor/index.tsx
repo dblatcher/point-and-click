@@ -239,7 +239,14 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 {animationEntries.map(([animationKey, animation]) => {
                     return (
                         <Box key={animationKey}>
-                            <Typography variant="h4">{animationKey}</Typography>
+                            <Stack direction={'row'} spacing={2} alignItems={'center'}>
+                                <Typography variant="h4">{animationKey}</Typography>
+                                {animationKey !== 'default' &&
+                                    <ButtonWithConfirm
+                                        label={`Delete animation "${animationKey}"`}
+                                        onClick={() => this.deleteAnimation(animationKey)} />
+                                }
+                            </Stack>
                             <Stack direction={'row'}>
                                 {directions.map(direction => (
 
@@ -251,14 +258,9 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                                         direction={direction}
                                         animation={animation}
                                         animationKey={animationKey}
+                                        isDefault={direction === defaultDirection}
                                     />
                                 ))}
-
-                                {animationKey !== 'default' &&
-                                    <ButtonWithConfirm
-                                        label={`Delete animation "${animationKey}"`}
-                                        onClick={() => this.deleteAnimation(animationKey)} />
-                                }
                             </Stack>
                         </Box>
                     )
