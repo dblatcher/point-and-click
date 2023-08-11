@@ -6,14 +6,14 @@ import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import { eventToString } from "@/lib/util";
 import spriteService from "@/services/spriteService";
-import { Box, Container, Dialog, DialogContent, Grid, Stack, Typography } from "@mui/material";
+import { Box, Container, Dialog, DialogContent, DialogTitle, Grid, Stack, Typography } from "@mui/material";
 import { Component } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { SpritePreview } from "../SpritePreview";
 import { StorageMenu } from "../StorageMenu";
 import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
 import editorStyles from '../editorStyles.module.css';
-import { DeleteButton, StringInput } from "../formControls";
+import { StringInput } from "../formControls";
 import { AnimatedSpriteButton } from "./AnimatedSpriteButton";
 import { AnimationControl } from "./AnimationControl";
 import { FramePicker } from "./FramePicker";
@@ -273,6 +273,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             </Stack>
 
             <Dialog fullWidth maxWidth={'xl'}
+                scroll="paper"
                 open={!!selectedAnimation && !!selectedDirection}
                 onClose={() => {
                     this.setState({
@@ -282,53 +283,51 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 }}>
 
                 <DialogContent>
+                    <DialogTitle>
+                        {selectedAnimation}/{selectedDirection}{selectedDirection === defaultDirection && <span>(default)</span>}
+                    </DialogTitle>
                     <Container>
-                        <Typography variant="h3">
-                            {selectedAnimation}/{selectedDirection}{selectedDirection === defaultDirection && <span>(default)</span>}
-                        </Typography>
                         {(selectedAnimation && selectedDirection) && (
-                            <Grid container spacing={2}>
-                                <Grid item xs={6}>
-                                    <SpritePreview
-                                        overrideSprite={overrideSprite}
-                                        data={this.buildActorData(selectedAnimation, selectedDirection)}
-                                    />
-                                </Grid>
 
-                                <Grid item xs={6}>
+                            <Stack direction={'row'} spacing={2}>
+                                <Stack spacing={2} flex={1}>
+                                    <Grid item xs={6}>
+                                        <SpritePreview
+                                            scale={3}
+                                            overrideSprite={overrideSprite}
+                                            data={this.buildActorData(selectedAnimation, selectedDirection)}
+                                        />
+                                    </Grid>
+
                                     {(animations[selectedAnimation]?.[selectedDirection] && selectedDirection !== defaultDirection) && (
                                         <ButtonWithConfirm
                                             label={`Delete animation "${selectedAnimation} (${selectedDirection})"`}
                                             onClick={() => this.editCycle(selectedAnimation, selectedDirection, undefined)} />
                                     )}
-                                </Grid>
 
-                                <Grid item xs={6}>
-                                    {(selectedDirection && selectedAnimation && animations[selectedAnimation]) && (
-                                        <AnimationControl animKey={selectedAnimation}
-                                            defaultDirection={defaultDirection}
-                                            direction={selectedDirection}
-                                            animation={animations[selectedAnimation]}
-                                            editCycle={this.editCycle}
-                                            pickFrame={this.pickFrame}
-                                            selectedFrame={selectedSheetId ? {
-                                                row: selectedRow,
-                                                col: selectedCol,
-                                                imageId: selectedSheetId,
-                                            } : undefined}
-                                        />
-                                    )}
-                                </Grid>
-
-                                <Grid item xs={6}>
                                     <FramePicker
                                         pickFrame={this.pickFrame}
                                         sheetId={selectedSheetId}
                                         row={selectedRow}
                                         col={selectedCol}
                                     />
-                                </Grid>
-                            </Grid>
+                                </Stack>
+
+                                {(animations[selectedAnimation]) && (
+                                    <AnimationControl animKey={selectedAnimation}
+                                        defaultDirection={defaultDirection}
+                                        direction={selectedDirection}
+                                        animation={animations[selectedAnimation]}
+                                        editCycle={this.editCycle}
+                                        pickFrame={this.pickFrame}
+                                        selectedFrame={selectedSheetId ? {
+                                            row: selectedRow,
+                                            col: selectedCol,
+                                            imageId: selectedSheetId,
+                                        } : undefined}
+                                    />
+                                )}
+                            </Stack>
                         )}
                     </Container>
                 </DialogContent>

@@ -1,62 +1,43 @@
-import { Component } from "react";
 import { RoomData, ActorData } from "@/definitions";
 import { Room } from "@/components/svg/Room";
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { Sprite } from "@/lib/Sprite";
 
-const makeRoomData: { (actorData: ActorData): RoomData } = (actorData) => ({
-    height: actorData.height  + 10,
-    width: (actorData.width * 1.5) + 10,
-    frameWidth: (actorData.width * 1.5) + 10,
+type Props = {
+    data: ActorData;
+    overrideSprite?: Sprite;
+    scale?: number;
+}
+
+const makeRoomData = (data: ActorData, scale: number): RoomData => ({
+    height: (scale * data.height) + 10,
+    width: (scale * data.width * 1.5) + 10,
+    frameWidth: (scale * data.width * 1.5) + 10,
     id: '',
     background: []
 })
 
-type State = {
-    speed: number;
-    maxWidth: number;
-};
-
-type Props = {
-    data: ActorData;
-    overrideSprite?: Sprite;
-}
-
-
-export class SpritePreview extends Component<Props, State>{
-
-    constructor(props: SpritePreview['props']) {
-        super(props)
-        this.state = {
-            maxWidth: 100,
-            speed: 1
-        }
+export const SpritePreview = ({ data, overrideSprite, scale = 1 }: Props) => {
+    const maxWidth = 100 * scale
+    const roomData = makeRoomData(data, scale)
+    const modifiedActorData: ActorData = {
+        ...data,
+        width: scale * data.width,
+        height: scale * data.height,
+        x: roomData.width / 2
     }
-
-    render() {
-        const { maxWidth } = this.state
-        const { data, overrideSprite } = this.props
-        const roomData = makeRoomData(data)
-
-        const modifiedActorData: ActorData = {
-            ...data,
-            x: roomData.width / 2
-        }
-
-        return (
-            <Room data={roomData}
-                showObstacleAreas={false}
-                forPreview
-                maxWidth={maxWidth}
-                viewAngle={0}
-                highlightHotspots={false}
-                handleRoomClick={() => { }}
-                contents={[{ overrideSprite, data: modifiedActorData, }]}
-            >
-                <HorizontalLine roomData={roomData} y={data.baseline || 0} />
-            </Room>
-        )
-    }
+    return (
+        <Room data={roomData}
+            showObstacleAreas={false}
+            forPreview
+            maxWidth={maxWidth}
+            viewAngle={0}
+            highlightHotspots={false}
+            handleRoomClick={() => { }}
+            contents={[{ overrideSprite, data: modifiedActorData, }]}
+        >
+            <HorizontalLine roomData={roomData} y={data.baseline || 0} />
+        </Room>
+    )
 }
-
 
