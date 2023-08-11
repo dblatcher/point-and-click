@@ -4,7 +4,6 @@ import { SpriteDataSchema, directions } from "@/definitions/SpriteSheet";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
-import { eventToString } from "@/lib/util";
 import spriteService from "@/services/spriteService";
 import { Box, Dialog, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { Component } from "react";
@@ -12,11 +11,12 @@ import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { EditorHeading } from "../EditorHeading";
 import { StorageMenu } from "../StorageMenu";
 import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
-import editorStyles from '../editorStyles.module.css';
-import { StringInput } from "../formControls";
+import { StringInput } from "@/components/SchemaForm/StringInput";
 import { AnimatedSpriteButton } from "./AnimatedSpriteButton";
 import { AnimationDialog } from "./AnimationDialog";
 import { NewAnimationForm } from "./NewAnimationForm";
+import { SelectInput } from "@/components/SchemaForm/SelectInput";
+import { EditorBox } from "../EditorBox";
 
 type ExtraState = {
     selectedAnimation?: string;
@@ -202,28 +202,25 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         const { id, defaultDirection, animations, selectedAnimation, selectedCol, selectedRow, selectedSheetId, selectedDirection } = this.state
         const { spriteIds } = this.props
         const overrideSprite = this.buildSprite()
-
         const animationEntries = Object.entries(animations)
 
         return <Box component={'article'}>
             <EditorHeading heading="Sprite Editor" itemId={this.props.data?.id ?? '[new]'} />
-            <div className={editorStyles.container}>
 
-                <fieldset className={editorStyles.fieldset}>
-                    <legend>Sprite</legend>
-                    <div className={editorStyles.row}>
+            <Stack direction={'row'} spacing={2}>
+                <EditorBox title="config">
+                    <Stack spacing={2}>
                         <StringInput label="sprite ID"
                             value={id}
                             inputHandler={value => this.changeValue('id', value)} />
-                    </div>
-                    <div className={editorStyles.row}>
-                        <label>Default Direction</label>
-                        <select value={defaultDirection} onChange={event => this.changeValue('defaultDirection', eventToString(event))}>
-                            {directions.map(direction => <option key={direction}>{direction}</option>)}
-                        </select>
-                    </div>
-                </fieldset>
-
+                        <SelectInput
+                            label="default direction"
+                            value={defaultDirection}
+                            options={directions}
+                            inputHandler={(choice) => { this.setState({ defaultDirection: choice as Direction }) }}
+                        />
+                    </Stack>
+                </EditorBox>
                 <StorageMenu
                     data={this.currentData}
                     originalId={this.props.data?.id}
@@ -236,7 +233,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     deleteItem={this.props.deleteData}
                     options={this.props.options}
                 />
-            </div>
+            </Stack>
 
             <Stack spacing={1}>
                 {animationEntries.map(([animationKey, animation]) => {
