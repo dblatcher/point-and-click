@@ -39,7 +39,7 @@ export const AnimatedSpriteButton = ({
     return (
         <Button
             variant={isDefault ? "contained" : "outlined"}
-            sx={{ minWidth: 100 }}
+            sx={{ minWidth: 100, minHeight: 100, padding: 0 }}
             onClick={onClick}
         >
             {directionSet ?

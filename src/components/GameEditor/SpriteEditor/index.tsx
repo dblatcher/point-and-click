@@ -5,18 +5,18 @@ import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import spriteService from "@/services/spriteService";
-import { Box, Dialog, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
+import { Box, Grid, Dialog, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { Component } from "react";
-import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { EditorHeading } from "../EditorHeading";
 import { StorageMenu } from "../StorageMenu";
 import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
 import { StringInput } from "@/components/SchemaForm/StringInput";
-import { AnimatedSpriteButton } from "./AnimatedSpriteButton";
 import { AnimationDialog } from "./AnimationDialog";
 import { NewAnimationForm } from "./NewAnimationForm";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { EditorBox } from "../EditorBox";
+import { AnimationGrid } from "./AnimationGrid";
+
 
 type ExtraState = {
     selectedAnimation?: string;
@@ -66,6 +66,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.addAnimation = this.addAnimation.bind(this)
         this.editCycle = this.editCycle.bind(this)
         this.buildActorData = this.buildActorData.bind(this)
+        this.deleteAnimation = this.deleteAnimation.bind(this)
         this.pickFrame = this.pickFrame.bind(this)
         this.setStateWithAutosave = (input, callback) => {
             higherLevelSetStateWithAutosave(this).bind(this)(input, callback)
@@ -201,10 +202,10 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     render() {
         const { id, defaultDirection, animations, selectedAnimation, selectedCol, selectedRow, selectedSheetId, selectedDirection } = this.state
         const { spriteIds } = this.props
-        const overrideSprite = this.buildSprite()
+        const sprite = this.buildSprite()
         const animationEntries = Object.entries(animations)
 
-        return <Box component={'article'}>
+        return <Stack component={'article'} spacing={1}>
             <EditorHeading heading="Sprite Editor" itemId={this.props.data?.id ?? '[new]'} />
 
             <Stack direction={'row'} spacing={2}>
@@ -234,40 +235,21 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     options={this.props.options}
                 />
             </Stack>
+            <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
 
-            <Stack spacing={1}>
-                {animationEntries.map(([animationKey, animation]) => {
-                    return (
-                        <Box key={animationKey}>
-                            <Stack direction={'row'} spacing={2} alignItems={'center'}>
-                                <Typography variant="h4">{animationKey}</Typography>
-                                {animationKey !== 'default' &&
-                                    <ButtonWithConfirm
-                                        label={`Delete animation "${animationKey}"`}
-                                        onClick={() => this.deleteAnimation(animationKey)} />
-                                }
-                            </Stack>
-                            <Stack direction={'row'}>
-                                {directions.map(direction => (
-
-                                    <AnimatedSpriteButton key={direction}
-                                        onClick={() => {
-                                            this.setState({ selectedAnimation: animationKey, selectedDirection: direction })
-                                        }}
-                                        sprite={overrideSprite}
-                                        direction={direction}
-                                        animation={animation}
-                                        animationKey={animationKey}
-                                        isDefault={direction === defaultDirection}
-                                    />
-                                ))}
-                            </Stack>
-                        </Box>
-                    )
-                })}
-
-                <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
-            </Stack>
+            <Grid container spacing={1}>
+                {animationEntries.map(([animationKey, animation]) => (
+                    <Grid xs={6} item key={animationKey}>
+                        <AnimationGrid
+                            {...{ animationKey, animation, defaultDirection, sprite }}
+                            deleteAnimation={this.deleteAnimation}
+                            selectAnimationAndDirection={(selectedAnimation, selectedDirection) => {
+                                this.setState({ selectedAnimation, selectedDirection })
+                            }}
+                        />
+                    </Grid>
+                ))}
+            </Grid>
 
             <Dialog fullWidth maxWidth={'xl'}
                 scroll="paper"
@@ -289,7 +271,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                             {...{
                                 selectedAnimation,
                                 selectedDirection,
-                                overrideSprite,
+                                overrideSprite: sprite,
                                 selectedRow,
                                 selectedCol,
                                 selectedSheetId,
@@ -303,6 +285,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
                 </DialogContent>
             </Dialog>
-        </Box>
+        </Stack>
     }
 }
