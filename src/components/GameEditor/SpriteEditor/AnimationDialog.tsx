@@ -4,7 +4,7 @@ import { Sprite } from "@/lib/Sprite";
 import { Container, Grid, Stack } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { SpritePreview } from "../SpritePreview";
-import { AnimationControl } from "./AnimationControl";
+import { AnimationFrameList } from "./AnimationFrameList";
 import { FramePicker } from "./FramePicker";
 
 interface Props {
@@ -64,7 +64,7 @@ export const AnimationDialog = ({
                 </Stack>
 
                 {(animations[selectedAnimation]) && (
-                    <AnimationControl animKey={selectedAnimation}
+                    <AnimationFrameList animKey={selectedAnimation}
                         defaultDirection={defaultDirection}
                         direction={selectedDirection}
                         animation={animations[selectedAnimation]}

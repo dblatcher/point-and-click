@@ -14,7 +14,7 @@ interface Props {
     pickFrame: { (row: number, col: number, sheetId?: string): void };
 }
 
-export const AnimationControl = ({
+export const AnimationFrameList = ({
     animKey, animation,
     editCycle, pickFrame,
     selectedFrame,
