@@ -239,7 +239,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
             <Grid container spacing={1}>
                 {animationEntries.map(([animationKey, animation]) => (
-                    <Grid xs={6} item key={animationKey}>
+                    <Grid xs={6} md={4} item key={animationKey}>
                         <AnimationGrid
                             {...{ animationKey, animation, defaultDirection, sprite }}
                             deleteAnimation={this.deleteAnimation}

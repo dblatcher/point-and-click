@@ -21,10 +21,10 @@ const buildActorData = (sprite: Sprite, animationKey: string, direction: Directi
     return {
         type: 'actor',
         id: 'preview',
-        x: 75 / widthScale,
+        x: 50 / widthScale,
         y: 0,
-        height: 150 / heightScale,
-        width: 150 / widthScale,
+        height: 100 / heightScale,
+        width: 100 / widthScale,
         sprite: sprite.id,
         status: animationKey,
         direction
@@ -38,12 +38,12 @@ export const AnimatedSpriteButton = ({
 
     return (
         <Button
-            variant={isDefault ? "contained" : "outlined"}
-            sx={{ minWidth: 100, minHeight: 100, padding: 0 }}
+            variant={isDefault ? "outlined" : "text"}
+            sx={{ minWidth: 80, minHeight: 80, padding: 0 }}
             onClick={onClick}
         >
             {directionSet ?
-                <SpritePreview noBaseLine
+                <SpritePreview noBaseLine scale={.8}
                     overrideSprite={sprite}
                     data={buildActorData(sprite, animationKey, direction)}
                 /> : <Typography>[{direction}]</Typography>

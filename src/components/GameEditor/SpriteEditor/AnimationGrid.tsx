@@ -35,7 +35,7 @@ export const AnimationGrid = ({ animation, animationKey, sprite, defaultDirectio
 
     return (
         <EditorBox title={animationKey}>
-            <Stack spacing={2} alignItems={'center'}>
+            <Stack alignItems={'center'}>
                 {animationKey !== 'default' &&
                     <ButtonWithConfirm
                         label={`Delete animation "${animationKey}"`}

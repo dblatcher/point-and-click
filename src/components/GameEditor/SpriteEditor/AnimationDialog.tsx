@@ -43,6 +43,7 @@ export const AnimationDialog = ({
                 <Stack spacing={2} flex={1}>
                     <Grid item xs={6}>
                         <SpritePreview
+                            noBaseLine
                             scale={3}
                             overrideSprite={overrideSprite}
                             data={actorData}
