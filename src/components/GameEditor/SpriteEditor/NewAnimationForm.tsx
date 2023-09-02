@@ -13,7 +13,7 @@ interface Props {
 export const NewAnimationForm: FunctionComponent<Props> = ({ existingKeys, submit }: Props) => {
     const [animationKey, setAnimationKey] = useState<string>('')
     const keyAlreadyUsed = existingKeys.includes(animationKey)
-    const warning = keyAlreadyUsed ? `There is already an animation called ${animationKey}` : undefined;
+    const warning = keyAlreadyUsed ? `animation "${animationKey}" already exists` : undefined;
     const handleSubmit = () => {
         if (keyAlreadyUsed || animationKey === '') { return }
         submit(animationKey)
@@ -24,9 +24,9 @@ export const NewAnimationForm: FunctionComponent<Props> = ({ existingKeys, submi
         .filter(value => !existingKeys.includes(value))
 
     return (
-        <EditorBox title="Add Animation">
+        <EditorBox title="Add Animation" boxProps={{ minWidth: 220 }}>
             <Stack direction={'row'} alignItems={'center'}>
-                <Box flexBasis={200}>
+                <Box flexBasis={180}>
                     <StringInput
                         label="animation name" value={animationKey}
                         inputHandler={setAnimationKey}
@@ -39,10 +39,12 @@ export const NewAnimationForm: FunctionComponent<Props> = ({ existingKeys, submi
                     disabled={keyAlreadyUsed || animationKey === ''}
                     color="primary"
                 ><AddIcon /></IconButton>
-                {warning && (
-                    <Alert severity="warning">{warning}</Alert>
-                )}
             </Stack>
+            {warning && (
+                <Box width={200}>
+                    <Alert severity="warning">{warning}</Alert>
+                </Box>
+            )}
         </EditorBox>
     )
 }

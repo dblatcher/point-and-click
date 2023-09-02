@@ -234,12 +234,14 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     deleteItem={this.props.deleteData}
                     options={this.props.options}
                 />
+                <NewAnimationForm
+                    existingKeys={Object.keys(this.state.animations)}
+                    submit={this.addAnimation} />
             </Stack>
-            <NewAnimationForm existingKeys={Object.keys(this.state.animations)} submit={this.addAnimation} />
 
             <Grid container spacing={1}>
                 {animationEntries.map(([animationKey, animation]) => (
-                    <Grid xs={6} md={4} item key={animationKey}>
+                    <Grid xs={6} md={4} item key={animationKey} minWidth={260}>
                         <AnimationGrid
                             {...{ animationKey, animation, defaultDirection, sprite }}
                             deleteAnimation={this.deleteAnimation}

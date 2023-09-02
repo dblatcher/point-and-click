@@ -34,7 +34,7 @@ export const AnimationGrid = ({ animation, animationKey, sprite, defaultDirectio
     }
 
     return (
-        <EditorBox title={animationKey}>
+        <EditorBox title={animationKey} boxProps={{ minWidth: 240 }}>
             <Stack alignItems={'center'}>
                 {animationKey !== 'default' &&
                     <ButtonWithConfirm
