@@ -1,8 +1,9 @@
 import { FunctionComponent, useState } from "react";
-import { icons } from "../dataEditors";
-import { Warning, StringInput } from "../formControls";
-import editorStyles from '../editorStyles.module.css';
+import { StringInput } from "@/components/SchemaForm/inputs";
 import { Sprite } from "@/lib/Sprite";
+import { Box, Alert, Stack, IconButton } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add"
+import { EditorBox } from "../EditorBox";
 
 interface Props {
     existingKeys: string[];
@@ -23,21 +24,25 @@ export const NewAnimationForm: FunctionComponent<Props> = ({ existingKeys, submi
         .filter(value => !existingKeys.includes(value))
 
     return (
-        <div>
-            <div>
-                <StringInput
-                    label="New animation:" value={animationKey}
-                    inputHandler={setAnimationKey}
-                    suggestions={animationKeySuggestions}
-                />
+        <EditorBox title="Add Animation">
+            <Stack direction={'row'} alignItems={'center'}>
+                <Box flexBasis={200}>
+                    <StringInput
+                        label="animation name" value={animationKey}
+                        inputHandler={setAnimationKey}
+                        suggestions={animationKeySuggestions}
+                    />
+                </Box>
 
-                <button
-                    className={[editorStyles.button, editorStyles.plusButton].join(" ")}
-                    onClick={handleSubmit} disabled={keyAlreadyUsed || animationKey === ''}>{icons.INSERT}</button>
-            </div>
-            {warning && (
-                <Warning>{warning}</Warning>
-            )}
-        </div>
+                <IconButton
+                    onClick={handleSubmit}
+                    disabled={keyAlreadyUsed || animationKey === ''}
+                    color="primary"
+                ><AddIcon /></IconButton>
+                {warning && (
+                    <Alert severity="warning">{warning}</Alert>
+                )}
+            </Stack>
+        </EditorBox>
     )
 }
