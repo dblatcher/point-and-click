@@ -38,7 +38,8 @@ export const AnimatedSpriteButton = ({
 
     return (
         <Button
-            variant={isDefault ? "outlined" : "text"}
+            variant="outlined"
+            color={isDefault ? "primary" : "secondary"}
             sx={{ minWidth: 80, minHeight: 80, padding: 0 }}
             onClick={onClick}
         >
