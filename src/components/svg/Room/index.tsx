@@ -72,6 +72,7 @@ export const Room: FunctionComponent<Props> = ({
         height: `${height * scale}px`,
         position: 'relative',
         margin: forPreview ? 0 : undefined,
+        backgroundColor: data.backgroundColor,
     }
 
     return (

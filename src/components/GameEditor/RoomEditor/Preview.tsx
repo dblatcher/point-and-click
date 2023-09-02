@@ -178,11 +178,18 @@ export class Preview extends Component<Props, State>{
                 flexBasis={'100%'}
                 position={'relative'}
                 boxSizing={'border-box'}
+                padding={1}
+                sx={{
+                    backgroundColor:'secondary.light'
+                }}
             >
 
                 <Box sx={{
                     position: 'relative',
                     display: 'inline-block',
+                    borderStyle: 'outset',
+                    borderWidth: 3,
+                    color: 'secondary.light'
                 }}>
                     <Room data={roomData} forPreview
                         showObstacleAreas={showObstacleAreas}

@@ -20,5 +20,6 @@ export const RoomDataSchema = z.object({
     obstacleAreas: z.optional(ZoneSchema.array()),
     walkableAreas: z.optional(ZoneSchema.array()),
     scaling: z.optional(ScaleLevelSchema),
+    backgroundColor: z.string().optional(),
 })
 export type RoomData = z.infer<typeof RoomDataSchema>

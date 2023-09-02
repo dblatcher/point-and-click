@@ -1,35 +1,34 @@
-import { Component } from "react";
-import { Stack, Box, Container, Alert } from "@mui/material";
-import { BackgroundLayer, RoomData, ScaleLevel, HotspotZone, Zone, ActorData } from "@/definitions";
+import { ActorData, BackgroundLayer, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import imageService from "@/services/imageService";
-import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
+import { Alert, Box, Container, Stack } from "@mui/material";
+import { Component } from "react";
+import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
 import { getBlankRoom } from "../defaults";
-import { type DataItemEditorProps, type EnhancedSetStateFunction, higherLevelSetStateWithAutosave } from "../dataEditors";
+import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
 // lib
-import { Point } from "@/lib/pathfinding/geometry";
 import { cloneData } from "@/lib/clone";
-import { eventToString } from "@/lib/util";
-import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { uploadJsonData } from "@/lib/files";
+import { Point } from "@/lib/pathfinding/geometry";
+import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 // components
-import { NumberInput, Warning } from "../formControls";
 import { TabSet, type TabSetItem } from "@/components/GameEditor/TabSet";
-import { StorageMenu } from "../StorageMenu";
-import { ListEditor } from "../ListEditor";
 import { EditorHeading } from "../EditorHeading";
+import { ListEditor } from "../ListEditor";
+import { StorageMenu } from "../StorageMenu";
 import { TabMenu } from "../TabMenu";
 // subcomponents
-import { HotspotControl } from "./HotSpotControl";
+import { SchemaForm, getModification } from "@/components/SchemaForm";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
-import { ShapeChangeFunction } from "./ShapeControl";
+import { HotspotControl } from "./HotSpotControl";
+import { NewZoneButtons } from "./NewZoneButtons";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
-import { ZoneSetEditor } from "./ZoneSetEditor";
-import { NewZoneButtons } from "./NewZoneButtons";
+import { ShapeChangeFunction } from "./ShapeControl";
 import { ZonePicker } from "./ZonePicker";
-import { SchemaForm, getModification } from "@/components/SchemaForm";
+import { ZoneSetEditor } from "./ZoneSetEditor";
+import { StringInput } from "@/components/SchemaForm/StringInput";
 
 export type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -417,6 +416,12 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         {frameWidth > width && (
                             <Alert severity="warning">frame width is bigger than room width</Alert>
                         )}
+                        <Box width={120}>
+                            <StringInput label="backdrop color" type="color"
+                                value={this.state.backgroundColor ?? ''}
+                                optional
+                                inputHandler={value => this.setStateWithAutosave({ backgroundColor: value })} />
+                        </Box>
                     </Container>
                 )
             },
@@ -538,7 +543,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const { actors = [] } = this.props
         const tabs = this.buildTabs()
 
-        return <Stack component={'article'} spacing={1} height={'100%'}>
+        return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
             <TabMenu tabs={tabs} />
             <Preview
@@ -547,7 +552,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 clickEffect={clickEffect}
                 activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
                 handleRoomClick={this.handleRoomClick} />
-
         </Stack>
     }
 }
