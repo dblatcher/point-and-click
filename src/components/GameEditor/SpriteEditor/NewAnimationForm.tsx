@@ -25,26 +25,28 @@ export const NewAnimationForm: FunctionComponent<Props> = ({ existingKeys, submi
 
     return (
         <EditorBox title="Add Animation" boxProps={{ minWidth: 220 }}>
-            <Stack direction={'row'} alignItems={'center'}>
-                <Box flexBasis={180}>
-                    <StringInput
-                        label="animation name" value={animationKey}
-                        inputHandler={setAnimationKey}
-                        suggestions={animationKeySuggestions}
-                    />
-                </Box>
+            <Stack minHeight={200}>
+                <Stack direction={'row'} alignItems={'center'}>
+                    <Box flexBasis={180}>
+                        <StringInput
+                            label="animation name" value={animationKey}
+                            inputHandler={setAnimationKey}
+                            suggestions={animationKeySuggestions}
+                        />
+                    </Box>
 
-                <IconButton
-                    onClick={handleSubmit}
-                    disabled={keyAlreadyUsed || animationKey === ''}
-                    color="primary"
-                ><AddIcon /></IconButton>
+                    <IconButton
+                        onClick={handleSubmit}
+                        disabled={keyAlreadyUsed || animationKey === ''}
+                        color="primary"
+                    ><AddIcon /></IconButton>
+                </Stack>
+                {warning && (
+                    <Box width={200}>
+                        <Alert severity="warning">{warning}</Alert>
+                    </Box>
+                )}
             </Stack>
-            {warning && (
-                <Box width={200}>
-                    <Alert severity="warning">{warning}</Alert>
-                </Box>
-            )}
         </EditorBox>
     )
 }

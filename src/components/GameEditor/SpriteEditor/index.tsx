@@ -234,9 +234,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     deleteItem={this.props.deleteData}
                     options={this.props.options}
                 />
-                <NewAnimationForm
-                    existingKeys={Object.keys(this.state.animations)}
-                    submit={this.addAnimation} />
             </Stack>
 
             <Grid container spacing={1}>
@@ -251,6 +248,12 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                         />
                     </Grid>
                 ))}
+
+                <Grid xs={6} md={4} item  minWidth={260}>
+                    <NewAnimationForm
+                        existingKeys={Object.keys(this.state.animations)}
+                        submit={this.addAnimation} />
+                </Grid>
             </Grid>
 
             <Dialog fullWidth maxWidth={'xl'}
