@@ -4,7 +4,6 @@ import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { Box, Button, Typography, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
 import { ServiceItemSelector } from "../ServiceItemSelector";
-import { RangeInput } from "../RoomEditor/RangeInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 
 interface Props {
@@ -62,9 +61,7 @@ export const FramePicker2: FunctionComponent<Props> = ({ row, col, sheetId, pick
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
     const image = sheetId ? imageService.get(sheetId) : undefined;
-
     const frameSize = frameSizeFromButtonSize(buttonSize)
-
 
     const buttonPropsGrid: FrameButtonProps[][] = []
     if (image) {
@@ -85,11 +82,8 @@ export const FramePicker2: FunctionComponent<Props> = ({ row, col, sheetId, pick
         }
     }
 
-
-
     return (
         <EditorBox title="Pick frame to insert">
-
             <Stack direction={'row'} justifyContent={'space-between'}>
                 <BooleanInput value={showInOneRow} inputHandler={setShowInOneRow} label="arrange frames in one list" />
                 <Box width={100}>
@@ -102,7 +96,6 @@ export const FramePicker2: FunctionComponent<Props> = ({ row, col, sheetId, pick
                         }} />
                 </Box>
             </Stack>
-
 
             {image && (<>
                 {showInOneRow ? (<>
@@ -125,7 +118,7 @@ export const FramePicker2: FunctionComponent<Props> = ({ row, col, sheetId, pick
                 )}
             </>)}
 
-            <Stack direction={'row'} justifyContent={'space-between'}>
+            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
                 {!fixedSheet && (
                     <ServiceItemSelector legend="sprite sheet"
                         format="select"
@@ -133,14 +126,10 @@ export const FramePicker2: FunctionComponent<Props> = ({ row, col, sheetId, pick
                         selectedItemId={sheetId}
                         select={(item): void => { pickFrame(0, 0, item.id) }} />
                 )}
-
-
-                <Typography variant='overline'>
+                <Typography variant='h6'>
                     {sheetId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
                 </Typography>
             </Stack>
-
-
         </EditorBox>
     )
 }

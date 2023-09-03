@@ -1,21 +1,21 @@
 
+import { SelectInput } from "@/components/SchemaForm/SelectInput";
+import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ActorData, Animation, Direction, SpriteData, SpriteFrame } from "@/definitions";
 import { SpriteDataSchema, directions } from "@/definitions/SpriteSheet";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import spriteService from "@/services/spriteService";
-import { Box, Grid, Dialog, DialogContent, DialogTitle, Stack } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import { Component } from "react";
+import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
 import { StorageMenu } from "../StorageMenu";
 import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
-import { StringInput } from "@/components/SchemaForm/StringInput";
 import { AnimationDialog } from "./AnimationDialog";
-import { NewAnimationForm } from "./NewAnimationForm";
-import { SelectInput } from "@/components/SchemaForm/SelectInput";
-import { EditorBox } from "../EditorBox";
 import { AnimationGrid } from "./AnimationGrid";
+import { NewAnimationForm } from "./NewAnimationForm";
 
 
 type ExtraState = {
@@ -249,47 +249,33 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     </Grid>
                 ))}
 
-                <Grid xs={6} md={4} item  minWidth={260}>
+                <Grid xs={6} md={4} item minWidth={260}>
                     <NewAnimationForm
                         existingKeys={Object.keys(this.state.animations)}
                         submit={this.addAnimation} />
                 </Grid>
             </Grid>
 
-            <Dialog fullWidth maxWidth={'xl'}
-                scroll="paper"
-                open={!!selectedAnimation && !!selectedDirection}
-                onClose={() => {
+            <AnimationDialog
+                {...{
+                    selectedAnimation,
+                    selectedDirection,
+                    overrideSprite: sprite,
+                    selectedRow,
+                    selectedCol,
+                    selectedSheetId,
+                }}
+                spriteData={this.state}
+                actorData={(selectedAnimation && selectedDirection) ? this.buildActorData(selectedAnimation, selectedDirection) : undefined}
+                editCycle={this.editCycle}
+                pickFrame={this.pickFrame}
+                close={() => {
                     this.setState({
                         selectedAnimation: undefined,
                         selectedDirection: undefined
                     })
-                }}>
-
-                <DialogContent>
-                    <DialogTitle>
-                        {selectedAnimation}/{selectedDirection}{selectedDirection === defaultDirection && <span>(default)</span>}
-                    </DialogTitle>
-
-                    {(selectedAnimation && selectedDirection) && (
-                        <AnimationDialog
-                            {...{
-                                selectedAnimation,
-                                selectedDirection,
-                                overrideSprite: sprite,
-                                selectedRow,
-                                selectedCol,
-                                selectedSheetId,
-                            }}
-                            spriteData={this.state}
-                            actorData={this.buildActorData(selectedAnimation, selectedDirection)}
-                            editCycle={this.editCycle}
-                            pickFrame={this.pickFrame}
-                        />
-                    )}
-
-                </DialogContent>
-            </Dialog>
+                }}
+            />
         </Stack>
     }
 }

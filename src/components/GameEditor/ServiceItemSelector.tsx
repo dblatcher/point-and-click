@@ -60,7 +60,7 @@ export const ServiceItemSelector: FunctionComponent<Props> = ({
     switch (format) {
         case 'select':
             return (
-                <Box padding={1}>
+                <Box padding={1} minWidth={120}>
                     <SelectInput label={legend}
                         optional options={list}
                         value={selectedItemId}
