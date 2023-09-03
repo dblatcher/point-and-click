@@ -30,6 +30,7 @@ export const AnimationFrameList = ({
             (<Stack>
                 <ListEditor tight
                     list={animation[direction] as SpriteFrame[]}
+                    insertText="insert frame"
                     mutateList={newlist => {
                         return editCycle(animKey, direction, newlist)
                     }}
@@ -43,7 +44,6 @@ export const AnimationFrameList = ({
                             <FramePreview
                                 height={80}
                                 width={80}
-                                backgroundColor={'yellow'}
                                 frame={frame} />
                             <p>{frame.imageId}</p>
                             <p>[{frame.col}, {frame.row}]</p>

@@ -5,7 +5,7 @@ import { Container, Grid, Stack } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { SpritePreview } from "../SpritePreview";
 import { AnimationFrameList } from "./AnimationFrameList";
-import { FramePicker } from "./FramePicker";
+import { FramePicker2 } from "./FramePicker2";
 
 interface Props {
     selectedDirection: Direction
@@ -56,7 +56,7 @@ export const AnimationDialog = ({
                             onClick={() => editCycle(selectedAnimation, selectedDirection, undefined)} />
                     )}
 
-                    <FramePicker
+                    <FramePicker2
                         pickFrame={pickFrame}
                         sheetId={selectedSheetId}
                         row={selectedRow}
