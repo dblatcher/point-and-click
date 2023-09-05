@@ -64,6 +64,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.addAnimation = this.addAnimation.bind(this)
+        this.copyAnimation = this.copyAnimation.bind(this)
         this.editCycle = this.editCycle.bind(this)
         this.buildActorData = this.buildActorData.bind(this)
         this.deleteAnimation = this.deleteAnimation.bind(this)
@@ -123,6 +124,17 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 animations,
                 selectedAnimation: animationKey,
                 selectedDirection: defaultDirection
+            }
+        })
+    }
+
+    copyAnimation(newName: string, animationKey: string) {
+        this.setStateWithAutosave(state => {
+            const { animations, defaultDirection } = state
+            const newAnimation = cloneData(animations[animationKey]) as Animation
+            animations[newName] = newAnimation
+            return {
+                animations,
             }
         })
     }
@@ -244,6 +256,10 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                             deleteAnimation={this.deleteAnimation}
                             selectAnimationAndDirection={(selectedAnimation, selectedDirection) => {
                                 this.setState({ selectedAnimation, selectedDirection })
+                            }}
+                            copyAnimation={(newName, animationKey) => {
+                                console.log('rename', newName, animationKey)
+                                this.copyAnimation(newName, animationKey)
                             }}
                         />
                     </Grid>

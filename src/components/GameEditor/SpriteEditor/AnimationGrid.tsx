@@ -5,6 +5,9 @@ import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { EditorBox } from "../EditorBox";
 import { AnimatedSpriteButton } from "./AnimatedSpriteButton";
 import { Sprite } from "@/lib/Sprite";
+import DeleteIcon from "@mui/icons-material/Delete"
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { ButtonWithTextInput } from "../ButtonWithTextInput";
 
 interface Props {
     animationKey: string
@@ -12,11 +15,12 @@ interface Props {
     sprite: Sprite
     defaultDirection: Direction
     deleteAnimation: { (animationKey: string): void }
+    copyAnimation: { (newName: string, animationKey: string): void }
     selectAnimationAndDirection: { (selectedAnimation: string, selectedDirection: Direction): void }
 }
 
 
-export const AnimationGrid = ({ animation, animationKey, sprite, defaultDirection, deleteAnimation, selectAnimationAndDirection }: Props) => {
+export const AnimationGrid = ({ animation, animationKey, sprite, defaultDirection, deleteAnimation, copyAnimation, selectAnimationAndDirection }: Props) => {
 
     const renderedButtons: Partial<Record<Direction, JSX.Element>> = {}
 
@@ -36,11 +40,22 @@ export const AnimationGrid = ({ animation, animationKey, sprite, defaultDirectio
     return (
         <EditorBox title={animationKey} boxProps={{ minWidth: 240 }}>
             <Stack alignItems={'center'} justifyContent={'flex-end'} minHeight={200}>
-                {animationKey !== 'default' &&
-                    <ButtonWithConfirm
-                        label={`Delete animation "${animationKey}"`}
-                        onClick={() => deleteAnimation(animationKey)} />
-                }
+                <Stack direction={'row'} justifyContent={'flex-end'} width={'100%'}>
+
+                    <ButtonWithTextInput
+                        useIconButton icon={<ContentCopyIcon />}
+                        label={`Copy animation "${animationKey}"`}
+                        confirmationText={`Copy "${animationKey}" as...`}
+                        onEntry={newName => { copyAnimation(newName, animationKey) }}
+                    />
+
+                    {animationKey !== 'default' &&
+                        <ButtonWithConfirm
+                            useIconButton icon={<DeleteIcon />}
+                            label={`Delete animation "${animationKey}"`}
+                            onClick={() => deleteAnimation(animationKey)} />
+                    }
+                </Stack>
                 <Stack direction={'row'} alignItems={'center'}>
                     {renderedButtons.left}
                     <Stack>

@@ -1,37 +1,34 @@
+import { StringInput } from "@/components/SchemaForm/inputs";
 import { defaultTheme } from "@/theme";
-import { Alert, Button, ThemeProvider, Dialog, DialogActions, DialogTitle, IconButton } from "@mui/material";
-import { MouseEventHandler, ReactNode, useState } from "react";
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ThemeProvider } from "@mui/material";
+import { ReactNode, useState } from "react";
 
 interface Props {
     label: string;
-    onClick: MouseEventHandler<HTMLButtonElement>;
-    noConfirmation?: boolean;
-    confirmationText?: string;
+    onEntry: { (input: string): void };
+    confirmationText: string;
     useIconButton?: boolean;
     icon?: ReactNode;
 }
 
-export const ButtonWithConfirm = ({ label, onClick, noConfirmation, confirmationText, useIconButton, icon }: Props) => {
+export const ButtonWithTextInput = ({ onEntry, label, confirmationText, useIconButton, icon }: Props) => {
 
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
+    const [input, setInput] = useState<string>('')
 
-    const handleFirstButton = noConfirmation
-        ? onClick
-        : (): void => { setShowConfirmation(true) }
-
-    const warningText = confirmationText || `Are you sure you want to ${label}?`
+    const handleFirstButton = (): void => { setShowConfirmation(true) }
 
     return (
         <>
             {useIconButton && !!icon ? (
                 <IconButton
-                    color="warning"
                     onClick={handleFirstButton}
                     aria-label={label}
                 >
                     {icon}
                 </IconButton>
             ) : (
+
                 <Button
                     color="warning"
                     onClick={handleFirstButton}
@@ -43,23 +40,24 @@ export const ButtonWithConfirm = ({ label, onClick, noConfirmation, confirmation
             <ThemeProvider theme={defaultTheme}>
                 <Dialog open={showConfirmation} onClose={(): void => { setShowConfirmation(false); }}>
                     <DialogTitle>
-                        <Alert severity="warning">
-                            {warningText}
-                        </Alert>
+                        {confirmationText}
                     </DialogTitle>
+                    <DialogContent>
+                        <StringInput value={input} inputHandler={setInput} />
+                    </DialogContent>
                     <DialogActions>
                         <Button
                             onClick={(): void => { setShowConfirmation(false); }}
                         >
-                            no
+                            cancel
                         </Button>
-                        <Button color='warning'
-                            onClick={(event): void => {
+                        <Button
+                            onClick={() => {
                                 setShowConfirmation(false);
-                                onClick.bind(undefined as never)(event);
+                                onEntry(input)
                             }}
                         >
-                            yes
+                            confirm
                         </Button>
                     </DialogActions>
                 </Dialog>
