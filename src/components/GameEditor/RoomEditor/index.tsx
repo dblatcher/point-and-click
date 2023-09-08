@@ -545,7 +545,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
-            <TabMenu tabs={tabs} />
+            <TabMenu tabs={tabs} contentMinHeight={220}/>
             <Preview
                 actors={actors}
                 roomData={this.state}

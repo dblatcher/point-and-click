@@ -12,6 +12,7 @@ interface Props {
     backgroundColor?: string;
     flex?: number;
     noButtons?: boolean;
+    contentMinHeight?: number;
 }
 
 const tabStyle = (isOpen: boolean, backgroundColor?: string): CSSProperties => {
@@ -31,10 +32,11 @@ const Frame = (props: { children: ReactNode }) => {
     </Paper>
 }
 
-export const TabMenu: FunctionComponent<Props> = ({
+export const TabMenu = ({
     tabs,
     defaultOpenIndex = 0,
     backgroundColor,
+    contentMinHeight,
 }: Props) => {
     const [selectedTabIndex, setSelectedTabIndex] = useState<number>(defaultOpenIndex)
 
@@ -51,7 +53,8 @@ export const TabMenu: FunctionComponent<Props> = ({
                 ))}
             </Tabs>
             <Box sx={{
-                paddingX: 1
+                paddingX: 1,
+                minHeight: contentMinHeight,
             }}>
                 {tabs.map((tab, index) => (
                     <div key={index} style={tabStyle(index === selectedTabIndex, backgroundColor)}>
