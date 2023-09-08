@@ -360,7 +360,8 @@ export default class GameEditor extends Component<Props, State>{
 
                             <TreeMenu folders={folders}
                                 folderClick={(folderId) => {
-                                    const folderIndex = tabs.indexOf(folderId);
+                                    const indexOfClickedFolder = tabs.indexOf(folderId);
+                                    const folderIndex = this.state.tabOpen === indexOfClickedFolder ? 0 : indexOfClickedFolder;
                                     this.setState(state => {
                                         return {
                                             tabOpen: folderIndex,
