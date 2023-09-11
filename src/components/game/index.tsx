@@ -29,6 +29,7 @@ export type GameProps = Readonly<{
     save?: { (saveDate: GameData): void };
     reset?: { (): void };
     load?: { (): void };
+    _sprites: Sprite[];
     showDebugLog?: boolean;
     startPaused?: boolean;
     uiComponents?: UiComponentSet;
@@ -190,7 +191,7 @@ export default class Game extends Component<GameProps, GameState> {
             const { cellMatrix = [] } = state
             let pendingInteractionShouldBeDone = false;
             state.actors.forEach(actor => {
-                const triggersPendingInteraction = followOrder(actor, cellMatrix, state.actorOrders[actor.id], state)
+                const triggersPendingInteraction = followOrder(actor, cellMatrix, state.actorOrders[actor.id], state, findById(actor.sprite, this.props._sprites))
                 if (triggersPendingInteraction) {
                     pendingInteractionShouldBeDone = true
                 }
@@ -264,7 +265,7 @@ export default class Game extends Component<GameProps, GameState> {
         }
     }
 
-    setScreenSize(roomWidth=this.state.roomWidth, roomHeight = this.state.roomHeight) {
+    setScreenSize(roomWidth = this.state.roomWidth, roomHeight = this.state.roomHeight) {
         this.setState({ roomWidth, roomHeight })
     }
 

@@ -6,11 +6,12 @@ import { Sprite } from "@/lib/Sprite";
 import { useInterval } from "@/lib/useInterval"
 
 import { SpriteShape } from "./SpriteShape";
-import spriteService from "@/services/spriteService";
 import { HandleClickFunction, HandleHoverFunction } from "../game";
 import { PersistentSound } from "@/components/sound/PersistentSound";
 import { IntermitentSound } from "@/components/sound/IntermitentSound";
 import { SoundEffectMap, SoundValue } from "../../definitions/ActorData";
+import { useSprites } from "@/context/sprite-context";
+import { findById } from "@/lib/util";
 
 interface Props {
     roomData: RoomData;
@@ -68,13 +69,14 @@ export const ActorFigure: FunctionComponent<Props> = ({
     forPreview
 }: Props) => {
     const [frameIndex, setFrameIndex] = useState<number>(0)
+    const sprites = useSprites()
 
     const {
         x, y,
         height = 50, width = 50, sprite: spriteId, filter,
         status, soundEffectMap = {}
     } = data
-    const spriteObject = overrideSprite || spriteService.get(spriteId)
+    const spriteObject = overrideSprite || findById(spriteId, sprites)
     const currentOrder: Order | undefined = orders[0]
     const animationName = getAnimationName(currentOrder, data.status, spriteObject)
     const soundValue = getSoundValue(currentOrder, status, soundEffectMap)

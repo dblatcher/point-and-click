@@ -6,6 +6,8 @@ import { populateServices } from "@/services/populateServices";
 import { SoundAsset } from "@/services/soundService";
 import React from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
+import { SpritesProvider } from "@/context/sprite-context";
+import { Sprite } from "@/lib/Sprite";
 
 
 type Props = {
@@ -22,6 +24,8 @@ type State = {
 
 export class GameDesignPlayer extends React.Component<Props, State> {
 
+  sprites: Sprite[]
+
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -30,6 +34,8 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     this.reset = this.reset.bind(this)
     this.save = this.save.bind(this)
     this.load = this.load.bind(this)
+
+    this.sprites = []
   }
 
   get storageKey(): string | undefined {
@@ -82,6 +88,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
   componentDidMount(): void {
     const { gameDesign, imageAssets, soundAssets } = this.props
+    this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data)))
     populateServices(gameDesign, imageAssets, soundAssets)
     this.reset()
   }
@@ -104,15 +111,19 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     const { uiComponents } = this.props
     return <>
       {gameCondition && (
-        <Game
-          {...gameCondition}
-          load={this.load}
-          save={this.save}
-          reset={this.reset}
-          key={timestamp}
+        <SpritesProvider value={this.sprites}>
+          <p>there are {this.sprites.length} sprites</p>
+          <Game
+            {...gameCondition}
+            load={this.load}
+            save={this.save}
+            reset={this.reset}
+            key={timestamp}
+            _sprites={this.sprites}
 
-          uiComponents={uiComponents}
-        />
+            uiComponents={uiComponents}
+          />
+        </SpritesProvider>
       )}
     </>
   }
