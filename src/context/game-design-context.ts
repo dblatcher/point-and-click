@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { GameDesign } from '@/definitions'
-import { EditorOptions } from '.'
+import { EditorOptions } from '../components/GameEditor'
 
 const gameDesignContext = createContext<{
     gameDesign: GameDesign,

@@ -31,8 +31,8 @@ import imageService from "@/services/imageService";
 import { VerbMenuEditor } from "./VerbMenuEditor";
 import { Container, Stack, Box, Typography, Divider } from "@mui/material";
 import { OptionsMenu } from "./OptionsMenu";
-import { GameDesignProvider } from "./game-design-context";
 import { Sprite } from "@/lib/Sprite";
+import { GameDesignProvider } from "@/context/game-design-context";
 import { SpritesProvider } from "@/context/sprite-context";
 import { testSprite } from "./RoomEditor/testSprite";
 

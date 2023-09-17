@@ -5,7 +5,7 @@ import { Paper, Stack, Typography } from "@mui/material";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { ListEditor } from "./ListEditor";
-import { useGameDesign } from "./game-design-context";
+import { useGameDesign } from "@/context/game-design-context";
 
 
 

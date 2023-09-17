@@ -5,7 +5,7 @@ import { Stack } from "@mui/material"
 import { SelectInput } from "@/components/SchemaForm/SelectInput"
 import { ChoiceListControl } from "./ChoiceListControl"
 import { NewSequenceForm } from "./NewSequenceForm"
-import { useGameDesign } from "../game-design-context"
+import { useGameDesign } from "@/context/game-design-context"
 import { Sequence } from "@/definitions"
 
 

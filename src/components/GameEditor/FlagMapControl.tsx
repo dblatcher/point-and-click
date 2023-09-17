@@ -3,7 +3,7 @@ import { SchemaForm, getModification } from "@/components/SchemaForm";
 import { Flag, FlagMap, FlagSchema } from "@/definitions/Flag";
 import { RecordEditor } from "./RecordEditor";
 import { makeNewFlag } from "./defaults";
-import { useGameDesign } from "./game-design-context";
+import { useGameDesign } from "@/context/game-design-context";
 
 export const FlagMapControl = () => {
     const { gameDesign, performUpdate } = useGameDesign()
