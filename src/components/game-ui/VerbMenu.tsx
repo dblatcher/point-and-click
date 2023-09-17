@@ -2,7 +2,7 @@ import { memo } from 'react'
 import uiStyles from './uiStyles.module.css';
 import { VerbMenuProps, verbMenuPropsAreEqual } from "../game/uiComponentSet";
 import { Verb } from '@/definitions';
-import { useGameInfo } from '../game/game-info-provider';
+import { useGameInfo } from '@/context/game-info-provider';
 import { useGameState } from '../game/game-state-context';
 
 

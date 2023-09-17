@@ -22,7 +22,7 @@ import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
 import { GameStateProvider } from "./game-state-context";
 import { UiComponentSet } from "./uiComponentSet";
-import { GameInfoProvider } from "./game-info-provider";
+import { GameInfoProvider } from "@/context/game-info-provider";
 
 
 export type GameProps = Readonly<{

@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { Ending } from "@/definitions";
 import imageService from "@/services/imageService";
-import { useGameInfo } from "../game/game-info-provider";
+import { useGameInfo } from "@/context/game-info-provider";
 
 
 export const EndingWrapper = () => {
