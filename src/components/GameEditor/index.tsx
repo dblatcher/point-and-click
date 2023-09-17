@@ -488,14 +488,10 @@ export default class GameEditor extends Component<Props, State>{
                                                 sequenceId={gameItemIds.sequences} />
                                         },
                                         {
-                                            label: 'endings', content: <EndingEditor
-                                                key={gameItemIds.endings}
-                                                gameDesign={gameDesign}
-                                                data={findById(gameItemIds.endings, gameDesign.endings)}
-                                                updateData={data => { this.performUpdate('endings', data) }}
-                                                deleteData={index => { this.deleteArrayItem(index, 'endings') }}
-                                                options={options}
-                                            />
+                                            label: 'endings', content: (
+                                                <EndingEditor key={gameItemIds.endings}
+                                                    data={findById(gameItemIds.endings, gameDesign.endings)}
+                                                />)
                                         },
                                         {
                                             label: 'verbs', content: <>
