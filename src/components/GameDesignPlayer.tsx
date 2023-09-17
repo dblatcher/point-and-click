@@ -112,7 +112,6 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     return <>
       {gameCondition && (
         <SpritesProvider value={this.sprites}>
-          <p>there are {this.sprites.length} sprites</p>
           <Game
             {...gameCondition}
             load={this.load}
@@ -120,7 +119,6 @@ export class GameDesignPlayer extends React.Component<Props, State> {
             reset={this.reset}
             key={timestamp}
             _sprites={this.sprites}
-
             uiComponents={uiComponents}
           />
         </SpritesProvider>
