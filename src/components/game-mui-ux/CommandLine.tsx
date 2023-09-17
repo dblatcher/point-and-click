@@ -3,7 +3,7 @@ import { findById } from '@/lib/util';
 import { Box, useTheme, BoxProps } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { memo } from 'react';
-import { useGameState } from '../game/game-state-context';
+import { useGameState } from '../../context/game-state-context';
 import { useGameInfo } from '@/context/game-info-provider';
 
 type InnerCommandLineProps = {

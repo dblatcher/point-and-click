@@ -2,7 +2,7 @@ import { Box, Button, Container, Drawer, Stack } from "@mui/material";
 import { useRef, useState } from "react";
 import { ResizeWatcher } from "../ResizeWatcher";
 import { EndingWrapper } from "../game-ui/EndingScreen";
-import { useGameStateDerivations } from "../game/game-state-context";
+import { useGameStateDerivations } from "@/context/game-state-context";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";

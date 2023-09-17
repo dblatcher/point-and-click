@@ -1,7 +1,7 @@
 import { Conversation, ConversationChoice } from "@/definitions";
 import { Box, Button } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { useGameStateDerivations } from "../game/game-state-context";
+import { useGameStateDerivations } from "@/context/game-state-context";
 
 export const ConversationMenu = (props: { select: { (choice: ConversationChoice): void } }) => {
     const { currentConversation } = useGameStateDerivations()

@@ -1,7 +1,7 @@
 
 import { ConversationChoice } from "@/definitions"
 import uiStyles from './uiStyles.module.css';
-import { useGameStateDerivations } from "../game/game-state-context";
+import { useGameStateDerivations } from "@/context/game-state-context";
 
 interface Props {
     select: { (choice: ConversationChoice): void };

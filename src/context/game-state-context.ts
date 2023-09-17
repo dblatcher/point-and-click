@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { GameState } from '.'
+import { GameState } from '@/components/game'
 import { findById } from '@/lib/util'
 
 const gameStateContext = createContext<GameState>(

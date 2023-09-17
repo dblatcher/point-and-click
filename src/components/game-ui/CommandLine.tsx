@@ -1,5 +1,5 @@
 import { findById } from "@/lib/util";
-import { useGameState } from "../game/game-state-context";
+import { useGameState } from "@/context/game-state-context";
 import uiStyles from './uiStyles.module.css';
 import { useGameInfo } from "@/context/game-info-provider";
 

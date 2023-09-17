@@ -1,4 +1,4 @@
-import { useGameState, useGameStateDerivations } from "../game/game-state-context";
+import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
