@@ -7,12 +7,10 @@ import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
-import spriteService from "@/services/spriteService";
 import { Box, Stack, Typography } from "@mui/material";
 import { Component } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { RecordEditor } from "../RecordEditor";
-import { ServiceItemSelector } from "../ServiceItemSelector";
 import { SpritePreview } from "../SpritePreview";
 import { StorageMenu } from "../StorageMenu";
 import { TabMenu } from "../TabMenu";
@@ -32,15 +30,16 @@ type Props = DataItemEditorProps<ActorData> & {
     actorIds: string[];
     actors: ActorData[];
     provideSprite: { (id: string): Sprite | undefined }
+    spriteIds: string[];
 }
 
-const makeBlankActor = (): ActorData => ({
+const makeBlankActor = (spriteId: string): ActorData => ({
     id: 'NEW_ACTOR',
     type: 'actor',
     name: undefined,
     status: undefined,
 
-    sprite: spriteService.list()[0],
+    sprite: spriteId,
     direction: 'left',
     height: 150, width: 100,
     x: 0, y: 0, room: undefined,
@@ -62,7 +61,7 @@ export class ActorEditor extends Component<Props, State> {
 
         const initialState = props.data ? {
             ...props.data
-        } : makeBlankActor()
+        } : makeBlankActor(props.spriteIds[0])
 
         this.state = {
             ...initialState
@@ -157,7 +156,7 @@ export class ActorEditor extends Component<Props, State> {
     }
     handleResetButton() {
         const { props } = this
-        const initialState = props.data ? cloneData(props.data) : makeBlankActor()
+        const initialState = props.data ? cloneData(props.data) : makeBlankActor(props.spriteIds[0])
         this.setState({
             ...initialState
         })
@@ -213,7 +212,7 @@ export class ActorEditor extends Component<Props, State> {
     render() {
         const { state, changeValue } = this
         const { sprite: spriteId, width = 1, height = 1, soundEffectMap = {}, walkToX, walkToY, id, name, status } = state
-        const { actorIds } = this.props
+        const { actorIds, spriteIds } = this.props
 
         return (
             <Stack component='article' spacing={1}>
@@ -257,14 +256,15 @@ export class ActorEditor extends Component<Props, State> {
                         label: 'sprite', content: (
                             <Stack direction={'row'} spacing={3}>
                                 <Stack spacing={2}>
-                                    <ServiceItemSelector legend="choose sprite"
-                                        selectedItemId={spriteId}
-                                        format='select'
-                                        service={spriteService}
-                                        select={
-                                            item => this.setStateWithAutosave({ sprite: item.id })
-                                        } />
 
+                                    <SelectInput
+                                        value={spriteId}
+                                        options={spriteIds}
+                                        label="pick sprite"
+                                        inputHandler={
+                                            id => this.setStateWithAutosave({ sprite: id })
+                                        }
+                                    />
 
                                     <Stack direction={'row'} spacing={2}>
                                         <NumberInput label="width" value={width}

@@ -446,6 +446,7 @@ export default class GameEditor extends Component<Props, State>{
                                             options={options}
                                             key={gameItemIds.actors} data={this.currentActor}
                                             provideSprite={this.provideSprite}
+                                            spriteIds={listIds(gameDesign.sprites)}
                                         />
                                     },
                                     {

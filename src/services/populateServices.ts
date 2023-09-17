@@ -21,7 +21,7 @@ export function populateServices(
   soundAssets: SoundAsset[],
 ): void {
   console.log("populating services for:", gameDesign.id);
-  // spriteService.add(gameDesign.sprites.map((data) => new Sprite(data)));
+  spriteService.add(gameDesign.sprites.map((data) => new Sprite(data)));
   imageService.add(imageAssets);
   soundService.add(soundAssets);
 }
