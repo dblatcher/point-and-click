@@ -27,7 +27,6 @@ import { FlagMap } from "@/definitions/Flag";
 
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import imageService from "@/services/imageService";
-import spriteService from "@/services/spriteService";
 
 import { VerbMenuEditor } from "./VerbMenuEditor";
 import { Container, Stack, Box, Typography, Divider } from "@mui/material";
@@ -35,6 +34,7 @@ import { OptionsMenu } from "./OptionsMenu";
 import { GameDesignProvider } from "./game-design-context";
 import { Sprite } from "@/lib/Sprite";
 import { SpritesProvider } from "@/context/sprite-context";
+import { testSprite } from "./RoomEditor/testSprite";
 
 
 export type EditorOptions = {
@@ -147,12 +147,10 @@ export default class GameEditor extends Component<Props, State>{
 
     componentDidMount() {
         imageService.on('update', this.respondToServiceUpdate)
-        spriteService.on('update', this.respondToServiceUpdate)
     }
 
     componentWillUnmount() {
         imageService.off('update', this.respondToServiceUpdate)
-        spriteService.off('update', this.respondToServiceUpdate)
     }
 
     provideSprite(id: string) {
@@ -253,9 +251,6 @@ export default class GameEditor extends Component<Props, State>{
             })
             if (Array.isArray(gameDesign[property])) {
                 const [deletedItem] = (gameDesign[property] as GameDataItem[]).splice(index, 1)
-                if (property === 'sprites' && 'id' in deletedItem) {
-                    spriteService.remove(deletedItem.id)
-                }
             }
             return { gameDesign, history }
         })
@@ -330,7 +325,7 @@ export default class GameEditor extends Component<Props, State>{
             makeFolder('test'),
         ]
 
-        const sprites = gameDesign.sprites.map(data => new Sprite(data))
+        const sprites = [testSprite, ...gameDesign.sprites.map(data => new Sprite(data))]
 
         return (
             <GameDesignProvider value={{
@@ -471,6 +466,7 @@ export default class GameEditor extends Component<Props, State>{
                                                 deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
                                                 key={gameItemIds.sprites} data={this.currentSprite}
                                                 options={options}
+                                                provideSprite={this.provideSprite}
                                                 spriteIds={listIds(gameDesign.sprites)}
                                             />
                                         },
