@@ -1,7 +1,7 @@
 import { FieldDef, FieldValue, SchemaForm } from "@/components/SchemaForm"
 import { ChoiceRefSet, Conversation, ConversationChoice, ConversationChoiceSchema } from "@/definitions/Conversation"
 import { listIds } from "@/lib/util"
-import { Stack } from "@mui/material"
+import { Box, Stack } from "@mui/material"
 import { SelectInput } from "@/components/SchemaForm/SelectInput"
 import { ChoiceListControl } from "./ChoiceListControl"
 import { NewSequenceForm } from "./NewSequenceForm"
@@ -34,7 +34,7 @@ export const ChoiceEditor = ({
     const { gameDesign: design } = useGameDesign()
     const { id, branches } = conversation
 
-    return (<Stack spacing={2}>
+    return (<Stack spacing={2} width={500}>
         <SchemaForm
             schema={ConversationChoiceSchema.omit({
                 'sequence': true
@@ -68,20 +68,21 @@ export const ChoiceEditor = ({
         />
 
         <Stack direction={'row'} spacing={2} justifyContent={'space-between'}>
-            <SelectInput
-                value={choice.sequence}
-                options={listIds(design.sequences)}
-                label="sequence"
-                inputHandler={(value) => {
-                    handleChoiceChange(value, {
-                        key: 'sequence',
-                        optional: true,
-                        type: 'ZodString',
-                        value: choice.sequence
-                    })
-                }}
-            />
-
+            <Box flex={1}>
+                <SelectInput
+                    value={choice.sequence}
+                    options={listIds(design.sequences)}
+                    label="select sequence"
+                    inputHandler={(value) => {
+                        handleChoiceChange(value, {
+                            key: 'sequence',
+                            optional: true,
+                            type: 'ZodString',
+                            value: choice.sequence
+                        })
+                    }}
+                />
+            </Box>
             <NewSequenceForm
                 suggestedIds={[
                     `${id}-${openBranchId}-${activeChoiceIndex}`,
@@ -89,9 +90,7 @@ export const ChoiceEditor = ({
                 existingIds={listIds(design.sequences)}
                 addSequence={addSequence}
             />
-
         </Stack>
-
     </Stack>
     )
 }

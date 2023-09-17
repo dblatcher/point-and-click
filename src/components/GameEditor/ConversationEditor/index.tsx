@@ -339,7 +339,7 @@ export class ConversationEditor extends Component<Props, State> {
 
                 <Dialog
                     open={!!choice}
-                    maxWidth={'lg'}
+                    maxWidth={'xl'}
                     onClose={() => { this.setState({ activeChoiceIndex: undefined }) }}
                 >
                     <DialogTitle>
