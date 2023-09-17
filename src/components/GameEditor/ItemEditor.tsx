@@ -12,16 +12,11 @@ import { FramePicker } from "./SpriteEditor/FramePicker";
 import { StorageMenu } from "./StorageMenu";
 import { EnhancedSetStateFunction } from "./dataEditors";
 import { StringInput } from "../SchemaForm/StringInput";
-import { EditorOptions } from ".";
+import { useGameDesign } from "@/context/game-design-context";
+import { listIds } from "@/lib/util";
 
 type Props = {
     data?: ItemData;
-    updateData: { (data: ItemData): void };
-    deleteData: { (index: number): void };
-    options: EditorOptions;
-
-    actorIds: string[];
-    itemIds: string[];
 }
 
 const makeNewItem: { (): ItemData } = () => (
@@ -33,11 +28,11 @@ const makeNewItem: { (): ItemData } = () => (
 
 export const ItemEditor = (props: Props) => {
 
+    const { gameDesign, options, deleteArrayItem, performUpdate } = useGameDesign()
     const [item, setItem] = useState<ItemData>((props.data ? cloneData(props.data) : makeNewItem()));
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-
     const { actorId = '', id, name } = item
-    const { itemIds } = props
+    const itemIds = listIds(gameDesign.items)
 
     const getCurrentData = () => {
         const { id, type, name, status, actorId, imageId, col, row } = item
@@ -47,12 +42,12 @@ export const ItemEditor = (props: Props) => {
     const imageKey = `${item.imageId}-${item.row}-${item.col}`
 
     const setStateWithAutosave: EnhancedSetStateFunction<ItemData> = (input, callback) => {
-        const { options, data, updateData, } = props
+        const { data } = props
         setItem({ ...item, ...input });
         if (options.autoSave) {
             const isExistingId = itemIds.includes(item.id);
             if (data && isExistingId) {
-                updateData(getCurrentData())
+                performUpdate('items', getCurrentData())
             }
         }
         return callback ? callback() : undefined;
@@ -100,7 +95,7 @@ export const ItemEditor = (props: Props) => {
                         <SelectInput
                             label="actorId"
                             optional
-                            options={props.actorIds}
+                            options={listIds(gameDesign.actors)}
                             value={actorId}
                             inputHandler={id => { changeValue('actorId', id) }} />
 
@@ -132,9 +127,9 @@ export const ItemEditor = (props: Props) => {
                             ...initialState
                         })
                     }}
-                    deleteItem={props.deleteData}
-                    update={() => { props.updateData(item) }}
-                    options={props.options}
+                    deleteItem={(index) => { deleteArrayItem(index, 'items') }}
+                    update={() => { performUpdate('items', item) }}
+                    options={options}
                 />
             </Stack>
 

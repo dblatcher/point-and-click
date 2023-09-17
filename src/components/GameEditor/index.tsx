@@ -426,14 +426,11 @@ export default class GameEditor extends Component<Props, State>{
                                                 key={gameItemIds.rooms} data={this.currentRoom} />
                                         },
                                         {
-                                            label: 'Items', content: <ItemEditor
-                                                updateData={data => { this.performUpdate('items', data) }}
-                                                deleteData={index => { this.deleteArrayItem(index, 'items') }}
-                                                itemIds={listIds(gameDesign.items)}
-                                                actorIds={listIds(gameDesign.actors)}
-                                                options={options}
-                                                key={gameItemIds.items} data={this.currentItem}
-                                            />
+                                            label: 'Items',
+                                            content: (
+                                                <ItemEditor key={gameItemIds.items}
+                                                    data={this.currentItem}
+                                                />)
                                         },
                                         {
                                             label: 'Actor Editor', content: <ActorEditor
