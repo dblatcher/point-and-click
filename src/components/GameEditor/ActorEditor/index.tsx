@@ -19,6 +19,7 @@ import { TabMenu } from "../TabMenu";
 import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
 import { PositionPreview } from "./PositionPreview";
 import { SoundValueForm } from "./SoundValueForm";
+import type { Sprite } from "@/lib/Sprite";
 
 type ExtraState = {
 
@@ -30,6 +31,7 @@ type Props = DataItemEditorProps<ActorData> & {
     rooms: RoomData[];
     actorIds: string[];
     actors: ActorData[];
+    provideSprite: { (id: string): Sprite | undefined }
 }
 
 const makeBlankActor = (): ActorData => ({
@@ -187,7 +189,8 @@ export class ActorEditor extends Component<Props, State> {
 
     get statusSuggestions(): string[] {
         const { sprite: spriteId, id } = this.state
-        const sprite = spriteService.get(spriteId)
+        const { provideSprite } = this.props
+        const sprite = provideSprite(spriteId)
         const sprites = sprite ? [sprite.data] : []
         return getStatusSuggestions(id, {
             sprites,

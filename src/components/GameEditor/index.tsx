@@ -33,6 +33,7 @@ import { VerbMenuEditor } from "./VerbMenuEditor";
 import { Container, Stack, Box, Typography, Divider } from "@mui/material";
 import { OptionsMenu } from "./OptionsMenu";
 import { GameDesignProvider } from "./game-design-context";
+import { Sprite } from "@/lib/Sprite";
 
 
 export type EditorOptions = {
@@ -134,6 +135,7 @@ export default class GameEditor extends Component<Props, State>{
         this.changeInteraction = this.changeInteraction.bind(this)
         this.deleteArrayItem = this.deleteArrayItem.bind(this)
         this.loadNewGame = this.loadNewGame.bind(this)
+        this.provideSprite = this.provideSprite.bind(this)
         this.undo = this.undo.bind(this)
     }
 
@@ -150,6 +152,16 @@ export default class GameEditor extends Component<Props, State>{
     componentWillUnmount() {
         imageService.off('update', this.respondToServiceUpdate)
         spriteService.off('update', this.respondToServiceUpdate)
+    }
+
+    provideSprite(id: string) {
+        const spriteData = findById(id, this.state.gameDesign.sprites)
+
+        if (!spriteData) {
+            return undefined
+        }
+
+        return new Sprite(spriteData);
     }
 
     get currentRoom() {
@@ -433,6 +445,7 @@ export default class GameEditor extends Component<Props, State>{
                                             deleteData={index => { this.deleteArrayItem(index, 'actors') }}
                                             options={options}
                                             key={gameItemIds.actors} data={this.currentActor}
+                                            provideSprite={this.provideSprite}
                                         />
                                     },
                                     {
@@ -499,7 +512,8 @@ export default class GameEditor extends Component<Props, State>{
                                             <div>
                                                 <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset game test</button>
                                                 <hr />
-                                                <Game key={this.state.resetTimeStamp} startPaused
+                                                <Game
+                                                    key={this.state.resetTimeStamp} startPaused
                                                     {...gameDesign} actorOrders={{}} gameNotBegun
                                                     showDebugLog={true} />
                                             </div>
