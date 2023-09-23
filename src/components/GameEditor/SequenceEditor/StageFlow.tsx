@@ -1,6 +1,6 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { ImmediateConsequence, Order, Stage } from "@/definitions";
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, Grid, Stack } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
@@ -54,54 +54,63 @@ export const StageFlow = ({
     }
 
     return (
-        <Box key={stageIndex}>
-            <Stack direction={'row'} spacing={2}>
-                <EditorBox title="consequences">
-                    <Stack spacing={1}>
-                        {stage.immediateConsequences?.map((consequence, consequnceIndex) => (
-                            <EditorBox key={consequnceIndex} title={consequence.type} themePalette="secondary">
-                                <Button onClick={() => {
-                                    setConsequenceParams({
-                                        stage: stageIndex,
-                                        index: consequnceIndex,
-                                    })
-                                }}>edit</Button>
-                                <Button onClick={() => { removeConsequence(stageIndex, consequnceIndex) }}>delete</Button>
-                            </EditorBox>
-                        ))}
-
-                        <Button variant="outlined" color={"secondary"} onClick={() => { addConsequence(stageIndex) }} >add consequence</Button>
-                    </Stack>
-                </EditorBox>
-
-                {actorIds.map((actorId) => (
-                    <EditorBox title={actorId} key={actorId}>
-                        <ArrayControl
-                            color="secondary"
-                            list={stage.actorOrders?.[actorId] ?? []}
-                            describeItem={(order, orderIndex) => (
-                                <EditorBox key={orderIndex} title={order.type} themePalette="secondary" >
+        <Box>
+            <Grid container>
+                <Grid item display={'flex'}>
+                    <EditorBox title="consequences">
+                        <Stack spacing={0}>
+                            {stage.immediateConsequences?.map((consequence, consequnceIndex) => (
+                                <EditorBox key={consequnceIndex} title={consequence.type} themePalette="secondary">
                                     <Button onClick={() => {
-                                        setOrderParams({
+                                        setConsequenceParams({
                                             stage: stageIndex,
-                                            actorId,
-                                            index: orderIndex,
+                                            index: consequnceIndex,
                                         })
                                     }}>edit</Button>
+                                    <Button onClick={() => { removeConsequence(stageIndex, consequnceIndex) }}>delete</Button>
                                 </EditorBox>
-                            )}
-                            mutateList={(newList) => { changeOrderList(newList, stageIndex, actorId) }}
-                            createItem={() => getDefaultOrder('say')}
-                        />
+                            ))}
+
+                            <Button variant="outlined" color={"secondary"} onClick={() => { addConsequence(stageIndex) }} >add consequence</Button>
+                        </Stack>
                     </EditorBox>
+                </Grid>
+
+                {actorIds.map((actorId) => (
+                    <Grid item key={actorId} display={'flex'} >
+                        <EditorBox title={actorId} boxProps={{ minWidth: 240 }}>
+                            <ArrayControl
+                                color="secondary"
+                                list={stage.actorOrders?.[actorId] ?? []}
+                                describeItem={(order, orderIndex) => (
+                                    <EditorBox key={orderIndex} title={order.type} themePalette="secondary" >
+                                        <Button onClick={() => {
+                                            setOrderParams({
+                                                stage: stageIndex,
+                                                actorId,
+                                                index: orderIndex,
+                                            })
+                                        }}>edit</Button>
+                                    </EditorBox>
+                                )}
+                                mutateList={(newList) => { changeOrderList(newList, stageIndex, actorId) }}
+                                createItem={() => getDefaultOrder('say')}
+                            />
+                        </EditorBox>
+                    </Grid>
                 ))}
 
+                <Grid item display={'flex'}>
+                    <Box padding={1} alignSelf={'center'}>
+                        <Button variant="outlined"
+                            onClick={() => { setAddActorParams({ stage: stageIndex }) }}>
+                            other actor
+                        </Button>
+                    </Box>
+                </Grid>
+            </Grid>
 
-                <Button onClick={() => { setAddActorParams({ stage: stageIndex }) }}>
-                    other actor
-                </Button>
-
-            </Stack>
+            <hr></hr>
         </Box>
     )
 }
