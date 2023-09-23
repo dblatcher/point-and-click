@@ -77,6 +77,7 @@ export const StageFlow = ({
                 {actorIds.map((actorId) => (
                     <EditorBox title={actorId} key={actorId} boxProps={{ minWidth: 250 }}>
                         <ArrayControl
+                            color="secondary"
                             list={stage.actorOrders?.[actorId] ?? []}
                             describeItem={(order, orderIndex) => (
                                 <EditorBox key={orderIndex} title={order.type} themePalette="secondary" >

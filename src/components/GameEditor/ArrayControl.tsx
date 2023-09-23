@@ -6,6 +6,8 @@ import { Box, Button, ButtonGroup, IconButton, Stack } from "@mui/material";
 import { Fragment, ReactNode } from "react";
 
 
+type Color = "success" | "primary" | "secondary" | "error" | "info" | "warning"
+
 interface Props<T> {
     list: T[];
     describeItem: { (item: T, index: number): ReactNode };
@@ -16,37 +18,47 @@ interface Props<T> {
     noDeleteButtons?: boolean;
     insertText?: string;
     deleteText?: string;
+    color?: Color
 }
 
 
-const MoveButton = ({ role, index, handleMove }: {
+const MoveButton = ({ role, index, handleMove, color }: {
     role: 'UP' | 'DOWN'
     index: number;
     handleMove: { (index: number, role: 'UP' | 'DOWN'): void }
+    color?: Color
 }) => (
     <Button size='small'
         title={role}
-        color={'info'}
+        color={color}
         onClick={() => { handleMove(index, role) }}
     >{role === 'UP' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}</Button>
 )
-const InsertButton = ({ index, handleInsert, }: {
+const InsertButton = ({ index, handleInsert, color }: {
     index: number;
     handleInsert: { (index: number): void }
+    color?: Color
 }) => (
-    <IconButton size="large"
-        title="insert"
-        color={'success'}
-        onClick={() => { handleInsert(index) }}
-    ><AddIcon />
-    </IconButton>
+
+    <Box width={'100%'} height={0} component={'aside'}>
+        <Box position={'relative'} display={"flex"} justifyContent={'flex-end'} sx={{ transform: 'translateY(-50%)' }}>
+            <IconButton size="large"
+                title="insert"
+                color={color}
+                onClick={() => { handleInsert(index) }}
+            >
+                <AddIcon />
+            </IconButton>
+        </Box>
+    </Box>
 )
-const DeleteButton = ({ index, handleDelete, }: {
+const DeleteButton = ({ index, handleDelete, color }: {
     index: number;
     handleDelete: { (index: number): void }
+    color?: Color
 }) => (
     <IconButton size='large'
-        color={'warning'}
+        color={color}
         onClick={() => { handleDelete(index) }}
         title="delete"
     ><DeleteIcon />
@@ -57,6 +69,7 @@ export const ArrayControl = <T,>(props: Props<T>) => {
 
     const {
         list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
+        color = 'primary'
     } = props
 
 
@@ -90,63 +103,44 @@ export const ArrayControl = <T,>(props: Props<T>) => {
 
 
     return (
-        <Stack sx={{ paddingRight: 8, paddingY: 4 }}>
+        <Stack sx={{ paddingY: 2 }}>
             {list.map((item, index) => (
                 <Fragment key={index}>
                     {(!!createItem && createButton !== 'END') && (
-                        <Box position={'relative'} component={'aside'}>
-                            <Box position={'absolute'}
-                                sx={{
-                                    transform: "translateY(-50%) translateX(100%)",
-                                    right: 0
-                                }}
-                            >
-                                <InsertButton index={index} handleInsert={handleInsert} />
-                            </Box>
-                        </Box>
+                        <InsertButton index={index} handleInsert={handleInsert} color={color} />
                     )}
                     <Stack component={'article'}
                         justifyContent={'space-between'}
                         alignItems={'center'}
                         direction={'row'}
                         spacing={1} paddingBottom={1}
+                        minHeight={72}
                     >
                         {!noMoveButtons && (
-                            <ButtonGroup orientation="vertical">
-                                <MoveButton handleMove={handleMove} index={index} role="UP" />
-                                <MoveButton handleMove={handleMove} index={index} role="DOWN" />
+                            <ButtonGroup orientation="vertical" component={'aside'}>
+                                <MoveButton handleMove={handleMove} index={index} role="UP" color={color} />
+                                <MoveButton handleMove={handleMove} index={index} role="DOWN" color={color} />
                             </ButtonGroup>
                         )}
-                        {describeItem(item, index)}
+
+                        <Box flex={1}>
+                            {describeItem(item, index)}
+                        </Box>
 
                         {!noDeleteButtons && (
                             <Box position={'relative'} component={'aside'}>
-                                <Box position={'absolute'}
-                                    sx={{
-                                        transform: "translateY(-50%) translateX(100%)",
-                                        right: 0
-                                    }}
-                                >
-                                    <DeleteButton index={index} handleDelete={handleDelete} />
-                                </Box>
+                                <DeleteButton index={index} handleDelete={handleDelete} color={color} />
                             </Box>
                         )}
 
                     </Stack>
                 </Fragment>
             ))}
-            {!!createItem && (
-                <Box position={'relative'} component={'aside'}>
-                    <Box position={'absolute'}
-                        sx={{
-                            transform: "translateY(-50%) translateX(100%)",
-                            right: 0
-                        }}
-                    >
-                        <InsertButton index={list.length} handleInsert={handleInsert} />
-                    </Box>
-                </Box>
-            )}
+            {
+                !!createItem && (
+                    <InsertButton index={list.length} handleInsert={handleInsert} color={color} />
+                )
+            }
         </Stack >
     )
 
