@@ -20,6 +20,7 @@ interface Props<T> {
     deleteText?: string;
     stackSx?: StackProps['sx'];
     tight?: boolean;
+    controlPosition?: 'right' | 'above'
 }
 
 
@@ -89,11 +90,21 @@ export class ListEditor<T> extends Component<Props<T>> {
     render() {
         const {
             list, describeItem, createItem, createButton, noMoveButtons, darkItembackground = false, noDeleteButtons,
-            stackSx = {}, tight = false,
+            stackSx = {}, tight = false, controlPosition = 'right'
         } = this.props
 
 
         if (tight) {
+
+            const itemStackProps: Partial<StackProps> = controlPosition === 'above' ? {
+                direction: 'column-reverse',
+                paddingTop: 1,
+
+            } : {
+                direction: 'row',
+                alignItems: 'center',
+            }
+
             return (
                 <Stack component={'ul'} sx={{ margin: 0, padding: 0, listStyle: 'none', ...stackSx }}>
                     {list.map((item, index) => (
@@ -103,7 +114,7 @@ export class ListEditor<T> extends Component<Props<T>> {
                                     {this.renderButton('INSERT', index, true)}
                                 </Box>
                             )}
-                            <Stack component={'li'} direction={'row'} alignItems={'center'} justifyContent={'space-between'} spacing={1} paddingBottom={1}>
+                            <Stack component={'li'} {...itemStackProps} justifyContent={'space-between'} spacing={1} paddingBottom={1}>
                                 {describeItem(item, index)}
                                 <ButtonGroup>
                                     {!noMoveButtons && <>

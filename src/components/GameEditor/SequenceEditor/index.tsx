@@ -16,6 +16,7 @@ import { getTargetLists } from "../InteractionEditor/getTargetLists";
 import { EditorHeading } from "../EditorHeading";
 import { Accordion, AccordionDetails, AccordionSummary, Typography, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
+import { SequenceFlow } from "./SequenceFlow";
 
 
 type Props = DataItemEditorProps<Sequence> & {
@@ -246,6 +247,12 @@ export class SequenceEditor extends Component<Props, State> {
                         </Stack>
                     </>)}
 
+                <SequenceFlow
+                    sequence={this.state}
+                    changeConsequence={this.changeConsequence}
+                    changeStages={(stages) => { this.setStateWithAutosave({ stages }) }}
+                    changeConsequenceList={this.changeConsequenceList}
+                />
 
                 <ListEditor
                     list={stages}
