@@ -4,6 +4,7 @@ import { Box, Button, Grid, Stack } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
+import { OrderCard } from "./OrderCard";
 
 interface Props {
     stage: Stage
@@ -78,20 +79,22 @@ export const StageFlow = ({
 
                 {actorIds.map((actorId) => (
                     <Grid item key={actorId} display={'flex'} >
-                        <EditorBox title={actorId} boxProps={{ minWidth: 240 }}>
+                        <EditorBox title={actorId} boxProps={{ minWidth: 280 }}>
                             <ArrayControl
                                 color="secondary"
                                 list={stage.actorOrders?.[actorId] ?? []}
                                 describeItem={(order, orderIndex) => (
-                                    <EditorBox key={orderIndex} title={order.type} themePalette="secondary" >
-                                        <Button onClick={() => {
+                                    <OrderCard
+                                        order={order}
+                                        orderIndex={orderIndex}
+                                        handleEditButton={() => {
                                             setOrderParams({
                                                 stage: stageIndex,
                                                 actorId,
                                                 index: orderIndex,
                                             })
-                                        }}>edit</Button>
-                                    </EditorBox>
+                                        }}
+                                    />
                                 )}
                                 mutateList={(newList) => { changeOrderList(newList, stageIndex, actorId) }}
                                 createItem={() => getDefaultOrder('say')}
@@ -109,8 +112,6 @@ export const StageFlow = ({
                     </Box>
                 </Grid>
             </Grid>
-
-            <hr></hr>
         </Box>
     )
 }
