@@ -252,6 +252,7 @@ export class SequenceEditor extends Component<Props, State> {
                     changeConsequence={this.changeConsequence}
                     changeStages={(stages) => { this.setStateWithAutosave({ stages }) }}
                     changeConsequenceList={this.changeConsequenceList}
+                    changeOrder={this.changeOrder}
                 />
 
                 <ListEditor

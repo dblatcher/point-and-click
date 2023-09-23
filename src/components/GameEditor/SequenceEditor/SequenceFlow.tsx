@@ -1,18 +1,17 @@
-import { Consequence, ImmediateConsequence, Sequence, Stage } from "@/definitions";
-import { Stack, Typography } from "@mui/material";
+import { Consequence, ImmediateConsequence, Order, Sequence, Stage } from "@/definitions";
 import { useState } from "react";
+import { ArrayControl } from "../ArrayControl";
+import { makeBlankStage } from "../defaults";
 import { ConsequenceDialog } from "./ConsequenceDialog";
 import { OrderDialog } from "./OrderDialog";
 import { StageFlow } from "./StageFlow";
-import { ListEditor } from "../ListEditor";
-import { makeBlankStage } from "../defaults";
-import { ArrayControl } from "../ArrayControl";
 
 interface Props {
     sequence: Sequence
     changeConsequence: { (consequence: Consequence, stageIndex: number, consequenceIndex: number): void }
     changeStages: { (stages: Stage[]): void }
     changeConsequenceList: { (newList: ImmediateConsequence[], stageIndex: number): void }
+    changeOrder: { (order: Order, stageIndex: number, actorId: string, orderIndex: number): void }
 }
 
 type ConsequenceDialogParams = {
@@ -26,7 +25,7 @@ type OrderDialogParams = {
     index: number;
 }
 
-export const SequenceFlow = ({ sequence, changeStages, changeConsequence, changeConsequenceList }: Props) => {
+export const SequenceFlow = ({ sequence, changeStages, changeConsequence, changeConsequenceList, changeOrder }: Props) => {
 
     const [consequenceParams, setConsequenceParams] = useState<ConsequenceDialogParams | undefined>(undefined)
     const [orderParams, setOrderParams] = useState<OrderDialogParams | undefined>(undefined)
@@ -54,7 +53,6 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
                         setOrderParams={setOrderParams}
                     />
                 )}
-                controlPosition="above"
                 mutateList={changeStages}
                 createItem={makeBlankStage}
                 insertText={`INSERT NEW STAGE`}
@@ -65,9 +63,8 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
             {consequenceParams && (
                 <ConsequenceDialog
                     sequenceId={sequence.id}
+                    {...consequenceParams}
                     changeConsequence={changeConsequence}
-                    index={consequenceParams.index}
-                    stage={consequenceParams.stage}
                     close={() => { setConsequenceParams(undefined) }}
                 />
             )}
@@ -76,6 +73,7 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
                 <OrderDialog
                     sequenceId={sequence.id}
                     {...orderParams}
+                    changeOrder={(newOrder) => { changeOrder(newOrder, orderParams.stage, orderParams.actorId, orderParams.index) }}
                     close={() => { setOrderParams(undefined) }}
                 />
             )}
