@@ -6,6 +6,7 @@ import { OrderDialog } from "./OrderDialog";
 import { StageFlow } from "./StageFlow";
 import { ListEditor } from "../ListEditor";
 import { makeBlankStage } from "../defaults";
+import { ArrayControl } from "../ArrayControl";
 
 interface Props {
     sequence: Sequence
@@ -41,7 +42,7 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
 
     return (
         <>
-            <ListEditor tight
+            <ArrayControl
                 list={sequence.stages}
                 describeItem={(stage, stageIndex) => (
                     <StageFlow key={stageIndex}
