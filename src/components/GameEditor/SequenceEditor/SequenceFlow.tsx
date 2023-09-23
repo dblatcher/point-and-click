@@ -1,10 +1,11 @@
 import { Consequence, ImmediateConsequence, Order, Sequence, Stage } from "@/definitions";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
-import { makeBlankStage } from "../defaults";
+import { getDefaultOrder, makeBlankStage } from "../defaults";
 import { ConsequenceDialog } from "./ConsequenceDialog";
 import { OrderDialog } from "./OrderDialog";
 import { StageFlow } from "./StageFlow";
+import { PickActorDialog } from "../PickActorDialog";
 
 interface Props {
     sequence: Sequence
@@ -26,10 +27,15 @@ type OrderDialogParams = {
     index: number;
 }
 
+type AddActorParams = {
+    stage: number
+}
+
 export const SequenceFlow = ({ sequence, changeStages, changeConsequence, changeConsequenceList, changeOrder, changeOrderList }: Props) => {
 
     const [consequenceParams, setConsequenceParams] = useState<ConsequenceDialogParams | undefined>(undefined)
     const [orderParams, setOrderParams] = useState<OrderDialogParams | undefined>(undefined)
+    const [addActorParams, setAddActorParams] = useState<AddActorParams | undefined>(undefined)
 
     const actorIds = sequence.stages.reduce<string[]>((list, stage) => {
         if (!stage.actorOrders) {
@@ -39,6 +45,8 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
         const newKeys = Object.keys(stage.actorOrders).filter(key => !list.includes(key))
         return [...list, ...newKeys]
     }, [])
+
+    const addActor = (actorId: string, stageIndex: number) => { changeOrderList([], stageIndex, actorId) }
 
     return (
         <>
@@ -52,6 +60,7 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
                         changeConsequenceList={changeConsequenceList}
                         setConsequenceParams={setConsequenceParams}
                         setOrderParams={setOrderParams}
+                        setAddActorParams={setAddActorParams}
                         changeOrderList={changeOrderList}
                     />
                 )}
@@ -80,6 +89,14 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
                 />
             )}
 
+            {addActorParams && (
+                <PickActorDialog
+                    isOpen={true}
+                    excluded={actorIds}
+                    close={() => { setAddActorParams(undefined) }}
+                    onSelect={(actorId) => { addActor(actorId, addActorParams.stage) }}
+                />
+            )}
         </>
     )
 }

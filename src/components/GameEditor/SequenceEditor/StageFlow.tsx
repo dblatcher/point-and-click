@@ -1,8 +1,9 @@
+import { useGameDesign } from "@/context/game-design-context";
 import { ImmediateConsequence, Order, Stage } from "@/definitions";
 import { Box, Button, Stack } from "@mui/material";
+import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
-import { ArrayControl } from "../ArrayControl";
 
 interface Props {
     stage: Stage
@@ -12,6 +13,7 @@ interface Props {
     setConsequenceParams: { (params: ConsequenceDialogParams): void }
     setOrderParams: { (params: OrderDialogParams): void }
     changeOrderList: { (newList: Order[], stageIndex: number, actorId: string): void }
+    setAddActorParams: { (params: { stage: number }): void }
 }
 
 type ConsequenceDialogParams = {
@@ -28,8 +30,12 @@ type OrderDialogParams = {
 export const StageFlow = ({
     stage, stageIndex, actorIds,
     changeConsequenceList,
-    setConsequenceParams, setOrderParams, changeOrderList
+    setConsequenceParams, setOrderParams, setAddActorParams,
+    changeOrderList
 }: Props) => {
+
+
+    const { gameDesign } = useGameDesign()
 
     const exisingConsequences: ImmediateConsequence[] = stage.immediateConsequences ?? []
 
@@ -88,9 +94,12 @@ export const StageFlow = ({
                         />
                     </EditorBox>
                 ))}
-                <Button>
-                    Add orders for other actor
+
+
+                <Button onClick={() => { setAddActorParams({ stage: stageIndex }) }}>
+                    other actor
                 </Button>
+
             </Stack>
         </Box>
     )
