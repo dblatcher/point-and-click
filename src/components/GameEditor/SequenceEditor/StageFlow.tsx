@@ -1,7 +1,8 @@
-import { ImmediateConsequence, Stage } from "@/definitions";
+import { ImmediateConsequence, Order, Stage } from "@/definitions";
 import { Box, Button, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
-import { makeNewConsequence } from "../defaults";
+import { getDefaultOrder, makeNewConsequence } from "../defaults";
+import { ArrayControl } from "../ArrayControl";
 
 interface Props {
     stage: Stage
@@ -10,6 +11,7 @@ interface Props {
     changeConsequenceList: { (newList: ImmediateConsequence[], stageIndex: number): void }
     setConsequenceParams: { (params: ConsequenceDialogParams): void }
     setOrderParams: { (params: OrderDialogParams): void }
+    changeOrderList: { (newList: Order[], stageIndex: number, actorId: string): void }
 }
 
 type ConsequenceDialogParams = {
@@ -23,7 +25,11 @@ type OrderDialogParams = {
     index: number;
 }
 
-export const StageFlow = ({ stage, stageIndex, changeConsequenceList, actorIds, setConsequenceParams, setOrderParams }: Props) => {
+export const StageFlow = ({
+    stage, stageIndex, actorIds,
+    changeConsequenceList,
+    setConsequenceParams, setOrderParams, changeOrderList
+}: Props) => {
 
     const exisingConsequences: ImmediateConsequence[] = stage.immediateConsequences ?? []
 
@@ -63,9 +69,10 @@ export const StageFlow = ({ stage, stageIndex, changeConsequenceList, actorIds, 
                 </EditorBox>
 
                 {actorIds.map((actorId) => (
-                    <EditorBox title={actorId} key={actorId} boxProps={{ minWidth: 150 }}>
-                        <Stack spacing={1}>
-                            {(stage.actorOrders?.[actorId] ?? []).map((order, orderIndex) => (
+                    <EditorBox title={actorId} key={actorId} boxProps={{ minWidth: 250 }}>
+                        <ArrayControl
+                            list={stage.actorOrders?.[actorId] ?? []}
+                            describeItem={(order, orderIndex) => (
                                 <EditorBox key={orderIndex} title={order.type} themePalette="secondary" >
                                     <Button onClick={() => {
                                         setOrderParams({
@@ -75,11 +82,12 @@ export const StageFlow = ({ stage, stageIndex, changeConsequenceList, actorIds, 
                                         })
                                     }}>edit</Button>
                                 </EditorBox>
-                            ))}
-                        </Stack>
+                            )}
+                            mutateList={(newList) => { changeOrderList(newList, stageIndex, actorId) }}
+                            createItem={() => getDefaultOrder('say')}
+                        />
                     </EditorBox>
                 ))}
-
                 <Button>
                     Add orders for other actor
                 </Button>

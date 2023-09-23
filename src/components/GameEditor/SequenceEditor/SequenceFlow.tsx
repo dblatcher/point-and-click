@@ -12,6 +12,7 @@ interface Props {
     changeStages: { (stages: Stage[]): void }
     changeConsequenceList: { (newList: ImmediateConsequence[], stageIndex: number): void }
     changeOrder: { (order: Order, stageIndex: number, actorId: string, orderIndex: number): void }
+    changeOrderList: { (newList: Order[], stageIndex: number, actorId: string): void }
 }
 
 type ConsequenceDialogParams = {
@@ -25,7 +26,7 @@ type OrderDialogParams = {
     index: number;
 }
 
-export const SequenceFlow = ({ sequence, changeStages, changeConsequence, changeConsequenceList, changeOrder }: Props) => {
+export const SequenceFlow = ({ sequence, changeStages, changeConsequence, changeConsequenceList, changeOrder, changeOrderList }: Props) => {
 
     const [consequenceParams, setConsequenceParams] = useState<ConsequenceDialogParams | undefined>(undefined)
     const [orderParams, setOrderParams] = useState<OrderDialogParams | undefined>(undefined)
@@ -51,6 +52,7 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
                         changeConsequenceList={changeConsequenceList}
                         setConsequenceParams={setConsequenceParams}
                         setOrderParams={setOrderParams}
+                        changeOrderList={changeOrderList}
                     />
                 )}
                 mutateList={changeStages}
