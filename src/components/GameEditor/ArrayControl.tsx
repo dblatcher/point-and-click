@@ -2,7 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Button, ButtonGroup, Stack, StackProps } from "@mui/material";
+import { Box, Button, ButtonGroup, IconButton, Stack } from "@mui/material";
 import { Fragment, ReactNode } from "react";
 
 
@@ -16,8 +16,6 @@ interface Props<T> {
     noDeleteButtons?: boolean;
     insertText?: string;
     deleteText?: string;
-    stackSx?: StackProps['sx'];
-    controlPosition?: 'right' | 'above'
 }
 
 
@@ -27,43 +25,38 @@ const MoveButton = ({ role, index, handleMove }: {
     handleMove: { (index: number, role: 'UP' | 'DOWN'): void }
 }) => (
     <Button size='small'
+        title={role}
         color={'info'}
         onClick={() => { handleMove(index, role) }}
-        startIcon={role === 'UP' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
-    />
+    >{role === 'UP' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}</Button>
 )
 const InsertButton = ({ index, handleInsert, }: {
     index: number;
     handleInsert: { (index: number): void }
 }) => (
-    <Button size='small'
-        variant={"outlined"}
+    <IconButton size="large"
+        title="insert"
         color={'success'}
         onClick={() => { handleInsert(index) }}
-        startIcon={<AddIcon />}
-    >{'insertText'}
-    </Button>
+    ><AddIcon />
+    </IconButton>
 )
 const DeleteButton = ({ index, handleDelete, }: {
     index: number;
     handleDelete: { (index: number): void }
 }) => (
-    <Button size='small'
-        variant={"outlined"}
+    <IconButton size='large'
         color={'warning'}
         onClick={() => { handleDelete(index) }}
-        startIcon={<DeleteIcon />}
-    >{'delete'}
-    </Button>
+        title="delete"
+    ><DeleteIcon />
+    </IconButton>
 )
 
 export const ArrayControl = <T,>(props: Props<T>) => {
 
-
-
     const {
         list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
-        stackSx = {}, controlPosition = 'right'
     } = props
 
 
@@ -96,44 +89,65 @@ export const ArrayControl = <T,>(props: Props<T>) => {
     }
 
 
-    const itemStackProps: Partial<StackProps> = controlPosition === 'above' ? {
-        direction: 'column-reverse',
-        paddingTop: 1,
-
-    } : {
-        direction: 'row',
-        alignItems: 'center',
-    }
-
     return (
-        <Stack component={'ul'} sx={{ margin: 0, padding: 0, listStyle: 'none', ...stackSx }}>
+        <Stack sx={{ paddingRight: 8, paddingY: 4 }}>
             {list.map((item, index) => (
                 <Fragment key={index}>
                     {(!!createItem && createButton !== 'END') && (
-                        <Box component={'li'}>
-                            <InsertButton index={list.length} handleInsert={handleInsert} />
+                        <Box position={'relative'} component={'aside'}>
+                            <Box position={'absolute'}
+                                sx={{
+                                    transform: "translateY(-50%) translateX(100%)",
+                                    right: 0
+                                }}
+                            >
+                                <InsertButton index={index} handleInsert={handleInsert} />
+                            </Box>
                         </Box>
                     )}
-                    <Stack component={'li'} {...itemStackProps} justifyContent={'space-between'} spacing={1} paddingBottom={1}>
-                        {describeItem(item, index)}
-                        <ButtonGroup>
-                            {!noMoveButtons && <>
+                    <Stack component={'article'}
+                        justifyContent={'space-between'}
+                        alignItems={'center'}
+                        direction={'row'}
+                        spacing={1} paddingBottom={1}
+                    >
+                        {!noMoveButtons && (
+                            <ButtonGroup orientation="vertical">
                                 <MoveButton handleMove={handleMove} index={index} role="UP" />
                                 <MoveButton handleMove={handleMove} index={index} role="DOWN" />
-                            </>}
-                            {!noDeleteButtons && <>
-                                <DeleteButton index={index} handleDelete={handleDelete} />
-                            </>}
-                        </ButtonGroup>
+                            </ButtonGroup>
+                        )}
+                        {describeItem(item, index)}
+
+                        {!noDeleteButtons && (
+                            <Box position={'relative'} component={'aside'}>
+                                <Box position={'absolute'}
+                                    sx={{
+                                        transform: "translateY(-50%) translateX(100%)",
+                                        right: 0
+                                    }}
+                                >
+                                    <DeleteButton index={index} handleDelete={handleDelete} />
+                                </Box>
+                            </Box>
+                        )}
+
                     </Stack>
                 </Fragment>
             ))}
             {!!createItem && (
-                <Box component={'li'}>
-                    <InsertButton index={list.length} handleInsert={handleInsert} />
+                <Box position={'relative'} component={'aside'}>
+                    <Box position={'absolute'}
+                        sx={{
+                            transform: "translateY(-50%) translateX(100%)",
+                            right: 0
+                        }}
+                    >
+                        <InsertButton index={list.length} handleInsert={handleInsert} />
+                    </Box>
                 </Box>
             )}
-        </Stack>
+        </Stack >
     )
 
 }
