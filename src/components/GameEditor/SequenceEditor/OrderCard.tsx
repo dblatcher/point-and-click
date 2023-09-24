@@ -1,9 +1,9 @@
 import { Order } from "@/definitions";
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import PlaceIcon from '@mui/icons-material/Place';
 import RouteIcon from '@mui/icons-material/Route';
-import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import AnimationIcon from '@mui/icons-material/Animation';
 
 interface Props {
     order: Order;
@@ -12,14 +12,14 @@ interface Props {
 }
 
 
-const getIcon = (order: Order): typeof ChatBubbleOutlineIcon => {
+const getIcon = (order: Order): typeof ChatOutlinedIcon => {
     switch (order.type) {
         case "move":
             return RouteIcon
         case "act":
-            return EmojiEmotionsIcon
+            return AnimationIcon
         case "say":
-            return ChatBubbleOutlineIcon
+            return ChatOutlinedIcon
         case "goTo":
             return PlaceIcon
     }
@@ -28,14 +28,14 @@ const getIcon = (order: Order): typeof ChatBubbleOutlineIcon => {
 const getDescription = (order: Order): string => {
     switch (order.type) {
         case "move":
-            return `Follow path, ${order.steps.length} steps`
+            return `path: ${order.steps.length} steps`
         case "act": {
             const actions = order.steps.map(step => step.animation);
             return `actions: ${actions.join()}`
         }
         case "say": {
             const text = order.text.length > 50 ? order.text.substring(0, 47) + "..." : order.text
-            return `"${text}"`
+            return `say: "${text}"`
         }
         case "goTo":
             return `go to ${order.targetId ?? '?'}`
@@ -44,10 +44,8 @@ const getDescription = (order: Order): string => {
 }
 
 export const OrderCard = ({ order, handleEditButton }: Props) => {
-
     const Icon = getIcon(order)
     const description = getDescription(order)
-
     return (
         <Card onClick={handleEditButton}
             sx={{ maxWidth: 200, minWidth: 200 }}
