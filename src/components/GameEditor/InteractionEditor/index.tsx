@@ -1,21 +1,16 @@
 
+import { SelectInput } from "@/components/SchemaForm/inputs";
 import { GameDesign, Interaction } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ClearIcon from '@mui/icons-material/Clear';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from "@mui/icons-material/Add";
-import { IconButton, Box, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { Component } from "react";
-import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { EditorHeading } from "../EditorHeading";
-import { SelectInput } from "@/components/SchemaForm/inputs";
 import { InteractionForm } from "./InteractionForm";
+import { InteractionTableRow } from "./InteractionTableRow";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import styles from './styles.module.css';
-import { InteractionTableRow } from "./InteractionTableRow";
 
 interface Props {
     gameDesign: GameDesign;
