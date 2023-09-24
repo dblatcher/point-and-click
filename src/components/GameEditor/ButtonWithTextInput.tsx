@@ -9,7 +9,7 @@ interface Props {
     confirmationText: string;
     useIconButton?: boolean;
     icon?: ReactNode;
-    buttonProps: ButtonProps;
+    buttonProps?: ButtonProps;
 }
 
 export const ButtonWithTextInput = ({ onEntry, label, confirmationText, useIconButton, icon, buttonProps = {} }: Props) => {

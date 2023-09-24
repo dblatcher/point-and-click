@@ -12,20 +12,16 @@ interface Props {
 }
 
 export const ButtonWithConfirm = ({ label, onClick, noConfirmation, confirmationText, useIconButton, icon }: Props) => {
-
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
-
     const handleFirstButton = noConfirmation
         ? onClick
         : (): void => { setShowConfirmation(true) }
-
     const warningText = confirmationText || `Are you sure you want to ${label}?`
 
     return (
         <>
             {useIconButton && !!icon ? (
                 <IconButton
-                    color="warning"
                     onClick={handleFirstButton}
                     aria-label={label}
                 >
@@ -33,7 +29,6 @@ export const ButtonWithConfirm = ({ label, onClick, noConfirmation, confirmation
                 </IconButton>
             ) : (
                 <Button
-                    color="warning"
                     onClick={handleFirstButton}
                 >
                     {label}

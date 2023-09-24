@@ -26,6 +26,7 @@ export const EditorBox = ({ title, children, themePalette = 'primary', boxProps 
             {(title || barContent) && (
                 <Box
                     display={'flex'}
+                    alignItems={'center'}
                     justifyContent={'space-between'}
                     sx={{
                         background: colorScheme.light,
