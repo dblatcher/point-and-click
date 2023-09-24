@@ -8,12 +8,12 @@ import { ItemMenuInner } from "../game-ui/ItemMenu";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { ServiceItemSelector } from "./ServiceItemSelector";
-import { FramePicker } from "./SpriteEditor/FramePicker";
 import { StorageMenu } from "./StorageMenu";
 import { EnhancedSetStateFunction } from "./dataEditors";
 import { StringInput } from "../SchemaForm/StringInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { listIds } from "@/lib/util";
+import { FramePicker } from "./SpriteEditor/FramePicker";
 
 type Props = {
     data?: ItemData;
@@ -148,6 +148,7 @@ export const ItemEditor = (props: Props) => {
                         selectNone={() => changeValue('imageId', undefined)}
                         service={imageService}
                         selectedItemId={item.imageId} />
+
                     <FramePicker fixedSheet
                         sheetId={item.imageId}
                         row={item.row || 0}
@@ -155,6 +156,7 @@ export const ItemEditor = (props: Props) => {
                         pickFrame={(row: number, col: number) => {
                             setStateWithAutosave({ col, row })
                         }}
+
                     />
                 </DialogContent>
                 <DialogActions>
