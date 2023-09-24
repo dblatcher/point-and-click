@@ -1,15 +1,20 @@
 
-import { Component } from "react";
 import { GameDesign, Interaction } from "@/definitions";
-import { DeleteButton, SelectInput } from "../formControls";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import { InteractionForm } from "./InteractionForm";
-import { getTargetLists, getItemDescriptions } from "./getTargetLists";
-import editorStyles from '../editorStyles.module.css';
-import styles from './styles.module.css';
-import { icons } from "../dataEditors";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ClearIcon from '@mui/icons-material/Clear';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from "@mui/icons-material/Add";
+import { IconButton, Box, Button } from "@mui/material";
+import { Component } from "react";
+import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { EditorHeading } from "../EditorHeading";
+import { SelectInput } from "../formControls";
+import { InteractionForm } from "./InteractionForm";
+import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import styles from './styles.module.css';
 
 interface Props {
     gameDesign: GameDesign;
@@ -116,14 +121,6 @@ export class InteractionEditor extends Component<Props, State> {
                 <table className={styles.interactionTable}>
                     <caption>
                         <span>{filteredInteractions.length}/{interactions.length} interactions</span>
-                        <button
-                            className={[editorStyles.button, editorStyles.plusButton].join(" ")}
-                            onClick={() =>
-                                this.setState({
-                                    edittedIndex: undefined,
-                                    interactionUnderConstruction: {}
-                                })
-                            }>add new interaction</button>
                     </caption>
                     <thead>
                         <tr>
@@ -204,35 +201,49 @@ export class InteractionEditor extends Component<Props, State> {
                                     <td className={styles.centered} title={trueFlagTitle}>{trueFlagText}</td>
                                     <td className={styles.centered} title={falseFlagTitle}>{falseFlagText}</td>
                                     <td>
-                                        <button
-                                            className={[editorStyles.button].join(" ")}
+                                        <IconButton
                                             onClick={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}>
-                                            edit
-                                        </button>
+                                            <EditIcon color="primary" />
+                                        </IconButton>
                                     </td>
                                     <td>
-                                        <button
-                                            className={[editorStyles.button, editorStyles.moveButton].join(" ")}
-                                            onClick={() => this.changeOrder(index, 'up')}
-                                        >{icons.UP}</button>
+                                        <IconButton onClick={() => this.changeOrder(index, 'up')}>
+                                            <ArrowUpwardIcon />
+                                        </IconButton>
                                     </td>
                                     <td>
-                                        <button
-                                            className={[editorStyles.button, editorStyles.moveButton].join(" ")}
-                                            onClick={() => this.changeOrder(index, 'down')}
-                                        >{icons.DOWN}</button>
+                                        <IconButton onClick={() => this.changeOrder(index, 'down')}>
+                                            <ArrowDownwardIcon />
+                                        </IconButton>
                                     </td>
                                     <td>
-                                        <DeleteButton label={icons.DELETE}
-                                            className={[editorStyles.button, editorStyles.deleteButton].join(" ")}
-                                            confirmationText="really?"
-                                            onClick={() => { this.props.deleteInteraction(index) }} />
+                                        <ButtonWithConfirm
+                                            useIconButton={true}
+                                            icon={<ClearIcon />}
+                                            label="delete this interaction"
+                                            onClick={() => { this.props.deleteInteraction(index) }}
+                                        />
                                     </td>
                                 </tr>
                             )
                         })}
                     </tbody>
                 </table>
+
+                <Box display='flex' justifyContent='flex-end' paddingTop={2}>
+                    <Button
+                        size="large"
+                        onClick={() =>
+                            this.setState({
+                                edittedIndex: undefined,
+                                interactionUnderConstruction: {}
+                            })}
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                    >
+                        Add new Interaction
+                    </Button>
+                </Box>
 
                 {interactionUnderConstruction &&
                     <InteractionForm key={edittedIndex}
