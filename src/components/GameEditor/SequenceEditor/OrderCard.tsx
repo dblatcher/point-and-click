@@ -1,9 +1,9 @@
+import { ConceptCard } from "@/components/ConceptCard";
 import { Order } from "@/definitions";
-import { Box, Card, CardActionArea, Typography } from "@mui/material";
+import AnimationIcon from '@mui/icons-material/Animation';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import PlaceIcon from '@mui/icons-material/Place';
 import RouteIcon from '@mui/icons-material/Route';
-import AnimationIcon from '@mui/icons-material/Animation';
 
 interface Props {
     order: Order;
@@ -42,27 +42,11 @@ const getDescription = (order: Order): string => {
 
 }
 
-export const OrderCard = ({ order, handleEditButton }: Props) => {
-    const Icon = getIcon(order)
-    const description = getDescription(order)
-    return (
-        <Card onClick={handleEditButton}
-            sx={{ maxWidth: 180, minWidth: 180 }}
-            variant="outlined"
-        >
-            <CardActionArea
-                sx={{ padding: 1 }}
-            >
-                <Box display={'flex'} alignItems={'flex-start'}>
-                    <Icon fontSize="large" color={'secondary'} />
-                    <Box paddingLeft={1} flex={1}>
-                        <Typography variant="caption" borderBottom={1}>{order.type}</Typography>
-                        <Typography >
-                            {description}
-                        </Typography>
-                    </Box>
-                </Box>
-            </CardActionArea>
-        </Card >
-    )
-}
+export const OrderCard = ({ order, handleEditButton }: Props) => (
+    <ConceptCard
+        Icon={getIcon(order)}
+        handleClick={handleEditButton}
+        description={getDescription(order)}
+        title={order.type}
+    />
+)
