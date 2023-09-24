@@ -25,7 +25,7 @@ export const NewAnimationForm: FunctionComponent<Props> = ({ existingKeys, submi
 
     return (
         <EditorBox title="Add Animation" boxProps={{ minWidth: 220 }}>
-            <Stack minHeight={200}>
+            <Stack minHeight={160}>
                 <Stack direction={'row'} alignItems={'center'}>
                     <Box flexBasis={180}>
                         <StringInput
