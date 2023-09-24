@@ -312,6 +312,17 @@ export class ConversationEditor extends Component<Props, State> {
                         )
                     }}
                     addNewChoice={this.addNewChoice}
+                    deleteBranch={branchKey => {
+                        this.setStateWithAutosave(
+                            {
+                                branches: {
+                                    ...this.currentData.branches,
+                                    [branchKey]: undefined
+                                }
+                            }
+                        )
+                    }}
+                    addNewBranch={this.addNewBranch}
                 />
 
                 <Dialog open={!!this.state.editOrderDialogBranchId}
@@ -320,7 +331,6 @@ export class ConversationEditor extends Component<Props, State> {
                     <DialogTitle>Edit Order: {editOrderDialogBranchId}</DialogTitle>
 
                     <DialogContent>
-
                         {(branchInOrderDialog && editOrderDialogBranchId) &&
                             <ListEditor tight
                                 list={branchInOrderDialog.choices}

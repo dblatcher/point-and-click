@@ -1,6 +1,6 @@
 import { StringInput } from "@/components/SchemaForm/inputs";
 import { defaultTheme } from "@/theme";
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ThemeProvider } from "@mui/material";
+import { Button, ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ThemeProvider } from "@mui/material";
 import { ReactNode, useState } from "react";
 
 interface Props {
@@ -9,13 +9,12 @@ interface Props {
     confirmationText: string;
     useIconButton?: boolean;
     icon?: ReactNode;
+    buttonProps: ButtonProps;
 }
 
-export const ButtonWithTextInput = ({ onEntry, label, confirmationText, useIconButton, icon }: Props) => {
-
+export const ButtonWithTextInput = ({ onEntry, label, confirmationText, useIconButton, icon, buttonProps = {} }: Props) => {
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const [input, setInput] = useState<string>('')
-
     const handleFirstButton = (): void => { setShowConfirmation(true) }
 
     return (
@@ -28,10 +27,9 @@ export const ButtonWithTextInput = ({ onEntry, label, confirmationText, useIconB
                     {icon}
                 </IconButton>
             ) : (
-
                 <Button
-                    color="warning"
                     onClick={handleFirstButton}
+                    {...buttonProps}
                 >
                     {label}
                 </Button>

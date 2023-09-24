@@ -1,4 +1,7 @@
-import { Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType, Stage, ConversationChoice, Ending, Flag, Order, OrderType } from "@/definitions";
+import {
+    Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType,
+    Stage, ConversationChoice, Ending, Flag, Order, OrderType, ConversationBranch
+} from "@/definitions";
 import { ActStep, MoveStep } from "@/definitions/Order";
 
 const DEFAULT_TALK_TIME = 250;
@@ -60,6 +63,9 @@ export const makeBlankConversation = (): Conversation => ({
             ]
         }
     }
+})
+export const makeBlankConversationBranch = (): ConversationBranch => ({
+    choices: []
 })
 
 export const makeBlankStage = (): Stage => ({
