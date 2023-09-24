@@ -12,6 +12,7 @@ interface Props {
     sheetId?: string;
     pickFrame: { (row: number, col: number, sheetId?: string): void };
     fixedSheet?: boolean;
+    noOptions?: boolean;
 }
 
 interface FrameButtonProps {
@@ -57,7 +58,7 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
     }
 }
 
-export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickFrame, fixedSheet = false }) => {
+export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickFrame, fixedSheet = false, noOptions = false }) => {
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
     const image = sheetId ? imageService.get(sheetId) : undefined;
@@ -84,18 +85,20 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
 
     return (
         <EditorBox title="Pick frame">
-            <Stack direction={'row'} justifyContent={'space-between'}>
-                <BooleanInput value={showInOneRow} inputHandler={setShowInOneRow} label="arrange frames in one list" />
-                <Box width={100}>
-                    <SelectInput
-                        label="button size"
-                        value={buttonSize}
-                        options={['small', 'medium', 'large']}
-                        inputHandler={value => {
-                            setButtonSize(value as ButtonSize)
-                        }} />
-                </Box>
-            </Stack>
+            {!noOptions && (
+                <Stack direction={'row'} justifyContent={'space-between'}>
+                    <BooleanInput value={showInOneRow} inputHandler={setShowInOneRow} label="arrange frames in one list" />
+                    <Box width={100}>
+                        <SelectInput
+                            label="button size"
+                            value={buttonSize}
+                            options={['small', 'medium', 'large']}
+                            inputHandler={value => {
+                                setButtonSize(value as ButtonSize)
+                            }} />
+                    </Box>
+                </Stack>
+            )}
 
             {image && (<>
                 {showInOneRow ? (<>

@@ -148,15 +148,13 @@ export const ItemEditor = (props: Props) => {
                         selectNone={() => changeValue('imageId', undefined)}
                         service={imageService}
                         selectedItemId={item.imageId} />
-
-                    <FramePicker fixedSheet
+                    <FramePicker fixedSheet noOptions
                         sheetId={item.imageId}
                         row={item.row || 0}
                         col={item.col || 0}
                         pickFrame={(row: number, col: number) => {
                             setStateWithAutosave({ col, row })
                         }}
-
                     />
                 </DialogContent>
                 <DialogActions>
