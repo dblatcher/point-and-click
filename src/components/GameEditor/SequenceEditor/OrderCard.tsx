@@ -50,13 +50,15 @@ export const OrderCard = ({ order, handleEditButton }: Props) => {
 
     return (
         <Card onClick={handleEditButton}
-            sx={{ padding: 1, maxWidth: 200, minWidth: 200 }}
+            sx={{ maxWidth: 200, minWidth: 200 }}
             variant="outlined"
         >
-            <CardActionArea>
-                <Box display={'flex'} flexWrap={'wrap'} alignItems={'flex-start'}>
-                    <Icon fontSize="large" color={'secondary'} />
-                    <Typography component={'span'} >
+            <CardActionArea
+                sx={{ padding: 1 }}
+            >
+                <Box display={'flex'} alignItems={'flex-start'}>
+                    <Icon fontSize="medium" color={'secondary'} />
+                    <Typography component={'span'} flex={1}>
                         {description}
                     </Typography>
                 </Box>
