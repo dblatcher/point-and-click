@@ -11,7 +11,7 @@ import { IconButton, Box, Button } from "@mui/material";
 import { Component } from "react";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { EditorHeading } from "../EditorHeading";
-import { SelectInput } from "../formControls";
+import { SelectInput } from "@/components/SchemaForm/inputs";
 import { InteractionForm } from "./InteractionForm";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import styles from './styles.module.css';
@@ -134,39 +134,43 @@ export class InteractionEditor extends Component<Props, State> {
                         </tr>
                         <tr>
                             <th>
-                                <SelectInput
-                                    haveEmptyOption={true}
-                                    onSelect={verbFilter => { this.setState({ verbFilter }) }}
-                                    emptyOptionLabel="[ANY VERB]"
-                                    value={verbFilter}
-                                    items={listIds(verbs)} />
+                                <Box minWidth={80}>
+                                    <SelectInput
+                                        optional
+                                        inputHandler={verbFilter => { this.setState({ verbFilter }) }}
+                                        value={verbFilter}
+                                        options={listIds(verbs)} />
+                                </Box>
                             </th>
                             <th>
-                                <SelectInput
-                                    haveEmptyOption={true}
-                                    onSelect={targetFilter => { this.setState({ targetFilter }) }}
-                                    emptyOptionLabel="[ANY Target]"
-                                    value={targetFilter}
-                                    items={filteredTargets.ids}
-                                    descriptions={filteredTargets.descriptions}
-                                />
+                                <Box minWidth={80}>
+                                    <SelectInput
+                                        optional
+                                        inputHandler={targetFilter => { this.setState({ targetFilter }) }}
+                                        value={targetFilter}
+                                        options={filteredTargets.ids}
+                                        descriptions={filteredTargets.descriptions}
+                                    />
+                                </Box>
                             </th>
                             <th>
-                                <SelectInput
-                                    haveEmptyOption={true}
-                                    onSelect={itemFilter => { this.setState({ itemFilter }) }}
-                                    emptyOptionLabel="[ANY ITEM]"
-                                    value={itemFilter}
-                                    items={listIds(items)}
-                                    descriptions={getItemDescriptions(gameDesign)} />
+                                <Box minWidth={80}>
+                                    <SelectInput
+                                        optional
+                                        inputHandler={itemFilter => { this.setState({ itemFilter }) }}
+                                        value={itemFilter}
+                                        options={listIds(items)}
+                                        descriptions={getItemDescriptions(gameDesign)} />
+                                </Box>
                             </th>
                             <th>
-                                <SelectInput
-                                    haveEmptyOption={true}
-                                    onSelect={roomFilter => { this.setState({ roomFilter }) }}
-                                    emptyOptionLabel="[ANY ROOM]"
-                                    value={roomFilter}
-                                    items={listIds(rooms)} />
+                                <Box minWidth={80}>
+                                    <SelectInput
+                                        optional
+                                        inputHandler={roomFilter => { this.setState({ roomFilter }) }}
+                                        value={roomFilter}
+                                        options={listIds(rooms)} />
+                                </Box>
                             </th>
                         </tr>
                     </thead>
