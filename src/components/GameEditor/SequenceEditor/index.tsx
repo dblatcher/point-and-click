@@ -9,7 +9,7 @@ import { EditorHeading } from "../EditorHeading";
 import { StorageMenu } from "../StorageMenu";
 import { DataItemEditorProps } from "../dataEditors";
 import { makeBlankSequence } from "../defaults";
-import { StringInput } from "../formControls";
+import { StringInput } from "@/components/SchemaForm/StringInput"
 import { SequenceFlow } from "./SequenceFlow";
 
 
@@ -135,10 +135,10 @@ export class SequenceEditor extends Component<Props, State> {
                         <EditorHeading heading="Sequence Editor" itemId={data?.id ?? '[new]'} />
                         <Stack direction='row' spacing={1}>
                             <EditorBox title="details">
-                                <StringInput block label="id" value={id} // don't autosave when changing ID
+                                <StringInput label="id" value={id} // don't autosave when changing ID
                                     inputHandler={(id) => { this.setState({ id }) }}
                                 />
-                                <StringInput block label="description" value={description || ''}
+                                <StringInput label="description" value={description || ''}
                                     inputHandler={(description) => {
                                         this.setStateWithAutosave({ description })
                                     }}
