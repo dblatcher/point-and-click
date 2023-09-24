@@ -1,8 +1,7 @@
 
-import {  Component } from "react"
-import { GotoOrder, GotoOrderSchema, orderTypes, SayOrder, SayOrderSchema } from "@/definitions/Order";
-import { SelectInput } from "../formControls";
-import { SchemaForm, getModification, FieldValue, FieldDef } from "@/components/SchemaForm";
+import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm";
+import { GotoOrder, GotoOrderSchema, SayOrder, SayOrderSchema } from "@/definitions/Order";
+import { Component } from "react";
 
 
 type OrderWithoutSteps = SayOrder | GotoOrder
@@ -13,25 +12,13 @@ interface Props {
     targetIdOptions: string[];
     targetIdDescriptions: string[];
     updateData: { (data: OrderWithoutSteps): void };
-    changeType: { (type: string): void };
 }
 
 export class OrderWithoutStepsForm extends Component<Props> {
 
     constructor(props: Props) {
         super(props)
-        this.changeValue = this.changeValue.bind(this)
         this.handleSchemaFormChange = this.handleSchemaFormChange.bind(this)
-    }
-
-    changeValue(propery: keyof OrderWithoutSteps, newValue: string | undefined | number) {
-        const { changeType } = this.props
-        switch (propery) {
-            case 'type': {
-                changeType(newValue as string)
-                break;
-            }
-        }
     }
 
     handleSchemaFormChange(value: FieldValue, field: FieldDef) {
@@ -43,16 +30,9 @@ export class OrderWithoutStepsForm extends Component<Props> {
     render() {
         const { type } = this.props.data
         const { animationSuggestions, targetIdOptions, targetIdDescriptions } = this.props
-        const { changeValue } = this
 
         return (
-            <article style={{ flex: 1 }}>
-                <SelectInput label="order type"
-                    value={type}
-                    items={orderTypes}
-                    onSelect={newValue => changeValue('type', newValue)}
-                />
-
+            <>
                 {type === 'say' && (
                     <SchemaForm
                         schema={SayOrderSchema}
@@ -78,7 +58,7 @@ export class OrderWithoutStepsForm extends Component<Props> {
                         }}
                     />
                 )}
-            </article>
+            </>
         )
     }
 }

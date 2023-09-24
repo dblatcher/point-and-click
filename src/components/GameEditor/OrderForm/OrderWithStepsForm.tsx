@@ -1,18 +1,17 @@
 
-import {  Component } from "react"
-import { ActOrder, MoveOrder, orderTypes, stepSchama } from "@/definitions/Order";
-import { SelectInput } from "../formControls";
+import { FieldDef, FieldValue, SchemaForm, getModification } from "@/components/SchemaForm";
+import { ActOrder, MoveOrder, stepSchama } from "@/definitions/Order";
+import { Typography } from "@mui/material";
+import { Component } from "react";
+import { ArrayControl } from "../ArrayControl";
 import { makeNewStep } from "../defaults";
-import { ListEditor } from "../ListEditor";
-import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm";
 
-type OrderWithSteps =  MoveOrder | ActOrder
+type OrderWithSteps = MoveOrder | ActOrder
 
 interface Props {
     data: OrderWithSteps;
     animationSuggestions?: string[];
     updateData: { (data: OrderWithSteps): void };
-    changeType: { (type: string): void };
 }
 
 export class OrderWithStepsForm extends Component<Props> {
@@ -23,12 +22,8 @@ export class OrderWithStepsForm extends Component<Props> {
     }
 
     changeValue(propery: keyof OrderWithSteps, newValue: string | undefined | OrderWithSteps['steps']) {
-        const { data, updateData,changeType } = this.props
+        const { data, updateData } = this.props
         switch (propery) {
-            case 'type': {
-                changeType(newValue as string )
-                break;
-            }
             case 'steps': {
                 if (data.type === 'act') {
                     updateData({
@@ -53,7 +48,7 @@ export class OrderWithStepsForm extends Component<Props> {
             return
         }
 
-        const stepCopy = Object.assign({}, data.steps[index] , getModification(value,field))
+        const stepCopy = Object.assign({}, data.steps[index], getModification(value, field))
         const result = stepSchama[data.type].safeParse(stepCopy)
         if (!result.success) { return }
         const stepListCopy = [...data.steps]
@@ -67,18 +62,9 @@ export class OrderWithStepsForm extends Component<Props> {
         const { changeStep, changeValue } = this
 
         return (
-            <article style={{ flex: 1 }}>
-
-                <div style={{ borderBottom: '3px double black' }}>
-                    <SelectInput label="order type"
-                        value={type}
-                        items={orderTypes}
-                        onSelect={newValue => changeValue('type', newValue)}
-                    />
-                </div>
-
+            <>
                 {type === 'act' && (
-                    <ListEditor
+                    <ArrayControl
                         list={steps}
                         describeItem={(step, index) => (
                             <SchemaForm key={index}
@@ -89,10 +75,11 @@ export class OrderWithStepsForm extends Component<Props> {
                         )}
                         mutateList={(newList) => changeValue('steps', newList)}
                         createItem={makeNewStep[type]}
+                        frame="PLAIN"
                     />
                 )}
                 {type === 'move' && (
-                    <ListEditor
+                    <ArrayControl
                         list={steps}
                         describeItem={(step, index) => (
                             <SchemaForm key={index}
@@ -103,9 +90,13 @@ export class OrderWithStepsForm extends Component<Props> {
                         )}
                         mutateList={(newList) => changeValue('steps', newList)}
                         createItem={makeNewStep[type]}
+                        frame="PLAIN"
                     />
                 )}
-            </article>
+                {steps.length === 0 && (
+                    <Typography variant="caption">Insert first step:</Typography>
+                )}
+            </>
         )
     }
 }
