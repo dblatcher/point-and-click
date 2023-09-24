@@ -1,5 +1,5 @@
 import { Order } from "@/definitions";
-import { Button, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, Typography } from "@mui/material";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import PlaceIcon from '@mui/icons-material/Place';
 import RouteIcon from '@mui/icons-material/Route';
@@ -49,20 +49,18 @@ export const OrderCard = ({ order, handleEditButton }: Props) => {
     const description = getDescription(order)
 
     return (
-        <Button
-            fullWidth
-            color="secondary"
+        <Card onClick={handleEditButton}
+            sx={{ padding: 1, maxWidth: 200, minWidth: 200 }}
             variant="outlined"
-            onClick={handleEditButton}
-            size="small"
-            startIcon={<Icon />}>
-            <Typography variant="body1" component={'span'} maxWidth={150}
-                color={'InfoText'}
-                sx={{
-                    textTransform: 'none'
-                }}>
-                {description}
-            </Typography>
-        </Button>
+        >
+            <CardActionArea>
+                <Box display={'flex'} flexWrap={'wrap'} alignItems={'flex-start'}>
+                    <Icon fontSize="large" color={'secondary'} />
+                    <Typography component={'span'} >
+                        {description}
+                    </Typography>
+                </Box>
+            </CardActionArea>
+        </Card >
     )
 }
