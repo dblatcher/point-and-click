@@ -48,6 +48,16 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
 
     const addActor = (actorId: string, stageIndex: number) => { changeOrderList([], stageIndex, actorId) }
 
+    const removeActorFromAll = (actorId:string) => {
+        const stagesCopy = sequence.stages.map(stage => ({...stage}))
+        stagesCopy.forEach(stage => {
+            if (stage.actorOrders?.[actorId]) {
+                delete stage.actorOrders[actorId]
+            }
+        })
+        changeStages(stagesCopy)
+    }
+
     return (
         <>
             <ArrayControl frame='PLAIN'
@@ -62,6 +72,7 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
                         setOrderParams={setOrderParams}
                         setAddActorParams={setAddActorParams}
                         changeOrderList={changeOrderList}
+                        removeActorFromAll={removeActorFromAll}
                     />
                 )}
                 mutateList={changeStages}

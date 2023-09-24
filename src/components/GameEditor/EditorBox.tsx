@@ -1,4 +1,4 @@
-import { Box, BoxProps, Typography, useTheme } from '@mui/material';
+import { Box, BoxProps, IconButton, Typography, useTheme } from '@mui/material';
 import { ReactNode } from 'react'
 
 interface Props {
@@ -6,9 +6,10 @@ interface Props {
     children: ReactNode;
     themePalette?: 'primary' | 'secondary';
     boxProps?: BoxProps;
+    barContent?: ReactNode;
 }
 
-export const EditorBox = ({ title, children, themePalette = 'primary', boxProps = {} }: Props) => {
+export const EditorBox = ({ title, children, themePalette = 'primary', boxProps = {}, barContent }: Props) => {
 
     const theme = useTheme()
     const colorScheme = theme.palette[themePalette]
@@ -22,14 +23,22 @@ export const EditorBox = ({ title, children, themePalette = 'primary', boxProps 
             }}
             {...boxProps}
         >
-            {title && (
-                <Typography component={'div'}
-                    variant='overline'
+            {(title || barContent) && (
+                <Box
+                    display={'flex'}
+                    justifyContent={'space-between'}
                     sx={{
                         background: colorScheme.light,
                         color: colorScheme.contrastText,
                         paddingX: 1,
-                    }}>{title}</Typography>
+                    }}>
+                    <Typography component={'span'}
+                        variant='overline'
+                    >{title}</Typography>
+                    <Box>
+                        {barContent}
+                    </Box>
+                </Box>
             )}
             <Box component={'section'}
                 sx={{

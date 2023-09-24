@@ -1,10 +1,12 @@
 import { ImmediateConsequence, Order, Stage } from "@/definitions";
-import { Box, Button, Grid, Stack } from "@mui/material";
+import { Box, Button, Grid, IconButton, Stack } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { OrderCard } from "./OrderCard";
 import { ConsequenceCard } from "./ConsequenceCard";
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+
 
 interface Props {
     stage: Stage
@@ -15,6 +17,7 @@ interface Props {
     setOrderParams: { (params: OrderDialogParams): void }
     changeOrderList: { (newList: Order[], stageIndex: number, actorId: string): void }
     setAddActorParams: { (params: { stage: number }): void }
+    removeActorFromAll: { (actorId: string): void }
 }
 
 type ConsequenceDialogParams = {
@@ -32,7 +35,7 @@ export const StageFlow = ({
     stage, stageIndex, actorIds,
     changeConsequenceList,
     setConsequenceParams, setOrderParams, setAddActorParams,
-    changeOrderList
+    changeOrderList, removeActorFromAll
 }: Props) => {
 
 
@@ -73,7 +76,16 @@ export const StageFlow = ({
 
                 {actorIds.map((actorId) => (
                     <Grid item key={actorId} display={'flex'} >
-                        <EditorBox title={actorId} boxProps={{ minWidth: 300 }}>
+                        <EditorBox title={actorId}
+                            boxProps={{ minWidth: 300 }}
+                            barContent={(
+                                <IconButton size="small" 
+                                onClick={() => { removeActorFromAll(actorId) }}
+                                >
+                                    <ClearOutlinedIcon />
+                                </IconButton>
+                            )}
+                        >
                             <ArrayControl
                                 color="secondary"
                                 list={stage.actorOrders?.[actorId] ?? []}
