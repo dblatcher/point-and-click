@@ -1,5 +1,5 @@
 import { ConversationChoice } from "@/definitions";
-import { Box, Button, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import LogOut from '@mui/icons-material/Logout';
 import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
 import RepeatOneIcon from '@mui/icons-material/RepeatOne';

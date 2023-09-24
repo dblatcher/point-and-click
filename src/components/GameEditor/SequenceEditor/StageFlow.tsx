@@ -1,10 +1,10 @@
-import { useGameDesign } from "@/context/game-design-context";
 import { ImmediateConsequence, Order, Stage } from "@/definitions";
 import { Box, Button, Grid, Stack } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { OrderCard } from "./OrderCard";
+import { ConsequenceCard } from "./ConsequenceCard";
 
 interface Props {
     stage: Stage
@@ -36,43 +36,37 @@ export const StageFlow = ({
 }: Props) => {
 
 
-    const { gameDesign } = useGameDesign()
-
-    const exisingConsequences: ImmediateConsequence[] = stage.immediateConsequences ?? []
-
-    const addConsequence = (stageIndex: number) => {
-        changeConsequenceList([
-            ...exisingConsequences,
-            makeNewConsequence('changeStatus') as ImmediateConsequence
-        ], stageIndex)
-    }
-
-    const removeConsequence = (stageIndex: number, consequenceIndex: number) => {
-        changeConsequenceList([
-            ...exisingConsequences.slice(0, consequenceIndex),
-            ...exisingConsequences.slice(consequenceIndex + 1),
-        ], stageIndex)
-    }
-
     return (
         <Box>
             <Grid container>
                 <Grid item display={'flex'}>
                     <EditorBox title="consequences">
                         <Stack spacing={0}>
-                            {stage.immediateConsequences?.map((consequence, consequnceIndex) => (
-                                <EditorBox key={consequnceIndex} title={consequence.type} themePalette="secondary">
-                                    <Button onClick={() => {
-                                        setConsequenceParams({
-                                            stage: stageIndex,
-                                            index: consequnceIndex,
-                                        })
-                                    }}>edit</Button>
-                                    <Button onClick={() => { removeConsequence(stageIndex, consequnceIndex) }}>delete</Button>
-                                </EditorBox>
-                            ))}
 
-                            <Button variant="outlined" color={"secondary"} onClick={() => { addConsequence(stageIndex) }} >add consequence</Button>
+                            <ArrayControl
+                                list={stage.immediateConsequences ?? []}
+                                describeItem={(consequence, consequenceIndex) => (
+                                    <ConsequenceCard
+                                        consequence={consequence}
+                                        handleEditButton={() => {
+                                            setConsequenceParams({
+                                                stage: stageIndex,
+                                                index: consequenceIndex,
+                                            })
+                                        }}
+                                    />
+                                )}
+                                mutateList={(newList) => {
+                                    changeConsequenceList(newList, stageIndex)
+                                }}
+                                createItem={() => (
+                                    makeNewConsequence('changeStatus') as ImmediateConsequence
+                                )}
+                                createButton="END"
+                                noMoveButtons
+                                color="secondary"
+                            />
+
                         </Stack>
                     </EditorBox>
                 </Grid>
@@ -86,7 +80,6 @@ export const StageFlow = ({
                                 describeItem={(order, orderIndex) => (
                                     <OrderCard
                                         order={order}
-                                        orderIndex={orderIndex}
                                         handleEditButton={() => {
                                             setOrderParams({
                                                 stage: stageIndex,

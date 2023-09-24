@@ -7,7 +7,6 @@ import AnimationIcon from '@mui/icons-material/Animation';
 
 interface Props {
     order: Order;
-    orderIndex: number
     handleEditButton: { (): void }
 }
 
@@ -28,17 +27,17 @@ const getIcon = (order: Order): typeof ChatOutlinedIcon => {
 const getDescription = (order: Order): string => {
     switch (order.type) {
         case "move":
-            return `path: ${order.steps.length} steps`
+            return `${order.steps.length}x steps`
         case "act": {
             const actions = order.steps.map(step => step.animation);
-            return `actions: ${actions.join()}`
+            return `${actions.join()}`
         }
         case "say": {
             const text = order.text.length > 50 ? order.text.substring(0, 47) + "..." : order.text
-            return `say: "${text}"`
+            return `"${text}"`
         }
         case "goTo":
-            return `go to ${order.targetId ?? '?'}`
+            return `${order.targetId ?? '?'}`
     }
 
 }
@@ -56,9 +55,12 @@ export const OrderCard = ({ order, handleEditButton }: Props) => {
             >
                 <Box display={'flex'} alignItems={'flex-start'}>
                     <Icon fontSize="medium" color={'secondary'} />
-                    <Typography component={'span'} flex={1}>
-                        {description}
-                    </Typography>
+                    <Box paddingLeft={1} flex={1}>
+                        <Typography variant="caption" borderBottom={1}>{order.type}</Typography>
+                        <Typography >
+                            {description}
+                        </Typography>
+                    </Box>
                 </Box>
             </CardActionArea>
         </Card >
