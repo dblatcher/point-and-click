@@ -50,7 +50,7 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
 
     return (
         <>
-            <ArrayControl
+            <ArrayControl frame='PLAIN'
                 list={sequence.stages}
                 describeItem={(stage, stageIndex) => (
                     <StageFlow key={stageIndex}

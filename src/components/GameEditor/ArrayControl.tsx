@@ -2,11 +2,12 @@ import AddIcon from "@mui/icons-material/Add";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Button, ButtonGroup, IconButton, Stack } from "@mui/material";
+import { Box, Button, ButtonGroup, IconButton, Paper, Stack, useTheme } from "@mui/material";
 import { Fragment, ReactNode } from "react";
 
 
 type Color = "success" | "primary" | "secondary" | "error" | "info" | "warning"
+type Framing = 'STRIPED' | 'PLAIN' | 'NONE'
 
 interface Props<T> {
     list: T[];
@@ -19,6 +20,7 @@ interface Props<T> {
     insertText?: string;
     deleteText?: string;
     color?: Color
+    frame?: Framing
 }
 
 
@@ -65,16 +67,33 @@ const DeleteButton = ({ index, handleDelete, color }: {
     </IconButton>
 )
 
-export const ArrayControl = <T,>(props: Props<T>) => {
 
-    const {
-        list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
-        color = 'primary'
-    } = props
+const Frame = (props: { children: ReactNode, index: number, framing: Framing }) => {
+    const { index, framing } = props
+    const theme = useTheme()
+
+    if (framing === 'NONE') {
+        return <>{props.children}</>
+    }
+
+    const backgroundColor = framing == 'STRIPED' && index % 2 === 1 ? theme.palette.grey[200] : undefined
+
+    return <Paper
+        sx={{ padding: 1, backgroundColor, marginY: 1.5 }}
+        elevation={2}>
+        {props.children}
+    </Paper>
+}
+
+export const ArrayControl = <T,>({
+    list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
+    mutateList,
+    color = 'primary',
+    frame = 'NONE',
+}: Props<T>) => {
 
 
     const handleDelete = (index: number) => {
-        const { list, mutateList } = props
         const listCopy = [...list]
         listCopy.splice(index, 1)
         mutateList(listCopy)
@@ -82,7 +101,6 @@ export const ArrayControl = <T,>(props: Props<T>) => {
 
 
     const handleInsert = (index: number) => {
-        const { list, mutateList, createItem } = props
         if (!createItem) { return }
         const listCopy = [...list]
         const newItem = createItem()
@@ -92,7 +110,6 @@ export const ArrayControl = <T,>(props: Props<T>) => {
     }
 
     const handleMove = (index: number, direction: 'UP' | 'DOWN') => {
-        const { list, mutateList } = props
         const reinsertIndex = direction === 'UP' ? index - 1 : index + 1
         if (reinsertIndex < 0 || reinsertIndex >= list.length) { return }
         const listCopy = [...list]
@@ -101,7 +118,6 @@ export const ArrayControl = <T,>(props: Props<T>) => {
         mutateList(listCopy)
     }
 
-
     return (
         <Stack sx={{ paddingY: 2 }}>
             {list.map((item, index) => (
@@ -109,31 +125,33 @@ export const ArrayControl = <T,>(props: Props<T>) => {
                     {(!!createItem && createButton !== 'END') && (
                         <InsertButton index={index} handleInsert={handleInsert} color={color} />
                     )}
-                    <Stack component={'article'}
-                        justifyContent={'space-between'}
-                        alignItems={'center'}
-                        direction={'row'}
-                        spacing={1} paddingBottom={1}
-                        minHeight={72}
-                    >
-                        {!noMoveButtons && (
-                            <ButtonGroup orientation="vertical" component={'aside'}>
-                                <MoveButton handleMove={handleMove} index={index} role="UP" color={color} />
-                                <MoveButton handleMove={handleMove} index={index} role="DOWN" color={color} />
-                            </ButtonGroup>
-                        )}
+                    <Frame index={index} framing={frame}>
+                        <Stack component={'article'}
+                            justifyContent={'space-between'}
+                            alignItems={'center'}
+                            direction={'row'}
+                            spacing={1} 
+                            minHeight={72}
+                        >
+                            {!noMoveButtons && (
+                                <ButtonGroup orientation="vertical" component={'aside'}>
+                                    <MoveButton handleMove={handleMove} index={index} role="UP" color={color} />
+                                    <MoveButton handleMove={handleMove} index={index} role="DOWN" color={color} />
+                                </ButtonGroup>
+                            )}
 
-                        <Box flex={1}>
-                            {describeItem(item, index)}
-                        </Box>
-
-                        {!noDeleteButtons && (
-                            <Box position={'relative'} component={'aside'}>
-                                <DeleteButton index={index} handleDelete={handleDelete} color={color} />
+                            <Box flex={1}>
+                                {describeItem(item, index)}
                             </Box>
-                        )}
 
-                    </Stack>
+                            {!noDeleteButtons && (
+                                <Box position={'relative'} component={'aside'}>
+                                    <DeleteButton index={index} handleDelete={handleDelete} color={color} />
+                                </Box>
+                            )}
+
+                        </Stack>
+                    </Frame>
                 </Fragment>
             ))}
             {
