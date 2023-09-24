@@ -40,7 +40,7 @@ export const StageFlow = ({
         <Box>
             <Grid container>
                 <Grid item display={'flex'}>
-                    <EditorBox title="consequences">
+                    <EditorBox title="consequences" boxProps={{ minWidth: 280 }}>
                         <Stack spacing={0}>
 
                             <ArrayControl
@@ -73,7 +73,7 @@ export const StageFlow = ({
 
                 {actorIds.map((actorId) => (
                     <Grid item key={actorId} display={'flex'} >
-                        <EditorBox title={actorId} boxProps={{ minWidth: 280 }}>
+                        <EditorBox title={actorId} boxProps={{ minWidth: 300 }}>
                             <ArrayControl
                                 color="secondary"
                                 list={stage.actorOrders?.[actorId] ?? []}
