@@ -15,6 +15,7 @@ import { SelectInput } from "@/components/SchemaForm/inputs";
 import { InteractionForm } from "./InteractionForm";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import styles from './styles.module.css';
+import { InteractionTableRow } from "./InteractionTableRow";
 
 interface Props {
     gameDesign: GameDesign;
@@ -176,60 +177,14 @@ export class InteractionEditor extends Component<Props, State> {
                     </thead>
                     <tbody>
                         {interactions.map((interaction, index) => {
-
                             if (!filteredInteractions.includes(interaction)) { return <></> }
-                            const {
-                                verbId, targetId, targetStatus, itemId, roomId,
-                                consequences, flagsThatMustBeFalse = [], flagsThatMustBeTrue = []
-                            } = interaction
-
-                            const trueFlagText = flagsThatMustBeTrue.length ? `x${flagsThatMustBeTrue.length}` : ''
-                            const trueFlagTitle = flagsThatMustBeTrue.join(", ")
-
-                            const falseFlagText = flagsThatMustBeFalse.length ? `x${flagsThatMustBeFalse.length}` : ''
-                            const falseFlagTitle = flagsThatMustBeFalse.join(", ")
-
-                            const consequenceText = consequences.length ? `x${consequences.length}` : 'empty'
-                            const consequenceTitle = consequences.map(_ => _.type).join(", ")
-
-                            return (
-                                <tr key={index}>
-                                    <td>{verbId}</td>
-                                    <td>
-                                        <span>{targetId}</span>
-                                        {targetStatus && <span>({targetStatus})</span>}
-                                    </td>
-                                    <td>{itemId}</td>
-                                    <td>{roomId}</td>
-                                    <td className={styles.centered} title={consequenceTitle}>{consequenceText}</td>
-                                    <td className={styles.centered} title={trueFlagTitle}>{trueFlagText}</td>
-                                    <td className={styles.centered} title={falseFlagTitle}>{falseFlagText}</td>
-                                    <td>
-                                        <IconButton
-                                            onClick={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}>
-                                            <EditIcon color="primary" />
-                                        </IconButton>
-                                    </td>
-                                    <td>
-                                        <IconButton onClick={() => this.changeOrder(index, 'up')}>
-                                            <ArrowUpwardIcon />
-                                        </IconButton>
-                                    </td>
-                                    <td>
-                                        <IconButton onClick={() => this.changeOrder(index, 'down')}>
-                                            <ArrowDownwardIcon />
-                                        </IconButton>
-                                    </td>
-                                    <td>
-                                        <ButtonWithConfirm
-                                            useIconButton={true}
-                                            icon={<ClearIcon />}
-                                            label="delete this interaction"
-                                            onClick={() => { this.props.deleteInteraction(index) }}
-                                        />
-                                    </td>
-                                </tr>
-                            )
+                            return (<InteractionTableRow key={index}
+                                interaction={interaction}
+                                index={index}
+                                changeOrder={this.changeOrder}
+                                deleteInteraction={this.props.deleteInteraction}
+                                openEditor={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}
+                            />)
                         })}
                     </tbody>
                 </table>
