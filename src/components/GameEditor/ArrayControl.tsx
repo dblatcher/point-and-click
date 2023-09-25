@@ -8,6 +8,7 @@ import { Fragment, ReactNode } from "react";
 
 type Color = "success" | "primary" | "secondary" | "error" | "info" | "warning"
 type Framing = 'STRIPED' | 'PLAIN' | 'NONE'
+type ButtonSize = "small" | "medium" | "large"
 
 interface Props<T> {
     list: T[];
@@ -21,6 +22,7 @@ interface Props<T> {
     deleteText?: string;
     color?: Color
     frame?: Framing
+    buttonSize?: ButtonSize
 }
 
 
@@ -36,15 +38,16 @@ const MoveButton = ({ role, index, handleMove, color }: {
         onClick={() => { handleMove(index, role) }}
     >{role === 'UP' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}</Button>
 )
-const InsertButton = ({ index, handleInsert, color }: {
+const InsertButton = ({ index, handleInsert, color, buttonSize }: {
     index: number;
     handleInsert: { (index: number): void }
     color?: Color
+    buttonSize?: ButtonSize
 }) => (
 
     <Box width={'100%'} height={0} component={'aside'}>
         <Box position={'relative'} display={"flex"} justifyContent={'flex-end'} sx={{ transform: 'translateY(-50%)' }}>
-            <IconButton size="large"
+            <IconButton size={buttonSize}
                 title="insert"
                 color={color}
                 onClick={() => { handleInsert(index) }}
@@ -54,12 +57,13 @@ const InsertButton = ({ index, handleInsert, color }: {
         </Box>
     </Box>
 )
-const DeleteButton = ({ index, handleDelete, color }: {
+const DeleteButton = ({ index, handleDelete, color, buttonSize }: {
     index: number;
     handleDelete: { (index: number): void }
     color?: Color
+    buttonSize?: ButtonSize
 }) => (
-    <IconButton size='large'
+    <IconButton size={buttonSize}
         color={color}
         onClick={() => { handleDelete(index) }}
         title="delete"
@@ -90,6 +94,7 @@ export const ArrayControl = <T,>({
     mutateList,
     color = 'primary',
     frame = 'NONE',
+    buttonSize = 'large'
 }: Props<T>) => {
 
 
@@ -123,7 +128,7 @@ export const ArrayControl = <T,>({
             {list.map((item, index) => (
                 <Fragment key={index}>
                     {(!!createItem && createButton !== 'END') && (
-                        <InsertButton index={index} handleInsert={handleInsert} color={color} />
+                        <InsertButton index={index} handleInsert={handleInsert} color={color} buttonSize={buttonSize} />
                     )}
                     <Frame index={index} framing={frame}>
                         <Stack component={'article'}
@@ -146,7 +151,7 @@ export const ArrayControl = <T,>({
 
                             {!noDeleteButtons && (
                                 <Box position={'relative'} component={'aside'}>
-                                    <DeleteButton index={index} handleDelete={handleDelete} color={color} />
+                                    <DeleteButton index={index} handleDelete={handleDelete} color={color} buttonSize={buttonSize} />
                                 </Box>
                             )}
 
@@ -156,7 +161,7 @@ export const ArrayControl = <T,>({
             ))}
             {
                 !!createItem && (
-                    <InsertButton index={list.length} handleInsert={handleInsert} color={color} />
+                    <InsertButton index={list.length} handleInsert={handleInsert} color={color} buttonSize={buttonSize} />
                 )
             }
         </Stack >

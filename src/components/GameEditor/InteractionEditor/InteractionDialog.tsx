@@ -164,7 +164,7 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                                         setInteractionProperty('flagsThatMustBeFalse', newList)
                                     }}
                                 />
-                                <ArrayControl noMoveButtons
+                                <ArrayControl noMoveButtons buttonSize="small"
                                     list={interaction.flagsThatMustBeFalse || []}
                                     describeItem={(item, index) => (
                                         <Typography key={index}>{item}</Typography>
@@ -186,7 +186,7 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                                         setInteractionProperty('flagsThatMustBeTrue', newList)
                                     }}
                                 />
-                                <ArrayControl noMoveButtons
+                                <ArrayControl noMoveButtons buttonSize="small"
                                     list={interaction.flagsThatMustBeTrue || []}
                                     describeItem={(item, index) => (
                                         <Typography key={index}>{item}</Typography>
