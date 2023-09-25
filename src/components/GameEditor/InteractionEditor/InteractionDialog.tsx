@@ -11,10 +11,11 @@ import { ArrayControl } from "../ArrayControl";
 import { ButtonWithConfirm } from '../ButtonWithConfirm';
 import { EditorBox } from "../EditorBox";
 import { makeNewConsequence } from "../defaults";
-import { SelectAndConfirmInput } from "../formControls";
+
 import { StringInput, BooleanInput, SelectInput } from "@/components/SchemaForm/inputs";
 import { ConsequenceForm } from "./ConsequenceForm";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { SelectAndConfirm } from "../SelectAndConfirm";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -22,7 +23,6 @@ interface Props {
     confirm: { (interaction: Interaction): void };
     cancelFunction: { (): void }
 }
-
 
 export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFunction }: Props) => {
 
@@ -96,7 +96,10 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                 <DialogTitle>Edit Interactions: {dialogTitle()}</DialogTitle>
                 <DialogContent>
                     <EditorBox title="Command">
-                        <Stack direction={'row'} alignItems={'center'} spacing={2} padding={1}>
+                        <Stack direction={'row'}
+                            alignItems={'center'} spacing={2}
+                            padding={1}
+                        >
                             <SelectInput
                                 label="VERB"
                                 optional
@@ -126,7 +129,7 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
 
                     <EditorBox title="Conditions">
                         <Grid container>
-                            <Grid item padding={1}>
+                            <Grid item padding={1} borderRight={1}>
                                 <Stack spacing={2}>
                                     <SelectInput
                                         label="Room must be:"
@@ -148,48 +151,48 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                                 </Stack>
                             </Grid>
 
-                            <Grid item padding={1}>
-                                <fieldset>
-
-                                    <legend>Flags that must be false[{interaction.flagsThatMustBeFalse?.length || 0}]</legend>
-                                    <ArrayControl noMoveButtons
-                                        list={interaction.flagsThatMustBeFalse || []}
-                                        describeItem={(item, index) => (
-                                            <span key={index}>{item}</span>
-                                        )}
-                                        mutateList={value => setInteractionProperty('flagsThatMustBeFalse', value)}
-                                    />
-                                    <SelectAndConfirmInput
-                                        label="ADD"
-                                        items={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeFalse?.includes(id))}
-                                        onSelect={flagId => {
-                                            if (flagId.length === 0) { return }
-                                            const newList = [...interaction.flagsThatMustBeFalse || [], flagId]
-                                            setInteractionProperty('flagsThatMustBeFalse', newList)
-                                        }}
-                                    />
-                                </fieldset>
+                            <Grid item padding={1} borderRight={1}>
+                                <Typography variant="caption">
+                                    Flags that must be false[{interaction.flagsThatMustBeFalse?.length || 0}]
+                                </Typography>
+                                <SelectAndConfirm
+                                    boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
+                                    options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeFalse?.includes(id))}
+                                    inputHandler={flagId => {
+                                        if (flagId.length === 0) { return }
+                                        const newList = [...interaction.flagsThatMustBeFalse || [], flagId]
+                                        setInteractionProperty('flagsThatMustBeFalse', newList)
+                                    }}
+                                />
+                                <ArrayControl noMoveButtons
+                                    list={interaction.flagsThatMustBeFalse || []}
+                                    describeItem={(item, index) => (
+                                        <Typography key={index}>{item}</Typography>
+                                    )}
+                                    mutateList={value => setInteractionProperty('flagsThatMustBeFalse', value)}
+                                />
                             </Grid>
+
                             <Grid item padding={1}>
-                                <fieldset>
-                                    <legend>Flags that must be true[{interaction.flagsThatMustBeTrue?.length || 0}]</legend>
-                                    <ArrayControl noMoveButtons
-                                        list={interaction.flagsThatMustBeTrue || []}
-                                        describeItem={(item, index) => (
-                                            <span key={index}>{item}</span>
-                                        )}
-                                        mutateList={value => setInteractionProperty('flagsThatMustBeTrue', value)}
-                                    />
-                                    <SelectAndConfirmInput
-                                        label="ADD"
-                                        items={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeTrue?.includes(id))}
-                                        onSelect={flagId => {
-                                            if (flagId.length === 0) { return }
-                                            const newList = [...interaction.flagsThatMustBeTrue || [], flagId]
-                                            setInteractionProperty('flagsThatMustBeTrue', newList)
-                                        }}
-                                    />
-                                </fieldset>
+                                <Typography variant="caption">
+                                    Flags that must be true[{interaction.flagsThatMustBeTrue?.length || 0}]
+                                </Typography>
+                                <SelectAndConfirm
+                                    boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
+                                    options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeTrue?.includes(id))}
+                                    inputHandler={flagId => {
+                                        if (flagId.length === 0) { return }
+                                        const newList = [...interaction.flagsThatMustBeTrue || [], flagId]
+                                        setInteractionProperty('flagsThatMustBeTrue', newList)
+                                    }}
+                                />
+                                <ArrayControl noMoveButtons
+                                    list={interaction.flagsThatMustBeTrue || []}
+                                    describeItem={(item, index) => (
+                                        <Typography key={index}>{item}</Typography>
+                                    )}
+                                    mutateList={value => setInteractionProperty('flagsThatMustBeTrue', value)}
+                                />
                             </Grid>
                         </Grid>
                     </EditorBox>
