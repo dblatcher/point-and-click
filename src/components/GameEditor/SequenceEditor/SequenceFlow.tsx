@@ -31,8 +31,10 @@ type AddActorParams = {
     stage: number
 }
 
-export const SequenceFlow = ({ sequence, changeStages, changeConsequence, changeConsequenceList, changeOrder, changeOrderList }: Props) => {
+const getConsequenceFromParams = (consequenceParams: ConsequenceDialogParams | undefined, sequence: Sequence): Consequence | undefined =>
+    consequenceParams ? sequence.stages[consequenceParams.stage].immediateConsequences?.[consequenceParams.index] : undefined
 
+export const SequenceFlow = ({ sequence, changeStages, changeConsequence, changeConsequenceList, changeOrder, changeOrderList }: Props) => {
     const [consequenceParams, setConsequenceParams] = useState<ConsequenceDialogParams | undefined>(undefined)
     const [orderParams, setOrderParams] = useState<OrderDialogParams | undefined>(undefined)
     const [addActorParams, setAddActorParams] = useState<AddActorParams | undefined>(undefined)
@@ -41,15 +43,14 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
         if (!stage.actorOrders) {
             return list
         }
-
         const newKeys = Object.keys(stage.actorOrders).filter(key => !list.includes(key))
         return [...list, ...newKeys]
     }, [])
 
     const addActor = (actorId: string, stageIndex: number) => { changeOrderList([], stageIndex, actorId) }
 
-    const removeActorFromAll = (actorId:string) => {
-        const stagesCopy = sequence.stages.map(stage => ({...stage}))
+    const removeActorFromAll = (actorId: string) => {
+        const stagesCopy = sequence.stages.map(stage => ({ ...stage }))
         stagesCopy.forEach(stage => {
             if (stage.actorOrders?.[actorId]) {
                 delete stage.actorOrders[actorId]
@@ -57,6 +58,8 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
         })
         changeStages(stagesCopy)
     }
+
+    const consequenceToEdit = getConsequenceFromParams(consequenceParams, sequence)
 
     return (
         <>
@@ -81,12 +84,12 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
                 deleteText={`REMOVE STAGE`}
             />
 
-
-            {consequenceParams && (
+            {(consequenceParams && consequenceToEdit) && (
                 <ConsequenceDialog
-                    sequenceId={sequence.id}
-                    {...consequenceParams}
-                    changeConsequence={changeConsequence}
+                    consequence={consequenceToEdit}
+                    handleConsequenceUpdate={(updatedConsequence) => {
+                        changeConsequence(updatedConsequence, consequenceParams.stage, consequenceParams.index)
+                    }}
                     close={() => { setConsequenceParams(undefined) }}
                 />
             )}

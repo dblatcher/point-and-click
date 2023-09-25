@@ -1,24 +1,15 @@
-import { useGameDesign } from "@/context/game-design-context";
 import { Consequence } from "@/definitions";
-import { findById } from "@/lib/util";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 
 interface Props {
-    sequenceId: string
-    stage: number
-    index: number
-    changeConsequence: { (consequence: Consequence, stageIndex: number, consequenceIndex: number): void }
+    consequence: Consequence
+    handleConsequenceUpdate: { (consequence: Consequence): void }
     close: { (): void }
 }
 
 
-
-export const ConsequenceDialog = ({ sequenceId, stage, index, close, changeConsequence }: Props) => {
-    const { gameDesign } = useGameDesign()
-    const sequence = findById(sequenceId, gameDesign.sequences)
-    const consequence = sequence?.stages[stage].immediateConsequences?.[index]
-
+export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence }: Props) => {
     return (
         <Dialog open={!!consequence} onClose={close}>
             <DialogTitle>edit consequence</DialogTitle>
@@ -27,9 +18,7 @@ export const ConsequenceDialog = ({ sequenceId, stage, index, close, changeConse
                     <ConsequenceForm
                         consequence={consequence}
                         immediateOnly
-                        update={(consequence) => {
-                            changeConsequence(consequence, stage, index)
-                        }}
+                        update={handleConsequenceUpdate}
                     />
                 )}
             </DialogContent>
