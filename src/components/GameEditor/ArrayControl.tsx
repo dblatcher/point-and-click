@@ -119,7 +119,7 @@ export const ArrayControl = <T,>({
     }
 
     return (
-        <Stack sx={{ paddingY: 2 }}>
+        <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }}>
             {list.map((item, index) => (
                 <Fragment key={index}>
                     {(!!createItem && createButton !== 'END') && (
@@ -130,8 +130,8 @@ export const ArrayControl = <T,>({
                             justifyContent={'space-between'}
                             alignItems={'center'}
                             direction={'row'}
-                            spacing={1} 
-                            minHeight={72}
+                            spacing={1}
+                            minHeight={noMoveButtons ? undefined : 72}
                         >
                             {!noMoveButtons && (
                                 <ButtonGroup orientation="vertical" component={'aside'}>

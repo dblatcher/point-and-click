@@ -7,7 +7,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Box, Button } from "@mui/material";
 import { Component } from "react";
 import { EditorHeading } from "../EditorHeading";
-import { InteractionForm } from "./InteractionForm";
+import { InteractionDialog } from "./InteractionDialog";
 import { InteractionTableRow } from "./InteractionTableRow";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import styles from './styles.module.css';
@@ -200,7 +200,7 @@ export class InteractionEditor extends Component<Props, State> {
                 </Box>
 
                 {interactionUnderConstruction &&
-                    <InteractionForm key={edittedIndex}
+                    <InteractionDialog key={edittedIndex}
                         confirm={this.saveInteraction}
                         gameDesign={this.props.gameDesign}
                         initialState={interactionUnderConstruction}
