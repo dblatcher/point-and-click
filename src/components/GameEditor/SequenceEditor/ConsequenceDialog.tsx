@@ -15,7 +15,6 @@ interface Props {
 
 
 export const ConsequenceDialog = ({ sequenceId, stage, index, close, changeConsequence }: Props) => {
-
     const { gameDesign } = useGameDesign()
     const sequence = findById(sequenceId, gameDesign.sequences)
     const consequence = sequence?.stages[stage].immediateConsequences?.[index]
@@ -26,7 +25,6 @@ export const ConsequenceDialog = ({ sequenceId, stage, index, close, changeConse
             <DialogContent>
                 {consequence && (
                     <ConsequenceForm
-                        gameDesign={gameDesign}
                         consequence={consequence}
                         immediateOnly
                         update={(consequence) => {

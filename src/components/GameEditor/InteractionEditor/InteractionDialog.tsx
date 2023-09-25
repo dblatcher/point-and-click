@@ -207,7 +207,7 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                                 <ConsequenceForm
                                     consequence={consequence as AnyConsequence}
                                     update={(consequence) => { updateConsequence(consequence, index) }}
-                                    gameDesign={gameDesign} />
+                                />
                             )}
                             mutateList={newConsequences => {
                                 interaction.consequences = newConsequences

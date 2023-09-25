@@ -12,17 +12,16 @@ import { getStatusSuggestions } from "@/lib/animationFunctions";
 import soundService from "@/services/soundService";
 import { getModification, SchemaForm } from "@/components/SchemaForm";
 import editorStyles from '../editorStyles.module.css';
+import { useGameDesign } from "@/context/game-design-context";
 
 interface Props {
     consequence: AnyConsequence;
-    gameDesign: GameDesign;
     update: { (consequence: Consequence): void };
     immediateOnly?: boolean;
 }
 
 
 const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, branchId: string | undefined, gameDesign: GameDesign) => {
-
     const conversation = findById(conversationId, gameDesign.conversations)
     const branch = conversation && branchId ? conversation.branches[branchId] : undefined;
     const branchIdList = Object.keys(conversation?.branches || {})
@@ -33,7 +32,8 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
     return { branchIdList, choiceRefList }
 }
 
-export const ConsequenceForm: FunctionComponent<Props> = ({ consequence, gameDesign, update, immediateOnly }: Props) => {
+export const ConsequenceForm: FunctionComponent<Props> = ({ consequence, update, immediateOnly }: Props) => {
+    const { gameDesign } = useGameDesign()
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
     const { ids: targetIdsWithoutItems, descriptions: targetDescriptionsWithoutItems } = getTargetLists(gameDesign, true)
 
