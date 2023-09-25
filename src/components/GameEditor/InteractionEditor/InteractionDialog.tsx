@@ -197,8 +197,6 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                         </Grid>
                     </EditorBox>
 
-
-
                     <EditorBox title="Consequences">
                         <ArrayControl
                             list={consequences}
@@ -220,8 +218,8 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                             deleteText={`REMOVE CONSEQUENCE`}
                         />
                     </EditorBox>
-
                 </DialogContent>
+
                 <DialogActions>
                     <ButtonWithConfirm label="Cancel Changes" confirmationText="really cancel changes?"
                         onClick={cancelFunction}
