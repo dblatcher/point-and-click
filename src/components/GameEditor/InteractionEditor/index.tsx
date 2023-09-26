@@ -187,7 +187,7 @@ export class InteractionEditor extends Component<Props, State> {
                 </TableContainer>
 
 
-                <Box display='flex' justifyContent='flex-end' paddingTop={2}>
+                <Box display='flex' justifyContent='flex-end' paddingY={2}>
                     <Button
                         size="large"
                         onClick={() =>
