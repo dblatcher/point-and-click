@@ -59,7 +59,7 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
                     <Typography>{falseFlagText}</Typography>
                 </Tooltip>
             </TableCell>
-            <TableCell>
+            <TableCell padding="none">
                 <IconButton
                     onClick={openEditor}>
                     <EditIcon color="primary" />
