@@ -1,11 +1,10 @@
 import { Interaction } from "@/definitions";
-import { IconButton, Tooltip, Typography } from "@mui/material";
+import { IconButton, Tooltip, Typography, TableCell, TableRow } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ClearIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
-import styles from './styles.module.css';
 
 interface Props {
     index: number;
@@ -31,60 +30,57 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
     const consequenceTitle = consequences.map(_ => _.type).join(", ")
 
     return (
-        <tr key={index}>
-            <td>
+        <TableRow key={index}>
+            <TableCell>
                 <Typography>{verbId}</Typography>
-            </td>
-            <td>
-                <Typography>{targetId}</Typography>
-                {targetStatus && <Typography>({targetStatus})</Typography>}
-            </td>
-            <td>
+            </TableCell>
+            <TableCell>
+                <Typography component={'span'}>{targetId}</Typography>
+                {targetStatus && <Typography variant="overline" component={'span'}>({targetStatus})</Typography>}
+            </TableCell>
+            <TableCell>
                 <Typography>{itemId}</Typography>
-            </td>
-            <td>
+            </TableCell>
+            <TableCell>
                 <Typography>{roomId}</Typography>
-            </td>
-            <td className={styles.centered} >
+            </TableCell>
+            <TableCell align='center' >
                 <Tooltip title={consequenceTitle}>
                     <Typography>{consequenceText}</Typography>
                 </Tooltip>
-            </td>
-            <td className={styles.centered} >
+            </TableCell>
+            <TableCell align='center' >
                 <Tooltip title={trueFlagTitle}>
                     <Typography>{trueFlagText}</Typography>
                 </Tooltip>
-            </td>
-            <td className={styles.centered}>
+            </TableCell>
+            <TableCell align='center'>
                 <Tooltip title={falseFlagTitle}>
                     <Typography>{falseFlagText}</Typography>
                 </Tooltip>
-            </td>
-            <td>
+            </TableCell>
+            <TableCell>
                 <IconButton
                     onClick={openEditor}>
                     <EditIcon color="primary" />
                 </IconButton>
-            </td>
-            <td>
+
                 <IconButton onClick={() => changeOrder(index, 'up')}>
                     <ArrowUpwardIcon />
                 </IconButton>
-            </td>
-            <td>
+
                 <IconButton onClick={() => changeOrder(index, 'down')}>
                     <ArrowDownwardIcon />
                 </IconButton>
-            </td>
-            <td>
+
                 <ButtonWithConfirm
                     useIconButton={true}
                     icon={<ClearIcon />}
                     label="delete this interaction"
                     onClick={() => { deleteInteraction(index) }}
                 />
-            </td>
-        </tr>
+            </TableCell>
+        </TableRow >
     )
 
 }

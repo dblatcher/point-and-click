@@ -4,13 +4,13 @@ import { GameDesign, Interaction } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import AddIcon from "@mui/icons-material/Add";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Paper, Table, TableContainer, TableBody, TableHead, TableRow, TableCell, Typography } from "@mui/material";
 import { Component } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { InteractionDialog } from "./InteractionDialog";
 import { InteractionTableRow } from "./InteractionTableRow";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
-import styles from './styles.module.css';
+
 
 interface Props {
     gameDesign: GameDesign;
@@ -114,75 +114,78 @@ export class InteractionEditor extends Component<Props, State> {
         return (
             <article>
                 <EditorHeading heading="Interactions" />
-                <table className={styles.interactionTable}>
-                    <caption>
-                        <span>{filteredInteractions.length}/{interactions.length} interactions</span>
-                    </caption>
-                    <thead>
-                        <tr>
-                            <th>verb</th>
-                            <th>target</th>
-                            <th>item</th>
-                            <th>room</th>
-                            <th rowSpan={2}>consequences</th>
-                            <th rowSpan={2} style={{ width: '4em' }}>must be true</th>
-                            <th rowSpan={2} style={{ width: '4em' }}>must be false</th>
-                        </tr>
-                        <tr>
-                            <th>
-                                <Box minWidth={80}>
-                                    <SelectInput
-                                        optional
-                                        inputHandler={verbFilter => { this.setState({ verbFilter }) }}
-                                        value={verbFilter}
-                                        options={listIds(verbs)} />
-                                </Box>
-                            </th>
-                            <th>
-                                <Box minWidth={80}>
-                                    <SelectInput
-                                        optional
-                                        inputHandler={targetFilter => { this.setState({ targetFilter }) }}
-                                        value={targetFilter}
-                                        options={filteredTargets.ids}
-                                        descriptions={filteredTargets.descriptions}
-                                    />
-                                </Box>
-                            </th>
-                            <th>
-                                <Box minWidth={80}>
-                                    <SelectInput
-                                        optional
-                                        inputHandler={itemFilter => { this.setState({ itemFilter }) }}
-                                        value={itemFilter}
-                                        options={listIds(items)}
-                                        descriptions={getItemDescriptions(gameDesign)} />
-                                </Box>
-                            </th>
-                            <th>
-                                <Box minWidth={80}>
-                                    <SelectInput
-                                        optional
-                                        inputHandler={roomFilter => { this.setState({ roomFilter }) }}
-                                        value={roomFilter}
-                                        options={listIds(rooms)} />
-                                </Box>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {interactions.map((interaction, index) => {
-                            if (!filteredInteractions.includes(interaction)) { return <></> }
-                            return (<InteractionTableRow key={index}
-                                interaction={interaction}
-                                index={index}
-                                changeOrder={this.changeOrder}
-                                deleteInteraction={this.props.deleteInteraction}
-                                openEditor={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}
-                            />)
-                        })}
-                    </tbody>
-                </table>
+                <TableContainer component={Paper}>
+                    <Table size="small" padding="normal" sx={{captionSide:'top'}}>
+                        <caption>
+                            <Typography>Showing {filteredInteractions.length}/{interactions.length} interactions</Typography>
+                        </caption>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>verb</TableCell>
+                                <TableCell>target</TableCell>
+                                <TableCell>item</TableCell>
+                                <TableCell>room</TableCell>
+                                <TableCell rowSpan={2}>consequences</TableCell>
+                                <TableCell rowSpan={2} style={{ width: '4em' }}>must be true</TableCell>
+                                <TableCell rowSpan={2} style={{ width: '4em' }}>must be false</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Box minWidth={80}>
+                                        <SelectInput
+                                            optional
+                                            inputHandler={verbFilter => { this.setState({ verbFilter }) }}
+                                            value={verbFilter}
+                                            options={listIds(verbs)} />
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Box minWidth={80}>
+                                        <SelectInput
+                                            optional
+                                            inputHandler={targetFilter => { this.setState({ targetFilter }) }}
+                                            value={targetFilter}
+                                            options={filteredTargets.ids}
+                                            descriptions={filteredTargets.descriptions}
+                                        />
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Box minWidth={80}>
+                                        <SelectInput
+                                            optional
+                                            inputHandler={itemFilter => { this.setState({ itemFilter }) }}
+                                            value={itemFilter}
+                                            options={listIds(items)}
+                                            descriptions={getItemDescriptions(gameDesign)} />
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Box minWidth={80}>
+                                        <SelectInput
+                                            optional
+                                            inputHandler={roomFilter => { this.setState({ roomFilter }) }}
+                                            value={roomFilter}
+                                            options={listIds(rooms)} />
+                                    </Box>
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {interactions.map((interaction, index) => {
+                                if (!filteredInteractions.includes(interaction)) { return <></> }
+                                return (<InteractionTableRow key={index}
+                                    interaction={interaction}
+                                    index={index}
+                                    changeOrder={this.changeOrder}
+                                    deleteInteraction={this.props.deleteInteraction}
+                                    openEditor={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}
+                                />)
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
 
                 <Box display='flex' justifyContent='flex-end' paddingTop={2}>
                     <Button
