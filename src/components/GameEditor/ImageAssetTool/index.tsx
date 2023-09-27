@@ -17,7 +17,7 @@ import imageService, {
 
 } from "@/services/imageService";
 import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
-import { SpriteSheetPreview } from "../SpriteSheetPreview";
+import { SpriteSheetPreview } from "./SpriteSheetPreview";
 import { EditorHeading } from "../EditorHeading";
 
 

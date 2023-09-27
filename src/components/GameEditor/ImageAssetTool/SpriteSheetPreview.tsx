@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useRef, MouseEventHandler } from "react";
 import { ImageAsset } from "@/services/imageService";
-import editorStyles from './editorStyles.module.css';
+import editorStyles from '../editorStyles.module.css';
 
 interface Props {
     imageAsset: ImageAsset;
