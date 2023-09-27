@@ -128,10 +128,11 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                     </Stack>
                 </EditorBox>
 
-                <EditorBox title="Conditions">
-                    <Grid container>
-                        <Grid item padding={1} borderRight={1}>
-                            <Stack spacing={2}>
+                <Grid container>
+                    <Grid item xs={6}>
+                        <EditorBox title="Conditions">
+
+                            <Stack spacing={2} paddingBottom={2}>
                                 <SelectInput
                                     label="Room must be:"
                                     optional
@@ -150,83 +151,84 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                                     value={!!interaction.mustReachFirst}
                                 />
                             </Stack>
-                        </Grid>
 
-                        <Grid item padding={1} borderRight={1}>
-                            <Typography variant="caption">
-                                Flags that must be false[{interaction.flagsThatMustBeFalse?.length || 0}]
-                            </Typography>
-                            <SelectAndConfirm
-                                boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
-                                options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeFalse?.includes(id))}
-                                inputHandler={flagId => {
-                                    if (flagId.length === 0) { return }
-                                    const newList = [...interaction.flagsThatMustBeFalse || [], flagId]
-                                    setInteractionProperty('flagsThatMustBeFalse', newList)
-                                }}
-                            />
-                            <ArrayControl noMoveButtons buttonSize="small"
-                                list={interaction.flagsThatMustBeFalse || []}
-                                describeItem={(item, index) => (
-                                    <Typography key={index}>{item}</Typography>
-                                )}
-                                mutateList={value => setInteractionProperty('flagsThatMustBeFalse', value)}
-                            />
-                        </Grid>
-
-                        <Grid item padding={1}>
-                            <Typography variant="caption">
-                                Flags that must be true[{interaction.flagsThatMustBeTrue?.length || 0}]
-                            </Typography>
-                            <SelectAndConfirm
-                                boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
-                                options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeTrue?.includes(id))}
-                                inputHandler={flagId => {
-                                    if (flagId.length === 0) { return }
-                                    const newList = [...interaction.flagsThatMustBeTrue || [], flagId]
-                                    setInteractionProperty('flagsThatMustBeTrue', newList)
-                                }}
-                            />
-                            <ArrayControl noMoveButtons buttonSize="small"
-                                list={interaction.flagsThatMustBeTrue || []}
-                                describeItem={(item, index) => (
-                                    <Typography key={index}>{item}</Typography>
-                                )}
-                                mutateList={value => setInteractionProperty('flagsThatMustBeTrue', value)}
-                            />
-                        </Grid>
-                    </Grid>
-                </EditorBox>
-
-                <EditorBox title="Consequences">
-                    <ArrayControl
-                        list={consequences}
-                        createButton="END"
-                        noMoveButtons={true}
-                        describeItem={(consequence, index) => (
-                            <Box paddingBottom={1}>
-                                <ConsequenceCard
-                                    consequence={consequence}
-                                    handleEditButton={() => { setActiveConsequenceIndex(index) }}
+                            <Box paddingBottom={2}>
+                                <Typography variant="caption">
+                                    Flags that must be false[{interaction.flagsThatMustBeFalse?.length || 0}]
+                                </Typography>
+                                <SelectAndConfirm
+                                    boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
+                                    options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeFalse?.includes(id))}
+                                    inputHandler={flagId => {
+                                        if (flagId.length === 0) { return }
+                                        const newList = [...interaction.flagsThatMustBeFalse || [], flagId]
+                                        setInteractionProperty('flagsThatMustBeFalse', newList)
+                                    }}
+                                />
+                                <ArrayControl noMoveButtons buttonSize="small"
+                                    list={interaction.flagsThatMustBeFalse || []}
+                                    describeItem={(item, index) => (
+                                        <Typography key={index}>{item}</Typography>
+                                    )}
+                                    mutateList={value => setInteractionProperty('flagsThatMustBeFalse', value)}
                                 />
                             </Box>
+
+                            <Box paddingBottom={2}>
+                                <Typography variant="caption">
+                                    Flags that must be true[{interaction.flagsThatMustBeTrue?.length || 0}]
+                                </Typography>
+                                <SelectAndConfirm
+                                    boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
+                                    options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeTrue?.includes(id))}
+                                    inputHandler={flagId => {
+                                        if (flagId.length === 0) { return }
+                                        const newList = [...interaction.flagsThatMustBeTrue || [], flagId]
+                                        setInteractionProperty('flagsThatMustBeTrue', newList)
+                                    }}
+                                />
+                                <ArrayControl noMoveButtons buttonSize="small"
+                                    list={interaction.flagsThatMustBeTrue || []}
+                                    describeItem={(item, index) => (
+                                        <Typography key={index}>{item}</Typography>
+                                    )}
+                                    mutateList={value => setInteractionProperty('flagsThatMustBeTrue', value)}
+                                />
+                            </Box>
+                        </EditorBox>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <EditorBox title="Consequences">
+                            <ArrayControl
+                                list={consequences}
+                                createButton="END"
+                                noMoveButtons={true}
+                                describeItem={(consequence, index) => (
+                                    <Box paddingBottom={1}>
+                                        <ConsequenceCard
+                                            consequence={consequence}
+                                            handleEditButton={() => { setActiveConsequenceIndex(index) }}
+                                        />
+                                    </Box>
+                                )}
+                                mutateList={newConsequences => {
+                                    interaction.consequences = newConsequences
+                                    setInteraction(Object.assign({}, interaction))
+                                }}
+                                createItem={() => makeNewConsequence('order')}
+                                insertText={`ADD NEW CONSEQUENCE`}
+                                deleteText={`REMOVE CONSEQUENCE`}
+                            />
+                        </EditorBox>
+                        {activeConsequence && (
+                            <ConsequenceDialog close={() => { setActiveConsequenceIndex(undefined) }}
+                                consequence={activeConsequence}
+                                handleConsequenceUpdate={(consequence) => { updateConsequence(consequence, activeConsequenceIndex ?? 0) }}
+                            />
                         )}
-                        mutateList={newConsequences => {
-                            interaction.consequences = newConsequences
-                            setInteraction(Object.assign({}, interaction))
-                        }}
-                        createItem={() => makeNewConsequence('order')}
-                        insertText={`ADD NEW CONSEQUENCE`}
-                        deleteText={`REMOVE CONSEQUENCE`}
-                    />
-                </EditorBox>
-                {activeConsequence && (
-                    <ConsequenceDialog close={() => { setActiveConsequenceIndex(undefined) }}
-                        consequence={activeConsequence}
-                        handleConsequenceUpdate={(consequence) => { updateConsequence(consequence, activeConsequenceIndex ?? 0) }}
-                    />
-                )}
-            </DialogContent>
+                    </Grid>
+                </Grid>
+            </DialogContent >
 
             <DialogActions>
                 <ButtonWithConfirm label="Cancel Changes" confirmationText="really cancel changes?"
@@ -239,6 +241,6 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                     title={(!parseResult.success && parseResult.error.message) || ''}
                 >SAVE CHANGES</Button>
             </DialogActions>
-        </Dialog>
+        </Dialog >
     )
 }
