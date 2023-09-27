@@ -1,7 +1,7 @@
 
 import { FieldDef, FieldValue, SchemaForm, getModification } from "@/components/SchemaForm";
 import { ActOrder, MoveOrder, stepSchama } from "@/definitions/Order";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Component } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { makeNewStep } from "../defaults";
@@ -63,6 +63,9 @@ export class OrderWithStepsForm extends Component<Props> {
 
         return (
             <>
+                <Box marginTop={2}>
+                    <Typography variant="caption" >Steps</Typography>
+                </Box>
                 {type === 'act' && (
                     <ArrayControl
                         list={steps}

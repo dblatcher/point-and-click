@@ -121,21 +121,21 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                 }}
             />
             {consequence.orders && (
-                <EditorBox title="orders" themePalette="secondary">
-                    <ArrayControl color="secondary"
-                        list={consequence.orders}
-                        describeItem={(order, index) =>
+                <ArrayControl color="secondary"
+                    list={consequence.orders}
+                    describeItem={(order, index) =>
+                        <EditorBox title={`${order.type} order`} themePalette="secondary">
                             <OrderForm
                                 animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
                                 targetIdOptions={targetIdsWithoutItems}
                                 targetIdDescriptions={targetDescriptionsWithoutItems}
                                 updateData={(newOrder) => { editOrder(newOrder, index) }}
                                 data={order} key={index} />
-                        }
-                        createItem={() => getDefaultOrder('say')}
-                        mutateList={newList => { updateProperty('orders', newList) }}
-                    />
-                </EditorBox>
+                        </EditorBox>
+                    }
+                    createItem={() => getDefaultOrder('say')}
+                    mutateList={newList => { updateProperty('orders', newList) }}
+                />
             )}
         </Box>
     )
