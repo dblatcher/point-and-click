@@ -1,19 +1,20 @@
-import { AnyConsequence, Consequence, GameDesign, Interaction } from "@/definitions";
+import { BooleanInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
+import { Consequence, GameDesign, Interaction } from "@/definitions";
 import { InteractionSchema } from "@/definitions/Interaction";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findTarget } from "@/lib/commandFunctions";
 import { listIds } from "@/lib/util";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { ButtonWithConfirm } from '../ButtonWithConfirm';
 import { EditorBox } from "../EditorBox";
-import { makeNewConsequence } from "../defaults";
-import { StringInput, BooleanInput, SelectInput } from "@/components/SchemaForm/inputs";
-import { ConsequenceForm } from "./ConsequenceForm";
-import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { SelectAndConfirm } from "../SelectAndConfirm";
+import { ConsequenceCard } from "../SequenceEditor/ConsequenceCard";
+import { ConsequenceDialog } from "../SequenceEditor/ConsequenceDialog";
+import { makeNewConsequence } from "../defaults";
+import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -25,7 +26,10 @@ interface Props {
 export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFunction }: Props) => {
 
     const [interaction, setInteraction] = useState<Partial<Interaction>>(Object.assign({ consequences: [] }, cloneData(initialState)))
+    const [activeConsequenceIndex, setActiveConsequenceIndex] = useState<number | undefined>(undefined)
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
+
+    const activeConsequence = typeof activeConsequenceIndex === 'number' ? interaction.consequences?.[activeConsequenceIndex] : undefined
 
     const setInteractionProperty = (property: keyof Interaction, value: unknown) => {
         const modification: Partial<Interaction> = {}
@@ -197,14 +201,15 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                 <EditorBox title="Consequences">
                     <ArrayControl
                         list={consequences}
-                        frame="STRIPED"
                         createButton="END"
                         noMoveButtons={true}
                         describeItem={(consequence, index) => (
-                            <ConsequenceForm
-                                consequence={consequence as AnyConsequence}
-                                update={(consequence) => { updateConsequence(consequence, index) }}
-                            />
+                            <Box paddingBottom={1}>
+                                <ConsequenceCard
+                                    consequence={consequence}
+                                    handleEditButton={() => { setActiveConsequenceIndex(index) }}
+                                />
+                            </Box>
                         )}
                         mutateList={newConsequences => {
                             interaction.consequences = newConsequences
@@ -215,6 +220,12 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                         deleteText={`REMOVE CONSEQUENCE`}
                     />
                 </EditorBox>
+                {activeConsequence && (
+                    <ConsequenceDialog close={() => { setActiveConsequenceIndex(undefined) }}
+                        consequence={activeConsequence}
+                        handleConsequenceUpdate={(consequence) => { updateConsequence(consequence, activeConsequenceIndex ?? 0) }}
+                    />
+                )}
             </DialogContent>
 
             <DialogActions>

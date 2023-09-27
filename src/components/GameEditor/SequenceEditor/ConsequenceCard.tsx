@@ -26,13 +26,13 @@ const getIcon = (consequence: Consequence): typeof ChatOutlinedIcon => {
             return PersonRemoveAlt1OutlinedIcon
         case "teleportActor":
             return TransferWithinAStationOutlinedIcon
+        case "order":
         case "ending":
         case "toggleZone":
         case "soundEffect":
         case "flag":
         case "conversationChoice":
         case "sequence":
-        case "order":
         case "changeStatus":
         default:
             return PriorityHighOutlinedIcon
@@ -40,6 +40,7 @@ const getIcon = (consequence: Consequence): typeof ChatOutlinedIcon => {
 }
 
 const UNSET = '[UNSET]'
+const PLAYER = '[PLAYER]'
 
 const getDescription = (consequence: Consequence): string => {
     switch (consequence.type) {
@@ -48,17 +49,18 @@ const getDescription = (consequence: Consequence): string => {
         case "changeRoom":
             return `room: ${consequence.roomId ?? UNSET} ${consequence.takePlayer ? '(player comes)' : ''}`
         case "inventory":
-            return `${consequence.addOrRemove} ${consequence.itemId} TO ${consequence.actorId ?? 'player'} `
+            return `${consequence.addOrRemove} ${consequence.itemId} TO ${consequence.actorId ?? PLAYER} `
         case "removeActor":
             return consequence.actorId ?? UNSET;
         case "teleportActor":
             return `${consequence.actorId || UNSET} TO ${consequence.roomId || UNSET}`
+        case "order":
+            return `${consequence.actorId ?? PLAYER}: ${consequence.orders.map(order => order.type).join('; ')}`
         case "ending":
         case "toggleZone":
         case "soundEffect":
         case "flag":
         case "conversationChoice":
-        case "order":
         case "sequence":
         case "changeStatus":
         default:
