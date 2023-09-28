@@ -86,6 +86,7 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
 
             {(consequenceParams && consequenceToEdit) && (
                 <ConsequenceDialog
+                    immediateOnly
                     consequence={consequenceToEdit}
                     handleConsequenceUpdate={(updatedConsequence) => {
                         changeConsequence(updatedConsequence, consequenceParams.stage, consequenceParams.index)

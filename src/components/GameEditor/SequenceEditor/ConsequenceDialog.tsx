@@ -6,10 +6,11 @@ interface Props {
     consequence: Consequence
     handleConsequenceUpdate: { (consequence: Consequence): void }
     close: { (): void }
+    immediateOnly?: boolean
 }
 
 
-export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence }: Props) => {
+export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence, immediateOnly }: Props) => {
     return (
         <Dialog open={!!consequence} onClose={close}>
             <DialogTitle>edit consequence</DialogTitle>
@@ -17,7 +18,7 @@ export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence 
                 {consequence && (
                     <ConsequenceForm
                         consequence={consequence}
-                        immediateOnly
+                        immediateOnly={immediateOnly}
                         update={handleConsequenceUpdate}
                     />
                 )}
