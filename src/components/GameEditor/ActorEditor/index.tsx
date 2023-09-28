@@ -244,12 +244,11 @@ export class ActorEditor extends Component<Props, State> {
                                 }}
                             />
 
-                            <div>
-                                <StringInput
-                                    type="color" label="dialogue color" value={state.dialogueColor || ''}
-                                    inputHandler={value => { changeValue('dialogueColor', value) }} />
-                                <span>{state.dialogueColor}</span>
-                            </div>
+                            <StringInput
+                                type="color" 
+                                label="dialogue color" 
+                                value={state.dialogueColor || ''}
+                                inputHandler={value => { changeValue('dialogueColor', value) }} />
                         </Box>
                     },
                     {

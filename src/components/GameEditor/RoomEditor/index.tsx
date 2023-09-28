@@ -416,12 +416,12 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         {frameWidth > width && (
                             <Alert severity="warning">frame width is bigger than room width</Alert>
                         )}
-                        <Box width={120}>
-                            <StringInput label="backdrop color" type="color"
-                                value={this.state.backgroundColor ?? ''}
-                                optional
-                                inputHandler={value => this.setStateWithAutosave({ backgroundColor: value })} />
-                        </Box>
+
+                        <StringInput label="backdrop color"
+                            type="color"
+                            value={this.state.backgroundColor ?? '#ffffff'}
+                            optional
+                            inputHandler={value => this.setStateWithAutosave({ backgroundColor: value })} />
                     </Container>
                 )
             },
