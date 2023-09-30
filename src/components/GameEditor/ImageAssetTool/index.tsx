@@ -1,24 +1,25 @@
-import { Component, createRef, RefObject } from "react";
+import { cloneData } from "@/lib/clone";
 import {
   fileToObjectUrl,
   makeDownloadFile,
   uploadFile,
 } from "@/lib/files";
-import { eventToString } from "@/lib/util";
-import { OptionalNumberInput, SelectInput, TextInput, Warning } from "../formControls";
-import { cloneData } from "@/lib/clone";
-import { ServiceItemSelector } from "../ServiceItemSelector";
+import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
 import { ServiceItem } from "@/services/Service";
-import editorStyles from "../editorStyles.module.css";
 import imageService, {
   ImageAsset,
   ImageAssetCategory,
   imageAssetCategories,
-
 } from "@/services/imageService";
-import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
-import { ImageAssetPreview } from "./ImageAssetPreview";
+import DownloadIcon from '@mui/icons-material/Download';
+import UploadIcon from "@mui/icons-material/Upload";
+import { Alert, Button, Grid, Stack } from "@mui/material";
+import { Component, RefObject, createRef } from "react";
+import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
+import { ServiceItemSelector } from "../ServiceItemSelector";
+import { ImageAssetForm } from "./ImageAssetForm";
+import { ImageAssetPreview } from "./ImageAssetPreview";
 
 
 type State = {
@@ -45,6 +46,7 @@ export class ImageAssetTool extends Component<{}, State> {
     this.saveToService = this.saveToService.bind(this);
     this.openFromService = this.openFromService.bind(this);
     this.zipImages = this.zipImages.bind(this);
+    this.changeValue = this.changeValue.bind(this);
 
     this.canvasRef = createRef();
     this.fileRef = createRef();
@@ -188,109 +190,54 @@ export class ImageAssetTool extends Component<{}, State> {
       asset
     } = this.state;
 
-    const {
-      id = "",
-      category = "",
-      rows, cols, widthScale, heightScale
-    } = asset
-
-    const saveButtonText = imageService.list().includes(id) ? `UPDATE ${id}` : `ADD NEW ASSET`
+    const isNewAsset = asset.id ? imageService.list().includes(asset.id) : true
 
     return (
       <article>
         <EditorHeading heading="Image asset tool" />
-        <div className={editorStyles.container}>
-          <section>
+        <EditorBox title="zip file" boxProps={{ marginBottom: 1 }}>
+          <Stack direction={'row'} spacing={1}>
+            <Button
+              variant="outlined"
+              startIcon={<DownloadIcon />}
+              onClick={this.zipImages}>
+              zip all image assets
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<UploadIcon />}
+              onClick={this.loadFromZipFile}>
+              load assets from zip file
+            </Button>
+            {uploadWarning && <Alert severity="error">{uploadWarning}</Alert>}
+          </Stack>
+        </EditorBox>
+
+        <Grid container spacing={1}>
+          <Grid item>
             <ServiceItemSelector
               legend="assets"
               service={imageService}
-              currentSelection={id}
+              currentSelection={asset.id}
               select={this.openFromService} />
+          </Grid>
 
-            <fieldset className={editorStyles.fieldset}>
-              <div className={editorStyles.row}>
-                <button onClick={this.zipImages}>zip all image assets</button>
-              </div>
-              <div className={editorStyles.row}>
-                <button onClick={this.loadFromZipFile}>
-                  load assets from zip file
-                </button>
-                {uploadWarning && <Warning>{uploadWarning}</Warning>}
-              </div>
-            </fieldset>
-          </section>
+          <Grid item>
+            <ImageAssetForm
+              imageAsset={asset}
+              changeValue={this.changeValue}
+              loadFile={this.loadFile}
+              isNewAsset={isNewAsset}
+              saveAssetChanges={this.saveToService}
+              saveWarning={saveWarning}
+            />
 
-          <section>
-            <fieldset className={editorStyles.fieldset}>
-              <legend>image properties</legend>
-
-              <div className={editorStyles.row}>
-                <button onClick={this.loadFile}>select image file</button>
-              </div>
-              <div className={editorStyles.row}>
-                <TextInput
-                  label="ID"
-                  value={id}
-                  onInput={(event) =>
-                    this.changeValue("id", eventToString(event))
-                  } />
-              </div>
-              <div className={editorStyles.row}>
-                <SelectInput
-                  onSelect={(value) => this.changeValue("category", value)}
-                  label="category"
-                  value={category}
-                  items={imageAssetCategories}
-                  haveEmptyOption={true} />
-              </div>
-
-
-              <div className={editorStyles.row}>
-                <OptionalNumberInput label="rows" value={rows} min={1}
-                  key={`${id}1`}
-                  inputHandler={
-                    value => { this.changeValue('rows', value) }
-                  }
-                />
-                <OptionalNumberInput label="cols" value={cols} min={1}
-                  key={`${id}2`}
-                  inputHandler={
-                    value => { this.changeValue('cols', value) }
-                  }
-                />
-              </div>
-              <div className={editorStyles.row}>
-                <OptionalNumberInput label="widthScale" value={widthScale} step={.1}
-                  key={`${id}3`}
-                  inputHandler={
-                    value => { this.changeValue('widthScale', value) }
-                  }
-                />
-                <OptionalNumberInput label="heightScale" value={heightScale} step={.1}
-                  key={`${id}4`}
-                  inputHandler={
-                    value => { this.changeValue('heightScale', value) }
-                  }
-                />
-              </div>
-
-
-            </fieldset>
-
-            <fieldset className={editorStyles.fieldset}>
-              <div className={editorStyles.row}>
-                <button onClick={this.saveToService}>{saveButtonText}</button>
-                {saveWarning && <Warning>{saveWarning}</Warning>}
-              </div>
-            </fieldset>
-
-            
             <ImageAssetPreview
               imageAsset={this.fullAsset}
               canvasScale={300} />
+          </Grid>
+        </Grid>
 
-          </section>
-        </div>
       </article>
     );
   }
