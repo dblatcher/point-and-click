@@ -34,7 +34,7 @@ type State = {
 
 export class ImageAssetTool extends Component<{}, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
-  fileRef: RefObject<File>;
+  file: File|null;
 
   constructor(props: ImageAssetTool["props"]) {
     super(props);
@@ -50,7 +50,7 @@ export class ImageAssetTool extends Component<{}, State> {
     this.changeValue = this.changeValue.bind(this);
 
     this.canvasRef = createRef();
-    this.fileRef = createRef();
+    this.file = null;
   }
 
   get fullAsset(): ImageAsset {
@@ -67,7 +67,7 @@ export class ImageAssetTool extends Component<{}, State> {
     if (!file) {
       return;
     }
-    this.fileRef.current = file
+    this.file = file
     const newUrl = fileToObjectUrl(file);
 
     if (this.state.fileObjectUrl && typeof window !== undefined) {
@@ -120,7 +120,7 @@ export class ImageAssetTool extends Component<{}, State> {
 
   saveToService() {
     const { asset } = this.state;
-    const { current: file } = this.fileRef
+    const { file } = this
 
     // create a new url as the one in state is revoked when
     // a new file is uploaded or a asset retrieved from the service.
@@ -174,7 +174,7 @@ export class ImageAssetTool extends Component<{}, State> {
 
   openFromService(asset: ServiceItem) {
     const assetCopy = cloneData(asset as ImageAsset);
-    this.fileRef.current = null
+    this.file = null
     if (this.state.fileObjectUrl && typeof window !== undefined) {
       window.URL.revokeObjectURL(this.state.fileObjectUrl);
     }
