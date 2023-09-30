@@ -1,5 +1,6 @@
 import { FunctionComponent, useLayoutEffect, useState } from "react";
 
+import { MouseEventHandler } from "react";
 import { RoomData, Order, ActorData } from "@/definitions"
 import { getScale } from "@/lib/getScale";
 import { Sprite } from "@/lib/Sprite";
@@ -126,7 +127,8 @@ export const ActorFigure: FunctionComponent<Props> = ({
                 animationName={animationName}
                 direction={direction}
                 frameIndex={frameIndex}
-                clickHandler={processClick}
+                // works - the Event definitions don't match, but stopPropagation is the only event method needed
+                clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
                 handleHover={processClick ? handleHover : undefined}
                 hoverData={data}
                 roomData={roomData}
