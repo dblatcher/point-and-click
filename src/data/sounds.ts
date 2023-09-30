@@ -1,4 +1,4 @@
-import type { SoundAsset } from "../src/services/soundService"
+import type { SoundAsset } from "@/services/soundService"
 
 export const soundAssets: SoundAsset[] = [
     {
