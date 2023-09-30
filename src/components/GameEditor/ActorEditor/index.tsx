@@ -131,7 +131,7 @@ export class ActorEditor extends Component<Props, State> {
                 break;
         }
         if (propery === 'id') {
-            return this.setState(modification)
+            return this.setState(modification as State)
         }
         this.setStateWithAutosave(modification)
     }

@@ -63,6 +63,8 @@ export const cellSize = 5
 const renderCells = false
 const TIMER_SPEED = 10
 
+type SetGameStateFn = {(state:GameState):GameState}
+
 export default class Game extends Component<GameProps, GameState> {
 
     constructor(props: GameProps) {
@@ -184,7 +186,7 @@ export default class Game extends Component<GameProps, GameState> {
 
     makeActorsAct() {
         if (this.state.sequenceRunning) {
-            return this.setState(continueSequence(this.state, this.props))
+            return this.setState(continueSequence(this.state, this.props) as GameState)
         }
 
         return this.setState(state => {
@@ -232,7 +234,7 @@ export default class Game extends Component<GameProps, GameState> {
         }
 
         this.setState(
-            handleCommand({ verb, target, item }, this.props)
+            handleCommand({ verb, target, item }, this.props) as SetGameStateFn
         )
     }
 
@@ -243,7 +245,7 @@ export default class Game extends Component<GameProps, GameState> {
 
     handleConversationClick(choice: ConversationChoice) {
         if (!this.isActive) { return }
-        this.setState(handleConversationChoice(choice, this.props.sequences))
+        this.setState(handleConversationChoice(choice, this.props.sequences) as SetGameStateFn)
     }
 
     handleRoomClick(x: number, y: number) {
@@ -253,7 +255,7 @@ export default class Game extends Component<GameProps, GameState> {
         const { player, currentRoom } = this
         if (!player || !currentRoom) { return }
         const pointClicked = locateClickInWorld(x, y, this.state.viewAngle, currentRoom)
-        this.setState(issueMoveOrder(pointClicked, player.id, false, false))
+        this.setState(issueMoveOrder(pointClicked, player.id, false, false) as SetGameStateFn)
     }
 
     handleHover(target: CommandTarget, event: 'enter' | 'leave') {

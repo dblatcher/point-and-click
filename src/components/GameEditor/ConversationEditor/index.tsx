@@ -76,10 +76,10 @@ export class ConversationEditor extends Component<Props, State> {
         const { options, data, updateData, conversations } = this.props
 
         if (!options.autoSave) {
-            return this.setState(input, callback)
+            return this.setState(input as State, callback)
         }
 
-        return this.setState(input, () => {
+        return this.setState(input as State, () => {
             if (data && listIds(conversations).includes(this.state.id)) {
                 updateData(this.currentData)
             }
@@ -105,7 +105,7 @@ export class ConversationEditor extends Component<Props, State> {
                 break;
         }
         if (propery === 'id') {
-            return this.setState(modification)
+            return this.setState(modification as State)
         }
         this.setStateWithAutosave(modification)
     }

@@ -30,10 +30,10 @@ export function higherLevelSetStateWithAutosave<
         const { options, data, updateData, } = component.props
 
         if (!options.autoSave) {
-            return component.setState(input, callback)
+            return component.setState(input as S, callback)
         }
 
-        return component.setState(input, () => {
+        return component.setState(input as S, () => {
             const isExistingId = component.existingIds.includes(component.state.id)
             if (data && isExistingId) {
                 updateData(component.currentData)
@@ -45,9 +45,3 @@ export function higherLevelSetStateWithAutosave<
     }
 }
 
-export const icons = {
-    UP: '🔼',
-    DOWN: '🔽',
-    INSERT: '➕',
-    DELETE: '❌',
-}
