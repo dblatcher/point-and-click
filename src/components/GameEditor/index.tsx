@@ -1,41 +1,36 @@
-import { Component } from "react";
-
-import { TreeMenu, Folder, Entry } from "./TreeMenu";
-import { Overview } from "./Overview";
-import { RoomEditor } from "./RoomEditor";
-import { SpriteEditor } from "./SpriteEditor";
 import { TabSet } from "@/components/GameEditor/TabSet";
-import { ActorEditor } from "./ActorEditor";
-import { ImageAssetTool } from "./ImageAssetTool";
-import { ItemEditor } from "./ItemEditor";
-import { InteractionEditor } from "./InteractionEditor";
-import { ConversationEditor } from "./ConversationEditor";
-import { SequenceEditor } from "./SequenceEditor";
-import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
-import { SoundAssetTool } from "./SoundAssetTool";
-import { EndingEditor } from "./EndingEditor";
-import { VerbEditor } from "./VerbEditor";
-import Game from "@/components/game";
-
-import { defaultVerbs1, getBlankRoom } from "./defaults";
-
-import { prebuiltGameDesign } from '@/data/fullGame';
-import { listIds, findById, findIndexById } from "@/lib/util";
-import { cloneData } from "@/lib/clone";
-import { GameDesign, GameDataItem, Interaction, Verb } from "@/definitions";
-import { FlagMap } from "@/definitions/Flag";
-
-import { populateServicesForPreBuiltGame } from "@/services/populateServices";
-import imageService from "@/services/imageService";
-
-import { VerbMenuEditor } from "./VerbMenuEditor";
-import { Container, Stack, Box, Typography, Divider } from "@mui/material";
-import { OptionsMenu } from "./OptionsMenu";
-import { Sprite } from "@/lib/Sprite";
 import { GameDesignProvider } from "@/context/game-design-context";
 import { SpritesProvider } from "@/context/sprite-context";
+import { prebuiltGameDesign } from '@/data/fullGame';
+import { GameDataItem, GameDesign, Interaction, Verb } from "@/definitions";
+import { FlagMap } from "@/definitions/Flag";
+import { Sprite } from "@/lib/Sprite";
+import { cloneData } from "@/lib/clone";
+import { findById, findIndexById, listIds } from "@/lib/util";
+import imageService from "@/services/imageService";
+import { populateServicesForPreBuiltGame } from "@/services/populateServices";
+import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
+import { Box, Container, Divider, IconButton, Stack, Typography } from "@mui/material";
+import { Component } from "react";
+import { ActorEditor } from "./ActorEditor";
+import { ConversationEditor } from "./ConversationEditor";
+import { EndingEditor } from "./EndingEditor";
+import { ImageAssetTool } from "./ImageAssetTool";
+import { InteractionEditor } from "./InteractionEditor";
+import { ItemEditor } from "./ItemEditor";
+import { OptionsMenu } from "./OptionsMenu";
+import { Overview } from "./Overview";
+import { RoomEditor } from "./RoomEditor";
 import { testSprite } from "./RoomEditor/testSprite";
-
+import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
+import { SequenceEditor } from "./SequenceEditor";
+import { SoundAssetTool } from "./SoundAssetTool";
+import { SpriteEditor } from "./SpriteEditor";
+import { TestGameDialog } from "./TestGameDialog";
+import { Entry, Folder, TreeMenu } from "./TreeMenu";
+import { VerbEditor } from "./VerbEditor";
+import { VerbMenuEditor } from "./VerbMenuEditor";
+import { defaultVerbs1, getBlankRoom } from "./defaults";
 
 export type EditorOptions = {
     autoSave: boolean;
@@ -59,6 +54,7 @@ type State = {
     options: EditorOptions;
     history: { gameDesign: GameDesign; label: string }[];
     undoTime: number;
+    gameTestDialogOpen: boolean;
 };
 
 export type Props = {
@@ -78,7 +74,6 @@ const tabs: string[] = [
     'verbs',
     'images',
     'sounds',
-    'test',
 ]
 
 const defaultRoomId = 'ROOM_1' as const;
@@ -129,6 +124,7 @@ export default class GameEditor extends Component<Props, State>{
             },
             history: [],
             undoTime: 0,
+            gameTestDialogOpen: false,
         }
 
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
@@ -322,7 +318,6 @@ export default class GameEditor extends Component<Props, State>{
             makeFolder('verbs', gameDesign.verbs, gameItemIds.verbs),
             makeFolder('images'),
             makeFolder('sounds'),
-            makeFolder('test'),
         ]
 
         const sprites = [testSprite, ...gameDesign.sprites.map(data => new Sprite(data))]
@@ -363,6 +358,12 @@ export default class GameEditor extends Component<Props, State>{
                                         undo={this.undo}
                                     />
                                     <OptionsMenu options={this.state.options} setOptions={options => { this.setState({ options }) }} />
+
+                                    <IconButton
+                                        onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
+                                    >
+                                        <PlayCircleFilledOutlinedIcon />
+                                    </IconButton>
                                 </Stack>
 
                                 <Typography variant="h2" noWrap gutterBottom sx={{ fontSize: '175%', paddingTop: 1, flexShrink: 0 }}>
@@ -376,7 +377,6 @@ export default class GameEditor extends Component<Props, State>{
                                             return {
                                                 tabOpen: folderIndex,
                                                 gameItemIds: {},
-                                                resetTimeStamp: folderId == 'test' ? Date.now() : state.resetTimeStamp
                                             }
                                         })
                                     }}
@@ -501,23 +501,17 @@ export default class GameEditor extends Component<Props, State>{
                                         },
                                         { label: 'Image uploader', content: <ImageAssetTool /> },
                                         { label: 'Sound uploader', content: <SoundAssetTool /> },
-                                        {
-                                            label: 'Test', content: (
-                                                <div>
-                                                    <button onClick={() => { this.setState({ resetTimeStamp: Date.now() }) }} >reset game test</button>
-                                                    <hr />
-                                                    <Game
-                                                        key={this.state.resetTimeStamp} startPaused
-                                                        {...gameDesign} actorOrders={{}} gameNotBegun
-                                                        showDebugLog={true}
-                                                        _sprites={sprites}
-                                                    />
-                                                </div>
-                                            )
-                                        }
                                     ]} />
                             </Box>
                         </Stack>
+
+                        <TestGameDialog
+                            isOpen={this.state.gameTestDialogOpen}
+                            close={() => { this.setState({ gameTestDialogOpen: false }) }}
+                            reset={() => { this.setState({ resetTimeStamp: Date.now() }) }}
+                            resetTimeStamp={this.state.resetTimeStamp}
+                        />
+                    
                     </Container>
                 </SpritesProvider>
             </GameDesignProvider>
