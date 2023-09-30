@@ -3,6 +3,7 @@ import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { ImageAsset } from "@/services/imageService";
 import { Box, Typography } from "@mui/material";
 import { EditorBox } from "../EditorBox";
+import HideImageOutlinedIcon from '@mui/icons-material/HideImageOutlined';
 
 interface Props {
     imageAsset: ImageAsset;
@@ -59,16 +60,30 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ imageAsset, canvas
                     overflow: 'hidden',
                 }}
             >
-                {<img src={imageAsset.href}
-                    ref={imageRef}
-                    alt='sprite preview'
-                    style={{
+                {imageAsset.href ? (
+                    <img src={imageAsset.href}
+                        ref={imageRef}
+                        alt='sprite preview'
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            boxSizing: 'border-box'
+                        }}
+                        onLoad={handleLoadEvent}
+                    />
+                ) : (
+                    <Box display={'flex'} justifyContent={'center'} alignItems={'center'} flexDirection={'column'}
+                    sx={{
                         width: '100%',
                         height: '100%',
-                        boxSizing: 'border-box'
-                    }}
-                    onLoad={handleLoadEvent}
-                />}
+                        minHeight: 150
+                    }}>
+                        <HideImageOutlinedIcon sx={{
+                            width: 100, height: 100
+                        }} />
+                        <Typography>no image file</Typography>
+                    </Box>
+                )}
                 <canvas ref={canvasRef}
                     height={canvasScale}
                     width={canvasScale}
@@ -82,8 +97,7 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ imageAsset, canvas
                 />
             </Box>
 
-            <Box display={'flex'} justifyContent={'space-between'}>
-                <Typography variant="caption">{imageAsset.id} </Typography>
+            <Box display={'flex'} justifyContent={'flex-end'}>
                 {naturalHeight && naturalWidth && (
                     <Typography variant="caption"> {naturalWidth} x {naturalHeight}</Typography>
                 )}
