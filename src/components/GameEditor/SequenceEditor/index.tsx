@@ -54,10 +54,10 @@ export class SequenceEditor extends Component<Props, State> {
         const { options, data, updateData, gameDesign } = this.props
 
         if (!options.autoSave) {
-            return this.setState(input)
+            return this.setState(input as State)
         }
 
-        return this.setState(input, () => {
+        return this.setState(input as State, () => {
             const isExistingId = listIds(gameDesign.sequences).includes(this.state.id)
             if (data && isExistingId) {
                 updateData(this.currentData)
@@ -125,7 +125,7 @@ export class SequenceEditor extends Component<Props, State> {
                     ? (<>
                         <h3>Edit sequence: </h3>
                         <div>ID: <b>{data?.id}</b></div>
-                        <StringInput block label="description" value={description || ''}
+                        <StringInput label="description" value={description || ''}
                             inputHandler={(description) => {
                                 this.setStateWithAutosave({ description })
                             }}

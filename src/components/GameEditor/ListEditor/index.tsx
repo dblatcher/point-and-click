@@ -105,6 +105,13 @@ export class ListEditor<T> extends Component<Props<T>> {
                 alignItems: 'center',
             }
 
+            const innerStackProps: StackProps = {
+                ...itemStackProps,
+                justifyContent: 'space-between',
+                spacing: 1,
+                paddingBottom: 1,
+            }
+
             return (
                 <Stack component={'ul'} sx={{ margin: 0, padding: 0, listStyle: 'none', ...stackSx }}>
                     {list.map((item, index) => (
@@ -114,18 +121,20 @@ export class ListEditor<T> extends Component<Props<T>> {
                                     {this.renderButton('INSERT', index, true)}
                                 </Box>
                             )}
-                            <Stack component={'li'} {...itemStackProps} justifyContent={'space-between'} spacing={1} paddingBottom={1}>
-                                {describeItem(item, index)}
-                                <ButtonGroup>
-                                    {!noMoveButtons && <>
-                                        {this.renderButton('UP', index)}
-                                        {this.renderButton('DOWN', index)}
-                                    </>}
-                                    {!noDeleteButtons && <>
-                                        {this.renderButton('DELETE', index)}
-                                    </>}
-                                </ButtonGroup>
-                            </Stack>
+                            <Box component={'li'}>
+                                <Stack {...innerStackProps}>
+                                    {describeItem(item, index)}
+                                    <ButtonGroup>
+                                        {!noMoveButtons && <>
+                                            {this.renderButton('UP', index)}
+                                            {this.renderButton('DOWN', index)}
+                                        </>}
+                                        {!noDeleteButtons && <>
+                                            {this.renderButton('DELETE', index)}
+                                        </>}
+                                    </ButtonGroup>
+                                </Stack>
+                            </Box>
                         </Fragment>
                     ))}
                     {!!createItem && (

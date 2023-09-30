@@ -276,6 +276,7 @@ export default class GameEditor extends Component<Props, State>{
             const historyItem = history.pop()
             if (!historyItem) { return {} }
             return {
+                ...state,
                 history,
                 gameDesign: historyItem.gameDesign,
                 undoTime: Date.now()

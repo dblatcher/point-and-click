@@ -108,7 +108,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 break;
         }
         if (propery === 'id') {
-            return this.setState(modification)
+            return this.setState({...this.state, ...modification})
         }
         this.setStateWithAutosave(modification)
     }

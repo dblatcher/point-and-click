@@ -14,7 +14,7 @@ interface Props<T> {
     newKeySuggestions?: string[];
 };
 
-const PaperLi = (props: PaperProps) => <Paper {...props} component={'li'}>{props.children}</Paper>
+const PaperLi = (props: PaperProps) => <Paper {...{...props, component:'li'}}> { props.children }</Paper >
 
 export const RecordEditor = <T,>({
     record,

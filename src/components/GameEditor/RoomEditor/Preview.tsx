@@ -80,7 +80,7 @@ export class Preview extends Component<Props, State>{
         const setValue: ChangeEventHandler<HTMLInputElement> = (event) => {
             const mod: Partial<BooleanState> = {}
             mod[propery] = eventToBoolean(event.nativeEvent);
-            this.setState(mod)
+            this.setState({ ...state, ...mod })
         }
         return (
             <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
@@ -180,7 +180,7 @@ export class Preview extends Component<Props, State>{
                 boxSizing={'border-box'}
                 padding={1}
                 sx={{
-                    backgroundColor:'secondary.light'
+                    backgroundColor: 'secondary.light'
                 }}
             >
 

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { CSSProperties, FunctionComponent } from "react";
 import { Ending } from "@/definitions";
 import imageService from "@/services/imageService";
