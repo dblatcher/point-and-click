@@ -5,22 +5,21 @@ import {
   makeDownloadFile,
   uploadFile,
 } from "@/lib/files";
-import { ServiceItem } from "@/services/Service";
-import DownloadIcon from '@mui/icons-material/Download';
-import UploadIcon from "@mui/icons-material/Upload";
-import { Alert, Button, Grid, Stack } from "@mui/material";
-import { Component, createRef, RefObject } from "react";
-import { ServiceItemSelector } from "../ServiceItemSelector";
-import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import { buildAssetZipBlob, readSoundAssetFromZipFile } from "@/lib/zipFiles";
-import soundService from "@/services/soundService"
+import { ServiceItem } from "@/services/Service";
 import {
   SoundAsset,
-  soundAssetCategories,
   SoundAssetCategory,
+  soundAssetCategories,
 } from "@/services/assets";
+import soundService from "@/services/soundService";
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import { Button, Grid } from "@mui/material";
+import { Component, RefObject, createRef } from "react";
 import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
+import { ServiceItemSelector } from "../ServiceItemSelector";
+import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { SoundAssetForm } from "./SoundAssetForm";
 
 type State = {
@@ -43,6 +42,7 @@ export class SoundAssetTool extends Component<{}, State> {
       }
     };
     this.loadFile = this.loadFile.bind(this);
+    this.loadFromZipFile = this.loadFromZipFile.bind(this);
     this.saveToService = this.saveToService.bind(this);
     this.openFromService = this.openFromService.bind(this);
     this.zipSounds = this.zipSounds.bind(this);
@@ -178,24 +178,10 @@ export class SoundAssetTool extends Component<{}, State> {
     return (
       <article>
         <EditorHeading heading="Sound asset tool" />
-
-        <EditorBox title="zip file" boxProps={{ marginBottom: 1 }}>
-          <Stack direction={'row'} spacing={1}>
-            <Button
-              variant="outlined"
-              startIcon={<DownloadIcon />}
-              onClick={this.zipSounds}>
-              zip all sound assets
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<UploadIcon />}
-              onClick={this.loadFromZipFile}>
-              load assets from zip file
-            </Button>
-            {uploadWarning && <Alert severity="error">{uploadWarning}</Alert>}
-          </Stack>
-        </EditorBox>
+        <ZipFileControl
+          uploadWarning={uploadWarning}
+          zipAssets={this.zipSounds}
+          loadFromZipFile={this.loadFromZipFile} />
 
         <Grid container spacing={1}>
           <Grid item>

@@ -2,11 +2,10 @@ import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ImageAsset, imageAssetCategories } from "@/services/assets";
-import AddIcon from "@mui/icons-material/Add";
-import SaveIcon from '@mui/icons-material/Save';
 import UploadIcon from "@mui/icons-material/Upload";
-import { Alert, Box, Button, Stack } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
+import { SaveButtonsAndWarning } from "../asset-components/SaveButtonsAndWarning";
 
 interface Props {
     imageAsset: Partial<ImageAsset>;
@@ -72,22 +71,11 @@ export const ImageAssetForm = ({ imageAsset, changeValue, loadFile, isNewAsset, 
                 </Button>
             </Box>
 
-            <Box display={'flex'} justifyContent={'space-between'} paddingTop={2}>
-                <Button variant="contained"
-                    disabled={isNewAsset}
-                    startIcon={<AddIcon />}
-                    onClick={saveAssetChanges}>
-                    Save New Asset
-                </Button>
-                <Button variant="contained"
-                    disabled={!isNewAsset}
-                    startIcon={<SaveIcon />}
-                    onClick={saveAssetChanges}>
-                    Save Changes
-                </Button>
-            </Box>
-
-            {saveWarning && <Alert severity="error">{saveWarning}</Alert>}
+            <SaveButtonsAndWarning {...{
+                isNewAsset,
+                saveAssetChanges,
+                saveWarning
+            }} />
         </EditorBox>
     )
 }

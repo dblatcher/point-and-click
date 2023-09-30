@@ -21,6 +21,7 @@ import { EditorHeading } from "../EditorHeading";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ImageAssetForm } from "./ImageAssetForm";
 import { ImageAssetPreview } from "./ImageAssetPreview";
+import { ZipFileControl } from "../asset-components/ZipFileControl";
 
 
 type State = {
@@ -34,7 +35,7 @@ type State = {
 
 export class ImageAssetTool extends Component<{}, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
-  file: File|null;
+  file: File | null;
 
   constructor(props: ImageAssetTool["props"]) {
     super(props);
@@ -196,23 +197,10 @@ export class ImageAssetTool extends Component<{}, State> {
     return (
       <article>
         <EditorHeading heading="Image asset tool" />
-        <EditorBox title="zip file" boxProps={{ marginBottom: 1 }}>
-          <Stack direction={'row'} spacing={1}>
-            <Button
-              variant="outlined"
-              startIcon={<DownloadIcon />}
-              onClick={this.zipImages}>
-              zip all image assets
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<UploadIcon />}
-              onClick={this.loadFromZipFile}>
-              load assets from zip file
-            </Button>
-            {uploadWarning && <Alert severity="error">{uploadWarning}</Alert>}
-          </Stack>
-        </EditorBox>
+        <ZipFileControl
+          uploadWarning={uploadWarning}
+          zipAssets={this.zipImages}
+          loadFromZipFile={this.loadFromZipFile} />
 
         <Grid container spacing={1}>
           <Grid item>
