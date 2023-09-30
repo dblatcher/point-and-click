@@ -173,11 +173,6 @@ export class SoundAssetTool extends Component<{}, State> {
       asset
     } = this.state;
 
-    const {
-      id = "",
-      category = "",
-    } = asset
-
     const isNewAsset = asset.id ? soundService.list().includes(asset.id) : true
 
     return (
@@ -207,7 +202,7 @@ export class SoundAssetTool extends Component<{}, State> {
             <ServiceItemSelector
               legend="open asset"
               service={soundService}
-              currentSelection={id}
+              currentSelection={asset.id}
               select={this.openFromService} />
           </Grid>
           <Grid item>
@@ -223,14 +218,14 @@ export class SoundAssetTool extends Component<{}, State> {
 
             <EditorBox title="play sound">
               <SoundToggle />
-              {(id && soundService.get(id)) && (
+              {(asset.id && soundService.get(asset.id)) && (
                 <Button
                   startIcon={<PlayCircleOutlineOutlinedIcon />}
                   sx={{ marginLeft: 1 }}
                   variant="outlined"
-                  onClick={() => { soundService.play(id) }}
+                  onClick={() => { soundService.play(asset.id ?? '') }}
                 >
-                  play {id}
+                  play {asset.id}
                 </Button>
               )}
 
