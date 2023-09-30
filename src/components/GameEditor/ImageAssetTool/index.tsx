@@ -17,7 +17,7 @@ import imageService, {
 
 } from "@/services/imageService";
 import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
-import { SpriteSheetPreview } from "./SpriteSheetPreview";
+import { ImageAssetPreview } from "./ImageAssetPreview";
 import { EditorHeading } from "../EditorHeading";
 
 
@@ -284,8 +284,8 @@ export class ImageAssetTool extends Component<{}, State> {
               </div>
             </fieldset>
 
-            <p>Resizing the preview does not effect the image data.</p>
-            <SpriteSheetPreview
+            
+            <ImageAssetPreview
               imageAsset={this.fullAsset}
               canvasScale={300} />
 
