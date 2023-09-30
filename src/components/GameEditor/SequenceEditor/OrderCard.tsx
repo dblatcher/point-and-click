@@ -1,4 +1,4 @@
-import { ConceptCard } from "@/components/ConceptCard";
+import { ConceptCard } from "@/components/GameEditor/ConceptCard";
 import { Order } from "@/definitions";
 import AnimationIcon from '@mui/icons-material/Animation';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';

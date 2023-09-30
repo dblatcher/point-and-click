@@ -6,7 +6,7 @@ import PriorityHighOutlinedIcon from '@mui/icons-material/PriorityHighOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import PersonRemoveAlt1OutlinedIcon from '@mui/icons-material/PersonRemoveAlt1Outlined';
 import TransferWithinAStationOutlinedIcon from '@mui/icons-material/TransferWithinAStationOutlined';
-import { ConceptCard } from "@/components/ConceptCard";
+import { ConceptCard } from "@/components/GameEditor/ConceptCard";
 
 interface Props {
     consequence: Consequence;
