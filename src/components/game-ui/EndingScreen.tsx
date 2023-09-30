@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { CSSProperties, FunctionComponent } from "react";
 import { Ending } from "@/definitions";
 import imageService from "@/services/imageService";
 import { useGameInfo } from "@/context/game-info-provider";
@@ -18,11 +18,11 @@ interface Props {
     inline?: boolean;
 }
 
-const baseArticleStyle = {
+const baseArticleStyle:CSSProperties = {
     maxWidth: '100%',
 }
 
-const baseFrameStyle = {
+const baseFrameStyle: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -33,7 +33,7 @@ const baseFrameStyle = {
 
 export const EndingScreen: FunctionComponent<Props> = ({ ending, inline }) => {
 
-    const articleStyle = inline ? {
+    const articleStyle: CSSProperties = inline ? {
         ...baseArticleStyle,
         display: 'inline-block',
     } : {

@@ -1,13 +1,10 @@
+import { ImageAsset, ImageAssetSchema, SoundAsset, SoundAssetSchema, } from "@/services/assets";
+import { ImageService } from "@/services/imageService";
+import { SoundService } from "@/services/soundService";
 import JSZip from "jszip";
-import { GameDesignSchema } from "../definitions/Game";
 import { GameDesign } from "../definitions";
-import {
-  ImageAsset,
-  ImageAssetSchema,
-  ImageService,
-} from "@/services/imageService";
+import { GameDesignSchema } from "../definitions/Game";
 import { dataToBlob, fileToObjectUrl } from "./files";
-import { SoundAsset, SoundAssetSchema, SoundService } from "@/services/soundService";
 
 type ZipActionFailure = {
   success: false;
@@ -262,10 +259,10 @@ export const buildGameZipBlob = async (
 export const readGameFromZipFile = async (
   file: File
 ): Promise<
-  ZipReadResult<{ 
+  ZipReadResult<{
     gameDesign: GameDesign;
-    imageAssets: ImageAsset[]; 
-    soundAssets: SoundAsset[]; 
+    imageAssets: ImageAsset[];
+    soundAssets: SoundAsset[];
   }>
 > => {
   const readImageResult = await readImageAssetFromZipFile(file);

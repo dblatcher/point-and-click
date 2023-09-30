@@ -1,6 +1,7 @@
 import { ItemData } from "@/definitions";
 import { cloneData } from "@/lib/clone";
-import imageService, { ImageAsset } from "@/services/imageService";
+import imageService from "@/services/imageService";
+import { ImageAsset } from "@/services/assets";
 import { Stack, Dialog, Button, DialogContent, DialogActions, DialogTitle, Typography } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";

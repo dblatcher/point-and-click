@@ -10,7 +10,6 @@ interface Props {
     className?: string;
     stopPropagation?: boolean;
     // HotspotZone is a subtype of Zone but not assignable to Zone or (Zone|HotspotZone)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     clickHandler?: { (zone: any): void };
     handleHover?: HandleHoverFunction;
     markVertices?: boolean;

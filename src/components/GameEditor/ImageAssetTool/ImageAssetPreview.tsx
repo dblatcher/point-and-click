@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { FunctionComponent, useEffect, useRef, useState } from "react";
-import { ImageAsset } from "@/services/imageService";
+import { ImageAsset } from "@/services/assets";
 import { Box, Typography } from "@mui/material";
 import { EditorBox } from "../EditorBox";
 import HideImageOutlinedIcon from '@mui/icons-material/HideImageOutlined';

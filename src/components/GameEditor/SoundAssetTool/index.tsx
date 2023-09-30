@@ -13,11 +13,12 @@ import { Component, createRef, RefObject } from "react";
 import { ServiceItemSelector } from "../ServiceItemSelector";
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import { buildAssetZipBlob, readSoundAssetFromZipFile } from "@/lib/zipFiles";
-import soundService, {
+import soundService from "@/services/soundService"
+import {
   SoundAsset,
   soundAssetCategories,
   SoundAssetCategory,
-} from "@/services/soundService";
+} from "@/services/assets";
 import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
 import { SoundAssetForm } from "./SoundAssetForm";

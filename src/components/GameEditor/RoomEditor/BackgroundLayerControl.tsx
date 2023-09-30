@@ -1,4 +1,4 @@
-import { ImageAsset } from "@/services/imageService";
+import { ImageAsset } from "@/services/assets";
 import { BackgroundLayer } from "@/definitions";
 import { clamp, listIds } from "@/lib/util";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";

@@ -1,9 +1,7 @@
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
-import {
-    ImageAsset, imageAssetCategories
-} from "@/services/imageService";
+import { ImageAsset, imageAssetCategories } from "@/services/assets";
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from '@mui/icons-material/Save';
 import UploadIcon from "@mui/icons-material/Upload";

@@ -97,7 +97,6 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
             </Box>
 
             <SchemaForm
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 schema={consequenceMap[consequence.type] as any}
                 numberConfig={{
                     time: { min: 0 },

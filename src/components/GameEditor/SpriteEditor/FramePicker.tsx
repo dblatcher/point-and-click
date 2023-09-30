@@ -1,5 +1,6 @@
 import { FunctionComponent, useState } from "react";
-import imageService, { ImageAsset } from "@/services/imageService";
+import imageService from "@/services/imageService";
+import { ImageAsset } from "@/services/assets";
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { Box, Button, Typography, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";

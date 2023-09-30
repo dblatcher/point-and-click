@@ -6,11 +6,12 @@ import {
 } from "@/lib/files";
 import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
 import { ServiceItem } from "@/services/Service";
-import imageService, {
+import imageService from "@/services/imageService";
+import {
   ImageAsset,
   ImageAssetCategory,
   imageAssetCategories,
-} from "@/services/imageService";
+} from "@/services/assets";
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadIcon from "@mui/icons-material/Upload";
 import { Alert, Button, Grid, Stack } from "@mui/material";

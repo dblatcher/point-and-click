@@ -1,5 +1,6 @@
 import { SpriteData, Direction, SpriteFrame, Animation } from "../definitions/SpriteSheet"
-import imageService, { ImageAsset } from "@/services/imageService";
+import imageService from "@/services/imageService";
+import { ImageAsset } from "@/services/assets";
 
 
 interface ImageWithFrame {

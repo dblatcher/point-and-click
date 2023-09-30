@@ -1,9 +1,9 @@
 import { GameCondition, GameData, GameDesign } from "@/definitions";
 import Game from "@/components/game";
 import { cloneData } from "@/lib/clone";
-import { ImageAsset } from "@/services/imageService";
+import { ImageAsset } from "@/services/assets";
 import { populateServices } from "@/services/populateServices";
-import { SoundAsset } from "@/services/soundService";
+import { SoundAsset } from "@/services/assets";
 import React from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
 import { SpritesProvider } from "@/context/sprite-context";
