@@ -1,6 +1,8 @@
-import imageService, { ImageAsset } from "./imageService";
-import soundService, { SoundAsset } from "./soundService";
-import { imageAssets } from "../data/images";
+import imageService from "./imageService";
+import soundService from "./soundService";
+import { SoundAsset, ImageAsset } from "./assets";
+
+import { imageAssets, } from "../data/images";
 import { soundAssets } from "../data/sounds";
 import { GameDesign } from "../definitions/Game";
 
