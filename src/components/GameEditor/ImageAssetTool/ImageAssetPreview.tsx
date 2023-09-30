@@ -18,7 +18,6 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ imageAsset, canvas
 
     const handleLoadEvent = () => {
         const img = imageRef.current
-        console.log('image load', imageRef.current)
         if (!img) { return }
         setNaturalHeight(img.naturalHeight)
         setNaturalWidth(img.naturalWidth)
