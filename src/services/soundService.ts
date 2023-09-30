@@ -1,6 +1,6 @@
 import { SoundControl, SoundDeck } from "sound-deck";
 import { Service } from "./Service";
-import { SoundAsset, getSoundMimeType } from "./assets";
+import { SoundAsset, getMimeType } from "./assets";
 
 
 
@@ -75,7 +75,7 @@ export class SoundService extends Service<SoundAsset> {
         try {
             const response = await fetch(asset.href)
             const blob = await response.blob()
-            return new File([blob], asset.id, { type: getSoundMimeType(asset) })
+            return new File([blob], asset.id, { type: getMimeType(asset) })
         } catch (err) {
             console.warn(err)
             return undefined
