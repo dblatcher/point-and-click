@@ -1,25 +1,26 @@
-import { Component, createRef,  RefObject } from "react";
+import { SoundToggle } from "@/components/game-ui/SoundToggle";
+import { cloneData } from "@/lib/clone";
 import {
   fileToObjectUrl,
   makeDownloadFile,
   uploadFile,
 } from "@/lib/files";
-import { eventToString } from "@/lib/util";
-import { SelectInput, TextInput, Warning } from "../formControls";
-import { cloneData } from "@/lib/clone";
-import { ServiceItemSelector } from "../ServiceItemSelector";
 import { ServiceItem } from "@/services/Service";
-import { SoundToggle } from "@/components/game-ui/SoundToggle";
-import editorStyles from "../editorStyles.module.css";
-
+import DownloadIcon from '@mui/icons-material/Download';
+import UploadIcon from "@mui/icons-material/Upload";
+import { Alert, Button, Grid, Stack } from "@mui/material";
+import { Component, createRef, RefObject } from "react";
+import { ServiceItemSelector } from "../ServiceItemSelector";
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import { buildAssetZipBlob, readSoundAssetFromZipFile } from "@/lib/zipFiles";
 import soundService, {
   SoundAsset,
-  SoundAssetCategory,
   soundAssetCategories,
-
+  SoundAssetCategory,
 } from "@/services/soundService";
-import { buildAssetZipBlob, readSoundAssetFromZipFile } from "@/lib/zipFiles";
+import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
+import { SoundAssetForm } from "./SoundAssetForm";
 
 type State = {
   saveWarning?: string;
@@ -44,6 +45,7 @@ export class SoundAssetTool extends Component<{}, State> {
     this.saveToService = this.saveToService.bind(this);
     this.openFromService = this.openFromService.bind(this);
     this.zipSounds = this.zipSounds.bind(this);
+    this.changeValue = this.changeValue.bind(this);
 
     this.canvasRef = createRef();
     this.fileRef = createRef();
@@ -71,7 +73,7 @@ export class SoundAssetTool extends Component<{}, State> {
     });
   };
 
-  changeValue(propery: keyof SoundAsset, newValue: string | number) {
+  changeValue(propery: keyof SoundAsset, newValue: string | number | undefined) {
     this.setState(state => {
       const asset = state.asset
       switch (propery) {
@@ -175,69 +177,66 @@ export class SoundAssetTool extends Component<{}, State> {
       category = "",
     } = asset
 
+    const isNewAsset = asset.id ? soundService.list().includes(asset.id) : true
+
     return (
       <article>
         <EditorHeading heading="Sound asset tool" />
-        <div className={editorStyles.container}>
-          <section>
+
+        <EditorBox title="zip file" boxProps={{ marginBottom: 1 }}>
+          <Stack direction={'row'} spacing={1}>
+            <Button
+              variant="outlined"
+              startIcon={<DownloadIcon />}
+              onClick={this.zipSounds}>
+              zip all sound assets
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<UploadIcon />}
+              onClick={this.loadFromZipFile}>
+              load assets from zip file
+            </Button>
+            {uploadWarning && <Alert severity="error">{uploadWarning}</Alert>}
+          </Stack>
+        </EditorBox>
+
+        <Grid container spacing={1}>
+          <Grid item>
             <ServiceItemSelector
               legend="open asset"
               service={soundService}
               currentSelection={id}
               select={this.openFromService} />
+          </Grid>
+          <Grid item>
 
-            <fieldset className={editorStyles.fieldset}>
-              <div className={editorStyles.row}>
-                <button onClick={this.zipSounds}>zip assets</button>
-              </div>
-              <div className={editorStyles.row}>
-                <button onClick={this.loadFromZipFile}>
-                  load assets from zip file
-                </button>
-                {uploadWarning && <Warning>{uploadWarning}</Warning>}
-              </div>
-            </fieldset>
-          </section>
+            <SoundAssetForm
+              soundAsset={asset}
+              changeValue={this.changeValue}
+              loadFile={this.loadFile}
+              isNewAsset={isNewAsset}
+              saveAssetChanges={this.saveToService}
+              saveWarning={saveWarning}
+            />
 
-          <section>
-            <fieldset className={editorStyles.fieldset}>
-              <legend>sound properties</legend>
+            <EditorBox title="play sound">
+              <SoundToggle />
+              {(id && soundService.get(id)) && (
+                <Button
+                  startIcon={<PlayCircleOutlineOutlinedIcon />}
+                  sx={{ marginLeft: 1 }}
+                  variant="outlined"
+                  onClick={() => { soundService.play(id) }}
+                >
+                  play {id}
+                </Button>
+              )}
 
-              <div className={editorStyles.row}>
-                <button onClick={this.loadFile}>select sound file</button>
-              </div>
-              <div className={editorStyles.row}>
-                <TextInput
-                  label="ID"
-                  value={id}
-                  onInput={(event) =>
-                    this.changeValue("id", eventToString(event.nativeEvent))
-                  }
-                />
-              </div>
-              <div className={editorStyles.row}>
-                <SelectInput
-                  onSelect={(value) => this.changeValue("category", value)}
-                  label="category"
-                  value={category}
-                  items={soundAssetCategories}
-                  haveEmptyOption={true}
-                />
-              </div>
+            </EditorBox>
 
-              <div className={editorStyles.row}>
-                <button onClick={this.saveToService}>Save to service</button>
-                {saveWarning && <Warning>{saveWarning}</Warning>}
-              </div>
-            </fieldset>
-
-            <p>play</p>
-            <SoundToggle />
-            {(id && soundService.get(id)) && (
-              <button onClick={() => { soundService.play(id) }}>play {id}</button>
-            )}
-          </section>
-        </div>
+          </Grid>
+        </Grid>
       </article>
     );
   }
