@@ -18,7 +18,7 @@ import { Button, Grid } from "@mui/material";
 import { Component, RefObject, createRef } from "react";
 import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
-import { ServiceItemSelector } from "../ServiceItemSelector";
+import { FileAssetSelector } from "../FileAssetSelector";
 import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { SoundAssetForm } from "./SoundAssetForm";
 
@@ -185,7 +185,7 @@ export class SoundAssetTool extends Component<{}, State> {
 
         <Grid container spacing={1}>
           <Grid item>
-            <ServiceItemSelector
+            <FileAssetSelector
               legend="open asset"
               service={soundService}
               currentSelection={asset.id}

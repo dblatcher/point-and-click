@@ -4,7 +4,7 @@ import { ImageAsset } from "@/services/assets";
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { Box, Button, Typography, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
-import { ServiceItemSelector } from "../ServiceItemSelector";
+import { FileAssetSelector } from "../FileAssetSelector";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 
 interface Props {
@@ -124,7 +124,7 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
 
             <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
                 {!fixedSheet && (
-                    <ServiceItemSelector legend="sprite sheet"
+                    <FileAssetSelector legend="sprite sheet"
                         format="select"
                         service={imageService}
                         selectedItemId={sheetId}

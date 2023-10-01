@@ -6,22 +6,19 @@ import {
 } from "@/lib/files";
 import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
 import { ServiceItem } from "@/services/Service";
-import imageService from "@/services/imageService";
 import {
   ImageAsset,
   ImageAssetCategory,
   imageAssetCategories,
 } from "@/services/assets";
-import DownloadIcon from '@mui/icons-material/Download';
-import UploadIcon from "@mui/icons-material/Upload";
-import { Alert, Button, Grid, Stack } from "@mui/material";
+import imageService from "@/services/imageService";
+import { Grid } from "@mui/material";
 import { Component, RefObject, createRef } from "react";
-import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
-import { ServiceItemSelector } from "../ServiceItemSelector";
+import { FileAssetSelector } from "../FileAssetSelector";
+import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { ImageAssetForm } from "./ImageAssetForm";
 import { ImageAssetPreview } from "./ImageAssetPreview";
-import { ZipFileControl } from "../asset-components/ZipFileControl";
 
 
 type State = {
@@ -204,7 +201,7 @@ export class ImageAssetTool extends Component<{}, State> {
 
         <Grid container spacing={1}>
           <Grid item>
-            <ServiceItemSelector
+            <FileAssetSelector
               legend="assets"
               service={imageService}
               currentSelection={asset.id}

@@ -8,7 +8,7 @@ import { SelectInput } from "../SchemaForm/SelectInput";
 import { ItemMenuInner } from "../game-ui/ItemMenu";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
-import { ServiceItemSelector } from "./ServiceItemSelector";
+import { FileAssetSelector } from "./FileAssetSelector";
 import { StorageMenu } from "./StorageMenu";
 import { EnhancedSetStateFunction } from "./dataEditors";
 import { StringInput } from "../SchemaForm/StringInput";
@@ -142,7 +142,7 @@ export const ItemEditor = (props: Props) => {
                     Pick Icon for {item.id}
                 </DialogTitle>
                 <DialogContent>
-                    <ServiceItemSelector legend='image asset'
+                    <FileAssetSelector legend='image asset'
                         format="select"
                         filterItems={item => (item as ImageAsset).category === 'item' || (item as ImageAsset).category === 'any'}
                         select={item => changeValue('imageId', item.id)}
