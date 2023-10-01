@@ -23,6 +23,7 @@ interface Props<T> {
     color?: Color
     frame?: Framing
     buttonSize?: ButtonSize
+    horizontalMoveButtons?: boolean
 }
 
 
@@ -94,7 +95,8 @@ export const ArrayControl = <T,>({
     mutateList,
     color = 'primary',
     frame = 'NONE',
-    buttonSize = 'large'
+    buttonSize = 'large',
+    horizontalMoveButtons = false,
 }: Props<T>) => {
 
 
@@ -136,10 +138,10 @@ export const ArrayControl = <T,>({
                             alignItems={'center'}
                             direction={'row'}
                             spacing={1}
-                            minHeight={noMoveButtons ? undefined : 72}
+                            minHeight={noMoveButtons ? undefined : horizontalMoveButtons ? 36 : 72}
                         >
                             {!noMoveButtons && (
-                                <ButtonGroup orientation="vertical" component={'aside'}>
+                                <ButtonGroup orientation={horizontalMoveButtons ? 'horizontal' : 'vertical'} component={'aside'}>
                                     <MoveButton handleMove={handleMove} index={index} role="UP" color={color} />
                                     <MoveButton handleMove={handleMove} index={index} role="DOWN" color={color} />
                                 </ButtonGroup>

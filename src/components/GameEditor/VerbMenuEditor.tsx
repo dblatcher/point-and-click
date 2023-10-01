@@ -6,6 +6,7 @@ import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { ListEditor } from "./ListEditor";
 import { useGameDesign } from "@/context/game-design-context";
+import { ArrayControl } from "./ArrayControl";
 
 
 
@@ -15,7 +16,7 @@ export const VerbMenuEditor = () => {
     return (<>
         <EditorHeading heading="Verb Menu" helpTopic="verb menu" />
         <Stack direction="row" justifyContent="space-between">
-            <ListEditor noDeleteButtons
+            <ArrayControl noDeleteButtons horizontalMoveButtons
                 list={gameDesign.verbs}
                 mutateList={(list) => { updateData(list) }}
                 describeItem={(verb, index) => (
