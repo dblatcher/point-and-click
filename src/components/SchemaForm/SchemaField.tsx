@@ -1,7 +1,7 @@
 import { z } from "zod"
 import {
     TriStateInput,
-} from "../GameEditor/formControls";
+} from "../GameEditor/TristateInput";
 import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
 import { StringInput } from "./StringInput";
 import { BooleanInput } from "./BooleanInput";
