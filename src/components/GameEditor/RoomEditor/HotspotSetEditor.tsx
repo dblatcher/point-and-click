@@ -17,14 +17,13 @@ interface Props {
     setClickEffect: { (clickEffect: ClickEffect): void }
 }
 
-export const HotspotPicker = ({ hotspots, openIndex, changeZone, selectZone, removeZone, setClickEffect, clickEffect }: Props) => {
+export const HotspotSetEditor = ({ hotspots, openIndex, changeZone, selectZone, removeZone, setClickEffect, clickEffect }: Props) => {
 
     const activeHotspot = typeof openIndex === 'number'
         ? hotspots[openIndex]
         : undefined;
 
     return (
-
         <>
             <NewZoneButtons
                 type="hotspot"
@@ -50,7 +49,6 @@ export const HotspotPicker = ({ hotspots, openIndex, changeZone, selectZone, rem
                     )}
                 </Stack>
             )}
-
         </>
     )
 }

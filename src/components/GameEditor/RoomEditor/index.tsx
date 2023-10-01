@@ -22,7 +22,7 @@ import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ArrayControl } from "../ArrayControl";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
-import { HotspotPicker } from "./HotspotPicker";
+import { HotspotSetEditor } from "./HotspotSetEditor";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { ShapeChangeFunction } from "./ShapeControl";
@@ -451,7 +451,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             },
             {
                 label: 'Hotspots', content: (
-                    <HotspotPicker
+                    <HotspotSetEditor
                         hotspots={hotspots}
                         openIndex={this.state.hotspotTab}
                         changeZone={this.changeZone}
