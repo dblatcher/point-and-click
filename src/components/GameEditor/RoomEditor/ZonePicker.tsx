@@ -1,6 +1,5 @@
 import { HotspotZone, Zone } from "@/definitions";
 import { FormControl, MenuItem, Select } from "@mui/material";
-import { FunctionComponent } from "react";
 
 
 type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
@@ -14,7 +13,8 @@ interface Props {
 const getZoneLabel = (zone: Zone | HotspotZone, type: string, index: number) => 'id' in zone ? zone.id : zone.ref || `${type} #${index}`
 const getClickData = (zone: Zone | HotspotZone, index: number) => 'id' in zone ? zone : { id: index.toString() }
 
-export const ZonePicker: FunctionComponent<Props> = ({
+/** TO DO - fix bug - can't select non */
+export const ZonePicker = ({
     type,
     zones,
     selectZone,
