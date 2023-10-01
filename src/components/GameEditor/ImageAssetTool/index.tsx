@@ -189,7 +189,7 @@ export class ImageAssetTool extends Component<{}, State> {
       asset
     } = this.state;
 
-    const isNewAsset = asset.id ? imageService.list().includes(asset.id) : true
+    const isNewAsset = asset.id ? !imageService.list().includes(asset.id) : true
 
     return (
       <article>
