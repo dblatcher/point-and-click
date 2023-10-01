@@ -1,13 +1,10 @@
-
 import { VerbMenuInner } from "@/components/game-ui/VerbMenu";
+import { useGameDesign } from "@/context/game-design-context";
 import { listIds } from "@/lib/util";
 import { Paper, Stack, Typography } from "@mui/material";
+import { ArrayControl } from "./ArrayControl";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
-import { ListEditor } from "./ListEditor";
-import { useGameDesign } from "@/context/game-design-context";
-import { ArrayControl } from "./ArrayControl";
-
 
 
 export const VerbMenuEditor = () => {
