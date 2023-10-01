@@ -7,13 +7,14 @@ interface Props {
     description: string;
     title: string;
     handleClick: { (): void }
+    width?: number
 }
 
-export const ConceptCard = ({ Icon, handleClick, title, description }: Props) => {
+export const ConceptCard = ({ Icon, handleClick, title, description, width }: Props) => {
 
     return (
         <Card onClick={handleClick}
-            sx={{ maxWidth: 180, minWidth: 180, borderColor:'secondary.light' }}
+            sx={{ maxWidth: width, minWidth: width, borderColor: 'secondary.light' }}
             variant="outlined"
         >
             <CardActionArea>
