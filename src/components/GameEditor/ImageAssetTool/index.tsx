@@ -212,15 +212,7 @@ export class ImageAssetTool extends Component<{}, State> {
           zipAssets={this.zipImages}
           loadFromZipFile={this.loadFromZipFile} />
 
-        <Grid container spacing={1}>
-          <Grid item>
-            <FileAssetSelector
-              legend="assets"
-              service={imageService}
-              currentSelection={asset.id}
-              select={this.openFromService} />
-          </Grid>
-
+        <Grid container spacing={1} justifyContent={'space-between'}>
           <Grid item>
             <ImageAssetForm
               imageAsset={asset}
@@ -230,10 +222,17 @@ export class ImageAssetTool extends Component<{}, State> {
               saveAssetChanges={this.saveToService}
               saveWarning={saveWarning}
             />
-
             <ImageAssetPreview
               imageAsset={this.fullAsset}
               canvasScale={300} />
+          </Grid>
+
+          <Grid item>
+            <FileAssetSelector
+              legend="assets"
+              service={imageService}
+              currentSelection={asset.id}
+              select={this.openFromService} />
           </Grid>
         </Grid>
 

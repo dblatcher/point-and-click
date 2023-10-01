@@ -196,16 +196,8 @@ export class SoundAssetTool extends Component<{}, State> {
           zipAssets={this.zipSounds}
           loadFromZipFile={this.loadFromZipFile} />
 
-        <Grid container spacing={1}>
+        <Grid container spacing={1} justifyContent={'space-between'}>
           <Grid item>
-            <FileAssetSelector
-              legend="open asset"
-              service={soundService}
-              currentSelection={asset.id}
-              select={this.openFromService} />
-          </Grid>
-          <Grid item>
-
             <SoundAssetForm
               soundAsset={asset}
               changeValue={this.changeValue}
@@ -214,7 +206,6 @@ export class SoundAssetTool extends Component<{}, State> {
               saveAssetChanges={this.saveToService}
               saveWarning={saveWarning}
             />
-
             <EditorBox title="play sound">
               <SoundToggle />
               {(asset.id && soundService.get(asset.id)) && (
@@ -227,9 +218,15 @@ export class SoundAssetTool extends Component<{}, State> {
                   play {asset.id}
                 </Button>
               )}
-
             </EditorBox>
+          </Grid>
 
+          <Grid item>
+            <FileAssetSelector
+              legend="open asset"
+              service={soundService}
+              currentSelection={asset.id}
+              select={this.openFromService} />
           </Grid>
         </Grid>
       </article>
