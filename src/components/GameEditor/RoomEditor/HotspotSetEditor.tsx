@@ -1,6 +1,5 @@
 import { HotspotZone } from "@/definitions";
 import { Alert, Stack } from "@mui/material";
-import { EntryClickFunction } from "../TreeMenu";
 import { ClickEffect } from "./ClickEffect";
 import { HotspotControl } from "./HotSpotControl";
 import { NewZoneButtons } from "./NewZoneButtons";
@@ -11,7 +10,7 @@ interface Props {
     hotspots: HotspotZone[],
     openIndex?: number
     changeZone: ShapeChangeFunction
-    selectZone: EntryClickFunction
+    selectZone: { (folderId: string, data: { id: string }): void }
     removeZone: { (index: number, type: "hotspot" | "obstacle" | "walkable"): void }
     clickEffect?: ClickEffect
     setClickEffect: { (clickEffect: ClickEffect): void }

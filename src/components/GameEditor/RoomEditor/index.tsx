@@ -82,7 +82,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.handleLoadButton = this.handleLoadButton.bind(this)
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
-        this.handleTreeEntryClick = this.handleTreeEntryClick.bind(this)
+        this.selectZone = this.selectZone.bind(this)
         this.setStateWithAutosave = higherLevelSetStateWithAutosave(this).bind(this)
     }
 
@@ -347,40 +347,24 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             this.props.updateData(this.currentData)
         }
     }
-    handleTreeEntryClick(folderId: string, data: { id: string }, isForNew: boolean | undefined) {
-        if (isForNew) {
-            switch (folderId) {
-                case 'WALKABLE':
-                case 'OBSTACLE':
-                case 'HOTSPOT':
-                    switch (data.id) {
-                        case 'rect':
-                        case 'polygon':
-                        case 'circle':
-                            this.setClickEffect({ type: folderId, shape: data.id })
-                            break;
-                    }
-                    break;
+    selectZone(folderId: string, data: { id: string }) {
+        switch (folderId) {
+            case 'WALKABLE': {
+                const zoneIndex = Number(data.id)
+                if (isNaN(zoneIndex)) { return }
+                this.setState({ 'walkableTab': zoneIndex })
+                break;
             }
-        } else {
-            switch (folderId) {
-                case 'WALKABLE': {
-                    const zoneIndex = Number(data.id)
-                    if (isNaN(zoneIndex)) { return }
-                    this.setState({ 'walkableTab': zoneIndex })
-                    break;
-                }
-                case 'OBSTACLE': {
-                    const zoneIndex = Number(data.id)
-                    if (isNaN(zoneIndex)) { return }
-                    this.setState({ 'obstableTab': zoneIndex })
-                    break;
-                }
-                case 'HOTSPOT':
-                    const zoneIndex = this.state.hotspots?.indexOf(data as HotspotZone) || 0
-                    this.setState({ 'hotspotTab': zoneIndex })
-                    break;
+            case 'OBSTACLE': {
+                const zoneIndex = Number(data.id)
+                if (isNaN(zoneIndex)) { return }
+                this.setState({ 'obstableTab': zoneIndex })
+                break;
             }
+            case 'HOTSPOT':
+                const zoneIndex = this.state.hotspots?.indexOf(data as HotspotZone) || 0
+                this.setState({ 'hotspotTab': zoneIndex })
+                break;
         }
     }
 
@@ -455,7 +439,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         hotspots={hotspots}
                         openIndex={this.state.hotspotTab}
                         changeZone={this.changeZone}
-                        selectZone={this.handleTreeEntryClick}
+                        selectZone={this.selectZone}
                         removeZone={this.removeZone}
                         clickEffect={this.state.clickEffect}
                         setClickEffect={this.setClickEffect}
@@ -471,7 +455,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         change={this.changeZone}
                         remove={this.removeZone}
                         openTab={this.state.obstableTab}
-                        selectZone={this.handleTreeEntryClick}
+                        selectZone={this.selectZone}
                         clickEffect={this.state.clickEffect}
                     />
                 )
@@ -485,7 +469,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         change={this.changeZone}
                         remove={this.removeZone}
                         openTab={this.state.walkableTab}
-                        selectZone={this.handleTreeEntryClick}
+                        selectZone={this.selectZone}
                         clickEffect={this.state.clickEffect}
                     />
                 )

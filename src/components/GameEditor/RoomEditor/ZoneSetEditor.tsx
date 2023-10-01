@@ -7,7 +7,7 @@ import { Stack, Alert } from "@mui/material";
 import { NewZoneButtons } from "./NewZoneButtons";
 import { ZonePicker } from "./ZonePicker";
 
-type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
+type EntryClickFunction = { (folderId: string, data: { id: string }): void }
 interface Props {
     type: 'obstacle' | 'walkable';
     zones: (Zone | HotspotZone)[];

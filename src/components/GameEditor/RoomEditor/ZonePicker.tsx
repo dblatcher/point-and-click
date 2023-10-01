@@ -2,12 +2,11 @@ import { HotspotZone, Zone } from "@/definitions";
 import { FormControl, MenuItem, Select } from "@mui/material";
 
 
-type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
 interface Props {
     type: 'obstacle' | 'walkable' | 'hotspot';
     zones: (Zone | HotspotZone)[];
     openTab?: number;
-    selectZone: EntryClickFunction
+    selectZone: { (folderId: string, data: { id: string }): void }
 }
 
 const getZoneLabel = (zone: Zone | HotspotZone, type: string, index: number) => 'id' in zone ? zone.id : zone.ref || `${type} #${index}`
@@ -29,7 +28,7 @@ export const ZonePicker = ({
                 onChange={(event) => {
                     const index = Number(event.target.value)
                     const zone = zones[index]
-                    selectZone(type.toUpperCase(), getClickData(zone, index), false)
+                    selectZone(type.toUpperCase(), getClickData(zone, index))
                 }}>
                 <MenuItem value={undefined}>[none]</MenuItem>
                 {zones.map((zone, index) => (
