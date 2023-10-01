@@ -1,10 +1,10 @@
 
-import { ScaleLevel } from "@/definitions";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { cloneData } from "@/lib/clone"
-import { ListEditor } from "../ListEditor";
+import { ScaleLevel } from "@/definitions";
+import { cloneData } from "@/lib/clone";
 import { clamp } from "@/lib/util";
 import { Box, Stack } from "@mui/material";
+import { ArrayControl } from "../ArrayControl";
 
 interface Props {
     scaling: ScaleLevel;
@@ -29,13 +29,13 @@ export const ScalingControl = ({ scaling, height, change }: Props) => {
     }
 
     return (
-        <ListEditor
+        <ArrayControl
             list={scaling}
-            stackSx={{maxWidth:300}}
+            buttonSize='medium'
             describeItem={(level, index) => {
                 const [y, scale] = level
                 return (
-                    <Stack key={index} direction={'row'} spacing={2}>
+                    <Stack key={index} direction={'row'} spacing={1}>
                         <Box>
                             <NumberInput label="Y" value={y}
                                 inputHandler={(value) => handleAdjustment(index, value, 'y')}
