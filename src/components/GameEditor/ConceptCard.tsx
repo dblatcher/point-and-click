@@ -1,5 +1,5 @@
-import { Box, Button, Card, CardActionArea, Typography } from "@mui/material";
 import type AnimationIcon from '@mui/icons-material/Animation';
+import { Box, Card, CardActionArea, Typography } from "@mui/material";
 
 
 interface Props {
