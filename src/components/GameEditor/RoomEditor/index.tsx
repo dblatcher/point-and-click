@@ -1,7 +1,7 @@
 import { ActorData, BackgroundLayer, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import imageService from "@/services/imageService";
-import { Alert, Box, Container, Grid, Stack } from "@mui/material";
+import { Alert, Container, Grid, Stack } from "@mui/material";
 import { Component } from "react";
 import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
 import { getBlankRoom } from "../defaults";
@@ -12,7 +12,7 @@ import { uploadJsonData } from "@/lib/files";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 // components
-import { TabSet, type TabSetItem } from "@/components/GameEditor/TabSet";
+import { type TabSetItem } from "@/components/GameEditor/TabSet";
 import { AccoridanedContent } from "../AccordianedContent";
 import { EditorHeading } from "../EditorHeading";
 import { StorageMenu } from "../StorageMenu";
@@ -22,12 +22,10 @@ import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ArrayControl } from "../ArrayControl";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
-import { HotspotControl } from "./HotSpotControl";
-import { NewZoneButtons } from "./NewZoneButtons";
+import { HotspotPicker } from "./HotspotPicker";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { ShapeChangeFunction } from "./ShapeControl";
-import { ZonePicker } from "./ZonePicker";
 import { ZoneSetEditor } from "./ZoneSetEditor";
 
 export type RoomEditorState = RoomData & {
@@ -435,7 +433,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             },
             {
                 label: 'Background', content: (<Stack spacing={2}>
-                    <ArrayControl 
+                    <ArrayControl
                         list={background}
                         buttonSize="small"
                         mutateList={(background) => { this.setStateWithAutosave({ background }) }}
@@ -450,6 +448,19 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         imageAssets={imageAssets}
                         addNewLayer={this.addBackground} />
                 </Stack>)
+            },
+            {
+                label: 'Hotspots', content: (
+                    <HotspotPicker
+                        hotspots={hotspots}
+                        openIndex={this.state.hotspotTab}
+                        changeZone={this.changeZone}
+                        selectZone={this.handleTreeEntryClick}
+                        removeZone={this.removeZone}
+                        clickEffect={this.state.clickEffect}
+                        setClickEffect={this.setClickEffect}
+                    />
+                )
             },
             {
                 label: 'Obstacles', content: (
@@ -479,44 +490,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     />
                 )
             },
-            {
-                label: 'Hotspots', content: (
-                    <>
-                        <Stack >
-                            <ZonePicker
-                                type={'hotspot'}
-                                zones={hotspots}
-                                openTab={this.state.hotspotTab}
-                                selectZone={this.handleTreeEntryClick}
-                            />
-                            <Box flexShrink={1}>
-                                {hotspots.length === 0 && (
-                                    <Alert severity="info">
-                                        No <b>hotspots</b> for this room yet. Select a shape from the buttons below to add one.
-                                    </Alert>
-                                )}
-                                <TabSet
-                                    openIndex={this.state.hotspotTab}
-                                    tabs={hotspots.map((hotspot, index) => {
-                                        return {
-                                            label: hotspot.id, content: (
-                                                <HotspotControl hotspot={hotspot} index={index}
-                                                    setClickEffect={this.setClickEffect}
-                                                    change={this.changeZone}
-                                                    remove={this.removeZone} />
-                                            )
-                                        }
-                                    })} />
 
-                            </Box>
-                        </Stack>
-                        <NewZoneButtons
-                            type="hotspot"
-                            clickEffect={this.state.clickEffect}
-                            selectZone={this.handleTreeEntryClick} />
-                    </>
-                )
-            },
             {
                 label: 'storage', content: (
                     <Container maxWidth="xs">
