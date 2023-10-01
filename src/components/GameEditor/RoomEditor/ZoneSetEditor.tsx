@@ -1,6 +1,5 @@
 import { FunctionComponent } from "react";
 import { HotspotZone, Zone } from "@/definitions";
-import { TabSet } from "@/components/GameEditor/TabSet";
 import { ClickEffect } from "./ClickEffect";
 import { ShapeChangeFunction, ValidShapeType } from "./ShapeControl";
 import { ZoneControl } from "./ZoneControl";
@@ -20,7 +19,6 @@ interface Props {
     clickEffect?: ClickEffect;
 }
 
-const getZoneLabel = (zone: Zone, type: string, index: number): string => 'id' in zone && typeof zone.id === 'string' ? zone.id : zone.ref || `${type} #${index}`
 
 export const ZoneSetEditor: FunctionComponent<Props> = ({
     type,
@@ -39,9 +37,14 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
 
     return (
         <>
+            <NewZoneButtons
+                type={type}
+                clickEffect={clickEffect}
+                selectZone={selectZone}
+            />
             {zones.length === 0 ? (
                 <Alert severity="info">
-                    No <b>{type}s</b> for this room yet. Select a shape from the buttons below to add one.
+                    No <b>{type}s</b> for this room yet. Select a shape from the buttons above to add one.
                 </Alert>
             ) : (
                 <Stack>
@@ -63,13 +66,6 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
                     )}
                 </Stack>
             )}
-
-
-            <NewZoneButtons
-                type={type}
-                clickEffect={clickEffect}
-                selectZone={selectZone}
-            />
         </>
     )
 }

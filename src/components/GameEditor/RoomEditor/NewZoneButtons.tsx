@@ -11,7 +11,6 @@ interface Props {
 }
 
 
-
 export const NewZoneButtons: FunctionComponent<Props> = ({
     type,
     selectZone,
@@ -24,9 +23,8 @@ export const NewZoneButtons: FunctionComponent<Props> = ({
         return (clickEffect.shape === shapeToCheck && clickEffect.type == type.toUpperCase())
     }
 
-
     return (
-        <ButtonGroup>
+        <ButtonGroup sx={{ paddingBottom: 1 }}>
             <Button
                 variant={clickEffectIsNewZone('circle') ? 'contained' : 'outlined'}
                 startIcon={<AddIcon />}

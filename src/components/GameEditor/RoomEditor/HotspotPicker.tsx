@@ -1,12 +1,11 @@
-import { TabSet } from "@/components/GameEditor/TabSet";
-import { Alert, Box, Stack } from "@mui/material";
-import { HotspotControl } from "./HotSpotControl";
-import { NewZoneButtons } from "./NewZoneButtons";
-import { ZonePicker } from "./ZonePicker";
 import { HotspotZone } from "@/definitions";
-import { ShapeChangeFunction } from "./ShapeControl";
+import { Alert, Stack } from "@mui/material";
 import { EntryClickFunction } from "../TreeMenu";
 import { ClickEffect } from "./ClickEffect";
+import { HotspotControl } from "./HotSpotControl";
+import { NewZoneButtons } from "./NewZoneButtons";
+import { ShapeChangeFunction } from "./ShapeControl";
+import { ZonePicker } from "./ZonePicker";
 
 interface Props {
     hotspots: HotspotZone[],
@@ -27,9 +26,13 @@ export const HotspotPicker = ({ hotspots, openIndex, changeZone, selectZone, rem
     return (
 
         <>
+            <NewZoneButtons
+                type="hotspot"
+                clickEffect={clickEffect}
+                selectZone={selectZone} />
             {hotspots.length === 0 ? (
                 <Alert severity="info">
-                    No <b>hotspots</b> for this room yet. Select a shape from the buttons below to add one.
+                    No <b>hotspots</b> for this room yet. Select a shape from the buttons above to add one.
                 </Alert>
             ) : (
                 <Stack>
@@ -47,10 +50,7 @@ export const HotspotPicker = ({ hotspots, openIndex, changeZone, selectZone, rem
                     )}
                 </Stack>
             )}
-            <NewZoneButtons
-                type="hotspot"
-                clickEffect={clickEffect}
-                selectZone={selectZone} />
+
         </>
     )
 }
