@@ -41,7 +41,7 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
                 </Button>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12}>
                 <EditorBox title="shape and position">
                     <Box maxWidth={100}>
                         <NumberInput value={parallax}
@@ -59,7 +59,7 @@ export function HotspotControl({ hotspot, index, change, remove, setClickEffect 
                 </EditorBox>
             </Grid>
 
-            <Grid item xs={5}>
+            <Grid item xs={12}>
                 <EditorBox title="walk to point">
                     <OptionalNumberInput
                         value={walkToX} label="X: "

@@ -18,7 +18,7 @@ interface Props {
 export function ZoneControl({ zone, index, change, remove, setClickEffect, type }: Props) {
     return (
         <Grid container component={'article'}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
                 <Stack spacing={2}>
                     <OptionalStringInput
                         label="Ref: "
@@ -39,7 +39,7 @@ export function ZoneControl({ zone, index, change, remove, setClickEffect, type 
                     </Box>
                 </Stack>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
                 <ShapeControl
                     shape={zone} index={index}
                     setClickEffect={setClickEffect}

@@ -5,6 +5,7 @@ import { HotspotZone, Shape, Zone, ZoneType } from "@/definitions";
 import { ListEditor } from "../ListEditor";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { Stack, Button, Typography } from "@mui/material";
+import { ArrayControl } from "../ArrayControl";
 
 export type ValidShapeType = ZoneType;
 export type ShapeChangeFunction = { (index: number, propery: Exclude<keyof HotspotZone | keyof Zone, 'type'>, newValue: unknown, type: ValidShapeType): void }
@@ -50,7 +51,8 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, c
             {polygon && (
                 <div>
                     <Typography variant='overline'>points: </Typography>
-                    <ListEditor tight
+                    <ArrayControl horizontalMoveButtons
+                        buttonSize="small"
                         list={polygon}
                         mutateList={polygon => change(index, 'polygon', polygon, type)}
                         describeItem={(point, index) => (

@@ -1,6 +1,7 @@
 import { HotspotZone, Zone } from "@/definitions";
-import { Tab, Tabs } from "@mui/material";
+import { FormControl, MenuItem, Select } from "@mui/material";
 import { FunctionComponent } from "react";
+
 
 type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
 interface Props {
@@ -17,23 +18,27 @@ export const ZonePicker: FunctionComponent<Props> = ({
     type,
     zones,
     selectZone,
-    openTab = 0,
+    openTab,
 }: Props) => {
 
-    const validOpenTab = openTab >= zones.length ? undefined : openTab
-
     return (
-        <Tabs value={validOpenTab} orientation="horizontal" sx={{ flexShrink: 0,flexWrap:'wrap' }}>
-            {zones.map((zone, index) => (
-                <Tab
-                    key={index}
-                    onClick={() => {
-                        selectZone(type.toUpperCase(), getClickData(zone, index), false)
-                    }}
-                    value={index}
-                    label={getZoneLabel(zone, type, index)}
-                />
-            ))}
-        </Tabs>
+        <FormControl>
+            <Select<number>
+                variant='filled'
+                value={openTab} label={'zones'}
+                onChange={(event) => {
+                    const index = Number(event.target.value)
+                    const zone = zones[index]
+                    selectZone(type.toUpperCase(), getClickData(zone, index), false)
+                }}>
+                <MenuItem value={undefined}>[none]</MenuItem>
+                {zones.map((zone, index) => (
+                    <MenuItem key={index} value={index} >
+                        {getZoneLabel(zone, type, index)}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl >
+
     )
 }

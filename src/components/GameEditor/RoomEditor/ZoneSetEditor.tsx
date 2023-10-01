@@ -29,46 +29,41 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
     remove,
     setClickEffect,
     selectZone,
-    openTab = 0,
+    openTab,
     clickEffect,
 }: Props) => {
 
+    const activeZone = typeof openTab === 'number'
+        ? zones[openTab]
+        : undefined
+
     return (
         <>
-            {zones.length === 0 && (
+            {zones.length === 0 ? (
                 <Alert severity="info">
                     No <b>{type}s</b> for this room yet. Select a shape from the buttons below to add one.
                 </Alert>
+            ) : (
+                <Stack>
+                    <ZonePicker
+                        type={type}
+                        zones={zones}
+                        openTab={openTab}
+                        selectZone={selectZone}
+                    />
+
+                    {activeZone && typeof openTab === 'number' && (
+                        <ZoneControl
+                            zone={activeZone}
+                            index={openTab}
+                            type={type}
+                            setClickEffect={setClickEffect}
+                            change={change}
+                            remove={remove} />
+                    )}
+                </Stack>
             )}
 
-            <Stack direction={'row'}>
-                <ZonePicker
-                    type={type}
-                    zones={zones}
-                    openTab={openTab}
-                    selectZone={selectZone}
-                />
-
-                <TabSet
-                    openIndex={openTab}
-                    tabs={
-                        zones.map((obstacle, index) => {
-                            return {
-                                label: getZoneLabel(obstacle, type, index), content: (
-                                    <ZoneControl
-                                        key={index}
-                                        zone={obstacle}
-                                        index={index}
-                                        type={type}
-                                        setClickEffect={setClickEffect}
-                                        change={change}
-                                        remove={remove} />
-                                )
-                            }
-                        })
-                    }
-                />
-            </Stack>
 
             <NewZoneButtons
                 type={type}

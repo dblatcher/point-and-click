@@ -20,38 +20,37 @@ interface Props {
 
 export const HotspotPicker = ({ hotspots, openIndex, changeZone, selectZone, removeZone, setClickEffect, clickEffect }: Props) => {
 
-    return <>
-        <Stack >
-            <ZonePicker
-                type={'hotspot'}
-                zones={hotspots}
-                openTab={openIndex}
-                selectZone={selectZone}
-            />
-            <Box flexShrink={1}>
-                {hotspots.length === 0 && (
-                    <Alert severity="info">
-                        No <b>hotspots</b> for this room yet. Select a shape from the buttons below to add one.
-                    </Alert>
-                )}
-                <TabSet
-                    openIndex={openIndex ?? 0}
-                    tabs={hotspots.map((hotspot, index) => {
-                        return {
-                            label: hotspot.id, content: (
-                                <HotspotControl hotspot={hotspot} index={index}
-                                    setClickEffect={setClickEffect}
-                                    change={changeZone}
-                                    remove={removeZone} />
-                            )
-                        }
-                    })} />
+    const activeHotspot = typeof openIndex === 'number'
+        ? hotspots[openIndex]
+        : undefined;
 
-            </Box>
-        </Stack>
-        <NewZoneButtons
-            type="hotspot"
-            clickEffect={clickEffect}
-            selectZone={selectZone} />
-    </>
+    return (
+
+        <>
+            {hotspots.length === 0 ? (
+                <Alert severity="info">
+                    No <b>hotspots</b> for this room yet. Select a shape from the buttons below to add one.
+                </Alert>
+            ) : (
+                <Stack>
+                    <ZonePicker
+                        type={'hotspot'}
+                        zones={hotspots}
+                        openTab={openIndex}
+                        selectZone={selectZone}
+                    />
+                    {activeHotspot && typeof openIndex === 'number' && (
+                        <HotspotControl hotspot={activeHotspot} index={openIndex}
+                            setClickEffect={setClickEffect}
+                            change={changeZone}
+                            remove={removeZone} />
+                    )}
+                </Stack>
+            )}
+            <NewZoneButtons
+                type="hotspot"
+                clickEffect={clickEffect}
+                selectZone={selectZone} />
+        </>
+    )
 }
