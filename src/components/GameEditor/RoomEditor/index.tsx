@@ -522,7 +522,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
 
             <Grid container>
-                <Grid item xs={5}>
+                <Grid item xs={4}>
                     <AccoridanedContent tabs={tabs} />
                 </Grid>
                 <Grid item>
