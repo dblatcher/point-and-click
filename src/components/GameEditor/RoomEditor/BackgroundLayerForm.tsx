@@ -4,7 +4,7 @@ import { BackgroundLayer } from "@/definitions";
 import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
 import AddIcon from "@mui/icons-material/Add";
-import { Box, Button, Stack } from "@mui/material";
+import { Box, IconButton, Stack } from "@mui/material";
 import { useState } from "react";
 
 interface Props {
@@ -20,7 +20,7 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
     const [parallax, setParallax] = useState<number>(0);
 
     return (
-        <Stack direction="row" spacing={2} flex={1} alignSelf={'stretch'}>
+        <Stack direction="row" spacing={2} flex={1} alignSelf={'stretch'} alignItems={'flex-end'}>
             <SelectInput
                 value={imageId}
                 options={listIds(imageAssets)}
@@ -36,10 +36,10 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
                 />
             </Box>
 
-            <Button
+            <IconButton
                 size="small"
+                color="primary"
                 sx={{ flexShrink: 0 }}
-                variant="contained"
                 disabled={!imageId}
                 onClick={() => {
                     if (!imageId) { return }
@@ -47,7 +47,7 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
                     setParallax(0)
                     setImageId('')
                 }}
-                startIcon={<AddIcon />}>add new</Button>
+            ><AddIcon /></IconButton>
         </Stack>
     )
 }

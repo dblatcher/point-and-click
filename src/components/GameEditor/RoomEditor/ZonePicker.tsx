@@ -23,7 +23,7 @@ export const ZonePicker: FunctionComponent<Props> = ({
     const validOpenTab = openTab >= zones.length ? undefined : openTab
 
     return (
-        <Tabs value={validOpenTab} orientation="vertical" sx={{ flexShrink: 0 }}>
+        <Tabs value={validOpenTab} orientation="horizontal" sx={{ flexShrink: 0,flexWrap:'wrap' }}>
             {zones.map((zone, index) => (
                 <Tab
                     key={index}
