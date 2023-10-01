@@ -28,7 +28,8 @@ export const HotspotSetEditor = ({ hotspots, openIndex, changeZone, selectZone, 
             <NewZoneButtons
                 type="hotspot"
                 clickEffect={clickEffect}
-                selectZone={selectZone} />
+                setClickEffect={setClickEffect}
+            />
             {hotspots.length === 0 ? (
                 <Alert severity="info">
                     No <b>hotspots</b> for this room yet. Select a shape from the buttons above to add one.

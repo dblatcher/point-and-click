@@ -40,7 +40,7 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
             <NewZoneButtons
                 type={type}
                 clickEffect={clickEffect}
-                selectZone={selectZone}
+                setClickEffect={setClickEffect}
             />
             {zones.length === 0 ? (
                 <Alert severity="info">
