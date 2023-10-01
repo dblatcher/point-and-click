@@ -94,7 +94,7 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
                     </div>
                 ))}
                 <ButtonGroup sx={{ marginY: 1 }} fullWidth>
-                    <Button onClick={() => { openOrderDialog(branchKey) }}>change order</Button>
+                    <Button onClick={() => { openOrderDialog(branchKey) }}>sort choices</Button>
                     <Button variant="contained" startIcon={<AddIcon />} onClick={() => { addNewChoice(branchKey) }}>Add choice</Button>
                 </ButtonGroup>
             </EditorBox>

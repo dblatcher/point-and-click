@@ -28,20 +28,21 @@ export const ChoiceDescription = ({ choice, openEditor }: Props) => {
             justifyContent={'flex-start'}
             alignItems={'center'}
         >
-            {openEditor && (
-                <IconButton color="primary" onClick={openEditor} aria-label="edit">
-                    <EditIcon />
-                </IconButton>
-            )}
-            <Box sx={{ backgroundColor: 'secondary.dark', color: 'secondary.contrastText', borderRadius:4 }} paddingY={1} paddingX={3}>
+
+            {choice.end && <Tooltip title='ends conversation'>< LogOut /></Tooltip>}
+            {choice.disabled && <Tooltip title='starts disabled'>< SpeakerNotesOffIcon /></Tooltip>}
+            {choice.once && <Tooltip title='can say only once'>< RepeatOneIcon /></Tooltip>}
+            <Box sx={{ backgroundColor: 'secondary.dark', color: 'secondary.contrastText', borderRadius: 4 }} paddingY={1} paddingX={3} flex={1}>
                 <Typography component={'q'}>
                     {choice.text ? truncateLine(choice.text, 40) : "[no text]"}
                 </Typography>
 
             </Box>
-            {choice.end && <Tooltip title='ends conversation'>< LogOut /></Tooltip>}
-            {choice.disabled && <Tooltip title='starts disabled'>< SpeakerNotesOffIcon /></Tooltip>}
-            {choice.once && <Tooltip title='can say only once'>< RepeatOneIcon /></Tooltip>}
+            {openEditor && (
+                <IconButton color="primary" onClick={openEditor} aria-label="edit">
+                    <EditIcon />
+                </IconButton>
+            )}
         </Stack>
     )
 }

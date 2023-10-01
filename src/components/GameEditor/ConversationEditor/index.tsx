@@ -8,9 +8,9 @@ import { uploadJsonData } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { Component } from "react";
+import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
-import { ListEditor } from "../ListEditor";
 import { SequenceEditor } from "../SequenceEditor";
 import { StorageMenu } from "../StorageMenu";
 import { DataItemEditorProps } from "../dataEditors";
@@ -328,11 +328,11 @@ export class ConversationEditor extends Component<Props, State> {
                 <Dialog open={!!this.state.editOrderDialogBranchId}
                     onClose={() => { this.setState({ editOrderDialogBranchId: undefined }) }}
                 >
-                    <DialogTitle>Edit Order: {editOrderDialogBranchId}</DialogTitle>
+                    <DialogTitle>{`Sort choices in branch "${editOrderDialogBranchId}"`}</DialogTitle>
 
                     <DialogContent>
                         {(branchInOrderDialog && editOrderDialogBranchId) &&
-                            <ListEditor tight
+                            <ArrayControl horizontalMoveButtons 
                                 list={branchInOrderDialog.choices}
                                 describeItem={(choice) => {
                                     return (
