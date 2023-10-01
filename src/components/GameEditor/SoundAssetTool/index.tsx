@@ -47,6 +47,7 @@ export class SoundAssetTool extends Component<{}, State> {
     this.openFromService = this.openFromService.bind(this);
     this.zipSounds = this.zipSounds.bind(this);
     this.changeValue = this.changeValue.bind(this);
+    this.clearForm = this.clearForm.bind(this)
 
     this.canvasRef = createRef();
     this.file = null;
@@ -73,6 +74,17 @@ export class SoundAssetTool extends Component<{}, State> {
       fileObjectUrl: newUrl,
     });
   };
+
+  clearForm() {
+    if (this.state.fileObjectUrl && typeof window !== undefined) {
+      window.URL.revokeObjectURL(this.state.fileObjectUrl);
+    }
+    this.file = null
+    this.setState({
+      asset: { id: '' },
+      fileObjectUrl: undefined,
+    })
+  }
 
   changeValue(propery: keyof SoundAsset, newValue: string | number | undefined) {
     this.setState(state => {
@@ -179,6 +191,7 @@ export class SoundAssetTool extends Component<{}, State> {
       <article>
         <EditorHeading heading="Sound asset tool" />
         <ZipFileControl
+          clearForm={this.clearForm}
           uploadWarning={uploadWarning}
           zipAssets={this.zipSounds}
           loadFromZipFile={this.loadFromZipFile} />
