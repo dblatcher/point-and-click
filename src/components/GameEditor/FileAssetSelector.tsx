@@ -1,20 +1,20 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { listIds } from "@/lib/util";
 import { Service } from "@/services/Service";
-
-import { StringInput } from "../SchemaForm/StringInput";
-import { SelectInput } from "../SchemaForm/SelectInput";
-import { Box, List, IconButton, ListItemButton, ListItemText } from "@mui/material";
-import { EditorBox } from "./EditorBox";
-import DeleteIcon from "@mui/icons-material/Delete"
 import { FileAsset } from "@/services/assets";
-import { listIds } from "@/lib/util"
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, Grid, IconButton, List, ListItemButton, ListItemText } from "@mui/material";
+import { useEffect, useState } from "react";
+import { SelectInput } from "../SchemaForm/SelectInput";
+import { StringInput } from "../SchemaForm/StringInput";
+import { EditorBox } from "./EditorBox";
+import { AssetCard } from "./asset-components/AssetCard";
 
 interface Props {
     service: Service<FileAsset>;
     legend: string;
     select: { (item: FileAsset): void };
     selectNone?: { (): void };
-    format?: 'buttons' | 'select';
+    format?: 'buttons' | 'select' | 'folder';
     selectedItemId?: string;
     filterItems?: { (item: FileAsset): boolean };
     currentSelection?: string;
@@ -56,8 +56,8 @@ export const FileAssetSelector = ({
         ? service.getAll().filter(filterItems)
         : service.getAll();
 
-    const searchedItemsInFilter = searchInput !== '' 
-        ? itemsInFilter.filter(({id}) => id.toLowerCase().includes(searchInput.toLowerCase())) 
+    const searchedItemsInFilter = searchInput !== ''
+        ? itemsInFilter.filter(({ id }) => id.toLowerCase().includes(searchInput.toLowerCase()))
         : itemsInFilter
 
 
@@ -70,7 +70,24 @@ export const FileAssetSelector = ({
                         value={selectedItemId}
                         inputHandler={value => { handleSelect(value ?? '') }} />
                 </Box>
-
+            )
+        case 'folder':
+            return (
+                <EditorBox title={legend}>
+                    <Box>
+                        <StringInput label="search" value={searchInput} inputHandler={setSearchInput} />
+                    </Box>
+                    <Grid container spacing={1} flexWrap={'wrap'}>
+                        {searchedItemsInFilter.map(asset => (
+                            <Grid item key={asset.id}>
+                                <AssetCard
+                                    asset={asset}
+                                    handleClick={() => { handleSelect(asset.id) }}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </EditorBox>
             )
         case 'buttons':
         default:
@@ -78,7 +95,7 @@ export const FileAssetSelector = ({
                 <EditorBox title={legend}>
                     <StringInput label="search" value={searchInput} inputHandler={setSearchInput} />
                     <List dense>
-                        {searchedItemsInFilter.map(({id}) =>
+                        {searchedItemsInFilter.map(({ id }) =>
                             <ListItemButton
                                 selected={id === currentSelection}
                                 key={id} onClick={() => { handleSelect(id) }}>
