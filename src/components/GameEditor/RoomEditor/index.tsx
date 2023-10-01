@@ -1,7 +1,7 @@
 import { ActorData, BackgroundLayer, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import imageService from "@/services/imageService";
-import { Alert, Box, Container, Stack } from "@mui/material";
+import { Alert, Box, Container, Grid, Stack } from "@mui/material";
 import { Component } from "react";
 import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
 import { getBlankRoom } from "../defaults";
@@ -13,12 +13,13 @@ import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 // components
 import { TabSet, type TabSetItem } from "@/components/GameEditor/TabSet";
+import { AccoridanedContent } from "../AccordianedContent";
 import { EditorHeading } from "../EditorHeading";
-import { ListEditor } from "../ListEditor";
 import { StorageMenu } from "../StorageMenu";
-import { TabMenu } from "../TabMenu";
 // subcomponents
 import { SchemaForm, getModification } from "@/components/SchemaForm";
+import { StringInput } from "@/components/SchemaForm/StringInput";
+import { ArrayControl } from "../ArrayControl";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { HotspotControl } from "./HotSpotControl";
@@ -28,7 +29,6 @@ import { ScalingControl } from "./ScalingControl";
 import { ShapeChangeFunction } from "./ShapeControl";
 import { ZonePicker } from "./ZonePicker";
 import { ZoneSetEditor } from "./ZoneSetEditor";
-import { StringInput } from "@/components/SchemaForm/StringInput";
 
 export type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
@@ -435,8 +435,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             },
             {
                 label: 'Background', content: (<Stack spacing={2}>
-                    <ListEditor tight
+                    <ArrayControl 
                         list={background}
+                        buttonSize="small"
                         mutateList={(background) => { this.setStateWithAutosave({ background }) }}
                         describeItem={(layer, index) => (
                             <BackgroundLayerControl index={index}
@@ -481,7 +482,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             {
                 label: 'Hotspots', content: (
                     <>
-                        <Stack direction={'row'}>
+                        <Stack >
                             <ZonePicker
                                 type={'hotspot'}
                                 zones={hotspots}
@@ -545,13 +546,20 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
-            <TabMenu tabs={tabs} />
-            <Preview
-                actors={actors}
-                roomData={this.state}
-                clickEffect={clickEffect}
-                activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
-                handleRoomClick={this.handleRoomClick} />
+
+            <Grid container>
+                <Grid item xs={5}>
+                    <AccoridanedContent tabs={tabs} />
+                </Grid>
+                <Grid item>
+                    <Preview
+                        actors={actors}
+                        roomData={this.state}
+                        clickEffect={clickEffect}
+                        activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
+                        handleRoomClick={this.handleRoomClick} />
+                </Grid>
+            </Grid>
         </Stack>
     }
 }
