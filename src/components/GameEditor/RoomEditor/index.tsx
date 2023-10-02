@@ -511,12 +511,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
-
-            <Grid container>
+            <Grid container flexWrap={'nowrap'} spacing={1}>
                 <Grid item xs={4}>
                     <AccoridanedContent tabs={tabs} />
                 </Grid>
-                <Grid item>
+                <Grid item flex={1}>
                     <div style={{ position: 'sticky', top: 1 }}>
                         <Preview
                             actors={actors}

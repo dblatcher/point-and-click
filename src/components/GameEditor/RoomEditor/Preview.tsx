@@ -9,6 +9,7 @@ import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { makeTestActor } from "./testSprite";
 import { Stack, Checkbox, Box, Typography, Drawer, Button } from "@mui/material";
 import { RangeInput } from "./RangeInput";
+import { ResizeWatcher } from "@/components/ResizeWatcher";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -170,90 +171,65 @@ export class Preview extends Component<Props, State>{
                 this.changeActorNumberProperty(eventToNumber(event.nativeEvent), key)
 
         return (
-            <Box
-                display={'flex'}
-                flexDirection={'column'}
-                justifyContent={'flex-end'}
-                alignItems={'center'}
-                flexBasis={'100%'}
-                position={'relative'}
-                boxSizing={'border-box'}
-                padding={1}
-                sx={{
-                    backgroundColor: 'secondary.light'
-                }}
-            >
-
-                <Box sx={{
-                    position: 'relative',
-                    display: 'inline-block',
-                    borderStyle: 'outset',
-                    borderWidth: 3,
-                    color: 'secondary.light'
-                }}>
-                    <Room data={roomData} forPreview
-                        showObstacleAreas={showObstacleAreas}
-                        maxWidth={maxWidth} maxHeight={1000}
-                        viewAngle={viewAngle}
-                        highlightHotspots={highlightHotspots}
-                        handleRoomClick={processClick}
-                        markHotspotVertices={this.hotspotsToMark}
-                        markObstacleVertices={this.obstaclesToMark}
-                        flashHotspot={activeHotspotIndex}
-                        markWalkableVertices={this.walkablesToMark}
-                        contents={contents}
-                    >
-                        {showScaleLines && scaling.map((yAndScale, index) => (
-                            <HorizontalLine key={index}
-                                y={yAndScale[0]}
-                                text={`scale: ${yAndScale[1]}`}
-                                roomData={roomData} />
-                        ))}
-
-                        {this.hotspotToHaveMarkWalkToPoint && (
-                            <MarkerShape
-                                roomData={roomData}
-                                viewAngle={viewAngle}
-                                color={'red'}
-                                text={this.walkToPointLabel}
-                                {...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
-                            />
-                        )}
-                    </Room>
-                </Box>
-
-                {clickEffect && (
-                    <Typography
-                        variant='overline'
-                        padding={1}
-                        sx={{
-                            position: 'absolute',
-                            right: 0, top: 0,
-                            color: 'white',
-                            backgroundColor: 'rgba(0,0,0,.5)'
-                        }}>{getClickCaption(clickEffect)}</Typography>
-                )}
-
-                <Button
+            <ResizeWatcher resizeHandler={() => {
+                const container = document.querySelector('.iwillreplacewitharef')
+                if (container) {
+                    this.setState({ maxWidth: container.clientWidth - 100 })
+                }
+            }}>
+                <Box className="iwillreplacewitharef"
+                    display={'flex'}
+                    flexDirection={'column'}
+                    justifyContent={'flex-end'}
+                    alignItems={'center'}
+                    flexBasis={'100%'}
+                    position={'relative'}
+                    boxSizing={'border-box'}
+                    padding={1}
                     sx={{
-                        position: 'absolute',
-                        left: 0,
-                        top: 0,
+                        backgroundColor: 'secondary.light'
                     }}
-                    onClick={() => { this.setState({ drawerOpen: !this.state.drawerOpen }) }}
-                    variant="contained"
-                >menu</Button>
+                >
 
-                <Drawer open={this.state.drawerOpen} anchor="right" variant="persistent">
-                    <Box padding={1}>
-                        <Typography>Preview window</Typography>
-                        <RangeInput
-                            label="width"
-                            value={maxWidth}
-                            max={800} min={100} step={25}
-                            onChange={
-                                (event) => this.setState({ maxWidth: eventToNumber(event.nativeEvent) })
-                            } />
+                    <Box sx={{
+                        position: 'relative',
+                        display: 'inline-block',
+                        borderStyle: 'outset',
+                        borderWidth: 3,
+                        color: 'secondary.light'
+                    }}>
+                        <Room data={roomData} forPreview
+                            showObstacleAreas={showObstacleAreas}
+                            maxWidth={maxWidth} 
+                            maxHeight={Math.min(roomData.height*2, 600)}
+                            viewAngle={viewAngle}
+                            highlightHotspots={highlightHotspots}
+                            handleRoomClick={processClick}
+                            markHotspotVertices={this.hotspotsToMark}
+                            markObstacleVertices={this.obstaclesToMark}
+                            flashHotspot={activeHotspotIndex}
+                            markWalkableVertices={this.walkablesToMark}
+                            contents={contents}
+                        >
+                            {showScaleLines && scaling.map((yAndScale, index) => (
+                                <HorizontalLine key={index}
+                                    y={yAndScale[0]}
+                                    text={`scale: ${yAndScale[1]}`}
+                                    roomData={roomData} />
+                            ))}
+
+                            {this.hotspotToHaveMarkWalkToPoint && (
+                                <MarkerShape
+                                    roomData={roomData}
+                                    viewAngle={viewAngle}
+                                    color={'red'}
+                                    text={this.walkToPointLabel}
+                                    {...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
+                                />
+                            )}
+                        </Room>
+                    </Box>
+                    <Box>
                         <RangeInput
                             label="angle"
                             value={viewAngle}
@@ -262,55 +238,82 @@ export class Preview extends Component<Props, State>{
                             onChange={
                                 (event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) })
                             } />
-
-                        {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
-                        {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
-                        {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
-                        {this.renderCheckBox('Show Actors', 'showRealActors')}
                     </Box>
 
-                    <Box padding={1}>
-                        <Typography>Test Actor</Typography>
-                        {this.renderCheckBox('Show', 'showTestActor')}
-                        <RangeInput
-                            label="X"
-                            value={testActor.x}
-                            max={roomData.width}
-                            onChange={testActorChange('x')}
-                            disabled={!showTestActor}
-                        />
-                        <RangeInput
-                            label="Y"
-                            value={testActor.y}
-                            max={roomData.height}
-                            onChange={testActorChange('y')}
-                            disabled={!showTestActor}
-                        />
-                        <RangeInput
-                            label="base height"
-                            value={testActor.height}
-                            max={200} min={10}
-                            onChange={testActorChange('height')}
-                            disabled={!showTestActor}
-                        />
-                        <RangeInput
-                            label="base width"
-                            value={testActor.width}
-                            max={200} min={10}
-                            onChange={testActorChange('width')}
-                            disabled={!showTestActor}
-                        />
-                    </Box>
+                    {clickEffect && (
+                        <Typography
+                            variant='overline'
+                            padding={1}
+                            sx={{
+                                position: 'absolute',
+                                right: 0, top: 0,
+                                color: 'white',
+                                backgroundColor: 'rgba(0,0,0,.5)'
+                            }}>{getClickCaption(clickEffect)}</Typography>
+                    )}
 
-                    <Box padding={1}>
-                        <Button
-                            fullWidth
-                            onClick={() => { this.setState({ drawerOpen: false }) }}
-                            variant="contained"
-                        >close menu</Button>
-                    </Box>
-                </Drawer>
-            </Box>
+                    <Button
+                        sx={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                        }}
+                        onClick={() => { this.setState({ drawerOpen: !this.state.drawerOpen }) }}
+                        variant="contained"
+                    >menu</Button>
+
+                    <Drawer open={this.state.drawerOpen} anchor="right" variant="persistent">
+                        <Box padding={1}>
+                            <Typography>Preview window</Typography>
+                            {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
+                            {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
+                            {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
+                            {this.renderCheckBox('Show Actors', 'showRealActors')}
+                        </Box>
+
+                        <Box padding={1}>
+                            <Typography>Test Actor</Typography>
+                            {this.renderCheckBox('Show', 'showTestActor')}
+                            <RangeInput
+                                label="X"
+                                value={testActor.x}
+                                max={roomData.width}
+                                onChange={testActorChange('x')}
+                                disabled={!showTestActor}
+                            />
+                            <RangeInput
+                                label="Y"
+                                value={testActor.y}
+                                max={roomData.height}
+                                onChange={testActorChange('y')}
+                                disabled={!showTestActor}
+                            />
+                            <RangeInput
+                                label="base height"
+                                value={testActor.height}
+                                max={200} min={10}
+                                onChange={testActorChange('height')}
+                                disabled={!showTestActor}
+                            />
+                            <RangeInput
+                                label="base width"
+                                value={testActor.width}
+                                max={200} min={10}
+                                onChange={testActorChange('width')}
+                                disabled={!showTestActor}
+                            />
+                        </Box>
+
+                        <Box padding={1}>
+                            <Button
+                                fullWidth
+                                onClick={() => { this.setState({ drawerOpen: false }) }}
+                                variant="contained"
+                            >close menu</Button>
+                        </Box>
+                    </Drawer>
+                </Box>
+            </ResizeWatcher>
         )
     }
 }
