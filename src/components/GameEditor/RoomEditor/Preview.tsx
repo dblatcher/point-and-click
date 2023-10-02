@@ -1,15 +1,15 @@
-import { ChangeEventHandler, Component } from "react";
-import { RoomData, ActorData, HotspotZone } from "@/definitions";
-import { Room } from "@/components/svg/Room";
-import { MarkerShape } from "@/components/svg/MarkerShape";
-import HorizontalLine from "@/components/svg/HorizontalLine";
-import { ClickEffect } from "./ClickEffect";
-import { eventToBoolean, eventToNumber } from "@/lib/util";
-import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
-import { makeTestActor } from "./testSprite";
-import { Stack, Checkbox, Box, Typography, Drawer, Button } from "@mui/material";
-import { RangeInput } from "./RangeInput";
 import { ResizeWatcher } from "@/components/ResizeWatcher";
+import HorizontalLine from "@/components/svg/HorizontalLine";
+import { MarkerShape } from "@/components/svg/MarkerShape";
+import { Room } from "@/components/svg/Room";
+import { ActorData, HotspotZone, RoomData } from "@/definitions";
+import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
+import { eventToBoolean, eventToNumber } from "@/lib/util";
+import { Box, Checkbox, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
+import { ChangeEventHandler, Component } from "react";
+import { ClickEffect } from "./ClickEffect";
+import { RangeInput } from "./RangeInput";
+import { makeTestActor } from "./testSprite";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -23,7 +23,6 @@ type State = BooleanState & {
     viewAngle: number;
     maxWidth: number;
     testActor: ActorData;
-    drawerOpen: boolean;
 };
 
 type Props = {
@@ -70,7 +69,6 @@ export class Preview extends Component<Props, State>{
             showTestActor: false,
             showRealActors: true,
             testActor: makeTestActor({ x: props.roomData.width / 2, y: 20 }),
-            drawerOpen: false,
         }
 
         this.changeActorNumberProperty = this.changeActorNumberProperty.bind(this)
@@ -186,9 +184,7 @@ export class Preview extends Component<Props, State>{
                     position={'relative'}
                     boxSizing={'border-box'}
                     padding={1}
-                    sx={{
-                        backgroundColor: 'secondary.light'
-                    }}
+                    component={Paper}
                 >
 
                     <Box sx={{
@@ -200,8 +196,8 @@ export class Preview extends Component<Props, State>{
                     }}>
                         <Room data={roomData} forPreview
                             showObstacleAreas={showObstacleAreas}
-                            maxWidth={maxWidth} 
-                            maxHeight={Math.min(roomData.height*2, 600)}
+                            maxWidth={maxWidth}
+                            maxHeight={Math.min(roomData.height * 2, 600)}
                             viewAngle={viewAngle}
                             highlightHotspots={highlightHotspots}
                             handleRoomClick={processClick}
@@ -238,6 +234,61 @@ export class Preview extends Component<Props, State>{
                             onChange={
                                 (event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) })
                             } />
+
+                        <Divider />
+
+                        <Grid container>
+                            <Grid item>
+                                {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
+                            </Grid>
+                            <Grid item>
+                                {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
+                            </Grid>
+                            <Grid item>
+                                {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
+                            </Grid>
+                            <Grid item>
+                                {this.renderCheckBox('Show Actors', 'showRealActors')}
+                            </Grid>
+                        </Grid>
+
+                        <Divider />
+
+                        <Box padding={1}>
+                            {this.renderCheckBox('Test Actor', 'showTestActor')}
+                            {this.state.showTestActor && (<>
+                                <RangeInput
+                                    label="X"
+                                    value={testActor.x}
+                                    max={roomData.width}
+                                    onChange={testActorChange('x')}
+                                    disabled={!showTestActor}
+                                />
+                                <RangeInput
+                                    label="Y"
+                                    value={testActor.y}
+                                    max={roomData.height}
+                                    onChange={testActorChange('y')}
+                                    disabled={!showTestActor}
+                                />
+                                <RangeInput
+                                    label="base height"
+                                    value={testActor.height}
+                                    max={200} min={10}
+                                    onChange={testActorChange('height')}
+                                    disabled={!showTestActor}
+                                />
+                                <RangeInput
+                                    label="base width"
+                                    value={testActor.width}
+                                    max={200} min={10}
+                                    onChange={testActorChange('width')}
+                                    disabled={!showTestActor}
+                                />
+
+                            </>)}
+                        </Box>
+
                     </Box>
 
                     {clickEffect && (
@@ -251,67 +302,6 @@ export class Preview extends Component<Props, State>{
                                 backgroundColor: 'rgba(0,0,0,.5)'
                             }}>{getClickCaption(clickEffect)}</Typography>
                     )}
-
-                    <Button
-                        sx={{
-                            position: 'absolute',
-                            left: 0,
-                            top: 0,
-                        }}
-                        onClick={() => { this.setState({ drawerOpen: !this.state.drawerOpen }) }}
-                        variant="contained"
-                    >menu</Button>
-
-                    <Drawer open={this.state.drawerOpen} anchor="right" variant="persistent">
-                        <Box padding={1}>
-                            <Typography>Preview window</Typography>
-                            {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
-                            {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
-                            {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
-                            {this.renderCheckBox('Show Actors', 'showRealActors')}
-                        </Box>
-
-                        <Box padding={1}>
-                            <Typography>Test Actor</Typography>
-                            {this.renderCheckBox('Show', 'showTestActor')}
-                            <RangeInput
-                                label="X"
-                                value={testActor.x}
-                                max={roomData.width}
-                                onChange={testActorChange('x')}
-                                disabled={!showTestActor}
-                            />
-                            <RangeInput
-                                label="Y"
-                                value={testActor.y}
-                                max={roomData.height}
-                                onChange={testActorChange('y')}
-                                disabled={!showTestActor}
-                            />
-                            <RangeInput
-                                label="base height"
-                                value={testActor.height}
-                                max={200} min={10}
-                                onChange={testActorChange('height')}
-                                disabled={!showTestActor}
-                            />
-                            <RangeInput
-                                label="base width"
-                                value={testActor.width}
-                                max={200} min={10}
-                                onChange={testActorChange('width')}
-                                disabled={!showTestActor}
-                            />
-                        </Box>
-
-                        <Box padding={1}>
-                            <Button
-                                fullWidth
-                                onClick={() => { this.setState({ drawerOpen: false }) }}
-                                variant="contained"
-                            >close menu</Button>
-                        </Box>
-                    </Drawer>
                 </Box>
             </ResizeWatcher>
         )
