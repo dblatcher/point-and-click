@@ -24,7 +24,7 @@ export const NewZoneButtons: FunctionComponent<Props> = ({
     const effectType = type.toUpperCase() as "OBSTACLE" | "HOTSPOT" | "WALKABLE";
 
     return (
-        <ButtonGroup sx={{ paddingBottom: 1 }}>
+        <ButtonGroup sx={{ paddingBottom: 1 }} size="small">
             <Button
                 variant={clickEffectIsNewZone('circle') ? 'contained' : 'outlined'}
                 startIcon={<AddIcon />}
