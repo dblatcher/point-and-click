@@ -33,11 +33,11 @@ const MoveButton = ({ role, index, handleMove, color }: {
     handleMove: { (index: number, role: 'UP' | 'DOWN'): void }
     color?: Color
 }) => (
-    <Button size='small'
+    <IconButton size='small'
         title={role}
         color={color}
         onClick={() => { handleMove(index, role) }}
-    >{role === 'UP' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}</Button>
+    >{role === 'UP' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}</IconButton>
 )
 const InsertButton = ({ index, handleInsert, color, buttonSize }: {
     index: number;

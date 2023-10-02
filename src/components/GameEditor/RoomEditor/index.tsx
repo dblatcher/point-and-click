@@ -420,6 +420,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     <ArrayControl
                         list={background}
                         buttonSize="small"
+                        horizontalMoveButtons
                         mutateList={(background) => { this.setStateWithAutosave({ background }) }}
                         describeItem={(layer, index) => (
                             <BackgroundLayerControl index={index}
