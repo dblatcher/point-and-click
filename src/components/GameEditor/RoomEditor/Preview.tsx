@@ -172,7 +172,7 @@ export class Preview extends Component<Props, State>{
             <ResizeWatcher resizeHandler={() => {
                 const container = document.querySelector('.iwillreplacewitharef')
                 if (container) {
-                    this.setState({ maxWidth: container.clientWidth - 100 })
+                    this.setState({ maxWidth: container.clientWidth - 50 })
                 }
             }}>
                 <Box className="iwillreplacewitharef"
@@ -285,10 +285,8 @@ export class Preview extends Component<Props, State>{
                                     onChange={testActorChange('width')}
                                     disabled={!showTestActor}
                                 />
-
                             </>)}
                         </Box>
-
                     </Box>
 
                     {clickEffect && (
