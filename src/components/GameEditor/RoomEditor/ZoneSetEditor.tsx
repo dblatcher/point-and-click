@@ -7,14 +7,14 @@ import { Stack, Alert } from "@mui/material";
 import { NewZoneButtons } from "./NewZoneButtons";
 import { ZonePicker } from "./ZonePicker";
 
-type EntryClickFunction = { (folderId: string, data: { id: string }): void }
+type EntryClickFunction = { (folderId: string, data?: { id: string }): void }
 interface Props {
     type: 'obstacle' | 'walkable';
     zones: (Zone | HotspotZone)[];
     change: ShapeChangeFunction;
     remove: { (index: number, type: ValidShapeType): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
-    openTab?: number;
+    activeZoneIndex?: number;
     selectZone: EntryClickFunction
     clickEffect?: ClickEffect;
 }
@@ -27,12 +27,12 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
     remove,
     setClickEffect,
     selectZone,
-    openTab,
+    activeZoneIndex,
     clickEffect,
 }: Props) => {
 
-    const activeZone = typeof openTab === 'number'
-        ? zones[openTab]
+    const activeZone = typeof activeZoneIndex === 'number'
+        ? zones[activeZoneIndex]
         : undefined
 
     return (
@@ -51,14 +51,14 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
                     <ZonePicker
                         type={type}
                         zones={zones}
-                        openTab={openTab}
+                        activeZoneIndex={activeZoneIndex}
                         selectZone={selectZone}
                     />
 
-                    {activeZone && typeof openTab === 'number' && (
+                    {activeZone && typeof activeZoneIndex === 'number' && (
                         <ZoneControl
                             zone={activeZone}
-                            index={openTab}
+                            index={activeZoneIndex}
                             type={type}
                             setClickEffect={setClickEffect}
                             change={change}

@@ -5,32 +5,37 @@ import { FormControl, MenuItem, Select } from "@mui/material";
 interface Props {
     type: 'obstacle' | 'walkable' | 'hotspot';
     zones: (Zone | HotspotZone)[];
-    openTab?: number;
-    selectZone: { (folderId: string, data: { id: string }): void }
+    activeZoneIndex?: number;
+    selectZone: { (folderId: string, data?: { id: string }): void }
 }
 
 const getZoneLabel = (zone: Zone | HotspotZone, type: string, index: number) => 'id' in zone ? zone.id : zone.ref || `${type} #${index}`
 const getClickData = (zone: Zone | HotspotZone, index: number) => 'id' in zone ? zone : { id: index.toString() }
 
-/** TO DO - fix bug - can't select non */
+const EMPTY_STRING = ''
+
+
 export const ZonePicker = ({
     type,
     zones,
     selectZone,
-    openTab,
+    activeZoneIndex,
 }: Props) => {
-
+    const selectValue = typeof activeZoneIndex === 'number' ? activeZoneIndex : EMPTY_STRING;
     return (
         <FormControl>
             <Select<number>
                 variant='filled'
-                value={openTab} label={'zones'}
+                value={selectValue} label={'zones'}
                 onChange={(event) => {
                     const index = Number(event.target.value)
+                    if (event.target.value === EMPTY_STRING) {
+                        return selectZone(type.toUpperCase(), undefined)
+                    }
                     const zone = zones[index]
                     selectZone(type.toUpperCase(), getClickData(zone, index))
                 }}>
-                <MenuItem value={undefined}>[none]</MenuItem>
+                <MenuItem value={EMPTY_STRING}>[none]</MenuItem>
                 {zones.map((zone, index) => (
                     <MenuItem key={index} value={index} >
                         {getZoneLabel(zone, type, index)}

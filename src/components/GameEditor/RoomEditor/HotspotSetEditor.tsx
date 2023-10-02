@@ -10,7 +10,7 @@ interface Props {
     hotspots: HotspotZone[],
     openIndex?: number
     changeZone: ShapeChangeFunction
-    selectZone: { (folderId: string, data: { id: string }): void }
+    selectZone: { (folderId: string, data?: { id: string }): void }
     removeZone: { (index: number, type: "hotspot" | "obstacle" | "walkable"): void }
     clickEffect?: ClickEffect
     setClickEffect: { (clickEffect: ClickEffect): void }
@@ -38,7 +38,7 @@ export const HotspotSetEditor = ({ hotspots, openIndex, changeZone, selectZone, 
                     <ZonePicker
                         type={'hotspot'}
                         zones={hotspots}
-                        openTab={openIndex}
+                        activeZoneIndex={openIndex}
                         selectZone={selectZone}
                     />
                     {activeHotspot && typeof openIndex === 'number' && (

@@ -30,10 +30,9 @@ import { ZoneSetEditor } from "./ZoneSetEditor";
 
 export type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
-    mainTab: number;
-    walkableTab: number;
-    obstableTab: number;
-    hotspotTab: number;
+    activeWalkableIndex?: number;
+    activeObstacleIndex?: number;
+    activeHotspotIndex?: number;
 };
 
 type RoomEditorProps = DataItemEditorProps<RoomData> & {
@@ -66,10 +65,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const initialState = props.data ? cloneData(props.data) : getBlankRoom()
         this.state = {
             ...initialState,
-            mainTab: 0,
-            walkableTab: 0,
-            obstableTab: 0,
-            hotspotTab: 0,
+            activeWalkableIndex: 0,
+            activeObstacleIndex: 0,
+            activeHotspotIndex: 0,
         }
 
         this.changeProperty = this.changeProperty.bind(this)
@@ -89,10 +87,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     get currentData(): RoomData {
         const roomData = cloneData(this.state) as RoomData & Partial<RoomEditorState>;
         delete roomData.clickEffect
-        delete roomData.mainTab
-        delete roomData.obstableTab
-        delete roomData.walkableTab
-        delete roomData.hotspotTab
+        delete roomData.activeObstacleIndex
+        delete roomData.activeWalkableIndex
+        delete roomData.activeHotspotIndex
         return roomData
     }
 
@@ -110,7 +107,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             obstacleAreas = [], hotspots = [], walkableAreas = []
         } = this.state
         let {
-            hotspotTab, obstableTab, walkableTab,
+            activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
         } = this.state
         if (!clickEffect) { return }
         const roundedPoint = {
@@ -143,15 +140,15 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         switch (clickEffect.type) {
             case 'OBSTACLE':
                 obstacleAreas.push(makeNewZone(targetPoint, clickEffect))
-                obstableTab = obstacleAreas.length - 1;
+                activeObstacleIndex = obstacleAreas.length - 1;
                 break;
             case 'WALKABLE':
                 walkableAreas.push(makeNewZone(targetPoint, clickEffect))
-                walkableTab = walkableAreas.length - 1;
+                activeWalkableIndex = walkableAreas.length - 1;
                 break;
             case 'HOTSPOT':
                 hotspots.push(this.makeNewHotspot(targetPoint, clickEffect, hotspots.length + 1, viewAngle))
-                hotspotTab = hotspots.length - 1;
+                activeHotspotIndex = hotspots.length - 1;
                 break;
             case 'POLYGON_POINT_OBSTACLE':
                 const obstacle = obstacleAreas[clickEffect.index]
@@ -186,7 +183,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
         this.setStateWithAutosave({
             hotspots, obstacleAreas, walkableAreas,
-            hotspotTab, obstableTab, walkableTab,
+            activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
             clickEffect: getNextClickEffect(clickEffect),
         })
     }
@@ -347,23 +344,32 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             this.props.updateData(this.currentData)
         }
     }
-    selectZone(folderId: string, data: { id: string }) {
+    selectZone(folderId: string, data?: { id: string }) {
         switch (folderId) {
             case 'WALKABLE': {
+                if (!data) {
+                    return this.setState({ 'activeWalkableIndex': undefined })
+                }
                 const zoneIndex = Number(data.id)
                 if (isNaN(zoneIndex)) { return }
-                this.setState({ 'walkableTab': zoneIndex })
+                this.setState({ 'activeWalkableIndex': zoneIndex })
                 break;
             }
             case 'OBSTACLE': {
+                if (!data) {
+                    return this.setState({ 'activeObstacleIndex': undefined })
+                }
                 const zoneIndex = Number(data.id)
                 if (isNaN(zoneIndex)) { return }
-                this.setState({ 'obstableTab': zoneIndex })
+                this.setState({ 'activeObstacleIndex': zoneIndex })
                 break;
             }
             case 'HOTSPOT':
+                if (!data) {
+                    return this.setState({ 'activeHotspotIndex': undefined })
+                }
                 const zoneIndex = this.state.hotspots?.indexOf(data as HotspotZone) || 0
-                this.setState({ 'hotspotTab': zoneIndex })
+                this.setState({ 'activeHotspotIndex': zoneIndex })
                 break;
         }
     }
@@ -438,7 +444,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 label: 'Hotspots', content: (
                     <HotspotSetEditor
                         hotspots={hotspots}
-                        openIndex={this.state.hotspotTab}
+                        openIndex={this.state.activeHotspotIndex}
                         changeZone={this.changeZone}
                         selectZone={this.selectZone}
                         removeZone={this.removeZone}
@@ -455,7 +461,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         setClickEffect={this.setClickEffect}
                         change={this.changeZone}
                         remove={this.removeZone}
-                        openTab={this.state.obstableTab}
+                        activeZoneIndex={this.state.activeObstacleIndex}
                         selectZone={this.selectZone}
                         clickEffect={this.state.clickEffect}
                     />
@@ -469,7 +475,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         setClickEffect={this.setClickEffect}
                         change={this.changeZone}
                         remove={this.removeZone}
-                        openTab={this.state.walkableTab}
+                        activeZoneIndex={this.state.activeWalkableIndex}
                         selectZone={this.selectZone}
                         clickEffect={this.state.clickEffect}
                     />
@@ -516,7 +522,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                             actors={actors}
                             roomData={this.state}
                             clickEffect={clickEffect}
-                            activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
+                            activeHotspotIndex={this.state.activeHotspotIndex}
                             handleRoomClick={this.handleRoomClick} />
                     </div>
                 </Grid>
