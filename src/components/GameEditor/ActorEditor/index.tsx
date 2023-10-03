@@ -8,7 +8,7 @@ import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography, Button } from "@mui/material";
 import { Component } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
 import { EditorHeading } from "../EditorHeading";
@@ -18,6 +18,7 @@ import { StorageMenu } from "../StorageMenu";
 import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
 import { PositionPreview } from "./PositionPreview";
 import { SoundValueForm } from "./SoundValueForm";
+import AddIcon from "@mui/icons-material/Add";
 
 type ExtraState = {
 
@@ -214,11 +215,30 @@ export class ActorEditor extends Component<Props, State> {
         const { sprite: spriteId, width = 1, height = 1, soundEffectMap = {}, walkToX, walkToY } = state
         const { actorIds, spriteIds } = this.props
 
+        const originalId = this.props.data?.id
+        const currentId = this.currentData.id
+        const isNewItem = currentId !== originalId
+
         return (
             <Stack component='article' spacing={1}>
                 <EditorHeading heading="Actor Editor" itemId={this.state.id} />
                 <Grid container flexWrap={'nowrap'} spacing={1}>
-                    <Grid item xs={5}>
+                    <Grid item xs={5}><>
+
+                        {isNewItem && (
+                            <Box paddingY={1}>
+
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    startIcon={<AddIcon />}
+                                    onClick={this.handleUpdateButton}
+                                >
+                                    Save new actor: {state.id}
+                                </Button>
+                            </Box>
+                        )}
+
                         <AccoridanedContent tabs={[
                             {
                                 label: 'Actor', content: <Box maxWidth={'sm'}>
@@ -358,6 +378,7 @@ export class ActorEditor extends Component<Props, State> {
                                 )
                             }
                         ]} />
+                    </>
                     </Grid>
                     <Grid item flex={1}>
                         <div style={{ position: 'sticky', top: 1 }}>
