@@ -7,8 +7,9 @@ import type { Sprite } from "@/lib/Sprite";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
-import { findById, listIds } from "@/lib/util";
-import { Box, Grid, Stack, Typography, Button } from "@mui/material";
+import { listIds } from "@/lib/util";
+import AddIcon from "@mui/icons-material/Add";
+import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { Component } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
 import { EditorHeading } from "../EditorHeading";
@@ -18,7 +19,6 @@ import { StorageMenu } from "../StorageMenu";
 import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
 import { PositionPreview } from "./PositionPreview";
 import { SoundValueForm } from "./SoundValueForm";
-import AddIcon from "@mui/icons-material/Add";
 
 type ExtraState = {
 
@@ -198,18 +198,6 @@ export class ActorEditor extends Component<Props, State> {
         })
     }
 
-    get otherActorsInRoom(): ActorData[] {
-        const { actors } = this.props
-        const { id, room } = this.state
-        const originalId = this.props.data?.id
-
-        return actors.filter(actor =>
-            actor.id !== id &&
-            actor.id !== originalId &&
-            actor.room === room
-        )
-    }
-
     render() {
         const { state, changeValue } = this
         const { sprite: spriteId, width = 1, height = 1, soundEffectMap = {}, walkToX, walkToY } = state
@@ -224,10 +212,8 @@ export class ActorEditor extends Component<Props, State> {
                 <EditorHeading heading="Actor Editor" itemId={this.state.id} />
                 <Grid container flexWrap={'nowrap'} spacing={1}>
                     <Grid item xs={5}><>
-
                         {isNewItem && (
                             <Box paddingY={1}>
-
                                 <Button
                                     variant="contained"
                                     fullWidth
@@ -384,8 +370,6 @@ export class ActorEditor extends Component<Props, State> {
                         <div style={{ position: 'sticky', top: 1 }}>
                             <PositionPreview
                                 actorData={this.state}
-                                otherActors={this.otherActorsInRoom}
-                                roomData={this.state.room ? findById(this.state.room, this.props.rooms) : undefined}
                                 reportClick={this.handlePreviewClick}
                             />
                         </div>

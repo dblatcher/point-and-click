@@ -1,26 +1,37 @@
-import { Box, Paper, PaperProps, Typography, Alert, Stack, ToggleButton, ToggleButtonGroup, Slider } from "@mui/material";
-import { FunctionComponent, useState } from "react";
-import { Room } from "@/components/svg/Room";
 import { MarkerShape } from "@/components/svg/MarkerShape";
-import { ActorData, RoomData } from "@/definitions"
-import { clamp } from "@/lib/util";
+import { Room } from "@/components/svg/Room";
+import { useGameDesign } from "@/context/game-design-context";
+import { ActorData } from "@/definitions";
 import { getTargetPoint, getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "@/lib/roomFunctions";
-
-type PointRole = 'position' | 'walkTo';
+import { clamp, findById } from "@/lib/util";
+import { Alert, Box, Paper, PaperProps, Slider, Stack, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { useState } from "react";
 
 interface Props {
     actorData: ActorData;
-    otherActors: ActorData[];
-    roomData?: RoomData;
     reportClick: { (point: { x: number; y: number }, pointRole: PointRole): void };
 }
 
+type PointRole = 'position' | 'walkTo';
+
 const PaperSection = (props: PaperProps) => <Paper component={'section'} {...props}>{props.children}</Paper>
 
-export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData, reportClick, otherActors }) => {
+export const PositionPreview = ({ actorData, reportClick }: Props) => {
     const [role, setRole] = useState<PointRole>('position')
-    const [previewWidth, setPreviewWidth] = useState(800)
+    const [previewWidth, setPreviewWidth] = useState(600)
+    const { gameDesign } = useGameDesign();
+
+    const roomData = findById(actorData.room, gameDesign.rooms)
+
+    const otherActors = (gameDesign.actors && roomData)
+        ? gameDesign.actors.filter(actor => actor.room === roomData.id && actor.id !== actorData.id)
+        : []
+
     const viewAngle = roomData ? clamp(getViewAngleCenteredOn(actorData.x, roomData), 1, -1) : 0
+
+    const contents = [...otherActors, actorData]
+        .sort(putActorsInDisplayOrder)
+        .map(actor => ({ data: actor }))
 
     const handleRole = (
         event: React.MouseEvent<HTMLElement>,
@@ -30,11 +41,6 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
             setRole(newRole);
         }
     };
-
-    const contents = [...otherActors, actorData]
-        .sort(putActorsInDisplayOrder)
-        .map(actor => ({ data: actor }))
-
 
     return (
         <>
@@ -91,8 +97,8 @@ export const PositionPreview: FunctionComponent<Props> = ({ actorData, roomData,
                             <Slider
                                 step={50}
                                 marks
-                                min={600}
-                                max={1200}
+                                min={400}
+                                max={800}
                                 value={previewWidth}
                                 onChange={(e, v) => { setPreviewWidth(v as number) }}
                             />
