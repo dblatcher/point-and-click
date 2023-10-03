@@ -99,7 +99,7 @@ export class ActorEditor extends Component<Props, State> {
             case 'status':
             case 'filter':
             case 'dialogueColor':
-                if (typeof newValue === 'string') {
+                if (typeof newValue === 'string' || typeof newValue === 'undefined') {
                     modification[propery] = newValue
                 }
                 break;
@@ -371,6 +371,7 @@ export class ActorEditor extends Component<Props, State> {
                             <PositionPreview
                                 actorData={this.state}
                                 reportClick={this.handlePreviewClick}
+                                pickRoom={(roomId) => this.changeValue('room', roomId)}
                             />
                         </div>
                     </Grid>
