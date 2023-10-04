@@ -1,27 +1,25 @@
+import { type TabSetItem } from "@/components/GameEditor/TabSet";
+import { SchemaForm, getModification } from "@/components/SchemaForm";
+import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ActorData, BackgroundLayer, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
-import imageService from "@/services/imageService";
-import { Alert, Container, Grid, Stack } from "@mui/material";
-import { Component } from "react";
-import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
-import { getBlankRoom } from "../defaults";
-import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
-// lib
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
-// components
-import { type TabSetItem } from "@/components/GameEditor/TabSet";
+import imageService from "@/services/imageService";
+import AddIcon from "@mui/icons-material/Add";
+import { Alert, Box, Button, Container, Grid, Stack } from "@mui/material";
+import { Component } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
+import { ArrayControl } from "../ArrayControl";
 import { EditorHeading } from "../EditorHeading";
 import { StorageMenu } from "../StorageMenu";
-// subcomponents
-import { SchemaForm, getModification } from "@/components/SchemaForm";
-import { StringInput } from "@/components/SchemaForm/StringInput";
-import { ArrayControl } from "../ArrayControl";
+import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
+import { getBlankRoom } from "../defaults";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
+import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
 import { HotspotSetEditor } from "./HotspotSetEditor";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
@@ -508,11 +506,28 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const { id, clickEffect } = this.state
         const { actors = [] } = this.props
         const tabs = this.buildTabs()
+        const originalId = this.props.data?.id
+        const currentId = this.currentData.id
+        const isNewItem = currentId !== originalId
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
             <Grid container flexWrap={'nowrap'} spacing={1}>
                 <Grid item xs={4}>
+
+                    {isNewItem && (
+                        <Box paddingY={1}>
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                startIcon={<AddIcon />}
+                                onClick={this.handleUpdateButton}
+                            >
+                                Save new Room: {id}
+                            </Button>
+                        </Box>
+                    )}
+
                     <AccoridanedContent tabs={tabs} />
                 </Grid>
                 <Grid item flex={1}>
