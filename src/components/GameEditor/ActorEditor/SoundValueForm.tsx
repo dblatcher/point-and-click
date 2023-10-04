@@ -15,6 +15,8 @@ export const SoundValueForm: FunctionComponent<Props> = ({ animation, data, upda
 
         <SchemaForm schema={SoundValueSchema}
             formLegend={`SFX for "${animation}" animation`}
+            containerProps={{ border: 1, padding: 1, flex: 1 }}
+            legendProps={{ variant: 'overline', paddingBottom: 2,  }}
             options={{ soundId: soundService.list() }}
             fieldAliases={{
                 frameIndex: 'play on frame#:'
