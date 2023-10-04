@@ -298,7 +298,7 @@ export class ActorEditor extends Component<Props, State> {
                                         {soundEffectMap && (
                                             <RecordEditor
                                                 record={soundEffectMap}
-                                                addEntryLabel={'add sfx for:'}
+                                                addEntryLabel={'Pick animation to add sound effect for'}
                                                 describeValue={(key, value) =>
                                                     <SoundValueForm
                                                         animation={key}

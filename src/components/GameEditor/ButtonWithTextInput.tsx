@@ -2,6 +2,7 @@ import { StringInput } from "@/components/SchemaForm/inputs";
 import { defaultTheme } from "@/theme";
 import { Button, ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ThemeProvider } from "@mui/material";
 import { ReactNode, useState } from "react";
+import AddIcon from "@mui/icons-material/Add"
 
 interface Props {
     label: string;
@@ -10,16 +11,25 @@ interface Props {
     useIconButton?: boolean;
     icon?: ReactNode;
     buttonProps?: ButtonProps;
+    suggestions?: string[];
 }
 
-export const ButtonWithTextInput = ({ onEntry, label, confirmationText, useIconButton, icon, buttonProps = {} }: Props) => {
+export const ButtonWithTextInput = ({
+    onEntry,
+    label,
+    confirmationText,
+    useIconButton,
+    icon = <AddIcon color="primary" />,
+    buttonProps = {},
+    suggestions
+}: Props) => {
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const [input, setInput] = useState<string>('')
     const handleFirstButton = (): void => { setShowConfirmation(true) }
 
     return (
         <>
-            {useIconButton && !!icon ? (
+            {useIconButton ? (
                 <IconButton
                     onClick={handleFirstButton}
                     aria-label={label}
@@ -41,7 +51,7 @@ export const ButtonWithTextInput = ({ onEntry, label, confirmationText, useIconB
                         {confirmationText}
                     </DialogTitle>
                     <DialogContent>
-                        <StringInput value={input} inputHandler={setInput} />
+                        <StringInput value={input} inputHandler={setInput} suggestions={suggestions} />
                     </DialogContent>
                     <DialogActions>
                         <Button
@@ -52,6 +62,7 @@ export const ButtonWithTextInput = ({ onEntry, label, confirmationText, useIconB
                         <Button
                             onClick={() => {
                                 setShowConfirmation(false);
+                                setInput('')
                                 onEntry(input)
                             }}
                         >
