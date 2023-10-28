@@ -1,41 +1,36 @@
+import { type TabSetItem } from "@/components/GameEditor/TabSet";
+import { SchemaForm, getModification } from "@/components/SchemaForm";
+import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ActorData, BackgroundLayer, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
-import imageService from "@/services/imageService";
-import { Alert, Box, Container, Stack } from "@mui/material";
-import { Component } from "react";
-import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
-import { getBlankRoom } from "../defaults";
-import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
-// lib
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
-// components
-import { TabSet, type TabSetItem } from "@/components/GameEditor/TabSet";
+import imageService from "@/services/imageService";
+import AddIcon from "@mui/icons-material/Add";
+import { Alert, Box, Button, Container, Grid, Stack } from "@mui/material";
+import { Component } from "react";
+import { AccoridanedContent } from "../AccordianedContent";
+import { ArrayControl } from "../ArrayControl";
 import { EditorHeading } from "../EditorHeading";
-import { ListEditor } from "../ListEditor";
 import { StorageMenu } from "../StorageMenu";
-import { TabMenu } from "../TabMenu";
-// subcomponents
-import { SchemaForm, getModification } from "@/components/SchemaForm";
+import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
+import { getBlankRoom } from "../defaults";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
-import { HotspotControl } from "./HotSpotControl";
-import { NewZoneButtons } from "./NewZoneButtons";
+import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
+import { HotspotSetEditor } from "./HotspotSetEditor";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { ShapeChangeFunction } from "./ShapeControl";
-import { ZonePicker } from "./ZonePicker";
 import { ZoneSetEditor } from "./ZoneSetEditor";
-import { StringInput } from "@/components/SchemaForm/StringInput";
 
 export type RoomEditorState = RoomData & {
     clickEffect?: ClickEffect;
-    mainTab: number;
-    walkableTab: number;
-    obstableTab: number;
-    hotspotTab: number;
+    activeWalkableIndex?: number;
+    activeObstacleIndex?: number;
+    activeHotspotIndex?: number;
 };
 
 type RoomEditorProps = DataItemEditorProps<RoomData> & {
@@ -68,10 +63,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const initialState = props.data ? cloneData(props.data) : getBlankRoom()
         this.state = {
             ...initialState,
-            mainTab: 0,
-            walkableTab: 0,
-            obstableTab: 0,
-            hotspotTab: 0,
+            activeWalkableIndex: 0,
+            activeObstacleIndex: 0,
+            activeHotspotIndex: 0,
         }
 
         this.changeProperty = this.changeProperty.bind(this)
@@ -84,17 +78,16 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.handleLoadButton = this.handleLoadButton.bind(this)
         this.handleResetButton = this.handleResetButton.bind(this)
         this.handleUpdateButton = this.handleUpdateButton.bind(this)
-        this.handleTreeEntryClick = this.handleTreeEntryClick.bind(this)
+        this.selectZone = this.selectZone.bind(this)
         this.setStateWithAutosave = higherLevelSetStateWithAutosave(this).bind(this)
     }
 
     get currentData(): RoomData {
         const roomData = cloneData(this.state) as RoomData & Partial<RoomEditorState>;
         delete roomData.clickEffect
-        delete roomData.mainTab
-        delete roomData.obstableTab
-        delete roomData.walkableTab
-        delete roomData.hotspotTab
+        delete roomData.activeObstacleIndex
+        delete roomData.activeWalkableIndex
+        delete roomData.activeHotspotIndex
         return roomData
     }
 
@@ -112,7 +105,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             obstacleAreas = [], hotspots = [], walkableAreas = []
         } = this.state
         let {
-            hotspotTab, obstableTab, walkableTab,
+            activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
         } = this.state
         if (!clickEffect) { return }
         const roundedPoint = {
@@ -145,15 +138,15 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         switch (clickEffect.type) {
             case 'OBSTACLE':
                 obstacleAreas.push(makeNewZone(targetPoint, clickEffect))
-                obstableTab = obstacleAreas.length - 1;
+                activeObstacleIndex = obstacleAreas.length - 1;
                 break;
             case 'WALKABLE':
                 walkableAreas.push(makeNewZone(targetPoint, clickEffect))
-                walkableTab = walkableAreas.length - 1;
+                activeWalkableIndex = walkableAreas.length - 1;
                 break;
             case 'HOTSPOT':
                 hotspots.push(this.makeNewHotspot(targetPoint, clickEffect, hotspots.length + 1, viewAngle))
-                hotspotTab = hotspots.length - 1;
+                activeHotspotIndex = hotspots.length - 1;
                 break;
             case 'POLYGON_POINT_OBSTACLE':
                 const obstacle = obstacleAreas[clickEffect.index]
@@ -188,7 +181,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
         this.setStateWithAutosave({
             hotspots, obstacleAreas, walkableAreas,
-            hotspotTab, obstableTab, walkableTab,
+            activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
             clickEffect: getNextClickEffect(clickEffect),
         })
     }
@@ -349,40 +342,33 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             this.props.updateData(this.currentData)
         }
     }
-    handleTreeEntryClick(folderId: string, data: { id: string }, isForNew: boolean | undefined) {
-        if (isForNew) {
-            switch (folderId) {
-                case 'WALKABLE':
-                case 'OBSTACLE':
-                case 'HOTSPOT':
-                    switch (data.id) {
-                        case 'rect':
-                        case 'polygon':
-                        case 'circle':
-                            this.setClickEffect({ type: folderId, shape: data.id })
-                            break;
-                    }
-                    break;
-            }
-        } else {
-            switch (folderId) {
-                case 'WALKABLE': {
-                    const zoneIndex = Number(data.id)
-                    if (isNaN(zoneIndex)) { return }
-                    this.setState({ 'walkableTab': zoneIndex })
-                    break;
+    selectZone(folderId: string, data?: { id: string }) {
+        switch (folderId) {
+            case 'WALKABLE': {
+                if (!data) {
+                    return this.setState({ 'activeWalkableIndex': undefined })
                 }
-                case 'OBSTACLE': {
-                    const zoneIndex = Number(data.id)
-                    if (isNaN(zoneIndex)) { return }
-                    this.setState({ 'obstableTab': zoneIndex })
-                    break;
-                }
-                case 'HOTSPOT':
-                    const zoneIndex = this.state.hotspots?.indexOf(data as HotspotZone) || 0
-                    this.setState({ 'hotspotTab': zoneIndex })
-                    break;
+                const zoneIndex = Number(data.id)
+                if (isNaN(zoneIndex)) { return }
+                this.setState({ 'activeWalkableIndex': zoneIndex })
+                break;
             }
+            case 'OBSTACLE': {
+                if (!data) {
+                    return this.setState({ 'activeObstacleIndex': undefined })
+                }
+                const zoneIndex = Number(data.id)
+                if (isNaN(zoneIndex)) { return }
+                this.setState({ 'activeObstacleIndex': zoneIndex })
+                break;
+            }
+            case 'HOTSPOT':
+                if (!data) {
+                    return this.setState({ 'activeHotspotIndex': undefined })
+                }
+                const zoneIndex = this.state.hotspots?.indexOf(data as HotspotZone) || 0
+                this.setState({ 'activeHotspotIndex': zoneIndex })
+                break;
         }
     }
 
@@ -416,12 +402,12 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         {frameWidth > width && (
                             <Alert severity="warning">frame width is bigger than room width</Alert>
                         )}
-                        <Box width={120}>
-                            <StringInput label="backdrop color" type="color"
-                                value={this.state.backgroundColor ?? ''}
-                                optional
-                                inputHandler={value => this.setStateWithAutosave({ backgroundColor: value })} />
-                        </Box>
+
+                        <StringInput label="backdrop color"
+                            type="color"
+                            value={this.state.backgroundColor ?? '#ffffff'}
+                            optional
+                            inputHandler={value => this.setStateWithAutosave({ backgroundColor: value })} />
                     </Container>
                 )
             },
@@ -435,8 +421,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             },
             {
                 label: 'Background', content: (<Stack spacing={2}>
-                    <ListEditor tight
+                    <ArrayControl
                         list={background}
+                        buttonSize="small"
+                        horizontalMoveButtons
                         mutateList={(background) => { this.setStateWithAutosave({ background }) }}
                         describeItem={(layer, index) => (
                             <BackgroundLayerControl index={index}
@@ -451,6 +439,19 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 </Stack>)
             },
             {
+                label: 'Hotspots', content: (
+                    <HotspotSetEditor
+                        hotspots={hotspots}
+                        openIndex={this.state.activeHotspotIndex}
+                        changeZone={this.changeZone}
+                        selectZone={this.selectZone}
+                        removeZone={this.removeZone}
+                        clickEffect={this.state.clickEffect}
+                        setClickEffect={this.setClickEffect}
+                    />
+                )
+            },
+            {
                 label: 'Obstacles', content: (
                     <ZoneSetEditor
                         zones={obstacleAreas}
@@ -458,8 +459,8 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         setClickEffect={this.setClickEffect}
                         change={this.changeZone}
                         remove={this.removeZone}
-                        openTab={this.state.obstableTab}
-                        selectZone={this.handleTreeEntryClick}
+                        activeZoneIndex={this.state.activeObstacleIndex}
+                        selectZone={this.selectZone}
                         clickEffect={this.state.clickEffect}
                     />
                 )
@@ -472,50 +473,13 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         setClickEffect={this.setClickEffect}
                         change={this.changeZone}
                         remove={this.removeZone}
-                        openTab={this.state.walkableTab}
-                        selectZone={this.handleTreeEntryClick}
+                        activeZoneIndex={this.state.activeWalkableIndex}
+                        selectZone={this.selectZone}
                         clickEffect={this.state.clickEffect}
                     />
                 )
             },
-            {
-                label: 'Hotspots', content: (
-                    <>
-                        <Stack direction={'row'}>
-                            <ZonePicker
-                                type={'hotspot'}
-                                zones={hotspots}
-                                openTab={this.state.hotspotTab}
-                                selectZone={this.handleTreeEntryClick}
-                            />
-                            <Box flexShrink={1}>
-                                {hotspots.length === 0 && (
-                                    <Alert severity="info">
-                                        No <b>hotspots</b> for this room yet. Select a shape from the buttons below to add one.
-                                    </Alert>
-                                )}
-                                <TabSet
-                                    openIndex={this.state.hotspotTab}
-                                    tabs={hotspots.map((hotspot, index) => {
-                                        return {
-                                            label: hotspot.id, content: (
-                                                <HotspotControl hotspot={hotspot} index={index}
-                                                    setClickEffect={this.setClickEffect}
-                                                    change={this.changeZone}
-                                                    remove={this.removeZone} />
-                                            )
-                                        }
-                                    })} />
 
-                            </Box>
-                        </Stack>
-                        <NewZoneButtons
-                            type="hotspot"
-                            clickEffect={this.state.clickEffect}
-                            selectZone={this.handleTreeEntryClick} />
-                    </>
-                )
-            },
             {
                 label: 'storage', content: (
                     <Container maxWidth="xs">
@@ -542,16 +506,41 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const { id, clickEffect } = this.state
         const { actors = [] } = this.props
         const tabs = this.buildTabs()
+        const originalId = this.props.data?.id
+        const currentId = this.currentData.id
+        const isNewItem = currentId !== originalId
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
-            <TabMenu tabs={tabs} contentMinHeight={220}/>
-            <Preview
-                actors={actors}
-                roomData={this.state}
-                clickEffect={clickEffect}
-                activeHotspotIndex={this.state.mainTab == 4 ? this.state.hotspotTab : undefined}
-                handleRoomClick={this.handleRoomClick} />
+            <Grid container flexWrap={'nowrap'} spacing={1}>
+                <Grid item xs={4}>
+
+                    {isNewItem && (
+                        <Box paddingY={1}>
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                startIcon={<AddIcon />}
+                                onClick={this.handleUpdateButton}
+                            >
+                                Save new Room: {id}
+                            </Button>
+                        </Box>
+                    )}
+
+                    <AccoridanedContent tabs={tabs} />
+                </Grid>
+                <Grid item flex={1}>
+                    <div style={{ position: 'sticky', top: 1 }}>
+                        <Preview
+                            actors={actors}
+                            roomData={this.state}
+                            clickEffect={clickEffect}
+                            activeHotspotIndex={this.state.activeHotspotIndex}
+                            handleRoomClick={this.handleRoomClick} />
+                    </div>
+                </Grid>
+            </Grid>
         </Stack>
     }
 }

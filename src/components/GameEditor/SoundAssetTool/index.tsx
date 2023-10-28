@@ -1,25 +1,26 @@
-import { Component, createRef,  RefObject } from "react";
+import { SoundToggle } from "@/components/game-ui/SoundToggle";
+import { cloneData } from "@/lib/clone";
 import {
   fileToObjectUrl,
   makeDownloadFile,
   uploadFile,
 } from "@/lib/files";
-import { eventToString } from "@/lib/util";
-import { SelectInput, TextInput, Warning } from "../formControls";
-import { cloneData } from "@/lib/clone";
-import { ServiceItemSelector } from "../ServiceItemSelector";
+import { buildAssetZipBlob, readSoundAssetFromZipFile } from "@/lib/zipFiles";
 import { ServiceItem } from "@/services/Service";
-import { SoundToggle } from "@/components/game-ui/SoundToggle";
-import editorStyles from "../editorStyles.module.css";
-
-import soundService, {
+import {
   SoundAsset,
   SoundAssetCategory,
   soundAssetCategories,
-
-} from "@/services/soundService";
-import { buildAssetZipBlob, readSoundAssetFromZipFile } from "@/lib/zipFiles";
+} from "@/services/assets";
+import soundService from "@/services/soundService";
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import { Button, Grid } from "@mui/material";
+import { Component, RefObject, createRef } from "react";
+import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
+import { FileAssetSelector } from "../FileAssetSelector";
+import { ZipFileControl } from "../asset-components/ZipFileControl";
+import { SoundAssetForm } from "./SoundAssetForm";
 
 type State = {
   saveWarning?: string;
@@ -31,7 +32,7 @@ type State = {
 
 export class SoundAssetTool extends Component<{}, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
-  fileRef: RefObject<File>;
+  file: File | null;
 
   constructor(props: SoundAssetTool["props"]) {
     super(props);
@@ -41,12 +42,15 @@ export class SoundAssetTool extends Component<{}, State> {
       }
     };
     this.loadFile = this.loadFile.bind(this);
+    this.loadFromZipFile = this.loadFromZipFile.bind(this);
     this.saveToService = this.saveToService.bind(this);
     this.openFromService = this.openFromService.bind(this);
     this.zipSounds = this.zipSounds.bind(this);
+    this.changeValue = this.changeValue.bind(this);
+    this.clearForm = this.clearForm.bind(this)
 
     this.canvasRef = createRef();
-    this.fileRef = createRef();
+    this.file = null;
   }
 
   loadFile = async () => {
@@ -54,7 +58,7 @@ export class SoundAssetTool extends Component<{}, State> {
     if (!file) {
       return;
     }
-    this.fileRef.current = file
+    this.file = file
     const newUrl = fileToObjectUrl(file);
 
     if (this.state.fileObjectUrl && typeof window !== undefined) {
@@ -71,7 +75,18 @@ export class SoundAssetTool extends Component<{}, State> {
     });
   };
 
-  changeValue(propery: keyof SoundAsset, newValue: string | number) {
+  clearForm() {
+    if (this.state.fileObjectUrl && typeof window !== undefined) {
+      window.URL.revokeObjectURL(this.state.fileObjectUrl);
+    }
+    this.file = null
+    this.setState({
+      asset: { id: '' },
+      fileObjectUrl: undefined,
+    })
+  }
+
+  changeValue(propery: keyof SoundAsset, newValue: string | number | undefined) {
     this.setState(state => {
       const asset = state.asset
       switch (propery) {
@@ -99,7 +114,7 @@ export class SoundAssetTool extends Component<{}, State> {
 
   saveToService() {
     const { asset } = this.state;
-    const { current: file } = this.fileRef
+    const file = this.file
 
     // create a new url as the one in state is revoked when
     // a new file is uploaded or a asset retrieved from the service.
@@ -153,7 +168,7 @@ export class SoundAssetTool extends Component<{}, State> {
 
   openFromService(asset: ServiceItem) {
     const assetCopy = cloneData(asset as SoundAsset);
-    this.fileRef.current = null
+    this.file = null
     if (this.state.fileObjectUrl && typeof window !== undefined) {
       window.URL.revokeObjectURL(this.state.fileObjectUrl);
     }
@@ -170,74 +185,50 @@ export class SoundAssetTool extends Component<{}, State> {
       asset
     } = this.state;
 
-    const {
-      id = "",
-      category = "",
-    } = asset
+    const isNewAsset = asset.id ? !soundService.list().includes(asset.id) : true
 
     return (
       <article>
         <EditorHeading heading="Sound asset tool" />
-        <div className={editorStyles.container}>
-          <section>
-            <ServiceItemSelector
+        <ZipFileControl
+          clearForm={this.clearForm}
+          uploadWarning={uploadWarning}
+          zipAssets={this.zipSounds}
+          loadFromZipFile={this.loadFromZipFile} />
+
+        <Grid container spacing={1} justifyContent={'space-between'}>
+          <Grid item>
+            <SoundAssetForm
+              soundAsset={asset}
+              changeValue={this.changeValue}
+              loadFile={this.loadFile}
+              isNewAsset={isNewAsset}
+              saveAssetChanges={this.saveToService}
+              saveWarning={saveWarning}
+            />
+            <EditorBox title="play sound">
+              <SoundToggle />
+              {(asset.id && soundService.get(asset.id)) && (
+                <Button
+                  startIcon={<PlayCircleOutlineOutlinedIcon />}
+                  sx={{ marginLeft: 1 }}
+                  variant="outlined"
+                  onClick={() => { soundService.play(asset.id ?? '') }}
+                >
+                  play {asset.id}
+                </Button>
+              )}
+            </EditorBox>
+          </Grid>
+
+          <Grid item>
+            <FileAssetSelector
               legend="open asset"
               service={soundService}
-              currentSelection={id}
+              currentSelection={asset.id}
               select={this.openFromService} />
-
-            <fieldset className={editorStyles.fieldset}>
-              <div className={editorStyles.row}>
-                <button onClick={this.zipSounds}>zip assets</button>
-              </div>
-              <div className={editorStyles.row}>
-                <button onClick={this.loadFromZipFile}>
-                  load assets from zip file
-                </button>
-                {uploadWarning && <Warning>{uploadWarning}</Warning>}
-              </div>
-            </fieldset>
-          </section>
-
-          <section>
-            <fieldset className={editorStyles.fieldset}>
-              <legend>sound properties</legend>
-
-              <div className={editorStyles.row}>
-                <button onClick={this.loadFile}>select sound file</button>
-              </div>
-              <div className={editorStyles.row}>
-                <TextInput
-                  label="ID"
-                  value={id}
-                  onInput={(event) =>
-                    this.changeValue("id", eventToString(event.nativeEvent))
-                  }
-                />
-              </div>
-              <div className={editorStyles.row}>
-                <SelectInput
-                  onSelect={(value) => this.changeValue("category", value)}
-                  label="category"
-                  value={category}
-                  items={soundAssetCategories}
-                  haveEmptyOption={true}
-                />
-              </div>
-
-              <div className={editorStyles.row}>
-                <button onClick={this.saveToService}>Save to service</button>
-                {saveWarning && <Warning>{saveWarning}</Warning>}
-              </div>
-            </fieldset>
-
-            <p>play</p>
-            <SoundToggle />
-            {(id && soundService.get(id)) && (
-              <button onClick={() => { soundService.play(id) }}>play {id}</button>
-            )}
-          </section>
-        </div>
+          </Grid>
+        </Grid>
       </article>
     );
   }

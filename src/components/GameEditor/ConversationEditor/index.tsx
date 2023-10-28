@@ -8,9 +8,9 @@ import { uploadJsonData } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { Component } from "react";
+import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
-import { ListEditor } from "../ListEditor";
 import { SequenceEditor } from "../SequenceEditor";
 import { StorageMenu } from "../StorageMenu";
 import { DataItemEditorProps } from "../dataEditors";
@@ -76,10 +76,10 @@ export class ConversationEditor extends Component<Props, State> {
         const { options, data, updateData, conversations } = this.props
 
         if (!options.autoSave) {
-            return this.setState(input, callback)
+            return this.setState(input as State, callback)
         }
 
-        return this.setState(input, () => {
+        return this.setState(input as State, () => {
             if (data && listIds(conversations).includes(this.state.id)) {
                 updateData(this.currentData)
             }
@@ -105,7 +105,7 @@ export class ConversationEditor extends Component<Props, State> {
                 break;
         }
         if (propery === 'id') {
-            return this.setState(modification)
+            return this.setState(modification as State)
         }
         this.setStateWithAutosave(modification)
     }
@@ -312,17 +312,27 @@ export class ConversationEditor extends Component<Props, State> {
                         )
                     }}
                     addNewChoice={this.addNewChoice}
+                    deleteBranch={branchKey => {
+                        this.setStateWithAutosave(
+                            {
+                                branches: {
+                                    ...this.currentData.branches,
+                                    [branchKey]: undefined
+                                }
+                            }
+                        )
+                    }}
+                    addNewBranch={this.addNewBranch}
                 />
 
                 <Dialog open={!!this.state.editOrderDialogBranchId}
                     onClose={() => { this.setState({ editOrderDialogBranchId: undefined }) }}
                 >
-                    <DialogTitle>Edit Order: {editOrderDialogBranchId}</DialogTitle>
+                    <DialogTitle>{`Sort choices in branch "${editOrderDialogBranchId}"`}</DialogTitle>
 
                     <DialogContent>
-
                         {(branchInOrderDialog && editOrderDialogBranchId) &&
-                            <ListEditor tight
+                            <ArrayControl horizontalMoveButtons 
                                 list={branchInOrderDialog.choices}
                                 describeItem={(choice) => {
                                     return (
@@ -339,7 +349,7 @@ export class ConversationEditor extends Component<Props, State> {
 
                 <Dialog
                     open={!!choice}
-                    maxWidth={'lg'}
+                    maxWidth={'xl'}
                     onClose={() => { this.setState({ activeChoiceIndex: undefined }) }}
                 >
                     <DialogTitle>

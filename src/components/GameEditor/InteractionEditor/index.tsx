@@ -1,15 +1,16 @@
 
-import { Component } from "react";
+import { SelectInput } from "@/components/SchemaForm/inputs";
 import { GameDesign, Interaction } from "@/definitions";
-import { DeleteButton, SelectInput } from "../formControls";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import { InteractionForm } from "./InteractionForm";
-import { getTargetLists, getItemDescriptions } from "./getTargetLists";
-import editorStyles from '../editorStyles.module.css';
-import styles from './styles.module.css';
-import { icons } from "../dataEditors";
+import AddIcon from "@mui/icons-material/Add";
+import { Box, Button, Paper, Table, TableContainer, TableBody, TableHead, TableRow, TableCell, Typography } from "@mui/material";
+import { Component } from "react";
 import { EditorHeading } from "../EditorHeading";
+import { InteractionDialog } from "./InteractionDialog";
+import { InteractionTableRow } from "./InteractionTableRow";
+import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+
 
 interface Props {
     gameDesign: GameDesign;
@@ -113,129 +114,96 @@ export class InteractionEditor extends Component<Props, State> {
         return (
             <article>
                 <EditorHeading heading="Interactions" />
-                <table className={styles.interactionTable}>
-                    <caption>
-                        <span>{filteredInteractions.length}/{interactions.length} interactions</span>
-                        <button
-                            className={[editorStyles.button, editorStyles.plusButton].join(" ")}
-                            onClick={() =>
-                                this.setState({
-                                    edittedIndex: undefined,
-                                    interactionUnderConstruction: {}
-                                })
-                            }>add new interaction</button>
-                    </caption>
-                    <thead>
-                        <tr>
-                            <th>verb</th>
-                            <th>target</th>
-                            <th>item</th>
-                            <th>room</th>
-                            <th rowSpan={2}>consequences</th>
-                            <th rowSpan={2} style={{ width: '4em' }}>must be true</th>
-                            <th rowSpan={2} style={{ width: '4em' }}>must be false</th>
-                        </tr>
-                        <tr>
-                            <th>
-                                <SelectInput
-                                    haveEmptyOption={true}
-                                    onSelect={verbFilter => { this.setState({ verbFilter }) }}
-                                    emptyOptionLabel="[ANY VERB]"
-                                    value={verbFilter}
-                                    items={listIds(verbs)} />
-                            </th>
-                            <th>
-                                <SelectInput
-                                    haveEmptyOption={true}
-                                    onSelect={targetFilter => { this.setState({ targetFilter }) }}
-                                    emptyOptionLabel="[ANY Target]"
-                                    value={targetFilter}
-                                    items={filteredTargets.ids}
-                                    descriptions={filteredTargets.descriptions}
-                                />
-                            </th>
-                            <th>
-                                <SelectInput
-                                    haveEmptyOption={true}
-                                    onSelect={itemFilter => { this.setState({ itemFilter }) }}
-                                    emptyOptionLabel="[ANY ITEM]"
-                                    value={itemFilter}
-                                    items={listIds(items)}
-                                    descriptions={getItemDescriptions(gameDesign)} />
-                            </th>
-                            <th>
-                                <SelectInput
-                                    haveEmptyOption={true}
-                                    onSelect={roomFilter => { this.setState({ roomFilter }) }}
-                                    emptyOptionLabel="[ANY ROOM]"
-                                    value={roomFilter}
-                                    items={listIds(rooms)} />
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {interactions.map((interaction, index) => {
+                <TableContainer component={Paper}>
+                    <Table size="small" padding="normal" sx={{captionSide:'top'}}>
+                        <caption>
+                            <Typography>Showing {filteredInteractions.length}/{interactions.length} interactions</Typography>
+                        </caption>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>verb</TableCell>
+                                <TableCell>target</TableCell>
+                                <TableCell>item</TableCell>
+                                <TableCell>room</TableCell>
+                                <TableCell rowSpan={2}>consequences</TableCell>
+                                <TableCell rowSpan={2} style={{ width: '4em' }}>must be true</TableCell>
+                                <TableCell rowSpan={2} style={{ width: '4em' }}>must be false</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    <Box minWidth={80}>
+                                        <SelectInput
+                                            optional
+                                            inputHandler={verbFilter => { this.setState({ verbFilter }) }}
+                                            value={verbFilter}
+                                            options={listIds(verbs)} />
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Box minWidth={80}>
+                                        <SelectInput
+                                            optional
+                                            inputHandler={targetFilter => { this.setState({ targetFilter }) }}
+                                            value={targetFilter}
+                                            options={filteredTargets.ids}
+                                            descriptions={filteredTargets.descriptions}
+                                        />
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Box minWidth={80}>
+                                        <SelectInput
+                                            optional
+                                            inputHandler={itemFilter => { this.setState({ itemFilter }) }}
+                                            value={itemFilter}
+                                            options={listIds(items)}
+                                            descriptions={getItemDescriptions(gameDesign)} />
+                                    </Box>
+                                </TableCell>
+                                <TableCell>
+                                    <Box minWidth={80}>
+                                        <SelectInput
+                                            optional
+                                            inputHandler={roomFilter => { this.setState({ roomFilter }) }}
+                                            value={roomFilter}
+                                            options={listIds(rooms)} />
+                                    </Box>
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {interactions.map((interaction, index) => {
+                                if (!filteredInteractions.includes(interaction)) { return <></> }
+                                return (<InteractionTableRow key={index}
+                                    interaction={interaction}
+                                    index={index}
+                                    changeOrder={this.changeOrder}
+                                    deleteInteraction={this.props.deleteInteraction}
+                                    openEditor={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}
+                                />)
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
 
-                            if (!filteredInteractions.includes(interaction)) { return <></> }
-                            const {
-                                verbId, targetId, targetStatus, itemId, roomId,
-                                consequences, flagsThatMustBeFalse = [], flagsThatMustBeTrue = []
-                            } = interaction
 
-                            const trueFlagText = flagsThatMustBeTrue.length ? `x${flagsThatMustBeTrue.length}` : ''
-                            const trueFlagTitle = flagsThatMustBeTrue.join(", ")
-
-                            const falseFlagText = flagsThatMustBeFalse.length ? `x${flagsThatMustBeFalse.length}` : ''
-                            const falseFlagTitle = flagsThatMustBeFalse.join(", ")
-
-                            const consequenceText = consequences.length ? `x${consequences.length}` : 'empty'
-                            const consequenceTitle = consequences.map(_ => _.type).join(", ")
-
-                            return (
-                                <tr key={index}>
-                                    <td>{verbId}</td>
-                                    <td>
-                                        <span>{targetId}</span>
-                                        {targetStatus && <span>({targetStatus})</span>}
-                                    </td>
-                                    <td>{itemId}</td>
-                                    <td>{roomId}</td>
-                                    <td className={styles.centered} title={consequenceTitle}>{consequenceText}</td>
-                                    <td className={styles.centered} title={trueFlagTitle}>{trueFlagText}</td>
-                                    <td className={styles.centered} title={falseFlagTitle}>{falseFlagText}</td>
-                                    <td>
-                                        <button
-                                            className={[editorStyles.button].join(" ")}
-                                            onClick={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}>
-                                            edit
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button
-                                            className={[editorStyles.button, editorStyles.moveButton].join(" ")}
-                                            onClick={() => this.changeOrder(index, 'up')}
-                                        >{icons.UP}</button>
-                                    </td>
-                                    <td>
-                                        <button
-                                            className={[editorStyles.button, editorStyles.moveButton].join(" ")}
-                                            onClick={() => this.changeOrder(index, 'down')}
-                                        >{icons.DOWN}</button>
-                                    </td>
-                                    <td>
-                                        <DeleteButton label={icons.DELETE}
-                                            className={[editorStyles.button, editorStyles.deleteButton].join(" ")}
-                                            confirmationText="really?"
-                                            onClick={() => { this.props.deleteInteraction(index) }} />
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
+                <Box display='flex' justifyContent='flex-end' paddingY={2}>
+                    <Button
+                        size="large"
+                        onClick={() =>
+                            this.setState({
+                                edittedIndex: undefined,
+                                interactionUnderConstruction: {}
+                            })}
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                    >
+                        Add new Interaction
+                    </Button>
+                </Box>
 
                 {interactionUnderConstruction &&
-                    <InteractionForm key={edittedIndex}
+                    <InteractionDialog key={edittedIndex}
                         confirm={this.saveInteraction}
                         gameDesign={this.props.gameDesign}
                         initialState={interactionUnderConstruction}

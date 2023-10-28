@@ -1,28 +1,27 @@
-import { FunctionComponent } from "react";
+import { SchemaForm, getModification } from "@/components/SchemaForm";
+import { SelectInput } from "@/components/SchemaForm/inputs";
+import { useGameDesign } from "@/context/game-design-context";
+import { AnyConsequence, Consequence, ConsequenceType, GameDesign, Order } from "@/definitions";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
-import { GameDesign, AnyConsequence, Order, Consequence, ConsequenceType } from "@/definitions";
-import { SelectInput } from "../formControls";
-import { findById, listIds } from "@/lib/util";
-import { getTargetLists, getActorDescriptions, getItemDescriptions, getConversationsDescriptions, getSequenceDescriptions, getZoneRefsOrIds } from "./getTargetLists";
-import { OrderForm } from "../OrderForm";
-import { ListEditor } from "../ListEditor";
-import { getDefaultOrder, makeNewConsequence } from "../defaults";
-import { cloneData } from "@/lib/clone";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
+import { cloneData } from "@/lib/clone";
+import { findById, listIds } from "@/lib/util";
 import soundService from "@/services/soundService";
-import { getModification, SchemaForm } from "@/components/SchemaForm";
-import editorStyles from '../editorStyles.module.css';
+import { Box } from "@mui/material";
+import { ArrayControl } from "../ArrayControl";
+import { EditorBox } from "../EditorBox";
+import { OrderForm } from "../OrderForm";
+import { getDefaultOrder, makeNewConsequence } from "../defaults";
+import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
 
 interface Props {
     consequence: AnyConsequence;
-    gameDesign: GameDesign;
     update: { (consequence: Consequence): void };
     immediateOnly?: boolean;
 }
 
 
 const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, branchId: string | undefined, gameDesign: GameDesign) => {
-
     const conversation = findById(conversationId, gameDesign.conversations)
     const branch = conversation && branchId ? conversation.branches[branchId] : undefined;
     const branchIdList = Object.keys(conversation?.branches || {})
@@ -33,7 +32,8 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
     return { branchIdList, choiceRefList }
 }
 
-export const ConsequenceForm: FunctionComponent<Props> = ({ consequence, gameDesign, update, immediateOnly }: Props) => {
+export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) => {
+    const { gameDesign } = useGameDesign()
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
     const { ids: targetIdsWithoutItems, descriptions: targetDescriptionsWithoutItems } = getTargetLists(gameDesign, true)
 
@@ -73,7 +73,7 @@ export const ConsequenceForm: FunctionComponent<Props> = ({ consequence, gameDes
         update(copy)
     }
 
-    const changeType = (value: string): void => {
+    const changeType = (value: string | undefined): void => {
         if (consequenceTypes.includes(value as ConsequenceType)) {
             update(makeNewConsequence(value as ConsequenceType))
         }
@@ -85,56 +85,57 @@ export const ConsequenceForm: FunctionComponent<Props> = ({ consequence, gameDes
         updateProperty('orders', ordersCopy)
     }
 
-    return <div className={editorStyles.formBlock}>
+    return (
+        <Box>
+            <Box paddingY={2} marginBottom={2}>
+                <SelectInput value={consequence.type}
+                    label={'type'}
+                    options={optionListIds.type}
+                    descriptions={optionListDescriptions.type}
+                    inputHandler={changeType}
+                />
+            </Box>
 
-        <SelectInput value={consequence.type}
-            block
-            className={editorStyles.formRow}
-            label={'type'}
-            items={optionListIds.type}
-            descriptions={optionListDescriptions.type}
-            onSelect={changeType}
-        />
-
-        <SchemaForm
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            schema={consequenceMap[consequence.type] as any}
-            numberConfig={{
-                time: { min: 0 },
-                volume: {
-                    step: .1,
-                    max: 2,
-                    min: 0,
-                }
-            }}
-            options={optionListIds}
-            suggestions={{
-                targetId: targetIds,
-                status: getStatusSuggestions(consequence.targetId, gameDesign)
-            }}
-            data={consequence}
-            changeValue={(value, field) => {
-                update({
-                    ...consequence,
-                    ...getModification(value, field)
-                })
-            }}
-        />
-        {consequence.orders && (<fieldset>
-            <legend style={{ fontWeight: 'bold' }}>orders</legend>
-            <ListEditor
-                list={consequence.orders}
-                describeItem={(order, index) =>
-                    <OrderForm
-                        animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
-                        targetIdOptions={targetIdsWithoutItems}
-                        targetIdDescriptions={targetDescriptionsWithoutItems}
-                        updateData={(newOrder) => { editOrder(newOrder, index) }}
-                        data={order} key={index} />
-                }
-                createItem={() => getDefaultOrder('say')}
-                mutateList={newList => { updateProperty('orders', newList) }}
+            <SchemaForm
+                schema={consequenceMap[consequence.type] as any}
+                numberConfig={{
+                    time: { min: 0 },
+                    volume: {
+                        step: .1,
+                        max: 2,
+                        min: 0,
+                    }
+                }}
+                options={optionListIds}
+                suggestions={{
+                    targetId: targetIds,
+                    status: getStatusSuggestions(consequence.targetId, gameDesign)
+                }}
+                data={consequence}
+                changeValue={(value, field) => {
+                    update({
+                        ...consequence,
+                        ...getModification(value, field)
+                    })
+                }}
             />
-        </fieldset>)}
-    </div>
+            {consequence.orders && (
+                <ArrayControl color="secondary"
+                    list={consequence.orders}
+                    describeItem={(order, index) =>
+                        <EditorBox title={`${order.type} order`} themePalette="secondary">
+                            <OrderForm
+                                animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
+                                targetIdOptions={targetIdsWithoutItems}
+                                targetIdDescriptions={targetDescriptionsWithoutItems}
+                                updateData={(newOrder) => { editOrder(newOrder, index) }}
+                                data={order} key={index} />
+                        </EditorBox>
+                    }
+                    createItem={() => getDefaultOrder('say')}
+                    mutateList={newList => { updateProperty('orders', newList) }}
+                />
+            )}
+        </Box>
+    )
 }

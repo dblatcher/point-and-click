@@ -7,6 +7,7 @@ import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
 import { exectuteSay } from "./executeSay";
 import { makeMoveOrderFromGoto } from "./makeMoveOrderFromGoto";
+import { Sprite } from "@/lib/Sprite";
 
 
 function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order: MoveOrder): void {
@@ -41,7 +42,7 @@ function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order:
  * @param orders 
  * @returns whether they just finished an order that triggers the pendingInteraction
  */
-export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: Order[]|undefined, state: GameState): boolean {
+export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: Order[] | undefined, state: GameState, sprite?: Sprite): boolean {
     if (!orders || orders.length === 0) { return false }
     const [nextOrder] = orders
 
@@ -49,7 +50,7 @@ export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: 
         if (!nextOrder.pathIsSet) {
             findPathBetweenSteps(subject, cellMatrix, nextOrder)
         }
-        executeMove(nextOrder, subject)
+        executeMove(nextOrder, subject, sprite)
     } else if (nextOrder.type === 'say') {
         exectuteSay(nextOrder)
     } else if (nextOrder.type === 'act') {

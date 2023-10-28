@@ -5,7 +5,7 @@ import { Button, Container, DialogActions, Dialog, DialogContent, DialogTitle, G
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { SpritePreview } from "../SpritePreview";
 import { AnimationFrameList } from "./AnimationFrameList";
-import { FramePicker2 } from "./FramePicker2";
+import { FramePicker } from "./FramePicker";
 
 interface Props {
     selectedDirection?: Direction
@@ -74,7 +74,7 @@ export const AnimationDialog = ({
                                         onClick={() => editCycle(selectedAnimation, selectedDirection, undefined)} />
                                 )}
 
-                                <FramePicker2
+                                <FramePicker
                                     pickFrame={pickFrame}
                                     sheetId={selectedSheetId}
                                     row={selectedRow}

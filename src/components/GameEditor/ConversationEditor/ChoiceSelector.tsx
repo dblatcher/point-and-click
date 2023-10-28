@@ -1,11 +1,9 @@
-
-import { FunctionComponent } from "react";
-import { findById, listIds } from "@/lib/util";
+import { SelectInput } from "@/components/SchemaForm/inputs";
 import { Conversation } from "@/definitions";
 import { ChoiceRefSet } from "@/definitions/Conversation";
-import { SelectInput } from "../formControls";
-import editorStyles from "../editorStyles.module.css"
-import { icons } from "../dataEditors";
+import { findById, listIds } from "@/lib/util";
+import ClearIcon from '@mui/icons-material/Clear';
+import { IconButton, Stack } from '@mui/material';
 
 interface Props {
     refSet: ChoiceRefSet;
@@ -16,7 +14,7 @@ interface Props {
     openBranchId: string;
 }
 
-export const ChoiceSelector: FunctionComponent<Props> = ({
+export const ChoiceSelector = ({
     refSet, change, remove, conversations, currentConversationId, openBranchId,
 }: Props) => {
 
@@ -35,7 +33,7 @@ export const ChoiceSelector: FunctionComponent<Props> = ({
     /**
      * BUG - [undefined] => [null] in JSON
      */
-    const updateSet = (value: string, property: keyof ChoiceRefSet) => {
+    const updateSet = (value: string | undefined, property: keyof ChoiceRefSet) => {
         if (refSet[property] === value) {
             return
         }
@@ -47,38 +45,30 @@ export const ChoiceSelector: FunctionComponent<Props> = ({
         } else if (property === 'branchId') {
             delete copy.choiceRef
         }
-
         change(copy)
     }
 
     return (
-        <div>
+        <Stack direction={'row'} alignItems={'center'}>
             <SelectInput value={conversationId || ''}
-                items={listIds(conversations)}
-                haveEmptyOption={true}
-                emptyOptionLabel="[current conversation]"
-                onSelect={(item) => { updateSet(item, 'conversationId') }}
+                options={listIds(conversations)}
+                optional
+                label="conversation"
+                inputHandler={(item) => { updateSet(item, 'conversationId') }}
             />
-
             <SelectInput value={branchId || ''}
-                items={Object.keys(branches)}
-                haveEmptyOption={true}
-                emptyOptionLabel="[current branch]"
-                onSelect={(item) => { updateSet(item, 'branchId') }}
+                options={Object.keys(branches)}
+                optional
+                label="branch"
+                inputHandler={(item) => { updateSet(item, 'branchId') }}
             />
-
             <SelectInput value={choiceRef || ''}
-                items={choiceRefs}
-                haveEmptyOption={true}
-                emptyOptionLabel="[none]"
-                onSelect={(item) => { updateSet(item, 'choiceRef') }}
+                options={choiceRefs}
+                optional
+                label="choice"
+                inputHandler={(item) => { updateSet(item, 'choiceRef') }}
             />
-
-            <button
-                className={[editorStyles.button, editorStyles.deleteButton].join(" ")}
-                onClick={remove}>
-                {icons.DELETE}
-            </button>
-        </div>
+            <IconButton onClick={remove}><ClearIcon /></IconButton>
+        </Stack>
     )
 }

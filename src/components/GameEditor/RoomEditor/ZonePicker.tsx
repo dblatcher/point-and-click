@@ -1,39 +1,48 @@
 import { HotspotZone, Zone } from "@/definitions";
-import { Tab, Tabs } from "@mui/material";
-import { FunctionComponent } from "react";
+import { FormControl, MenuItem, Select } from "@mui/material";
 
-type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
+
 interface Props {
     type: 'obstacle' | 'walkable' | 'hotspot';
     zones: (Zone | HotspotZone)[];
-    openTab?: number;
-    selectZone: EntryClickFunction
+    activeZoneIndex?: number;
+    selectZone: { (folderId: string, data?: { id: string }): void }
 }
 
 const getZoneLabel = (zone: Zone | HotspotZone, type: string, index: number) => 'id' in zone ? zone.id : zone.ref || `${type} #${index}`
 const getClickData = (zone: Zone | HotspotZone, index: number) => 'id' in zone ? zone : { id: index.toString() }
 
-export const ZonePicker: FunctionComponent<Props> = ({
+const EMPTY_STRING = ''
+
+
+export const ZonePicker = ({
     type,
     zones,
     selectZone,
-    openTab = 0,
+    activeZoneIndex,
 }: Props) => {
-
-    const validOpenTab = openTab >= zones.length ? undefined : openTab
-
+    const selectValue = typeof activeZoneIndex === 'number' ? activeZoneIndex : EMPTY_STRING;
     return (
-        <Tabs value={validOpenTab} orientation="vertical" sx={{ flexShrink: 0 }}>
-            {zones.map((zone, index) => (
-                <Tab
-                    key={index}
-                    onClick={() => {
-                        selectZone(type.toUpperCase(), getClickData(zone, index), false)
-                    }}
-                    value={index}
-                    label={getZoneLabel(zone, type, index)}
-                />
-            ))}
-        </Tabs>
+        <FormControl>
+            <Select<number>
+                variant='filled'
+                value={selectValue} label={'zones'}
+                onChange={(event) => {
+                    const index = Number(event.target.value)
+                    if (event.target.value === EMPTY_STRING) {
+                        return selectZone(type.toUpperCase(), undefined)
+                    }
+                    const zone = zones[index]
+                    selectZone(type.toUpperCase(), getClickData(zone, index))
+                }}>
+                <MenuItem value={EMPTY_STRING}>[none]</MenuItem>
+                {zones.map((zone, index) => (
+                    <MenuItem key={index} value={index} >
+                        {getZoneLabel(zone, type, index)}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl >
+
     )
 }

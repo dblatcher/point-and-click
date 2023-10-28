@@ -1,9 +1,11 @@
-import { FunctionComponent, MouseEventHandler } from "react";
-
+import { FunctionComponent, useState } from "react";
 import imageService from "@/services/imageService";
-
-import { ServiceItemSelector } from "../ServiceItemSelector";
-import { SpriteSheetPreview } from "../SpriteSheetPreview";
+import { ImageAsset } from "@/services/assets";
+import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
+import { Box, Button, Typography, Stack } from "@mui/material";
+import { EditorBox } from "../EditorBox";
+import { FileAssetSelector } from "../FileAssetSelector";
+import { SelectInput } from "@/components/SchemaForm/SelectInput";
 
 interface Props {
     row: number;
@@ -11,38 +13,127 @@ interface Props {
     sheetId?: string;
     pickFrame: { (row: number, col: number, sheetId?: string): void };
     fixedSheet?: boolean;
+    noOptions?: boolean;
 }
 
-export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickFrame, fixedSheet = false }) => {
-
-    const image = sheetId ? imageService.get(sheetId) : undefined;
-    const handleClick:MouseEventHandler<HTMLCanvasElement> = (event): void => {
-        if (!image) { return }
-        const { cols = 1, rows = 1 } = image
-        const { offsetX, offsetY } = event.nativeEvent
-        const { clientWidth, clientHeight } = event.target as HTMLCanvasElement;
-        const newCol = Math.floor(cols * (offsetX / clientWidth))
-        const newRow = Math.floor(rows * (offsetY / clientHeight))
-        pickFrame(newRow, newCol, sheetId)
+interface FrameButtonProps {
+    image: ImageAsset;
+    row: number;
+    col: number;
+    onClick: { (): void }
+    isSelected: boolean
+    frameSize: number
+}
+const FrameButton = ({ image, row, col, onClick, isSelected, frameSize }: FrameButtonProps) => {
+    const { href, cols = 1, rows = 1, widthScale = 1, heightScale = 1 } = image
+    const imageStyle = {
+        backgroundImage: `url(${href})`,
+        backgroundPositionX: `${-100 * col}%`,
+        backgroundPositionY: `${-100 * row}%`,
+        backgroundSize: `${100 * cols}% ${100 * rows}%`,
+        width: '100%',
+        height: '100%',
+        filter: undefined
     }
 
-    return (<>
-        {!fixedSheet && (
-            <ServiceItemSelector legend="pick sheet"
-                format="select"
-                service={imageService}
-                selectedItemId={sheetId}
-                select={(item): void => { pickFrame(0, 0, item.id) }} />
-        )}
+    return (
+        <Button
+            size="small"
+            onClick={onClick} variant={isSelected ? 'contained' : 'outlined'}
+        >
+            <Box height={frameSize * widthScale} width={frameSize * heightScale}>
+                <div style={imageStyle} />
+            </Box>
+        </Button >
+    )
+}
 
-        {image && (<>
-            <SpriteSheetPreview
-                imageAsset={image}
-                highlight={{ row, col }}
-                canvasScale={300}
-                handleClick={handleClick} />
-            <span>{sheetId} [ <span>{col}</span>,<span>{row}</span> ]</span>
-        </>)}
-    </>
+type ButtonSize = 'small' | 'medium' | 'large'
+
+const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
+    switch (buttonSize) {
+        case "small": return 30;
+        case "medium": return 50;
+        case "large": return 80;
+        default: return 50
+    }
+}
+
+export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickFrame, fixedSheet = false, noOptions = false }) => {
+    const [showInOneRow, setShowInOneRow] = useState(false)
+    const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
+    const image = sheetId ? imageService.get(sheetId) : undefined;
+    const frameSize = frameSizeFromButtonSize(buttonSize)
+
+    const buttonPropsGrid: FrameButtonProps[][] = []
+    if (image) {
+        for (let r = 0; r < (image.rows || 1); r++) {
+            buttonPropsGrid[r] = [];
+            for (let c = 0; c < (image.cols || 1); c++) {
+                buttonPropsGrid[r].push(
+                    {
+                        isSelected: r === row && c === col,
+                        row: r,
+                        col: c,
+                        image,
+                        frameSize,
+                        onClick: () => { pickFrame(r, c, sheetId) }
+                    }
+                )
+            }
+        }
+    }
+
+    return (
+        <EditorBox title="Pick frame">
+            {!noOptions && (
+                <Stack direction={'row'} justifyContent={'space-between'}>
+                    <BooleanInput value={showInOneRow} inputHandler={setShowInOneRow} label="arrange frames in one list" />
+                    <Box width={100}>
+                        <SelectInput
+                            label="button size"
+                            value={buttonSize}
+                            options={['small', 'medium', 'large']}
+                            inputHandler={value => {
+                                setButtonSize(value as ButtonSize)
+                            }} />
+                    </Box>
+                </Stack>
+            )}
+
+            {image && (<>
+                {showInOneRow ? (<>
+                    <div>
+                        {buttonPropsGrid.flat().map((buttonProps, buttonIndex) => (
+                            <FrameButton {...buttonProps} key={buttonIndex} />
+                        ))}
+                    </div>
+                </>) : (<>
+                    {
+                        buttonPropsGrid.map((rowOfButtons, rowIndex) => (
+                            <div key={rowIndex}>
+                                {rowOfButtons.map((buttonProps, buttonIndex) => (
+                                    <FrameButton {...buttonProps} key={buttonIndex} />
+                                ))}
+                            </div>
+                        ))
+                    }
+                </>
+                )}
+            </>)}
+
+            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
+                {!fixedSheet && (
+                    <FileAssetSelector legend="sprite sheet"
+                        format="select"
+                        service={imageService}
+                        selectedItemId={sheetId}
+                        select={(item): void => { pickFrame(0, 0, item.id) }} />
+                )}
+                <Typography variant='h6'>
+                    {sheetId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
+                </Typography>
+            </Stack>
+        </EditorBox>
     )
 }

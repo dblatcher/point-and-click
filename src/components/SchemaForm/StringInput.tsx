@@ -1,4 +1,4 @@
-import { Autocomplete, TextField, TextFieldProps } from '@mui/material';
+import { Autocomplete, Box, TextField, TextFieldProps, Typography } from '@mui/material';
 import type { FormEventHandler, FunctionComponent } from 'react';
 import { eventToString } from './util';
 import { FieldProps } from './types';
@@ -28,6 +28,20 @@ export const StringInput: FunctionComponent<
         disabled: readOnly,
         size: 'small',
         variant: type === 'textArea' ? 'outlined' : 'standard'
+    }
+
+    if (type === 'color') {
+        return (
+            <Box display='flex' alignItems='flex-end'>
+                <TextField
+                    value={props.value}
+                    onInput={sendValue}
+                    {...commonProps}
+                    sx={{ maxWidth: 150, paddingRight:1 }}
+                />
+                <Typography variant='caption'>{props.value}</Typography>
+            </Box>
+        )
     }
 
     if (suggestions) {

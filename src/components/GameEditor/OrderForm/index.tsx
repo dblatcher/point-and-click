@@ -4,6 +4,8 @@ import { Order, orderTypes } from "@/definitions/Order";
 import { getDefaultOrder } from "../defaults";
 import { OrderWithoutStepsForm } from "./OrderWithoutStepsForm";
 import { OrderWithStepsForm } from "./OrderWithStepsForm";
+import { Box } from "@mui/material";
+import { SelectInput } from "@/components/SchemaForm/inputs";
 
 
 interface Props {
@@ -14,32 +16,42 @@ interface Props {
     updateData: { (data: Order): void };
 }
 
-export const OrderForm: FunctionComponent<Props> = ({ data, animationSuggestions, targetIdOptions, targetIdDescriptions, updateData }) => {
+export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetIdDescriptions, updateData }: Props) => {
 
-    const changeType = (value: string) => {
+    const changeType = (value: string | undefined) => {
+        if (!value) { return }
         const orderType = findValueAsType(value, orderTypes)
         if (orderType) {
             updateData(getDefaultOrder(orderType))
         }
     }
 
-    if ('steps' in data) {
-        return <OrderWithStepsForm
+    const form = ('steps' in data) ? (
+        <OrderWithStepsForm
             data={data}
             animationSuggestions={animationSuggestions}
             updateData={updateData}
-            changeType={changeType}
         />
-    }
+    ) : (
+        <OrderWithoutStepsForm
+            data={data}
+            animationSuggestions={animationSuggestions}
+            targetIdOptions={targetIdOptions}
+            targetIdDescriptions={targetIdDescriptions}
+            updateData={updateData}
+        />
+    )
 
-    return <OrderWithoutStepsForm
-        data={data}
-        animationSuggestions={animationSuggestions}
-        targetIdOptions={targetIdOptions}
-        targetIdDescriptions={targetIdDescriptions}
-        updateData={updateData}
-        changeType={changeType}
-    />
+    return (
+        <Box component={'article'} sx={{ flex: 1, minWidth: 400, paddingY: 2 }}>
+            <SelectInput label="order type"
+                value={data.type}
+                options={orderTypes}
+                inputHandler={changeType}
+            />
+            {form}
+        </Box>
+    )
 }
 
 

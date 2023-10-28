@@ -1,4 +1,4 @@
-import { ImageAsset } from "@/services/imageService";
+import { ImageAsset } from "@/services/assets";
 import { BackgroundLayer } from "@/definitions";
 import { clamp, listIds } from "@/lib/util";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
@@ -16,7 +16,7 @@ interface Props {
 export function BackgroundLayerControl({ layer, index, imageAssets, change }: Props) {
     const { parallax, imageId } = layer
 
-    return <Stack direction="row" spacing={2} flex={1}>
+    return <Stack direction="row" spacing={2} flex={1} alignItems={'flex-end'}>
         <SelectInput
             value={imageId}
             options={listIds(imageAssets)}

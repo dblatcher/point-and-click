@@ -1,7 +1,6 @@
-
 import { Direction, SpriteFrame } from "@/definitions";
-import { Box, Button, Stack } from "@mui/material";
-import { ListEditor } from "../ListEditor";
+import { Alert, Box, Button, Stack } from "@mui/material";
+import { ArrayControl } from "../ArrayControl";
 import { FramePreview } from "./FramePreview";
 
 interface Props {
@@ -28,8 +27,10 @@ export const AnimationFrameList = ({
     return (<>
         {animationInDirection ?
             (<Stack>
-                <ListEditor tight
-                    list={animation[direction] as SpriteFrame[]}
+                {!selectedFrame && <Alert severity='info'>Pick a frame to insert</Alert>}
+                {animationInDirection.length === 0 && <Alert severity='info'>Add the first frame</Alert>}
+                <ArrayControl
+                    list={animationInDirection}
                     insertText="insert frame"
                     mutateList={newlist => {
                         return editCycle(animKey, direction, newlist)
@@ -49,7 +50,7 @@ export const AnimationFrameList = ({
                             <p>[{frame.col}, {frame.row}]</p>
                         </Button>
                     )}
-                    createItem={() => selectedFrame ? { ...selectedFrame } : undefined}
+                    createItem={selectedFrame ? () => ({ ...selectedFrame }) : undefined}
                 />
             </Stack>
             ) : (
@@ -57,7 +58,7 @@ export const AnimationFrameList = ({
                     <Button
                         variant="contained"
                         onClick={() => { addDirection(direction) }}
-                    >Add Frame for: {direction}
+                    >create frame list for: {direction}
                     </Button>
                 </Box>
             )

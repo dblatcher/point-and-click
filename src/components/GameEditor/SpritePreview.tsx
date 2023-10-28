@@ -1,6 +1,6 @@
-import { RoomData, ActorData } from "@/definitions";
-import { Room } from "@/components/svg/Room";
 import HorizontalLine from "@/components/svg/HorizontalLine";
+import { Room } from "@/components/svg/Room";
+import { ActorData, RoomData } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
 
 type Props = {

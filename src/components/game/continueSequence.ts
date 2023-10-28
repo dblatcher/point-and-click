@@ -3,6 +3,7 @@ import { Order, ActorData } from "@/definitions";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
+import { findById } from "@/lib/util";
 
 
 function validateOrderIdsAndClearEmpties(
@@ -40,7 +41,7 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     const { actorOrders: stageActorOrders = {} } = currentStage
     validateOrderIdsAndClearEmpties(stageActorOrders, actors)
 
-    actors.forEach(actor => followOrder(actor, cellMatrix, stageActorOrders[actor.id], state))
+    actors.forEach(actor => followOrder(actor, cellMatrix, stageActorOrders[actor.id], state, findById(actor.sprite, props._sprites)))
 
     if (currentStage.immediateConsequences) {
         const consequenceExecutor = makeConsequenceExecutor(state, props)

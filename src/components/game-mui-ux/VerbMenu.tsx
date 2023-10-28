@@ -3,8 +3,8 @@ import { Button } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { VerbMenuProps, verbMenuPropsAreEqual } from "../game/uiComponentSet";
 import { Verb } from '@/definitions';
-import { useGameState } from '../game/game-state-context';
-import { useGameInfo } from '../game/game-info-provider';
+import { useGameState } from '../../context/game-state-context';
+import { useGameInfo } from '@/context/game-info-provider';
 
 
 export const VerbMenu = (props: { select: { (verb: Verb): void }; }) => {

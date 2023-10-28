@@ -9,7 +9,7 @@ import { useState } from "react";
 import { EditorHeading } from "./EditorHeading";
 import { StorageMenu } from "./StorageMenu";
 import { makeBlankVerb } from "./defaults";
-import { useGameDesign } from "./game-design-context";
+import { useGameDesign } from "@/context/game-design-context";
 import { Box, Stack, Typography } from "@mui/material";
 import { EditorBox } from "./EditorBox";
 import { StringInput } from "../SchemaForm/StringInput";

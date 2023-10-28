@@ -1,7 +1,7 @@
 
 import { Order } from "@/definitions";
 import { useEffect, useRef } from "react";
-import { useGameState } from "../game/game-state-context";
+import { useGameState } from "@/context/game-state-context";
 import styles from "./styles.module.css";
 
 

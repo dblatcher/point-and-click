@@ -1,8 +1,9 @@
+import { StringInput } from '@/components/SchemaForm/inputs';
+import AddIcon from "@mui/icons-material/Add";
+import { IconButton, Stack } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
-import { Sequence } from '../../../definitions/Sequence'
-import { icons } from '../dataEditors';
+import { Sequence } from '../../../definitions/Sequence';
 import { makeBlankSequence } from '../defaults';
-import { StringInput } from '../formControls';
 
 interface Props {
     addSequence: { (sequence: Sequence): void };
@@ -20,13 +21,16 @@ export const NewSequenceForm: FunctionComponent<Props> = ({ addSequence, existin
         }
     }
 
-    return <div>
-        <b>Use new Sequence:</b>
-        <StringInput value={newId} inputHandler={setNewId} suggestions={suggestedIds} />
-        <button
-            onClick={handleSubmit}
-            disabled={!idIsAvailable}>
-            {icons.INSERT}
-        </button>
-    </div>
+    return (
+        <Stack direction={'row'} flex={1}>
+            <StringInput label='Use new Sequence'
+                value={newId}
+                inputHandler={setNewId}
+                suggestions={suggestedIds} />
+            <IconButton onClick={handleSubmit}
+                disabled={!idIsAvailable}>
+                <AddIcon />
+            </IconButton>
+        </Stack>
+    )
 }

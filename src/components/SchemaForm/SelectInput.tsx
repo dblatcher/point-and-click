@@ -14,7 +14,7 @@ export const SelectInput: FunctionComponent<
         descriptions?: string[];
     }
 > = (props) => {
-    const { value, optional, options, inputHandler, label = 'value', descriptions } = props;
+    const { value, optional, options, inputHandler, label, descriptions } = props;
     const handleChange = (event: SelectChangeEvent<string>) => {
         if (event.target.value === EMPTY_STRING) {
             return inputHandler(undefined);
@@ -25,14 +25,16 @@ export const SelectInput: FunctionComponent<
 
     return (
         <FormControl fullWidth>
-            <InputLabel id={`select-input-label-${label}-${options.toString()}`}>
-                {label}
-            </InputLabel>
-            <Select 
-            size='small'
-            variant='standard'
-            required={!optional}
-            value={valueAsString} label={label} onChange={handleChange}>
+            {label && (
+                <InputLabel id={`select-input-label-${label}-${options.toString()}`}>
+                    {label}
+                </InputLabel>
+            )}
+            <Select
+                size='small'
+                variant='standard'
+                required={!optional}
+                value={valueAsString} label={label} onChange={handleChange}>
                 {optional && <MenuItem value={EMPTY_STRING}>[none]</MenuItem>}
                 {options.map((option, index) => (
                     <MenuItem key={option} value={option}>

@@ -1,9 +1,8 @@
 import { Direction, ActorData, MoveOrder } from "@/definitions";
+import { Sprite } from "@/lib/Sprite";
 import { Point } from "@/lib/pathfinding/geometry";
-import spriteService from "@/services/spriteService";
 
-function getAvailableDirections(actor: ActorData, animationName?: string): Direction[] {
-    const sprite = spriteService.get(actor.sprite);
+function getAvailableDirections(sprite?: Sprite, animationName?: string): Direction[] {
     const animation = sprite?.getAnimation(animationName, 'move') || {}
     return Object.keys(animation) as Direction[]
 }
@@ -12,7 +11,7 @@ function determineDirection(postion: Point, desination: Point, availableDirectio
 
     const dx = desination.x - postion.x
     const dy = desination.y - postion.y
- 
+
     const horizontal = dx < 0 ? 'left' : 'right'
     const vertical = dy < 0 ? 'down' : 'up';
     const moreVertical = Math.abs(dx) < Math.abs(dy);
@@ -26,7 +25,7 @@ function determineDirection(postion: Point, desination: Point, availableDirectio
     return vertical
 }
 
-export function executeMove(moveOrder: MoveOrder, actor: ActorData): void {
+export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Sprite): void {
     const { x, y, speed: actorSpeed = 1 } = actor
     const [nextStep] = moveOrder.steps;
     if (!nextStep) { return }
@@ -51,7 +50,7 @@ export function executeMove(moveOrder: MoveOrder, actor: ActorData): void {
         moveOrder.steps.shift()
     }
 
-    const availableDirections = getAvailableDirections(actor, nextStep.animation)
+    const availableDirections = getAvailableDirections(sprite, nextStep.animation)
     actor.x = newX
     actor.y = newY
     actor.direction = determineDirection({ x, y }, { x: newX, y: newY }, availableDirections)

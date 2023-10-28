@@ -1,7 +1,7 @@
 import { Card, Container, Grid, useTheme } from "@mui/material";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { FullScreenWrapper } from "../FullScreenWrapper";
-import { useGameStateDerivations } from "../game/game-state-context";
+import { useGameStateDerivations } from "@/context/game-state-context";
 import { SoundToggle } from "./SoundToggle";
 import { CommandLine } from "./CommandLine";
 import { VerbMenu } from "./VerbMenu";

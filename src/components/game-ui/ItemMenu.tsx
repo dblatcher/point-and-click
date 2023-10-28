@@ -5,7 +5,7 @@ import uiStyles from '@/components/game-ui/uiStyles.module.css';
 import { CSSProperties, memo } from "react";
 import { ItemMenuProps, itemMenuPropsAreEqual } from '@/components/game/uiComponentSet'
 import { HandleHoverFunction } from "../game";
-import { useGameStateDerivations } from "../game/game-state-context";
+import { useGameStateDerivations } from "@/context/game-state-context";
 
 
 export const ItemMenu = (props: {

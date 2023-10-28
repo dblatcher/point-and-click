@@ -38,24 +38,25 @@ export const AnimationGrid = ({ animation, animationKey, sprite, defaultDirectio
     }
 
     return (
-        <EditorBox title={animationKey} boxProps={{ minWidth: 240 }}>
-            <Stack alignItems={'center'} justifyContent={'flex-end'} minHeight={200}>
-                <Stack direction={'row'} justifyContent={'flex-end'} width={'100%'}>
-
+        <EditorBox title={animationKey} boxProps={{ minWidth: 240 }}
+            barContent={
+                <>
                     <ButtonWithTextInput
                         useIconButton icon={<ContentCopyIcon />}
                         label={`Copy animation "${animationKey}"`}
                         confirmationText={`Copy "${animationKey}" as...`}
                         onEntry={newName => { copyAnimation(newName, animationKey) }}
                     />
-
                     {animationKey !== 'default' &&
                         <ButtonWithConfirm
                             useIconButton icon={<DeleteIcon />}
                             label={`Delete animation "${animationKey}"`}
                             onClick={() => deleteAnimation(animationKey)} />
                     }
-                </Stack>
+                </>
+            }
+        >
+            <Stack alignItems={'center'} justifyContent={'flex-end'} minHeight={160}>
                 <Stack direction={'row'} alignItems={'center'}>
                     {renderedButtons.left}
                     <Stack>

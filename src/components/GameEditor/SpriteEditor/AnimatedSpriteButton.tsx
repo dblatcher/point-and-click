@@ -2,7 +2,6 @@ import { Direction, Animation, ActorData } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
 import { Button, Typography } from "@mui/material";
 import { SpritePreview } from "../SpritePreview";
-import spriteService from "@/services/spriteService";
 
 interface Props {
     sprite: Sprite
@@ -14,7 +13,7 @@ interface Props {
 }
 
 const buildActorData = (sprite: Sprite, animationKey: string, direction: Direction): ActorData => {
-    const image = spriteService.get(sprite.id)?.getFrame(animationKey, 0, direction)?.image
+    const image = sprite.getFrame(animationKey, 0, direction)?.image
     const widthScale = image?.widthScale || 1
     const heightScale = image?.heightScale || 1
 

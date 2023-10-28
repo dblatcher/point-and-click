@@ -1,24 +1,24 @@
-import { Component, createRef, RefObject } from "react";
+import { cloneData } from "@/lib/clone";
 import {
   fileToObjectUrl,
   makeDownloadFile,
   uploadFile,
 } from "@/lib/files";
-import { eventToString } from "@/lib/util";
-import { OptionalNumberInput, SelectInput, TextInput, Warning } from "../formControls";
-import { cloneData } from "@/lib/clone";
-import { ServiceItemSelector } from "../ServiceItemSelector";
+import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
 import { ServiceItem } from "@/services/Service";
-import editorStyles from "../editorStyles.module.css";
-import imageService, {
+import {
   ImageAsset,
   ImageAssetCategory,
   imageAssetCategories,
-
-} from "@/services/imageService";
-import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
-import { SpriteSheetPreview } from "../SpriteSheetPreview";
+} from "@/services/assets";
+import imageService from "@/services/imageService";
+import { Grid } from "@mui/material";
+import { Component, RefObject, createRef } from "react";
 import { EditorHeading } from "../EditorHeading";
+import { FileAssetSelector } from "../FileAssetSelector";
+import { ZipFileControl } from "../asset-components/ZipFileControl";
+import { ImageAssetForm } from "./ImageAssetForm";
+import { ImageAssetPreview } from "./ImageAssetPreview";
 
 
 type State = {
@@ -32,7 +32,7 @@ type State = {
 
 export class ImageAssetTool extends Component<{}, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
-  fileRef: RefObject<File>;
+  file: File | null;
 
   constructor(props: ImageAssetTool["props"]) {
     super(props);
@@ -45,9 +45,11 @@ export class ImageAssetTool extends Component<{}, State> {
     this.saveToService = this.saveToService.bind(this);
     this.openFromService = this.openFromService.bind(this);
     this.zipImages = this.zipImages.bind(this);
+    this.changeValue = this.changeValue.bind(this);
+    this.clearForm = this.clearForm.bind(this)
 
     this.canvasRef = createRef();
-    this.fileRef = createRef();
+    this.file = null;
   }
 
   get fullAsset(): ImageAsset {
@@ -64,7 +66,7 @@ export class ImageAssetTool extends Component<{}, State> {
     if (!file) {
       return;
     }
-    this.fileRef.current = file
+    this.file = file
     const newUrl = fileToObjectUrl(file);
 
     if (this.state.fileObjectUrl && typeof window !== undefined) {
@@ -80,6 +82,17 @@ export class ImageAssetTool extends Component<{}, State> {
       fileObjectUrl: newUrl,
     });
   };
+
+  clearForm() {
+    if (this.state.fileObjectUrl && typeof window !== undefined) {
+      window.URL.revokeObjectURL(this.state.fileObjectUrl);
+    }
+    this.file = null
+    this.setState({
+      asset: { id: '' },
+      fileObjectUrl: undefined,
+    })
+  }
 
   changeValue(propery: keyof ImageAsset, newValue: string | number | undefined) {
     this.setState(state => {
@@ -117,7 +130,7 @@ export class ImageAssetTool extends Component<{}, State> {
 
   saveToService() {
     const { asset } = this.state;
-    const { current: file } = this.fileRef
+    const { file } = this
 
     // create a new url as the one in state is revoked when
     // a new file is uploaded or a asset retrieved from the service.
@@ -126,13 +139,13 @@ export class ImageAssetTool extends Component<{}, State> {
     if (!asset.id || !newHref || !asset.category) {
       let saveWarning = ''
       if (!asset.id) {
-        saveWarning += "NO ID "
+        saveWarning += "NO ID. "
       }
       if (!newHref) {
-        saveWarning += "NO FILE "
+        saveWarning += "NO FILE. "
       }
       if (!asset.category) {
-        saveWarning += "NO CATEGORY "
+        saveWarning += "NO CATEGORY. "
       }
       this.setState({ saveWarning });
       return;
@@ -171,7 +184,7 @@ export class ImageAssetTool extends Component<{}, State> {
 
   openFromService(asset: ServiceItem) {
     const assetCopy = cloneData(asset as ImageAsset);
-    this.fileRef.current = null
+    this.file = null
     if (this.state.fileObjectUrl && typeof window !== undefined) {
       window.URL.revokeObjectURL(this.state.fileObjectUrl);
     }
@@ -188,109 +201,41 @@ export class ImageAssetTool extends Component<{}, State> {
       asset
     } = this.state;
 
-    const {
-      id = "",
-      category = "",
-      rows, cols, widthScale, heightScale
-    } = asset
-
-    const saveButtonText = imageService.list().includes(id) ? `UPDATE ${id}` : `ADD NEW ASSET`
+    const isNewAsset = asset.id ? !imageService.list().includes(asset.id) : true
 
     return (
       <article>
         <EditorHeading heading="Image asset tool" />
-        <div className={editorStyles.container}>
-          <section>
-            <ServiceItemSelector
-              legend="assets"
-              service={imageService}
-              currentSelection={id}
-              select={this.openFromService} />
+        <ZipFileControl
+          clearForm={this.clearForm}
+          uploadWarning={uploadWarning}
+          zipAssets={this.zipImages}
+          loadFromZipFile={this.loadFromZipFile} />
 
-            <fieldset className={editorStyles.fieldset}>
-              <div className={editorStyles.row}>
-                <button onClick={this.zipImages}>zip all image assets</button>
-              </div>
-              <div className={editorStyles.row}>
-                <button onClick={this.loadFromZipFile}>
-                  load assets from zip file
-                </button>
-                {uploadWarning && <Warning>{uploadWarning}</Warning>}
-              </div>
-            </fieldset>
-          </section>
-
-          <section>
-            <fieldset className={editorStyles.fieldset}>
-              <legend>image properties</legend>
-
-              <div className={editorStyles.row}>
-                <button onClick={this.loadFile}>select image file</button>
-              </div>
-              <div className={editorStyles.row}>
-                <TextInput
-                  label="ID"
-                  value={id}
-                  onInput={(event) =>
-                    this.changeValue("id", eventToString(event))
-                  } />
-              </div>
-              <div className={editorStyles.row}>
-                <SelectInput
-                  onSelect={(value) => this.changeValue("category", value)}
-                  label="category"
-                  value={category}
-                  items={imageAssetCategories}
-                  haveEmptyOption={true} />
-              </div>
-
-
-              <div className={editorStyles.row}>
-                <OptionalNumberInput label="rows" value={rows} min={1}
-                  key={`${id}1`}
-                  inputHandler={
-                    value => { this.changeValue('rows', value) }
-                  }
-                />
-                <OptionalNumberInput label="cols" value={cols} min={1}
-                  key={`${id}2`}
-                  inputHandler={
-                    value => { this.changeValue('cols', value) }
-                  }
-                />
-              </div>
-              <div className={editorStyles.row}>
-                <OptionalNumberInput label="widthScale" value={widthScale} step={.1}
-                  key={`${id}3`}
-                  inputHandler={
-                    value => { this.changeValue('widthScale', value) }
-                  }
-                />
-                <OptionalNumberInput label="heightScale" value={heightScale} step={.1}
-                  key={`${id}4`}
-                  inputHandler={
-                    value => { this.changeValue('heightScale', value) }
-                  }
-                />
-              </div>
-
-
-            </fieldset>
-
-            <fieldset className={editorStyles.fieldset}>
-              <div className={editorStyles.row}>
-                <button onClick={this.saveToService}>{saveButtonText}</button>
-                {saveWarning && <Warning>{saveWarning}</Warning>}
-              </div>
-            </fieldset>
-
-            <p>Resizing the preview does not effect the image data.</p>
-            <SpriteSheetPreview
+        <Grid container spacing={1} justifyContent={'space-between'}>
+          <Grid item>
+            <ImageAssetForm
+              imageAsset={asset}
+              changeValue={this.changeValue}
+              loadFile={this.loadFile}
+              isNewAsset={isNewAsset}
+              saveAssetChanges={this.saveToService}
+              saveWarning={saveWarning}
+            />
+            <ImageAssetPreview
               imageAsset={this.fullAsset}
               canvasScale={300} />
+          </Grid>
 
-          </section>
-        </div>
+          <Grid item>
+            <FileAssetSelector
+              legend="assets"
+              service={imageService}
+              currentSelection={asset.id}
+              select={this.openFromService} />
+          </Grid>
+        </Grid>
+
       </article>
     );
   }

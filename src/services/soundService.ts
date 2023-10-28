@@ -1,34 +1,7 @@
 import { SoundControl, SoundDeck } from "sound-deck";
-import Zod, { object, string } from "zod";
 import { Service } from "./Service";
+import { SoundAsset, getMimeType } from "./assets";
 
-
-export type SoundAssetCategory = 'sfx'
-export type SoundAsset = {
-    id: string;
-    href: string;
-    category: SoundAssetCategory;
-    originalFileName?: string;
-}
-
-export const SoundAssetSchema = object({
-    id: string(),
-    href: string(),
-    category: Zod.enum(['sfx']),
-    originalFileName: string().optional(),
-})
-
-export const soundAssetCategories: SoundAssetCategory[] = SoundAssetSchema.shape.category.options.map(_ => _)
-
-function getFileExtension(asset: SoundAsset): string | undefined {
-    const { href, originalFileName } = asset
-    const fileName = originalFileName || href
-    return fileName.includes(".") ? fileName.split(".").reverse()[0] : undefined
-}
-function getMimeType(asset: SoundAsset): string | undefined {
-    const fileExtension = getFileExtension(asset)
-    return fileExtension ? `sound/${fileExtension}` : undefined
-}
 
 
 export class SoundService extends Service<SoundAsset> {

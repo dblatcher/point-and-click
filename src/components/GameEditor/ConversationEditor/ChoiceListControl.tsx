@@ -1,9 +1,8 @@
-import { FunctionComponent } from "react";
 import { Conversation } from "@/definitions";
 import { ChoiceRefSet } from "@/definitions/Conversation";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { FunctionComponent } from "react";
 import { ChoiceSelector } from "./ChoiceSelector";
-import editorStyles from "../editorStyles.module.css"
-import { icons } from "../dataEditors";
 
 interface Props {
     property: 'enablesChoices' | 'disablesChoices';
@@ -21,31 +20,29 @@ export const ChoiceListControl: FunctionComponent<Props> = ({
     choices, change, remove, add, conversations, currentConversationId, openBranchId,
 }: Props) => {
 
+    const whatItDoes = property === 'disablesChoices' ? 'disable' : 'enable'
+
     return (
-        <article style={{
-            borderBottom: '1px dotted black',
-            borderTop: '1px dotted black',
-        }}>
-            <b>{property}</b>
-            {
-                choices?.map((refSet, index) => (
-                    <ChoiceSelector refSet={refSet} key={index}
-                        conversations={conversations}
-                        currentConversationId={currentConversationId}
-                        openBranchId={openBranchId || ''}
-                        change={(newSet) => { change(property, index, newSet) }}
-                        remove={() => { remove(property, index) }}
-                    />
-                ))
-            }
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <span>Add choice</span>
-                <button
-                    className={[editorStyles.button, editorStyles.plusButton].join(" ")}
-                    onClick={() => { add(property) }}>
-                    {icons.INSERT}
-                </button>
-            </div>
-        </article>
+        <Stack spacing={1}>
+            <Typography variant="caption">
+                This choice {whatItDoes}s the following choices:
+            </Typography>
+
+            {choices?.map((refSet, index) => (
+                <ChoiceSelector refSet={refSet} key={index}
+                    conversations={conversations}
+                    currentConversationId={currentConversationId}
+                    openBranchId={openBranchId || ''}
+                    change={(newSet) => { change(property, index, newSet) }}
+                    remove={() => { remove(property, index) }}
+                />
+            ))}
+
+            <Box display='flex' justifyContent={"flex-end"}>
+                <Button onClick={() => { add(property) }}>
+                    add choice to {whatItDoes}
+                </Button>
+            </Box>
+        </Stack>
     )
 }

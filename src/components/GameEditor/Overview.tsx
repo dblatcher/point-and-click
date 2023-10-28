@@ -5,7 +5,7 @@ import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow } f
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
-import { useGameDesign } from "./game-design-context";
+import { useGameDesign } from "@/context/game-design-context";
 
 const formSchema = GameContentsDataSchema.pick({
   id: true,

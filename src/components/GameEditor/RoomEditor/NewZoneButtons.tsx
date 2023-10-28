@@ -3,19 +3,16 @@ import { ClickEffect } from "./ClickEffect";
 import { ButtonGroup, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add"
 
-type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
 interface Props {
     type: 'obstacle' | 'walkable' | 'hotspot';
-    selectZone: EntryClickFunction
     clickEffect?: ClickEffect;
+    setClickEffect: { (clickEffect: ClickEffect): void }
 }
-
-
 
 export const NewZoneButtons: FunctionComponent<Props> = ({
     type,
-    selectZone,
     clickEffect,
+    setClickEffect,
 }: Props) => {
 
     const clickEffectIsNewZone = (shapeToCheck: 'circle' | 'rect' | 'polygon'): boolean => {
@@ -24,26 +21,36 @@ export const NewZoneButtons: FunctionComponent<Props> = ({
         return (clickEffect.shape === shapeToCheck && clickEffect.type == type.toUpperCase())
     }
 
+    const effectType = type.toUpperCase() as "OBSTACLE" | "HOTSPOT" | "WALKABLE";
 
     return (
-        <ButtonGroup>
+        <ButtonGroup sx={{ paddingBottom: 1 }} size="small">
             <Button
                 variant={clickEffectIsNewZone('circle') ? 'contained' : 'outlined'}
                 startIcon={<AddIcon />}
                 onClick={() => {
-                    selectZone(type.toUpperCase(), { id: 'circle' }, true)
+                    setClickEffect({
+                        type: effectType,
+                        shape: 'circle'
+                    })
                 }}>circle</Button>
             <Button
                 variant={clickEffectIsNewZone('rect') ? 'contained' : 'outlined'}
                 startIcon={<AddIcon />}
                 onClick={() => {
-                    selectZone(type.toUpperCase(), { id: 'rect' }, true)
+                    setClickEffect({
+                        type: effectType,
+                        shape: 'rect'
+                    })
                 }}>Rectangle</Button>
             <Button
                 variant={clickEffectIsNewZone('polygon') ? 'contained' : 'outlined'}
                 startIcon={<AddIcon />}
                 onClick={() => {
-                    selectZone(type.toUpperCase(), { id: 'polygon' }, true)
+                    setClickEffect({
+                        type: effectType,
+                        shape: 'polygon'
+                    })
                 }}>Polygon</Button>
         </ButtonGroup>
 

@@ -1,7 +1,6 @@
-import { ActorData, SpriteData  } from "@/definitions"
+import { ActorData, SpriteData } from "@/definitions"
 import { Point } from "@/lib/pathfinding/geometry";
 import { Sprite } from "@/lib/Sprite";
-import spriteService from "@/services/spriteService";
 import imageService from "@/services/imageService";
 
 
@@ -26,18 +25,17 @@ const data: SpriteData = {
     }
 }
 
-const testSprite = new Sprite(data)
+export const testSprite = new Sprite(data)
 
 
-const makeTestActor: { (point: Point): ActorData } = (point) => {
+export const makeTestActor: { (point: Point): ActorData } = (point) => {
 
-    spriteService.add(testSprite)
     imageService.add({
-        id:'_TEST_SPRITE_IMG',
-        category:'spriteSheet',
-        href:'./assets/characters/mario.png',
-        rows:2,
-        cols:3,
+        id: '_TEST_SPRITE_IMG',
+        category: 'spriteSheet',
+        href: './assets/characters/mario.png',
+        rows: 2,
+        cols: 3,
     })
 
     return {
@@ -55,5 +53,3 @@ const makeTestActor: { (point: Point): ActorData } = (point) => {
         dialogueColor: 'red',
     }
 }
-
-export { makeTestActor }

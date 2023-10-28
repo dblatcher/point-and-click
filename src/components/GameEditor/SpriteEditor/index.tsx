@@ -6,7 +6,6 @@ import { SpriteDataSchema, directions } from "@/definitions/SpriteSheet";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
-import spriteService from "@/services/spriteService";
 import { Grid, Stack } from "@mui/material";
 import { Component } from "react";
 import { EditorBox } from "../EditorBox";
@@ -29,6 +28,7 @@ type ExtraState = {
 type SpriteEditorState = SpriteData & ExtraState;
 
 type SpriteEditorProps = DataItemEditorProps<SpriteData> & {
+    provideSprite: { (id: string): Sprite | undefined }
     spriteIds: string[];
 }
 
@@ -70,8 +70,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.deleteAnimation = this.deleteAnimation.bind(this)
         this.pickFrame = this.pickFrame.bind(this)
         this.setStateWithAutosave = (input, callback) => {
-            higherLevelSetStateWithAutosave(this).bind(this)(input, callback)
-            spriteService.add(new Sprite(this.currentData))
+            higherLevelSetStateWithAutosave(this).bind(this)(input, callback);
         }
     }
 
@@ -109,7 +108,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 break;
         }
         if (propery === 'id') {
-            return this.setState(modification)
+            return this.setState({...this.state, ...modification})
         }
         this.setStateWithAutosave(modification)
     }
@@ -184,7 +183,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
     handleUpdateButton() {
         const { currentData } = this
-        spriteService.add(new Sprite(currentData))
         if (this.props.updateData) {
             this.props.updateData(currentData)
         }
@@ -196,7 +194,8 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
     buildActorData(animation: string, direction: Direction): ActorData {
         const { state } = this
-        const image = spriteService.get(state.id)?.getFrame(animation, 0, direction)?.image
+        const { provideSprite } = this.props
+        const image = provideSprite(state.id)?.getFrame(animation, 0, direction)?.image
         const widthScale = image?.widthScale || 1
         const heightScale = image?.heightScale || 1
 

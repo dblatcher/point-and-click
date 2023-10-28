@@ -1,16 +1,19 @@
 import { Conversation, ConversationBranch } from "@/definitions"
-import { Box, Button, Stack, Typography, Card, ButtonGroup } from "@mui/material"
+import { Box, Button, Stack, Typography, Card, ButtonGroup, IconButton } from "@mui/material"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { LineBetweenNodes } from "./LineBetweenNodes"
 import { EditorBox } from "../EditorBox"
 import AddIcon from "@mui/icons-material/Add"
 import { ChoiceDescription } from "./ChoiceDescription"
+import { ButtonWithTextInput } from "../ButtonWithTextInput"
 
 interface Props {
     conversation: Conversation
     openEditor: { (branchKey: string, choiceIndex: number): void }
     addNewChoice: { (branchKey: string): void }
     openOrderDialog: { (branchKey: string): void }
+    deleteBranch: { (branchKey: string): void }
+    addNewBranch: { (branchKey: string): void }
 }
 
 
@@ -70,12 +73,19 @@ type BranchBoxProps = {
     openEditor: { (brandId: string, choiceIndex: number): void };
     addNewChoice: { (branchKey: string): void }
     openOrderDialog: { (branchKey: string): void }
+    deleteBranch: { (branchKey: string): void }
 }
 
-const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialog }: BranchBoxProps) => {
+const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialog, deleteBranch }: BranchBoxProps) => {
     return (
         <div data-branch-identifier={branchKey}>
-            <EditorBox title={`Branch: ${branchKey}`} >
+
+            <EditorBox
+                title={`Branch: ${branchKey}`}
+                barContent={
+                    <IconButton onClick={() => { deleteBranch(branchKey) }}>x</IconButton>
+                }
+            >
                 {branch.choices.map((choice, index) => (
                     <div key={index} data-choice-identifier={`${branchKey}-${index}`}>
                         <ChoiceDescription
@@ -84,7 +94,7 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
                     </div>
                 ))}
                 <ButtonGroup sx={{ marginY: 1 }} fullWidth>
-                    <Button onClick={() => { openOrderDialog(branchKey) }}>change order</Button>
+                    <Button onClick={() => { openOrderDialog(branchKey) }}>sort choices</Button>
                     <Button variant="contained" startIcon={<AddIcon />} onClick={() => { addNewChoice(branchKey) }}>Add choice</Button>
                 </ButtonGroup>
             </EditorBox>
@@ -92,7 +102,7 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
 }
 
 
-export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openOrderDialog }: Props) => {
+export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openOrderDialog, deleteBranch, addNewBranch }: Props) => {
     const [nodePairs, setNodePairs] = useState<[Element, Element][]>([])
     const containerRef = useRef<HTMLElement>()
     const { id } = conversation
@@ -134,9 +144,9 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                 )}
                 <Stack spacing={2}>
                     {heirarchy.map((rank, rankIndex) => (
-                        <Stack key={rankIndex} 
-                            direction={'row'} 
-                            spacing={2} 
+                        <Stack key={rankIndex}
+                            direction={'row'}
+                            spacing={2}
                             justifyContent={rankIndex === 0 ? 'center' : 'space-between'}
                             alignItems={'flex-start'}
                         >
@@ -146,6 +156,7 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                                         openEditor={openEditor}
                                         addNewChoice={addNewChoice}
                                         openOrderDialog={openOrderDialog}
+                                        deleteBranch={deleteBranch}
                                         key={`${rankIndex}-${itemIndex}`}
                                         branch={branch} branchKey={branchKey} />
                                 )
@@ -153,6 +164,18 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                         </Stack>
                     ))}
                 </Stack>
+                <Box display={'flex'} justifyContent={'flex-end'} paddingTop={2}>
+                    <ButtonWithTextInput
+                        label="Add Branch"
+                        onEntry={(entry) => { addNewBranch(entry) }}
+                        confirmationText="enter branch name"
+                        buttonProps={{
+                            size: 'large',
+                            variant: "contained",
+                            startIcon: (< AddIcon />),
+                        }}
+                    />
+                </Box>
             </Card>
         </Box>
     )
