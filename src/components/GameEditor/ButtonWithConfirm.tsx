@@ -25,6 +25,7 @@ export const ButtonWithConfirm = ({ label, onClick, noConfirmation, confirmation
                     onClick={handleFirstButton}
                     aria-label={label}
                     title={label}
+                    size="small"
                 >
                     {icon}
                 </IconButton>

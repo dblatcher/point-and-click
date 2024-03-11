@@ -63,6 +63,13 @@ export const editorTheme = createTheme({
             }
         },
 
+        MuiIconButton: {
+            styleOverrides: {
+                root: {
+                    padding: 2
+                }
+            },
+        },
 
         MuiAccordionSummary: {
             styleOverrides: {

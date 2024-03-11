@@ -83,7 +83,7 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
             <EditorBox
                 title={`Branch: ${branchKey}`}
                 barContent={
-                    <IconButton onClick={() => { deleteBranch(branchKey) }}>x</IconButton>
+                    <IconButton size="small" onClick={() => { deleteBranch(branchKey) }}>x</IconButton>
                 }
             >
                 {branch.choices.map((choice, index) => (

@@ -28,7 +28,7 @@ export const EditorBox = ({ title, children, themePalette = 'primary', boxProps 
                     display={'flex'}
                     alignItems={'center'}
                     justifyContent={'space-between'}
-                    minHeight={38} // adding an icon button won't stretch further
+                    minHeight={30} // adding an icon button won't stretch further
                     sx={{
                         background: colorScheme.light,
                         color: colorScheme.contrastText,

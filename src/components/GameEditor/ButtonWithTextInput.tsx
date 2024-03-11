@@ -33,6 +33,7 @@ export const ButtonWithTextInput = ({
                 <IconButton
                     onClick={handleFirstButton}
                     aria-label={label}
+                    size="small"
                 >
                     {icon}
                 </IconButton>
