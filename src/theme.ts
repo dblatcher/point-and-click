@@ -30,6 +30,40 @@ export const editorTheme = createTheme({
     },
     spacing: 2,
     components: {
+        MuiFormControl: {
+            styleOverrides: {
+                root: {
+                    position: 'relative',
+                    padding: '8px 0 8px',
+                }
+            }
+        },
+        MuiInputBase: {
+            styleOverrides: {
+                input: {
+                    paddingTop: 0,
+                    paddingBottom: 1,
+                }
+            }
+        },
+        MuiInputLabel: {
+            styleOverrides: {
+                root: {
+                    marginTop: 0,
+                    transform: 'translate(4px ,-50%) scale(1)',
+                    top: '50%',
+                    lineHeight: 1,
+                    "& +.MuiInputBase-root": {
+                        marginTop: 0,
+                    },
+                },
+                shrink: {
+                    transform: 'translate(0px ,-140%) scale(.75)',
+                }
+            }
+        },
+
+
         MuiAccordionSummary: {
             styleOverrides: {
                 root: {
