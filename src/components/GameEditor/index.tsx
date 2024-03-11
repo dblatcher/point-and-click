@@ -10,7 +10,7 @@ import { findById, findIndexById, listIds } from "@/lib/util";
 import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
-import { Box, Container, Divider, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Container, Divider, IconButton, Stack, ThemeProvider, Typography } from "@mui/material";
 import { Component } from "react";
 import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
@@ -31,6 +31,7 @@ import { Entry, Folder, TreeMenu } from "./TreeMenu";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
+import { editorTheme } from "@/theme";
 
 export type EditorOptions = {
     autoSave: boolean;
@@ -324,198 +325,200 @@ export default class GameEditor extends Component<Props, State>{
         const sprites = [testSprite, ...gameDesign.sprites.map(data => new Sprite(data))]
 
         return (
-            <GameDesignProvider value={{
-                gameDesign: this.state.gameDesign,
-                performUpdate,
-                deleteArrayItem,
-                options,
-            }} >
-                <SpritesProvider value={sprites}>
-                    <Container maxWidth='xl'
-                        component={'main'}
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            overflow: 'hidden',
-                        }}>
-                        <Stack
-                            direction={'row'}
-                            spacing={1}
+            <ThemeProvider theme={editorTheme}>
+                <GameDesignProvider value={{
+                    gameDesign: this.state.gameDesign,
+                    performUpdate,
+                    deleteArrayItem,
+                    options,
+                }} >
+                    <SpritesProvider value={sprites}>
+                        <Container maxWidth='xl'
+                            component={'main'}
                             sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
                                 overflow: 'hidden',
-                            }}
-                            divider={<Divider orientation="vertical" flexItem />}
-                        >
+                            }}>
                             <Stack
-                                component={'nav'}
+                                direction={'row'}
                                 spacing={1}
-                                width={250}
+                                sx={{
+                                    overflow: 'hidden',
+                                }}
+                                divider={<Divider orientation="vertical" flexItem />}
                             >
-                                <Stack direction={'row'}>
-                                    <SaveLoadAndUndo
-                                        gameDesign={gameDesign}
-                                        loadNewGame={this.loadNewGame}
-                                        history={history}
-                                        undo={this.undo}
-                                    />
-                                    <OptionsMenu options={this.state.options} setOptions={options => { this.setState({ options }) }} />
+                                <Stack
+                                    component={'nav'}
+                                    spacing={1}
+                                    width={250}
+                                >
+                                    <Stack direction={'row'}>
+                                        <SaveLoadAndUndo
+                                            gameDesign={gameDesign}
+                                            loadNewGame={this.loadNewGame}
+                                            history={history}
+                                            undo={this.undo}
+                                        />
+                                        <OptionsMenu options={this.state.options} setOptions={options => { this.setState({ options }) }} />
 
-                                    <IconButton
-                                        onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
-                                    >
-                                        <PlayCircleFilledOutlinedIcon />
-                                    </IconButton>
+                                        <IconButton
+                                            onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
+                                        >
+                                            <PlayCircleFilledOutlinedIcon />
+                                        </IconButton>
+                                    </Stack>
+
+                                    <Typography variant="h2" noWrap gutterBottom sx={{ fontSize: '175%', paddingTop: 1, flexShrink: 0 }}>
+                                        {gameDesign.id}
+                                    </Typography>
+
+                                    <TreeMenu folders={folders}
+                                        folderClick={(folderId) => {
+                                            const folderIndex = tabs.indexOf(folderId);
+                                            this.setState(state => {
+                                                return {
+                                                    tabOpen: folderIndex,
+                                                    gameItemIds: {},
+                                                }
+                                            })
+                                        }}
+                                        entryClick={(folderId, data, isForNew) => {
+                                            const folderIndex = tabs.indexOf(folderId);
+                                            const newId: string | undefined = isForNew ? undefined : data.id;
+
+                                            this.setState(state => {
+                                                const { gameItemIds } = state
+                                                switch (folderId) {
+                                                    case 'rooms':
+                                                    case 'items':
+                                                    case 'actors':
+                                                    case 'conversations':
+                                                    case 'sprites':
+                                                    case 'sequences':
+                                                    case 'endings':
+                                                    case 'verbs':
+                                                        gameItemIds[folderId] = newId
+                                                        break;
+                                                }
+                                                return { gameItemIds, tabOpen: folderIndex }
+                                            })
+                                        }}
+                                    />
                                 </Stack>
 
-                                <Typography variant="h2" noWrap gutterBottom sx={{ fontSize: '175%', paddingTop: 1, flexShrink: 0 }}>
-                                    {gameDesign.id}
-                                </Typography>
-
-                                <TreeMenu folders={folders}
-                                    folderClick={(folderId) => {
-                                        const folderIndex = tabs.indexOf(folderId);
-                                        this.setState(state => {
-                                            return {
-                                                tabOpen: folderIndex,
-                                                gameItemIds: {},
-                                            }
-                                        })
-                                    }}
-                                    entryClick={(folderId, data, isForNew) => {
-                                        const folderIndex = tabs.indexOf(folderId);
-                                        const newId: string | undefined = isForNew ? undefined : data.id;
-
-                                        this.setState(state => {
-                                            const { gameItemIds } = state
-                                            switch (folderId) {
-                                                case 'rooms':
-                                                case 'items':
-                                                case 'actors':
-                                                case 'conversations':
-                                                case 'sprites':
-                                                case 'sequences':
-                                                case 'endings':
-                                                case 'verbs':
-                                                    gameItemIds[folderId] = newId
-                                                    break;
-                                            }
-                                            return { gameItemIds, tabOpen: folderIndex }
-                                        })
-                                    }}
-                                />
+                                <Box component={'section'} flex={1} sx={{ overflowY: 'auto' }}>
+                                    <TabSet
+                                        onlyRenderOpenTab
+                                        fullHeight
+                                        // ISSUE - re-rendering on undo clears the subcomponent state in TabMenus,
+                                        // making the UI switch to the first horizontal tag
+                                        // EG ActorEditor
+                                        key={this.state.undoTime}
+                                        openIndex={tabOpen} tabs={[
+                                            {
+                                                label: 'main', content: <Overview />
+                                            },
+                                            {
+                                                label: 'Room Editor', content: <RoomEditor
+                                                    updateData={data => { this.performUpdate('rooms', data) }}
+                                                    deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
+                                                    existingRoomIds={listIds(gameDesign.rooms)}
+                                                    actors={gameDesign.actors}
+                                                    options={options}
+                                                    key={gameItemIds.rooms} data={this.currentRoom} />
+                                            },
+                                            {
+                                                label: 'Items',
+                                                content: (
+                                                    <ItemEditor key={gameItemIds.items}
+                                                        data={this.currentItem}
+                                                    />)
+                                            },
+                                            {
+                                                label: 'Actor Editor', content: <ActorEditor
+                                                    rooms={gameDesign.rooms}
+                                                    actors={gameDesign.actors}
+                                                    actorIds={listIds(gameDesign.actors)}
+                                                    updateData={data => { this.performUpdate('actors', data) }}
+                                                    deleteData={index => { this.deleteArrayItem(index, 'actors') }}
+                                                    options={options}
+                                                    key={gameItemIds.actors} data={this.currentActor}
+                                                    provideSprite={this.provideSprite}
+                                                    spriteIds={listIds(gameDesign.sprites)}
+                                                />
+                                            },
+                                            {
+                                                label: 'Conversation Editor', content: <ConversationEditor
+                                                    sequenceIds={listIds(gameDesign.sequences)}
+                                                    conversations={gameDesign.conversations}
+                                                    gameDesign={gameDesign}
+                                                    updateData={data => { this.performUpdate('conversations', data) }}
+                                                    deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
+                                                    updateSequenceData={data => { this.performUpdate('sequences', data) }}
+                                                    options={options}
+                                                    key={gameItemIds.conversations} data={this.currentConversation}
+                                                />
+                                            },
+                                            {
+                                                label: 'Sprite Editor', content: <SpriteEditor
+                                                    updateData={data => { this.performUpdate('sprites', data) }}
+                                                    deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
+                                                    key={gameItemIds.sprites} data={this.currentSprite}
+                                                    options={options}
+                                                    provideSprite={this.provideSprite}
+                                                    spriteIds={listIds(gameDesign.sprites)}
+                                                />
+                                            },
+                                            {
+                                                label: 'interactions', content: <InteractionEditor
+                                                    changeInteraction={this.changeInteraction}
+                                                    deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
+                                                    updateData={data => { this.performUpdate('interactions', data) }}
+                                                    gameDesign={gameDesign} />
+                                            },
+                                            {
+                                                label: 'Sequences', content: <SequenceEditor
+                                                    key={gameItemIds.sequences}
+                                                    gameDesign={gameDesign}
+                                                    data={findById(gameItemIds.sequences, gameDesign.sequences)}
+                                                    updateData={data => { this.performUpdate('sequences', data) }}
+                                                    deleteData={index => { this.deleteArrayItem(index, 'sequences') }}
+                                                    options={options}
+                                                    sequenceId={gameItemIds.sequences} />
+                                            },
+                                            {
+                                                label: 'endings', content: (
+                                                    <EndingEditor key={gameItemIds.endings}
+                                                        data={findById(gameItemIds.endings, gameDesign.endings)}
+                                                    />)
+                                            },
+                                            {
+                                                label: 'verbs', content: <>
+                                                    <VerbEditor key={gameItemIds.verbs}
+                                                        data={findById(gameItemIds.verbs, gameDesign.verbs)}
+                                                    />
+                                                    <br />
+                                                    <VerbMenuEditor />
+                                                </>
+                                            },
+                                            { label: 'Image uploader', content: <ImageAssetTool /> },
+                                            { label: 'Sound uploader', content: <SoundAssetTool /> },
+                                        ]} />
+                                </Box>
                             </Stack>
 
-                            <Box component={'section'} flex={1} sx={{ overflowY: 'auto' }}>
-                                <TabSet
-                                    onlyRenderOpenTab
-                                    fullHeight
-                                    // ISSUE - re-rendering on undo clears the subcomponent state in TabMenus,
-                                    // making the UI switch to the first horizontal tag
-                                    // EG ActorEditor
-                                    key={this.state.undoTime}
-                                    openIndex={tabOpen} tabs={[
-                                        {
-                                            label: 'main', content: <Overview />
-                                        },
-                                        {
-                                            label: 'Room Editor', content: <RoomEditor
-                                                updateData={data => { this.performUpdate('rooms', data) }}
-                                                deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
-                                                existingRoomIds={listIds(gameDesign.rooms)}
-                                                actors={gameDesign.actors}
-                                                options={options}
-                                                key={gameItemIds.rooms} data={this.currentRoom} />
-                                        },
-                                        {
-                                            label: 'Items',
-                                            content: (
-                                                <ItemEditor key={gameItemIds.items}
-                                                    data={this.currentItem}
-                                                />)
-                                        },
-                                        {
-                                            label: 'Actor Editor', content: <ActorEditor
-                                                rooms={gameDesign.rooms}
-                                                actors={gameDesign.actors}
-                                                actorIds={listIds(gameDesign.actors)}
-                                                updateData={data => { this.performUpdate('actors', data) }}
-                                                deleteData={index => { this.deleteArrayItem(index, 'actors') }}
-                                                options={options}
-                                                key={gameItemIds.actors} data={this.currentActor}
-                                                provideSprite={this.provideSprite}
-                                                spriteIds={listIds(gameDesign.sprites)}
-                                            />
-                                        },
-                                        {
-                                            label: 'Conversation Editor', content: <ConversationEditor
-                                                sequenceIds={listIds(gameDesign.sequences)}
-                                                conversations={gameDesign.conversations}
-                                                gameDesign={gameDesign}
-                                                updateData={data => { this.performUpdate('conversations', data) }}
-                                                deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
-                                                updateSequenceData={data => { this.performUpdate('sequences', data) }}
-                                                options={options}
-                                                key={gameItemIds.conversations} data={this.currentConversation}
-                                            />
-                                        },
-                                        {
-                                            label: 'Sprite Editor', content: <SpriteEditor
-                                                updateData={data => { this.performUpdate('sprites', data) }}
-                                                deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
-                                                key={gameItemIds.sprites} data={this.currentSprite}
-                                                options={options}
-                                                provideSprite={this.provideSprite}
-                                                spriteIds={listIds(gameDesign.sprites)}
-                                            />
-                                        },
-                                        {
-                                            label: 'interactions', content: <InteractionEditor
-                                                changeInteraction={this.changeInteraction}
-                                                deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
-                                                updateData={data => { this.performUpdate('interactions', data) }}
-                                                gameDesign={gameDesign} />
-                                        },
-                                        {
-                                            label: 'Sequences', content: <SequenceEditor
-                                                key={gameItemIds.sequences}
-                                                gameDesign={gameDesign}
-                                                data={findById(gameItemIds.sequences, gameDesign.sequences)}
-                                                updateData={data => { this.performUpdate('sequences', data) }}
-                                                deleteData={index => { this.deleteArrayItem(index, 'sequences') }}
-                                                options={options}
-                                                sequenceId={gameItemIds.sequences} />
-                                        },
-                                        {
-                                            label: 'endings', content: (
-                                                <EndingEditor key={gameItemIds.endings}
-                                                    data={findById(gameItemIds.endings, gameDesign.endings)}
-                                                />)
-                                        },
-                                        {
-                                            label: 'verbs', content: <>
-                                                <VerbEditor key={gameItemIds.verbs}
-                                                    data={findById(gameItemIds.verbs, gameDesign.verbs)}
-                                                />
-                                                <br />
-                                                <VerbMenuEditor />
-                                            </>
-                                        },
-                                        { label: 'Image uploader', content: <ImageAssetTool /> },
-                                        { label: 'Sound uploader', content: <SoundAssetTool /> },
-                                    ]} />
-                            </Box>
-                        </Stack>
+                            <TestGameDialog
+                                isOpen={this.state.gameTestDialogOpen}
+                                close={() => { this.setState({ gameTestDialogOpen: false }) }}
+                                reset={() => { this.setState({ resetTimeStamp: Date.now() }) }}
+                                resetTimeStamp={this.state.resetTimeStamp}
+                            />
 
-                        <TestGameDialog
-                            isOpen={this.state.gameTestDialogOpen}
-                            close={() => { this.setState({ gameTestDialogOpen: false }) }}
-                            reset={() => { this.setState({ resetTimeStamp: Date.now() }) }}
-                            resetTimeStamp={this.state.resetTimeStamp}
-                        />
-                    
-                    </Container>
-                </SpritesProvider>
-            </GameDesignProvider>
+                        </Container>
+                    </SpritesProvider>
+                </GameDesignProvider>
+            </ThemeProvider>
         )
     }
 }
