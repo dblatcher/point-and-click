@@ -58,12 +58,12 @@ export const TreeMenu: FunctionComponent<Props> = ({ folders, folderClick, entry
                                     selected={entry.active}
                                     onClick={() => { entryClick(folder.id, entry.data, entry.isForNew) }}>
 
+                                    <ListItemText inset={!entry.isForNew} primary={entry.label || entry.data.id} />
                                     {entry.isForNew && (
                                         <ListItemIcon>
                                             <AddIcon />
                                         </ListItemIcon>
                                     )}
-                                    <ListItemText inset={!entry.isForNew} primary={entry.label || entry.data.id} />
                                 </ListItemButton>
                             ))}
                         </List>

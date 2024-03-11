@@ -23,26 +23,62 @@ export const redTheme = createTheme({
 export const defaultTheme = createTheme({})
 
 export const editorTheme = createTheme({
-    // palette: {
-    //     primary: {
-    //         main: 'hsl(220deg 100% 50%);',
-    //         light: 'hsl(220deg 90% 60%);',
-    //         dark: 'hsl(220deg 100% 35%);',
-    //         contrastText: '#fff',
-    //     },
-    //     secondary: {
-    //         main: 'hsl(140deg 100% 50%);',
-    //         light: 'hsl(140deg 90% 60%);',
-    //         dark: 'hsl(140deg 100% 35%);',
-    //         contrastText: '#fff',
-    //     },
-    // },
     palette: defaultTheme.palette,
     typography: {
         fontFamily: 'arial',
         fontSize: 11,
     },
-    spacing: 2
+    spacing: 2,
+    components: {
+        MuiAccordionSummary: {
+            styleOverrides: {
+                root: {
+                    minHeight: 28,
+                },
+                content: {
+                    margin: 1,
+                }
+            }
+        },
+        MuiList: {
+            styleOverrides: {
+                dense: {
+                    paddingTop: 2,
+                    paddingBottom: 2
+                }
+            }
+        },
+        MuiListItemButton: {
+            styleOverrides: {
+                dense: {
+                    root: {
+                        paddingBottom: 1,
+                        paddingTop: 1,
+                    }
+                },
+                root: {
+                    paddingBottom: 1,
+                    paddingTop: 1,
+                },
+            }
+        },
+        MuiListItemText: {
+            styleOverrides: {
+                root: {
+                    marginTop: 1,
+                    marginBottom: 1,
+                    paddingLeft: 0,
+                }
+            }
+        },
+        MuiListItemIcon: {
+            styleOverrides: {
+                root: {
+                    minWidth: 25,
+                }
+            }
+        }
+    }
 })
 
 
