@@ -64,6 +64,9 @@ export const editorTheme = createTheme({
         },
 
         MuiIconButton: {
+            defaultProps: {
+                size: 'small',
+            },
             styleOverrides: {
                 root: {
                     padding: 2

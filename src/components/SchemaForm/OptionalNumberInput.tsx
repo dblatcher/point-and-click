@@ -1,10 +1,7 @@
 import {
     Checkbox,
-    FormControlLabel,
-    FormGroup,
     Stack,
-    Switch,
-    TextField,
+    TextField
 } from '@mui/material';
 import type { FormEventHandler, FunctionComponent } from 'react';
 import { useState } from 'react';
@@ -34,20 +31,22 @@ export const OptionalNumberInput: FunctionComponent<
         setStoredNumber(newValue);
         props.inputHandler(eventToNumber(event));
     };
-
     const toggleUndefined: FormEventHandler<HTMLInputElement> = (event) => {
         const { checked } = event.target as HTMLInputElement;
-        if (checked) {
+        if (!checked) {
             return props.inputHandler(undefined);
         }
 
         props.inputHandler(storedNumber);
     };
 
+    const isDefined = typeof props.value !== 'undefined'
+    const labelText = isDefined ? label : `${label}(undefined)`
+
     return (
         <Stack direction='row' alignItems={'center'} spacing={1} minWidth={200}>
             <TextField
-                label={label}
+                label={labelText}
                 size='small'
                 variant='standard'
                 type={'number'}
@@ -56,7 +55,7 @@ export const OptionalNumberInput: FunctionComponent<
                 helperText={props.error}
                 error={!!props.error}
                 required={false}
-                disabled={typeof props.value === 'undefined' || props.readOnly}
+                disabled={!isDefined || props.readOnly}
                 inputProps={{
                     step: props.step
                 }}
@@ -64,19 +63,11 @@ export const OptionalNumberInput: FunctionComponent<
                     maxWidth: 100
                 }}
             />
-            <FormGroup>
-                <FormControlLabel
-                    labelPlacement='top'
-                    control={
-                        <Checkbox
-                            size='small'
-                            checked={typeof props.value === 'undefined'}
-                            onChange={toggleUndefined}
-                        />
-                    }
-                    label={'undefined'}
-                />
-            </FormGroup>
+            <Checkbox
+                size='small'
+                checked={isDefined}
+                onChange={toggleUndefined}
+            />
         </Stack>
     );
 };
