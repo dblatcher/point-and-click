@@ -1,11 +1,14 @@
 import { SchemaForm } from "@/components/SchemaForm";
 import { FixedGameInfoSchema, GameContentsDataSchema } from "@/definitions/Game";
 import { listIds } from "@/lib/util";
-import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
+import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
 import { useGameDesign } from "@/context/game-design-context";
+import { usePageMeta } from "@/context/page-meta-context";
+import { useEffect } from "react";
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
 
 const formSchema = GameContentsDataSchema.pick({
   id: true,
@@ -15,7 +18,20 @@ const formSchema = GameContentsDataSchema.pick({
 }))
 
 export const Overview = () => {
-  const { gameDesign, performUpdate } = useGameDesign()
+  const { gameDesign, performUpdate } = useGameDesign();
+  const { setHeaderContent } = usePageMeta();
+
+
+  useEffect(() => {
+    setHeaderContent(
+      <Stack direction={'row'}>
+        <DesignServicesIcon />
+        <Typography variant="h2" noWrap sx={{ fontSize: '120%', margin: 0 }}>
+          {gameDesign.id}
+        </Typography>
+      </Stack>
+    )
+  }, [gameDesign.id, setHeaderContent])
 
   return (
     <Stack>

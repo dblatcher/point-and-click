@@ -353,7 +353,7 @@ export default class GameEditor extends Component<Props, State>{
                                     spacing={1}
                                     width={250}
                                 >
-                                    <Stack direction={'row'}>
+                                    <Stack direction={'row'} marginTop={3} spacing={3}>
                                         <SaveLoadAndUndo
                                             gameDesign={gameDesign}
                                             loadNewGame={this.loadNewGame}
@@ -368,11 +368,6 @@ export default class GameEditor extends Component<Props, State>{
                                             <PlayCircleFilledOutlinedIcon />
                                         </IconButton>
                                     </Stack>
-
-                                    <Typography variant="h2" noWrap gutterBottom sx={{ fontSize: '175%', paddingTop: 1, flexShrink: 0 }}>
-                                        {gameDesign.id}
-                                    </Typography>
-
                                     <TreeMenu folders={folders}
                                         folderClick={(folderId) => {
                                             const folderIndex = tabs.indexOf(folderId);
