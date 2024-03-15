@@ -2,12 +2,12 @@ import AddIcon from "@mui/icons-material/Add";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, ButtonGroup, IconButton, Paper, Stack, useTheme } from "@mui/material";
+import { Box, ButtonGroup, IconButton, Paper, Stack } from "@mui/material";
 import { Fragment, ReactNode } from "react";
 
 
 type Color = "success" | "primary" | "secondary" | "error" | "info" | "warning"
-type Framing = 'STRIPED' | 'PLAIN' | 'NONE'
+type Framing = 'PLAIN' | 'NONE'
 type ButtonSize = "small" | "medium" | "large"
 
 interface Props<T> {
@@ -74,17 +74,14 @@ const DeleteButton = ({ index, handleDelete, color, buttonSize }: {
 
 
 const Frame = (props: { children: ReactNode, index: number, framing: Framing }) => {
-    const { index, framing } = props
-    const theme = useTheme()
+    const { framing } = props
 
     if (framing === 'NONE') {
         return <>{props.children}</>
     }
 
-    const backgroundColor = framing == 'STRIPED' && index % 2 === 1 ? theme.palette.grey[200] : undefined
-
     return <Paper
-        sx={{ padding: 1, backgroundColor, marginY: 1.5 }}
+        sx={{ padding: 1, marginY: 1.5 }}
         elevation={2}>
         {props.children}
     </Paper>
@@ -138,7 +135,6 @@ export const ArrayControl = <T,>({
                             alignItems={'center'}
                             direction={'row'}
                             spacing={1}
-                            minHeight={noMoveButtons ? undefined : horizontalMoveButtons ? 36 : 72}
                         >
                             {!noMoveButtons && (
                                 <ButtonGroup orientation={horizontalMoveButtons ? 'horizontal' : 'vertical'} component={'aside'}>
