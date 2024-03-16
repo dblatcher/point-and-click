@@ -15,21 +15,19 @@ type Coordinates = {
 
 const determineCoordinates = (startNode: Element, endNode: Element, container: HTMLElement): Coordinates => {
     const containerBox = container.getBoundingClientRect()
-    const choiceBox = startNode.getBoundingClientRect()
-    const branchBox = endNode.getBoundingClientRect()
-    let startX = choiceBox.left - containerBox.left
-    const startY = choiceBox.top - containerBox.top + choiceBox.height / 2
-    const endX = branchBox.left + branchBox.width / 2 - containerBox.left
-    let endY = branchBox.top - containerBox.top
+    const startBox = startNode.getBoundingClientRect()
+    const endBox = endNode.getBoundingClientRect()
 
-    const goingRight = startX < endX
-    const goingUp = startY > endY
-    if (goingRight) {
-        startX += choiceBox.width
-    }
-    if (goingUp) {
-        endY += branchBox.height
-    }
+    const startLeft = startBox.left - containerBox.left
+    const startY = startBox.top - containerBox.top + startBox.height / 2
+    const endX = endBox.left - containerBox.left + endBox.width / 2
+    const topY = endBox.top - containerBox.top
+
+    const goingRight = startLeft < endX
+    const goingUp = startY > topY
+
+    const startX = goingRight ? startLeft + startBox.width : startLeft
+    const endY = goingUp ? topY + endBox.height : topY
     const lineToTopRight = startX > endX != startY > endY
 
     const w = Math.abs(startX - endX)
@@ -83,7 +81,7 @@ export const LineBetweenNodes = ({ startNode, endNode, container }: { startNode:
 
                 }}>
                 {lineToTopRight ?
-                    <line x1={100} y1={0} x2={0} y2={100} stroke={palette.secondary.light}/>
+                    <line x1={100} y1={0} x2={0} y2={100} stroke={palette.secondary.light} />
                     :
                     <line x1={0} y1={0} x2={100} y2={100} stroke={palette.secondary.light} />
                 }
