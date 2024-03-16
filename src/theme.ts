@@ -46,6 +46,13 @@ export const editorTheme = createTheme({
                 }
             }
         },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    padding: '3px 6px',
+                }
+            }
+        },
         MuiInputLabel: {
             styleOverrides: {
                 root: {
@@ -74,7 +81,7 @@ export const editorTheme = createTheme({
             },
         },
 
-        MuiCheckbox:{
+        MuiCheckbox: {
             defaultProps: {
                 size: 'small'
             },
@@ -130,6 +137,13 @@ export const editorTheme = createTheme({
             styleOverrides: {
                 root: {
                     minWidth: 25,
+                }
+            }
+        },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                    padding: '2px 4px',
                 }
             }
         }
