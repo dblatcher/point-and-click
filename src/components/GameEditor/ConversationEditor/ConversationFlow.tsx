@@ -1,11 +1,14 @@
 import { Conversation, ConversationBranch } from "@/definitions"
-import { Box, Button, Stack, Typography, Card, ButtonGroup, IconButton } from "@mui/material"
-import { Fragment, useEffect, useRef, useState } from "react"
-import { LineBetweenNodes } from "./LineBetweenNodes"
-import { EditorBox } from "../EditorBox"
 import AddIcon from "@mui/icons-material/Add"
-import { ChoiceDescription } from "./ChoiceDescription"
+import DeleteIcon from "@mui/icons-material/Delete"
+import SortIcon from '@mui/icons-material/Sort'
+import { Box, Button, Card, IconButton, Stack, Typography } from "@mui/material"
+import { Fragment, useEffect, useRef, useState } from "react"
+import { ButtonWithConfirm } from "../ButtonWithConfirm"
 import { ButtonWithTextInput } from "../ButtonWithTextInput"
+import { EditorBox } from "../EditorBox"
+import { ChoiceDescription } from "./ChoiceDescription"
+import { LineBetweenNodes } from "./LineBetweenNodes"
 
 interface Props {
     conversation: Conversation
@@ -37,7 +40,7 @@ const assignRanks = (conversation: Conversation): Record<string, number> => {
     return record
 }
 
-const getHeirarchy = (conversation: Conversation) => {
+const getHeirarchy = (conversation: Conversation): [string, ConversationBranch][][] => {
     const ranks = assignRanks(conversation)
     const entries = Object.entries(conversation.branches);
     const heirarchy: [string, ConversationBranch][][] = [[], [], []]
@@ -83,7 +86,15 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
             <EditorBox
                 title={`Branch: ${branchKey}`}
                 barContent={
-                    <IconButton size="small" onClick={() => { deleteBranch(branchKey) }}>x</IconButton>
+                    <>
+                        <IconButton onClick={() => { openOrderDialog(branchKey) }} aria-label="sort choices">
+                            <SortIcon />
+                        </IconButton>
+                        <ButtonWithConfirm useIconButton
+                            label={`delete Branch: ${branchKey}`}
+                            onClick={() => { deleteBranch(branchKey) }}
+                            icon={<DeleteIcon />} />
+                    </>
                 }
             >
                 {branch.choices.map((choice, index) => (
@@ -93,10 +104,15 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
                             openEditor={() => { openEditor(branchKey, index) }} />
                     </div>
                 ))}
-                <ButtonGroup sx={{ marginY: 1 }} fullWidth>
-                    <Button onClick={() => { openOrderDialog(branchKey) }}>sort choices</Button>
-                    <Button variant="contained" startIcon={<AddIcon />} onClick={() => { addNewChoice(branchKey) }}>Add choice</Button>
-                </ButtonGroup>
+                <Box justifyContent={'flex-end'} display={'flex'}>
+                    <Button variant="contained" sx={{
+                        paddingX: 2,
+                        paddingY: 1,
+                    }}
+                        startIcon={<AddIcon />}
+                        onClick={() => { addNewChoice(branchKey) }}
+                    >Add choice</Button>
+                </Box>
             </EditorBox>
         </div>)
 }
