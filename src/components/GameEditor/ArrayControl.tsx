@@ -81,7 +81,7 @@ const Frame = (props: { children: ReactNode, index: number, framing: Framing }) 
     }
 
     return <Paper
-        sx={{ padding: 1, marginY: 1.5 }}
+        sx={{ padding: 1, marginY: 4 }}
         elevation={2}>
         {props.children}
     </Paper>
