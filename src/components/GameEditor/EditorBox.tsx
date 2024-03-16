@@ -7,9 +7,10 @@ interface Props {
     themePalette?: 'primary' | 'secondary';
     boxProps?: BoxProps;
     barContent?: ReactNode;
+    leftContent?: ReactNode;
 }
 
-export const EditorBox = ({ title, children, themePalette = 'primary', boxProps = {}, barContent }: Props) => {
+export const EditorBox = ({ title, children, themePalette = 'primary', boxProps = {}, barContent, leftContent }: Props) => {
 
     const theme = useTheme()
     const colorScheme = theme.palette[themePalette]
@@ -23,7 +24,8 @@ export const EditorBox = ({ title, children, themePalette = 'primary', boxProps 
             }}
             {...boxProps}
         >
-            {(title || barContent) && (
+
+            {(title || barContent || leftContent) && (
                 <Box
                     display={'flex'}
                     alignItems={'center'}
@@ -34,6 +36,7 @@ export const EditorBox = ({ title, children, themePalette = 'primary', boxProps 
                         color: colorScheme.contrastText,
                         paddingX: 1,
                     }}>
+                    {leftContent}
                     <Typography component={'span'}
                         variant='overline'
                     >{title}</Typography>

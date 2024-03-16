@@ -74,6 +74,17 @@ export const editorTheme = createTheme({
             },
         },
 
+        MuiCheckbox:{
+            defaultProps: {
+                size: 'small'
+            },
+            styleOverrides: {
+                root: {
+                    padding: 2
+                }
+            }
+        },
+
         MuiAccordionSummary: {
             styleOverrides: {
                 root: {

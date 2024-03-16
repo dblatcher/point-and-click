@@ -1,6 +1,6 @@
 
 import { getModification, type FieldDef, type FieldValue } from "@/components/SchemaForm";
-import { SelectInput, StringInput } from "@/components/SchemaForm/inputs";
+import { StringInput } from "@/components/SchemaForm/inputs";
 import { GameDesign, Sequence } from "@/definitions";
 import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice, ConversationSchema } from "@/definitions/Conversation";
 import { cloneData } from "@/lib/clone";
@@ -258,7 +258,7 @@ export class ConversationEditor extends Component<Props, State> {
 
     render() {
         const { state, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence } = this
-        const { branches, defaultBranch, currentBranch, openBranchId, id, activeChoiceIndex, editOrderDialogBranchId } = this.state
+        const { branches, openBranchId, id, activeChoiceIndex, editOrderDialogBranchId } = this.state
         const { conversations, deleteData, options, gameDesign, updateSequenceData } = this.props
         const { choice } = this.getBranchAndChoice(state)
 
@@ -274,15 +274,6 @@ export class ConversationEditor extends Component<Props, State> {
                                 label="id"
                                 value={state.id || ''}
                                 inputHandler={value => { this.changeValue('id', value) }} />
-                            <SelectInput
-                                label="defaultBranch"
-                                value={defaultBranch}
-                                options={Object.keys(branches)}
-                                inputHandler={(item) => { if (item) { this.changeValue('defaultBranch', item) } }} />
-                            <SelectInput
-                                label="currentBranch" value={currentBranch || ''} options={Object.keys(branches)}
-                                optional
-                                inputHandler={(item) => { if (item) { this.changeValue('defaultBranch', item) } }} />
                         </Stack>
                     </EditorBox>
 
@@ -322,6 +313,9 @@ export class ConversationEditor extends Component<Props, State> {
                             }
                         )
                     }}
+                    changeDefaultBranch={branchKey => {
+                        if (branchKey) { this.changeValue('defaultBranch', branchKey) }
+                    }}
                     addNewBranch={this.addNewBranch}
                 />
 
@@ -332,13 +326,9 @@ export class ConversationEditor extends Component<Props, State> {
 
                     <DialogContent>
                         {(branchInOrderDialog && editOrderDialogBranchId) &&
-                            <ArrayControl horizontalMoveButtons 
+                            <ArrayControl horizontalMoveButtons
                                 list={branchInOrderDialog.choices}
-                                describeItem={(choice) => {
-                                    return (
-                                        <ChoiceDescription choice={choice} />
-                                    )
-                                }}
+                                describeItem={(choice) => <ChoiceDescription choice={choice} />}
                                 mutateList={newList => {
                                     this.mutateChoiceList(editOrderDialogBranchId, newList)
                                 }}

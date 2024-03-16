@@ -2,13 +2,16 @@ import { Conversation, ConversationBranch } from "@/definitions"
 import AddIcon from "@mui/icons-material/Add"
 import DeleteIcon from "@mui/icons-material/Delete"
 import SortIcon from '@mui/icons-material/Sort'
-import { Box, Button, Card, IconButton, Stack, Typography } from "@mui/material"
+import { Box, Button, Card, IconButton, Stack, Typography, useTheme } from "@mui/material"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { ButtonWithConfirm } from "../ButtonWithConfirm"
 import { ButtonWithTextInput } from "../ButtonWithTextInput"
 import { EditorBox } from "../EditorBox"
 import { ChoiceDescription } from "./ChoiceDescription"
 import { LineBetweenNodes } from "./LineBetweenNodes"
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import StarIcon from '@mui/icons-material/Star';
+import Checkbox from '@mui/material/Checkbox';
 
 interface Props {
     conversation: Conversation
@@ -17,6 +20,7 @@ interface Props {
     openOrderDialog: { (branchKey: string): void }
     deleteBranch: { (branchKey: string): void }
     addNewBranch: { (branchKey: string): void }
+    changeDefaultBranch: { (branchKey: string): void }
 }
 
 
@@ -77,13 +81,30 @@ type BranchBoxProps = {
     addNewChoice: { (branchKey: string): void }
     openOrderDialog: { (branchKey: string): void }
     deleteBranch: { (branchKey: string): void }
+    isDefaultBranch: boolean
+    makeDefault: { (): void }
 }
 
-const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialog, deleteBranch }: BranchBoxProps) => {
+const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialog, deleteBranch, isDefaultBranch, makeDefault }: BranchBoxProps) => {
+    const { palette } = useTheme()
     return (
         <div data-branch-identifier={branchKey}>
 
             <EditorBox
+                leftContent={
+                    <Checkbox
+                        aria-label="make default branch"
+                        onChange={({ target }) => {
+                            if (target.checked) {
+                                makeDefault()
+                            }
+                        }}
+                        disabled={isDefaultBranch}
+                        checked={isDefaultBranch}
+                        icon={<StarOutlineIcon htmlColor={palette.primary.contrastText} />}
+                        checkedIcon={<StarIcon htmlColor={palette.primary.contrastText} />}
+                    />
+                }
                 title={`Branch: ${branchKey}`}
                 barContent={
                     <>
@@ -118,7 +139,7 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
 }
 
 
-export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openOrderDialog, deleteBranch, addNewBranch }: Props) => {
+export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openOrderDialog, deleteBranch, addNewBranch, changeDefaultBranch }: Props) => {
     const [nodePairs, setNodePairs] = useState<[Element, Element][]>([])
     const containerRef = useRef<HTMLElement>()
     const { id } = conversation
@@ -169,6 +190,11 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                             {rank.map(([branchKey, branch], itemIndex) => {
                                 return (
                                     <BranchBox
+                                        isDefaultBranch={branchKey === conversation.defaultBranch}
+                                        makeDefault={() => {
+                                            console.log(`want to make ${branchKey} the default for conversation ${conversation.id}`)
+                                            changeDefaultBranch(branchKey)
+                                        }}
                                         openEditor={openEditor}
                                         addNewChoice={addNewChoice}
                                         openOrderDialog={openOrderDialog}
