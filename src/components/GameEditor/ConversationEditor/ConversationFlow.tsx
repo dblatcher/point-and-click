@@ -111,10 +111,12 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
                         <IconButton onClick={() => { openOrderDialog(branchKey) }} aria-label="sort choices">
                             <SortIcon />
                         </IconButton>
-                        <ButtonWithConfirm useIconButton
-                            label={`delete Branch: ${branchKey}`}
-                            onClick={() => { deleteBranch(branchKey) }}
-                            icon={<DeleteIcon />} />
+                        {!isDefaultBranch && (
+                            <ButtonWithConfirm useIconButton
+                                label={`delete Branch: ${branchKey}`}
+                                onClick={() => { deleteBranch(branchKey) }}
+                                icon={<DeleteIcon />} />
+                        )}
                     </>
                 }
             >
