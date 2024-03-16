@@ -33,7 +33,7 @@ const getDescription = (order: Order): string => {
             return `${actions.join()}`
         }
         case "say": {
-            const text = order.text.length > 50 ? order.text.substring(0, 47) + "..." : order.text
+            const text = order.text.length > 35 ? order.text.substring(0, 32) + "..." : order.text
             return `"${text}"`
         }
         case "goTo":

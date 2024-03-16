@@ -2,7 +2,7 @@ import { ConversationChoice } from "@/definitions";
 import LogOut from '@mui/icons-material/Logout';
 import RepeatOneIcon from '@mui/icons-material/RepeatOne';
 import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
-import { Button, Stack, Tooltip, Typography } from "@mui/material";
+import { Button, Tooltip, Typography } from "@mui/material";
 
 function truncateLine(text: string, length: number) {
     if (text.length <= length) {

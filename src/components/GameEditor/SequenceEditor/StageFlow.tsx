@@ -38,14 +38,12 @@ export const StageFlow = ({
     changeOrderList, removeActorFromAll
 }: Props) => {
 
-
     return (
         <Box>
             <Grid container>
                 <Grid item display={'flex'}>
                     <EditorBox title="consequences" boxProps={{ minWidth: 280 }}>
-                        <Stack spacing={0}>
-
+                        <Stack spacing={0} paddingY={2}>
                             <ArrayControl
                                 list={stage.immediateConsequences ?? []}
                                 describeItem={(consequence, consequenceIndex) => (
@@ -77,33 +75,35 @@ export const StageFlow = ({
                 {actorIds.map((actorId) => (
                     <Grid item key={actorId} display={'flex'} >
                         <EditorBox title={actorId}
-                            boxProps={{ minWidth: 300 }}
+                            boxProps={{ minWidth: 280 }}
                             barContent={(
-                                <IconButton size="small" 
-                                onClick={() => { removeActorFromAll(actorId) }}
+                                <IconButton size="small"
+                                    onClick={() => { removeActorFromAll(actorId) }}
                                 >
                                     <ClearOutlinedIcon />
                                 </IconButton>
                             )}
                         >
-                            <ArrayControl
-                                color="secondary"
-                                list={stage.actorOrders?.[actorId] ?? []}
-                                describeItem={(order, orderIndex) => (
-                                    <OrderCard
-                                        order={order}
-                                        handleEditButton={() => {
-                                            setOrderParams({
-                                                stage: stageIndex,
-                                                actorId,
-                                                index: orderIndex,
-                                            })
-                                        }}
-                                    />
-                                )}
-                                mutateList={(newList) => { changeOrderList(newList, stageIndex, actorId) }}
-                                createItem={() => getDefaultOrder('say')}
-                            />
+                            <Box paddingY={2}>
+                                <ArrayControl
+                                    color="secondary"
+                                    list={stage.actorOrders?.[actorId] ?? []}
+                                    describeItem={(order, orderIndex) => (
+                                        <OrderCard
+                                            order={order}
+                                            handleEditButton={() => {
+                                                setOrderParams({
+                                                    stage: stageIndex,
+                                                    actorId,
+                                                    index: orderIndex,
+                                                })
+                                            }}
+                                        />
+                                    )}
+                                    mutateList={(newList) => { changeOrderList(newList, stageIndex, actorId) }}
+                                    createItem={() => getDefaultOrder('say')}
+                                />
+                            </Box>
                         </EditorBox>
                     </Grid>
                 ))}
