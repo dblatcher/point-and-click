@@ -178,6 +178,8 @@ export const ConversationEditor = (props: Props) => {
     const { choice } = getBranchAndChoice()
     const branchInOrderDialog = editOrderDialogBranchId ? conversation.branches[editOrderDialogBranchId] : undefined
 
+    const sequenceForCurrentChoice = choice && findById(choice.sequence, gameDesign.sequences)
+
     return (
         <Stack component={'article'} spacing={2}>
             <EditorHeading heading={`Conversation Editor`} itemId={conversation.id} />
@@ -277,11 +279,11 @@ export const ConversationEditor = (props: Props) => {
                 maxWidth={'xl'}
             >
 
-                {choice && choice.sequence && (
+                {sequenceForCurrentChoice && (
                     <DialogContent>
                         <SequenceEditor key={choice.sequence} isSubSection
                             sequenceId={choice.sequence}
-                            data={findById(choice.sequence, gameDesign.sequences)}
+                            data={sequenceForCurrentChoice}
                             updateData={(sequence) => {
                                 performUpdate('sequences', sequence)
                             }}

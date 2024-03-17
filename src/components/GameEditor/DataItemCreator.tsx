@@ -15,7 +15,7 @@ import { GameDataItemType } from "@/definitions/Game";
 type Props<DataType extends GameDataItem> = {
     openInEditor: { (designProperty: GameDataItemType, id: string): void }
     createBlank: { (): DataType }
-    schema: ZodObject<ZodRawShape>
+    schema?: ZodObject<ZodRawShape>
     designProperty: GameDataItemType
     itemTypeName: string
 }
@@ -37,6 +37,9 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ openInEditor, 
     }
 
     const handleLoadButton = async () => {
+        if (!schema) {
+            return setWarning(`no schema for uploading ${designProperty}`)
+        }
         const { data, error } = await uploadJsonData(schema)
         if (error) {
             return setWarning(`upload failed: ${error}`)
