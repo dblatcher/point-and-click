@@ -472,14 +472,8 @@ export default class GameEditor extends Component<Props, State>{
                                             {
                                                 label: 'Conversation Editor', content: <>
                                                     {this.currentConversation ? (
-                                                        <ConversationEditor
-                                                            conversations={gameDesign.conversations}
-                                                            gameDesign={gameDesign}
-                                                            updateData={data => { this.performUpdate('conversations', data) }}
-                                                            deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
-                                                            updateSequenceData={data => { this.performUpdate('sequences', data) }}
-                                                            options={options}
-                                                            key={gameItemIds.conversations} data={this.currentConversation}
+                                                        <ConversationEditor key={gameItemIds.conversations}
+                                                            conversation={this.currentConversation}
                                                         />
                                                     ) : (
                                                         <ConversationCreator
