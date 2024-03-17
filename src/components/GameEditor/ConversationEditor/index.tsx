@@ -278,18 +278,11 @@ export const ConversationEditor = (props: Props) => {
                 onClose={() => { setSequenceDialogOpen(false) }}
                 maxWidth={'xl'}
             >
-
                 {sequenceForCurrentChoice && (
                     <DialogContent>
-                        <SequenceEditor key={choice.sequence} isSubSection
-                            sequenceId={choice.sequence}
+                        <SequenceEditor key={choice.sequence} 
+                            isSubSection
                             data={sequenceForCurrentChoice}
-                            updateData={(sequence) => {
-                                performUpdate('sequences', sequence)
-                            }}
-                            deleteData={(index) => { console.log('delete squence', index) }}
-                            gameDesign={gameDesign}
-                            options={options}
                         />
                     </DialogContent>
                 )}

@@ -496,14 +496,9 @@ export default class GameEditor extends Component<Props, State>{
                                             },
                                             {
                                                 label: 'Sequences', content: currentSequence
-                                                    ? <SequenceEditor
-                                                        key={gameItemIds.sequences}
-                                                        gameDesign={gameDesign}
+                                                    ? <SequenceEditor key={gameItemIds.sequences}
                                                         data={currentSequence}
-                                                        updateData={data => { this.performUpdate('sequences', data) }}
-                                                        deleteData={index => { this.deleteArrayItem(index, 'sequences') }}
-                                                        options={options}
-                                                        sequenceId={gameItemIds.sequences} />
+                                                    />
                                                     : <DataItemCreator
                                                         createBlank={makeBlankSequence}
                                                         designProperty="sequences"

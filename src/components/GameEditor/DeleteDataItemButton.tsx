@@ -19,7 +19,7 @@ export const DeleteDataItemButton = ({ dataItem, itemType, itemTypeName, buttonP
         <ButtonWithConfirm
             confirmationText={`Are you sure you want to delete ${itemTypeName} "${dataItem.id}"?`}
             label="delete"
-            buttonProps={{ startIcon: <DeleteIcon /> }}
+            buttonProps={{ startIcon: <DeleteIcon />, ...buttonProps }}
             onClick={() => {
                 const items = gameDesign[itemType]
                 const index = items.findIndex(otherItem => otherItem.id === dataItem.id)
@@ -28,7 +28,6 @@ export const DeleteDataItemButton = ({ dataItem, itemType, itemTypeName, buttonP
                 }
                 deleteArrayItem(index, itemType)
             }}
-            {...buttonProps}
         />
 
     )

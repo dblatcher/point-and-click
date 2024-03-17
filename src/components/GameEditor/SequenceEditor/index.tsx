@@ -1,55 +1,32 @@
 import { StringInput } from "@/components/SchemaForm/StringInput";
-import { Consequence, GameDesign, ImmediateConsequence, Order, Sequence } from "@/definitions";
+import { Consequence, ImmediateConsequence, Order, Sequence } from "@/definitions";
 import { ImmediateConsequenceSchema } from "@/definitions/Consequence";
 import { cloneData } from "@/lib/clone";
-import { listIds } from "@/lib/util";
-import { Stack } from "@mui/material";
-import { Component } from "react";
-import { EditorOptions } from "..";
-import { EditorBox } from "../EditorBox";
+import { Grid } from "@mui/material";
+import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
-import { StorageMenu } from "../StorageMenu";
-import { makeBlankSequence } from "../defaults";
 import { SequenceFlow } from "./SequenceFlow";
+import { useGameDesign } from "@/context/game-design-context";
 
 
 type Props = {
-
     data: Sequence;
-    updateData: (data: Sequence) => void;
-    deleteData: (index: number) => void;
-    options: EditorOptions;
-
-    gameDesign: GameDesign;
-    sequenceId?: string;
     isSubSection?: boolean;
 }
 
 
-export class SequenceEditor extends Component<Props> {
+export const SequenceEditor = (props: Props) => {
+    const { performUpdate } = useGameDesign()
 
-    constructor(props: Props) {
-        super(props)
-        this.changeOrder = this.changeOrder.bind(this)
-        this.changeOrderList = this.changeOrderList.bind(this)
-        this.changeConsequence = this.changeConsequence.bind(this)
-        this.changeConsequenceList = this.changeConsequenceList.bind(this)
-        this.updateFromPartial = this.updateFromPartial.bind(this)
-    }
-
-    get currentData(): Sequence {
-        return cloneData(this.props.data)
-    }
-
-    updateFromPartial(input: Partial<Sequence> | { (state: Sequence): Partial<Sequence> }) {
-        const { data, updateData } = this.props
+    const updateFromPartial = (input: Partial<Sequence> | { (state: Sequence): Partial<Sequence> }) => {
+        const { data } = props
         const modification = (typeof input === 'function')
-            ? input(this.currentData) : input
-        updateData({ ...data, ...modification })
+            ? input(cloneData(data)) : input
+        performUpdate('sequences', { ...data, ...modification })
     }
 
-    changeOrder(order: Order, stageIndex: number, actorId: string, orderIndex: number) {
-        this.updateFromPartial(state => {
+    const changeOrder = (order: Order, stageIndex: number, actorId: string, orderIndex: number) => {
+        updateFromPartial(state => {
             const { stages } = state
             const actorOrders = stages[stageIndex]?.actorOrders
             if (!actorOrders) { return {} }
@@ -60,8 +37,8 @@ export class SequenceEditor extends Component<Props> {
         })
     }
 
-    changeOrderList(newList: Order[], stageIndex: number, actorId: string) {
-        this.updateFromPartial(state => {
+    const changeOrderList = (newList: Order[], stageIndex: number, actorId: string) => {
+        updateFromPartial(state => {
             const { stages } = state
             const stage = stages[stageIndex]
             if (!stage) { return {} }
@@ -71,14 +48,14 @@ export class SequenceEditor extends Component<Props> {
         })
     }
 
-    changeConsequence(consequence: Consequence, stageIndex: number, consequenceIndex: number) {
+    const changeConsequence = (consequence: Consequence, stageIndex: number, consequenceIndex: number) => {
         const isImmediateConsequence = ImmediateConsequenceSchema.safeParse(consequence)
         if (!isImmediateConsequence.success) {
             console.warn('not immediate', consequence)
             return
         }
 
-        this.updateFromPartial(state => {
+        updateFromPartial(state => {
             const { stages } = state
             const immediateConsequences = stages[stageIndex]?.immediateConsequences
             if (!immediateConsequences) { return {} }
@@ -87,8 +64,8 @@ export class SequenceEditor extends Component<Props> {
         })
     }
 
-    changeConsequenceList(newList: ImmediateConsequence[], stageIndex: number) {
-        this.updateFromPartial(state => {
+    const changeConsequenceList = (newList: ImmediateConsequence[], stageIndex: number) => {
+        updateFromPartial(state => {
             const { stages } = state
             const stage = stages[stageIndex]
             if (!stage) { return {} }
@@ -97,54 +74,51 @@ export class SequenceEditor extends Component<Props> {
         })
     }
 
-    render() {
-        const { gameDesign, sequenceId, deleteData, options, isSubSection, data: sequence } = this.props
-        return (
-            <article>
-                {isSubSection
-                    ? (<>
-                        <h3>Edit sequence: </h3>
-                        <div>ID: <b>{sequence?.id}</b></div>
-                        <StringInput label="description" value={sequence.description || ''}
-                            inputHandler={(description) => {
-                                this.updateFromPartial({ description })
-                            }}
-                        />
-                    </>)
-                    : (<>
-                        <EditorHeading heading="Sequence Editor" itemId={sequence?.id ?? '[new]'} />
-                        <Stack direction='row' spacing={1}>
-                            <EditorBox title="details">
-                                <StringInput label="description" value={sequence.description || ''}
-                                    inputHandler={(description) => {
-                                        this.updateFromPartial({ description })
-                                    }}
-                                />
-                            </EditorBox>
 
-                            <StorageMenu
-                                type='sequence'
-                                data={this.currentData}
-                                originalId={sequenceId}
-                                existingIds={listIds(gameDesign.sequences)}
-                                reset={() => { }}
-                                update={() => { }}
-                                deleteItem={deleteData}
-                                options={options}
+    const { isSubSection, data: sequence } = props
+    return (
+        <article>
+            {isSubSection
+                ? (<>
+                    <h3>Edit sequence: </h3>
+                    <div>ID: <b>{sequence?.id}</b></div>
+                    <StringInput label="description" value={sequence.description || ''}
+                        inputHandler={(description) => {
+                            updateFromPartial({ description })
+                        }}
+                    />
+                </>)
+                : (<>
+                    <EditorHeading heading="Sequence Editor" itemId={sequence?.id ?? '[new]'} />
+
+                    <Grid container spacing={4}>
+                        <Grid item xs={8}>
+                            <StringInput label="description" value={sequence.description || ''}
+                                inputHandler={(description) => {
+                                    updateFromPartial({ description })
+                                }}
                             />
-                        </Stack>
-                    </>)
-                }
+                        </Grid>
+                        <Grid item xs={2}>
+                            <DeleteDataItemButton
+                                dataItem={sequence}
+                                buttonProps={{ variant: 'outlined' }}
+                                itemType='sequences'
+                                itemTypeName="sequence" />
+                        </Grid>
+                    </Grid>
+                </>)
+            }
 
-                <SequenceFlow
-                    sequence={this.props.data}
-                    changeConsequence={this.changeConsequence}
-                    changeStages={(stages) => { this.updateFromPartial({ stages }) }}
-                    changeConsequenceList={this.changeConsequenceList}
-                    changeOrder={this.changeOrder}
-                    changeOrderList={this.changeOrderList}
-                />
-            </article>
-        )
-    }
+            <SequenceFlow
+                sequence={props.data}
+                changeConsequence={changeConsequence}
+                changeStages={(stages) => { updateFromPartial({ stages }) }}
+                changeConsequenceList={changeConsequenceList}
+                changeOrder={changeOrder}
+                changeOrderList={changeOrderList}
+            />
+        </article>
+    )
+
 }
