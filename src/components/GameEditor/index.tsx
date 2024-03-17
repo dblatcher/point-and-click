@@ -32,7 +32,9 @@ import { TestGameDialog } from "./TestGameDialog";
 import { Entry, Folder, TreeMenu } from "./TreeMenu";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { defaultVerbs1, getBlankRoom } from "./defaults";
+import { defaultVerbs1, getBlankRoom, makeBlankItem } from "./defaults";
+import { DataItemCreator } from "./DataItemCreator";
+import { ItemDataSchema } from "@/definitions/ItemData";
 
 export type EditorOptions = {
     autoSave: boolean;
@@ -136,6 +138,7 @@ export default class GameEditor extends Component<Props, State>{
         this.loadNewGame = this.loadNewGame.bind(this)
         this.provideSprite = this.provideSprite.bind(this)
         this.undo = this.undo.bind(this)
+        this.openItemInEditor = this.openItemInEditor.bind(this)
     }
 
     respondToServiceUpdate(payload: unknown) {
@@ -286,6 +289,25 @@ export default class GameEditor extends Component<Props, State>{
         })
     }
 
+    openItemInEditor(itemType: keyof State['gameItemIds'], itemId: string | undefined) {
+        this.setState(state => {
+            const { gameItemIds } = state
+            switch (itemType) {
+                case 'rooms':
+                case 'items':
+                case 'actors':
+                case 'conversations':
+                case 'sprites':
+                case 'sequences':
+                case 'endings':
+                case 'verbs':
+                    gameItemIds[itemType] = itemId
+                    break;
+            }
+            return { gameItemIds, tabOpen: tabs.indexOf(itemType) }
+        })
+    }
+
     render() {
         const {
             gameDesign, tabOpen, options, gameItemIds, history,
@@ -372,33 +394,24 @@ export default class GameEditor extends Component<Props, State>{
                                     <TreeMenu folders={folders}
                                         folderClick={(folderId) => {
                                             const folderIndex = tabs.indexOf(folderId);
-                                            this.setState(state => {
-                                                return {
-                                                    tabOpen: folderIndex,
-                                                    gameItemIds: {},
-                                                }
+                                            this.setState({
+                                                tabOpen: folderIndex,
+                                                gameItemIds: {},
                                             })
                                         }}
                                         entryClick={(folderId, data, isForNew) => {
-                                            const folderIndex = tabs.indexOf(folderId);
                                             const newId: string | undefined = isForNew ? undefined : data.id;
-
-                                            this.setState(state => {
-                                                const { gameItemIds } = state
-                                                switch (folderId) {
-                                                    case 'rooms':
-                                                    case 'items':
-                                                    case 'actors':
-                                                    case 'conversations':
-                                                    case 'sprites':
-                                                    case 'sequences':
-                                                    case 'endings':
-                                                    case 'verbs':
-                                                        gameItemIds[folderId] = newId
-                                                        break;
-                                                }
-                                                return { gameItemIds, tabOpen: folderIndex }
-                                            })
+                                            switch (folderId) {
+                                                case 'rooms':
+                                                case 'items':
+                                                case 'actors':
+                                                case 'conversations':
+                                                case 'sprites':
+                                                case 'sequences':
+                                                case 'endings':
+                                                case 'verbs':
+                                                    this.openItemInEditor(folderId, newId)
+                                            }
                                         }}
                                     />
                                 </Stack>
@@ -426,10 +439,22 @@ export default class GameEditor extends Component<Props, State>{
                                             },
                                             {
                                                 label: 'Items',
-                                                content: (
-                                                    <ItemEditor key={gameItemIds.items}
-                                                        data={this.currentItem}
-                                                    />)
+                                                content:
+                                                    <>
+                                                        {this.currentItem ?
+                                                            <ItemEditor key={gameItemIds.items}
+                                                                data={this.currentItem}
+                                                            />
+                                                            : (
+                                                                <DataItemCreator
+                                                                    createBlank={makeBlankItem}
+                                                                    schema={ItemDataSchema}
+                                                                    designProperty="items"
+                                                                    itemTypeName="inventory item"
+                                                                    openInEditor={this.openItemInEditor}
+                                                                />
+                                                            )}
+                                                    </>
                                             },
                                             {
                                                 label: 'Actor Editor', content: <ActorEditor
@@ -459,11 +484,7 @@ export default class GameEditor extends Component<Props, State>{
                                                     ) : (
                                                         <ConversationCreator
                                                             openInEditor={(newId) => {
-                                                                this.setState(state => {
-                                                                    const { gameItemIds } = state
-                                                                    gameItemIds['conversations'] = newId
-                                                                    return { gameItemIds, tabOpen: tabs.indexOf('conversations') }
-                                                                })
+                                                                this.openItemInEditor('conversations', newId)
                                                             }} />
                                                     )}
                                                 </>

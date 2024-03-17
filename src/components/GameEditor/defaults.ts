@@ -1,6 +1,6 @@
 import {
     Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType,
-    Stage, ConversationChoice, Ending, Flag, Order, OrderType, ConversationBranch
+    Stage, ConversationChoice, Ending, Flag, Order, OrderType, ConversationBranch, ItemData
 } from "@/definitions";
 import { ActStep, MoveStep } from "@/definitions/Order";
 
@@ -126,3 +126,10 @@ export const makeNewStep = {
 }
 
 export const makeBlankEnding = (id = "NEW_ENDING", message = "game over"): Ending => ({ id, message, })
+
+export const makeBlankItem: { (): ItemData } = () => (
+    {
+        type: 'item',
+        id: 'NEW_ITEM',
+    }
+)
