@@ -25,7 +25,7 @@ import { RoomEditor } from "./RoomEditor";
 import { testSprite } from "./RoomEditor/testSprite";
 import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { SequenceEditor } from "./SequenceEditor";
-import { ConversationCreator } from "./SequenceEditor/ConversationCreator";
+import { ConversationCreator } from "./ConversationCreator";
 import { SoundAssetTool } from "./SoundAssetTool";
 import { SpriteEditor } from "./SpriteEditor";
 import { TestGameDialog } from "./TestGameDialog";

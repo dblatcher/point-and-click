@@ -4,9 +4,9 @@ import { ConversationSchema } from "@/definitions/Conversation";
 import { uploadJsonData } from "@/lib/files";
 import { Alert, Box, Button, ButtonGroup, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { ButtonWithTextInput } from "../ButtonWithTextInput";
-import { EditorHeading } from "../EditorHeading";
-import { makeBlankConversation } from "../defaults";
+import { ButtonWithTextInput } from "./ButtonWithTextInput";
+import { EditorHeading } from "./EditorHeading";
+import { makeBlankConversation } from "./defaults";
 import { cloneData } from "@/lib/clone";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import UploadIcon from "@mui/icons-material/Upload"
