@@ -1,67 +1,48 @@
+import { useGameDesign } from "@/context/game-design-context";
 import { ItemData } from "@/definitions";
 import { cloneData } from "@/lib/clone";
-import imageService from "@/services/imageService";
+import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
-import { Stack, Dialog, Button, DialogContent, DialogActions, DialogTitle, Typography } from "@mui/material";
+import imageService from "@/services/imageService";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
+import { StringInput } from "../SchemaForm/StringInput";
 import { ItemMenuInner } from "../game-ui/ItemMenu";
+import { ButtonWithConfirm } from "./ButtonWithConfirm";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FileAssetSelector } from "./FileAssetSelector";
-import { StorageMenu } from "./StorageMenu";
-import { EnhancedSetStateFunction } from "./dataEditors";
-import { StringInput } from "../SchemaForm/StringInput";
-import { useGameDesign } from "@/context/game-design-context";
-import { listIds } from "@/lib/util";
 import { FramePicker } from "./SpriteEditor/FramePicker";
 
 type Props = {
-    data?: ItemData;
+    data: ItemData;
 }
-
-const makeNewItem: { (): ItemData } = () => (
-    {
-        type: 'item',
-        id: 'NEW_ITEM',
-    }
-)
 
 export const ItemEditor = (props: Props) => {
 
-    const { gameDesign, options, deleteArrayItem, performUpdate } = useGameDesign()
-    const [item, setItem] = useState<ItemData>((props.data ? cloneData(props.data) : makeNewItem()));
+    const { gameDesign, deleteArrayItem, performUpdate } = useGameDesign()
+    const { data: item } = props
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const { actorId = '', id, name } = item
-    const itemIds = listIds(gameDesign.items)
-
-    const getCurrentData = () => {
-        const { id, type, name, status, actorId, imageId, col, row } = item
-        return { id, type, name, status, actorId, imageId, col, row }
-    }
 
     const imageKey = `${item.imageId}-${item.row}-${item.col}`
 
-    const setStateWithAutosave: EnhancedSetStateFunction<ItemData> = (input, callback) => {
-        const { data } = props
-        setItem({ ...item, ...input });
-        if (options.autoSave) {
-            const isExistingId = itemIds.includes(item.id);
-            if (data && isExistingId) {
-                performUpdate('items', getCurrentData())
-            }
+    const updateFromPartial = (input: Partial<ItemData>) => {
+        if (input.id && input.id !== item.id) {
+            console.warn(`tried to change id in ItemEditor`, { input })
+            return
         }
-        return callback ? callback() : undefined;
+        performUpdate('items', { ...cloneData(item), ...input })
     }
 
     const changeValue = (propery: keyof ItemData, newValue: string | undefined) => {
         const modification: Partial<ItemData> = {}
         switch (propery) {
             case 'id':
-                if (typeof newValue === 'string') {
-                    modification[propery] = newValue.toUpperCase()
-                }
-                break;
+                console.warn(`tried to change id in ItemEditor`, { newValue })
+                return
             case 'name':
             case 'actorId':
             case 'imageId':
@@ -70,69 +51,62 @@ export const ItemEditor = (props: Props) => {
                 }
                 break;
         }
-        if (propery === 'id') {
-            return setItem({ ...item, ...modification })
-        }
-
         if (propery === 'imageId') {
             modification.row = undefined
             modification.col = undefined
         }
-        setStateWithAutosave(modification)
+        updateFromPartial(modification)
     }
 
     return (
-        <Stack component='article' spacing={1}>
+        <Stack component='article' spacing={3}>
             <EditorHeading heading="Item Editor" helpTopic="items" itemId={id} />
             <Stack direction={'row'} spacing={1}>
-                <EditorBox title="Data">
-                    <Stack spacing={2}>
-                        <StringInput
-                            label="id" value={id}
-                            inputHandler={(value) => changeValue('id', value)} />
-                        <StringInput
-                            label="name" value={name || ''}
-                            inputHandler={(value) => changeValue('name', value)} />
-                        <SelectInput
-                            label="actorId"
-                            optional
-                            options={listIds(gameDesign.actors)}
-                            value={actorId}
-                            inputHandler={id => { changeValue('actorId', id) }} />
+                <Stack spacing={2}>
+                    <StringInput
+                        label="name" value={name || ''}
+                        inputHandler={(value) => changeValue('name', value)} />
+                    <SelectInput
+                        label="actorId"
+                        optional
+                        options={listIds(gameDesign.actors)}
+                        value={actorId}
+                        inputHandler={id => { changeValue('actorId', id) }} />
+                    <Button
+                        onClick={() => { setDialogOpen(true) }}
+                        variant="outlined"
+                    >
+                        pick icon
+                    </Button>
+                </Stack>
+                <Box>
+                    <ButtonWithConfirm
+                        confirmationText={`Are you sure you want to delete item "${item.id}"?`}
+                        label="delete"
+                        buttonProps={{ startIcon: <DeleteIcon /> }}
+                        onClick={() => {
+                            const index = gameDesign.items.findIndex(otherItem => otherItem.id === item.id)
+                            if (index === -1) {
+                                return console.error('item not found when trying to delete', { item, items: gameDesign.items })
+                            }
+                            deleteArrayItem(index, 'items')
+                        }}
+                    />
+                </Box>
+            </Stack>
 
-                        <Button
-                            onClick={() => { setDialogOpen(true) }}
-                            variant="outlined"
-                        >
-                            pick icon
-                        </Button>
-                    </Stack>
-                </EditorBox>
-
-                <EditorBox title="Button Preview">
-                    <Stack sx={{ maxWidth: '10rem' }}>
+            <EditorBox title="Button Preview">
+                <Stack direction={'row'} sx={{ maxWidth: '22rem' }}>
+                    <Box sx={{ maxWidth: '10rem' }}>
                         <Typography variant="caption">Selected:</Typography>
                         <ItemMenuInner key={`${imageKey}-selected`} items={[item]} currentItemId={id} select={() => true} />
+                    </Box>
+                    <Box sx={{ maxWidth: '10rem' }}>
                         <Typography variant="caption">Not Selected:</Typography>
                         <ItemMenuInner key={`${imageKey}-not-selected`} items={[item]} currentItemId={''} select={() => true} />
-                    </Stack>
-                </EditorBox>
-
-                <StorageMenu
-                    data={item} type='ItemData'
-                    originalId={props.data?.id}
-                    existingIds={itemIds}
-                    reset={() => {
-                        const initialState = props.data ? cloneData(props.data) : makeNewItem()
-                        setItem({
-                            ...initialState
-                        })
-                    }}
-                    deleteItem={(index) => { deleteArrayItem(index, 'items') }}
-                    update={() => { performUpdate('items', item) }}
-                    options={options}
-                />
-            </Stack>
+                    </Box>
+                </Stack>
+            </EditorBox>
 
             <Dialog
                 open={dialogOpen}
@@ -154,7 +128,7 @@ export const ItemEditor = (props: Props) => {
                         row={item.row || 0}
                         col={item.col || 0}
                         pickFrame={(row: number, col: number) => {
-                            setStateWithAutosave({ col, row })
+                            updateFromPartial({ col, row })
                         }}
                     />
                 </DialogContent>
