@@ -91,7 +91,6 @@ function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[
     } else {
         list.push(newItem)
     }
-    console.log({ matchIndex }, list)
     return list
 }
 
@@ -441,31 +440,23 @@ export default class GameEditor extends Component<Props, State>{
                                             },
                                             {
                                                 label: 'Items',
-                                                content:
-                                                    <>
-                                                        {this.currentItem ?
-                                                            <ItemEditor key={gameItemIds.items}
-                                                                item={this.currentItem}
-                                                            />
-                                                            : (
-                                                                <DataItemCreator
-                                                                    createBlank={makeBlankItem}
-                                                                    schema={ItemDataSchema}
-                                                                    designProperty="items"
-                                                                    itemTypeName="inventory item"
-                                                                    openInEditor={this.openItemInEditor}
-                                                                />
-                                                            )}
-                                                    </>
+                                                content: this.currentItem ?
+                                                    <ItemEditor key={gameItemIds.items}
+                                                        item={this.currentItem}
+                                                    />
+                                                    :
+                                                    <DataItemCreator
+                                                        createBlank={makeBlankItem}
+                                                        schema={ItemDataSchema}
+                                                        designProperty="items"
+                                                        itemTypeName="inventory item"
+                                                        openInEditor={this.openItemInEditor}
+                                                    />
                                             },
                                             {
                                                 label: 'Actor Editor', content: this.currentActor
                                                     ? <ActorEditor
-                                                        rooms={gameDesign.rooms}
-                                                        updateData={data => { this.performUpdate('actors', data) }}
                                                         data={this.currentActor}
-                                                        provideSprite={this.provideSprite}
-                                                        spriteIds={listIds(gameDesign.sprites)}
                                                     />
                                                     : <DataItemCreator
                                                         createBlank={makeBlankActor}
@@ -476,18 +467,13 @@ export default class GameEditor extends Component<Props, State>{
                                                     />
                                             },
                                             {
-                                                label: 'Conversation Editor', content: <>
-                                                    {this.currentConversation ? (
-                                                        <ConversationEditor key={gameItemIds.conversations}
-                                                            conversation={this.currentConversation}
-                                                        />
-                                                    ) : (
-                                                        <ConversationCreator
-                                                            openInEditor={(newId) => {
-                                                                this.openItemInEditor('conversations', newId)
-                                                            }} />
-                                                    )}
-                                                </>
+                                                label: 'Conversation Editor', content: this.currentConversation
+                                                    ? <ConversationEditor key={gameItemIds.conversations}
+                                                        conversation={this.currentConversation} />
+                                                    : <ConversationCreator
+                                                        openInEditor={(newId) => {
+                                                            this.openItemInEditor('conversations', newId)
+                                                        }} />
                                             },
                                             {
                                                 label: 'Sprite Editor', content: <SpriteEditor
