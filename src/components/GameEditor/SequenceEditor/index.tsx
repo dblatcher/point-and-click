@@ -1,72 +1,55 @@
+import { StringInput } from "@/components/SchemaForm/StringInput";
 import { Consequence, GameDesign, ImmediateConsequence, Order, Sequence } from "@/definitions";
 import { ImmediateConsequenceSchema } from "@/definitions/Consequence";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import { Stack } from "@mui/material";
 import { Component } from "react";
+import { EditorOptions } from "..";
 import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
 import { StorageMenu } from "../StorageMenu";
-import { DataItemEditorProps } from "../dataEditors";
 import { makeBlankSequence } from "../defaults";
-import { StringInput } from "@/components/SchemaForm/StringInput"
 import { SequenceFlow } from "./SequenceFlow";
 
 
-type Props = DataItemEditorProps<Sequence> & {
+type Props = {
+
+    data: Sequence;
+    updateData: (data: Sequence) => void;
+    deleteData: (index: number) => void;
+    options: EditorOptions;
+
     gameDesign: GameDesign;
     sequenceId?: string;
     isSubSection?: boolean;
 }
 
-type ExtraState = {
 
-}
-type State = Sequence & ExtraState
-
-
-
-export class SequenceEditor extends Component<Props, State> {
+export class SequenceEditor extends Component<Props> {
 
     constructor(props: Props) {
         super(props)
-        this.state = this.initialState
         this.changeOrder = this.changeOrder.bind(this)
         this.changeOrderList = this.changeOrderList.bind(this)
         this.changeConsequence = this.changeConsequence.bind(this)
         this.changeConsequenceList = this.changeConsequenceList.bind(this)
-        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
-    }
-
-    get initialState(): Sequence {
-        const { data } = this.props
-        return data ? {
-            ...cloneData(data)
-        } : makeBlankSequence()
+        this.updateFromPartial = this.updateFromPartial.bind(this)
     }
 
     get currentData(): Sequence {
-        const actorData = cloneData(this.state) as State;
-        return actorData
+        return cloneData(this.props.data)
     }
 
-    setStateWithAutosave(input: Partial<State> | { (state: State): Partial<State> }) {
-        const { options, data, updateData, gameDesign } = this.props
-
-        if (!options.autoSave) {
-            return this.setState(input as State)
-        }
-
-        return this.setState(input as State, () => {
-            const isExistingId = listIds(gameDesign.sequences).includes(this.state.id)
-            if (data && isExistingId) {
-                updateData(this.currentData)
-            }
-        })
+    updateFromPartial(input: Partial<Sequence> | { (state: Sequence): Partial<Sequence> }) {
+        const { data, updateData } = this.props
+        const modification = (typeof input === 'function')
+            ? input(this.currentData) : input
+        updateData({ ...data, ...modification })
     }
 
     changeOrder(order: Order, stageIndex: number, actorId: string, orderIndex: number) {
-        this.setStateWithAutosave(state => {
+        this.updateFromPartial(state => {
             const { stages } = state
             const actorOrders = stages[stageIndex]?.actorOrders
             if (!actorOrders) { return {} }
@@ -78,7 +61,7 @@ export class SequenceEditor extends Component<Props, State> {
     }
 
     changeOrderList(newList: Order[], stageIndex: number, actorId: string) {
-        this.setStateWithAutosave(state => {
+        this.updateFromPartial(state => {
             const { stages } = state
             const stage = stages[stageIndex]
             if (!stage) { return {} }
@@ -95,7 +78,7 @@ export class SequenceEditor extends Component<Props, State> {
             return
         }
 
-        this.setStateWithAutosave(state => {
+        this.updateFromPartial(state => {
             const { stages } = state
             const immediateConsequences = stages[stageIndex]?.immediateConsequences
             if (!immediateConsequences) { return {} }
@@ -105,7 +88,7 @@ export class SequenceEditor extends Component<Props, State> {
     }
 
     changeConsequenceList(newList: ImmediateConsequence[], stageIndex: number) {
-        this.setStateWithAutosave(state => {
+        this.updateFromPartial(state => {
             const { stages } = state
             const stage = stages[stageIndex]
             if (!stage) { return {} }
@@ -115,32 +98,26 @@ export class SequenceEditor extends Component<Props, State> {
     }
 
     render() {
-        const { gameDesign, sequenceId, updateData, deleteData, options, isSubSection, data } = this.props
-        const { description, id } = this.state
-
+        const { gameDesign, sequenceId, deleteData, options, isSubSection, data: sequence } = this.props
         return (
             <article>
-
                 {isSubSection
                     ? (<>
                         <h3>Edit sequence: </h3>
-                        <div>ID: <b>{data?.id}</b></div>
-                        <StringInput label="description" value={description || ''}
+                        <div>ID: <b>{sequence?.id}</b></div>
+                        <StringInput label="description" value={sequence.description || ''}
                             inputHandler={(description) => {
-                                this.setStateWithAutosave({ description })
+                                this.updateFromPartial({ description })
                             }}
                         />
                     </>)
                     : (<>
-                        <EditorHeading heading="Sequence Editor" itemId={data?.id ?? '[new]'} />
+                        <EditorHeading heading="Sequence Editor" itemId={sequence?.id ?? '[new]'} />
                         <Stack direction='row' spacing={1}>
                             <EditorBox title="details">
-                                <StringInput label="id" value={id} // don't autosave when changing ID
-                                    inputHandler={(id) => { this.setState({ id }) }}
-                                />
-                                <StringInput label="description" value={description || ''}
+                                <StringInput label="description" value={sequence.description || ''}
                                     inputHandler={(description) => {
-                                        this.setStateWithAutosave({ description })
+                                        this.updateFromPartial({ description })
                                     }}
                                 />
                             </EditorBox>
@@ -150,8 +127,8 @@ export class SequenceEditor extends Component<Props, State> {
                                 data={this.currentData}
                                 originalId={sequenceId}
                                 existingIds={listIds(gameDesign.sequences)}
-                                reset={() => this.setState(this.initialState)}
-                                update={() => { updateData(this.currentData) }}
+                                reset={() => { }}
+                                update={() => { }}
                                 deleteItem={deleteData}
                                 options={options}
                             />
@@ -160,9 +137,9 @@ export class SequenceEditor extends Component<Props, State> {
                 }
 
                 <SequenceFlow
-                    sequence={this.state}
+                    sequence={this.props.data}
                     changeConsequence={this.changeConsequence}
-                    changeStages={(stages) => { this.setStateWithAutosave({ stages }) }}
+                    changeStages={(stages) => { this.updateFromPartial({ stages }) }}
                     changeConsequenceList={this.changeConsequenceList}
                     changeOrder={this.changeOrder}
                     changeOrderList={this.changeOrderList}
