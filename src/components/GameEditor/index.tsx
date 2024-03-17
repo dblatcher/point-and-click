@@ -448,7 +448,6 @@ export default class GameEditor extends Component<Props, State>{
                                                 label: 'Conversation Editor', content: <>
                                                     {this.currentConversation ? (
                                                         <ConversationEditor
-                                                            sequenceIds={listIds(gameDesign.sequences)}
                                                             conversations={gameDesign.conversations}
                                                             gameDesign={gameDesign}
                                                             updateData={data => { this.performUpdate('conversations', data) }}

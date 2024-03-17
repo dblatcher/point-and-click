@@ -3,20 +3,21 @@ import { getModification, type FieldDef, type FieldValue } from "@/components/Sc
 import { GameDesign, Sequence } from "@/definitions";
 import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice, ConversationSchema } from "@/definitions/Conversation";
 import { cloneData } from "@/lib/clone";
-import { uploadJsonData } from "@/lib/files";
+import { downloadJsonFile, uploadJsonData } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
+import { Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { Component } from "react";
 import { ArrayControl } from "../ArrayControl";
+import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { EditorHeading } from "../EditorHeading";
 import { SequenceEditor } from "../SequenceEditor";
-import { StorageMenu } from "../StorageMenu";
 import { DataItemEditorProps } from "../dataEditors";
 import { makeBlankConversationChoice } from "../defaults";
 import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ConversationFlow } from "./ConversationFlow";
-
+import DownloadIcon from '@mui/icons-material/Download';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 type State = {
     openBranchId?: string;
@@ -28,7 +29,6 @@ type State = {
 type Props = DataItemEditorProps<Conversation> & {
     data: Conversation,
     conversations: Conversation[];
-    sequenceIds: string[];
     gameDesign: GameDesign;
     updateSequenceData: { (data: Sequence): void };
 }
@@ -242,17 +242,24 @@ export class ConversationEditor extends Component<Props, State> {
         return (
             <Stack component={'article'} spacing={2}>
                 <EditorHeading heading={`Conversation Editor`} itemId={conversation.id} />
-                <Stack spacing={2} direction={'row'}>
-                    <StorageMenu
-                        type="conversation"
-                        data={this.currentData}
-                        originalId={conversation.id}
-                        existingIds={listIds(conversations)}
-                        deleteItem={deleteData}
-                        saveButton={true}
-                        load={this.handleLoadButton}
-                        options={options} reset={() => { }} update={() => { }} />
-                </Stack>
+                <ButtonGroup>
+                    <Button
+                        startIcon={<DownloadIcon />}
+                        onClick={(): void => { downloadJsonFile(conversation, 'conversation') }}
+                    >Save to file</Button>
+                    <ButtonWithConfirm
+                        confirmationText={`Are you sure you want to delete conversation "${conversation.id}"?`}
+                        label="delete"
+                        buttonProps={{ startIcon: <DeleteIcon /> }}
+                        onClick={() => {
+                            const index = conversations.findIndex(item => item.id === conversation.id)
+                            if (index === -1) {
+                                return console.error('converstion not found when trying to delete', { conversation, conversations })
+                            }
+                            deleteData(index)
+                        }}
+                    />
+                </ButtonGroup>
 
                 <ConversationFlow conversation={this.currentData} key={JSON.stringify(this.currentData)}
                     openEditor={(branchKey, choiceIndex) => {

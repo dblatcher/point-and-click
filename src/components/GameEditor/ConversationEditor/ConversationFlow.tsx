@@ -168,59 +168,56 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
         <Box
             ref={containerRef} position={'relative'}
         >
-            <Card sx={{ padding: 1 }}>
-                <Typography>Conversation: {id}</Typography>
-                {containerElement && (
-                    <Fragment key={JSON.stringify(conversation)}>
-                        {nodePairs.map((pair, index) => (
-                            <LineBetweenNodes key={index}
-                                startNode={pair[0]}
-                                endNode={pair[1]}
-                                container={containerElement}
-                            />
-                        ))}
-                    </Fragment>
-                )}
-                <Stack spacing={2}>
-                    {heirarchy.map((rank, rankIndex) => (
-                        <Stack key={rankIndex}
-                            direction={'row'}
-                            spacing={2}
-                            justifyContent={rankIndex === 0 ? 'center' : 'space-between'}
-                            alignItems={'flex-start'}
-                        >
-                            {rank.map(([branchKey, branch], itemIndex) => {
-                                return (
-                                    <BranchBox
-                                        isDefaultBranch={branchKey === conversation.defaultBranch}
-                                        makeDefault={() => {
-                                            console.log(`want to make ${branchKey} the default for conversation ${conversation.id}`)
-                                            changeDefaultBranch(branchKey)
-                                        }}
-                                        openEditor={openEditor}
-                                        addNewChoice={addNewChoice}
-                                        openOrderDialog={openOrderDialog}
-                                        deleteBranch={deleteBranch}
-                                        key={`${rankIndex}-${itemIndex}`}
-                                        branch={branch} branchKey={branchKey} />
-                                )
-                            })}
-                        </Stack>
+            {containerElement && (
+                <Fragment key={JSON.stringify(conversation)}>
+                    {nodePairs.map((pair, index) => (
+                        <LineBetweenNodes key={index}
+                            startNode={pair[0]}
+                            endNode={pair[1]}
+                            container={containerElement}
+                        />
                     ))}
-                </Stack>
-                <Box display={'flex'} justifyContent={'flex-end'} paddingTop={2}>
-                    <ButtonWithTextInput
-                        label="Add Branch"
-                        onEntry={(entry) => { addNewBranch(entry) }}
-                        confirmationText="enter branch name"
-                        buttonProps={{
-                            size: 'large',
-                            variant: "contained",
-                            startIcon: (< AddIcon />),
-                        }}
-                    />
-                </Box>
-            </Card>
+                </Fragment>
+            )}
+            <Stack spacing={2}>
+                {heirarchy.map((rank, rankIndex) => (
+                    <Stack key={rankIndex}
+                        direction={'row'}
+                        spacing={2}
+                        justifyContent={rankIndex === 0 ? 'center' : 'space-between'}
+                        alignItems={'flex-start'}
+                    >
+                        {rank.map(([branchKey, branch], itemIndex) => {
+                            return (
+                                <BranchBox
+                                    isDefaultBranch={branchKey === conversation.defaultBranch}
+                                    makeDefault={() => {
+                                        console.log(`want to make ${branchKey} the default for conversation ${conversation.id}`)
+                                        changeDefaultBranch(branchKey)
+                                    }}
+                                    openEditor={openEditor}
+                                    addNewChoice={addNewChoice}
+                                    openOrderDialog={openOrderDialog}
+                                    deleteBranch={deleteBranch}
+                                    key={`${rankIndex}-${itemIndex}`}
+                                    branch={branch} branchKey={branchKey} />
+                            )
+                        })}
+                    </Stack>
+                ))}
+            </Stack>
+            <Box display={'flex'} justifyContent={'flex-end'} paddingTop={2}>
+                <ButtonWithTextInput
+                    label="Add Branch"
+                    onEntry={(entry) => { addNewBranch(entry) }}
+                    confirmationText="enter branch name"
+                    buttonProps={{
+                        size: 'large',
+                        variant: "contained",
+                        startIcon: (< AddIcon />),
+                    }}
+                />
+            </Box>
         </Box>
     )
 }
