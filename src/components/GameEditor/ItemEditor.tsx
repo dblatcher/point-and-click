@@ -16,13 +16,11 @@ import { FileAssetSelector } from "./FileAssetSelector";
 import { FramePicker } from "./SpriteEditor/FramePicker";
 
 type Props = {
-    data: ItemData;
+    item: ItemData;
 }
 
-export const ItemEditor = (props: Props) => {
-
-    const { gameDesign, deleteArrayItem, performUpdate } = useGameDesign()
-    const { data: item } = props
+export const ItemEditor = ({ item }: Props) => {
+    const { gameDesign, performUpdate } = useGameDesign()
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const { actorId = '', id, name } = item
 

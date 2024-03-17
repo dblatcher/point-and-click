@@ -443,7 +443,7 @@ export default class GameEditor extends Component<Props, State>{
                                                     <>
                                                         {this.currentItem ?
                                                             <ItemEditor key={gameItemIds.items}
-                                                                data={this.currentItem}
+                                                                item={this.currentItem}
                                                             />
                                                             : (
                                                                 <DataItemCreator

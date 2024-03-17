@@ -1,9 +1,9 @@
 
 import { getModification, type FieldDef, type FieldValue } from "@/components/SchemaForm";
 import { GameDesign, Sequence } from "@/definitions";
-import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice, ConversationSchema } from "@/definitions/Conversation";
+import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice } from "@/definitions/Conversation";
 import { cloneData } from "@/lib/clone";
-import { downloadJsonFile, uploadJsonData } from "@/lib/files";
+import { downloadJsonFile } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
 import DownloadIcon from '@mui/icons-material/Download';
 import { Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
@@ -42,7 +42,6 @@ export class ConversationEditor extends Component<Props, State> {
             sequenceDialogOpen: false,
         }
 
-        this.handleLoadButton = this.handleLoadButton.bind(this)
         this.handleChoiceChange = this.handleChoiceChange.bind(this)
         this.updateChoiceListItem = this.updateChoiceListItem.bind(this)
         this.addChoiceListItem = this.addChoiceListItem.bind(this)
@@ -88,15 +87,6 @@ export class ConversationEditor extends Component<Props, State> {
                 break;
         }
         this.updateFromPartial(modification)
-    }
-    handleLoadButton = async () => {
-        const { data, error } = await uploadJsonData(ConversationSchema)
-        if (data) {
-            // this.setState(data)
-            console.log("TO DO - fix loading from JSON")
-        } else {
-            console.warn("NOT ACTOR DATA", error)
-        }
     }
 
     updateChoiceListItem(
@@ -233,7 +223,7 @@ export class ConversationEditor extends Component<Props, State> {
     render() {
         const { handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence } = this
         const { openBranchId, activeChoiceIndex, editOrderDialogBranchId } = this.state
-        const { conversations, deleteData, options, gameDesign, updateSequenceData, data: conversation } = this.props
+        const { options, gameDesign, updateSequenceData, data: conversation } = this.props
         const { choice } = this.getBranchAndChoice()
 
         const branchInOrderDialog = editOrderDialogBranchId ? conversation.branches[editOrderDialogBranchId] : undefined
