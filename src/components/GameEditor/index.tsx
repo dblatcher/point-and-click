@@ -444,16 +444,22 @@ export default class GameEditor extends Component<Props, State>{
                                                 />
                                             },
                                             {
-                                                label: 'Conversation Editor', content: <ConversationEditor
-                                                    sequenceIds={listIds(gameDesign.sequences)}
-                                                    conversations={gameDesign.conversations}
-                                                    gameDesign={gameDesign}
-                                                    updateData={data => { this.performUpdate('conversations', data) }}
-                                                    deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
-                                                    updateSequenceData={data => { this.performUpdate('sequences', data) }}
-                                                    options={options}
-                                                    key={gameItemIds.conversations} data={this.currentConversation}
-                                                />
+                                                label: 'Conversation Editor', content: <>
+                                                    {this.currentConversation ? (
+                                                        <ConversationEditor
+                                                            sequenceIds={listIds(gameDesign.sequences)}
+                                                            conversations={gameDesign.conversations}
+                                                            gameDesign={gameDesign}
+                                                            updateData={data => { this.performUpdate('conversations', data) }}
+                                                            deleteData={index => { this.deleteArrayItem(index, 'conversations') }}
+                                                            updateSequenceData={data => { this.performUpdate('sequences', data) }}
+                                                            options={options}
+                                                            key={gameItemIds.conversations} data={this.currentConversation}
+                                                        />
+                                                    ) : (
+                                                        <p>no conversation</p>
+                                                    )}
+                                                </>
                                             },
                                             {
                                                 label: 'Sprite Editor', content: <SpriteEditor
