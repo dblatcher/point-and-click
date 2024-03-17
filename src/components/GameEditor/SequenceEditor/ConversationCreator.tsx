@@ -2,11 +2,13 @@ import { useGameDesign } from "@/context/game-design-context";
 import { Conversation } from "@/definitions";
 import { ConversationSchema } from "@/definitions/Conversation";
 import { uploadJsonData } from "@/lib/files";
-import { Alert, Button, ButtonGroup, Stack, Typography } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { ButtonWithTextInput } from "../ButtonWithTextInput";
 import { EditorHeading } from "../EditorHeading";
 import { makeBlankConversation } from "../defaults";
+import { cloneData } from "@/lib/clone";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 interface Props {
     openInEditor: { (id: string): void }
@@ -17,8 +19,11 @@ export const ConversationCreator: React.FunctionComponent<Props> = ({ openInEdit
     const [warning, setWarning] = useState<string | undefined>()
 
     const handleStartFromScratch = (proposedId: string) => {
-        const newConversation: Conversation = { ...makeBlankConversation(), id: proposedId }
-        attemptCreate(newConversation)
+        attemptCreate({ ...makeBlankConversation(), id: proposedId })
+    }
+
+    function handleDuplicate(proposedId: string, item: Conversation): void {
+        attemptCreate({ ...cloneData(item), id: proposedId })
     }
 
     const handleLoadButton = async () => {
@@ -56,6 +61,18 @@ export const ConversationCreator: React.FunctionComponent<Props> = ({ openInEdit
                     confirmationText="Enter conversation name" />
                 <Button onClick={handleLoadButton} >load from data file</Button>
             </ButtonGroup>
+
+            <Typography variant="h3">Duplicate existing conversation</Typography>
+            <Box>
+                <ButtonGroup orientation="vertical">
+                    {gameDesign.conversations.map(item => (
+                        <ButtonWithTextInput key={item.id} label={item.id} buttonProps={{ startIcon: <ContentCopyIcon /> }}
+                            onEntry={(newId) => handleDuplicate(newId, item)}
+                            confirmationText="Enter conversation name"
+                        />
+                    ))}
+                </ButtonGroup>
+            </Box>
 
             {warning && (
                 <Alert severity="warning">{warning}</Alert>
