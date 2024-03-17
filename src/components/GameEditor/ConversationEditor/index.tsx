@@ -160,7 +160,7 @@ export const ConversationEditor = (props: Props) => {
             return { branches }
         }
         updateFromPartial(getModifiedBranches())
-        updateSequenceData(sequence)
+        performUpdate('sequences', sequence)
     }
 
     const getBranchAndChoice = (): { branch?: ConversationBranch; choice?: ConversationChoice, branches: Conversation['branches'] } => {

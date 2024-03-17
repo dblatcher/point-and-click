@@ -6,88 +6,45 @@ import { directions } from "@/definitions/SpriteSheet";
 import type { Sprite } from "@/lib/Sprite";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
-import { uploadJsonData } from "@/lib/files";
+import { downloadJsonFile, uploadJsonData } from "@/lib/files";
 import { listIds } from "@/lib/util";
-import AddIcon from "@mui/icons-material/Add";
+import DownloadIcon from '@mui/icons-material/Download';
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { Component } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
+import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
 import { RecordEditor } from "../RecordEditor";
 import { SpritePreview } from "../SpritePreview";
-import { StorageMenu } from "../StorageMenu";
-import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
 import { PositionPreview } from "./PositionPreview";
 import { SoundValueForm } from "./SoundValueForm";
 
-type ExtraState = {
 
-}
+type State = { sprite: string | undefined };
 
-type State = ActorData & { sprite: string | undefined } & ExtraState;
-
-type Props = DataItemEditorProps<ActorData> & {
+type Props = {
+    data: ActorData;
+    updateData: (data: ActorData) => void;
     rooms: RoomData[];
-    actorIds: string[];
-    actors: ActorData[];
     provideSprite: { (id: string): Sprite | undefined }
     spriteIds: string[];
 }
-
-const makeBlankActor = (spriteId: string): ActorData => ({
-    id: 'NEW_ACTOR',
-    type: 'actor',
-    name: undefined,
-    status: undefined,
-
-    sprite: spriteId,
-    direction: 'left',
-    height: 150, width: 100,
-    x: 0, y: 0, room: undefined,
-
-    isPlayer: false,
-    speed: 3,
-    dialogueColor: '#000000',
-
-})
 
 const newSound = (): SoundValue => ({ soundId: "beep" })
 
 export class ActorEditor extends Component<Props, State> {
 
-    setStateWithAutosave: EnhancedSetStateFunction<State>
-
     constructor(props: Props) {
         super(props)
 
-        const initialState = props.data ? {
-            ...props.data
-        } : makeBlankActor(props.spriteIds[0])
-
-        this.state = {
-            ...initialState
-        }
-
         this.handleLoadButton = this.handleLoadButton.bind(this)
-        this.handleResetButton = this.handleResetButton.bind(this)
-        this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.handlePreviewClick = this.handlePreviewClick.bind(this)
         this.changeValue = this.changeValue.bind(this)
         this.changeSoundMap = this.changeSoundMap.bind(this)
-        this.setStateWithAutosave = higherLevelSetStateWithAutosave(this).bind(this)
-    }
-
-    get currentData(): ActorData {
-        const actorData = cloneData(this.state) as State;
-        return actorData
-    }
-
-    get existingIds(): string[] {
-        return this.props.actorIds;
     }
 
     changeValue(propery: keyof ActorData, newValue: unknown) {
-        const modification: Partial<State> = {}
+        const modification: Partial<ActorData> = {}
         switch (propery) {
             case 'id':
                 if (typeof newValue === 'string') {
@@ -132,20 +89,32 @@ export class ActorEditor extends Component<Props, State> {
                 break;
         }
         if (propery === 'id') {
-            return this.setState(modification as State)
+            console.warn('ActorEditor tried to change id', { newValue })
+            return
         }
-        this.setStateWithAutosave(modification)
+        this.updateFromPartial(modification)
     }
+
+    updateFromPartial(modification: Partial<ActorData>) {
+        this.props.updateData({
+            ...cloneData(this.props.data),
+            ...modification,
+            dialogueColor: undefined,
+        })
+    }
+
     changeSoundMap(key: string, value?: SoundValue): void {
-        this.setStateWithAutosave(state => {
-            const { soundEffectMap = {} } = state
+        const makeMod = (): Partial<ActorData> => {
+            const { soundEffectMap = {} } = cloneData(this.props.data)
             if (typeof value === 'undefined') {
                 delete soundEffectMap[key]
             } else {
                 soundEffectMap[key] = value
             }
             return { soundEffectMap }
-        })
+        }
+
+        this.updateFromPartial(makeMod())
     }
     handleLoadButton = async () => {
         const { data, error } = await uploadJsonData(ActorDataSchema)
@@ -155,76 +124,48 @@ export class ActorEditor extends Component<Props, State> {
             console.warn("NOT ACTOR DATA", error)
         }
     }
-    handleResetButton() {
-        const { props } = this
-        const initialState = props.data ? cloneData(props.data) : makeBlankActor(props.spriteIds[0])
-        this.setState({
-            ...initialState
-        })
-    }
-    handleUpdateButton() {
-        if (this.props.updateData) {
-            this.props.updateData(this.currentData)
-        }
-    }
     handlePreviewClick(point: Point, pointRole: 'position' | 'walkTo') {
         switch (pointRole) {
             case 'position':
-                return this.setStateWithAutosave(point)
+                return this.updateFromPartial(point)
             case 'walkTo': {
-                const { x, y } = this.state;
+                const { x, y } = this.props.data;
                 const walkToX = point.x - x
                 const walkToY = point.y - y
-                return this.setStateWithAutosave({ walkToX, walkToY })
+                return this.updateFromPartial({ walkToX, walkToY })
             }
         }
     }
 
     get previewData(): ActorData {
         return {
-            ...this.state,
-            x: this.state.width / 2, y: 0
+            ...this.props.data,
+            x: this.props.data.width / 2, y: 0
         }
     }
 
     get statusSuggestions(): string[] {
-        const { sprite: spriteId, id } = this.state
+        const { sprite: spriteId, id } = this.props.data
         const { provideSprite } = this.props
         const sprite = provideSprite(spriteId)
         const sprites = sprite ? [sprite.data] : []
         return getStatusSuggestions(id, {
             sprites,
-            actors: [this.state]
+            actors: [this.props.data]
         })
     }
 
     render() {
-        const { state, changeValue } = this
-        const { sprite: spriteId, width = 1, height = 1, soundEffectMap = {}, walkToX, walkToY } = state
-        const { actorIds, spriteIds } = this.props
-
-        const originalId = this.props.data?.id
-        const currentId = this.currentData.id
-        const isNewItem = currentId !== originalId
+        const { changeValue } = this
+        const actor = this.props.data
+        const { sprite: spriteId, width = 1, height = 1, soundEffectMap = {}, walkToX, walkToY, dialogueColor, room, x, y, direction } = this.props.data
+        const { spriteIds } = this.props
 
         return (
             <Stack component='article' spacing={1}>
-                <EditorHeading heading="Actor Editor" itemId={this.state.id} />
+                <EditorHeading heading="Actor Editor" itemId={this.props.data.id} />
                 <Grid container flexWrap={'nowrap'} spacing={1}>
                     <Grid item xs={5}><>
-                        {isNewItem && (
-                            <Box paddingY={1}>
-                                <Button
-                                    variant="contained"
-                                    fullWidth
-                                    startIcon={<AddIcon />}
-                                    onClick={this.handleUpdateButton}
-                                >
-                                    Save new actor: {state.id}
-                                </Button>
-                            </Box>
-                        )}
-
                         <AccoridanedContent tabs={[
                             {
                                 label: 'Actor', content: <Box maxWidth={'sm'}>
@@ -245,7 +186,7 @@ export class ActorEditor extends Component<Props, State> {
                                             isPlayer: 'is player actor',
                                             noInteraction: 'cannot interact with',
                                         }}
-                                        data={state}
+                                        data={this.props.data}
                                         changeValue={(value, fieldDef) => {
                                             changeValue(fieldDef.key as keyof ActorData, value)
                                         }}
@@ -254,7 +195,7 @@ export class ActorEditor extends Component<Props, State> {
                                     <StringInput
                                         type="color"
                                         label="dialogue color"
-                                        value={state.dialogueColor || ''}
+                                        value={dialogueColor || ''}
                                         inputHandler={value => { changeValue('dialogueColor', value) }} />
                                 </Box>
                             },
@@ -268,7 +209,7 @@ export class ActorEditor extends Component<Props, State> {
                                                 options={spriteIds}
                                                 label="pick sprite"
                                                 inputHandler={
-                                                    id => this.setStateWithAutosave({ sprite: id })
+                                                    id => this.updateFromPartial({ sprite: id })
                                                 }
                                             />
 
@@ -280,11 +221,11 @@ export class ActorEditor extends Component<Props, State> {
                                             </Stack>
 
                                             <StringInput
-                                                label="filter" value={state.filter || ''}
+                                                label="filter" value={this.props.data.filter || ''}
                                                 inputHandler={(value) => changeValue('filter', value)} />
                                             <NumberInput
-                                                label="display baseline" value={state.baseline || 0}
-                                                min={0} max={state.height}
+                                                label="display baseline" value={this.props.data.baseline || 0}
+                                                min={0} max={this.props.data.height}
                                                 inputHandler={value => { changeValue('baseline', value) }} />
                                         </Stack>
                                         <SpritePreview data={this.previewData} />
@@ -319,18 +260,18 @@ export class ActorEditor extends Component<Props, State> {
                                     <Stack spacing={2}>
                                         <SelectInput label="roomId"
                                             options={listIds(this.props.rooms)}
-                                            value={state.room || ''}
+                                            value={room || ''}
                                             optional={true}
                                             inputHandler={roomId => { changeValue('room', roomId) }} />
                                         <Stack direction={'row'} spacing={2} maxWidth={300}>
                                             <NumberInput
-                                                label="x" value={state.x}
+                                                label="x" value={x}
                                                 inputHandler={value => { changeValue('x', value) }} />
                                             <NumberInput
-                                                label="y" value={state.y}
+                                                label="y" value={y}
                                                 inputHandler={value => { changeValue('y', value) }} />
                                             <SelectInput label="direction"
-                                                value={state.direction || 'left'}
+                                                value={direction || 'left'}
                                                 options={directions}
                                                 inputHandler={(item) => { changeValue('direction', item) }} />
                                         </Stack>
@@ -349,18 +290,17 @@ export class ActorEditor extends Component<Props, State> {
                             },
                             {
                                 label: 'storage', content: (
-                                    <StorageMenu
-                                        type="actorData"
-                                        data={this.currentData}
-                                        originalId={this.props.data?.id}
-                                        existingIds={actorIds}
-                                        reset={this.handleResetButton}
-                                        update={this.handleUpdateButton}
-                                        deleteItem={this.props.deleteData}
-                                        saveButton={true}
-                                        load={this.handleLoadButton}
-                                        options={this.props.options}
-                                    />
+                                    <>
+                                        <DeleteDataItemButton
+                                            dataItem={actor}
+                                            itemType="actors"
+                                            itemTypeName="actor"
+                                        />
+                                        <Button
+                                            startIcon={<DownloadIcon />}
+                                            onClick={(): void => { downloadJsonFile(actor, 'actor') }}
+                                        >Save to file</Button>
+                                    </>
                                 )
                             }
                         ]} />
@@ -369,7 +309,7 @@ export class ActorEditor extends Component<Props, State> {
                     <Grid item flex={1}>
                         <div style={{ position: 'sticky', top: 1 }}>
                             <PositionPreview
-                                actorData={this.state}
+                                actorData={this.props.data}
                                 reportClick={this.handlePreviewClick}
                                 pickRoom={(roomId) => this.changeValue('room', roomId)}
                             />

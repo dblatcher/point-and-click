@@ -32,9 +32,10 @@ import { TestGameDialog } from "./TestGameDialog";
 import { Entry, Folder, TreeMenu } from "./TreeMenu";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { defaultVerbs1, getBlankRoom, makeBlankItem } from "./defaults";
+import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankItem } from "./defaults";
 import { DataItemCreator } from "./DataItemCreator";
 import { ItemDataSchema } from "@/definitions/ItemData";
+import { ActorDataSchema } from "@/definitions/ActorData";
 
 export type EditorOptions = {
     autoSave: boolean;
@@ -90,6 +91,7 @@ function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[
     } else {
         list.push(newItem)
     }
+    console.log({ matchIndex }, list)
     return list
 }
 
@@ -457,17 +459,21 @@ export default class GameEditor extends Component<Props, State>{
                                                     </>
                                             },
                                             {
-                                                label: 'Actor Editor', content: <ActorEditor
-                                                    rooms={gameDesign.rooms}
-                                                    actors={gameDesign.actors}
-                                                    actorIds={listIds(gameDesign.actors)}
-                                                    updateData={data => { this.performUpdate('actors', data) }}
-                                                    deleteData={index => { this.deleteArrayItem(index, 'actors') }}
-                                                    options={options}
-                                                    key={gameItemIds.actors} data={this.currentActor}
-                                                    provideSprite={this.provideSprite}
-                                                    spriteIds={listIds(gameDesign.sprites)}
-                                                />
+                                                label: 'Actor Editor', content: this.currentActor
+                                                    ? <ActorEditor
+                                                        rooms={gameDesign.rooms}
+                                                        updateData={data => { this.performUpdate('actors', data) }}
+                                                        data={this.currentActor}
+                                                        provideSprite={this.provideSprite}
+                                                        spriteIds={listIds(gameDesign.sprites)}
+                                                    />
+                                                    : <DataItemCreator
+                                                        createBlank={makeBlankActor}
+                                                        schema={ActorDataSchema}
+                                                        designProperty="actors"
+                                                        itemTypeName="actor"
+                                                        openInEditor={this.openItemInEditor}
+                                                    />
                                             },
                                             {
                                                 label: 'Conversation Editor', content: <>
