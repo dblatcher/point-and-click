@@ -56,3 +56,12 @@ export type GameCondition = z.infer<typeof GameConditionSchema>
 export type GameDesign = z.infer<typeof GameDesignSchema>
 
 export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Ending | Verb
+
+export type GameDataItemType =
+    'rooms'
+    | 'items'
+    | 'actors'
+    | 'conversations'
+    | 'sprites'
+    | 'sequences'
+    | 'endings'

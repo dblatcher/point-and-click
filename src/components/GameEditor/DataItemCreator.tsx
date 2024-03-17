@@ -10,18 +10,10 @@ import { useState } from "react";
 import { ZodObject, ZodRawShape } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { EditorHeading } from "./EditorHeading";
-
-type GameDataItemType =
-    'rooms'
-    | 'items'
-    | 'actors'
-    | 'conversations'
-    | 'sprites'
-    | 'sequences'
-    | 'endings'
+import { GameDataItemType } from "@/definitions/Game";
 
 type Props<DataType extends GameDataItem> = {
-    openInEditor: { (designProperty:GameDataItemType,  id: string): void }
+    openInEditor: { (designProperty: GameDataItemType, id: string): void }
     createBlank: { (): DataType }
     schema: ZodObject<ZodRawShape>
     designProperty: GameDataItemType

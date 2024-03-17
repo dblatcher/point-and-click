@@ -4,13 +4,12 @@ import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
 import imageService from "@/services/imageService";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { StringInput } from "../SchemaForm/StringInput";
 import { ItemMenuInner } from "../game-ui/ItemMenu";
-import { ButtonWithConfirm } from "./ButtonWithConfirm";
+import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FileAssetSelector } from "./FileAssetSelector";
@@ -80,17 +79,10 @@ export const ItemEditor = (props: Props) => {
                     </Button>
                 </Stack>
                 <Box>
-                    <ButtonWithConfirm
-                        confirmationText={`Are you sure you want to delete item "${item.id}"?`}
-                        label="delete"
-                        buttonProps={{ startIcon: <DeleteIcon /> }}
-                        onClick={() => {
-                            const index = gameDesign.items.findIndex(otherItem => otherItem.id === item.id)
-                            if (index === -1) {
-                                return console.error('item not found when trying to delete', { item, items: gameDesign.items })
-                            }
-                            deleteArrayItem(index, 'items')
-                        }}
+                    <DeleteDataItemButton
+                        dataItem={item}
+                        itemType="items"
+                        itemTypeName="Inventory Item"
                     />
                 </Box>
             </Stack>

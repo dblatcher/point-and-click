@@ -5,10 +5,11 @@ import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice, Con
 import { cloneData } from "@/lib/clone";
 import { downloadJsonFile, uploadJsonData } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
+import DownloadIcon from '@mui/icons-material/Download';
 import { Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { Component } from "react";
 import { ArrayControl } from "../ArrayControl";
-import { ButtonWithConfirm } from "../ButtonWithConfirm";
+import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
 import { SequenceEditor } from "../SequenceEditor";
 import { DataItemEditorProps } from "../dataEditors";
@@ -16,8 +17,6 @@ import { makeBlankConversationChoice } from "../defaults";
 import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ConversationFlow } from "./ConversationFlow";
-import DownloadIcon from '@mui/icons-material/Download';
-import DeleteIcon from "@mui/icons-material/Delete";
 
 type State = {
     openBranchId?: string;
@@ -247,17 +246,10 @@ export class ConversationEditor extends Component<Props, State> {
                         startIcon={<DownloadIcon />}
                         onClick={(): void => { downloadJsonFile(conversation, 'conversation') }}
                     >Save to file</Button>
-                    <ButtonWithConfirm
-                        confirmationText={`Are you sure you want to delete conversation "${conversation.id}"?`}
-                        label="delete"
-                        buttonProps={{ startIcon: <DeleteIcon /> }}
-                        onClick={() => {
-                            const index = conversations.findIndex(item => item.id === conversation.id)
-                            if (index === -1) {
-                                return console.error('converstion not found when trying to delete', { conversation, conversations })
-                            }
-                            deleteData(index)
-                        }}
+                    <DeleteDataItemButton
+                        dataItem={conversation}
+                        itemType="conversations"
+                        itemTypeName="conversation"
                     />
                 </ButtonGroup>
 
