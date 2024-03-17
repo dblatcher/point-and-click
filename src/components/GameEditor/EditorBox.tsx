@@ -33,8 +33,7 @@ export const EditorBox = ({ title, children, themePalette = 'primary', boxProps 
                     minHeight={30} // adding an icon button won't stretch further
                     sx={{
                         background: colorScheme.light,
-                        color: colorScheme.contrastText,
-                        paddingX: 1,
+                        paddingX: 2,
                     }}>
                     {leftContent}
                     <Typography component={'span'}
