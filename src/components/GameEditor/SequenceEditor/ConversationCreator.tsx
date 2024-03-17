@@ -9,6 +9,8 @@ import { EditorHeading } from "../EditorHeading";
 import { makeBlankConversation } from "../defaults";
 import { cloneData } from "@/lib/clone";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import UploadIcon from "@mui/icons-material/Upload"
+import AddIcon from "@mui/icons-material/Add";
 
 interface Props {
     openInEditor: { (id: string): void }
@@ -58,15 +60,21 @@ export const ConversationCreator: React.FunctionComponent<Props> = ({ openInEdit
                 <ButtonWithTextInput
                     label="Start from scratch"
                     onEntry={handleStartFromScratch}
+                    buttonProps={{ startIcon: <AddIcon /> }}
                     confirmationText="Enter conversation name" />
-                <Button onClick={handleLoadButton} >load from data file</Button>
+                <Button
+                    onClick={handleLoadButton}
+                    startIcon={<UploadIcon />}
+                >load from data file</Button>
             </ButtonGroup>
 
             <Typography variant="h3">Duplicate existing conversation</Typography>
             <Box>
                 <ButtonGroup orientation="vertical">
                     {gameDesign.conversations.map(item => (
-                        <ButtonWithTextInput key={item.id} label={item.id} buttonProps={{ startIcon: <ContentCopyIcon /> }}
+                        <ButtonWithTextInput key={item.id}
+                            label={item.id}
+                            buttonProps={{ startIcon: <ContentCopyIcon /> }}
                             onEntry={(newId) => handleDuplicate(newId, item)}
                             confirmationText="Enter conversation name"
                         />
