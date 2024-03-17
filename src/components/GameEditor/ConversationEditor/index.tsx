@@ -12,7 +12,7 @@ import { EditorHeading } from "../EditorHeading";
 import { SequenceEditor } from "../SequenceEditor";
 import { StorageMenu } from "../StorageMenu";
 import { DataItemEditorProps } from "../dataEditors";
-import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
+import { makeBlankConversationChoice } from "../defaults";
 import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ConversationFlow } from "./ConversationFlow";
@@ -37,9 +37,7 @@ export class ConversationEditor extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-        const initialState = props.data ? cloneData(props.data) : makeBlankConversation()
         this.state = {
-            ...initialState,
             openBranchId: undefined,
             activeChoiceIndex: 0,
             sequenceDialogOpen: false,

@@ -9,8 +9,9 @@ import { cloneData } from "@/lib/clone";
 import { findById, findIndexById, listIds } from "@/lib/util";
 import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
+import { editorTheme } from "@/theme";
 import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
-import { Box, Container, Divider, IconButton, Stack, ThemeProvider, Typography } from "@mui/material";
+import { Box, Container, Divider, IconButton, Stack, ThemeProvider } from "@mui/material";
 import { Component } from "react";
 import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
@@ -24,6 +25,7 @@ import { RoomEditor } from "./RoomEditor";
 import { testSprite } from "./RoomEditor/testSprite";
 import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { SequenceEditor } from "./SequenceEditor";
+import { ConversationCreator } from "./SequenceEditor/ConversationCreator";
 import { SoundAssetTool } from "./SoundAssetTool";
 import { SpriteEditor } from "./SpriteEditor";
 import { TestGameDialog } from "./TestGameDialog";
@@ -31,7 +33,6 @@ import { Entry, Folder, TreeMenu } from "./TreeMenu";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
-import { editorTheme } from "@/theme";
 
 export type EditorOptions = {
     autoSave: boolean;
@@ -457,7 +458,14 @@ export default class GameEditor extends Component<Props, State>{
                                                             key={gameItemIds.conversations} data={this.currentConversation}
                                                         />
                                                     ) : (
-                                                        <p>no conversation</p>
+                                                        <ConversationCreator
+                                                            openInEditor={(newId) => {
+                                                                this.setState(state => {
+                                                                    const { gameItemIds } = state
+                                                                    gameItemIds['conversations'] = newId
+                                                                    return { gameItemIds, tabOpen: tabs.indexOf('conversations') }
+                                                                })
+                                                            }} />
                                                     )}
                                                 </>
                                             },
