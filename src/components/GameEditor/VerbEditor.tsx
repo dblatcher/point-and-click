@@ -1,18 +1,15 @@
 
 import { FieldDef, FieldValue, SchemaForm, getModification } from "@/components/SchemaForm";
+import { useGameDesign } from "@/context/game-design-context";
 import { Command, CommandTarget, ItemData, Verb } from "@/definitions";
 import { VerbSchema } from "@/definitions/Verb";
-import { cloneData } from "@/lib/clone";
 import { describeCommand, getDefaultResponseText, wildCard } from "@/lib/commandFunctions";
-import { listIds } from "@/lib/util";
-import { useState } from "react";
-import { EditorHeading } from "./EditorHeading";
-import { StorageMenu } from "./StorageMenu";
-import { makeBlankVerb } from "./defaults";
-import { useGameDesign } from "@/context/game-design-context";
 import { Box, Stack, Typography } from "@mui/material";
-import { EditorBox } from "./EditorBox";
+import { useState } from "react";
 import { StringInput } from "../SchemaForm/StringInput";
+import { DeleteDataItemButton } from "./DeleteDataItemButton";
+import { EditorBox } from "./EditorBox";
+import { EditorHeading } from "./EditorHeading";
 
 
 type Props = {
@@ -36,70 +33,45 @@ const testItem: ItemData = {
 }
 
 export const VerbEditor = ({ verb }: Props) => {
-    const { gameDesign, performUpdate, deleteArrayItem, options } = useGameDesign()
-
-    const updateData = (data: Verb) => { performUpdate('verbs', data) }
-    const deleteData = (index: number) => { deleteArrayItem(index, 'verbs') }
-
-    const [verbState, setVerbState] = useState<Verb>(cloneData(verb))
-
+    const { performUpdate } = useGameDesign()
     const [sampleTargetName, setSampleTargetName] = useState('TARGET')
     const [sampleItemName, setSampleItemName] = useState('ITEM')
 
-
-    const initialData = verb ? {
-        ...cloneData(verb)
-    } : makeBlankVerb();
-
     const handleUpdate = (value: FieldValue, field: FieldDef): void => {
         const property = field.key as keyof Verb;
-
         const mod = getModification(value, field) as Partial<Verb>
-        const updatedState = { ...verbState, ...mod }
-        setVerbState(updatedState)
-
-
-        if (options.autoSave && property !== 'id') {
-            const isExistingId = listIds(gameDesign.verbs).includes(verbState.id)
-            if (verb && isExistingId) {
-                updateData(updatedState)
-            }
+        if (property !== 'id') {
+            performUpdate('verbs', { ...verb, ...mod })
         }
     }
 
     const testCommandWithItem: Command = {
-        verb: { ...verbState, preposition: verbState.preposition || '[WITH]' },
+        verb: { ...verb, preposition: verb.preposition || '[WITH]' },
         target: { ...testTarget, name: sampleTargetName },
         item: { ...testItem, name: sampleItemName },
     }
     const testCommand: Command = {
-        verb: verbState,
+        verb: verb,
         target: { ...testTarget, name: sampleTargetName },
     }
 
-
     return (
-
         <Stack spacing={2}>
-            <EditorHeading heading="Verb Editor" itemId={initialData.id} />
+            <EditorHeading heading="Verb Editor" itemId={verb.id} />
             <Stack direction={'row'} spacing={2}>
                 <EditorBox title="Verb config" boxProps={{ flexBasis: 400 }}>
                     <SchemaForm
-                        data={verbState}
+                        data={verb}
                         schema={VerbSchema}
                         changeValue={(value, field) => { handleUpdate(value, field) }}
                     />
                 </EditorBox>
-                <Stack spacing={2}>
-                    <StorageMenu
-                        type="Verb"
-                        update={() => updateData(cloneData(verbState))}
-                        deleteItem={deleteData}
-                        existingIds={listIds(gameDesign.verbs)}
-                        data={cloneData(verbState)}
-                        originalId={verb.id}
-                        reset={() => { setVerbState(initialData) }}
-                        options={options}
+                <Stack spacing={2} justifyContent={'space-between'}>
+                    <DeleteDataItemButton
+                        dataItem={verb}
+                        itemType="verbs"
+                        itemTypeName="verb"
+                        buttonProps={{ variant: 'outlined' }}
                     />
                     <EditorBox title="wildcards for default responses">
                         <table>

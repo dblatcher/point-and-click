@@ -516,7 +516,7 @@ export default class GameEditor extends Component<Props, State>{
                                             {
                                                 label: 'verbs', content: currentVerb
                                                     ? <VerbEditor key={gameItemIds.verbs}
-                                                        verb={findById(gameItemIds.verbs, gameDesign.verbs)}
+                                                        verb={currentVerb}
                                                     />
                                                     : <>
                                                         <VerbMenuEditor />

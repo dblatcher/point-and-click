@@ -80,7 +80,7 @@ export const EndingEditor = (props: Props) => {
             />
 
             <Container>
-                <Typography variant="h5" component='p'>Preview</Typography>
+                <Typography variant="h3">Preview</Typography>
                 <EndingScreen ending={ending} inline={true} />
             </Container>
 
