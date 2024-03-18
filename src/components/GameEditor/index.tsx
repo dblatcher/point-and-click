@@ -32,7 +32,7 @@ import { TestGameDialog } from "./TestGameDialog";
 import { Entry, Folder, TreeMenu } from "./TreeMenu";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankItem, makeBlankSequence, makeBlankVerb } from "./defaults";
+import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankVerb } from "./defaults";
 import { DataItemCreator } from "./DataItemCreator";
 import { ItemDataSchema } from "@/definitions/ItemData";
 import { ActorDataSchema } from "@/definitions/ActorData";
@@ -350,6 +350,7 @@ export default class GameEditor extends Component<Props, State>{
 
         const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
         const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
+        const currentEnding = findById(gameItemIds.endings, gameDesign.endings)
 
         return (
             <ThemeProvider theme={editorTheme}>
@@ -508,10 +509,14 @@ export default class GameEditor extends Component<Props, State>{
                                                     />
                                             },
                                             {
-                                                label: 'endings', content: (
-                                                    <EndingEditor key={gameItemIds.endings}
-                                                        data={findById(gameItemIds.endings, gameDesign.endings)}
-                                                    />)
+                                                label: 'endings', content: currentEnding
+                                                    ? <EndingEditor ending={currentEnding} />
+                                                    : <DataItemCreator
+                                                        createBlank={makeBlankEnding}
+                                                        designProperty="endings"
+                                                        itemTypeName="ending"
+                                                        openInEditor={this.openItemInEditor}
+                                                    />
                                             },
                                             {
                                                 label: 'verbs', content: currentVerb

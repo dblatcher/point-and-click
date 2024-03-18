@@ -4,86 +4,66 @@ import { useGameDesign } from "@/context/game-design-context";
 import { Ending } from "@/definitions";
 import { EndingSchema } from "@/definitions/Ending";
 import { cloneData } from "@/lib/clone";
-import { listIds } from "@/lib/util";
 import imageService from "@/services/imageService";
-import { Container, Typography } from "@mui/material";
-import { useState } from "react";
+import { Card, Container, Grid, Typography } from "@mui/material";
+import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
-import { StorageMenu } from "../StorageMenu";
-import { makeBlankEnding } from "../defaults";
 
 
 type Props = {
-    data?: Ending;
+    ending: Ending;
 }
 
 
-export const EndingEditor = (props: Props) => {
-    const { gameDesign, deleteArrayItem, performUpdate, options } = useGameDesign()
-    const { data: originalData } = props
-
-    const initialState = (): Ending => {
-        return originalData ? {
-            ...cloneData(originalData)
-        } : makeBlankEnding()
-    }
-
-    const [ending, setEnding] = useState(initialState())
+export const EndingEditor = ({ ending }: Props) => {
+    const { performUpdate } = useGameDesign()
 
     const handleUpdate = (value: FieldValue, field: FieldDef): void => {
-        const newState = { ...ending, ...getModification(value, field) } as Ending
-        setEnding(newState)
-
-        if (options.autoSave && field.key !== 'id') {
-            const isExistingId = listIds(gameDesign.endings).includes(ending.id)
-            if (originalData && isExistingId) {
-                performUpdate('endings', newState)
-            }
+        if (field.key === 'id') {
+            console.warn('EndingEditor tried to change id', { value })
+            return
         }
+        const newState = { ...cloneData(ending), ...getModification(value, field) } as Ending
+        performUpdate('endings', newState)
     }
-
 
     return (
         <article>
-            <EditorHeading heading="Ending Editor" itemId={originalData?.id} />
-
-            <StorageMenu
-                type="ending"
-                update={() => performUpdate('endings', ending)}
-                deleteItem={(index) => deleteArrayItem(index, 'endings')}
-                existingIds={listIds(gameDesign.endings)}
-                data={ending}
-                originalId={originalData?.id}
-                reset={() => setEnding(initialState())}
-                options={options}
-            />
-
-            <SchemaForm
-                formLegend="Ending Config"
-                data={ending}
-                schema={EndingSchema}
-                changeValue={(value, field) => { handleUpdate(value, field) }}
-                options={{
-                    imageId: imageService.list()
-                }}
-                fieldWrapperProps={{
-                    spacing: 2,
-                }}
-                containerProps={{
-                    padding: 1,
-                    marginY: 1,
-                    maxWidth: 'sm',
-                    sx: {
-                        backgroundColor: 'grey.100',
-                    }
-                }}
-            />
-
+            <EditorHeading heading="Ending Editor" itemId={ending.id} />
+            <Grid container marginTop={2} spacing={2} marginBottom={2}>
+                <Grid item xs={8}>
+                    <Card>
+                        <SchemaForm
+                            formLegend="Ending Config"
+                            data={ending}
+                            schema={EndingSchema.omit({ id: true })}
+                            changeValue={(value, field) => { handleUpdate(value, field) }}
+                            options={{
+                                imageId: imageService.list()
+                            }}
+                            fieldWrapperProps={{
+                                spacing: 2,
+                            }}
+                            containerProps={{
+                                padding: 1,
+                                marginY: 1,
+                                maxWidth: 'sm'
+                            }}
+                        />
+                    </Card>
+                </Grid>
+                <Grid item xs={4}>
+                    <DeleteDataItemButton
+                        dataItem={ending}
+                        buttonProps={{ variant: 'outlined' }}
+                        itemType='endings'
+                        itemTypeName="ending" />
+                </Grid>
+            </Grid>
             <Container>
                 <Typography variant="h3">Preview</Typography>
                 <EndingScreen ending={ending} inline={true} />
             </Container>
-
         </article>
     )
 }
