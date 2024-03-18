@@ -65,3 +65,4 @@ export type GameDataItemType =
     | 'sprites'
     | 'sequences'
     | 'endings'
+    | 'verbs'

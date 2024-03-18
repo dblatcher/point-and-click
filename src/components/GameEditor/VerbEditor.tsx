@@ -16,7 +16,7 @@ import { StringInput } from "../SchemaForm/StringInput";
 
 
 type Props = {
-    data?: Verb,
+    verb: Verb,
 }
 
 const testTarget: CommandTarget = {
@@ -35,23 +35,20 @@ const testItem: ItemData = {
     name: '{{item}}',
 }
 
-export const VerbEditor = (props: Props) => {
+export const VerbEditor = ({ verb }: Props) => {
     const { gameDesign, performUpdate, deleteArrayItem, options } = useGameDesign()
-    const { data } = props
 
     const updateData = (data: Verb) => { performUpdate('verbs', data) }
     const deleteData = (index: number) => { deleteArrayItem(index, 'verbs') }
 
-    const [verbState, setVerbState] = useState<Verb>(data ? {
-        ...cloneData(data)
-    } : makeBlankVerb())
+    const [verbState, setVerbState] = useState<Verb>(cloneData(verb))
 
     const [sampleTargetName, setSampleTargetName] = useState('TARGET')
     const [sampleItemName, setSampleItemName] = useState('ITEM')
 
 
-    const initialData = data ? {
-        ...cloneData(data)
+    const initialData = verb ? {
+        ...cloneData(verb)
     } : makeBlankVerb();
 
     const handleUpdate = (value: FieldValue, field: FieldDef): void => {
@@ -64,7 +61,7 @@ export const VerbEditor = (props: Props) => {
 
         if (options.autoSave && property !== 'id') {
             const isExistingId = listIds(gameDesign.verbs).includes(verbState.id)
-            if (data && isExistingId) {
+            if (verb && isExistingId) {
                 updateData(updatedState)
             }
         }
@@ -100,7 +97,7 @@ export const VerbEditor = (props: Props) => {
                         deleteItem={deleteData}
                         existingIds={listIds(gameDesign.verbs)}
                         data={cloneData(verbState)}
-                        originalId={props.data?.id}
+                        originalId={verb.id}
                         reset={() => { setVerbState(initialData) }}
                         options={options}
                     />

@@ -32,7 +32,7 @@ import { TestGameDialog } from "./TestGameDialog";
 import { Entry, Folder, TreeMenu } from "./TreeMenu";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankItem, makeBlankSequence } from "./defaults";
+import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankItem, makeBlankSequence, makeBlankVerb } from "./defaults";
 import { DataItemCreator } from "./DataItemCreator";
 import { ItemDataSchema } from "@/definitions/ItemData";
 import { ActorDataSchema } from "@/definitions/ActorData";
@@ -349,6 +349,7 @@ export default class GameEditor extends Component<Props, State>{
         const sprites = [testSprite, ...gameDesign.sprites.map(data => new Sprite(data))]
 
         const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
+        const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
 
         return (
             <ThemeProvider theme={editorTheme}>
@@ -513,13 +514,21 @@ export default class GameEditor extends Component<Props, State>{
                                                     />)
                                             },
                                             {
-                                                label: 'verbs', content: <>
-                                                    <VerbEditor key={gameItemIds.verbs}
-                                                        data={findById(gameItemIds.verbs, gameDesign.verbs)}
+                                                label: 'verbs', content: currentVerb
+                                                    ? <VerbEditor key={gameItemIds.verbs}
+                                                        verb={findById(gameItemIds.verbs, gameDesign.verbs)}
                                                     />
-                                                    <br />
-                                                    <VerbMenuEditor />
-                                                </>
+                                                    : <>
+                                                        <VerbMenuEditor />
+                                                        <Box marginTop={2}>
+                                                            <DataItemCreator
+                                                                createBlank={makeBlankVerb}
+                                                                designProperty="verbs"
+                                                                itemTypeName="verb"
+                                                                openInEditor={this.openItemInEditor}
+                                                            />
+                                                        </Box>
+                                                    </>
                                             },
                                             { label: 'Image uploader', content: <ImageAssetTool /> },
                                             { label: 'Sound uploader', content: <SoundAssetTool /> },

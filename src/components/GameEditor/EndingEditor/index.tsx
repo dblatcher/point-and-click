@@ -1,4 +1,3 @@
-import { EditorOptions } from "@/components/GameEditor";
 import { FieldDef, FieldValue, SchemaForm, getModification } from "@/components/SchemaForm";
 import { EndingScreen } from "@/components/game-ui/EndingScreen";
 import { useGameDesign } from "@/context/game-design-context";
