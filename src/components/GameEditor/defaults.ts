@@ -1,6 +1,6 @@
 import {
     Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType,
-    Stage, ConversationChoice, Ending, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData
+    Stage, ConversationChoice, Ending, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData
 } from "@/definitions";
 import { ActStep, MoveStep } from "@/definitions/Order";
 
@@ -150,3 +150,15 @@ export const makeBlankActor = (): ActorData => ({
     dialogueColor: '#000000',
 
 })
+
+export function makeBlankSprite(): SpriteData {
+    return {
+        id: 'NEW_SPRITE',
+        defaultDirection: 'down',
+        animations: {
+            default: {
+                down: []
+            }
+        }
+    }
+}

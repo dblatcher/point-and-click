@@ -32,10 +32,11 @@ import { TestGameDialog } from "./TestGameDialog";
 import { Entry, Folder, TreeMenu } from "./TreeMenu";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankVerb } from "./defaults";
+import { defaultVerbs1, getBlankRoom, makeBlankSprite, makeBlankActor, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankVerb } from "./defaults";
 import { DataItemCreator } from "./DataItemCreator";
 import { ItemDataSchema } from "@/definitions/ItemData";
 import { ActorDataSchema } from "@/definitions/ActorData";
+import { SpriteDataSchema } from "@/definitions/SpriteSheet";
 
 export type EditorOptions = {
     autoSave: boolean;
@@ -351,6 +352,7 @@ export default class GameEditor extends Component<Props, State>{
         const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
         const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
         const currentEnding = findById(gameItemIds.endings, gameDesign.endings)
+        const { currentSprite } = this
 
         return (
             <ThemeProvider theme={editorTheme}>
@@ -480,14 +482,22 @@ export default class GameEditor extends Component<Props, State>{
                                                         }} />
                                             },
                                             {
-                                                label: 'Sprite Editor', content: <SpriteEditor
-                                                    updateData={data => { this.performUpdate('sprites', data) }}
-                                                    deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
-                                                    key={gameItemIds.sprites} data={this.currentSprite}
-                                                    options={options}
-                                                    provideSprite={this.provideSprite}
-                                                    spriteIds={listIds(gameDesign.sprites)}
-                                                />
+                                                label: 'Sprite Editor', content: currentSprite
+                                                    ? <SpriteEditor
+                                                        updateData={data => { this.performUpdate('sprites', data) }}
+                                                        deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
+                                                        key={gameItemIds.sprites} data={this.currentSprite}
+                                                        options={options}
+                                                        provideSprite={this.provideSprite}
+                                                        spriteIds={listIds(gameDesign.sprites)}
+                                                    />
+                                                    : <DataItemCreator
+                                                        createBlank={makeBlankSprite}
+                                                        schema={SpriteDataSchema}
+                                                        designProperty="sprites"
+                                                        itemTypeName="sprite"
+                                                        openInEditor={this.openItemInEditor}
+                                                    />
                                             },
                                             {
                                                 label: 'interactions', content: <InteractionEditor

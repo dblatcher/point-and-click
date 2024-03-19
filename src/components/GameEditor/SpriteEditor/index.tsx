@@ -15,6 +15,7 @@ import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type Enhance
 import { AnimationDialog } from "./AnimationDialog";
 import { AnimationGrid } from "./AnimationGrid";
 import { NewAnimationForm } from "./NewAnimationForm";
+import { makeBlankSprite } from "../defaults";
 
 
 type ExtraState = {
@@ -32,18 +33,6 @@ type SpriteEditorProps = DataItemEditorProps<SpriteData> & {
     spriteIds: string[];
 }
 
-function getBlankSprite(): SpriteData {
-    return {
-        id: 'NEW_SPRITE',
-        defaultDirection: 'left',
-        animations: {
-            default: {
-                left: []
-            }
-        }
-    }
-}
-
 export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState>{
 
     setStateWithAutosave: EnhancedSetStateFunction<SpriteEditorState>
@@ -51,7 +40,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     constructor(props: SpriteEditorProps) {
         super(props)
 
-        const initialData = props.data ? cloneData(props.data) : getBlankSprite()
+        const initialData = props.data ? cloneData(props.data) : makeBlankSprite()
 
         this.state = {
             ...initialData,
@@ -162,7 +151,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     handleNewButton() {
-        const newSprite = getBlankSprite()
+        const newSprite = makeBlankSprite()
         this.setState(newSprite)
     }
     handleLoadButton = async () => {
@@ -176,7 +165,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
     handleResetButton() {
         const { props } = this
-        const initialState = props.data ? cloneData(props.data) : getBlankSprite()
+        const initialState = props.data ? cloneData(props.data) : makeBlankSprite()
         this.setState({
             ...initialState
         })
