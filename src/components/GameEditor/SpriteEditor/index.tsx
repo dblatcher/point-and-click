@@ -3,15 +3,14 @@ import { ActorData, Animation, Direction, SpriteData, SpriteFrame } from "@/defi
 import { directions } from "@/definitions/SpriteSheet";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { downloadJsonFile } from "@/lib/files";
-import DownloadIcon from '@mui/icons-material/Download';
-import { Box, Button, Grid, Stack } from "@mui/material";
+import { Box, Grid, Stack } from "@mui/material";
 import { Component } from "react";
 import { EditorOptions } from "..";
 import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
 import { AnimationDialog } from "./AnimationDialog";
 import { AnimationGrid } from "./AnimationGrid";
+import { DownloadJsonButton } from "./DownloadJsonButton";
 import { NewAnimationForm } from "./NewAnimationForm";
 
 type ExtraState = {
@@ -182,10 +181,10 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     itemType="sprites"
                     itemTypeName="sprite"
                 />
-                <Button
-                    startIcon={<DownloadIcon />}
-                    onClick={(): void => { downloadJsonFile(this.props.data, 'sprite') }}
-                >Save to file</Button>
+                <DownloadJsonButton
+                    dataItem={this.props.data}
+                    itemTypeName="sprite"
+                />
             </Stack>
 
             <Grid container spacing={1}>

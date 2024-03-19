@@ -4,15 +4,14 @@ import { useGameDesign } from "@/context/game-design-context";
 import { Sequence } from "@/definitions";
 import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice } from "@/definitions/Conversation";
 import { cloneData } from "@/lib/clone";
-import { downloadJsonFile } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
-import DownloadIcon from '@mui/icons-material/Download';
 import { Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
 import { SequenceEditor } from "../SequenceEditor";
+import { DownloadJsonButton } from "../SpriteEditor/DownloadJsonButton";
 import { makeBlankConversationChoice } from "../defaults";
 import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
@@ -184,10 +183,10 @@ export const ConversationEditor = (props: Props) => {
         <Stack component={'article'} spacing={2}>
             <EditorHeading heading={`Conversation Editor`} itemId={conversation.id} />
             <ButtonGroup>
-                <Button
-                    startIcon={<DownloadIcon />}
-                    onClick={(): void => { downloadJsonFile(conversation, 'conversation') }}
-                >Save to file</Button>
+                  <DownloadJsonButton
+                    dataItem={conversation}
+                    itemTypeName="conversation"
+                />
                 <DeleteDataItemButton
                     dataItem={conversation}
                     itemType="conversations"
@@ -280,7 +279,7 @@ export const ConversationEditor = (props: Props) => {
             >
                 {sequenceForCurrentChoice && (
                     <DialogContent>
-                        <SequenceEditor key={choice.sequence} 
+                        <SequenceEditor key={choice.sequence}
                             isSubSection
                             data={sequenceForCurrentChoice}
                         />

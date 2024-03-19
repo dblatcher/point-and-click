@@ -7,14 +7,13 @@ import { ActorDataSchema, SoundValue } from "@/definitions/ActorData";
 import { directions } from "@/definitions/SpriteSheet";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
-import { downloadJsonFile } from "@/lib/files";
 import { listIds } from "@/lib/util";
-import DownloadIcon from '@mui/icons-material/Download';
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import { AccoridanedContent } from "../AccordianedContent";
 import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
 import { RecordEditor } from "../RecordEditor";
+import { DownloadJsonButton } from "../SpriteEditor/DownloadJsonButton";
 import { SpritePreview } from "../SpritePreview";
 import { PositionPreview } from "./PositionPreview";
 import { SoundValueForm } from "./SoundValueForm";
@@ -120,7 +119,7 @@ export const ActorEditor = (props: Props) => {
 
     const actor = props.data
     const { sprite: spriteId, width = 1, height = 1, soundEffectMap = {}, walkToX, walkToY, dialogueColor, room, x, y, direction } = actor
-    const spriteData = sprites.find(sprite => sprite.id === spriteId )?.data
+    const spriteData = sprites.find(sprite => sprite.id === spriteId)?.data
     const statusSuggestions = getStatusSuggestions(props.data.id, {
         sprites: spriteData ? [spriteData] : [],
         actors: [actor]
@@ -265,10 +264,10 @@ export const ActorEditor = (props: Props) => {
                                         itemType="actors"
                                         itemTypeName="actor"
                                     />
-                                    <Button
-                                        startIcon={<DownloadIcon />}
-                                        onClick={(): void => { downloadJsonFile(actor, 'actor') }}
-                                    >Save to file</Button>
+                                    <DownloadJsonButton
+                                        dataItem={actor}
+                                        itemTypeName="actor"
+                                    />
                                 </>
                             )
                         }
