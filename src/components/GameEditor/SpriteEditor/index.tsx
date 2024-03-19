@@ -1,22 +1,18 @@
-
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
-import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ActorData, Animation, Direction, SpriteData, SpriteFrame } from "@/definitions";
-import { SpriteDataSchema, directions } from "@/definitions/SpriteSheet";
+import { directions } from "@/definitions/SpriteSheet";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { uploadJsonData } from "@/lib/files";
-import { Grid, Stack } from "@mui/material";
+import { downloadJsonFile } from "@/lib/files";
+import DownloadIcon from '@mui/icons-material/Download';
+import { Box, Button, Grid, Stack } from "@mui/material";
 import { Component } from "react";
-import { EditorBox } from "../EditorBox";
+import { EditorOptions } from "..";
+import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
-import { StorageMenu } from "../StorageMenu";
-import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
 import { AnimationDialog } from "./AnimationDialog";
 import { AnimationGrid } from "./AnimationGrid";
 import { NewAnimationForm } from "./NewAnimationForm";
-import { makeBlankSprite } from "../defaults";
-
 
 type ExtraState = {
     selectedAnimation?: string;
@@ -26,54 +22,50 @@ type ExtraState = {
     selectedSheetId?: string;
 }
 
-type SpriteEditorState = SpriteData & ExtraState;
+type SpriteEditorState = ExtraState;
 
-type SpriteEditorProps = DataItemEditorProps<SpriteData> & {
+type SpriteEditorProps = {
+    data: SpriteData;
+    updateData: (data: SpriteData) => void;
+    deleteData: (index: number) => void;
+    options: EditorOptions;
     provideSprite: { (id: string): Sprite | undefined }
     spriteIds: string[];
 }
 
 export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState>{
 
-    setStateWithAutosave: EnhancedSetStateFunction<SpriteEditorState>
-
     constructor(props: SpriteEditorProps) {
         super(props)
-
-        const initialData = props.data ? cloneData(props.data) : makeBlankSprite()
-
         this.state = {
-            ...initialData,
             selectedAnimation: undefined,
             selectedCol: 0,
             selectedRow: 0,
         }
-        this.handleNewButton = this.handleNewButton.bind(this)
-        this.handleLoadButton = this.handleLoadButton.bind(this)
-        this.handleResetButton = this.handleResetButton.bind(this)
-        this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.addAnimation = this.addAnimation.bind(this)
         this.copyAnimation = this.copyAnimation.bind(this)
         this.editCycle = this.editCycle.bind(this)
         this.buildActorData = this.buildActorData.bind(this)
         this.deleteAnimation = this.deleteAnimation.bind(this)
         this.pickFrame = this.pickFrame.bind(this)
-        this.setStateWithAutosave = (input, callback) => {
-            higherLevelSetStateWithAutosave(this).bind(this)(input, callback);
-        }
+        this.updateFromPartial = this.updateFromPartial.bind(this)
     }
 
     get currentData(): SpriteData {
-        const data = cloneData(this.state as SpriteData & Partial<ExtraState>);
-        delete data.selectedAnimation;
-        delete data.selectedRow;
-        delete data.selectedCol;
-        delete data.selectedSheetId;
+        const data = cloneData(this.props.data);
         return data
     }
 
     get existingIds(): string[] {
         return this.props.spriteIds
+    }
+
+    updateFromPartial(input: { (): Partial<SpriteData> }): void {
+
+        const mod = input()
+
+        this.props.updateData({ ...this.props.data, ...mod })
+
     }
 
     pickFrame(selectedRow: number, selectedCol: number, selectedSheetId?: string) {
@@ -83,28 +75,23 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     changeValue(propery: keyof SpriteData, newValue: string) {
-        const modification: Partial<SpriteEditorState> = {}
+        const modification: Partial<SpriteData> = {}
+        if (propery === 'id') {
+            return console.warn('cannot change id', { newValue })
+        }
         switch (propery) {
-            case 'id':
-                if (typeof newValue === 'string') {
-                    modification[propery] = newValue.toUpperCase()
-                }
-                break;
             case 'defaultDirection':
                 if (directions.includes(newValue as Direction)) {
                     modification[propery] = newValue as Direction
                 }
                 break;
         }
-        if (propery === 'id') {
-            return this.setState({...this.state, ...modification})
-        }
-        this.setStateWithAutosave(modification)
+        this.updateFromPartial(() => modification)
     }
 
     addAnimation(animationKey: string) {
-        this.setStateWithAutosave(state => {
-            const { animations, defaultDirection } = state
+        this.updateFromPartial(() => {
+            const { animations, defaultDirection } = this.props.data
             const newAnimation: Animation = {}
             newAnimation[defaultDirection] = []
             animations[animationKey] = newAnimation
@@ -117,8 +104,8 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     copyAnimation(newName: string, animationKey: string) {
-        this.setStateWithAutosave(state => {
-            const { animations, defaultDirection } = state
+        this.updateFromPartial(() => {
+            const { animations, defaultDirection } = this.props.data
             const newAnimation = cloneData(animations[animationKey]) as Animation
             animations[newName] = newAnimation
             return {
@@ -128,16 +115,16 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     }
 
     deleteAnimation(animationKey: string) {
-        this.setStateWithAutosave(state => {
-            const { animations } = state
+        this.updateFromPartial(() => {
+            const { animations } = this.props.data
             delete animations[animationKey]
             return { animations }
         })
     }
 
     editCycle(animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined) {
-        this.setStateWithAutosave(state => {
-            const { animations, defaultDirection } = state
+        this.updateFromPartial(() => {
+            const { animations, defaultDirection } = this.props.data
             const animation = animations[animationKey]
             if (!animation) { return {} }
 
@@ -150,41 +137,13 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         })
     }
 
-    handleNewButton() {
-        const newSprite = makeBlankSprite()
-        this.setState(newSprite)
-    }
-    handleLoadButton = async () => {
-        const { data, error } = await uploadJsonData(SpriteDataSchema)
-        if (data) {
-            this.setState(data)
-        } else {
-            console.warn("NOT SPRITE DATA", error)
-        }
-    }
-
-    handleResetButton() {
-        const { props } = this
-        const initialState = props.data ? cloneData(props.data) : makeBlankSprite()
-        this.setState({
-            ...initialState
-        })
-    }
-    handleUpdateButton() {
-        const { currentData } = this
-        if (this.props.updateData) {
-            this.props.updateData(currentData)
-        }
-    }
-
     buildSprite(): Sprite {
-        return new Sprite(this.state)
+        return new Sprite(this.props.data)
     }
 
     buildActorData(animation: string, direction: Direction): ActorData {
-        const { state } = this
         const { provideSprite } = this.props
-        const image = provideSprite(state.id)?.getFrame(animation, 0, direction)?.image
+        const image = provideSprite(this.props.data.id)?.getFrame(animation, 0, direction)?.image
         const widthScale = image?.widthScale || 1
         const heightScale = image?.heightScale || 1
 
@@ -193,14 +152,15 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             id: 'preview',
             x: 75 / widthScale, y: 0,
             height: 150 / heightScale, width: 150 / widthScale,
-            sprite: state.id,
+            sprite: this.props.data.id,
             status: animation,
             direction
         }
     }
 
     render() {
-        const { id, defaultDirection, animations, selectedAnimation, selectedCol, selectedRow, selectedSheetId, selectedDirection } = this.state
+        const { selectedAnimation, selectedCol, selectedRow, selectedSheetId, selectedDirection } = this.state
+        const { defaultDirection, animations, } = this.props.data
         const { spriteIds } = this.props
         const sprite = this.buildSprite()
         const animationEntries = Object.entries(animations)
@@ -209,31 +169,23 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
             <EditorHeading heading="Sprite Editor" itemId={this.props.data?.id ?? '[new]'} />
 
             <Stack direction={'row'} spacing={2}>
-                <EditorBox title="config">
-                    <Stack spacing={2}>
-                        <StringInput label="sprite ID"
-                            value={id}
-                            inputHandler={value => this.changeValue('id', value)} />
-                        <SelectInput
-                            label="default direction"
-                            value={defaultDirection}
-                            options={directions}
-                            inputHandler={(choice) => { this.setState({ defaultDirection: choice as Direction }) }}
-                        />
-                    </Stack>
-                </EditorBox>
-                <StorageMenu
-                    data={this.currentData}
-                    originalId={this.props.data?.id}
-                    existingIds={spriteIds}
-                    type='sprite'
-                    update={this.handleUpdateButton}
-                    reset={this.handleResetButton}
-                    saveButton={true}
-                    load={this.handleLoadButton}
-                    deleteItem={this.props.deleteData}
-                    options={this.props.options}
+                <Box minWidth={100}>
+                    <SelectInput
+                        label="default direction"
+                        value={defaultDirection}
+                        options={directions}
+                        inputHandler={(choice) => { this.changeValue('defaultDirection', choice as Direction) }}
+                    />
+                </Box>
+                <DeleteDataItemButton
+                    dataItem={this.props.data}
+                    itemType="sprites"
+                    itemTypeName="sprite"
                 />
+                <Button
+                    startIcon={<DownloadIcon />}
+                    onClick={(): void => { downloadJsonFile(this.props.data, 'sprite') }}
+                >Save to file</Button>
             </Stack>
 
             <Grid container spacing={1}>
@@ -255,7 +207,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
 
                 <Grid xs={6} md={4} item minWidth={260}>
                     <NewAnimationForm
-                        existingKeys={Object.keys(this.state.animations)}
+                        existingKeys={Object.keys(this.props.data.animations)}
                         submit={this.addAnimation} />
                 </Grid>
             </Grid>
@@ -269,7 +221,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                     selectedCol,
                     selectedSheetId,
                 }}
-                spriteData={this.state}
+                spriteData={this.props.data}
                 actorData={(selectedAnimation && selectedDirection) ? this.buildActorData(selectedAnimation, selectedDirection) : undefined}
                 editCycle={this.editCycle}
                 pickFrame={this.pickFrame}
