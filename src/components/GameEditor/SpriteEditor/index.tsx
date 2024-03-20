@@ -108,10 +108,6 @@ export class SpriteEditor extends Component<SpriteEditorProps, State>{
         this.updateFromPartial({ animations })
     }
 
-    buildSprite(): Sprite {
-        return new Sprite(this.props.data)
-    }
-
     buildActorData(animation: string, direction: Direction): ActorData {
         const { provideSprite } = this.props
         const image = provideSprite(this.props.data.id)?.getFrame(animation, 0, direction)?.image
@@ -132,7 +128,7 @@ export class SpriteEditor extends Component<SpriteEditorProps, State>{
     render() {
         const { selectedAnimation, selectedCol, selectedRow, selectedSheetId, selectedDirection } = this.state
         const { defaultDirection, animations, } = this.props.data
-        const sprite = this.buildSprite()
+        const sprite = new Sprite(this.props.data)
         const animationEntries = Object.entries(animations)
 
         return <Stack component={'article'} spacing={1}>
