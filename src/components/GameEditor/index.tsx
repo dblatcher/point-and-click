@@ -391,7 +391,6 @@ export default class GameEditor extends Component<Props, State>{
                                             undo={this.undo}
                                         />
                                         <OptionsMenu options={this.state.options} setOptions={options => { this.setState({ options }) }} />
-
                                         <IconButton
                                             onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
                                         >
@@ -483,13 +482,10 @@ export default class GameEditor extends Component<Props, State>{
                                             },
                                             {
                                                 label: 'Sprite Editor', content: currentSprite
-                                                    ? <SpriteEditor
+                                                    ? <SpriteEditor key={gameItemIds.sprites}
+                                                        data={currentSprite}
                                                         updateData={data => { this.performUpdate('sprites', data) }}
-                                                        deleteData={index => { this.deleteArrayItem(index, 'sprites') }}
-                                                        key={gameItemIds.sprites} data={this.currentSprite}
-                                                        options={options}
                                                         provideSprite={this.provideSprite}
-                                                        spriteIds={listIds(gameDesign.sprites)}
                                                     />
                                                     : <DataItemCreator
                                                         createBlank={makeBlankSprite}

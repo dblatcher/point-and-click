@@ -5,7 +5,6 @@ import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
 import { Box, Grid, Stack } from "@mui/material";
 import { Component } from "react";
-import { EditorOptions } from "..";
 import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
 import { AnimationDialog } from "./AnimationDialog";
@@ -13,7 +12,7 @@ import { AnimationGrid } from "./AnimationGrid";
 import { DownloadJsonButton } from "./DownloadJsonButton";
 import { NewAnimationForm } from "./NewAnimationForm";
 
-type ExtraState = {
+type State = {
     selectedAnimation?: string;
     selectedDirection?: Direction;
     selectedRow: number;
@@ -21,18 +20,13 @@ type ExtraState = {
     selectedSheetId?: string;
 }
 
-type SpriteEditorState = ExtraState;
-
 type SpriteEditorProps = {
     data: SpriteData;
     updateData: (data: SpriteData) => void;
-    deleteData: (index: number) => void;
-    options: EditorOptions;
     provideSprite: { (id: string): Sprite | undefined }
-    spriteIds: string[];
 }
 
-export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState>{
+export class SpriteEditor extends Component<SpriteEditorProps, State>{
 
     constructor(props: SpriteEditorProps) {
         super(props)
@@ -50,21 +44,9 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
         this.updateFromPartial = this.updateFromPartial.bind(this)
     }
 
-    get currentData(): SpriteData {
-        const data = cloneData(this.props.data);
-        return data
-    }
-
-    get existingIds(): string[] {
-        return this.props.spriteIds
-    }
-
-    updateFromPartial(input: { (): Partial<SpriteData> }): void {
-
-        const mod = input()
-
+    updateFromPartial(input: Partial<SpriteData>): void {
+        const mod = input
         this.props.updateData({ ...this.props.data, ...mod })
-
     }
 
     pickFrame(selectedRow: number, selectedCol: number, selectedSheetId?: string) {
@@ -85,55 +67,45 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
                 }
                 break;
         }
-        this.updateFromPartial(() => modification)
+        this.updateFromPartial(modification)
     }
 
     addAnimation(animationKey: string) {
-        this.updateFromPartial(() => {
-            const { animations, defaultDirection } = this.props.data
-            const newAnimation: Animation = {}
-            newAnimation[defaultDirection] = []
-            animations[animationKey] = newAnimation
-            return {
-                animations,
-                selectedAnimation: animationKey,
-                selectedDirection: defaultDirection
-            }
+        const { animations, defaultDirection } = cloneData(this.props.data);
+        const newAnimation: Animation = {}
+        newAnimation[defaultDirection] = []
+        animations[animationKey] = newAnimation
+        this.updateFromPartial({ animations })
+        this.setState({
+            selectedAnimation: animationKey,
+            selectedDirection: defaultDirection
         })
     }
 
     copyAnimation(newName: string, animationKey: string) {
-        this.updateFromPartial(() => {
-            const { animations, defaultDirection } = this.props.data
-            const newAnimation = cloneData(animations[animationKey]) as Animation
-            animations[newName] = newAnimation
-            return {
-                animations,
-            }
-        })
+        const { animations } = cloneData(this.props.data);
+        const newAnimation = cloneData(animations[animationKey]) as Animation
+        animations[newName] = newAnimation
+        this.updateFromPartial({ animations })
     }
 
     deleteAnimation(animationKey: string) {
-        this.updateFromPartial(() => {
-            const { animations } = this.props.data
-            delete animations[animationKey]
-            return { animations }
-        })
+        const { animations } = cloneData(this.props.data);
+        delete animations[animationKey]
+        this.updateFromPartial({ animations })
     }
 
     editCycle(animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined) {
-        this.updateFromPartial(() => {
-            const { animations, defaultDirection } = this.props.data
-            const animation = animations[animationKey]
-            if (!animation) { return {} }
+        const { animations, defaultDirection } = cloneData(this.props.data);
+        const animation = animations[animationKey]
+        if (!animation) { return }
+        if (newValue) {
+            animation[direction] = newValue
+        } if (direction !== defaultDirection && !newValue) {
+            delete animation[direction]
+        }
 
-            if (newValue) {
-                animation[direction] = newValue
-            } if (direction !== defaultDirection && !newValue) {
-                delete animation[direction]
-            }
-            return { animations }
-        })
+        this.updateFromPartial({ animations })
     }
 
     buildSprite(): Sprite {
@@ -160,13 +132,11 @@ export class SpriteEditor extends Component<SpriteEditorProps, SpriteEditorState
     render() {
         const { selectedAnimation, selectedCol, selectedRow, selectedSheetId, selectedDirection } = this.state
         const { defaultDirection, animations, } = this.props.data
-        const { spriteIds } = this.props
         const sprite = this.buildSprite()
         const animationEntries = Object.entries(animations)
 
         return <Stack component={'article'} spacing={1}>
             <EditorHeading heading="Sprite Editor" itemId={this.props.data?.id ?? '[new]'} />
-
             <Stack direction={'row'} spacing={2}>
                 <Box minWidth={100}>
                     <SelectInput
