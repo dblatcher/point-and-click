@@ -19,7 +19,6 @@ import { EndingEditor } from "./EndingEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
 import { InteractionEditor } from "./InteractionEditor";
 import { ItemEditor } from "./ItemEditor";
-import { OptionsMenu } from "./OptionsMenu";
 import { Overview } from "./Overview";
 import { RoomEditor } from "./RoomEditor";
 import { testSprite } from "./RoomEditor/testSprite";
@@ -39,10 +38,6 @@ import { ActorDataSchema } from "@/definitions/ActorData";
 import { SpriteDataSchema } from "@/definitions/SpriteSheet";
 import { RoomDataSchema } from "@/definitions/RoomData";
 
-export type EditorOptions = {
-    autoSave: boolean;
-}
-
 type State = {
     gameDesign: GameDesign;
     tabOpen: number;
@@ -58,7 +53,6 @@ type State = {
     };
     resetTimeStamp: number;
 
-    options: EditorOptions;
     history: { gameDesign: GameDesign; label: string }[];
     undoTime: number;
     gameTestDialogOpen: boolean;
@@ -126,9 +120,6 @@ export default class GameEditor extends Component<Props, State>{
             tabOpen: tabs.indexOf('main'),
             gameItemIds: {},
             resetTimeStamp: 0,
-            options: {
-                autoSave: true
-            },
             history: [],
             undoTime: 0,
             gameTestDialogOpen: false,
@@ -313,7 +304,7 @@ export default class GameEditor extends Component<Props, State>{
 
     render() {
         const {
-            gameDesign, tabOpen, options, gameItemIds, history,
+            gameDesign, tabOpen, gameItemIds, history,
         } = this.state
         const { performUpdate, deleteArrayItem } = this
 
@@ -361,7 +352,6 @@ export default class GameEditor extends Component<Props, State>{
                     gameDesign: this.state.gameDesign,
                     performUpdate,
                     deleteArrayItem,
-                    options,
                 }} >
                     <SpritesProvider value={sprites}>
                         <Container maxWidth='xl'
@@ -391,7 +381,6 @@ export default class GameEditor extends Component<Props, State>{
                                             history={history}
                                             undo={this.undo}
                                         />
-                                        <OptionsMenu options={this.state.options} setOptions={options => { this.setState({ options }) }} />
                                         <IconButton
                                             onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
                                         >

@@ -28,7 +28,7 @@ export const ConversationEditor = (props: Props) => {
     const [sequenceDialogOpen, setSequenceDialogOpen] = useState<boolean>(false)
     const [editOrderDialogBranchId, setEditOrderDialogBranchId] = useState<string | undefined>(undefined)
 
-    const { gameDesign, performUpdate, options } = useGameDesign()
+    const { gameDesign, performUpdate } = useGameDesign()
     const { conversations } = gameDesign
     const { conversation } = props
 
