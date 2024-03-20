@@ -442,8 +442,7 @@ export default class GameEditor extends Component<Props, State>{
                                                         deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
                                                         existingRoomIds={listIds(gameDesign.rooms)}
                                                         actors={gameDesign.actors}
-                                                        options={options}
-                                                        key={gameItemIds.rooms} data={this.currentRoom} />
+                                                        key={gameItemIds.rooms} data={currentRoom} />
                                                     : <DataItemCreator
                                                         createBlank={getBlankRoom}
                                                         schema={RoomDataSchema}
