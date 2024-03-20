@@ -4,19 +4,16 @@ import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ActorData, BackgroundLayer, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import { cloneData } from "@/lib/clone";
-import { uploadJsonData } from "@/lib/files";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import imageService from "@/services/imageService";
-import AddIcon from "@mui/icons-material/Add";
-import { Alert, Box, Button, Container, Grid, Stack } from "@mui/material";
+import { Alert, Container, Grid, Stack } from "@mui/material";
 import { Component } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
 import { ArrayControl } from "../ArrayControl";
+import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
-import { StorageMenu } from "../StorageMenu";
-import { higherLevelSetStateWithAutosave, type DataItemEditorProps, type EnhancedSetStateFunction } from "../dataEditors";
-import { getBlankRoom } from "../defaults";
+import { DownloadJsonButton } from "../SpriteEditor/DownloadJsonButton";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
@@ -26,16 +23,19 @@ import { ScalingControl } from "./ScalingControl";
 import { ShapeChangeFunction } from "./ShapeControl";
 import { ZoneSetEditor } from "./ZoneSetEditor";
 
-export type RoomEditorState = RoomData & {
+export type RoomEditorState = {
     clickEffect?: ClickEffect;
     activeWalkableIndex?: number;
     activeObstacleIndex?: number;
     activeHotspotIndex?: number;
 };
 
-type RoomEditorProps = DataItemEditorProps<RoomData> & {
+type RoomEditorProps = {
+    updateData: (data: RoomData) => void;
+    deleteData: (index: number) => void;
     existingRoomIds: string[];
     actors?: ActorData[];
+    data: RoomData;
 }
 
 const defaultParallax = 1;
@@ -55,14 +55,10 @@ function makeNewZone(point: Point, effect: NewObstableEffect | NewWalkableEffect
 
 export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
-    setStateWithAutosave: EnhancedSetStateFunction<RoomEditorState>
-
     constructor(props: RoomEditor['props']) {
         super(props)
 
-        const initialState = props.data ? cloneData(props.data) : getBlankRoom()
         this.state = {
-            ...initialState,
             activeWalkableIndex: 0,
             activeObstacleIndex: 0,
             activeHotspotIndex: 0,
@@ -75,24 +71,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.changeZone = this.changeZone.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.setClickEffect = this.setClickEffect.bind(this)
-        this.handleLoadButton = this.handleLoadButton.bind(this)
-        this.handleResetButton = this.handleResetButton.bind(this)
-        this.handleUpdateButton = this.handleUpdateButton.bind(this)
         this.selectZone = this.selectZone.bind(this)
-        this.setStateWithAutosave = higherLevelSetStateWithAutosave(this).bind(this)
     }
 
-    get currentData(): RoomData {
-        const roomData = cloneData(this.state) as RoomData & Partial<RoomEditorState>;
-        delete roomData.clickEffect
-        delete roomData.activeObstacleIndex
-        delete roomData.activeWalkableIndex
-        delete roomData.activeHotspotIndex
-        return roomData
-    }
-
-    get existingIds(): string[] {
-        return this.props.existingRoomIds
+    updateFromPartial(mod: Partial<RoomData>): void {
+        this.props.updateData({ ...cloneData(this.props.data), ...mod })
     }
 
     setClickEffect(clickEffect?: ClickEffect) {
@@ -102,8 +85,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     handleRoomClick(pointClicked: { x: number; y: number }, viewAngle: number) {
         const {
             clickEffect,
-            obstacleAreas = [], hotspots = [], walkableAreas = []
         } = this.state
+        const {
+            obstacleAreas = [], hotspots = [], walkableAreas = []
+        } = this.props.data
         let {
             activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
         } = this.state
@@ -116,10 +101,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const targetPoint = [
             'OBSTACLE', 'POLYGON_POINT_OBSTACLE', 'WALKABLE', 'POLYGON_POINT_WALKABLE', 'HOTSPOT_WALKTO_POINT'
         ].includes(clickEffect.type)
-            ? locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngle, this.state)
+            ? locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngle, this.props.data)
             : {
-                x: roundedPoint.x - getShift(viewAngle, defaultParallax, this.state),
-                y: this.state.height - roundedPoint.y
+                x: roundedPoint.x - getShift(viewAngle, defaultParallax, this.props.data),
+                y: this.props.data.height - roundedPoint.y
             }
 
         const getNextClickEffect = (clickEffect: ClickEffect): ClickEffect | undefined => {
@@ -179,8 +164,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             }
         }
 
-        this.setStateWithAutosave({
+        this.updateFromPartial({
             hotspots, obstacleAreas, walkableAreas,
+        })
+        this.setState({
             activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
             clickEffect: getNextClickEffect(clickEffect),
         })
@@ -199,7 +186,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     removeZone(index: number, type?: 'hotspot' | 'obstacle' | 'walkable') {
-        const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = this.state
+        const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = this.props.data
         switch (type) {
             case 'hotspot':
                 hotspots.splice(index, 1)
@@ -211,12 +198,12 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 walkableAreas.splice(index, 1)
                 break;
         }
-        this.setStateWithAutosave({ obstacleAreas, hotspots, walkableAreas })
+        this.updateFromPartial({ obstacleAreas, hotspots, walkableAreas })
     }
 
     changeZone: ShapeChangeFunction = (index, propery, newValue, type) => {
-        this.setStateWithAutosave(state => {
-            const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = state
+        const getMod = () => {
+            const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = this.props.data
             function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
                 switch (propery) {
                     case 'x':
@@ -280,12 +267,13 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 }
             }
             return { obstacleAreas, hotspots, walkableAreas }
-        })
+        }
+        this.updateFromPartial(getMod())
     }
 
     changeProperty(propery: keyof RoomData, value: unknown): void {
         console.log('change', propery, value)
-        const mod: Partial<RoomEditorState> = {}
+        const mod: Partial<RoomData> = {}
 
         switch (propery) {
             case 'background': {
@@ -295,11 +283,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 }
             }
         }
-        this.setStateWithAutosave(mod)
+        this.updateFromPartial(mod)
     }
 
     changeBackground(index: number, propery: keyof BackgroundLayer, newValue: string | number) {
-        const { background } = this.state
+        const { background } = this.props.data
         const layer = background[index]
 
         switch (propery) {
@@ -315,32 +303,12 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 break;
         }
 
-        this.setStateWithAutosave({ background })
+        this.updateFromPartial({ background })
     }
     addBackground(newLayer: BackgroundLayer) {
-        const { background } = this.state
+        const { background } = this.props.data
         background.push(newLayer)
-        this.setStateWithAutosave({ background })
-    }
-    handleLoadButton = async () => {
-        const { data, error } = await uploadJsonData(RoomDataSchema)
-        if (data) {
-            this.setState(data)
-        } else {
-            console.warn("NOT ROOM DATA", error)
-        }
-    }
-    handleResetButton() {
-        const { props } = this
-        const initialState = props.data ? cloneData(props.data) : getBlankRoom()
-        this.setState({
-            ...initialState
-        })
-    }
-    handleUpdateButton() {
-        if (this.props.updateData) {
-            this.props.updateData(this.currentData)
-        }
+        this.updateFromPartial({ background })
     }
     selectZone(folderId: string, data?: { id: string }) {
         switch (folderId) {
@@ -366,7 +334,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 if (!data) {
                     return this.setState({ 'activeHotspotIndex': undefined })
                 }
-                const zoneIndex = this.state.hotspots?.indexOf(data as HotspotZone) || 0
+                const zoneIndex = this.props.data.hotspots?.indexOf(data as HotspotZone) || 0
                 this.setState({ 'activeHotspotIndex': zoneIndex })
                 break;
         }
@@ -377,8 +345,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             background, obstacleAreas = [], hotspots = [], walkableAreas = [],
             scaling = [],
             width, frameWidth,
-        } = this.state
-        const { existingRoomIds = [], options, deleteData } = this.props
+        } = this.props.data
         const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
 
         return [
@@ -387,14 +354,13 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     <Container maxWidth="sm">
                         <SchemaForm
                             schema={RoomDataSchema.pick({
-                                id: true,
                                 height: true,
                                 width: true,
                                 frameWidth: true,
                             })}
-                            data={this.state}
+                            data={this.props.data}
                             changeValue={(value, fieldDef,) => {
-                                this.setStateWithAutosave(
+                                this.updateFromPartial(
                                     getModification(value, fieldDef)
                                 )
                             }}
@@ -405,18 +371,18 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
                         <StringInput label="backdrop color"
                             type="color"
-                            value={this.state.backgroundColor ?? '#ffffff'}
+                            value={this.props.data.backgroundColor ?? '#ffffff'}
                             optional
-                            inputHandler={value => this.setStateWithAutosave({ backgroundColor: value })} />
+                            inputHandler={value => this.updateFromPartial({ backgroundColor: value })} />
                     </Container>
                 )
             },
             {
                 label: 'Scaling', content: (
                     <ScalingControl
-                        change={(scaling: ScaleLevel) => { this.setStateWithAutosave({ scaling }) }}
+                        change={(scaling: ScaleLevel) => { this.updateFromPartial({ scaling }) }}
                         scaling={scaling}
-                        height={this.state.height} />
+                        height={this.props.data.height} />
                 )
             },
             {
@@ -425,7 +391,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         list={background}
                         buttonSize="small"
                         horizontalMoveButtons
-                        mutateList={(background) => { this.setStateWithAutosave({ background }) }}
+                        mutateList={(background) => { this.updateFromPartial({ background }) }}
                         describeItem={(layer, index) => (
                             <BackgroundLayerControl index={index}
                                 imageAssets={imageAssets}
@@ -483,17 +449,14 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             {
                 label: 'storage', content: (
                     <Container maxWidth="xs">
-                        <StorageMenu
-                            type="room"
-                            data={this.currentData}
-                            originalId={this.props.data?.id}
-                            existingIds={existingRoomIds}
-                            reset={this.handleResetButton}
-                            update={this.handleUpdateButton}
-                            deleteItem={deleteData}
-                            saveButton={true}
-                            load={this.handleLoadButton}
-                            options={options}
+                        <DownloadJsonButton
+                            dataItem={this.props.data}
+                            itemTypeName="room"
+                        />
+                        <DeleteDataItemButton
+                            dataItem={this.props.data}
+                            itemType="rooms"
+                            itemTypeName="room"
                         />
                     </Container>
                 )
@@ -503,38 +466,22 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     render() {
-        const { id, clickEffect } = this.state
+        const { clickEffect } = this.state
+        const { id } = this.props.data
         const { actors = [] } = this.props
         const tabs = this.buildTabs()
-        const originalId = this.props.data?.id
-        const currentId = this.currentData.id
-        const isNewItem = currentId !== originalId
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
             <Grid container flexWrap={'nowrap'} spacing={1}>
                 <Grid item xs={4}>
-
-                    {isNewItem && (
-                        <Box paddingY={1}>
-                            <Button
-                                variant="contained"
-                                fullWidth
-                                startIcon={<AddIcon />}
-                                onClick={this.handleUpdateButton}
-                            >
-                                Save new Room: {id}
-                            </Button>
-                        </Box>
-                    )}
-
                     <AccoridanedContent tabs={tabs} />
                 </Grid>
                 <Grid item flex={1}>
                     <div style={{ position: 'sticky', top: 1 }}>
                         <Preview
                             actors={actors}
-                            roomData={this.state}
+                            roomData={this.props.data}
                             clickEffect={clickEffect}
                             activeHotspotIndex={this.state.activeHotspotIndex}
                             handleRoomClick={this.handleRoomClick} />

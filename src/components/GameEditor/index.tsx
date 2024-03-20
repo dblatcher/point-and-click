@@ -37,6 +37,7 @@ import { DataItemCreator } from "./DataItemCreator";
 import { ItemDataSchema } from "@/definitions/ItemData";
 import { ActorDataSchema } from "@/definitions/ActorData";
 import { SpriteDataSchema } from "@/definitions/SpriteSheet";
+import { RoomDataSchema } from "@/definitions/RoomData";
 
 export type EditorOptions = {
     autoSave: boolean;
@@ -352,7 +353,7 @@ export default class GameEditor extends Component<Props, State>{
         const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
         const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
         const currentEnding = findById(gameItemIds.endings, gameDesign.endings)
-        const { currentSprite } = this
+        const { currentSprite, currentRoom } = this
 
         return (
             <ThemeProvider theme={editorTheme}>
@@ -435,13 +436,21 @@ export default class GameEditor extends Component<Props, State>{
                                                 label: 'main', content: <Overview />
                                             },
                                             {
-                                                label: 'Room Editor', content: <RoomEditor
-                                                    updateData={data => { this.performUpdate('rooms', data) }}
-                                                    deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
-                                                    existingRoomIds={listIds(gameDesign.rooms)}
-                                                    actors={gameDesign.actors}
-                                                    options={options}
-                                                    key={gameItemIds.rooms} data={this.currentRoom} />
+                                                label: 'Room Editor', content: currentRoom
+                                                    ? <RoomEditor
+                                                        updateData={data => { this.performUpdate('rooms', data) }}
+                                                        deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
+                                                        existingRoomIds={listIds(gameDesign.rooms)}
+                                                        actors={gameDesign.actors}
+                                                        options={options}
+                                                        key={gameItemIds.rooms} data={this.currentRoom} />
+                                                    : <DataItemCreator
+                                                        createBlank={getBlankRoom}
+                                                        schema={RoomDataSchema}
+                                                        designProperty="rooms"
+                                                        itemTypeName="room"
+                                                        openInEditor={this.openItemInEditor}
+                                                    />
                                             },
                                             {
                                                 label: 'Items',
