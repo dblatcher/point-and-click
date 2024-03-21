@@ -31,12 +31,13 @@ import { TestGameDialog } from "./TestGameDialog";
 import { Entry, Folder, TreeMenu } from "./TreeMenu";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { defaultVerbs1, getBlankRoom, makeBlankSprite, makeBlankActor, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankVerb } from "./defaults";
+import { defaultVerbs1, getBlankRoom, makeBlankSprite, makeBlankActor, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankVerb, makeBlankConversation } from "./defaults";
 import { DataItemCreator } from "./DataItemCreator";
 import { ItemDataSchema } from "@/definitions/ItemData";
 import { ActorDataSchema } from "@/definitions/ActorData";
 import { SpriteDataSchema } from "@/definitions/SpriteSheet";
 import { RoomDataSchema } from "@/definitions/RoomData";
+import { ConversationSchema } from "@/definitions/Conversation";
 
 type State = {
     gameDesign: GameDesign;
@@ -472,10 +473,13 @@ export default class GameEditor extends Component<Props, State>{
                                                 label: 'Conversation Editor', content: this.currentConversation
                                                     ? <ConversationEditor key={gameItemIds.conversations}
                                                         conversation={this.currentConversation} />
-                                                    : <ConversationCreator
-                                                        openInEditor={(newId) => {
-                                                            this.openItemInEditor('conversations', newId)
-                                                        }} />
+                                                    : <DataItemCreator
+                                                        createBlank={makeBlankConversation}
+                                                        schema={ConversationSchema}
+                                                        designProperty="conversations"
+                                                        itemTypeName="convesation"
+                                                        openInEditor={this.openItemInEditor}
+                                                    />
                                             },
                                             {
                                                 label: 'Sprite Editor', content: currentSprite
