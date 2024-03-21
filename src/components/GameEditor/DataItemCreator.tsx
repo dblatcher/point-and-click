@@ -13,7 +13,6 @@ import { EditorHeading } from "./EditorHeading";
 import { GameDataItemType } from "@/definitions/Game";
 
 type Props<DataType extends GameDataItem> = {
-    openInEditor: { (designProperty: GameDataItemType, id: string): void }
     createBlank: { (): DataType }
     schema?: ZodObject<ZodRawShape>
     designProperty: GameDataItemType
@@ -24,8 +23,8 @@ const DATA_TYPES_WITH_JSON: GameDataItemType[] = [
     'rooms', 'actors', 'conversations', 'sprites',
 ]
 
-export const DataItemCreator = <DataType extends GameDataItem,>({ openInEditor, createBlank, schema, designProperty, itemTypeName }: Props<DataType>) => {
-    const { gameDesign, performUpdate } = useGameDesign()
+export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, schema, designProperty, itemTypeName }: Props<DataType>) => {
+    const { gameDesign, performUpdate, openInEditor } = useGameDesign()
     const [warning, setWarning] = useState<string | undefined>()
 
     const handleStartFromScratch = (proposedId: string) => {

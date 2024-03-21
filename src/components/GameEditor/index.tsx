@@ -24,7 +24,6 @@ import { RoomEditor } from "./RoomEditor";
 import { testSprite } from "./RoomEditor/testSprite";
 import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { SequenceEditor } from "./SequenceEditor";
-import { ConversationCreator } from "./ConversationCreator";
 import { SoundAssetTool } from "./SoundAssetTool";
 import { SpriteEditor } from "./SpriteEditor";
 import { TestGameDialog } from "./TestGameDialog";
@@ -38,6 +37,7 @@ import { ActorDataSchema } from "@/definitions/ActorData";
 import { SpriteDataSchema } from "@/definitions/SpriteSheet";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import { ConversationSchema } from "@/definitions/Conversation";
+import { GameDataItemType } from "@/definitions/Game";
 
 type State = {
     gameDesign: GameDesign;
@@ -133,7 +133,7 @@ export default class GameEditor extends Component<Props, State>{
         this.loadNewGame = this.loadNewGame.bind(this)
         this.provideSprite = this.provideSprite.bind(this)
         this.undo = this.undo.bind(this)
-        this.openItemInEditor = this.openItemInEditor.bind(this)
+        this.openInEditor = this.openInEditor.bind(this)
     }
 
     respondToServiceUpdate(payload: unknown) {
@@ -284,7 +284,7 @@ export default class GameEditor extends Component<Props, State>{
         })
     }
 
-    openItemInEditor(itemType: keyof State['gameItemIds'], itemId: string | undefined) {
+    openInEditor(itemType: GameDataItemType, itemId: string | undefined) {
         this.setState(state => {
             const { gameItemIds } = state
             switch (itemType) {
@@ -307,7 +307,8 @@ export default class GameEditor extends Component<Props, State>{
         const {
             gameDesign, tabOpen, gameItemIds, history,
         } = this.state
-        const { performUpdate, deleteArrayItem } = this
+        const { performUpdate, deleteArrayItem, openInEditor, currentSprite, currentRoom } = this
+
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
@@ -345,7 +346,6 @@ export default class GameEditor extends Component<Props, State>{
         const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
         const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
         const currentEnding = findById(gameItemIds.endings, gameDesign.endings)
-        const { currentSprite, currentRoom } = this
 
         return (
             <ThemeProvider theme={editorTheme}>
@@ -353,6 +353,7 @@ export default class GameEditor extends Component<Props, State>{
                     gameDesign: this.state.gameDesign,
                     performUpdate,
                     deleteArrayItem,
+                    openInEditor,
                 }} >
                     <SpritesProvider value={sprites}>
                         <Container maxWidth='xl'
@@ -407,7 +408,7 @@ export default class GameEditor extends Component<Props, State>{
                                                 case 'sequences':
                                                 case 'endings':
                                                 case 'verbs':
-                                                    this.openItemInEditor(folderId, newId)
+                                                    this.openInEditor(folderId, newId)
                                             }
                                         }}
                                     />
@@ -438,7 +439,6 @@ export default class GameEditor extends Component<Props, State>{
                                                         schema={RoomDataSchema}
                                                         designProperty="rooms"
                                                         itemTypeName="room"
-                                                        openInEditor={this.openItemInEditor}
                                                     />
                                             },
                                             {
@@ -453,7 +453,6 @@ export default class GameEditor extends Component<Props, State>{
                                                         schema={ItemDataSchema}
                                                         designProperty="items"
                                                         itemTypeName="inventory item"
-                                                        openInEditor={this.openItemInEditor}
                                                     />
                                             },
                                             {
@@ -466,7 +465,6 @@ export default class GameEditor extends Component<Props, State>{
                                                         schema={ActorDataSchema}
                                                         designProperty="actors"
                                                         itemTypeName="actor"
-                                                        openInEditor={this.openItemInEditor}
                                                     />
                                             },
                                             {
@@ -478,7 +476,6 @@ export default class GameEditor extends Component<Props, State>{
                                                         schema={ConversationSchema}
                                                         designProperty="conversations"
                                                         itemTypeName="convesation"
-                                                        openInEditor={this.openItemInEditor}
                                                     />
                                             },
                                             {
@@ -493,7 +490,6 @@ export default class GameEditor extends Component<Props, State>{
                                                         schema={SpriteDataSchema}
                                                         designProperty="sprites"
                                                         itemTypeName="sprite"
-                                                        openInEditor={this.openItemInEditor}
                                                     />
                                             },
                                             {
@@ -512,7 +508,6 @@ export default class GameEditor extends Component<Props, State>{
                                                         createBlank={makeBlankSequence}
                                                         designProperty="sequences"
                                                         itemTypeName="sequence"
-                                                        openInEditor={this.openItemInEditor}
                                                     />
                                             },
                                             {
@@ -522,7 +517,6 @@ export default class GameEditor extends Component<Props, State>{
                                                         createBlank={makeBlankEnding}
                                                         designProperty="endings"
                                                         itemTypeName="ending"
-                                                        openInEditor={this.openItemInEditor}
                                                     />
                                             },
                                             {
@@ -537,7 +531,6 @@ export default class GameEditor extends Component<Props, State>{
                                                                 createBlank={makeBlankVerb}
                                                                 designProperty="verbs"
                                                                 itemTypeName="verb"
-                                                                openInEditor={this.openItemInEditor}
                                                             />
                                                         </Box>
                                                     </>
