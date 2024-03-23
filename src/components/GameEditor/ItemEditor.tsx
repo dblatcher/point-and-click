@@ -89,11 +89,11 @@ export const ItemEditor = ({ item }: Props) => {
                 <Stack direction={'row'} sx={{ maxWidth: '22rem' }}>
                     <Box sx={{ maxWidth: '10rem' }}>
                         <Typography variant="caption">Selected:</Typography>
-                        <ItemMenuInner key={`${imageKey}-selected`} items={[item]} currentItemId={id} select={() => true} />
+                        <ItemMenuInner key={`${imageKey}-${name}-selected`} items={[item]} currentItemId={id} select={() => true} />
                     </Box>
                     <Box sx={{ maxWidth: '10rem' }}>
                         <Typography variant="caption">Not Selected:</Typography>
-                        <ItemMenuInner key={`${imageKey}-not-selected`} items={[item]} currentItemId={''} select={() => true} />
+                        <ItemMenuInner key={`${imageKey}-${name}-not-selected`} items={[item]} currentItemId={''} select={() => true} />
                     </Box>
                 </Stack>
             </EditorBox>
