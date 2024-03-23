@@ -19,7 +19,11 @@ export const DeleteDataItemButton = ({ dataItem, itemType, itemTypeName, buttonP
         <ButtonWithConfirm
             confirmationText={`Are you sure you want to delete ${itemTypeName} "${dataItem.id}"?`}
             label="delete"
-            buttonProps={{ startIcon: <DeleteIcon />, ...buttonProps }}
+            buttonProps={{ 
+                startIcon: <DeleteIcon />, 
+                color: 'warning', 
+                ...buttonProps 
+            }}
             onClick={() => {
                 const items = gameDesign[itemType]
                 const index = items.findIndex(otherItem => otherItem.id === dataItem.id)

@@ -1,17 +1,18 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { GameDataItem } from "@/definitions";
+import { GameDataItemType } from "@/definitions/Game";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
 import AddIcon from "@mui/icons-material/Add";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import EditIcon from '@mui/icons-material/Edit';
 import UploadIcon from "@mui/icons-material/Upload";
-import { Alert, Box, Button, ButtonGroup, Grid, Stack, Table, TableBody, TableCell, TableRow, Typography } from "@mui/material";
+import { Alert, Button, ButtonGroup, Grid, Stack, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import { ZodObject, ZodRawShape } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
+import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { EditorHeading } from "./EditorHeading";
-import { GameDataItemType } from "@/definitions/Game";
-import EditIcon from '@mui/icons-material/Edit';
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -89,6 +90,16 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                                 }}
                                 onEntry={(newId) => handleDuplicate(newId, item)}
                                 confirmationText={`Enter ${itemTypeName} id`}
+                            />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <DeleteDataItemButton
+                                buttonProps={{
+                                    variant: 'outlined'
+                                }}
+                                dataItem={item}
+                                itemType={designProperty}
+                                itemTypeName={itemTypeName}
                             />
                         </Grid>
                     </Fragment>
