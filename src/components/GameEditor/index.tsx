@@ -1,9 +1,14 @@
-import { TabSet } from "@/components/GameEditor/TabSet";
 import { GameDesignProvider } from "@/context/game-design-context";
 import { SpritesProvider } from "@/context/sprite-context";
 import { prebuiltGameDesign } from '@/data/fullGame';
 import { GameDataItem, GameDesign, Interaction, Verb } from "@/definitions";
+import { ActorDataSchema } from "@/definitions/ActorData";
+import { ConversationSchema } from "@/definitions/Conversation";
 import { FlagMap } from "@/definitions/Flag";
+import { GameDataItemType } from "@/definitions/Game";
+import { ItemDataSchema } from "@/definitions/ItemData";
+import { RoomDataSchema } from "@/definitions/RoomData";
+import { SpriteDataSchema } from "@/definitions/SpriteSheet";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
 import { findById, findIndexById, listIds } from "@/lib/util";
@@ -15,6 +20,7 @@ import { Box, Container, Divider, IconButton, Stack, ThemeProvider } from "@mui/
 import { Component } from "react";
 import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
+import { DataItemCreator } from "./DataItemCreator";
 import { EndingEditor } from "./EndingEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
 import { InteractionEditor } from "./InteractionEditor";
@@ -30,14 +36,7 @@ import { TestGameDialog } from "./TestGameDialog";
 import { Entry, Folder, TreeMenu } from "./TreeMenu";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { defaultVerbs1, getBlankRoom, makeBlankSprite, makeBlankActor, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankVerb, makeBlankConversation } from "./defaults";
-import { DataItemCreator } from "./DataItemCreator";
-import { ItemDataSchema } from "@/definitions/ItemData";
-import { ActorDataSchema } from "@/definitions/ActorData";
-import { SpriteDataSchema } from "@/definitions/SpriteSheet";
-import { RoomDataSchema } from "@/definitions/RoomData";
-import { ConversationSchema } from "@/definitions/Conversation";
-import { GameDataItemType } from "@/definitions/Game";
+import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb } from "./defaults";
 
 type State = {
     gameDesign: GameDesign;
@@ -298,6 +297,10 @@ export default class GameEditor extends Component<Props, State>{
         } = this.state
         const { performUpdate, deleteArrayItem, openInEditor, currentSprite, currentRoom } = this
 
+        const sprites = [testSprite, ...gameDesign.sprites.map(data => new Sprite(data))]
+        const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
+        const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
+        const currentEnding = findById(gameItemIds.endings, gameDesign.endings)
 
         const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
             const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
@@ -330,11 +333,108 @@ export default class GameEditor extends Component<Props, State>{
             makeFolder('sounds'),
         ]
 
-        const sprites = [testSprite, ...gameDesign.sprites.map(data => new Sprite(data))]
+        const renderOpenTab = () => {
+            switch (tabs[tabOpen]) {
+                case 'main':
+                    return <Overview />
+                case 'rooms':
+                    return currentRoom
+                        ? <RoomEditor
+                            updateData={data => { this.performUpdate('rooms', data) }}
+                            deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
+                            existingRoomIds={listIds(gameDesign.rooms)}
+                            actors={gameDesign.actors}
+                            key={gameItemIds.rooms} data={currentRoom} />
+                        : <DataItemCreator
+                            createBlank={getBlankRoom}
+                            schema={RoomDataSchema}
+                            designProperty="rooms"
+                            itemTypeName="room"
+                        />
+                case 'items':
+                    this.currentItem ?
+                        <ItemEditor item={this.currentItem} />
+                        :
+                        <DataItemCreator
+                            createBlank={makeBlankItem}
+                            schema={ItemDataSchema}
+                            designProperty="items"
+                            itemTypeName="inventory item"
+                        />
+                case 'actors':
+                    this.currentActor
+                        ? <ActorEditor data={this.currentActor} />
+                        : <DataItemCreator
+                            createBlank={makeBlankActor}
+                            schema={ActorDataSchema}
+                            designProperty="actors"
+                            itemTypeName="actor"
+                        />
+                case 'conversations':
+                    this.currentConversation
+                        ? <ConversationEditor key={gameItemIds.conversations}
+                            conversation={this.currentConversation} />
+                        : <DataItemCreator
+                            createBlank={makeBlankConversation}
+                            schema={ConversationSchema}
+                            designProperty="conversations"
+                            itemTypeName="convesation"
+                        />
+                case 'sprites':
+                    currentSprite
+                        ? <SpriteEditor data={currentSprite} />
+                        : <DataItemCreator
+                            createBlank={makeBlankSprite}
+                            schema={SpriteDataSchema}
+                            designProperty="sprites"
+                            itemTypeName="sprite"
+                        />
+                case 'interactions':
+                    <InteractionEditor
+                        changeInteraction={this.changeInteraction}
+                        deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
+                        updateData={data => { this.performUpdate('interactions', data) }}
+                        gameDesign={gameDesign} />
+                case 'sequences':
+                    currentSequence
+                        ? <SequenceEditor key={gameItemIds.sequences}
+                            data={currentSequence}
+                        />
+                        : <DataItemCreator
+                            createBlank={makeBlankSequence}
+                            designProperty="sequences"
+                            itemTypeName="sequence"
+                        />
+                case 'endings':
+                    currentEnding
+                        ? <EndingEditor ending={currentEnding} />
+                        : <DataItemCreator
+                            createBlank={makeBlankEnding}
+                            designProperty="endings"
+                            itemTypeName="ending"
+                        />
+                case 'verbs':
+                    currentVerb
+                        ? <VerbEditor verb={currentVerb}
+                        />
+                        : <>
+                            <VerbMenuEditor />
+                            <Box marginTop={2}>
+                                <DataItemCreator
+                                    createBlank={makeBlankVerb}
+                                    designProperty="verbs"
+                                    itemTypeName="verb"
+                                />
+                            </Box>
+                        </>
+                case 'images':
+                    <ImageAssetTool />
+                case 'sounds':
+                    <SoundAssetTool />
+            }
 
-        const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
-        const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
-        const currentEnding = findById(gameItemIds.endings, gameDesign.endings)
+            return null
+        }
 
         return (
             <ThemeProvider theme={editorTheme}>
@@ -351,12 +451,14 @@ export default class GameEditor extends Component<Props, State>{
                                 display: 'flex',
                                 flexDirection: 'column',
                                 overflow: 'hidden',
+                                flex: 1,
                             }}>
                             <Stack
                                 direction={'row'}
                                 spacing={1}
                                 sx={{
                                     overflow: 'hidden',
+                                    flex: 1,
                                 }}
                                 divider={<Divider orientation="vertical" flexItem />}
                             >
@@ -403,121 +505,8 @@ export default class GameEditor extends Component<Props, State>{
                                     />
                                 </Stack>
 
-                                <Box component={'section'} flex={1} sx={{ overflowY: 'auto' }}>
-                                    <TabSet
-                                        onlyRenderOpenTab
-                                        fullHeight
-                                        // ISSUE - re-rendering on undo clears the subcomponent state in TabMenus,
-                                        // making the UI switch to the first horizontal tag
-                                        // EG ActorEditor
-                                        key={this.state.undoTime}
-                                        openIndex={tabOpen} tabs={[
-                                            {
-                                                label: 'main', content: <Overview />
-                                            },
-                                            {
-                                                label: 'Room Editor', content: currentRoom
-                                                    ? <RoomEditor
-                                                        updateData={data => { this.performUpdate('rooms', data) }}
-                                                        deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
-                                                        existingRoomIds={listIds(gameDesign.rooms)}
-                                                        actors={gameDesign.actors}
-                                                        key={gameItemIds.rooms} data={currentRoom} />
-                                                    : <DataItemCreator
-                                                        createBlank={getBlankRoom}
-                                                        schema={RoomDataSchema}
-                                                        designProperty="rooms"
-                                                        itemTypeName="room"
-                                                    />
-                                            },
-                                            {
-                                                label: 'Items',
-                                                content: this.currentItem ?
-                                                    <ItemEditor item={this.currentItem} />
-                                                    :
-                                                    <DataItemCreator
-                                                        createBlank={makeBlankItem}
-                                                        schema={ItemDataSchema}
-                                                        designProperty="items"
-                                                        itemTypeName="inventory item"
-                                                    />
-                                            },
-                                            {
-                                                label: 'Actor Editor', content: this.currentActor
-                                                    ? <ActorEditor data={this.currentActor} />
-                                                    : <DataItemCreator
-                                                        createBlank={makeBlankActor}
-                                                        schema={ActorDataSchema}
-                                                        designProperty="actors"
-                                                        itemTypeName="actor"
-                                                    />
-                                            },
-                                            {
-                                                label: 'Conversation Editor', content: this.currentConversation
-                                                    ? <ConversationEditor key={gameItemIds.conversations}
-                                                        conversation={this.currentConversation} />
-                                                    : <DataItemCreator
-                                                        createBlank={makeBlankConversation}
-                                                        schema={ConversationSchema}
-                                                        designProperty="conversations"
-                                                        itemTypeName="convesation"
-                                                    />
-                                            },
-                                            {
-                                                label: 'Sprite Editor', content: currentSprite
-                                                    ? <SpriteEditor data={currentSprite} />
-                                                    : <DataItemCreator
-                                                        createBlank={makeBlankSprite}
-                                                        schema={SpriteDataSchema}
-                                                        designProperty="sprites"
-                                                        itemTypeName="sprite"
-                                                    />
-                                            },
-                                            {
-                                                label: 'interactions', content: <InteractionEditor
-                                                    changeInteraction={this.changeInteraction}
-                                                    deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
-                                                    updateData={data => { this.performUpdate('interactions', data) }}
-                                                    gameDesign={gameDesign} />
-                                            },
-                                            {
-                                                label: 'Sequences', content: currentSequence
-                                                    ? <SequenceEditor key={gameItemIds.sequences}
-                                                        data={currentSequence}
-                                                    />
-                                                    : <DataItemCreator
-                                                        createBlank={makeBlankSequence}
-                                                        designProperty="sequences"
-                                                        itemTypeName="sequence"
-                                                    />
-                                            },
-                                            {
-                                                label: 'endings', content: currentEnding
-                                                    ? <EndingEditor ending={currentEnding} />
-                                                    : <DataItemCreator
-                                                        createBlank={makeBlankEnding}
-                                                        designProperty="endings"
-                                                        itemTypeName="ending"
-                                                    />
-                                            },
-                                            {
-                                                label: 'verbs', content: currentVerb
-                                                    ? <VerbEditor verb={currentVerb}
-                                                    />
-                                                    : <>
-                                                        <VerbMenuEditor />
-                                                        <Box marginTop={2}>
-                                                            <DataItemCreator
-                                                                createBlank={makeBlankVerb}
-                                                                designProperty="verbs"
-                                                                itemTypeName="verb"
-                                                            />
-                                                        </Box>
-                                                    </>
-                                            },
-                                            { label: 'Image uploader', content: <ImageAssetTool /> },
-                                            { label: 'Sound uploader', content: <SoundAssetTool /> },
-                                        ]} />
+                                <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
+                                    {renderOpenTab()}
                                 </Box>
                             </Stack>
 
