@@ -11,15 +11,19 @@ import { AnimationDialog } from "./AnimationDialog";
 import { AnimationGrid } from "./AnimationGrid";
 import { DownloadJsonButton } from "./DownloadJsonButton";
 import { NewAnimationForm } from "./NewAnimationForm";
+import { useGameDesign } from "@/context/game-design-context";
+import { useSprites } from "@/context/sprite-context";
+import { findById } from "@/lib/util";
 
 
 type SpriteEditorProps = {
     data: SpriteData;
-    updateData: (data: SpriteData) => void;
-    provideSprite: { (id: string): Sprite | undefined }
 }
 
 export const SpriteEditor = (props: SpriteEditorProps) => {
+
+    const sprites = useSprites()
+    const { performUpdate } = useGameDesign()
 
     const [selectedAnimation, setSelectedAnimation] = useState<string | undefined>(undefined);
     const [selectedDirection, setSelectedDirection] = useState<Direction | undefined>(undefined);
@@ -28,7 +32,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
     const [selectedSheetId, setSelectedSheetId] = useState<string | undefined>(undefined);
 
     const updateFromPartial = (mod: Partial<SpriteData>) => {
-        props.updateData({ ...cloneData(props.data), ...mod })
+        performUpdate('sprites', { ...cloneData(props.data), ...mod })
     }
 
     const pickFrame = (newSelectedRow: number, newSelectedCol: number, newSelectedSheetId = selectedSheetId) => {
@@ -118,8 +122,8 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
     }
 
     const buildActorData = (animation: string, direction: Direction): ActorData => {
-        const { provideSprite } = props
-        const image = provideSprite(props.data.id)?.getFrame(animation, 0, direction)?.image
+        const sprite = findById(props.data.id, sprites)
+        const image = sprite?.getFrame(animation, 0, direction)?.image
         const widthScale = image?.widthScale || 1
         const heightScale = image?.heightScale || 1
 

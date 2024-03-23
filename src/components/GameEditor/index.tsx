@@ -131,7 +131,6 @@ export default class GameEditor extends Component<Props, State>{
         this.changeInteraction = this.changeInteraction.bind(this)
         this.deleteArrayItem = this.deleteArrayItem.bind(this)
         this.loadNewGame = this.loadNewGame.bind(this)
-        this.provideSprite = this.provideSprite.bind(this)
         this.undo = this.undo.bind(this)
         this.openInEditor = this.openInEditor.bind(this)
     }
@@ -147,16 +146,6 @@ export default class GameEditor extends Component<Props, State>{
 
     componentWillUnmount() {
         imageService.off('update', this.respondToServiceUpdate)
-    }
-
-    provideSprite(id: string) {
-        const spriteData = findById(id, this.state.gameDesign.sprites)
-
-        if (!spriteData) {
-            return undefined
-        }
-
-        return new Sprite(spriteData);
     }
 
     get currentRoom() {
@@ -444,9 +433,7 @@ export default class GameEditor extends Component<Props, State>{
                                             {
                                                 label: 'Items',
                                                 content: this.currentItem ?
-                                                    <ItemEditor key={gameItemIds.items}
-                                                        item={this.currentItem}
-                                                    />
+                                                    <ItemEditor item={this.currentItem} />
                                                     :
                                                     <DataItemCreator
                                                         createBlank={makeBlankItem}
@@ -457,9 +444,7 @@ export default class GameEditor extends Component<Props, State>{
                                             },
                                             {
                                                 label: 'Actor Editor', content: this.currentActor
-                                                    ? <ActorEditor
-                                                        data={this.currentActor}
-                                                    />
+                                                    ? <ActorEditor data={this.currentActor} />
                                                     : <DataItemCreator
                                                         createBlank={makeBlankActor}
                                                         schema={ActorDataSchema}
@@ -480,11 +465,7 @@ export default class GameEditor extends Component<Props, State>{
                                             },
                                             {
                                                 label: 'Sprite Editor', content: currentSprite
-                                                    ? <SpriteEditor key={gameItemIds.sprites}
-                                                        data={currentSprite}
-                                                        updateData={data => { this.performUpdate('sprites', data) }}
-                                                        provideSprite={this.provideSprite}
-                                                    />
+                                                    ? <SpriteEditor data={currentSprite} />
                                                     : <DataItemCreator
                                                         createBlank={makeBlankSprite}
                                                         schema={SpriteDataSchema}
@@ -521,8 +502,7 @@ export default class GameEditor extends Component<Props, State>{
                                             },
                                             {
                                                 label: 'verbs', content: currentVerb
-                                                    ? <VerbEditor key={gameItemIds.verbs}
-                                                        verb={currentVerb}
+                                                    ? <VerbEditor verb={currentVerb}
                                                     />
                                                     : <>
                                                         <VerbMenuEditor />
