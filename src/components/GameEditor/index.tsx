@@ -16,7 +16,7 @@ import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import { editorTheme } from "@/theme";
 import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
-import { Box, Container, Divider, IconButton, Stack, ThemeProvider } from "@mui/material";
+import { Box, Button, ButtonGroup, Container, Divider, IconButton, Stack, ThemeProvider } from "@mui/material";
 import { Component } from "react";
 import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
@@ -33,7 +33,6 @@ import { SequenceEditor } from "./SequenceEditor";
 import { SoundAssetTool } from "./SoundAssetTool";
 import { SpriteEditor } from "./SpriteEditor";
 import { TestGameDialog } from "./TestGameDialog";
-import { Entry, Folder, TreeMenu } from "./TreeMenu";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
 import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb } from "./defaults";
@@ -62,7 +61,11 @@ export type Props = {
     usePrebuiltGame?: boolean;
 }
 
-const tabs: string[] = [
+type NonItemEditorType = 'main' | 'images' | 'sounds' | 'interactions';
+
+type TabType = NonItemEditorType | GameDataItemType
+
+const tabs: TabType[] = [
     'main',
     'rooms',
     'items',
@@ -272,10 +275,10 @@ export default class GameEditor extends Component<Props, State>{
         })
     }
 
-    openInEditor(itemType: GameDataItemType, itemId: string | undefined) {
+    openInEditor(tabType: TabType, itemId?: string) {
         this.setState(state => {
             const { gameItemIds } = state
-            switch (itemType) {
+            switch (tabType) {
                 case 'rooms':
                 case 'items':
                 case 'actors':
@@ -284,10 +287,10 @@ export default class GameEditor extends Component<Props, State>{
                 case 'sequences':
                 case 'endings':
                 case 'verbs':
-                    gameItemIds[itemType] = itemId
+                    gameItemIds[tabType] = itemId
                     break;
             }
-            return { gameItemIds, tabOpen: tabs.indexOf(itemType) }
+            return { gameItemIds, tabOpen: tabs.indexOf(tabType) }
         })
     }
 
@@ -301,37 +304,6 @@ export default class GameEditor extends Component<Props, State>{
         const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
         const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
         const currentEnding = findById(gameItemIds.endings, gameDesign.endings)
-
-        const makeFolder = (id: string, list?: { id: string }[], entryId?: string): Folder => {
-            const entries: Entry[] | undefined = list?.map(item => ({ data: item, active: entryId === item.id }))
-            if (entries) {
-                entries.push({
-                    data: { id: '' },
-                    active: !entryId,
-                    label: '[add new]',
-                    isForNew: true
-                })
-            }
-            return {
-                id, open: tabs[tabOpen] === id,
-                entries
-            }
-        }
-
-        const folders = [
-            makeFolder('main'),
-            makeFolder('rooms', gameDesign.rooms, gameItemIds.rooms),
-            makeFolder('items', gameDesign.items, gameItemIds.items),
-            makeFolder('actors', gameDesign.actors, gameItemIds.actors),
-            makeFolder('conversations', gameDesign.conversations, gameItemIds.conversations),
-            makeFolder('sprites', gameDesign.sprites, gameItemIds.sprites),
-            makeFolder('interactions'),
-            makeFolder('sequences', gameDesign.sequences, gameItemIds.sequences),
-            makeFolder('endings', gameDesign.endings, gameItemIds.endings),
-            makeFolder('verbs', gameDesign.verbs, gameItemIds.verbs),
-            makeFolder('images'),
-            makeFolder('sounds'),
-        ]
 
         const renderOpenTab = () => {
             switch (tabs[tabOpen]) {
@@ -352,7 +324,7 @@ export default class GameEditor extends Component<Props, State>{
                             itemTypeName="room"
                         />
                 case 'items':
-                    this.currentItem ?
+                    return this.currentItem ?
                         <ItemEditor item={this.currentItem} />
                         :
                         <DataItemCreator
@@ -362,7 +334,7 @@ export default class GameEditor extends Component<Props, State>{
                             itemTypeName="inventory item"
                         />
                 case 'actors':
-                    this.currentActor
+                    return this.currentActor
                         ? <ActorEditor data={this.currentActor} />
                         : <DataItemCreator
                             createBlank={makeBlankActor}
@@ -371,7 +343,7 @@ export default class GameEditor extends Component<Props, State>{
                             itemTypeName="actor"
                         />
                 case 'conversations':
-                    this.currentConversation
+                    return this.currentConversation
                         ? <ConversationEditor key={gameItemIds.conversations}
                             conversation={this.currentConversation} />
                         : <DataItemCreator
@@ -381,7 +353,7 @@ export default class GameEditor extends Component<Props, State>{
                             itemTypeName="convesation"
                         />
                 case 'sprites':
-                    currentSprite
+                    return currentSprite
                         ? <SpriteEditor data={currentSprite} />
                         : <DataItemCreator
                             createBlank={makeBlankSprite}
@@ -390,13 +362,13 @@ export default class GameEditor extends Component<Props, State>{
                             itemTypeName="sprite"
                         />
                 case 'interactions':
-                    <InteractionEditor
+                    return <InteractionEditor
                         changeInteraction={this.changeInteraction}
                         deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
                         updateData={data => { this.performUpdate('interactions', data) }}
                         gameDesign={gameDesign} />
                 case 'sequences':
-                    currentSequence
+                    return currentSequence
                         ? <SequenceEditor key={gameItemIds.sequences}
                             data={currentSequence}
                         />
@@ -406,7 +378,7 @@ export default class GameEditor extends Component<Props, State>{
                             itemTypeName="sequence"
                         />
                 case 'endings':
-                    currentEnding
+                    return currentEnding
                         ? <EndingEditor ending={currentEnding} />
                         : <DataItemCreator
                             createBlank={makeBlankEnding}
@@ -414,7 +386,7 @@ export default class GameEditor extends Component<Props, State>{
                             itemTypeName="ending"
                         />
                 case 'verbs':
-                    currentVerb
+                    return currentVerb
                         ? <VerbEditor verb={currentVerb}
                         />
                         : <>
@@ -428,12 +400,10 @@ export default class GameEditor extends Component<Props, State>{
                             </Box>
                         </>
                 case 'images':
-                    <ImageAssetTool />
+                    return <ImageAssetTool />
                 case 'sounds':
-                    <SoundAssetTool />
+                    return <SoundAssetTool />
             }
-
-            return null
         }
 
         return (
@@ -465,7 +435,7 @@ export default class GameEditor extends Component<Props, State>{
                                 <Stack
                                     component={'nav'}
                                     spacing={1}
-                                    width={250}
+                                    width={150}
                                 >
                                     <Stack direction={'row'} marginTop={3} spacing={3}>
                                         <SaveLoadAndUndo
@@ -480,29 +450,13 @@ export default class GameEditor extends Component<Props, State>{
                                             <PlayCircleFilledOutlinedIcon />
                                         </IconButton>
                                     </Stack>
-                                    <TreeMenu folders={folders}
-                                        folderClick={(folderId) => {
-                                            const folderIndex = tabs.indexOf(folderId);
-                                            this.setState({
-                                                tabOpen: folderIndex,
-                                                gameItemIds: {},
-                                            })
-                                        }}
-                                        entryClick={(folderId, data, isForNew) => {
-                                            const newId: string | undefined = isForNew ? undefined : data.id;
-                                            switch (folderId) {
-                                                case 'rooms':
-                                                case 'items':
-                                                case 'actors':
-                                                case 'conversations':
-                                                case 'sprites':
-                                                case 'sequences':
-                                                case 'endings':
-                                                case 'verbs':
-                                                    this.openInEditor(folderId, newId)
-                                            }
-                                        }}
-                                    />
+                                    <ButtonGroup orientation="vertical">
+                                        {tabs.map(tabName => (
+                                            <Button key={tabName}
+                                            variant={tabName === tabs[tabOpen] ? 'contained' : 'outlined'} 
+                                            onClick={() => { openInEditor(tabName) }}>{tabName}</Button>
+                                        ))}
+                                    </ButtonGroup>
                                 </Stack>
 
                                 <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>

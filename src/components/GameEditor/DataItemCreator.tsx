@@ -5,12 +5,13 @@ import { uploadJsonData } from "@/lib/files";
 import AddIcon from "@mui/icons-material/Add";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import UploadIcon from "@mui/icons-material/Upload";
-import { Alert, Box, Button, ButtonGroup, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { Alert, Box, Button, ButtonGroup, Grid, Stack, Table, TableBody, TableCell, TableRow, Typography } from "@mui/material";
+import { Fragment, useState } from "react";
 import { ZodObject, ZodRawShape } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { EditorHeading } from "./EditorHeading";
 import { GameDataItemType } from "@/definitions/Game";
+import EditIcon from '@mui/icons-material/Edit';
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -66,14 +67,40 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
 
     return (
         <Stack component={'article'} spacing={2} height={'100%'}>
-            <EditorHeading heading={`${itemTypeName} Creator`} />
+            <EditorHeading heading={designProperty} />
+            <Typography variant="h3">existing {itemTypeName}</Typography>
+            <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'}>
+                {gameDesign[designProperty].map(item => (
+                    <Fragment key={item.id}>
+                        <Grid item xs={6}>
+                            <Button
+                                startIcon={<EditIcon />}
+                                variant="contained"
+                                sx={{ width: '100%' }}
+                                onClick={() => openInEditor(designProperty, item.id)}
+                            >{item.id}</Button>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <ButtonWithTextInput
+                                label={'copy'}
+                                buttonProps={{
+                                    startIcon: <ContentCopyIcon />,
+                                    variant: 'outlined'
+                                }}
+                                onEntry={(newId) => handleDuplicate(newId, item)}
+                                confirmationText={`Enter ${itemTypeName} id`}
+                            />
+                        </Grid>
+                    </Fragment>
+                ))}
+            </Grid>
 
             <Typography variant="h3">Add new {itemTypeName}</Typography>
             <ButtonGroup>
                 <ButtonWithTextInput
                     label="Start from scratch"
                     onEntry={handleStartFromScratch}
-                    buttonProps={{ startIcon: <AddIcon /> }}
+                    buttonProps={{ startIcon: <AddIcon />, variant: 'contained' }}
                     confirmationText={`Enter ${itemTypeName} id`}
                 />
                 {includeLoadButton && (
@@ -83,20 +110,6 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                     >load from data file</Button>
                 )}
             </ButtonGroup>
-
-            <Typography variant="h3">Duplicate existing {itemTypeName}</Typography>
-            <Box>
-                <ButtonGroup orientation="vertical">
-                    {gameDesign[designProperty].map(item => (
-                        <ButtonWithTextInput key={item.id}
-                            label={item.id}
-                            buttonProps={{ startIcon: <ContentCopyIcon /> }}
-                            onEntry={(newId) => handleDuplicate(newId, item)}
-                            confirmationText={`Enter ${itemTypeName} id`}
-                        />
-                    ))}
-                </ButtonGroup>
-            </Box>
 
             {warning && (
                 <Alert severity="warning">{warning}</Alert>
