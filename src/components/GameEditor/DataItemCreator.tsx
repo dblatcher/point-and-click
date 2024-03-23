@@ -86,7 +86,8 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                                 label={'copy'}
                                 buttonProps={{
                                     startIcon: <ContentCopyIcon />,
-                                    variant: 'outlined'
+                                    variant: 'outlined',
+                                    sx: { width: '100%' },
                                 }}
                                 onEntry={(newId) => handleDuplicate(newId, item)}
                                 confirmationText={`Enter ${itemTypeName} id`}
@@ -95,7 +96,8 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                         <Grid item xs={2}>
                             <DeleteDataItemButton
                                 buttonProps={{
-                                    variant: 'outlined'
+                                    variant: 'outlined',
+                                    sx: { width: '100%' },
                                 }}
                                 dataItem={item}
                                 itemType={designProperty}
@@ -107,25 +109,38 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
             </Grid>
 
             <Typography variant="h3">Add new {itemTypeName}</Typography>
-            <ButtonGroup>
-                <ButtonWithTextInput
-                    label="Start from scratch"
-                    onEntry={handleStartFromScratch}
-                    buttonProps={{ startIcon: <AddIcon />, variant: 'contained' }}
-                    confirmationText={`Enter ${itemTypeName} id`}
-                />
-                {includeLoadButton && (
-                    <Button
-                        onClick={handleLoadButton}
-                        startIcon={<UploadIcon />}
-                    >load from data file</Button>
-                )}
-            </ButtonGroup>
 
-            {warning && (
-                <Alert severity="warning">{warning}</Alert>
-            )}
-        </Stack>
+            <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'}>
+                <Grid item xs={6}>
+                    <ButtonWithTextInput
+                        label="Start from scratch"
+                        onEntry={handleStartFromScratch}
+                        buttonProps={{
+                            startIcon: <AddIcon />,
+                            variant: 'contained',
+                            sx: { width: '100%' },
+                        }}
+                        confirmationText={`Enter ${itemTypeName} id`}
+                    />
+                </Grid>
+                {includeLoadButton && (
+                    <Grid item xs={4}>
+                        <Button
+                            sx={{ width: '100%' }}
+                            variant="outlined"
+                            onClick={handleLoadButton}
+                            startIcon={<UploadIcon />}
+                        >load from data file</Button>
+                    </Grid>
+                )}
+            </Grid>
+
+            {
+                warning && (
+                    <Alert severity="warning">{warning}</Alert>
+                )
+            }
+        </Stack >
     )
 
 }
