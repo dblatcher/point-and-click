@@ -89,7 +89,13 @@ export const SequenceEditor = (props: Props) => {
                     />
                 </>)
                 : (<>
-                    <EditorHeading heading="Sequence Editor" itemId={sequence?.id ?? '[new]'} />
+                    <EditorHeading heading="Sequence Editor" itemId={sequence?.id ?? '[new]'} >
+                        <DeleteDataItemButton
+                            dataItem={sequence}
+                            buttonProps={{ variant: 'outlined' }}
+                            itemType='sequences'
+                            itemTypeName="sequence" />
+                    </EditorHeading>
 
                     <Grid container spacing={4}>
                         <Grid item xs={8}>
@@ -98,13 +104,6 @@ export const SequenceEditor = (props: Props) => {
                                     updateFromPartial({ description })
                                 }}
                             />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <DeleteDataItemButton
-                                dataItem={sequence}
-                                buttonProps={{ variant: 'outlined' }}
-                                itemType='sequences'
-                                itemTypeName="sequence" />
                         </Grid>
                     </Grid>
                 </>)

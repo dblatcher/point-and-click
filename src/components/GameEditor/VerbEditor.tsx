@@ -57,7 +57,14 @@ export const VerbEditor = ({ verb }: Props) => {
 
     return (
         <Stack spacing={2}>
-            <EditorHeading heading="Verb Editor" itemId={verb.id} />
+            <EditorHeading heading="Verb Editor" itemId={verb.id} >
+                <DeleteDataItemButton
+                    dataItem={verb}
+                    itemType="verbs"
+                    itemTypeName="verb"
+                    buttonProps={{ variant: 'outlined' }}
+                />
+            </EditorHeading>
             <Stack direction={'row'} spacing={2}>
                 <EditorBox title="Verb config" boxProps={{ flexBasis: 400 }}>
                     <SchemaForm
@@ -66,13 +73,7 @@ export const VerbEditor = ({ verb }: Props) => {
                         changeValue={(value, field) => { handleUpdate(value, field) }}
                     />
                 </EditorBox>
-                <Stack spacing={2} justifyContent={'space-between'}>
-                    <DeleteDataItemButton
-                        dataItem={verb}
-                        itemType="verbs"
-                        itemTypeName="verb"
-                        buttonProps={{ variant: 'outlined' }}
-                    />
+                <Stack spacing={2} justifyContent={'flex-end'}>
                     <EditorBox title="wildcards for default responses">
                         <table>
                             <tbody>

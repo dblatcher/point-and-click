@@ -181,18 +181,19 @@ export const ConversationEditor = (props: Props) => {
 
     return (
         <Stack component={'article'} spacing={2}>
-            <EditorHeading heading={`Conversation Editor`} itemId={conversation.id} />
-            <ButtonGroup>
-                  <DownloadJsonButton
-                    dataItem={conversation}
-                    itemTypeName="conversation"
-                />
-                <DeleteDataItemButton
-                    dataItem={conversation}
-                    itemType="conversations"
-                    itemTypeName="conversation"
-                />
-            </ButtonGroup>
+            <EditorHeading heading={`Conversation Editor`} itemId={conversation.id} >
+                <ButtonGroup>
+                    <DeleteDataItemButton
+                        dataItem={conversation}
+                        itemType="conversations"
+                        itemTypeName="conversation"
+                    />
+                    <DownloadJsonButton
+                        dataItem={conversation}
+                        itemTypeName="conversation"
+                    />
+                </ButtonGroup>
+            </EditorHeading>
 
             <ConversationFlow conversation={conversation} key={JSON.stringify(cloneData(conversation))}
                 openEditor={(branchKey, choiceIndex) => {
@@ -291,6 +292,6 @@ export const ConversationEditor = (props: Props) => {
                         onClick={() => { setSequenceDialogOpen(false) }}>close</Button>
                 </DialogActions>
             </Dialog>
-        </Stack>
+        </Stack >
     )
 }

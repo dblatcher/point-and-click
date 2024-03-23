@@ -3,7 +3,7 @@ import { ActorData, Animation, Direction, SpriteData, SpriteFrame } from "@/defi
 import { directions } from "@/definitions/SpriteSheet";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { Box, Grid, Stack } from "@mui/material";
+import { Box, ButtonGroup, Grid, Stack } from "@mui/material";
 import { useState } from "react";
 import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
@@ -143,7 +143,19 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
     const animationEntries = Object.entries(animations)
 
     return <Stack component={'article'} spacing={1}>
-        <EditorHeading heading="Sprite Editor" itemId={props.data?.id ?? '[new]'} />
+        <EditorHeading heading="Sprite Editor" itemId={props.data?.id ?? '[new]'} >
+            <ButtonGroup>
+                <DeleteDataItemButton
+                    dataItem={props.data}
+                    itemType="sprites"
+                    itemTypeName="sprite"
+                />
+                <DownloadJsonButton
+                    dataItem={props.data}
+                    itemTypeName="sprite"
+                />
+            </ButtonGroup>
+        </EditorHeading>
         <Stack direction={'row'} spacing={2}>
             <Box minWidth={100}>
                 <SelectInput
@@ -153,15 +165,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
                     inputHandler={(choice) => { changeValue('defaultDirection', choice as Direction) }}
                 />
             </Box>
-            <DeleteDataItemButton
-                dataItem={props.data}
-                itemType="sprites"
-                itemTypeName="sprite"
-            />
-            <DownloadJsonButton
-                dataItem={props.data}
-                itemTypeName="sprite"
-            />
+
         </Stack>
 
         <Grid container spacing={1}>

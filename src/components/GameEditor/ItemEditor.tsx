@@ -4,7 +4,7 @@ import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
 import imageService from "@/services/imageService";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { StringInput } from "../SchemaForm/StringInput";
@@ -57,46 +57,52 @@ export const ItemEditor = ({ item }: Props) => {
 
     return (
         <Stack component='article' spacing={3}>
-            <EditorHeading heading="Item Editor" helpTopic="items" itemId={id} />
-            <Stack direction={'row'} spacing={1}>
-                <Stack spacing={2}>
-                    <StringInput
-                        label="name" value={name || ''}
-                        inputHandler={(value) => changeValue('name', value)} />
-                    <SelectInput
-                        label="actorId"
-                        optional
-                        options={listIds(gameDesign.actors)}
-                        value={actorId}
-                        inputHandler={id => { changeValue('actorId', id) }} />
-                    <Button
-                        onClick={() => { setDialogOpen(true) }}
-                        variant="outlined"
-                    >
-                        pick icon
-                    </Button>
-                </Stack>
-                <Box>
-                    <DeleteDataItemButton
-                        dataItem={item}
-                        itemType="items"
-                        itemTypeName="Inventory Item"
-                    />
-                </Box>
-            </Stack>
+            <EditorHeading heading="Item Editor" helpTopic="items" itemId={id} >
+                <DeleteDataItemButton
+                    dataItem={item}
+                    itemType="items"
+                    itemTypeName="Inventory Item"
+                />
+            </EditorHeading>
 
-            <EditorBox title="Button Preview">
-                <Stack direction={'row'} sx={{ maxWidth: '22rem' }}>
-                    <Box sx={{ maxWidth: '10rem' }}>
-                        <Typography variant="caption">Selected:</Typography>
-                        <ItemMenuInner key={`${imageKey}-${name}-selected`} items={[item]} currentItemId={id} select={() => true} />
-                    </Box>
-                    <Box sx={{ maxWidth: '10rem' }}>
-                        <Typography variant="caption">Not Selected:</Typography>
-                        <ItemMenuInner key={`${imageKey}-${name}-not-selected`} items={[item]} currentItemId={''} select={() => true} />
-                    </Box>
-                </Stack>
-            </EditorBox>
+            <Grid container spacing={2}>
+                <Grid item>
+                    <Stack spacing={2} maxWidth={'md'}>
+                        <StringInput
+                            label="name" value={name || ''}
+                            inputHandler={(value) => changeValue('name', value)} />
+                        <SelectInput
+                            label="actorId"
+                            optional
+                            options={listIds(gameDesign.actors)}
+                            value={actorId}
+                            inputHandler={id => { changeValue('actorId', id) }} />
+                        <Button
+                            onClick={() => { setDialogOpen(true) }}
+                            variant="outlined"
+                        >
+                            pick icon
+                        </Button>
+                    </Stack>
+                </Grid>
+                <Grid item>
+                    <EditorBox title="Button Preview">
+                        <Stack direction={'row'} sx={{ maxWidth: '22rem' }}>
+                            <Box sx={{ maxWidth: '10rem' }}>
+                                <Typography variant="caption">Selected:</Typography>
+                                <ItemMenuInner key={`${imageKey}-${name}-selected`} items={[item]} currentItemId={id} select={() => true} />
+                            </Box>
+                            <Box sx={{ maxWidth: '10rem' }}>
+                                <Typography variant="caption">Not Selected:</Typography>
+                                <ItemMenuInner key={`${imageKey}-${name}-not-selected`} items={[item]} currentItemId={''} select={() => true} />
+                            </Box>
+                        </Stack>
+                    </EditorBox>
+                </Grid>
+            </Grid>
+
+
+
 
             <Dialog
                 open={dialogOpen}

@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, ReactNode, useState } from "react";
 import { HelpText } from "./HelpText";
 import { Typography, IconButton, Stack, Dialog, DialogTitle, DialogContent, Divider, Box } from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
@@ -8,18 +8,19 @@ interface Props {
     itemId?: string;
     helpTopic?: string;
     level?: 2 | 3;
+    children?: ReactNode;
 }
 
 
 export const EditorHeading: FunctionComponent<Props> = ({
-    heading, helpTopic, level = 2, itemId,
+    heading, helpTopic, level = 2, itemId, children
 }: Props) => {
 
     const [helpShowing, setHelpShowing] = useState(false)
 
     return (
         <>
-            <Stack component={'header'} direction={'row'} justifyContent={'space-between'}>
+            <Stack component={'header'} direction={'row'} justifyContent={'flex-start'} alignItems={'center'}>
                 <Box>
                     <Typography
                         variant={level === 2 ? 'h2' : 'h3'}
@@ -29,8 +30,13 @@ export const EditorHeading: FunctionComponent<Props> = ({
                     {itemId && <Typography>{itemId}</Typography>}
                 </Box>
 
+                <Box alignSelf={'flex-end'} padding={1}>
+                    {children}
+                </Box>
+
                 {helpTopic && (
                     <IconButton
+                        sx={{ marginLeft: 'auto' }}
                         aria-label={`open help text about ${helpTopic}`}
                         onClick={(): void => { setHelpShowing(!helpShowing) }}
                     >

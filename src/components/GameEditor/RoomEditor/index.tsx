@@ -7,7 +7,7 @@ import { cloneData } from "@/lib/clone";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import imageService from "@/services/imageService";
-import { Alert, Container, Grid, Stack } from "@mui/material";
+import { Alert, ButtonGroup, Container, Grid, Stack } from "@mui/material";
 import { Component } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
 import { ArrayControl } from "../ArrayControl";
@@ -445,22 +445,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     />
                 )
             },
-
-            {
-                label: 'storage', content: (
-                    <Container maxWidth="xs">
-                        <DownloadJsonButton
-                            dataItem={this.props.data}
-                            itemTypeName="room"
-                        />
-                        <DeleteDataItemButton
-                            dataItem={this.props.data}
-                            itemType="rooms"
-                            itemTypeName="room"
-                        />
-                    </Container>
-                )
-            }
         ]
 
     }
@@ -472,7 +456,19 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const tabs = this.buildTabs()
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
-            <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} />
+            <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} >
+                <ButtonGroup>
+                    <DeleteDataItemButton
+                        dataItem={this.props.data}
+                        itemType="rooms"
+                        itemTypeName="room"
+                    />
+                    <DownloadJsonButton
+                        dataItem={this.props.data}
+                        itemTypeName="room"
+                    />
+                </ButtonGroup>
+            </EditorHeading>
             <Grid container flexWrap={'nowrap'} spacing={1}>
                 <Grid item xs={4}>
                     <AccoridanedContent tabs={tabs} />

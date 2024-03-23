@@ -28,6 +28,7 @@ export const editorTheme = createTheme({
         fontFamily: 'arial',
         fontSize: 11,
         h3: {
+            marginTop: 10,
             fontSize: 14,
             fontWeight: 700,
         }

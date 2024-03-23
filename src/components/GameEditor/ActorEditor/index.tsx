@@ -8,7 +8,7 @@ import { directions } from "@/definitions/SpriteSheet";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Box, ButtonGroup, Grid, Stack, Typography } from "@mui/material";
 import { AccoridanedContent } from "../AccordianedContent";
 import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
@@ -128,7 +128,20 @@ export const ActorEditor = (props: Props) => {
 
     return (
         <Stack component='article' spacing={1}>
-            <EditorHeading heading="Actor Editor" itemId={props.data.id} />
+            <EditorHeading heading="Actor Editor" itemId={props.data.id} >
+                <ButtonGroup>
+                    <DeleteDataItemButton
+                        dataItem={actor}
+                        itemType="actors"
+                        itemTypeName="actor"
+                    />
+                    <DownloadJsonButton
+                        dataItem={actor}
+                        itemTypeName="actor"
+                    />
+                </ButtonGroup>
+            </EditorHeading>
+
             <Grid container flexWrap={'nowrap'} spacing={1}>
                 <Grid item xs={5}><>
                     <AccoridanedContent tabs={[
@@ -256,21 +269,6 @@ export const ActorEditor = (props: Props) => {
                                 </Stack>
                             )
                         },
-                        {
-                            label: 'storage', content: (
-                                <>
-                                    <DeleteDataItemButton
-                                        dataItem={actor}
-                                        itemType="actors"
-                                        itemTypeName="actor"
-                                    />
-                                    <DownloadJsonButton
-                                        dataItem={actor}
-                                        itemTypeName="actor"
-                                    />
-                                </>
-                            )
-                        }
                     ]} />
                 </>
                 </Grid>

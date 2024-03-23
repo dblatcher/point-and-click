@@ -29,37 +29,32 @@ export const EndingEditor = ({ ending }: Props) => {
 
     return (
         <article>
-            <EditorHeading heading="Ending Editor" itemId={ending.id} />
-            <Grid container marginTop={2} spacing={2} marginBottom={2}>
-                <Grid item xs={8}>
-                    <Card>
-                        <SchemaForm
-                            formLegend="Ending Config"
-                            data={ending}
-                            schema={EndingSchema.omit({ id: true })}
-                            changeValue={(value, field) => { handleUpdate(value, field) }}
-                            options={{
-                                imageId: imageService.list()
-                            }}
-                            fieldWrapperProps={{
-                                spacing: 2,
-                            }}
-                            containerProps={{
-                                padding: 1,
-                                marginY: 1,
-                                maxWidth: 'sm'
-                            }}
-                        />
-                    </Card>
-                </Grid>
-                <Grid item xs={4}>
-                    <DeleteDataItemButton
-                        dataItem={ending}
-                        buttonProps={{ variant: 'outlined' }}
-                        itemType='endings'
-                        itemTypeName="ending" />
-                </Grid>
-            </Grid>
+            <EditorHeading heading="Ending Editor" itemId={ending.id} >
+                <DeleteDataItemButton
+                    dataItem={ending}
+                    buttonProps={{ variant: 'outlined' }}
+                    itemType='endings'
+                    itemTypeName="ending" />
+            </EditorHeading>
+
+            <Typography variant="h3">Ending Config</Typography>
+            <Card sx={{ maxWidth: 'sm' }}>
+                <SchemaForm
+                    data={ending}
+                    schema={EndingSchema.omit({ id: true })}
+                    changeValue={(value, field) => { handleUpdate(value, field) }}
+                    options={{
+                        imageId: imageService.list()
+                    }}
+                    fieldWrapperProps={{
+                        spacing: 2,
+                    }}
+                    containerProps={{
+                        padding: 1,
+                        marginY: 1,
+                    }}
+                />
+            </Card>
             <Container>
                 <Typography variant="h3">Preview</Typography>
                 <EndingScreen ending={ending} inline={true} />

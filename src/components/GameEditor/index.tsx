@@ -413,6 +413,7 @@ export default class GameEditor extends Component<Props, State>{
                                 overflow: 'hidden',
                                 flex: 1,
                                 gap: 5,
+                                background:'white',
                             }}>
 
                             <Stack
