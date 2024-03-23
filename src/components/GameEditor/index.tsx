@@ -16,7 +16,7 @@ import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import { editorTheme } from "@/theme";
 import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
-import { Box, Button, ButtonGroup, Container, Divider, IconButton, Stack, ThemeProvider } from "@mui/material";
+import { Box, Button, ButtonGroup, Container, IconButton, Stack, ThemeProvider } from "@mui/material";
 import { Component } from "react";
 import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
@@ -37,21 +37,15 @@ import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
 import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb } from "./defaults";
 
+type NonItemEditorType = 'main' | 'images' | 'sounds' | 'interactions';
+
+type TabType = NonItemEditorType | GameDataItemType
+
 type State = {
     gameDesign: GameDesign;
-    tabOpen: number;
-    gameItemIds: {
-        rooms?: string;
-        items?: string;
-        actors?: string;
-        conversations?: string;
-        sprites?: string;
-        sequences?: string;
-        endings?: string;
-        verbs?: string;
-    };
+    tabOpen: TabType;
+    gameItemIds: Partial<Record<GameDataItemType, string>>;
     resetTimeStamp: number;
-
     history: { gameDesign: GameDesign; label: string }[];
     undoTime: number;
     gameTestDialogOpen: boolean;
@@ -61,11 +55,7 @@ export type Props = {
     usePrebuiltGame?: boolean;
 }
 
-type NonItemEditorType = 'main' | 'images' | 'sounds' | 'interactions';
-
-type TabType = NonItemEditorType | GameDataItemType
-
-const tabs: TabType[] = [
+const tabOrder: TabType[] = [
     'main',
     'rooms',
     'items',
@@ -120,7 +110,7 @@ export default class GameEditor extends Component<Props, State>{
 
         this.state = {
             gameDesign,
-            tabOpen: tabs.indexOf('main'),
+            tabOpen: 'main',
             gameItemIds: {},
             resetTimeStamp: 0,
             history: [],
@@ -290,7 +280,7 @@ export default class GameEditor extends Component<Props, State>{
                     gameItemIds[tabType] = itemId
                     break;
             }
-            return { gameItemIds, tabOpen: tabs.indexOf(tabType) }
+            return { gameItemIds, tabOpen: tabType }
         })
     }
 
@@ -306,7 +296,7 @@ export default class GameEditor extends Component<Props, State>{
         const currentEnding = findById(gameItemIds.endings, gameDesign.endings)
 
         const renderOpenTab = () => {
-            switch (tabs[tabOpen]) {
+            switch (tabOpen) {
                 case 'main':
                     return <Overview />
                 case 'rooms':
@@ -440,13 +430,13 @@ export default class GameEditor extends Component<Props, State>{
                                     <IconButton
                                         onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
                                     >
-                                        <PlayCircleFilledOutlinedIcon  fontSize={'large'}/>
+                                        <PlayCircleFilledOutlinedIcon fontSize={'large'} />
                                     </IconButton>
                                 </Stack>
                                 <ButtonGroup orientation="vertical">
-                                    {tabs.map(tabName => (
+                                    {tabOrder.map(tabName => (
                                         <Button key={tabName}
-                                            variant={tabName === tabs[tabOpen] ? 'contained' : 'outlined'}
+                                            variant={tabName === tabOpen ? 'contained' : 'outlined'}
                                             onClick={() => { openInEditor(tabName) }}>{tabName}</Button>
                                     ))}
                                 </ButtonGroup>
