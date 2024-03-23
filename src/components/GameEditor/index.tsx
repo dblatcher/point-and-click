@@ -72,10 +72,10 @@ const tabs: TabType[] = [
     'actors',
     'conversations',
     'sprites',
-    'interactions',
     'sequences',
     'endings',
     'verbs',
+    'interactions',
     'images',
     'sounds',
 ]
@@ -419,50 +419,42 @@ export default class GameEditor extends Component<Props, State>{
                             component={'main'}
                             sx={{
                                 display: 'flex',
-                                flexDirection: 'column',
+                                flexDirection: 'row',
                                 overflow: 'hidden',
                                 flex: 1,
+                                gap: 5,
                             }}>
-                            <Stack
-                                direction={'row'}
-                                spacing={1}
-                                sx={{
-                                    overflow: 'hidden',
-                                    flex: 1,
-                                }}
-                                divider={<Divider orientation="vertical" flexItem />}
-                            >
-                                <Stack
-                                    component={'nav'}
-                                    spacing={1}
-                                    width={150}
-                                >
-                                    <Stack direction={'row'} marginTop={3} spacing={3}>
-                                        <SaveLoadAndUndo
-                                            gameDesign={gameDesign}
-                                            loadNewGame={this.loadNewGame}
-                                            history={history}
-                                            undo={this.undo}
-                                        />
-                                        <IconButton
-                                            onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
-                                        >
-                                            <PlayCircleFilledOutlinedIcon />
-                                        </IconButton>
-                                    </Stack>
-                                    <ButtonGroup orientation="vertical">
-                                        {tabs.map(tabName => (
-                                            <Button key={tabName}
-                                            variant={tabName === tabs[tabOpen] ? 'contained' : 'outlined'} 
-                                            onClick={() => { openInEditor(tabName) }}>{tabName}</Button>
-                                        ))}
-                                    </ButtonGroup>
-                                </Stack>
 
-                                <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
-                                    {renderOpenTab()}
-                                </Box>
+                            <Stack
+                                component={'nav'}
+                                spacing={1}
+                                width={150}
+                            >
+                                <Stack direction={'row'} marginTop={3} spacing={3} minHeight={35}>
+                                    <SaveLoadAndUndo
+                                        gameDesign={gameDesign}
+                                        loadNewGame={this.loadNewGame}
+                                        history={history}
+                                        undo={this.undo}
+                                    />
+                                    <IconButton
+                                        onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
+                                    >
+                                        <PlayCircleFilledOutlinedIcon  fontSize={'large'}/>
+                                    </IconButton>
+                                </Stack>
+                                <ButtonGroup orientation="vertical">
+                                    {tabs.map(tabName => (
+                                        <Button key={tabName}
+                                            variant={tabName === tabs[tabOpen] ? 'contained' : 'outlined'}
+                                            onClick={() => { openInEditor(tabName) }}>{tabName}</Button>
+                                    ))}
+                                </ButtonGroup>
                             </Stack>
+
+                            <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
+                                {renderOpenTab()}
+                            </Box>
 
                             <TestGameDialog
                                 isOpen={this.state.gameTestDialogOpen}
