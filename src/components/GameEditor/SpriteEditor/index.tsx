@@ -31,10 +31,39 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
         props.updateData({ ...cloneData(props.data), ...mod })
     }
 
-    const pickFrame = (selectedRow: number, selectedCol: number, selectedSheetId?: string) => {
-        setSelectedCol(selectedCol)
-        setSelectedRow(selectedRow)
-        setSelectedSheetId(selectedSheetId)
+    const pickFrame = (newSelectedRow: number, newSelectedCol: number, newSelectedSheetId = selectedSheetId) => {
+        if (
+            newSelectedSheetId &&
+            newSelectedSheetId === selectedSheetId &&
+            newSelectedRow === selectedRow &&
+            newSelectedCol === selectedCol
+        ) {
+            return appendFrame(newSelectedRow, newSelectedCol, newSelectedSheetId)
+        }
+
+        setSelectedCol(newSelectedCol)
+        setSelectedRow(newSelectedRow)
+        if (newSelectedSheetId) {
+            setSelectedSheetId(newSelectedSheetId)
+        }
+    }
+
+    const appendFrame = (newSelectedRow: number, newSelectedCol: number, newSelectedSheetId: string) => {
+        const animations = cloneData(props.data.animations)
+        const animation = selectedAnimation && animations[selectedAnimation]
+        if (!animation) {
+            return
+        }
+        const cycle = animation[selectedDirection ?? props.data.defaultDirection]
+        if (!cycle) {
+            return
+        }
+        cycle?.push({
+            row: newSelectedRow,
+            col: newSelectedCol,
+            imageId: newSelectedSheetId,
+        })
+        updateFromPartial({ animations })
     }
 
     const changeValue = (propery: keyof SpriteData, newValue: string) => {
@@ -62,7 +91,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
         setSelectedDirection(defaultDirection)
     }
 
-    const copyAnimation=(newName: string, animationKey: string) =>{
+    const copyAnimation = (newName: string, animationKey: string) => {
         const { animations } = cloneData(props.data);
         const newAnimation = cloneData(animations[animationKey]) as Animation
         animations[newName] = newAnimation
