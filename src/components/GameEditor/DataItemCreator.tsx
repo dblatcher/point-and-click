@@ -7,12 +7,13 @@ import AddIcon from "@mui/icons-material/Add";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import UploadIcon from "@mui/icons-material/Upload";
-import { Alert, Button, ButtonGroup, Grid, Stack, Typography } from "@mui/material";
+import { Alert, Button, Grid, Stack, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import { ZodObject, ZodRawShape } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { EditorHeading } from "./EditorHeading";
+import { formatIdInput } from "./helpers";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -24,6 +25,7 @@ type Props<DataType extends GameDataItem> = {
 const DATA_TYPES_WITH_JSON: GameDataItemType[] = [
     'rooms', 'actors', 'conversations', 'sprites',
 ]
+
 
 export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, schema, designProperty, itemTypeName }: Props<DataType>) => {
     const { gameDesign, performUpdate, openInEditor } = useGameDesign()
@@ -89,6 +91,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                                     variant: 'outlined',
                                     sx: { width: '100%' },
                                 }}
+                                modifyInput={formatIdInput}
                                 onEntry={(newId) => handleDuplicate(newId, item)}
                                 confirmationText={`Enter ${itemTypeName} id`}
                             />
@@ -115,6 +118,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                     <ButtonWithTextInput
                         label="Start from scratch"
                         onEntry={handleStartFromScratch}
+                        modifyInput={formatIdInput}
                         buttonProps={{
                             startIcon: <AddIcon />,
                             variant: 'contained',
