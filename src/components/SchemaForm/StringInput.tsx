@@ -37,7 +37,7 @@ export const StringInput: FunctionComponent<
                     value={props.value}
                     onInput={sendValue}
                     {...commonProps}
-                    sx={{ maxWidth: 150, paddingRight:1 }}
+                    sx={{ maxWidth: 150, paddingRight: 1 }}
                 />
                 <Typography variant='caption'>{props.value}</Typography>
             </Box>
@@ -63,6 +63,14 @@ export const StringInput: FunctionComponent<
     return (
         <TextField
             multiline={type == 'textArea'}
+            InputLabelProps={type == 'textArea' ? {
+                shrink: true,
+                sx: {
+                    top: 2,
+                    transform: 'none',
+                    left: 10,
+                }
+            } : undefined}
             value={props.value}
             onInput={sendValue}
             {...commonProps}
