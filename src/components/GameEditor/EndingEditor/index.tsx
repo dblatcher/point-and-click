@@ -5,7 +5,7 @@ import { Ending } from "@/definitions";
 import { EndingSchema } from "@/definitions/Ending";
 import { cloneData } from "@/lib/clone";
 import imageService from "@/services/imageService";
-import { Card, Container, Grid, Typography } from "@mui/material";
+import { Card, Container, Typography } from "@mui/material";
 import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
 
