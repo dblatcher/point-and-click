@@ -7,8 +7,9 @@ import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
 import { useGameDesign } from "@/context/game-design-context";
 import { usePageMeta } from "@/context/page-meta-context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import { ColorInput } from "./ColorInput";
 
 const formSchema = GameContentsDataSchema.pick({
   id: true,
@@ -21,6 +22,7 @@ export const Overview = () => {
   const { gameDesign, performUpdate } = useGameDesign();
   const { setHeaderContent } = usePageMeta();
 
+  const [testColor, setTestColor] = useState('red')
 
   useEffect(() => {
     setHeaderContent(
@@ -64,7 +66,7 @@ export const Overview = () => {
         </EditorBox>
 
         <TableContainer component={Paper} sx={{ width: 'unset' }}>
-          <Table size="small"  >
+          <Table size="small" >
             <TableBody>
               <TableRow>
                 <TableCell>rooms</TableCell><TableCell>{gameDesign.rooms.length}</TableCell>
@@ -97,7 +99,6 @@ export const Overview = () => {
 
       <EditorHeading heading="Flags" />
       <FlagMapControl />
-
     </Stack>
   );
 };

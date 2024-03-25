@@ -17,6 +17,7 @@ import { DownloadJsonButton } from "../SpriteEditor/DownloadJsonButton";
 import { SpritePreview } from "../SpritePreview";
 import { PositionPreview } from "./PositionPreview";
 import { SoundValueForm } from "./SoundValueForm";
+import { ColorInput } from "../ColorInput";
 
 
 type Props = {
@@ -85,7 +86,6 @@ export const ActorEditor = (props: Props) => {
         performUpdate('actors', {
             ...cloneData(props.data),
             ...modification,
-            dialogueColor: undefined,
         })
     }
 
@@ -149,7 +149,6 @@ export const ActorEditor = (props: Props) => {
                             label: 'Actor', content: <Box maxWidth={'sm'}>
                                 <SchemaForm
                                     schema={ActorDataSchema.pick({
-                                        id: true,
                                         name: true,
                                         status: true,
                                         isPlayer: true,
@@ -170,11 +169,12 @@ export const ActorEditor = (props: Props) => {
                                     }}
                                 />
 
-                                <StringInput
-                                    type="color"
+                                <ColorInput 
                                     label="dialogue color"
                                     value={dialogueColor || ''}
-                                    inputHandler={value => { changeValue('dialogueColor', value) }} />
+                                    setValue={value => { 
+                                        changeValue('dialogueColor', value) 
+                                    }} />
                             </Box>
                         },
                         {

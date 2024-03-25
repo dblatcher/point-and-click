@@ -50,6 +50,6 @@ export const makeTestActor: { (point: Point): ActorData } = (point) => {
         height: 50,
         sprite: testSprite.data.id,
         direction: 'right',
-        dialogueColor: 'red',
+        dialogueColor: '#ff0000',
     }
 }

@@ -7,7 +7,7 @@ import { cloneData } from "@/lib/clone";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import imageService from "@/services/imageService";
-import { Alert, ButtonGroup, Container, Grid, Stack } from "@mui/material";
+import { Alert, Box, ButtonGroup, Container, Grid, Stack, Typography } from "@mui/material";
 import { Component } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
 import { ArrayControl } from "../ArrayControl";
@@ -22,6 +22,7 @@ import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { ShapeChangeFunction } from "./ShapeControl";
 import { ZoneSetEditor } from "./ZoneSetEditor";
+import { ColorInput } from "../ColorInput";
 
 export type RoomEditorState = {
     clickEffect?: ClickEffect;
@@ -368,25 +369,22 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         {frameWidth > width && (
                             <Alert severity="warning">frame width is bigger than room width</Alert>
                         )}
-
-                        <StringInput label="backdrop color"
-                            type="color"
-                            value={this.props.data.backgroundColor ?? '#ffffff'}
-                            optional
-                            inputHandler={value => this.updateFromPartial({ backgroundColor: value })} />
+                        <Box paddingBottom={2}>
+                            <Typography variant="overline" component={'label'}>Sprite Scaling</Typography>
+                            <ScalingControl
+                                change={(scaling: ScaleLevel) => { this.updateFromPartial({ scaling }) }}
+                                scaling={scaling}
+                                height={this.props.data.height} />
+                        </Box>
                     </Container>
                 )
             },
             {
-                label: 'Scaling', content: (
-                    <ScalingControl
-                        change={(scaling: ScaleLevel) => { this.updateFromPartial({ scaling }) }}
-                        scaling={scaling}
-                        height={this.props.data.height} />
-                )
-            },
-            {
                 label: 'Background', content: (<Stack spacing={2}>
+                    <ColorInput label="backdrop color"
+                        value={this.props.data.backgroundColor ?? '#ffffff'}
+                        setValue={value => this.updateFromPartial({ backgroundColor: value })}
+                    />
                     <ArrayControl
                         list={background}
                         buttonSize="small"
