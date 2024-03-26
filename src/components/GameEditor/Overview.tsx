@@ -1,15 +1,14 @@
 import { SchemaForm } from "@/components/SchemaForm";
+import { useGameDesign } from "@/context/game-design-context";
+import { usePageMeta } from "@/context/page-meta-context";
 import { FixedGameInfoSchema, GameContentsDataSchema } from "@/definitions/Game";
 import { listIds } from "@/lib/util";
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
-import { useGameDesign } from "@/context/game-design-context";
-import { usePageMeta } from "@/context/page-meta-context";
-import { useEffect, useState } from "react";
-import DesignServicesIcon from '@mui/icons-material/DesignServices';
-import { ColorInput } from "./ColorInput";
 
 const formSchema = GameContentsDataSchema.pick({
   id: true,
@@ -21,8 +20,6 @@ const formSchema = GameContentsDataSchema.pick({
 export const Overview = () => {
   const { gameDesign, performUpdate } = useGameDesign();
   const { setHeaderContent } = usePageMeta();
-
-  const [testColor, setTestColor] = useState('red')
 
   useEffect(() => {
     setHeaderContent(
@@ -69,28 +66,36 @@ export const Overview = () => {
           <Table size="small" >
             <TableBody>
               <TableRow>
-                <TableCell>rooms</TableCell><TableCell>{gameDesign.rooms.length}</TableCell>
+                <TableCell>rooms</TableCell>
+                <TableCell>{gameDesign.rooms.length}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>items</TableCell><TableCell>{gameDesign.items.length}</TableCell>
+                <TableCell>items</TableCell>
+                <TableCell>{gameDesign.items.length}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>actors</TableCell><TableCell>{gameDesign.actors.length}</TableCell>
+                <TableCell>actors</TableCell>
+                <TableCell>{gameDesign.actors.length}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>conversations</TableCell><TableCell>{gameDesign.conversations.length}</TableCell>
+                <TableCell>conversations</TableCell>
+                <TableCell>{gameDesign.conversations.length}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>sprites</TableCell><TableCell>{gameDesign.sprites.length}</TableCell>
+                <TableCell>sprites</TableCell>
+                <TableCell>{gameDesign.sprites.length}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>interactions</TableCell><TableCell>{gameDesign.interactions.length}</TableCell>
+                <TableCell>interactions</TableCell>
+                <TableCell>{gameDesign.interactions.length}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>sequences</TableCell><TableCell>{gameDesign.sequences.length}</TableCell>
+                <TableCell>sequences</TableCell>
+                <TableCell>{gameDesign.sequences.length}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>endings</TableCell><TableCell>{gameDesign.endings.length}</TableCell>
+                <TableCell>endings</TableCell>
+                <TableCell>{gameDesign.endings.length}</TableCell>
               </TableRow>
             </TableBody>
           </Table>

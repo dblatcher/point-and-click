@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, IconButton, Stack, Typography } from "@mui/material";
+import { Box, IconButton, Stack, StackProps, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import { ButtonWithTextInput } from "../ButtonWithTextInput";
 
@@ -12,6 +12,7 @@ interface Props<T> {
     renderKeys?: boolean;
     addEntryLabel?: string;
     newKeySuggestions?: string[];
+    containerProps?: StackProps;
 };
 
 
@@ -22,13 +23,14 @@ export const RecordEditor = <T,>({
     newKeySuggestions = [],
     describeValue,
     setEntry,
-    renderKeys = false
+    renderKeys = false,
+    containerProps,
 }: Props<T>) => {
     const populatedEntries = Object.entries(record).filter(([_, value]) => typeof value !== 'undefined') as [string, T][]
     const existingKeys = Object.keys(record)
 
     return (
-        <Stack spacing={1}>
+        <Stack spacing={1} {...containerProps}>
             {populatedEntries.map(([key, value]) => (
                 <Stack key={key}
                     direction={'row'}

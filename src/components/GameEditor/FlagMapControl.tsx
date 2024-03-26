@@ -21,12 +21,16 @@ export const FlagMapControl = () => {
     }
 
     return <RecordEditor
+        containerProps={{
+            maxWidth: 'sm',
+            spacing: 3
+        }}
         record={gameDesign.flagMap}
         addEntryLabel="add new flag"
         describeValue={(key, flag) => {
             return <SchemaForm key={key}
                 formLegend={key}
-                schema={FlagSchema}
+                schema={FlagSchema.omit({ 'default': true })}
                 data={flag}
                 changeValue={(value, fieldDef) => {
                     return setEntry(key, Object.assign({}, flag, getModification(value, fieldDef)))
@@ -35,7 +39,7 @@ export const FlagMapControl = () => {
                     flex: 1,
                     spacing: 0,
                     sx: {
-                        borderColor: 'primary.light',
+                        borderColor: 'primary.dark',
                         borderWidth: 1,
                         borderStyle: 'solid'
                     }
