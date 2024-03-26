@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
+import { HelpButton } from "./HelpButton";
 
 const formSchema = GameContentsDataSchema.pick({
   id: true,
@@ -66,11 +67,11 @@ export const Overview = () => {
           <Table size="small" >
             <TableBody>
               <TableRow>
-                <TableCell>rooms</TableCell>
+                <TableCell>rooms <HelpButton helpTopic="rooms" /></TableCell>
                 <TableCell>{gameDesign.rooms.length}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>items</TableCell>
+                <TableCell>items <HelpButton helpTopic="items" /></TableCell>
                 <TableCell>{gameDesign.items.length}</TableCell>
               </TableRow>
               <TableRow>

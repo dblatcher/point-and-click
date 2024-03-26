@@ -1,7 +1,6 @@
-import { FunctionComponent, ReactNode, useState } from "react";
-import { HelpText } from "./HelpText";
-import { Typography, IconButton, Stack, Dialog, DialogTitle, DialogContent, Divider, Box } from "@mui/material";
-import HelpIcon from "@mui/icons-material/Help";
+import { Box, Divider, Stack, Typography } from "@mui/material";
+import { FunctionComponent, ReactNode } from "react";
+import { HelpButton } from "./HelpButton";
 
 interface Props {
     heading: string;
@@ -16,11 +15,10 @@ export const EditorHeading: FunctionComponent<Props> = ({
     heading, helpTopic, level = 2, itemId, children
 }: Props) => {
 
-    const [helpShowing, setHelpShowing] = useState(false)
 
     return (
         <>
-            <Stack component={'header'} direction={'row'} justifyContent={'flex-start'} alignItems={'center'}>
+            <Stack component={'header'} direction={'row'} justifyContent={'flex-start'} alignItems={'center'} borderBottom={2} marginBottom={2}>
                 <Box>
                     <Typography
                         variant={level === 2 ? 'h2' : 'h3'}
@@ -34,26 +32,16 @@ export const EditorHeading: FunctionComponent<Props> = ({
                     {children}
                 </Box>
 
-                {helpTopic && (
-                    <IconButton
-                        sx={{ marginLeft: 'auto' }}
-                        aria-label={`open help text about ${helpTopic}`}
-                        onClick={(): void => { setHelpShowing(!helpShowing) }}
-                    >
-                        <HelpIcon />
-                    </IconButton>
-                )}
+                {helpTopic &&
+                    <HelpButton helpTopic={helpTopic}
+                        fontSize="large"
+                        buttonProps={{
+                            sx: {
+                                marginLeft: 'auto'
+                            }
+                        }} />
+                }
             </Stack>
-            <Divider sx={{ marginY: 1 }} />
-
-            <Dialog open={!!(helpTopic && helpShowing)} onClose={() => { setHelpShowing(false) }}>
-                <DialogTitle>
-                    {helpTopic}
-                </DialogTitle>
-                <DialogContent>
-                    {helpTopic && <HelpText topic={helpTopic} />}
-                </DialogContent>
-            </Dialog>
         </>
     )
 
