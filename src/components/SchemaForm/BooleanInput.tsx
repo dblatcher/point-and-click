@@ -7,6 +7,7 @@ export const BooleanInput: FunctionComponent<
     FieldProps & {
         value: boolean;
         inputHandler: { (value: boolean): void };
+        title?: string
     }
 > = (props) => {
     const sendValue: FormEventHandler<HTMLInputElement> = (event) => {
@@ -21,6 +22,9 @@ export const BooleanInput: FunctionComponent<
                 required={!props.optional}
                 disabled={props.readOnly}
                 onChange={sendValue}
+                inputProps={{
+                    title: props.title ?? ""
+                }}
             />
         </Stack>
     );
