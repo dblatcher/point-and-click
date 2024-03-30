@@ -1,4 +1,3 @@
-import { type TabSetItem } from "@/components/GameEditor/TabSet";
 import { SchemaForm, getModification } from "@/components/SchemaForm";
 import { ActorData, BackgroundLayer, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
@@ -7,7 +6,7 @@ import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import imageService from "@/services/imageService";
 import { Alert, Box, Container, Grid, Stack, Typography } from "@mui/material";
-import { Component } from "react";
+import { Component, ReactNode } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
 import { ArrayControl } from "../ArrayControl";
 import { ColorInput } from "../ColorInput";
@@ -35,6 +34,11 @@ type RoomEditorProps = {
     existingRoomIds: string[];
     actors?: ActorData[];
     data: RoomData;
+}
+
+interface TabbedContent {
+    label: string;
+    content: ReactNode;
 }
 
 const defaultParallax = 1;
@@ -339,7 +343,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
     }
 
-    buildTabs(): TabSetItem[] {
+    buildTabs(): TabbedContent[] {
         const {
             background, obstacleAreas = [], hotspots = [], walkableAreas = [],
             scaling = [],
