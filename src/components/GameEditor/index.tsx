@@ -2,41 +2,23 @@ import { GameDesignProvider } from "@/context/game-design-context";
 import { SpritesProvider } from "@/context/sprite-context";
 import { prebuiltGameDesign } from '@/data/fullGame';
 import { GameDataItem, GameDesign, Interaction, Verb } from "@/definitions";
-import { ActorDataSchema } from "@/definitions/ActorData";
-import { ConversationSchema } from "@/definitions/Conversation";
 import { FlagMap } from "@/definitions/Flag";
 import { GameDataItemType } from "@/definitions/Game";
-import { ItemDataSchema } from "@/definitions/ItemData";
-import { RoomDataSchema } from "@/definitions/RoomData";
-import { SpriteDataSchema } from "@/definitions/SpriteSheet";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { findById, findIndexById, listIds } from "@/lib/util";
+import { findIndexById } from "@/lib/util";
 import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import { editorTheme } from "@/theme";
 import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
 import { Box, Button, ButtonGroup, Container, IconButton, Stack, ThemeProvider } from "@mui/material";
 import { Component } from "react";
-import { ActorEditor } from "./ActorEditor";
-import { ConversationEditor } from "./ConversationEditor";
-import { DataItemCreator } from "./DataItemCreator";
-import { EndingEditor } from "./EndingEditor";
-import { ImageAssetTool } from "./ImageAssetTool";
-import { InteractionEditor } from "./InteractionEditor";
-import { ItemEditor } from "./ItemEditor";
-import { Overview } from "./Overview";
-import { RoomEditor } from "./RoomEditor";
+import { TabId, tabOrder } from "../../lib/editor-config";
+import { MainWindow } from "./MainWindow";
 import { testSprite } from "./RoomEditor/testSprite";
 import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
-import { SequenceEditor } from "./SequenceEditor";
-import { SoundAssetTool } from "./SoundAssetTool";
-import { SpriteEditor } from "./SpriteEditor";
 import { TestGameDialog } from "./TestGameDialog";
-import { VerbEditor } from "./VerbEditor";
-import { VerbMenuEditor } from "./VerbMenuEditor";
-import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb } from "./defaults";
-import { TabId, tabOrder } from "../../lib/editor-config";
+import { defaultVerbs1, getBlankRoom } from "./defaults";
 
 
 type State = {
@@ -122,22 +104,6 @@ export default class GameEditor extends Component<Props, State>{
 
     componentWillUnmount() {
         imageService.off('update', this.respondToServiceUpdate)
-    }
-
-    get currentRoom() {
-        return findById(this.state.gameItemIds.rooms, this.state.gameDesign.rooms)
-    }
-    get currentItem() {
-        return findById(this.state.gameItemIds.items, this.state.gameDesign.items)
-    }
-    get currentActor() {
-        return findById(this.state.gameItemIds.actors, this.state.gameDesign.actors)
-    }
-    get currentConversation() {
-        return findById(this.state.gameItemIds.conversations, this.state.gameDesign.conversations)
-    }
-    get currentSprite() {
-        return findById(this.state.gameItemIds.sprites, this.state.gameDesign.sprites)
     }
 
     performUpdate(property: keyof GameDesign, data: unknown) {
@@ -272,113 +238,9 @@ export default class GameEditor extends Component<Props, State>{
         const {
             gameDesign, tabOpen, gameItemIds, history,
         } = this.state
-        const { performUpdate, deleteArrayItem, openInEditor, currentSprite, currentRoom } = this
+        const { performUpdate, deleteArrayItem, openInEditor, changeInteraction } = this
 
         const sprites = [testSprite, ...gameDesign.sprites.map(data => new Sprite(data))]
-        const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
-        const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
-        const currentEnding = findById(gameItemIds.endings, gameDesign.endings)
-
-        const renderOpenTab = () => {
-            switch (tabOpen) {
-                case 'main':
-                    return <Overview />
-                case 'rooms':
-                    return currentRoom
-                        ? <RoomEditor
-                            updateData={data => { this.performUpdate('rooms', data) }}
-                            deleteData={index => { this.deleteArrayItem(index, 'rooms') }}
-                            existingRoomIds={listIds(gameDesign.rooms)}
-                            actors={gameDesign.actors}
-                            key={gameItemIds.rooms} data={currentRoom} />
-                        : <DataItemCreator
-                            createBlank={getBlankRoom}
-                            schema={RoomDataSchema}
-                            designProperty="rooms"
-                            itemTypeName="room"
-                        />
-                case 'items':
-                    return this.currentItem ?
-                        <ItemEditor item={this.currentItem} />
-                        :
-                        <DataItemCreator
-                            createBlank={makeBlankItem}
-                            schema={ItemDataSchema}
-                            designProperty="items"
-                            itemTypeName="inventory item"
-                        />
-                case 'actors':
-                    return this.currentActor
-                        ? <ActorEditor data={this.currentActor} />
-                        : <DataItemCreator
-                            createBlank={makeBlankActor}
-                            schema={ActorDataSchema}
-                            designProperty="actors"
-                            itemTypeName="actor"
-                        />
-                case 'conversations':
-                    return this.currentConversation
-                        ? <ConversationEditor key={gameItemIds.conversations}
-                            conversation={this.currentConversation} />
-                        : <DataItemCreator
-                            createBlank={makeBlankConversation}
-                            schema={ConversationSchema}
-                            designProperty="conversations"
-                            itemTypeName="convesation"
-                        />
-                case 'sprites':
-                    return currentSprite
-                        ? <SpriteEditor data={currentSprite} />
-                        : <DataItemCreator
-                            createBlank={makeBlankSprite}
-                            schema={SpriteDataSchema}
-                            designProperty="sprites"
-                            itemTypeName="sprite"
-                        />
-                case 'interactions':
-                    return <InteractionEditor
-                        changeInteraction={this.changeInteraction}
-                        deleteInteraction={(index: number) => { this.deleteArrayItem(index, 'interactions') }}
-                        updateData={data => { this.performUpdate('interactions', data) }}
-                        gameDesign={gameDesign} />
-                case 'sequences':
-                    return currentSequence
-                        ? <SequenceEditor key={gameItemIds.sequences}
-                            data={currentSequence}
-                        />
-                        : <DataItemCreator
-                            createBlank={makeBlankSequence}
-                            designProperty="sequences"
-                            itemTypeName="sequence"
-                        />
-                case 'endings':
-                    return currentEnding
-                        ? <EndingEditor ending={currentEnding} />
-                        : <DataItemCreator
-                            createBlank={makeBlankEnding}
-                            designProperty="endings"
-                            itemTypeName="ending"
-                        />
-                case 'verbs':
-                    return currentVerb
-                        ? <VerbEditor verb={currentVerb}
-                        />
-                        : <>
-                            <VerbMenuEditor />
-                            <Box marginTop={2}>
-                                <DataItemCreator
-                                    createBlank={makeBlankVerb}
-                                    designProperty="verbs"
-                                    itemTypeName="verb"
-                                />
-                            </Box>
-                        </>
-                case 'images':
-                    return <ImageAssetTool />
-                case 'sounds':
-                    return <SoundAssetTool />
-            }
-        }
 
         return (
             <ThemeProvider theme={editorTheme}>
@@ -387,6 +249,7 @@ export default class GameEditor extends Component<Props, State>{
                     performUpdate,
                     deleteArrayItem,
                     openInEditor,
+                    changeInteraction,
                 }} >
                     <SpritesProvider value={sprites}>
                         <Container maxWidth='xl'
@@ -428,7 +291,7 @@ export default class GameEditor extends Component<Props, State>{
                             </Stack>
 
                             <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
-                                {renderOpenTab()}
+                                <MainWindow gameItemIds={gameItemIds}  tabOpen={tabOpen}/>
                             </Box>
 
                             <TestGameDialog
