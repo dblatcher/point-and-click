@@ -9,10 +9,10 @@ import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { StringInput } from "../SchemaForm/StringInput";
 import { ItemMenuInner } from "../game-ui/ItemMenu";
-import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FileAssetSelector } from "./FileAssetSelector";
+import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
 import { FramePicker } from "./SpriteEditor/FramePicker";
 
 type Props = {
@@ -58,7 +58,7 @@ export const ItemEditor = ({ item }: Props) => {
     return (
         <Stack component='article' spacing={3}>
             <EditorHeading heading="Item Editor" helpTopic="items" itemId={id} >
-                <DeleteDataItemButton
+                <ItemEditorHeaderControls
                     dataItem={item}
                     itemType="items"
                     itemTypeName="Inventory Item"

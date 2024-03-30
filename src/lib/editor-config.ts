@@ -33,3 +33,7 @@ export const tabOrder: EditorTab[] = [
     buildTab('images', 'image assets'),
     buildTab('sounds', 'audio assets'),
 ]
+
+export const DATA_TYPES_WITH_JSON: GameDataItemType[] = [
+    'rooms', 'actors', 'conversations', 'sprites',
+]

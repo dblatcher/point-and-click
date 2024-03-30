@@ -8,16 +8,15 @@ import { directions } from "@/definitions/SpriteSheet";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import { Box, ButtonGroup, Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import { AccoridanedContent } from "../AccordianedContent";
-import { DeleteDataItemButton } from "../DeleteDataItemButton";
+import { ColorInput } from "../ColorInput";
 import { EditorHeading } from "../EditorHeading";
+import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { RecordEditor } from "../RecordEditor";
-import { DownloadJsonButton } from "../SpriteEditor/DownloadJsonButton";
 import { SpritePreview } from "../SpritePreview";
 import { PositionPreview } from "./PositionPreview";
 import { SoundValueForm } from "./SoundValueForm";
-import { ColorInput } from "../ColorInput";
 
 
 type Props = {
@@ -129,17 +128,11 @@ export const ActorEditor = (props: Props) => {
     return (
         <Stack component='article' spacing={1}>
             <EditorHeading heading="Actor Editor" itemId={props.data.id} >
-                <ButtonGroup>
-                    <DeleteDataItemButton
-                        dataItem={actor}
-                        itemType="actors"
-                        itemTypeName="actor"
-                    />
-                    <DownloadJsonButton
-                        dataItem={actor}
-                        itemTypeName="actor"
-                    />
-                </ButtonGroup>
+                <ItemEditorHeaderControls
+                    dataItem={actor}
+                    itemType="actors"
+                    itemTypeName="actor"
+                />
             </EditorHeading>
 
             <Grid container flexWrap={'nowrap'} spacing={1}>
@@ -169,11 +162,11 @@ export const ActorEditor = (props: Props) => {
                                     }}
                                 />
 
-                                <ColorInput 
+                                <ColorInput
                                     label="dialogue color"
                                     value={dialogueColor || ''}
-                                    setValue={value => { 
-                                        changeValue('dialogueColor', value) 
+                                    setValue={value => {
+                                        changeValue('dialogueColor', value)
                                     }} />
                             </Box>
                         },

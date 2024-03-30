@@ -1,19 +1,18 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
+import { useGameDesign } from "@/context/game-design-context";
+import { useSprites } from "@/context/sprite-context";
 import { ActorData, Animation, Direction, SpriteData, SpriteFrame } from "@/definitions";
 import { directions } from "@/definitions/SpriteSheet";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { Box, ButtonGroup, Grid, Stack } from "@mui/material";
+import { findById } from "@/lib/util";
+import { Box, Grid, Stack } from "@mui/material";
 import { useState } from "react";
-import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
+import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { AnimationDialog } from "./AnimationDialog";
 import { AnimationGrid } from "./AnimationGrid";
-import { DownloadJsonButton } from "./DownloadJsonButton";
 import { NewAnimationForm } from "./NewAnimationForm";
-import { useGameDesign } from "@/context/game-design-context";
-import { useSprites } from "@/context/sprite-context";
-import { findById } from "@/lib/util";
 
 
 type SpriteEditorProps = {
@@ -144,17 +143,11 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
 
     return <Stack component={'article'} spacing={1}>
         <EditorHeading heading="Sprite Editor" itemId={props.data?.id ?? '[new]'} >
-            <ButtonGroup>
-                <DeleteDataItemButton
-                    dataItem={props.data}
-                    itemType="sprites"
-                    itemTypeName="sprite"
-                />
-                <DownloadJsonButton
-                    dataItem={props.data}
-                    itemTypeName="sprite"
-                />
-            </ButtonGroup>
+            <ItemEditorHeaderControls
+                dataItem={props.data}
+                itemType="sprites"
+                itemTypeName="sprite"
+            />
         </EditorHeading>
         <Stack direction={'row'} spacing={2}>
             <Box minWidth={100}>

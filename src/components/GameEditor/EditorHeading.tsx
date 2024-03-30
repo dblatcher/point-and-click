@@ -25,7 +25,7 @@ export const EditorHeading: FunctionComponent<Props> = ({
                 {itemId && <Typography>{itemId}</Typography>}
             </Box>
 
-            <Box alignSelf={'flex-end'} padding={1}>
+            <Box alignSelf={'flex-end'} padding={1} flex={1}>
                 {children}
             </Box>
 

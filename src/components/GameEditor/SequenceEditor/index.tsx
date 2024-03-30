@@ -1,12 +1,12 @@
 import { StringInput } from "@/components/SchemaForm/StringInput";
+import { useGameDesign } from "@/context/game-design-context";
 import { Consequence, ImmediateConsequence, Order, Sequence } from "@/definitions";
 import { ImmediateConsequenceSchema } from "@/definitions/Consequence";
 import { cloneData } from "@/lib/clone";
 import { Grid } from "@mui/material";
-import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
+import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { SequenceFlow } from "./SequenceFlow";
-import { useGameDesign } from "@/context/game-design-context";
 
 
 type Props = {
@@ -90,9 +90,8 @@ export const SequenceEditor = (props: Props) => {
                 </>)
                 : (<>
                     <EditorHeading heading="Sequence Editor" itemId={sequence?.id ?? '[new]'} >
-                        <DeleteDataItemButton
+                        <ItemEditorHeaderControls
                             dataItem={sequence}
-                            buttonProps={{ variant: 'outlined' }}
                             itemType='sequences'
                             itemTypeName="sequence" />
                     </EditorHeading>

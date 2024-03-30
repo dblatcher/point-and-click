@@ -7,9 +7,9 @@ import { describeCommand, getDefaultResponseText, wildCard } from "@/lib/command
 import { Box, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { StringInput } from "../SchemaForm/StringInput";
-import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
+import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
 
 
 type Props = {
@@ -58,11 +58,10 @@ export const VerbEditor = ({ verb }: Props) => {
     return (
         <Stack spacing={2}>
             <EditorHeading heading="Verb Editor" itemId={verb.id} >
-                <DeleteDataItemButton
+                <ItemEditorHeaderControls
                     dataItem={verb}
                     itemType="verbs"
                     itemTypeName="verb"
-                    buttonProps={{ variant: 'outlined' }}
                 />
             </EditorHeading>
             <Stack direction={'row'} spacing={2}>

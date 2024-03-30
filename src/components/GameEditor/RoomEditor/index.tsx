@@ -1,19 +1,18 @@
 import { type TabSetItem } from "@/components/GameEditor/TabSet";
 import { SchemaForm, getModification } from "@/components/SchemaForm";
-import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ActorData, BackgroundLayer, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import { cloneData } from "@/lib/clone";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import imageService from "@/services/imageService";
-import { Alert, Box, ButtonGroup, Container, Grid, Stack, Typography } from "@mui/material";
+import { Alert, Box, Container, Grid, Stack, Typography } from "@mui/material";
 import { Component } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
 import { ArrayControl } from "../ArrayControl";
-import { DeleteDataItemButton } from "../DeleteDataItemButton";
+import { ColorInput } from "../ColorInput";
 import { EditorHeading } from "../EditorHeading";
-import { DownloadJsonButton } from "../SpriteEditor/DownloadJsonButton";
+import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
@@ -22,7 +21,6 @@ import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { ShapeChangeFunction } from "./ShapeControl";
 import { ZoneSetEditor } from "./ZoneSetEditor";
-import { ColorInput } from "../ColorInput";
 
 export type RoomEditorState = {
     clickEffect?: ClickEffect;
@@ -455,17 +453,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} >
-                <ButtonGroup>
-                    <DeleteDataItemButton
-                        dataItem={this.props.data}
-                        itemType="rooms"
-                        itemTypeName="room"
-                    />
-                    <DownloadJsonButton
-                        dataItem={this.props.data}
-                        itemTypeName="room"
-                    />
-                </ButtonGroup>
+                <ItemEditorHeaderControls
+                    dataItem={this.props.data}
+                    itemType="rooms"
+                    itemTypeName="room"
+                />
             </EditorHeading>
             <Grid container flexWrap={'nowrap'} spacing={1}>
                 <Grid item xs={4}>

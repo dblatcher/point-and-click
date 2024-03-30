@@ -14,6 +14,7 @@ import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { EditorHeading } from "./EditorHeading";
 import { formatIdInput } from "./helpers";
+import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -21,10 +22,6 @@ type Props<DataType extends GameDataItem> = {
     designProperty: GameDataItemType
     itemTypeName: string
 }
-
-const DATA_TYPES_WITH_JSON: GameDataItemType[] = [
-    'rooms', 'actors', 'conversations', 'sprites',
-]
 
 
 export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, schema, designProperty, itemTypeName }: Props<DataType>) => {

@@ -5,13 +5,12 @@ import { Sequence } from "@/definitions";
 import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice } from "@/definitions/Conversation";
 import { cloneData } from "@/lib/clone";
 import { findById, listIds } from "@/lib/util";
-import { Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
-import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
+import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { SequenceEditor } from "../SequenceEditor";
-import { DownloadJsonButton } from "../SpriteEditor/DownloadJsonButton";
 import { makeBlankConversationChoice } from "../defaults";
 import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
@@ -182,17 +181,11 @@ export const ConversationEditor = (props: Props) => {
     return (
         <Stack component={'article'} spacing={2}>
             <EditorHeading heading={`Conversation Editor`} itemId={conversation.id} >
-                <ButtonGroup>
-                    <DeleteDataItemButton
-                        dataItem={conversation}
-                        itemType="conversations"
-                        itemTypeName="conversation"
-                    />
-                    <DownloadJsonButton
-                        dataItem={conversation}
-                        itemTypeName="conversation"
-                    />
-                </ButtonGroup>
+                <ItemEditorHeaderControls
+                    dataItem={conversation}
+                    itemType="conversations"
+                    itemTypeName="conversation"
+                />
             </EditorHeading>
 
             <ConversationFlow conversation={conversation} key={JSON.stringify(cloneData(conversation))}

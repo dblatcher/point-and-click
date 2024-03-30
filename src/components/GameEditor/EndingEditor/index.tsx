@@ -6,14 +6,12 @@ import { EndingSchema } from "@/definitions/Ending";
 import { cloneData } from "@/lib/clone";
 import imageService from "@/services/imageService";
 import { Card, Container, Typography } from "@mui/material";
-import { DeleteDataItemButton } from "../DeleteDataItemButton";
 import { EditorHeading } from "../EditorHeading";
-
+import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 
 type Props = {
     ending: Ending;
 }
-
 
 export const EndingEditor = ({ ending }: Props) => {
     const { performUpdate } = useGameDesign()
@@ -30,9 +28,8 @@ export const EndingEditor = ({ ending }: Props) => {
     return (
         <article>
             <EditorHeading heading="Ending Editor" itemId={ending.id} >
-                <DeleteDataItemButton
+                <ItemEditorHeaderControls
                     dataItem={ending}
-                    buttonProps={{ variant: 'outlined' }}
                     itemType='endings'
                     itemTypeName="ending" />
             </EditorHeading>
