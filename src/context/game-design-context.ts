@@ -1,12 +1,12 @@
 import { createContext, useContext } from 'react'
 import { GameDesign } from '@/definitions'
-import { GameDataItemType } from '@/definitions/Game'
+import { TabId } from '@/lib/editor-config'
 
 const gameDesignContext = createContext<{
     gameDesign: GameDesign,
     performUpdate: { (property: keyof GameDesign, data: unknown): void },
     deleteArrayItem: { (index: number, property: keyof GameDesign): void },
-    openInEditor: { (itemType: GameDataItemType, itemId: string | undefined): void }
+    openInEditor: { (itemType: TabId, itemId: string | undefined): void }
 }>(
     {
         gameDesign: {

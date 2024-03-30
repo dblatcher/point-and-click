@@ -4,12 +4,13 @@ import { usePageMeta } from "@/context/page-meta-context";
 import { FixedGameInfoSchema, GameContentsDataSchema } from "@/definitions/Game";
 import { listIds } from "@/lib/util";
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
-import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
 import { HelpButton } from "./HelpButton";
+import { tabOrder } from "../../lib/editor-config";
 
 const formSchema = GameContentsDataSchema.pick({
   id: true,
@@ -19,8 +20,10 @@ const formSchema = GameContentsDataSchema.pick({
 }))
 
 export const Overview = () => {
-  const { gameDesign, performUpdate } = useGameDesign();
+  const { gameDesign, performUpdate, openInEditor } = useGameDesign();
   const { setHeaderContent } = usePageMeta();
+
+  const mainTab = tabOrder.find(tab => tab.id === 'main')
 
   useEffect(() => {
     setHeaderContent(
@@ -35,7 +38,7 @@ export const Overview = () => {
 
   return (
     <Stack>
-      <EditorHeading heading="main" />
+      <EditorHeading heading={mainTab?.label ?? 'main'} />
       <Stack direction={'row'} spacing={1} paddingY={1}>
 
         <EditorBox title="attributes">
@@ -66,41 +69,25 @@ export const Overview = () => {
         <TableContainer component={Paper} sx={{ width: 'unset' }}>
           <Table size="small" >
             <TableBody>
-              <TableRow>
-                <TableCell>rooms</TableCell>
-                <TableCell>{gameDesign.rooms.length}</TableCell>
-                <TableCell><HelpButton helpTopic="rooms" /></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>items</TableCell>
-                <TableCell>{gameDesign.items.length}</TableCell>
-                <TableCell><HelpButton helpTopic="items" /></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>actors</TableCell>
-                <TableCell>{gameDesign.actors.length}</TableCell>
-                <TableCell><HelpButton helpTopic="actors" /> </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>conversations</TableCell>
-                <TableCell>{gameDesign.conversations.length}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>sprites</TableCell>
-                <TableCell>{gameDesign.sprites.length}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>interactions</TableCell>
-                <TableCell>{gameDesign.interactions.length}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>sequences</TableCell>
-                <TableCell>{gameDesign.sequences.length}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>endings</TableCell>
-                <TableCell>{gameDesign.endings.length}</TableCell>
-              </TableRow>
+              {tabOrder.filter(tab => tab !== mainTab).map(tab => (
+                <TableRow key={tab.id}>
+                  <TableCell>
+                    <Button
+                      variant="outlined"
+                      fullWidth
+                      onClick={() => openInEditor(tab.id, undefined)}
+                    >{tab.label}</Button>
+                  </TableCell>
+                  <TableCell>
+                    {tab.itemType && "x" + gameDesign[tab.itemType].length}
+                  </TableCell>
+                  <TableCell>
+                    {tab.helpTopic &&
+                      <HelpButton helpTopic={tab.helpTopic} />
+                    }
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

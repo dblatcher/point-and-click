@@ -36,14 +36,12 @@ import { TestGameDialog } from "./TestGameDialog";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
 import { defaultVerbs1, getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb } from "./defaults";
+import { TabId, tabOrder } from "../../lib/editor-config";
 
-type NonItemEditorType = 'main' | 'images' | 'sounds' | 'interactions';
-
-type TabType = NonItemEditorType | GameDataItemType
 
 type State = {
     gameDesign: GameDesign;
-    tabOpen: TabType;
+    tabOpen: TabId;
     gameItemIds: Partial<Record<GameDataItemType, string>>;
     resetTimeStamp: number;
     history: { gameDesign: GameDesign; label: string }[];
@@ -55,20 +53,6 @@ export type Props = {
     usePrebuiltGame?: boolean;
 }
 
-const tabOrder: TabType[] = [
-    'main',
-    'rooms',
-    'items',
-    'actors',
-    'conversations',
-    'sprites',
-    'sequences',
-    'endings',
-    'verbs',
-    'interactions',
-    'images',
-    'sounds',
-]
 
 const defaultRoomId = 'ROOM_1' as const;
 
@@ -265,7 +249,7 @@ export default class GameEditor extends Component<Props, State>{
         })
     }
 
-    openInEditor(tabType: TabType, itemId?: string) {
+    openInEditor(tabType: TabId, itemId?: string) {
         this.setState(state => {
             const { gameItemIds } = state
             switch (tabType) {
@@ -413,7 +397,7 @@ export default class GameEditor extends Component<Props, State>{
                                 overflow: 'hidden',
                                 flex: 1,
                                 gap: 5,
-                                background:'white',
+                                background: 'white',
                             }}>
 
                             <Stack
@@ -435,10 +419,10 @@ export default class GameEditor extends Component<Props, State>{
                                     </IconButton>
                                 </Stack>
                                 <ButtonGroup orientation="vertical">
-                                    {tabOrder.map(tabName => (
-                                        <Button key={tabName}
-                                            variant={tabName === tabOpen ? 'contained' : 'outlined'}
-                                            onClick={() => { openInEditor(tabName) }}>{tabName}</Button>
+                                    {tabOrder.map(tab => (
+                                        <Button key={tab.id}
+                                            variant={tab.id === tabOpen ? 'contained' : 'outlined'}
+                                            onClick={() => { openInEditor(tab.id) }}>{tab.label}</Button>
                                     ))}
                                 </ButtonGroup>
                             </Stack>

@@ -57,6 +57,10 @@ export type GameDesign = z.infer<typeof GameDesignSchema>
 
 export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Ending | Verb
 
+export const GameDataItemTypeEnum = z.enum([
+    'rooms', 'items', 'actors', 'conversations', 'sprites', 'sequences', 'endings', 'verbs'
+])
+
 export type GameDataItemType =
     'rooms'
     | 'items'
