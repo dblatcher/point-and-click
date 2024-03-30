@@ -1,5 +1,5 @@
 import HelpIcon from "@mui/icons-material/Help";
-import { Dialog, DialogContent, DialogTitle, IconButton, IconButtonProps, SvgIconPropsSizeOverrides } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, IconButtonProps } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 import { HelpText } from "./HelpText";
 
@@ -28,11 +28,21 @@ export const HelpButton: FunctionComponent<Props> = ({
 
 
             <Dialog open={helpShowing} onClose={() => { setHelpShowing(false) }}>
-                <DialogTitle>
+                <DialogTitle sx={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText',
+                    textTransform: 'capitalize',
+                    alignItems: 'center',
+                    display: 'flex',
+                    gap: 5,
+                }}>
+                    <HelpIcon fontSize="large" />
                     {helpTopic}
                 </DialogTitle>
                 <DialogContent>
-                    {helpTopic && <HelpText topic={helpTopic} />}
+                    <Box paddingTop={2}>
+                        {helpTopic && <HelpText topic={helpTopic} />}
+                    </Box>
                 </DialogContent>
             </Dialog>
         </>

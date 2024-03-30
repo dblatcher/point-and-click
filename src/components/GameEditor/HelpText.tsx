@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
 import { MarkDown } from "../MarkDown";
 import itemsHelp from "@/content/editor-help/items.md"
+import actorsHelp from "@/content/editor-help/actors.md"
 
 interface Props {
     topic: string;
@@ -43,6 +44,8 @@ export const HelpText: FunctionComponent<Props> = ({
                     <p>Use this control to change the order in which verbs will appear in the UI.</p>
                 </article>
             )
+        case 'actors':
+            return <MarkDown content={actorsHelp}/>
         default:
             return (
                 <article>

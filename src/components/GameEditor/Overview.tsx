@@ -67,16 +67,19 @@ export const Overview = () => {
           <Table size="small" >
             <TableBody>
               <TableRow>
-                <TableCell>rooms <HelpButton helpTopic="rooms" /></TableCell>
+                <TableCell>rooms</TableCell>
                 <TableCell>{gameDesign.rooms.length}</TableCell>
+                <TableCell><HelpButton helpTopic="rooms" /></TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>items <HelpButton helpTopic="items" /></TableCell>
+                <TableCell>items</TableCell>
                 <TableCell>{gameDesign.items.length}</TableCell>
+                <TableCell><HelpButton helpTopic="items" /></TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>actors</TableCell>
                 <TableCell>{gameDesign.actors.length}</TableCell>
+                <TableCell><HelpButton helpTopic="actors" /> </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>conversations</TableCell>
