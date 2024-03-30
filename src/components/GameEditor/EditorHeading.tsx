@@ -19,8 +19,7 @@ export const EditorHeading: FunctionComponent<Props> = ({
             <Box>
                 <Typography
                     textTransform={'capitalize'}
-                    variant={level === 2 ? 'h2' : 'h3'}
-                    sx={{ fontSize: level === 2 ? '175%' : '150%' }}>
+                    variant={level === 2 ? 'h2' : 'h3'} >
                     {heading}
                 </Typography>
                 {itemId && <Typography>{itemId}</Typography>}
