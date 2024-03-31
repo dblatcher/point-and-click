@@ -3,7 +3,7 @@ import { RoomDataSchema } from "@/definitions/RoomData";
 import { cloneData } from "@/lib/clone";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
-import { Box, Container, Grid, Stack, Typography } from "@mui/material";
+import { Box, Container, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Component, ReactNode } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
 import { EditorHeading } from "../EditorHeading";
@@ -22,6 +22,7 @@ export type RoomEditorState = {
     activeWalkableIndex?: number;
     activeObstacleIndex?: number;
     activeHotspotIndex?: number;
+    tabOpen: 0 | 1
 };
 
 type RoomEditorProps = {
@@ -61,6 +62,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             activeWalkableIndex: 0,
             activeObstacleIndex: 0,
             activeHotspotIndex: 0,
+            tabOpen: 0,
         }
 
         this.changeProperty = this.changeProperty.bind(this)
@@ -379,7 +381,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     render() {
-        const { clickEffect } = this.state
+        const { clickEffect, tabOpen } = this.state
         const { id } = this.props.data
         const { actors = [] } = this.props
         const tabs = this.buildTabs()
@@ -393,24 +395,35 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 />
             </EditorHeading>
 
-            <DimensionControl room={this.props.data} />
-            <BackgroundControl room={this.props.data} />
+            <Tabs value={tabOpen} onChange={(event, tabOpen) => this.setState({ tabOpen })}>
+                <Tab label="Background and dimensions" value={0} />
+                <Tab label="Features" value={1} />
+            </Tabs>
 
-            <Grid container flexWrap={'nowrap'} spacing={1}>
-                <Grid item xs={4}>
-                    <AccoridanedContent tabs={tabs} />
+            {tabOpen === 0 && (
+                <>
+                    <DimensionControl room={this.props.data} />
+                    <BackgroundControl room={this.props.data} />
+                </>
+            )}
+
+            {tabOpen === 1 && (
+                <Grid container flexWrap={'nowrap'} spacing={1}>
+                    <Grid item xs={4}>
+                        <AccoridanedContent tabs={tabs} />
+                    </Grid>
+                    <Grid item flex={1}>
+                        <div style={{ position: 'sticky', top: 1 }}>
+                            <Preview
+                                actors={actors}
+                                roomData={this.props.data}
+                                clickEffect={clickEffect}
+                                activeHotspotIndex={this.state.activeHotspotIndex}
+                                handleRoomClick={this.handleRoomClick} />
+                        </div>
+                    </Grid>
                 </Grid>
-                <Grid item flex={1}>
-                    <div style={{ position: 'sticky', top: 1 }}>
-                        <Preview
-                            actors={actors}
-                            roomData={this.props.data}
-                            clickEffect={clickEffect}
-                            activeHotspotIndex={this.state.activeHotspotIndex}
-                            handleRoomClick={this.handleRoomClick} />
-                    </div>
-                </Grid>
-            </Grid>
+            )}
         </Stack>
     }
 }
