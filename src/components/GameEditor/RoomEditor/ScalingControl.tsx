@@ -3,7 +3,7 @@ import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { ActorData, RoomData, ScaleLevel } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { clamp, eventToNumber } from "@/lib/util";
-import { Alert, Box, Grid, Stack } from "@mui/material";
+import { Alert, Box, Grid, Stack, Typography } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { useGameDesign } from "@/context/game-design-context";
 import { useState } from "react";
@@ -27,10 +27,10 @@ export const ScalingControl = ({ room }: Props) => {
     const [testActor, setTestActor] = useState<ActorData>(initialTestActor)
     const { scaling = [], height } = room
     const { performUpdate } = useGameDesign()
+
     const change = (scaling: ScaleLevel) => {
         performUpdate('rooms', { ...room, scaling })
     }
-
 
     const handleAdjustment = (
         index: number, value: number, property: 'scale' | 'y'
@@ -47,7 +47,6 @@ export const ScalingControl = ({ room }: Props) => {
     }
 
     const handleClick = (clickX: number, clickY: number) => {
-
         const { x, y } = locateClickInWorld(clickX, clickY, viewAngle, room)
         const newActor = { ...testActor, x, y }
         setTestActor(newActor)
@@ -56,6 +55,7 @@ export const ScalingControl = ({ room }: Props) => {
     return (<Box>
         <Grid container>
             <Grid item xs={2}>
+                <Typography>Scale lines</Typography>
                 <ArrayControl
                     list={scaling}
                     buttonSize='medium'
@@ -83,9 +83,6 @@ export const ScalingControl = ({ room }: Props) => {
                 />
             </Grid>
             <Grid item xs={10}>
-                <Box maxWidth={room.frameWidth * scale}>
-               
-                </Box>
                 <div style={{ cursor: 'crosshair' }}>
                     <Room data={room} forPreview
                         viewAngle={viewAngle}
@@ -109,7 +106,6 @@ export const ScalingControl = ({ room }: Props) => {
                 </Box>
             </Grid>
         </Grid>
-
 
         <EditorBox boxProps={{ maxWidth: 200 }} title="Test Sprite">
             <RangeInput

@@ -1,13 +1,11 @@
 import { FieldValue } from "@/components/SchemaForm";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
+import { Room } from "@/components/svg/Room";
 import { useGameDesign } from "@/context/game-design-context";
 import { BackgroundLayer, RoomData } from "@/definitions";
+import imageService from "@/services/imageService";
 import { Alert, Box, Grid, Stack } from "@mui/material";
 import { ReactNode, useState } from "react";
-import { RangeInput } from "./RangeInput";
-import { eventToNumber } from "@/lib/util";
-import imageService from "@/services/imageService";
-import { Room } from "@/components/svg/Room";
 import { ViewAngleSlider } from "./ViewAngleSlider";
 
 interface Props {
@@ -48,10 +46,8 @@ const BackDrop = ({ layer }: { layer: BackgroundLayer }) => {
 
 export const DimensionControl = ({ room }: Props) => {
     const { performUpdate } = useGameDesign()
-
     const [scale, setScale] = useState(.75)
     const [viewAngle, setViewAngle] = useState(0)
-
     const updateRoom = (mod: Record<string, FieldValue>) => {
         performUpdate('rooms', { ...room, ...mod })
     }
@@ -60,11 +56,8 @@ export const DimensionControl = ({ room }: Props) => {
 
     return <Box>
         <Grid container>
-            <LeftGridCell>
-
-            </LeftGridCell>
+            <LeftGridCell />
             <RightGridCell row>
-
                 <Stack>
                     <Box>
                         <NumberInput label="width" value={room.width}
