@@ -1,25 +1,21 @@
-import { SchemaForm, getModification } from "@/components/SchemaForm";
-import { ActorData, BackgroundLayer, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
+import { ActorData, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import { cloneData } from "@/lib/clone";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
-import imageService from "@/services/imageService";
-import { Alert, Box, Container, Grid, Stack, Typography } from "@mui/material";
+import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import { Component, ReactNode } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
-import { ArrayControl } from "../ArrayControl";
-import { ColorInput } from "../ColorInput";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
-import { BackgroundLayerControl } from "./BackgroundLayerControl";
-import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
+import { DimensionControl } from "./DimensionControl";
 import { HotspotSetEditor } from "./HotspotSetEditor";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
 import { ShapeChangeFunction } from "./ShapeControl";
 import { ZoneSetEditor } from "./ZoneSetEditor";
+import { BackgroundControl } from "./background/BackgroundControl";
 
 export type RoomEditorState = {
     clickEffect?: ClickEffect;
@@ -68,8 +64,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
 
         this.changeProperty = this.changeProperty.bind(this)
-        this.addBackground = this.addBackground.bind(this)
-        this.changeBackground = this.changeBackground.bind(this)
         this.removeZone = this.removeZone.bind(this)
         this.changeZone = this.changeZone.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
@@ -289,30 +283,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.updateFromPartial(mod)
     }
 
-    changeBackground(index: number, propery: keyof BackgroundLayer, newValue: string | number) {
-        const { background } = this.props.data
-        const layer = background[index]
-
-        switch (propery) {
-            case 'parallax':
-                if (typeof newValue === 'number') {
-                    layer[propery] = newValue
-                }
-                break;
-            case 'imageId':
-                if (typeof newValue === 'string') {
-                    layer[propery] = newValue
-                }
-                break;
-        }
-
-        this.updateFromPartial({ background })
-    }
-    addBackground(newLayer: BackgroundLayer) {
-        const { background } = this.props.data
-        background.push(newLayer)
-        this.updateFromPartial({ background })
-    }
     selectZone(folderId: string, data?: { id: string }) {
         switch (folderId) {
             case 'WALKABLE': {
@@ -345,32 +315,14 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
     buildTabs(): TabbedContent[] {
         const {
-            background, obstacleAreas = [], hotspots = [], walkableAreas = [],
+            obstacleAreas = [], hotspots = [], walkableAreas = [],
             scaling = [],
-            width, frameWidth,
         } = this.props.data
-        const imageAssets = imageService.getAll().filter(_ => _.category === 'background')
 
         return [
             {
-                label: 'Room', content: (
+                label: 'Sprite Scaling', content: (
                     <Container maxWidth="sm">
-                        <SchemaForm
-                            schema={RoomDataSchema.pick({
-                                height: true,
-                                width: true,
-                                frameWidth: true,
-                            })}
-                            data={this.props.data}
-                            changeValue={(value, fieldDef,) => {
-                                this.updateFromPartial(
-                                    getModification(value, fieldDef)
-                                )
-                            }}
-                        />
-                        {frameWidth > width && (
-                            <Alert severity="warning">frame width is bigger than room width</Alert>
-                        )}
                         <Box paddingBottom={2}>
                             <Typography variant="overline" component={'label'}>Sprite Scaling</Typography>
                             <ScalingControl
@@ -380,29 +332,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         </Box>
                     </Container>
                 )
-            },
-            {
-                label: 'Background', content: (<Stack spacing={2}>
-                    <ColorInput label="backdrop color"
-                        value={this.props.data.backgroundColor ?? '#ffffff'}
-                        setValue={value => this.updateFromPartial({ backgroundColor: value })}
-                    />
-                    <ArrayControl
-                        list={background}
-                        buttonSize="small"
-                        horizontalMoveButtons
-                        mutateList={(background) => { this.updateFromPartial({ background }) }}
-                        describeItem={(layer, index) => (
-                            <BackgroundLayerControl index={index}
-                                imageAssets={imageAssets}
-                                layer={layer}
-                                change={this.changeBackground} />
-                        )}
-                    />
-                    <BackgroundLayerForm
-                        imageAssets={imageAssets}
-                        addNewLayer={this.addBackground} />
-                </Stack>)
             },
             {
                 label: 'Hotspots', content: (
@@ -463,6 +392,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     itemTypeName="room"
                 />
             </EditorHeading>
+
+            <DimensionControl room={this.props.data} />
+            <BackgroundControl room={this.props.data} />
+
             <Grid container flexWrap={'nowrap'} spacing={1}>
                 <Grid item xs={4}>
                     <AccoridanedContent tabs={tabs} />
