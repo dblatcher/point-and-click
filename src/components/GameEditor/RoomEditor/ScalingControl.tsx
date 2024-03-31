@@ -102,7 +102,7 @@ export const ScalingControl = ({ room }: Props) => {
                 <Box maxWidth={room.frameWidth * scale}>
                     <ViewAngleSlider viewAngle={viewAngle} setViewAngle={setViewAngle} />
                     <NumberInput label="preview scale" value={scale}
-                        inputHandler={setScale} max={1} min={.5} step={.05} />
+                        inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>
             </Grid>
         </Grid>
