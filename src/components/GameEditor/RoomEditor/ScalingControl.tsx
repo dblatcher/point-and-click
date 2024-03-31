@@ -1,18 +1,36 @@
 
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { ScaleLevel } from "@/definitions";
+import { ActorData, RoomData, ScaleLevel } from "@/definitions";
 import { cloneData } from "@/lib/clone";
-import { clamp } from "@/lib/util";
-import { Box, Stack } from "@mui/material";
+import { clamp, eventToNumber } from "@/lib/util";
+import { Alert, Box, Grid, Stack } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
+import { useGameDesign } from "@/context/game-design-context";
+import { useState } from "react";
+import { Room } from "@/components/svg/Room";
+import HorizontalLine from "@/components/svg/HorizontalLine";
+import { makeTestActor } from "./testSprite";
+import { RangeInput } from "./RangeInput";
+import { locateClickInWorld } from "@/lib/roomFunctions";
+import { ViewAngleSlider } from "./ViewAngleSlider";
+import { EditorBox } from "../EditorBox";
 
 interface Props {
-    scaling: ScaleLevel;
-    height: number;
-    change: { (scaling: ScaleLevel): void };
+    room: RoomData;
 }
 
-export const ScalingControl = ({ scaling, height, change }: Props) => {
+const initialTestActor = makeTestActor({ x: 100, y: 100 });
+
+export const ScalingControl = ({ room }: Props) => {
+    const [scale, setScale] = useState(.75)
+    const [viewAngle, setViewAngle] = useState(0)
+    const [testActor, setTestActor] = useState<ActorData>(initialTestActor)
+    const { scaling = [], height } = room
+    const { performUpdate } = useGameDesign()
+    const change = (scaling: ScaleLevel) => {
+        performUpdate('rooms', { ...room, scaling })
+    }
+
 
     const handleAdjustment = (
         index: number, value: number, property: 'scale' | 'y'
@@ -28,31 +46,89 @@ export const ScalingControl = ({ scaling, height, change }: Props) => {
         return last ? [last[0] + 15, clamp(last[1] - .1, height)] : [0, 1]
     }
 
-    return (
-        <ArrayControl
-            list={scaling}
-            buttonSize='medium'
-            describeItem={(level, index) => {
-                const [y, scale] = level
-                return (
-                    <Stack key={index} direction={'row'} spacing={1}>
-                        <Box>
-                            <NumberInput label="Y" value={y}
-                                inputHandler={(value) => handleAdjustment(index, value, 'y')}
-                                max={height} min={0} step={5} />
-                        </Box>
+    const handleClick = (clickX: number, clickY: number) => {
 
-                        <Box>
-                            <NumberInput label="scale" value={scale}
-                                inputHandler={(value) => handleAdjustment(index, value, 'scale')}
-                                max={5} min={0} step={.1} />
-                        </Box>
-                    </Stack>
-                )
-            }}
-            mutateList={change}
-            createItem={addNew}
-            createButton="END"
-        />
-    )
+        const { x, y } = locateClickInWorld(clickX, clickY, viewAngle, room)
+        const newActor = { ...testActor, x, y }
+        setTestActor(newActor)
+    }
+
+    return (<Box>
+        <Grid container>
+            <Grid item xs={2}>
+                <ArrayControl
+                    list={scaling}
+                    buttonSize='medium'
+                    describeItem={(level, index) => {
+                        const [y, scale] = level
+                        return (
+                            <Stack key={index} direction={'row'} spacing={1}>
+                                <Box>
+                                    <NumberInput label="Y" value={y}
+                                        inputHandler={(value) => handleAdjustment(index, value, 'y')}
+                                        max={height} min={0} step={5} />
+                                </Box>
+
+                                <Box>
+                                    <NumberInput label="scale" value={scale}
+                                        inputHandler={(value) => handleAdjustment(index, value, 'scale')}
+                                        max={5} min={0} step={.1} />
+                                </Box>
+                            </Stack>
+                        )
+                    }}
+                    mutateList={change}
+                    createItem={addNew}
+                    createButton="END"
+                />
+            </Grid>
+            <Grid item xs={10}>
+                <Box maxWidth={room.frameWidth * scale}>
+               
+                </Box>
+                <div style={{ cursor: 'crosshair' }}>
+                    <Room data={room} forPreview
+                        viewAngle={viewAngle}
+                        handleRoomClick={handleClick}
+                        maxHeight={room.height * scale}
+                        maxWidth={room.frameWidth * scale}
+                        contents={[{ data: testActor }]}
+                    >
+                        {scaling.map((yAndScale, index) => (
+                            <HorizontalLine key={index}
+                                y={yAndScale[0]}
+                                text={`scale: ${yAndScale[1]}`}
+                                roomData={room} />
+                        ))}
+                    </Room>
+                </div>
+                <Box maxWidth={room.frameWidth * scale}>
+                    <ViewAngleSlider viewAngle={viewAngle} setViewAngle={setViewAngle} />
+                    <NumberInput label="preview scale" value={scale}
+                        inputHandler={setScale} max={1} min={.5} step={.05} />
+                </Box>
+            </Grid>
+        </Grid>
+
+
+        <EditorBox boxProps={{ maxWidth: 200 }} title="Test Sprite">
+            <RangeInput
+                label="base height"
+                value={testActor.height}
+                max={200} min={10}
+                onChange={event => {
+                    setTestActor({ ...testActor, height: eventToNumber(event.nativeEvent) })
+                }}
+            />
+            <RangeInput
+                label="base width"
+                value={testActor.width}
+                max={200} min={10}
+                onChange={event => {
+                    setTestActor({ ...testActor, width: eventToNumber(event.nativeEvent) })
+                }}
+            />
+            <Alert>click room to position test sprite</Alert>
+        </EditorBox>
+    </Box >)
 }

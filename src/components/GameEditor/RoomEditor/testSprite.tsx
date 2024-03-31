@@ -28,7 +28,7 @@ const data: SpriteData = {
 export const testSprite = new Sprite(data)
 
 
-export const makeTestActor: { (point: Point): ActorData } = (point) => {
+export const makeTestActor = (point: Point): ActorData => {
 
     imageService.add({
         id: '_TEST_SPRITE_IMG',
@@ -46,8 +46,8 @@ export const makeTestActor: { (point: Point): ActorData } = (point) => {
         room: 'NA',
         x: point.x,
         y: point.y,
-        width: 20,
-        height: 50,
+        width: 40,
+        height: 100,
         sprite: testSprite.data.id,
         direction: 'right',
         dialogueColor: '#ff0000',

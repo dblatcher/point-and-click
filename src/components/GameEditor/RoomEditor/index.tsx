@@ -22,7 +22,7 @@ export type RoomEditorState = {
     activeWalkableIndex?: number;
     activeObstacleIndex?: number;
     activeHotspotIndex?: number;
-    tabOpen: 0 | 1
+    tabOpen: number;
 };
 
 type RoomEditorProps = {
@@ -318,23 +318,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     buildTabs(): TabbedContent[] {
         const {
             obstacleAreas = [], hotspots = [], walkableAreas = [],
-            scaling = [],
         } = this.props.data
 
         return [
-            {
-                label: 'Sprite Scaling', content: (
-                    <Container maxWidth="sm">
-                        <Box paddingBottom={2}>
-                            <Typography variant="overline" component={'label'}>Sprite Scaling</Typography>
-                            <ScalingControl
-                                change={(scaling: ScaleLevel) => { this.updateFromPartial({ scaling }) }}
-                                scaling={scaling}
-                                height={this.props.data.height} />
-                        </Box>
-                    </Container>
-                )
-            },
             {
                 label: 'Hotspots', content: (
                     <HotspotSetEditor
@@ -398,6 +384,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             <Tabs value={tabOpen} onChange={(event, tabOpen) => this.setState({ tabOpen })}>
                 <Tab label="Background and dimensions" value={0} />
                 <Tab label="Features" value={1} />
+                <Tab label="Sprite Scaling" value={2} />
             </Tabs>
 
             {tabOpen === 0 && (
@@ -423,6 +410,10 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                         </div>
                     </Grid>
                 </Grid>
+            )}
+
+            {tabOpen === 2 && (
+                <ScalingControl room={this.props.data} />
             )}
         </Stack>
     }

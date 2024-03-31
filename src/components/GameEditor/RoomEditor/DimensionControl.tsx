@@ -8,6 +8,7 @@ import { RangeInput } from "./RangeInput";
 import { eventToNumber } from "@/lib/util";
 import imageService from "@/services/imageService";
 import { Room } from "@/components/svg/Room";
+import { ViewAngleSlider } from "./ViewAngleSlider";
 
 interface Props {
     room: RoomData
@@ -60,8 +61,7 @@ export const DimensionControl = ({ room }: Props) => {
     return <Box>
         <Grid container>
             <LeftGridCell>
-                <NumberInput label="preview scale" value={scale}
-                    inputHandler={setScale} max={1} min={.5} step={.05} />
+
             </LeftGridCell>
             <RightGridCell row>
 
@@ -112,15 +112,11 @@ export const DimensionControl = ({ room }: Props) => {
             <LeftGridCell />
             <RightGridCell>
                 <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
-
-                    <RangeInput
-                        label="preview angle"
-                        value={viewAngle}
-                        formattedValue={`${Math.sign(viewAngle) !== -1 ? '+' : '-'}${Math.abs(viewAngle).toFixed(2)}`}
-                        max={1} min={-1} step={.01}
-                        onChange={
-                            (event) => setViewAngle(eventToNumber(event.nativeEvent))
-                        } />
+                    <ViewAngleSlider viewAngle={viewAngle} setViewAngle={setViewAngle} />
+                </Box>
+                <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
+                    <NumberInput label="preview scale" value={scale}
+                        inputHandler={setScale} max={1} min={.5} step={.05} />
                 </Box>
             </RightGridCell>
         </Grid>
