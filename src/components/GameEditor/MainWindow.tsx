@@ -5,7 +5,7 @@ import { GameDataItemType } from "@/definitions/Game";
 import { ItemDataSchema } from "@/definitions/ItemData";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import { SpriteDataSchema } from "@/definitions/SpriteSheet";
-import { findById, listIds } from "@/lib/util";
+import { findById } from "@/lib/util";
 import { Box } from "@mui/material";
 import { TabId } from "../../lib/editor-config";
 import { ActorEditor } from "./ActorEditor";
@@ -47,11 +47,7 @@ export const MainWindow = ({ tabOpen, gameItemIds }: Props) => {
     switch (tabOpen) {
         case 'rooms':
             return currentRoom
-                ? <RoomEditor
-                    updateData={data => { performUpdate('rooms', data) }}
-                    deleteData={index => { deleteArrayItem(index, 'rooms') }}
-                    existingRoomIds={listIds(gameDesign.rooms)}
-                    key={gameItemIds.rooms} data={currentRoom} />
+                ? <RoomEditor key={gameItemIds.rooms} data={currentRoom} />
                 : <DataItemCreator
                     createBlank={getBlankRoom}
                     schema={RoomDataSchema}
