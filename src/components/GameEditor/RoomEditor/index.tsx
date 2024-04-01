@@ -27,7 +27,7 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
     const [tabOpen, setTabOpen] = useState(0)
     const { id } = data
 
-    return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
+    return <Stack component={'article'} spacing={1} height={'100%'}>
         <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} >
             <ItemEditorHeaderControls
                 dataItem={data}

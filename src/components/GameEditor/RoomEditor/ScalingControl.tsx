@@ -24,6 +24,7 @@ const initialTestActor = makeTestActor({ x: 100, y: 100 });
 export const ScalingControl = ({ room }: Props) => {
     const [scale, setScale] = useState(.75)
     const [viewAngle, setViewAngle] = useState(0)
+    const [hue, setHue] = useState(0)
     const [testActor, setTestActor] = useState<ActorData>(initialTestActor)
     const { scaling = [], height } = room
     const { performUpdate } = useGameDesign()
@@ -51,6 +52,7 @@ export const ScalingControl = ({ room }: Props) => {
         const newActor = { ...testActor, x, y }
         setTestActor(newActor)
     }
+
 
     return (<Box>
         <Grid container>
@@ -122,6 +124,16 @@ export const ScalingControl = ({ room }: Props) => {
                 max={200} min={10}
                 onChange={event => {
                     setTestActor({ ...testActor, width: eventToNumber(event.nativeEvent) })
+                }}
+            />
+            <RangeInput
+                label="hue-rotate"
+                value={hue}
+                max={360} min={0}
+                onChange={event => {
+                    const value = eventToNumber(event.nativeEvent);
+                    setHue(value)
+                    setTestActor({ ...testActor, filter: `hue-rotate(${value}deg)` })
                 }}
             />
             <Alert>click room to position test sprite</Alert>
