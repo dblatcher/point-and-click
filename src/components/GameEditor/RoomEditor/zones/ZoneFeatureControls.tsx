@@ -1,12 +1,11 @@
-import { Grid } from "@mui/material"
-import { AccoridanedContent } from "../../AccordianedContent"
-import { Preview } from "../Preview"
 import { useGameDesign } from "@/context/game-design-context"
 import { RoomData } from "@/definitions"
+import { Grid } from "@mui/material"
+import { AccoridanedContent } from "../../AccordianedContent"
 import { ClickEffect } from "../ClickEffect"
-import { ReactNode } from "react"
-import { ShapeChangeFunction } from "./ShapeControl"
+import { Preview } from "../Preview"
 import { HotspotSetEditor } from "./HotspotSetEditor"
+import { ShapeChangeFunction } from "./ShapeControl"
 import { ZoneSetEditor } from "./ZoneSetEditor"
 
 interface Props {

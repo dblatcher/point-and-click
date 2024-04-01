@@ -1,17 +1,17 @@
-import { HotspotZone, RoomData, SupportedZoneShape, Zone } from "@/definitions";
+import { HotspotZone, RoomData, Zone } from "@/definitions";
 import { cloneData } from "@/lib/clone";
-import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { Stack, Tab, Tabs } from "@mui/material";
 import { Component } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
-import { ClickEffect, NewHotspotEffect } from "./ClickEffect";
+import { ClickEffect } from "./ClickEffect";
 import { DimensionControl } from "./DimensionControl";
 import { ScalingControl } from "./ScalingControl";
 import { BackgroundControl } from "./background/BackgroundControl";
 import { ShapeChangeFunction } from "./zones/ShapeControl";
 import { ZoneFeaturesControl } from "./zones/ZoneFeatureControls";
+import { makeNewHotspot, makeNewZone } from "./zones/lib";
 
 export type RoomEditorState = {
     clickEffect?: ClickEffect;
@@ -30,17 +30,6 @@ type RoomEditorProps = {
 
 const defaultParallax = 1;
 
-function makeNewZone(point: Point, shape: SupportedZoneShape): Zone {
-    const zone: Zone = { x: point.x, y: point.y }
-    switch (shape) {
-        case 'circle': zone.circle = 20;
-            break;
-        case 'rect': zone.rect = [20, 20]
-            break;
-        case 'polygon': zone.polygon = [[0, 0]]
-    }
-    return zone
-}
 
 export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
@@ -117,7 +106,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 activeWalkableIndex = walkableAreas.length - 1;
                 break;
             case 'HOTSPOT':
-                hotspots.push(this.makeNewHotspot(targetPoint, clickEffect, hotspots.length + 1, viewAngle))
+                hotspots.push(makeNewHotspot(targetPoint, clickEffect, hotspots.length + 1))
                 activeHotspotIndex = hotspots.length - 1;
                 break;
             case 'POLYGON_POINT_OBSTACLE':
@@ -158,18 +147,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
             clickEffect: getNextClickEffect(clickEffect),
         })
-    }
-
-    makeNewHotspot(point: Point, effect: NewHotspotEffect, idNumber: number, viewAngle: number): HotspotZone {
-        const zone: HotspotZone = { ...point, type: 'hotspot', id: `HOTSPOT_${idNumber}`, parallax: defaultParallax }
-        switch (effect.shape) {
-            case 'circle': zone.circle = 20;
-                break;
-            case 'rect': zone.rect = [20, 20]
-                break;
-            case 'polygon': zone.polygon = [[0, 0]]
-        }
-        return zone
     }
 
     removeZone(index: number, type?: 'hotspot' | 'obstacle' | 'walkable') {
