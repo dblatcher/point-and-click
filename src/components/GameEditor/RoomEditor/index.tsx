@@ -13,7 +13,6 @@ import { ZoneFeaturesControl } from "./zones/ZoneFeatureControls";
 import { makeNewHotspot, makeNewZone } from "./zones/lib";
 
 export type RoomEditorState = {
-    clickEffect?: ClickEffect;
     activeWalkableIndex?: number;
     activeObstacleIndex?: number;
     activeHotspotIndex?: number;
@@ -43,7 +42,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
 
         this.handleRoomClick = this.handleRoomClick.bind(this)
-        this.setClickEffect = this.setClickEffect.bind(this)
         this.selectZone = this.selectZone.bind(this)
     }
 
@@ -51,14 +49,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.props.updateData({ ...cloneData(this.props.data), ...mod })
     }
 
-    setClickEffect(clickEffect?: ClickEffect) {
-        this.setState({ clickEffect })
-    }
-
-    handleRoomClick(pointClicked: { x: number; y: number }, viewAngle: number) {
-        const {
-            clickEffect,
-        } = this.state
+    handleRoomClick(pointClicked: { x: number; y: number }, viewAngle: number, clickEffect: ClickEffect) {
         const {
             obstacleAreas = [], hotspots = [], walkableAreas = []
         } = this.props.data
@@ -79,19 +70,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                 x: roundedPoint.x - getShift(viewAngle, defaultParallax, this.props.data),
                 y: this.props.data.height - roundedPoint.y
             }
-
-        const getNextClickEffect = (clickEffect: ClickEffect): ClickEffect | undefined => {
-            switch (clickEffect.type) {
-                case 'OBSTACLE':
-                    return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined
-                case 'WALKABLE':
-                    return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_WALKABLE', index: walkableAreas.length - 1 } : undefined
-                case 'HOTSPOT':
-                    return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1 } : undefined
-                default:
-                    return clickEffect
-            }
-        }
 
         switch (clickEffect.type) {
             case 'OBSTACLE':
@@ -142,7 +120,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         })
         this.setState({
             activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
-            clickEffect: getNextClickEffect(clickEffect),
         })
     }
 
@@ -177,7 +154,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
     }
 
     render() {
-        const { clickEffect, tabOpen } = this.state
+        const { tabOpen } = this.state
         const { id } = this.props.data
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
@@ -204,9 +181,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
             {tabOpen === 1 && (
                 <ZoneFeaturesControl room={this.props.data}
-                    clickEffect={clickEffect}
                     handleRoomClick={this.handleRoomClick}
-                    setClickEffect={this.setClickEffect}
                     selectZone={this.selectZone}
                     activeHotspotIndex={this.state.activeHotspotIndex}
                     activeObstacleIndex={this.state.activeObstacleIndex}

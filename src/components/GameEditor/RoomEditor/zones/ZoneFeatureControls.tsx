@@ -8,23 +8,24 @@ import { HotspotSetEditor } from "./HotspotSetEditor"
 import { ShapeChangeFunction } from "./ShapeControl"
 import { ZoneSetEditor } from "./ZoneSetEditor"
 import { cloneData } from "@/lib/clone"
+import { useState } from "react"
+import { getNextClickEffect } from "./lib"
 
 interface Props {
     room: RoomData;
-    clickEffect?: ClickEffect;
     activeHotspotIndex?: number;
     activeObstacleIndex?: number;
     activeWalkableIndex?: number;
-    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number): void }
-    setClickEffect: { (clickEffect?: ClickEffect): void };
+    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number, clickEffect: ClickEffect): void }
     selectZone: { (folderId: string, data?: { id: string }): void }
 }
 
 export const ZoneFeaturesControl = ({
-    room, clickEffect, activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
-    handleRoomClick, setClickEffect, selectZone
+    room, activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
+    handleRoomClick, selectZone
 }: Props) => {
 
+    const [clickEffect, setClickEffect] = useState<ClickEffect | undefined>(undefined)
     const { gameDesign, performUpdate } = useGameDesign()
 
 
@@ -46,7 +47,7 @@ export const ZoneFeaturesControl = ({
 
     const changeZone: ShapeChangeFunction = (index, propery, newValue, type) => {
         const getMod = () => {
-            const { obstacleAreas = [], hotspots = [], walkableAreas = [] } =  cloneData(room)
+            const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = cloneData(room)
             function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
                 switch (propery) {
                     case 'x':
@@ -180,7 +181,10 @@ export const ZoneFeaturesControl = ({
                         roomData={room}
                         clickEffect={clickEffect}
                         activeHotspotIndex={activeHotspotIndex}
-                        handleRoomClick={handleRoomClick} />
+                        handleRoomClick={(pointClicked, viewAngle, clickEffect) => {
+                            handleRoomClick(pointClicked, viewAngle, clickEffect);
+                            setClickEffect(getNextClickEffect(clickEffect, room))
+                        }} />
                 </div>
             </Grid>
         </Grid>

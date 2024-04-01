@@ -1,6 +1,6 @@
-import { HotspotZone, SupportedZoneShape, Zone } from "@/definitions";
+import { HotspotZone, RoomData, SupportedZoneShape, Zone } from "@/definitions";
 import { Point } from "physics-worlds/dist/src/geometry";
-import { NewHotspotEffect } from "../ClickEffect";
+import { ClickEffect, NewHotspotEffect } from "../ClickEffect";
 
 export function makeNewZone(point: Point, shape: SupportedZoneShape): Zone {
     const zone: Zone = { x: point.x, y: point.y }
@@ -24,4 +24,18 @@ export const makeNewHotspot = (point: Point, effect: NewHotspotEffect, idNumber:
         case 'polygon': zone.polygon = [[0, 0]]
     }
     return zone
+}
+
+export const getNextClickEffect = (clickEffect: ClickEffect, room: RoomData): ClickEffect | undefined => {
+    const { obstacleAreas = [], walkableAreas = [], hotspots = [] } = room
+    switch (clickEffect.type) {
+        case 'OBSTACLE':
+            return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined
+        case 'WALKABLE':
+            return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_WALKABLE', index: walkableAreas.length - 1 } : undefined
+        case 'HOTSPOT':
+            return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1 } : undefined
+        default:
+            return clickEffect
+    }
 }

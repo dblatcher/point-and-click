@@ -26,7 +26,7 @@ type Props = {
     roomData: RoomData;
     actors: ActorData[];
     clickEffect?: ClickEffect;
-    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number): void };
+    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number, clickEffect: ClickEffect): void };
     activeHotspotIndex?: number;
 }
 
@@ -132,7 +132,9 @@ export class Preview extends Component<Props, State>{
         const { scaling = [] } = roomData
 
         const processClick = (x: number, y: number) => {
-            handleRoomClick({ x, y }, viewAngle)
+            if (clickEffect) {
+                handleRoomClick({ x, y }, viewAngle, clickEffect)
+            }
         }
 
         const contents = showRealActors
