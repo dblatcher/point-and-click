@@ -1,6 +1,6 @@
 import { HotspotZone } from "@/definitions";
 import { Alert, Stack } from "@mui/material";
-import { ClickEffect } from "./ClickEffect";
+import { ClickEffect } from "../ClickEffect";
 import { HotspotControl } from "./HotSpotControl";
 import { NewZoneButtons } from "./NewZoneButtons";
 import { ShapeChangeFunction } from "./ShapeControl";

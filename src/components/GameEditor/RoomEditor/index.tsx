@@ -9,11 +9,11 @@ import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { ClickEffect, NewHotspotEffect } from "./ClickEffect";
 import { DimensionControl } from "./DimensionControl";
-import { HotspotSetEditor } from "./HotspotSetEditor";
+import { HotspotSetEditor } from "./zones/HotspotSetEditor";
 import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
-import { ShapeChangeFunction } from "./ShapeControl";
-import { ZoneSetEditor } from "./ZoneSetEditor";
+import { ShapeChangeFunction } from "./zones/ShapeControl";
+import { ZoneSetEditor } from "./zones/ZoneSetEditor";
 import { BackgroundControl } from "./background/BackgroundControl";
 
 export type RoomEditorState = {

@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { HotspotZone, Zone } from "@/definitions";
-import { ClickEffect } from "./ClickEffect";
+import { ClickEffect } from "../ClickEffect";
 import { ShapeChangeFunction, ValidShapeType } from "./ShapeControl";
 import { ZoneControl } from "./ZoneControl";
 import { Stack, Alert } from "@mui/material";

@@ -5,8 +5,8 @@ import { HotspotZone } from "@/definitions";
 import { clamp } from "@/lib/util";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Button, Stack } from "@mui/material";
-import { EditorBox } from "../EditorBox";
-import { ClickEffect } from "./ClickEffect";
+import { EditorBox } from "../../EditorBox";
+import { ClickEffect } from "../ClickEffect";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
 
 interface Props {
