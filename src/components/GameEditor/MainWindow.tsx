@@ -51,7 +51,6 @@ export const MainWindow = ({ tabOpen, gameItemIds }: Props) => {
                     updateData={data => { performUpdate('rooms', data) }}
                     deleteData={index => { deleteArrayItem(index, 'rooms') }}
                     existingRoomIds={listIds(gameDesign.rooms)}
-                    actors={gameDesign.actors}
                     key={gameItemIds.rooms} data={currentRoom} />
                 : <DataItemCreator
                     createBlank={getBlankRoom}

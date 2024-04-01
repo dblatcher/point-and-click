@@ -1,20 +1,17 @@
-import { ActorData, HotspotZone, RoomData, SupportedZoneShape, Zone } from "@/definitions";
+import { HotspotZone, RoomData, SupportedZoneShape, Zone } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
-import { Grid, Stack, Tab, Tabs } from "@mui/material";
-import { Component, ReactNode } from "react";
-import { AccoridanedContent } from "../AccordianedContent";
+import { Stack, Tab, Tabs } from "@mui/material";
+import { Component } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { ClickEffect, NewHotspotEffect } from "./ClickEffect";
 import { DimensionControl } from "./DimensionControl";
-import { HotspotSetEditor } from "./zones/HotspotSetEditor";
-import { Preview } from "./Preview";
 import { ScalingControl } from "./ScalingControl";
-import { ShapeChangeFunction } from "./zones/ShapeControl";
-import { ZoneSetEditor } from "./zones/ZoneSetEditor";
 import { BackgroundControl } from "./background/BackgroundControl";
+import { ShapeChangeFunction } from "./zones/ShapeControl";
+import { ZoneFeaturesControl } from "./zones/ZoneFeatureControls";
 
 export type RoomEditorState = {
     clickEffect?: ClickEffect;
@@ -28,13 +25,7 @@ type RoomEditorProps = {
     updateData: (data: RoomData) => void;
     deleteData: (index: number) => void;
     existingRoomIds: string[];
-    actors?: ActorData[];
     data: RoomData;
-}
-
-interface TabbedContent {
-    label: string;
-    content: ReactNode;
 }
 
 const defaultParallax = 1;
@@ -297,62 +288,9 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
     }
 
-    buildFeatureTabs(): TabbedContent[] {
-        const {
-            obstacleAreas = [], hotspots = [], walkableAreas = [],
-        } = this.props.data
-
-        return [
-            {
-                label: 'Hotspots', content: (
-                    <HotspotSetEditor
-                        hotspots={hotspots}
-                        openIndex={this.state.activeHotspotIndex}
-                        changeZone={this.changeZone}
-                        selectZone={this.selectZone}
-                        removeZone={this.removeZone}
-                        clickEffect={this.state.clickEffect}
-                        setClickEffect={this.setClickEffect}
-                    />
-                )
-            },
-            {
-                label: 'Obstacles', content: (
-                    <ZoneSetEditor
-                        zones={obstacleAreas}
-                        type='obstacle'
-                        setClickEffect={this.setClickEffect}
-                        change={this.changeZone}
-                        remove={this.removeZone}
-                        activeZoneIndex={this.state.activeObstacleIndex}
-                        selectZone={this.selectZone}
-                        clickEffect={this.state.clickEffect}
-                    />
-                )
-            },
-            {
-                label: 'Walkables', content: (
-                    <ZoneSetEditor
-                        zones={walkableAreas}
-                        type='walkable'
-                        setClickEffect={this.setClickEffect}
-                        change={this.changeZone}
-                        remove={this.removeZone}
-                        activeZoneIndex={this.state.activeWalkableIndex}
-                        selectZone={this.selectZone}
-                        clickEffect={this.state.clickEffect}
-                    />
-                )
-            },
-        ]
-
-    }
-
     render() {
         const { clickEffect, tabOpen } = this.state
         const { id } = this.props.data
-        const { actors = [] } = this.props
-        const featureTabs = this.buildFeatureTabs()
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} >
@@ -377,21 +315,17 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             )}
 
             {tabOpen === 1 && (
-                <Grid container flexWrap={'nowrap'} spacing={1}>
-                    <Grid item xs={4}>
-                        <AccoridanedContent tabs={featureTabs} />
-                    </Grid>
-                    <Grid item flex={1}>
-                        <div style={{ position: 'sticky', top: 1 }}>
-                            <Preview
-                                actors={actors}
-                                roomData={this.props.data}
-                                clickEffect={clickEffect}
-                                activeHotspotIndex={this.state.activeHotspotIndex}
-                                handleRoomClick={this.handleRoomClick} />
-                        </div>
-                    </Grid>
-                </Grid>
+                <ZoneFeaturesControl room={this.props.data}
+                    clickEffect={clickEffect}
+                    handleRoomClick={this.handleRoomClick}
+                    setClickEffect={this.setClickEffect}
+                    changeZone={this.changeZone}
+                    removeZone={this.removeZone}
+                    selectZone={this.selectZone}
+                    activeHotspotIndex={this.state.activeHotspotIndex}
+                    activeObstacleIndex={this.state.activeObstacleIndex}
+                    activeWalkableIndex={this.state.activeWalkableIndex}
+                />
             )}
 
             {tabOpen === 2 && (
