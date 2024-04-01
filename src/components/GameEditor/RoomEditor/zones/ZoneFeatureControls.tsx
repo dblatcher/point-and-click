@@ -1,33 +1,29 @@
 import { useGameDesign } from "@/context/game-design-context"
 import { HotspotZone, RoomData, Zone } from "@/definitions"
+import { cloneData } from "@/lib/clone"
 import { Grid } from "@mui/material"
+import { useState } from "react"
 import { AccoridanedContent } from "../../AccordianedContent"
 import { ClickEffect } from "../ClickEffect"
 import { Preview } from "../Preview"
 import { HotspotSetEditor } from "./HotspotSetEditor"
 import { ShapeChangeFunction } from "./ShapeControl"
 import { ZoneSetEditor } from "./ZoneSetEditor"
-import { cloneData } from "@/lib/clone"
-import { useState } from "react"
-import { ChangesFromClick, getNextClickEffect } from "./lib"
+import { getChangesFromClick, getNextClickEffect } from "./lib"
 
 interface Props {
     room: RoomData;
-    activeHotspotIndex?: number;
-    activeObstacleIndex?: number;
-    activeWalkableIndex?: number;
-    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number, clickEffect: ClickEffect): ChangesFromClick }
-    selectZone: { (folderId: string, data?: { id: string }): void }
 }
 
 export const ZoneFeaturesControl = ({
-    room, activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
-    handleRoomClick, selectZone
+    room,
 }: Props) => {
 
     const [clickEffect, setClickEffect] = useState<ClickEffect | undefined>(undefined)
     const { gameDesign, performUpdate } = useGameDesign()
-
+    const [activeHotspotIndex, setActiveHotspotIndex] = useState<number | undefined>(0);
+    const [activeObstacleIndex, setActiveObstacleIndex] = useState<number | undefined>(0);
+    const [activeWalkableIndex, setActiveWalkableIndex] = useState<number | undefined>(0);
 
     const removeZone = (index: number, type: 'hotspot' | 'obstacle' | 'walkable') => {
         const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = cloneData(room)
@@ -165,6 +161,51 @@ export const ZoneFeaturesControl = ({
         ]
     }
 
+    const selectZone = (folderId: string, data?: { id: string }) => {
+        switch (folderId) {
+            case 'WALKABLE': {
+                if (!data) {
+                    return setActiveWalkableIndex(undefined)
+                }
+                const zoneIndex = Number(data.id)
+                if (isNaN(zoneIndex)) { return }
+                return setActiveWalkableIndex(zoneIndex)
+            }
+            case 'OBSTACLE': {
+                if (!data) {
+                    return setActiveObstacleIndex(undefined)
+                }
+                const zoneIndex = Number(data.id)
+                if (isNaN(zoneIndex)) { return }
+                return setActiveObstacleIndex(zoneIndex)
+            }
+            case 'HOTSPOT':
+                if (!data) {
+                    return setActiveHotspotIndex(undefined)
+                }
+                const zoneIndex = room.hotspots?.indexOf(data as HotspotZone) || 0
+                return setActiveHotspotIndex(zoneIndex)
+        }
+    }
+
+    const handleRoomClick = (
+        pointClicked: { x: number; y: number }, viewAngle: number, clickEffect: ClickEffect
+    ) => {
+        const changesFromClick = getChangesFromClick(
+            pointClicked, viewAngle, clickEffect,
+            room,
+            activeHotspotIndex,
+            activeObstacleIndex,
+            activeWalkableIndex,
+        );
+        const updatedRoom = { ...room, ...changesFromClick.roomChange }
+        performUpdate('rooms', updatedRoom)
+        setActiveHotspotIndex(changesFromClick.activeHotspotIndex)
+        setActiveObstacleIndex(changesFromClick.activeObstacleIndex)
+        setActiveWalkableIndex(changesFromClick.activeWalkableIndex)
+        // need to provide the room as it will be after the state change
+        setClickEffect(getNextClickEffect(clickEffect, updatedRoom))
+    }
 
     return (
         <Grid container flexWrap={'nowrap'} spacing={1}>
@@ -178,11 +219,7 @@ export const ZoneFeaturesControl = ({
                         roomData={room}
                         clickEffect={clickEffect}
                         activeHotspotIndex={activeHotspotIndex}
-                        handleRoomClick={(pointClicked, viewAngle, clickEffect) => {
-                            const { roomChange } = handleRoomClick(pointClicked, viewAngle, clickEffect);
-                            // need to provide the room as it will be after the state change
-                            setClickEffect(getNextClickEffect(clickEffect, { ...room, ...roomChange }))
-                        }} />
+                        handleRoomClick={handleRoomClick} />
                 </div>
             </Grid>
         </Grid>
