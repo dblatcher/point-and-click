@@ -1,4 +1,4 @@
-import { HotspotZone, RoomData, Zone } from "@/definitions";
+import { HotspotZone, RoomData } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { Stack, Tab, Tabs } from "@mui/material";
@@ -9,7 +9,6 @@ import { ClickEffect } from "./ClickEffect";
 import { DimensionControl } from "./DimensionControl";
 import { ScalingControl } from "./ScalingControl";
 import { BackgroundControl } from "./background/BackgroundControl";
-import { ShapeChangeFunction } from "./zones/ShapeControl";
 import { ZoneFeaturesControl } from "./zones/ZoneFeatureControls";
 import { makeNewHotspot, makeNewZone } from "./zones/lib";
 
@@ -43,8 +42,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             tabOpen: 0,
         }
 
-        this.removeZone = this.removeZone.bind(this)
-        this.changeZone = this.changeZone.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
         this.setClickEffect = this.setClickEffect.bind(this)
         this.selectZone = this.selectZone.bind(this)
@@ -149,92 +146,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         })
     }
 
-    removeZone(index: number, type?: 'hotspot' | 'obstacle' | 'walkable') {
-        const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = this.props.data
-        switch (type) {
-            case 'hotspot':
-                hotspots.splice(index, 1)
-                break;
-            case 'obstacle':
-                obstacleAreas.splice(index, 1)
-                break;
-            case 'walkable':
-                walkableAreas.splice(index, 1)
-                break;
-        }
-        this.updateFromPartial({ obstacleAreas, hotspots, walkableAreas })
-    }
-
-    changeZone: ShapeChangeFunction = (index, propery, newValue, type) => {
-        const getMod = () => {
-            const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = this.props.data
-            function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
-                switch (propery) {
-                    case 'x':
-                    case 'y':
-                    case 'circle':
-                        if (typeof newValue === 'number') {
-                            zoneOrHotspot[propery] = newValue
-                        }
-                        break;
-                    case 'path':
-                        if (typeof newValue === 'string') {
-                            zoneOrHotspot[propery] = newValue
-                        }
-                        break;
-                    case 'rect':
-                        zoneOrHotspot[propery] = newValue as [number, number]
-                        break;
-                    case 'polygon':
-                        zoneOrHotspot[propery] = newValue as [number, number][]
-                        break;
-                }
-            }
-
-            if (type === 'hotspot') {
-                const hotspot = hotspots[index]
-                handleCommonValues(hotspot)
-                switch (propery) {
-                    case 'parallax':
-                        if (typeof newValue === 'number') {
-                            hotspot[propery] = newValue
-                        }
-                        break;
-                    case 'walkToX':
-                    case 'walkToY':
-                        if (typeof newValue === 'number' || typeof newValue === 'undefined') {
-                            hotspot[propery] = newValue
-                        }
-                        break;
-                    case 'id':
-                    case 'name':
-                    case 'status':
-                        if (typeof newValue === 'string') {
-                            hotspot[propery] = newValue
-                        }
-                        break;
-                }
-            } else {
-                const zone = type == 'obstacle' ? obstacleAreas[index] : walkableAreas[index]
-                handleCommonValues(zone)
-                switch (propery) {
-                    case 'ref':
-                        if (typeof newValue === 'string' || typeof newValue === 'undefined') {
-                            zone[propery] = newValue
-                        }
-                        break;
-                    case 'disabled':
-                        if (typeof newValue === 'boolean' || typeof newValue === 'undefined') {
-                            zone[propery] = newValue
-                        }
-                        break;
-                }
-            }
-            return { obstacleAreas, hotspots, walkableAreas }
-        }
-        this.updateFromPartial(getMod())
-    }
-
     selectZone(folderId: string, data?: { id: string }) {
         switch (folderId) {
             case 'WALKABLE': {
@@ -296,8 +207,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
                     clickEffect={clickEffect}
                     handleRoomClick={this.handleRoomClick}
                     setClickEffect={this.setClickEffect}
-                    changeZone={this.changeZone}
-                    removeZone={this.removeZone}
                     selectZone={this.selectZone}
                     activeHotspotIndex={this.state.activeHotspotIndex}
                     activeObstacleIndex={this.state.activeObstacleIndex}

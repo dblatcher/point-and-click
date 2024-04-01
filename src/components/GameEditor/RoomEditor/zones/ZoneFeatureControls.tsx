@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context"
-import { RoomData } from "@/definitions"
+import { HotspotZone, RoomData, Zone } from "@/definitions"
 import { Grid } from "@mui/material"
 import { AccoridanedContent } from "../../AccordianedContent"
 import { ClickEffect } from "../ClickEffect"
@@ -7,6 +7,7 @@ import { Preview } from "../Preview"
 import { HotspotSetEditor } from "./HotspotSetEditor"
 import { ShapeChangeFunction } from "./ShapeControl"
 import { ZoneSetEditor } from "./ZoneSetEditor"
+import { cloneData } from "@/lib/clone"
 
 interface Props {
     room: RoomData;
@@ -16,18 +17,102 @@ interface Props {
     activeWalkableIndex?: number;
     handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number): void }
     setClickEffect: { (clickEffect?: ClickEffect): void };
-    changeZone: ShapeChangeFunction;
-    removeZone: { (index: number, type?: 'hotspot' | 'obstacle' | 'walkable'): void };
     selectZone: { (folderId: string, data?: { id: string }): void }
 }
 
 export const ZoneFeaturesControl = ({
     room, clickEffect, activeHotspotIndex, activeObstacleIndex, activeWalkableIndex,
-    handleRoomClick, setClickEffect, changeZone, removeZone, selectZone
+    handleRoomClick, setClickEffect, selectZone
 }: Props) => {
 
-    const { gameDesign } = useGameDesign()
+    const { gameDesign, performUpdate } = useGameDesign()
 
+
+    const removeZone = (index: number, type: 'hotspot' | 'obstacle' | 'walkable') => {
+        const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = cloneData(room)
+        switch (type) {
+            case 'hotspot':
+                hotspots.splice(index, 1)
+                break;
+            case 'obstacle':
+                obstacleAreas.splice(index, 1)
+                break;
+            case 'walkable':
+                walkableAreas.splice(index, 1)
+                break;
+        }
+        performUpdate('rooms', { ...room, obstacleAreas, hotspots, walkableAreas })
+    }
+
+    const changeZone: ShapeChangeFunction = (index, propery, newValue, type) => {
+        const getMod = () => {
+            const { obstacleAreas = [], hotspots = [], walkableAreas = [] } =  cloneData(room)
+            function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
+                switch (propery) {
+                    case 'x':
+                    case 'y':
+                    case 'circle':
+                        if (typeof newValue === 'number') {
+                            zoneOrHotspot[propery] = newValue
+                        }
+                        break;
+                    case 'path':
+                        if (typeof newValue === 'string') {
+                            zoneOrHotspot[propery] = newValue
+                        }
+                        break;
+                    case 'rect':
+                        zoneOrHotspot[propery] = newValue as [number, number]
+                        break;
+                    case 'polygon':
+                        zoneOrHotspot[propery] = newValue as [number, number][]
+                        break;
+                }
+            }
+
+            if (type === 'hotspot') {
+                const hotspot = hotspots[index]
+                handleCommonValues(hotspot)
+                switch (propery) {
+                    case 'parallax':
+                        if (typeof newValue === 'number') {
+                            hotspot[propery] = newValue
+                        }
+                        break;
+                    case 'walkToX':
+                    case 'walkToY':
+                        if (typeof newValue === 'number' || typeof newValue === 'undefined') {
+                            hotspot[propery] = newValue
+                        }
+                        break;
+                    case 'id':
+                    case 'name':
+                    case 'status':
+                        if (typeof newValue === 'string') {
+                            hotspot[propery] = newValue
+                        }
+                        break;
+                }
+            } else {
+                const zone = type == 'obstacle' ? obstacleAreas[index] : walkableAreas[index]
+                handleCommonValues(zone)
+                switch (propery) {
+                    case 'ref':
+                        if (typeof newValue === 'string' || typeof newValue === 'undefined') {
+                            zone[propery] = newValue
+                        }
+                        break;
+                    case 'disabled':
+                        if (typeof newValue === 'boolean' || typeof newValue === 'undefined') {
+                            zone[propery] = newValue
+                        }
+                        break;
+                }
+            }
+            return { obstacleAreas, hotspots, walkableAreas }
+        }
+        performUpdate('rooms', { ...room, ...getMod() })
+    }
 
     const buildFeatureTabs = () => {
         const {
