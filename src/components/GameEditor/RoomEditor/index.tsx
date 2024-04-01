@@ -1,14 +1,13 @@
-import { ActorData, HotspotZone, RoomData, ScaleLevel, Zone } from "@/definitions";
-import { RoomDataSchema } from "@/definitions/RoomData";
+import { ActorData, HotspotZone, RoomData, SupportedZoneShape, Zone } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { Point } from "@/lib/pathfinding/geometry";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
-import { Box, Container, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Grid, Stack, Tab, Tabs } from "@mui/material";
 import { Component, ReactNode } from "react";
 import { AccoridanedContent } from "../AccordianedContent";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
-import { ClickEffect, NewHotspotEffect, NewObstableEffect, NewWalkableEffect } from "./ClickEffect";
+import { ClickEffect, NewHotspotEffect } from "./ClickEffect";
 import { DimensionControl } from "./DimensionControl";
 import { HotspotSetEditor } from "./HotspotSetEditor";
 import { Preview } from "./Preview";
@@ -40,10 +39,9 @@ interface TabbedContent {
 
 const defaultParallax = 1;
 
-function makeNewZone(point: Point, effect: NewObstableEffect | NewWalkableEffect): Zone {
-
+function makeNewZone(point: Point, shape: SupportedZoneShape): Zone {
     const zone: Zone = { x: point.x, y: point.y }
-    switch (effect.shape) {
+    switch (shape) {
         case 'circle': zone.circle = 20;
             break;
         case 'rect': zone.rect = [20, 20]
@@ -65,7 +63,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             tabOpen: 0,
         }
 
-        this.changeProperty = this.changeProperty.bind(this)
         this.removeZone = this.removeZone.bind(this)
         this.changeZone = this.changeZone.bind(this)
         this.handleRoomClick = this.handleRoomClick.bind(this)
@@ -121,11 +118,11 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
 
         switch (clickEffect.type) {
             case 'OBSTACLE':
-                obstacleAreas.push(makeNewZone(targetPoint, clickEffect))
+                obstacleAreas.push(makeNewZone(targetPoint, clickEffect.shape))
                 activeObstacleIndex = obstacleAreas.length - 1;
                 break;
             case 'WALKABLE':
-                walkableAreas.push(makeNewZone(targetPoint, clickEffect))
+                walkableAreas.push(makeNewZone(targetPoint, clickEffect.shape))
                 activeWalkableIndex = walkableAreas.length - 1;
                 break;
             case 'HOTSPOT':
@@ -270,21 +267,6 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         this.updateFromPartial(getMod())
     }
 
-    changeProperty(propery: keyof RoomData, value: unknown): void {
-        console.log('change', propery, value)
-        const mod: Partial<RoomData> = {}
-
-        switch (propery) {
-            case 'background': {
-                const result = RoomDataSchema.shape.background.safeParse(value)
-                if (result.success) {
-                    mod.background = result.data
-                }
-            }
-        }
-        this.updateFromPartial(mod)
-    }
-
     selectZone(folderId: string, data?: { id: string }) {
         switch (folderId) {
             case 'WALKABLE': {
@@ -315,7 +297,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         }
     }
 
-    buildTabs(): TabbedContent[] {
+    buildFeatureTabs(): TabbedContent[] {
         const {
             obstacleAreas = [], hotspots = [], walkableAreas = [],
         } = this.props.data
@@ -370,7 +352,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
         const { clickEffect, tabOpen } = this.state
         const { id } = this.props.data
         const { actors = [] } = this.props
-        const tabs = this.buildTabs()
+        const featureTabs = this.buildFeatureTabs()
 
         return <Stack component={'article'} spacing={1} height={'100%'} marginBottom={2}>
             <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} >
@@ -397,7 +379,7 @@ export class RoomEditor extends Component<RoomEditorProps, RoomEditorState>{
             {tabOpen === 1 && (
                 <Grid container flexWrap={'nowrap'} spacing={1}>
                     <Grid item xs={4}>
-                        <AccoridanedContent tabs={tabs} />
+                        <AccoridanedContent tabs={featureTabs} />
                     </Grid>
                     <Grid item flex={1}>
                         <div style={{ position: 'sticky', top: 1 }}>
