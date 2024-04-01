@@ -44,14 +44,18 @@ export const BackgroundControl = ({ room }: Props) => {
     }
 
     return (
-        <Stack spacing={2}>
+        <Stack spacing={0}>
             <ColorInput label="backdrop color"
                 value={room.backgroundColor ?? '#ffffff'}
                 setValue={backgroundColor => updateRoom({ backgroundColor })}
             />
             <ArrayControl
+                stackProps={{
+                    maxWidth: 500,
+                    sx: {},
+                }}
                 list={room.background}
-                buttonSize="small"
+                buttonSize='large'
                 horizontalMoveButtons
                 mutateList={(background) => { updateRoom({ background }) }}
                 describeItem={(layer, index) => (

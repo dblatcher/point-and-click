@@ -2,11 +2,11 @@ import { FieldValue } from "@/components/SchemaForm";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { Room } from "@/components/svg/Room";
 import { useGameDesign } from "@/context/game-design-context";
-import { BackgroundLayer, RoomData } from "@/definitions";
-import imageService from "@/services/imageService";
+import { RoomData } from "@/definitions";
 import { Alert, Box, Grid, Stack } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { ViewAngleSlider } from "./ViewAngleSlider";
+import { BackDrop } from "./background/Backdrop";
 
 interface Props {
     room: RoomData
@@ -29,20 +29,6 @@ const LeftGridCell = ({ children }: { children?: ReactNode }) => <Grid
     display={'flex'}>
     {children}</Grid>
 
-const BackDrop = ({ layer }: { layer: BackgroundLayer }) => {
-    const href = imageService.get(layer.imageId)?.href
-    if (!href) {
-        return null
-    }
-    return <div style={{
-        position: 'absolute',
-        inset: 0,
-        backgroundImage: `url("${href}")`,
-        backgroundSize: '100% 100%',
-        filter: 'saturate(.15)',
-    }}>
-    </div>
-}
 
 export const DimensionControl = ({ room }: Props) => {
     const { performUpdate } = useGameDesign()
@@ -81,7 +67,7 @@ export const DimensionControl = ({ room }: Props) => {
             </LeftGridCell>
             <RightGridCell>
                 <Box bgcolor={room.backgroundColor ?? 'white'} width={room.width * scale} height={room.height * scale} position={'relative'}>
-                    {room.background.map((layer, index) => <BackDrop key={index} layer={layer} />)}
+                    {room.background.map((layer, index) => <BackDrop key={index} layer={layer} filter='saturate(.15)' />)}
                     <Box
                         boxSizing={'border-box'}
                         height={room.height * scale}

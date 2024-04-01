@@ -2,7 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, ButtonGroup, IconButton, Paper, Stack } from "@mui/material";
+import { Box, ButtonGroup, IconButton, Paper, Stack, StackProps } from "@mui/material";
 import { Fragment, ReactNode } from "react";
 
 
@@ -24,6 +24,7 @@ interface Props<T> {
     frame?: Framing
     buttonSize?: ButtonSize
     horizontalMoveButtons?: boolean
+    stackProps?:StackProps
 }
 
 
@@ -94,15 +95,14 @@ export const ArrayControl = <T,>({
     frame = 'NONE',
     buttonSize = 'large',
     horizontalMoveButtons = false,
+    stackProps,
 }: Props<T>) => {
-
 
     const handleDelete = (index: number) => {
         const listCopy = [...list]
         listCopy.splice(index, 1)
         mutateList(listCopy)
     }
-
 
     const handleInsert = (index: number) => {
         if (!createItem) { return }
@@ -123,7 +123,7 @@ export const ArrayControl = <T,>({
     }
 
     return (
-        <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }}>
+        <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }} {...stackProps}>
             {list.map((item, index) => (
                 <Fragment key={index}>
                     {(!!createItem && createButton !== 'END') && (
