@@ -9,14 +9,14 @@ import { ShapeChangeFunction } from "./ShapeControl"
 import { ZoneSetEditor } from "./ZoneSetEditor"
 import { cloneData } from "@/lib/clone"
 import { useState } from "react"
-import { getNextClickEffect } from "./lib"
+import { ChangesFromClick, getNextClickEffect } from "./lib"
 
 interface Props {
     room: RoomData;
     activeHotspotIndex?: number;
     activeObstacleIndex?: number;
     activeWalkableIndex?: number;
-    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number, clickEffect: ClickEffect): void }
+    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number, clickEffect: ClickEffect): ChangesFromClick }
     selectZone: { (folderId: string, data?: { id: string }): void }
 }
 
@@ -163,10 +163,7 @@ export const ZoneFeaturesControl = ({
                 )
             },
         ]
-
     }
-
-
 
 
     return (
@@ -182,8 +179,9 @@ export const ZoneFeaturesControl = ({
                         clickEffect={clickEffect}
                         activeHotspotIndex={activeHotspotIndex}
                         handleRoomClick={(pointClicked, viewAngle, clickEffect) => {
-                            handleRoomClick(pointClicked, viewAngle, clickEffect);
-                            setClickEffect(getNextClickEffect(clickEffect, room))
+                            const { roomChange } = handleRoomClick(pointClicked, viewAngle, clickEffect);
+                            // need to provide the room as it will be after the state change
+                            setClickEffect(getNextClickEffect(clickEffect, { ...room, ...roomChange }))
                         }} />
                 </div>
             </Grid>
