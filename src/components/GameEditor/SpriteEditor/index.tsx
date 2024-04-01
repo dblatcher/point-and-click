@@ -163,7 +163,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
 
         <Grid container spacing={1}>
             {animationEntries.map(([animationKey, animation]) => (
-                <Grid xs={6} md={4} item key={animationKey} minWidth={260}>
+                <Grid xs={4} md={3} item key={animationKey} minWidth={260}>
                     <AnimationGrid
                         {...{ animationKey, animation, defaultDirection, sprite }}
                         deleteAnimation={deleteAnimation}
@@ -179,7 +179,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
                 </Grid>
             ))}
 
-            <Grid xs={6} md={4} item minWidth={260}>
+            <Grid xs={4} md={3} item minWidth={260}>
                 <NewAnimationForm
                     existingKeys={Object.keys(props.data.animations)}
                     submit={addAnimation} />
