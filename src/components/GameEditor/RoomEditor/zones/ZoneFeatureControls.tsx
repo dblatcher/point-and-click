@@ -1,9 +1,8 @@
 import { useGameDesign } from "@/context/game-design-context"
 import { HotspotZone, RoomData, Zone } from "@/definitions"
 import { cloneData } from "@/lib/clone"
-import { Grid } from "@mui/material"
+import { Grid, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
-import { AccoridanedContent } from "../../AccordianedContent"
 import { ClickEffect } from "../ClickEffect"
 import { Preview } from "../Preview"
 import { HotspotSetEditor } from "./HotspotSetEditor"
@@ -15,11 +14,16 @@ interface Props {
     room: RoomData;
 }
 
+enum ZoneTypeTab {
+    Hotspot, Obstacle, Walkable
+}
+
 export const ZoneFeaturesControl = ({
     room,
 }: Props) => {
 
     const [clickEffect, setClickEffect] = useState<ClickEffect | undefined>(undefined)
+    const [openTab, setOpenTab] = useState(ZoneTypeTab.Hotspot)
     const { gameDesign, performUpdate } = useGameDesign()
     const [activeHotspotIndex, setActiveHotspotIndex] = useState<number | undefined>(0);
     const [activeObstacleIndex, setActiveObstacleIndex] = useState<number | undefined>(0);
@@ -111,56 +115,6 @@ export const ZoneFeaturesControl = ({
         performUpdate('rooms', { ...room, ...getMod() })
     }
 
-    const buildFeatureTabs = () => {
-        const {
-            obstacleAreas = [], hotspots = [], walkableAreas = [],
-        } = room
-
-        return [
-            {
-                label: 'Hotspots', content: (
-                    <HotspotSetEditor
-                        hotspots={hotspots}
-                        setClickEffect={setClickEffect}
-                        changeZone={changeZone}
-                        removeZone={removeZone}
-                        openIndex={activeHotspotIndex}
-                        selectZone={selectZone}
-                        clickEffect={clickEffect}
-                    />
-                )
-            },
-            {
-                label: 'Obstacles', content: (
-                    <ZoneSetEditor
-                        zones={obstacleAreas}
-                        type='obstacle'
-                        setClickEffect={setClickEffect}
-                        change={changeZone}
-                        remove={removeZone}
-                        activeZoneIndex={activeObstacleIndex}
-                        selectZone={selectZone}
-                        clickEffect={clickEffect}
-                    />
-                )
-            },
-            {
-                label: 'Walkables', content: (
-                    <ZoneSetEditor
-                        zones={walkableAreas}
-                        type='walkable'
-                        setClickEffect={setClickEffect}
-                        change={changeZone}
-                        remove={removeZone}
-                        activeZoneIndex={activeWalkableIndex}
-                        selectZone={selectZone}
-                        clickEffect={clickEffect}
-                    />
-                )
-            },
-        ]
-    }
-
     const selectZone = (folderId: string, data?: { id: string }) => {
         switch (folderId) {
             case 'WALKABLE': {
@@ -210,7 +164,53 @@ export const ZoneFeaturesControl = ({
     return (
         <Grid container flexWrap={'nowrap'} spacing={1}>
             <Grid item xs={4}>
-                <AccoridanedContent tabs={buildFeatureTabs()} />
+                <Tabs
+                    value={openTab}
+                    onChange={(event, value) => setOpenTab(value)}
+                    textColor="secondary"
+                    indicatorColor="secondary">
+                    <Tab value={ZoneTypeTab.Hotspot} label='Hotspots' />
+                    <Tab value={ZoneTypeTab.Obstacle} label='Obstables' />
+                    <Tab value={ZoneTypeTab.Walkable} label='Walkables' />
+                </Tabs>
+
+                {openTab === ZoneTypeTab.Hotspot && (
+                    <HotspotSetEditor
+                        hotspots={room.hotspots ?? []}
+                        setClickEffect={setClickEffect}
+                        changeZone={changeZone}
+                        removeZone={removeZone}
+                        openIndex={activeHotspotIndex}
+                        selectZone={selectZone}
+                        clickEffect={clickEffect}
+                    />
+                )}
+
+                {openTab === ZoneTypeTab.Obstacle && (
+                    <ZoneSetEditor
+                        zones={room.obstacleAreas ?? []}
+                        type='obstacle'
+                        setClickEffect={setClickEffect}
+                        change={changeZone}
+                        remove={removeZone}
+                        activeZoneIndex={activeObstacleIndex}
+                        selectZone={selectZone}
+                        clickEffect={clickEffect}
+                    />
+                )}
+                {openTab === ZoneTypeTab.Walkable && (
+                    <ZoneSetEditor
+                        zones={room.walkableAreas ?? []}
+                        type='walkable'
+                        setClickEffect={setClickEffect}
+                        change={changeZone}
+                        remove={removeZone}
+                        activeZoneIndex={activeWalkableIndex}
+                        selectZone={selectZone}
+                        clickEffect={clickEffect}
+                    />
+                )}
+
             </Grid>
             <Grid item flex={1}>
                 <div style={{ position: 'sticky', top: 1 }}>

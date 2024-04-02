@@ -1,5 +1,5 @@
-import { Box, BoxProps, IconButton, Typography, useTheme } from '@mui/material';
-import { ReactNode } from 'react'
+import { Box, BoxProps, Typography, useTheme } from '@mui/material';
+import { ReactNode } from 'react';
 
 interface Props {
     title?: string;

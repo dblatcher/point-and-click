@@ -24,7 +24,7 @@ enum RoomEditorTab {
 
 export const RoomEditor = ({ data }: RoomEditorProps) => {
 
-    const [tabOpen, setTabOpen] = useState(0)
+    const [tabOpen, setTabOpen] = useState(RoomEditorTab.BackgroundAndDimension)
     const { id } = data
 
     return <Stack component={'article'} spacing={1} height={'100%'}>
