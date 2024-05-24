@@ -9,27 +9,24 @@ import { Box, Checkbox, Divider, Grid, Paper, Stack, Typography } from "@mui/mat
 import { ChangeEventHandler, Component } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { RangeInput } from "./RangeInput";
-import { makeTestActor } from "./testSprite";
 
 type BooleanState = {
     showObstacleAreas: boolean;
     highlightHotspots: boolean;
     showScaleLines: boolean;
-    showTestActor: boolean;
     showRealActors: boolean;
 }
 
 type State = BooleanState & {
     viewAngle: number;
     maxWidth: number;
-    testActor: ActorData;
 };
 
 type Props = {
     roomData: RoomData;
     actors: ActorData[];
     clickEffect?: ClickEffect;
-    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number): void };
+    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number, clickEffect: ClickEffect): void };
     activeHotspotIndex?: number;
 }
 
@@ -66,12 +63,8 @@ export class Preview extends Component<Props, State>{
             showObstacleAreas: true,
             highlightHotspots: true,
             showScaleLines: false,
-            showTestActor: false,
             showRealActors: true,
-            testActor: makeTestActor({ x: props.roomData.width / 2, y: 20 }),
         }
-
-        this.changeActorNumberProperty = this.changeActorNumberProperty.bind(this)
     }
 
     renderCheckBox(label: string, propery: keyof BooleanState) {
@@ -86,16 +79,6 @@ export class Preview extends Component<Props, State>{
                 <Typography component={'label'} variant="body2">{label}</Typography>
                 <Checkbox checked={!!state[propery]} onChange={setValue} size="small" />
             </Stack>
-        )
-    }
-
-    changeActorNumberProperty(value: number, property: 'x' | 'y' | 'height' | 'width') {
-        this.setState(
-            (state) => {
-                const { testActor } = state
-                testActor[property] = value
-                return { testActor }
-            }
         )
     }
 
@@ -143,14 +126,15 @@ export class Preview extends Component<Props, State>{
     render() {
         const {
             viewAngle, maxWidth, showObstacleAreas, highlightHotspots,
-            testActor, showTestActor, showRealActors,
-            showScaleLines,
+            showRealActors, showScaleLines,
         } = this.state
         const { roomData, handleRoomClick, clickEffect, actors, activeHotspotIndex } = this.props
         const { scaling = [] } = roomData
 
         const processClick = (x: number, y: number) => {
-            handleRoomClick({ x, y }, viewAngle)
+            if (clickEffect) {
+                handleRoomClick({ x, y }, viewAngle, clickEffect)
+            }
         }
 
         const contents = showRealActors
@@ -159,14 +143,6 @@ export class Preview extends Component<Props, State>{
                 .sort(putActorsInDisplayOrder)
                 .map(actor => ({ data: actor }))
             : []
-
-        if (showTestActor) {
-            contents.push({ data: testActor })
-        }
-
-        const testActorChange = (key: 'x' | 'y' | 'height' | 'width'): ChangeEventHandler<HTMLInputElement> =>
-            (event) =>
-                this.changeActorNumberProperty(eventToNumber(event.nativeEvent), key)
 
         return (
             <ResizeWatcher resizeHandler={() => {
@@ -252,41 +228,6 @@ export class Preview extends Component<Props, State>{
                             </Grid>
                         </Grid>
 
-                        <Divider />
-
-                        <Box padding={1}>
-                            {this.renderCheckBox('Test Actor', 'showTestActor')}
-                            {this.state.showTestActor && (<>
-                                <RangeInput
-                                    label="X"
-                                    value={testActor.x}
-                                    max={roomData.width}
-                                    onChange={testActorChange('x')}
-                                    disabled={!showTestActor}
-                                />
-                                <RangeInput
-                                    label="Y"
-                                    value={testActor.y}
-                                    max={roomData.height}
-                                    onChange={testActorChange('y')}
-                                    disabled={!showTestActor}
-                                />
-                                <RangeInput
-                                    label="base height"
-                                    value={testActor.height}
-                                    max={200} min={10}
-                                    onChange={testActorChange('height')}
-                                    disabled={!showTestActor}
-                                />
-                                <RangeInput
-                                    label="base width"
-                                    value={testActor.width}
-                                    max={200} min={10}
-                                    onChange={testActorChange('width')}
-                                    disabled={!showTestActor}
-                                />
-                            </>)}
-                        </Box>
                     </Box>
 
                     {clickEffect && (

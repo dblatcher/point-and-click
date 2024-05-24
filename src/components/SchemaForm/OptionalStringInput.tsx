@@ -1,7 +1,7 @@
-import { FunctionComponent, FormEventHandler, useState } from "react";
+import { Box, Checkbox, TextField } from "@mui/material";
+import { FormEventHandler, FunctionComponent, useState } from "react";
 import { FieldProps } from "./types";
 import { eventToString } from "./util";
-import { Box, Checkbox, FormControlLabel, TextField } from "@mui/material";
 
 export const OptionalStringInput: FunctionComponent<FieldProps & {
     value: string | undefined;
@@ -19,35 +19,28 @@ export const OptionalStringInput: FunctionComponent<FieldProps & {
 
     const toggleUndefined: FormEventHandler<HTMLInputElement> = (event) => {
         const { checked } = event.nativeEvent.target as HTMLInputElement;
-        if (checked) {
+        if (!checked) {
             return inputHandler(undefined)
         }
         props.inputHandler(storedText)
     }
 
-    return <Box>
+    const isDefined = typeof props.value !== 'undefined'
+    const labelText = isDefined ? label : `${label}(undefined)`
 
+    return <Box>
         <TextField type={type}
-            label={label}
-            disabled={typeof value === 'undefined'}
+            label={labelText}
+            disabled={!isDefined}
             value={value ?? storedText}
             onInput={sendStringValue}
             size="small"
-            variant= {type === 'textArea' ? 'outlined' : 'standard'}
+            variant={type === 'textArea' ? 'outlined' : 'standard'}
         />
-
-        <FormControlLabel control={
-            <Checkbox
-                checked={typeof value === 'undefined'}
-                onChange={toggleUndefined}
-                size="small"
-            />
-        }
-            label="undefined"
-            labelPlacement="top"
-            slotProps={{typography:{
-                variant:'body2'
-            }}}
+        <Checkbox
+            size='small'
+            checked={isDefined}
+            onChange={toggleUndefined}
         />
     </Box>
 }

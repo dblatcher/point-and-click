@@ -74,7 +74,7 @@ export const SaveLoadAndUndo: FunctionComponent<Props> = ({
           aria-label={saveLabel}
           onClick={downloadAll}
         >
-          <Download />
+          <Download fontSize="large"/>
         </IconButton>
       </Tooltip>
 
@@ -83,14 +83,14 @@ export const SaveLoadAndUndo: FunctionComponent<Props> = ({
           aria-label={loadLabel}
           onClick={uploadAll}
         >
-          <Upload />
+          <Upload fontSize="large"/>
         </IconButton>
       </Tooltip>
 
       <Tooltip title={undoLabel}>
         <IconButton aria-label={undoLabel} onClick={undo}>
           <Badge badgeContent={history.length} color='primary'>
-            <Undo />
+            <Undo fontSize="large"/>
           </Badge>
         </IconButton>
       </Tooltip>

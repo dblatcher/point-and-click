@@ -3,8 +3,10 @@ import { useGameDesign } from "@/context/game-design-context";
 import { Order } from "@/definitions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { findById } from "@/lib/util";
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Stack, useTheme } from "@mui/material";
 import { OrderForm } from "../OrderForm";
+import { getOrderIcon } from "./get-icons";
+
 
 interface Props {
     sequenceId: string
@@ -18,16 +20,21 @@ interface Props {
 
 
 export const OrderDialog = ({ sequenceId, stage, index, actorId, close, changeOrder }: Props) => {
-
+    const { palette } = useTheme()
     const { gameDesign } = useGameDesign()
     const sequence = findById(sequenceId, gameDesign.sequences)
     const order: Order | undefined = sequence?.stages[stage].actorOrders?.[actorId]?.[index]
-
     const { ids: targetIdsWithoutItems, descriptions: targetDescriptionsWithoutItems } = getTargetLists(gameDesign, true)
+    const IconForOrderType = getOrderIcon(order)
 
     return (
         <Dialog open={!!order} onClose={close}>
-            <DialogTitle>edit order</DialogTitle>
+            <DialogTitle sx={{ backgroundColor: palette.secondary.light }}>
+                <Stack direction={'row'} alignItems={'center'}>
+                    <IconForOrderType />
+                    edit {order?.type} order
+                </Stack>
+            </DialogTitle>
             <DialogContent>
                 {order && (
                     <OrderForm

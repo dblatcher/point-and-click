@@ -68,7 +68,7 @@ export const ChoiceEditor = ({
         />
 
         <Stack direction={'row'} spacing={2} justifyContent={'space-between'}>
-            <Box flex={1}>
+            <Box flex={1} paddingTop={2.5}>
                 <SelectInput
                     value={choice.sequence}
                     options={listIds(design.sequences)}

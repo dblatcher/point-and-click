@@ -1,3 +1,4 @@
+import { useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 
 type Coordinates = {
@@ -14,21 +15,19 @@ type Coordinates = {
 
 const determineCoordinates = (startNode: Element, endNode: Element, container: HTMLElement): Coordinates => {
     const containerBox = container.getBoundingClientRect()
-    const choiceBox = startNode.getBoundingClientRect()
-    const branchBox = endNode.getBoundingClientRect()
-    let startX = choiceBox.left - containerBox.left
-    const startY = choiceBox.top - containerBox.top + choiceBox.height / 2
-    const endX = branchBox.left + branchBox.width / 2 - containerBox.left
-    let endY = branchBox.top - containerBox.top
+    const startBox = startNode.getBoundingClientRect()
+    const endBox = endNode.getBoundingClientRect()
 
-    const goingRight = startX < endX
-    const goingUp = startY > endY
-    if (goingRight) {
-        startX += choiceBox.width
-    }
-    if (goingUp) {
-        endY += branchBox.height
-    }
+    const startLeft = startBox.left - containerBox.left
+    const startY = startBox.top - containerBox.top + startBox.height / 2
+    const endX = endBox.left - containerBox.left + endBox.width / 2
+    const topY = endBox.top - containerBox.top
+
+    const goingRight = startLeft < endX
+    const goingUp = startY > topY
+
+    const startX = goingRight ? startLeft + startBox.width : startLeft
+    const endY = goingUp ? topY + endBox.height : topY
     const lineToTopRight = startX > endX != startY > endY
 
     const w = Math.abs(startX - endX)
@@ -41,6 +40,8 @@ const determineCoordinates = (startNode: Element, endNode: Element, container: H
 
 export const LineBetweenNodes = ({ startNode, endNode, container }: { startNode: Element; endNode: Element; container: HTMLElement }) => {
     const [coords, setCoords] = useState<Coordinates>(determineCoordinates(startNode, endNode, container))
+    const { palette } = useTheme()
+
     const updateCoords = () => {
         setCoords(determineCoordinates(startNode, endNode, container))
     }
@@ -51,7 +52,13 @@ export const LineBetweenNodes = ({ startNode, endNode, container }: { startNode:
             window.removeEventListener('resize', updateCoords)
         }
     })
-    const { w, h, l, t, lineToTopRight, endX: endX, endY: endY } = coords
+    const { w, h, l, t, lineToTopRight, endX, endY, startX, startY } = coords
+
+    const arrowPoints = startX < endX
+        ? ["50,20", "100,50", "50,80"].join(" ")
+        : ["50,20", "0,50", "50,80"].join(" ")
+
+    const direction = Math.atan((startY - endY) / (startX - endX))
 
     return (<>
         <div style={{
@@ -74,9 +81,9 @@ export const LineBetweenNodes = ({ startNode, endNode, container }: { startNode:
 
                 }}>
                 {lineToTopRight ?
-                    <line x1={100} y1={0} x2={0} y2={100} stroke="black" strokeDasharray={'2 2'} />
+                    <line x1={100} y1={0} x2={0} y2={100} stroke={palette.secondary.light} />
                     :
-                    <line x1={0} y1={0} x2={100} y2={100} stroke="black" strokeDasharray={'2 2'}/>
+                    <line x1={0} y1={0} x2={100} y2={100} stroke={palette.secondary.light} />
                 }
             </svg>
         </div>
@@ -97,9 +104,10 @@ export const LineBetweenNodes = ({ startNode, endNode, container }: { startNode:
                     top: 0,
                     width: 'inherit',
                     height: 'inherit',
+                    rotate: `${direction}rad`,
                 }}
             >
-                <circle cx={50} cy={50} r={50} fill="red" />
+                <polygon points={arrowPoints} fill={palette.secondary.light} />
             </svg>
         </div>
     </>

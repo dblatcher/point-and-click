@@ -156,44 +156,48 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
                                 <Typography variant="caption">
                                     Flags that must be false[{interaction.flagsThatMustBeFalse?.length || 0}]
                                 </Typography>
-                                <SelectAndConfirm
-                                    boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
-                                    options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeFalse?.includes(id))}
-                                    inputHandler={flagId => {
-                                        if (flagId.length === 0) { return }
-                                        const newList = [...interaction.flagsThatMustBeFalse || [], flagId]
-                                        setInteractionProperty('flagsThatMustBeFalse', newList)
-                                    }}
-                                />
-                                <ArrayControl noMoveButtons buttonSize="small"
-                                    list={interaction.flagsThatMustBeFalse || []}
-                                    describeItem={(item, index) => (
-                                        <Typography key={index}>{item}</Typography>
-                                    )}
-                                    mutateList={value => setInteractionProperty('flagsThatMustBeFalse', value)}
-                                />
+                                <Box paddingLeft={4}>
+                                    <ArrayControl noMoveButtons buttonSize="small"
+                                        list={interaction.flagsThatMustBeFalse || []}
+                                        describeItem={(item, index) => (
+                                            <Typography key={index}>{item}</Typography>
+                                        )}
+                                        mutateList={value => setInteractionProperty('flagsThatMustBeFalse', value)}
+                                    />
+                                    <SelectAndConfirm
+                                        boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
+                                        options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeFalse?.includes(id))}
+                                        inputHandler={flagId => {
+                                            if (flagId.length === 0) { return }
+                                            const newList = [...interaction.flagsThatMustBeFalse || [], flagId]
+                                            setInteractionProperty('flagsThatMustBeFalse', newList)
+                                        }}
+                                    />
+                                </Box>
                             </Box>
 
                             <Box paddingBottom={2}>
                                 <Typography variant="caption">
                                     Flags that must be true[{interaction.flagsThatMustBeTrue?.length || 0}]
                                 </Typography>
-                                <SelectAndConfirm
-                                    boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
-                                    options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeTrue?.includes(id))}
-                                    inputHandler={flagId => {
-                                        if (flagId.length === 0) { return }
-                                        const newList = [...interaction.flagsThatMustBeTrue || [], flagId]
-                                        setInteractionProperty('flagsThatMustBeTrue', newList)
-                                    }}
-                                />
-                                <ArrayControl noMoveButtons buttonSize="small"
-                                    list={interaction.flagsThatMustBeTrue || []}
-                                    describeItem={(item, index) => (
-                                        <Typography key={index}>{item}</Typography>
-                                    )}
-                                    mutateList={value => setInteractionProperty('flagsThatMustBeTrue', value)}
-                                />
+                                <Box paddingLeft={4}>
+                                    <ArrayControl noMoveButtons buttonSize="small"
+                                        list={interaction.flagsThatMustBeTrue || []}
+                                        describeItem={(item, index) => (
+                                            <Typography key={index}>{item}</Typography>
+                                        )}
+                                        mutateList={value => setInteractionProperty('flagsThatMustBeTrue', value)}
+                                    />
+                                    <SelectAndConfirm
+                                        boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
+                                        options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeTrue?.includes(id))}
+                                        inputHandler={flagId => {
+                                            if (flagId.length === 0) { return }
+                                            const newList = [...interaction.flagsThatMustBeTrue || [], flagId]
+                                            setInteractionProperty('flagsThatMustBeTrue', newList)
+                                        }}
+                                    />
+                                </Box>
                             </Box>
                         </EditorBox>
                     </Grid>

@@ -1,9 +1,8 @@
 import { ConversationChoice } from "@/definitions";
-import { Box, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import LogOut from '@mui/icons-material/Logout';
-import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
 import RepeatOneIcon from '@mui/icons-material/RepeatOne';
-import EditIcon from '@mui/icons-material/Edit';
+import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
+import { Button, Tooltip, Typography } from "@mui/material";
 
 function truncateLine(text: string, length: number) {
     if (text.length <= length) {
@@ -20,29 +19,25 @@ interface Props {
 export const ChoiceDescription = ({ choice, openEditor }: Props) => {
 
     return (
-        <Stack
-            spacing={1}
-            flex={1}
-            paddingBottom={1}
-            direction={'row'}
-            justifyContent={'flex-start'}
-            alignItems={'center'}
-        >
+        <Button
+            color="secondary" sx={{
+                textTransform: 'none',
+                marginBottom: 1,
+                justifyContent: 'flex-start',
+                display: 'flex',
+                width: '100%',
+                paddingX: 2,
+                paddingY: 1,
 
+            }} variant="outlined"
+            onClick={openEditor}
+        >
+            <Typography component={'q'} marginRight={'auto'}>
+                {choice.text ? truncateLine(choice.text, 40) : "[no text]"}
+            </Typography>
             {choice.end && <Tooltip title='ends conversation'>< LogOut /></Tooltip>}
             {choice.disabled && <Tooltip title='starts disabled'>< SpeakerNotesOffIcon /></Tooltip>}
             {choice.once && <Tooltip title='can say only once'>< RepeatOneIcon /></Tooltip>}
-            <Box sx={{ backgroundColor: 'secondary.dark', color: 'secondary.contrastText', borderRadius: 4 }} paddingY={1} paddingX={3} flex={1}>
-                <Typography component={'q'}>
-                    {choice.text ? truncateLine(choice.text, 40) : "[no text]"}
-                </Typography>
-
-            </Box>
-            {openEditor && (
-                <IconButton color="primary" onClick={openEditor} aria-label="edit">
-                    <EditIcon />
-                </IconButton>
-            )}
-        </Stack>
+        </Button>
     )
 }

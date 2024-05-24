@@ -6,6 +6,7 @@ import { ImageAsset } from "@/services/assets";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, IconButton, Stack } from "@mui/material";
 import { useState } from "react";
+import { BackDrop } from "./Backdrop";
 
 interface Props {
     imageAssets: Readonly<ImageAsset>[];
@@ -13,21 +14,20 @@ interface Props {
 }
 
 
-
 export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
-
     const [imageId, setImageId] = useState<string | undefined>(undefined);
     const [parallax, setParallax] = useState<number>(0);
-
     return (
-        <Stack direction="row" spacing={2} flex={1} alignSelf={'stretch'} alignItems={'flex-end'}>
-            <SelectInput
-                value={imageId}
-                options={listIds(imageAssets)}
-                inputHandler={setImageId}
-                optional
-            />
-
+        <Stack direction="row" spacing={2} flex={1} alignSelf={'stretch'}>
+            <Box width={46} />
+            <Box minWidth={200}>
+                <SelectInput
+                    value={imageId}
+                    options={listIds(imageAssets)}
+                    inputHandler={setImageId}
+                    optional
+                />
+            </Box>
             <Box maxWidth={100}>
                 <NumberInput value={parallax}
                     inputHandler={setParallax}
@@ -35,7 +35,9 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
                     max={2} min={0} step={.05}
                 />
             </Box>
-
+            <Box position={'relative'} height={50} width={100} border={'1px solid'}>
+                {imageId && <BackDrop layer={{ imageId, parallax }} />}
+            </Box>
             <IconButton
                 size="small"
                 color="primary"

@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { ClickEffect } from "./ClickEffect";
+import { ClickEffect } from "../ClickEffect";
 import { ButtonGroup, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add"
 

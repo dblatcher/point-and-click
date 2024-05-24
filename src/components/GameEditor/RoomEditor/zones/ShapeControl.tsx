@@ -1,10 +1,10 @@
 
 import { FunctionComponent } from "react";
-import { ClickEffect } from "./ClickEffect";
+import { ClickEffect } from "../ClickEffect";
 import { HotspotZone, Shape, Zone, ZoneType } from "@/definitions";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { Stack, Button, Typography } from "@mui/material";
-import { ArrayControl } from "../ArrayControl";
+import { ArrayControl } from "../../ArrayControl";
 
 export type ValidShapeType = ZoneType;
 export type ShapeChangeFunction = { (index: number, propery: Exclude<keyof HotspotZone | keyof Zone, 'type'>, newValue: unknown, type: ValidShapeType): void }

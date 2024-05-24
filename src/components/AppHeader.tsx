@@ -1,12 +1,13 @@
-import { AppBar, IconButton, Typography, Drawer, List, ListItem } from '@mui/material'
-import Toolbar from '@mui/material/Toolbar';
-import { useState } from 'react';
-import { LinkButton } from './LinkButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useRouter } from 'next/router'
+import { AppBar, Box, Drawer, IconButton, List, ListItem, Typography } from '@mui/material';
+import Toolbar from '@mui/material/Toolbar';
+import { useRouter } from 'next/router';
+import { ReactNode, useState } from 'react';
+import { LinkButton } from './LinkButton';
 
 interface Props {
-    position?: "fixed" | "relative" | "absolute" | "sticky" | "static" | undefined
+    position?: "fixed" | "relative" | "absolute" | "sticky" | "static" | undefined,
+    children?: ReactNode
 }
 
 const navItems: { label: string, href: string }[] = [
@@ -16,7 +17,7 @@ const navItems: { label: string, href: string }[] = [
     { label: 'game editor', href: '/editor' },
 ]
 
-export function AppHeader({ position }: Props) {
+export function AppHeader({ position, children }: Props) {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const router = useRouter()
     const { pathname } = router
@@ -27,9 +28,12 @@ export function AppHeader({ position }: Props) {
                 <IconButton onClick={() => { setDrawerOpen(!drawerOpen) }}>
                     <MenuIcon htmlColor='white' />
                 </IconButton>
-                <Typography component="div" sx={{ flexGrow: 1 }}>
-                    Point and Click
-                </Typography>
+                <Box>
+                    <Typography component="div" sx={{ flexGrow: 1 }}>
+                        Point and Click
+                    </Typography>
+                    {children}
+                </Box>
             </Toolbar>
             <Drawer
                 anchor={'left'}

@@ -1,12 +1,13 @@
 import { createContext, useContext } from 'react'
-import { GameDesign } from '@/definitions'
-import { EditorOptions } from '../components/GameEditor'
+import { GameDesign, Interaction } from '@/definitions'
+import { TabId } from '@/lib/editor-config'
 
 const gameDesignContext = createContext<{
     gameDesign: GameDesign,
     performUpdate: { (property: keyof GameDesign, data: unknown): void },
     deleteArrayItem: { (index: number, property: keyof GameDesign): void },
-    options: EditorOptions,
+    openInEditor: { (itemType: TabId, itemId: string | undefined): void }
+    changeInteraction: { (data: Interaction, index?: number): void }
 }>(
     {
         gameDesign: {
@@ -25,9 +26,8 @@ const gameDesignContext = createContext<{
         },
         performUpdate: () => { },
         deleteArrayItem: () => { },
-        options: {
-            autoSave: false
-        }
+        openInEditor: () => { },
+        changeInteraction: () => { },
     }
 )
 

@@ -15,18 +15,16 @@ const DynamicComponent = dynamic<Props>(() => import('@/components/GameEditor', 
         <Stack
           component={'nav'}
           spacing={1}
-          divider={<Divider orientation="horizontal" flexItem />}
-          width={250}
+          width={150}
         >
           <Skeleton variant='text' width={'100%'} sx={{ fontSize: 50 }} />
-          <Skeleton variant='text' width={'100%'} sx={{ fontSize: 75 }} />
           <Skeleton variant='rounded' width={'100%'} height={500} />
         </Stack>
 
-        <Box component={'section'} flex={1}>
+        <Stack component={'section'} flex={1} spacing={1}>
           <Skeleton variant='text' width={'100%'} sx={{ fontSize: 50 }} />
           <Skeleton variant='rounded' width={'100%'} height={650} />
-        </Box>
+        </Stack>
       </Stack>
     </Container>
   </>

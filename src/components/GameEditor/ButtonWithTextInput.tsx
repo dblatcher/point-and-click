@@ -12,6 +12,7 @@ interface Props {
     icon?: ReactNode;
     buttonProps?: ButtonProps;
     suggestions?: string[];
+    modifyInput?: { (input: string): string }
 }
 
 export const ButtonWithTextInput = ({
@@ -21,11 +22,14 @@ export const ButtonWithTextInput = ({
     useIconButton,
     icon = <AddIcon color="primary" />,
     buttonProps = {},
-    suggestions
+    suggestions,
+    modifyInput
 }: Props) => {
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const [input, setInput] = useState<string>('')
     const handleFirstButton = (): void => { setShowConfirmation(true) }
+
+    const handleInput = modifyInput ? (input: string) => setInput(modifyInput(input)) : setInput
 
     return (
         <>
@@ -33,6 +37,7 @@ export const ButtonWithTextInput = ({
                 <IconButton
                     onClick={handleFirstButton}
                     aria-label={label}
+                    size="small"
                 >
                     {icon}
                 </IconButton>
@@ -51,7 +56,10 @@ export const ButtonWithTextInput = ({
                         {confirmationText}
                     </DialogTitle>
                     <DialogContent>
-                        <StringInput value={input} inputHandler={setInput} suggestions={suggestions} />
+                        <StringInput 
+                            value={input} 
+                            inputHandler={handleInput} 
+                            suggestions={suggestions} />
                     </DialogContent>
                     <DialogActions>
                         <Button

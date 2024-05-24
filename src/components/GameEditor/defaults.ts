@@ -1,6 +1,6 @@
 import {
     Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType,
-    Stage, ConversationChoice, Ending, Flag, Order, OrderType, ConversationBranch
+    Stage, ConversationChoice, Ending, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData
 } from "@/definitions";
 import { ActStep, MoveStep } from "@/definitions/Order";
 
@@ -126,3 +126,39 @@ export const makeNewStep = {
 }
 
 export const makeBlankEnding = (id = "NEW_ENDING", message = "game over"): Ending => ({ id, message, })
+
+export const makeBlankItem: { (): ItemData } = () => (
+    {
+        type: 'item',
+        id: 'NEW_ITEM',
+    }
+)
+
+export const makeBlankActor = (): ActorData => ({
+    id: 'NEW_ACTOR',
+    type: 'actor',
+    name: undefined,
+    status: undefined,
+
+    sprite: '',
+    direction: 'left',
+    height: 150, width: 100,
+    x: 0, y: 0, room: undefined,
+
+    isPlayer: false,
+    speed: 3,
+    dialogueColor: '#000000',
+
+})
+
+export function makeBlankSprite(): SpriteData {
+    return {
+        id: 'NEW_SPRITE',
+        defaultDirection: 'down',
+        animations: {
+            default: {
+                down: []
+            }
+        }
+    }
+}

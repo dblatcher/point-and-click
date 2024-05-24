@@ -1,5 +1,5 @@
-import { Box, BoxProps, IconButton, Typography, useTheme } from '@mui/material';
-import { ReactNode } from 'react'
+import { Box, BoxProps, Typography, useTheme } from '@mui/material';
+import { ReactNode } from 'react';
 
 interface Props {
     title?: string;
@@ -7,9 +7,10 @@ interface Props {
     themePalette?: 'primary' | 'secondary';
     boxProps?: BoxProps;
     barContent?: ReactNode;
+    leftContent?: ReactNode;
 }
 
-export const EditorBox = ({ title, children, themePalette = 'primary', boxProps = {}, barContent }: Props) => {
+export const EditorBox = ({ title, children, themePalette = 'primary', boxProps = {}, barContent, leftContent }: Props) => {
 
     const theme = useTheme()
     const colorScheme = theme.palette[themePalette]
@@ -23,17 +24,18 @@ export const EditorBox = ({ title, children, themePalette = 'primary', boxProps 
             }}
             {...boxProps}
         >
-            {(title || barContent) && (
+
+            {(title || barContent || leftContent) && (
                 <Box
                     display={'flex'}
                     alignItems={'center'}
                     justifyContent={'space-between'}
-                    minHeight={38} // adding an icon button won't stretch further
+                    minHeight={30} // adding an icon button won't stretch further
                     sx={{
                         background: colorScheme.light,
-                        color: colorScheme.contrastText,
-                        paddingX: 1,
+                        paddingX: 2,
                     }}>
+                    {leftContent}
                     <Typography component={'span'}
                         variant='overline'
                     >{title}</Typography>

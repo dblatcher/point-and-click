@@ -1,102 +1,52 @@
 
 import { getModification, type FieldDef, type FieldValue } from "@/components/SchemaForm";
-import { SelectInput, StringInput } from "@/components/SchemaForm/inputs";
-import { GameDesign, Sequence } from "@/definitions";
-import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice, ConversationSchema } from "@/definitions/Conversation";
+import { useGameDesign } from "@/context/game-design-context";
+import { Sequence } from "@/definitions";
+import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice } from "@/definitions/Conversation";
 import { cloneData } from "@/lib/clone";
-import { uploadJsonData } from "@/lib/files";
 import { findById, listIds } from "@/lib/util";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
-import { Component } from "react";
+import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
-import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
+import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { SequenceEditor } from "../SequenceEditor";
-import { StorageMenu } from "../StorageMenu";
-import { DataItemEditorProps } from "../dataEditors";
-import { makeBlankConversation, makeBlankConversationChoice } from "../defaults";
+import { makeBlankConversationChoice } from "../defaults";
 import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ConversationFlow } from "./ConversationFlow";
 
-type ExtraState = {
-    openBranchId?: string;
-    activeChoiceIndex?: number;
-    sequenceDialogOpen?: boolean;
-    editOrderDialogBranchId?: string;
+type Props = {
+    conversation: Conversation;
 }
 
-type State = Conversation & ExtraState;
+export const ConversationEditor = (props: Props) => {
 
-type Props = DataItemEditorProps<Conversation> & {
-    conversations: Conversation[];
-    sequenceIds: string[];
-    gameDesign: GameDesign;
-    updateSequenceData: { (data: Sequence): void };
-}
+    const [openBranchId, setOpenBranchId] = useState<string | undefined>(undefined)
+    const [activeChoiceIndex, setActiveChoiceIndex] = useState<number | undefined>(0)
+    const [sequenceDialogOpen, setSequenceDialogOpen] = useState<boolean>(false)
+    const [editOrderDialogBranchId, setEditOrderDialogBranchId] = useState<string | undefined>(undefined)
 
-export class ConversationEditor extends Component<Props, State> {
+    const { gameDesign, performUpdate } = useGameDesign()
+    const { conversations } = gameDesign
+    const { conversation } = props
 
-    constructor(props: Props) {
-        super(props)
-        const initialState = props.data ? cloneData(props.data) : makeBlankConversation()
-        this.state = {
-            ...initialState,
-            openBranchId: undefined,
-            activeChoiceIndex: 0,
-            sequenceDialogOpen: false,
+    const updateFromPartial = (input: Partial<Conversation>) => {
+        const revisedData = {
+            ...cloneData(conversation),
+            ...input,
         }
-
-        this.handleLoadButton = this.handleLoadButton.bind(this)
-        this.handleResetButton = this.handleResetButton.bind(this)
-        this.handleUpdateButton = this.handleUpdateButton.bind(this)
-        this.handleChoiceChange = this.handleChoiceChange.bind(this)
-        this.updateChoiceListItem = this.updateChoiceListItem.bind(this)
-        this.addChoiceListItem = this.addChoiceListItem.bind(this)
-        this.removeChoiceListItem = this.removeChoiceListItem.bind(this)
-        this.addSequence = this.addSequence.bind(this)
-        this.addNewBranch = this.addNewBranch.bind(this)
-        this.addNewChoice = this.addNewChoice.bind(this)
-        this.changeBranch = this.changeBranch.bind(this)
-        this.mutateChoiceList = this.mutateChoiceList.bind(this)
-
-        this.setStateWithAutosave = this.setStateWithAutosave.bind(this)
-    }
-
-    get currentData(): Conversation {
-        const conversation = cloneData(this.state) as State;
-        delete conversation.openBranchId
-        delete conversation.activeChoiceIndex
-        delete conversation.sequenceDialogOpen
-        delete conversation.editOrderDialogBranchId
-        return conversation
-    }
-
-    setStateWithAutosave(input: Partial<State> | { (state: State): Partial<State> }, callback?: { (): void }) {
-        const { options, data, updateData, conversations } = this.props
-
-        if (!options.autoSave) {
-            return this.setState(input as State, callback)
+        if (listIds(conversations).includes(conversation.id)) {
+            performUpdate('conversations', revisedData)
         }
-
-        return this.setState(input as State, () => {
-            if (data && listIds(conversations).includes(this.state.id)) {
-                updateData(this.currentData)
-            }
-            if (callback) {
-                callback()
-            }
-        })
     }
 
-    changeValue(propery: keyof Conversation, newValue: string | number | boolean) {
-        const modification: Partial<State> = {}
+    const changeValue = (propery: keyof Conversation, newValue: string | number | boolean) => {
+        const modification: Partial<Conversation> = {}
         switch (propery) {
             case 'id':
-                if (typeof newValue === 'string') {
-                    modification[propery] = newValue.toUpperCase()
-                }
-                break;
+                console.warn("id change passed to ConversationEditor.changeValue", { newValue })
+                return;
             case 'currentBranch':
             case 'defaultBranch':
                 if (typeof newValue === 'string') {
@@ -104,149 +54,116 @@ export class ConversationEditor extends Component<Props, State> {
                 }
                 break;
         }
-        if (propery === 'id') {
-            return this.setState(modification as State)
-        }
-        this.setStateWithAutosave(modification)
-    }
-    handleLoadButton = async () => {
-        const { data, error } = await uploadJsonData(ConversationSchema)
-        if (data) {
-            this.setState(data)
-        } else {
-            console.warn("NOT ACTOR DATA", error)
-        }
-    }
-    handleResetButton() {
-        const { props } = this
-        const initialState = props.data ? cloneData(props.data) : makeBlankConversation()
-        this.setState(initialState)
-    }
-    handleUpdateButton() {
-        if (this.props.updateData) {
-            this.props.updateData(this.currentData)
-        }
+        updateFromPartial(modification)
     }
 
-    updateChoiceListItem(
+    const updateChoiceListItem = (
         property: 'enablesChoices' | 'disablesChoices',
         indexOfSet: number,
         newRefSet: ChoiceRefSet,
-    ) {
-        this.setStateWithAutosave(state => {
-            const { branches } = state
-            const { choice } = this.getBranchAndChoice(state)
+    ) => {
+
+        const getModifiedBranches = () => {
+            const { choice, branches } = getBranchAndChoice()
             if (!choice) { return {} }
             if (!choice[property]) { choice[property] = [] }
             choice[property]?.splice(indexOfSet, 1, newRefSet)
             return { branches }
-        })
+        }
+
+        updateFromPartial(getModifiedBranches())
     }
 
-    addChoiceListItem(
+    const addChoiceListItem = (
         property: 'enablesChoices' | 'disablesChoices'
-    ) {
-        this.setStateWithAutosave(state => {
-            const { branches } = state
-            const { choice } = this.getBranchAndChoice(state)
+    ) => {
+        const getModifiedBranches = () => {
+            const { choice, branches } = getBranchAndChoice()
             if (!choice) { return {} }
             if (!choice[property]) { choice[property] = [] }
             choice[property]?.push({})
             return { branches }
-        })
+        }
+        updateFromPartial(getModifiedBranches())
     }
 
-    removeChoiceListItem(
+    const removeChoiceListItem = (
         property: 'enablesChoices' | 'disablesChoices',
         index: number
-    ) {
-        this.setStateWithAutosave(state => {
-            const { branches } = state
-            const { choice } = this.getBranchAndChoice(state)
+    ) => {
+        const getModifiedBranches = () => {
+            const { choice, branches } = getBranchAndChoice()
             if (!choice || !choice[property]) { return {} }
             choice[property]?.splice(index, 1)
             return { branches }
-        })
+        }
+        updateFromPartial(getModifiedBranches())
     }
 
-    handleChoiceChange(value: FieldValue, field: FieldDef) {
-
-        this.setStateWithAutosave(state => {
-            const { branches, openBranchId, activeChoiceIndex } = state
-            if (!openBranchId || typeof activeChoiceIndex !== 'number') { return {} }
-            const choices = branches[openBranchId]?.choices
-            if (!choices) { return {} }
-            const choice = choices[activeChoiceIndex]
+    const handleChoiceChange = (value: FieldValue, field: FieldDef) => {
+        const getModifiedBranches = () => {
+            const { choice, branches } = getBranchAndChoice()
             if (!choice) { return {} }
-
             Object.assign(choice, getModification(value, field))
             return { branches }
-        })
+        }
+        updateFromPartial(getModifiedBranches())
     }
 
-    changeBranch(branchName: string, branch: ConversationBranch | undefined) {
-        this.setStateWithAutosave(state => {
-            const { branches = {} } = state
-            if (branch) {
-                branches[branchName] = branch
-            } else {
-                delete branches[branchName]
-            }
-            return { branches }
-        })
-    }
-
-    addNewBranch(branchName: string) {
-        if (!branchName || this.state.branches[branchName]) {
+    const addNewBranchAndOpenIt = (branchName: string) => {
+        if (!branchName || conversation.branches[branchName]) {
             return
         }
-        this.setStateWithAutosave(state => {
-            const { branches = {} } = state
-            const numberOfBranches = Object.keys(branches).length
-            const branchKey = branchName || `BRANCH_${numberOfBranches + 1}`
-            branches[branchKey] = {
+        const getModifiedBranches = () => {
+            const { branches } = getBranchAndChoice()
+            branches[branchName] = {
                 choices: [
                     makeBlankConversationChoice()
                 ]
             }
-            return { branches, openBranchId: branchKey, activeChoiceIndex: 0 }
-        })
+            return { branches }
+        }
+        updateFromPartial(getModifiedBranches())
+        setOpenBranchId(branchName)
+        setActiveChoiceIndex(0)
     }
 
-    mutateChoiceList(branchKey: string, newList: ConversationChoice[]) {
-        this.setStateWithAutosave(state => {
-            const { branches = {} } = state
+    const mutateChoiceList = (branchKey: string, newList: ConversationChoice[]) => {
+        const getModifiedBranches = () => {
+            const { branches } = getBranchAndChoice()
             const branch = branches[branchKey];
             if (branch) { branch.choices = newList }
             return { branches }
-        })
+        }
+        updateFromPartial(getModifiedBranches())
     }
 
-    addNewChoice(folderId: string): void {
-        this.setStateWithAutosave(state => {
-            const { branches = {} } = state
+    const addNewChoice = (folderId: string): void => {
+        const getModifiedBranches = () => {
+            const { branches } = getBranchAndChoice()
             const branch = branches[folderId]
             if (!branch) { return {} }
             branch.choices.push(makeBlankConversationChoice())
             return { branches }
-        })
+        }
+        updateFromPartial(getModifiedBranches())
     }
 
-    addSequence(sequence: Sequence) {
-        this.setStateWithAutosave(state => {
-            const { choice } = this.getBranchAndChoice(state)
+    const addSequence = (sequence: Sequence) => {
+        const getModifiedBranches = () => {
+            const { choice, branches } = getBranchAndChoice()
             if (choice) {
                 choice.sequence = sequence.id
             }
-            return state
-        }, () => {
-            this.props.updateSequenceData(sequence)
-        })
+            return { branches }
+        }
+        updateFromPartial(getModifiedBranches())
+        performUpdate('sequences', sequence)
     }
 
-    getBranchAndChoice(state: State): { branch?: ConversationBranch; choice?: ConversationChoice } {
-        const { activeChoiceIndex, openBranchId, branches } = state
-        const result: { branch?: ConversationBranch; choice?: ConversationChoice } = {}
+    const getBranchAndChoice = (): { branch?: ConversationBranch; choice?: ConversationChoice, branches: Conversation['branches'] } => {
+        const { branches } = cloneData(conversation)
+        const result: { branch?: ConversationBranch; choice?: ConversationChoice, branches: Conversation['branches'] } = { branches }
         if (openBranchId) {
             result.branch = branches[openBranchId]
             if (result.branch && typeof activeChoiceIndex === 'number') {
@@ -256,155 +173,118 @@ export class ConversationEditor extends Component<Props, State> {
         return result
     }
 
-    render() {
-        const { state, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence } = this
-        const { branches, defaultBranch, currentBranch, openBranchId, id, activeChoiceIndex, editOrderDialogBranchId } = this.state
-        const { conversations, deleteData, options, gameDesign, updateSequenceData } = this.props
-        const { choice } = this.getBranchAndChoice(state)
+    const { choice } = getBranchAndChoice()
+    const branchInOrderDialog = editOrderDialogBranchId ? conversation.branches[editOrderDialogBranchId] : undefined
 
-        const branchInOrderDialog = editOrderDialogBranchId ? branches[editOrderDialogBranchId] : undefined
+    const sequenceForCurrentChoice = choice && findById(choice.sequence, gameDesign.sequences)
 
-        return (
-            <Stack component={'article'} spacing={2}>
-                <EditorHeading heading={`Conversation Editor`} itemId={id} />
-                <Stack spacing={2} direction={'row'}>
-                    <EditorBox title={'Conversation'}>
-                        <Stack spacing={2} minWidth={'md'}>
-                            <StringInput
-                                label="id"
-                                value={state.id || ''}
-                                inputHandler={value => { this.changeValue('id', value) }} />
-                            <SelectInput
-                                label="defaultBranch"
-                                value={defaultBranch}
-                                options={Object.keys(branches)}
-                                inputHandler={(item) => { if (item) { this.changeValue('defaultBranch', item) } }} />
-                            <SelectInput
-                                label="currentBranch" value={currentBranch || ''} options={Object.keys(branches)}
-                                optional
-                                inputHandler={(item) => { if (item) { this.changeValue('defaultBranch', item) } }} />
-                        </Stack>
-                    </EditorBox>
-
-                    <StorageMenu
-                        type="conversation"
-                        data={this.currentData}
-                        originalId={this.props.data?.id}
-                        existingIds={listIds(conversations)}
-                        reset={this.handleResetButton}
-                        update={this.handleUpdateButton}
-                        deleteItem={deleteData}
-                        saveButton={true}
-                        load={this.handleLoadButton}
-                        options={options}
-                    />
-                </Stack>
-
-                <ConversationFlow conversation={this.currentData} key={JSON.stringify(this.currentData)}
-                    openEditor={(branchKey, choiceIndex) => {
-                        this.setState(
-                            { openBranchId: branchKey, activeChoiceIndex: choiceIndex }
-                        )
-                    }}
-                    openOrderDialog={(branchKey) => {
-                        this.setState(
-                            { editOrderDialogBranchId: branchKey }
-                        )
-                    }}
-                    addNewChoice={this.addNewChoice}
-                    deleteBranch={branchKey => {
-                        this.setStateWithAutosave(
-                            {
-                                branches: {
-                                    ...this.currentData.branches,
-                                    [branchKey]: undefined
-                                }
-                            }
-                        )
-                    }}
-                    addNewBranch={this.addNewBranch}
+    return (
+        <Stack component={'article'} spacing={2}>
+            <EditorHeading heading={`Conversation Editor`} itemId={conversation.id} >
+                <ItemEditorHeaderControls
+                    dataItem={conversation}
+                    itemType="conversations"
+                    itemTypeName="conversation"
                 />
+            </EditorHeading>
 
-                <Dialog open={!!this.state.editOrderDialogBranchId}
-                    onClose={() => { this.setState({ editOrderDialogBranchId: undefined }) }}
-                >
-                    <DialogTitle>{`Sort choices in branch "${editOrderDialogBranchId}"`}</DialogTitle>
-
-                    <DialogContent>
-                        {(branchInOrderDialog && editOrderDialogBranchId) &&
-                            <ArrayControl horizontalMoveButtons 
-                                list={branchInOrderDialog.choices}
-                                describeItem={(choice) => {
-                                    return (
-                                        <ChoiceDescription choice={choice} />
-                                    )
-                                }}
-                                mutateList={newList => {
-                                    this.mutateChoiceList(editOrderDialogBranchId, newList)
-                                }}
-                            />
+            <ConversationFlow conversation={conversation} key={JSON.stringify(cloneData(conversation))}
+                openEditor={(branchKey, choiceIndex) => {
+                    setOpenBranchId(branchKey)
+                    setActiveChoiceIndex(choiceIndex)
+                }}
+                openOrderDialog={(branchKey) => {
+                    setEditOrderDialogBranchId(branchKey)
+                }}
+                addNewChoice={addNewChoice}
+                deleteBranch={branchKey => {
+                    updateFromPartial(
+                        {
+                            branches: {
+                                ...cloneData(conversation).branches,
+                                [branchKey]: undefined
+                            }
                         }
-                    </DialogContent>
-                </Dialog>
+                    )
+                }}
+                changeDefaultBranch={branchKey => {
+                    if (branchKey) { changeValue('defaultBranch', branchKey) }
+                }}
+                addNewBranch={addNewBranchAndOpenIt}
+            />
 
-                <Dialog
-                    open={!!choice}
-                    maxWidth={'xl'}
-                    onClose={() => { this.setState({ activeChoiceIndex: undefined }) }}
-                >
-                    <DialogTitle>
-                        Branch {'"'}{openBranchId}{'"'} : choice #{activeChoiceIndex}
-                    </DialogTitle>
+            <Dialog open={!!editOrderDialogBranchId}
+                onClose={() => {
+                    setEditOrderDialogBranchId(undefined)
+                }}
+            >
+                <DialogTitle>{`Sort choices in branch "${editOrderDialogBranchId}"`}</DialogTitle>
+
+                <DialogContent>
+                    {(branchInOrderDialog && editOrderDialogBranchId) &&
+                        <ArrayControl horizontalMoveButtons
+                            list={branchInOrderDialog.choices}
+                            describeItem={(choice) => <ChoiceDescription choice={choice} />}
+                            mutateList={newList => {
+                                mutateChoiceList(editOrderDialogBranchId, newList)
+                            }}
+                        />
+                    }
+                </DialogContent>
+            </Dialog>
+
+            <Dialog
+                open={!!choice}
+                maxWidth={'xl'}
+                onClose={() => { setActiveChoiceIndex(undefined) }}
+            >
+                <DialogTitle>
+                    Branch {'"'}{openBranchId}{'"'} : choice #{activeChoiceIndex}
+                </DialogTitle>
+                <DialogContent>
+                    {choice && (<>
+                        <ChoiceEditor
+                            key={`choice-editor-${openBranchId}-${activeChoiceIndex}`}
+                            choice={choice}
+                            conversation={conversation}
+                            openBranchId={openBranchId ?? ''}
+                            activeChoiceIndex={activeChoiceIndex ?? -1}
+                            {...{
+                                handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence
+                            }}
+                        />
+                    </>)}
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="outlined"
+                        disabled={!choice?.sequence}
+                        onClick={() => { setSequenceDialogOpen(true) }}>edit sequence</Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => { setActiveChoiceIndex(undefined) }}>close</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={!!sequenceDialogOpen}
+                onClose={() => { setSequenceDialogOpen(false) }}
+                maxWidth={'xl'}
+            >
+                {sequenceForCurrentChoice && (
                     <DialogContent>
-                        {choice && (<>
-                            <ChoiceEditor
-                                key={`choice-editor-${openBranchId}-${activeChoiceIndex}`}
-                                choice={choice}
-                                conversation={this.state}
-                                openBranchId={openBranchId ?? ''}
-                                activeChoiceIndex={activeChoiceIndex ?? -1}
-                                {...{
-                                    handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence
-                                }}
-                            />
-                        </>)}
+                        <SequenceEditor key={choice.sequence}
+                            isSubSection
+                            data={sequenceForCurrentChoice}
+                        />
                     </DialogContent>
-                    <DialogActions>
-                        <Button
-                            variant="outlined"
-                            disabled={!choice?.sequence}
-                            onClick={() => { this.setState({ sequenceDialogOpen: true }) }}>edit sequence</Button>
-                        <Button
-                            variant="contained"
-                            onClick={() => { this.setState({ activeChoiceIndex: undefined }) }}>close</Button>
-                    </DialogActions>
-                </Dialog>
-
-                <Dialog
-                    open={!!this.state.sequenceDialogOpen}
-                    onClose={() => { this.setState({ sequenceDialogOpen: false }) }}
-                    maxWidth={'xl'}
-                >
-
-                    {choice && choice.sequence && (
-                        <DialogContent>
-                            <SequenceEditor key={choice.sequence} isSubSection
-                                sequenceId={choice.sequence}
-                                data={findById(choice.sequence, gameDesign.sequences)}
-                                updateData={updateSequenceData}
-                                deleteData={(index) => { console.log('delete squence', index) }}
-                                gameDesign={gameDesign}
-                                options={options}
-                            />
-                        </DialogContent>
-                    )}
-                    <DialogActions>
-                        <Button
-                            variant="contained"
-                            onClick={() => { this.setState({ sequenceDialogOpen: false }) }}>close</Button>
-                    </DialogActions>
-                </Dialog>
-            </Stack>
-        )
-    }
+                )}
+                <DialogActions>
+                    <Button
+                        variant="contained"
+                        onClick={() => { setSequenceDialogOpen(false) }}>close</Button>
+                </DialogActions>
+            </Dialog>
+        </Stack >
+    )
 }

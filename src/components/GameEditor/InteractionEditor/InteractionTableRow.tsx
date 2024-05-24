@@ -1,5 +1,5 @@
 import { Interaction } from "@/definitions";
-import { IconButton, Tooltip, Typography, TableCell, TableRow } from "@mui/material";
+import { IconButton, Tooltip, Typography, TableCell, TableRow, Stack } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -60,25 +60,27 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
                 </Tooltip>
             </TableCell>
             <TableCell padding="none">
-                <IconButton
-                    onClick={openEditor}>
-                    <EditIcon color="primary" />
-                </IconButton>
+                <Stack direction={'row'}>
+                    <IconButton
+                        onClick={openEditor}>
+                        <EditIcon color="primary" />
+                    </IconButton>
 
-                <IconButton onClick={() => changeOrder(index, 'up')}>
-                    <ArrowUpwardIcon />
-                </IconButton>
+                    <IconButton onClick={() => changeOrder(index, 'up')}>
+                        <ArrowUpwardIcon />
+                    </IconButton>
 
-                <IconButton onClick={() => changeOrder(index, 'down')}>
-                    <ArrowDownwardIcon />
-                </IconButton>
+                    <IconButton onClick={() => changeOrder(index, 'down')}>
+                        <ArrowDownwardIcon />
+                    </IconButton>
 
-                <ButtonWithConfirm
-                    useIconButton={true}
-                    icon={<ClearIcon />}
-                    label="delete this interaction"
-                    onClick={() => { deleteInteraction(index) }}
-                />
+                    <ButtonWithConfirm
+                        useIconButton={true}
+                        icon={<ClearIcon />}
+                        label="delete this interaction"
+                        onClick={() => { deleteInteraction(index) }}
+                    />
+                </Stack>
             </TableCell>
         </TableRow >
     )

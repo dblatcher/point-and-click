@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import { AppHeader } from '@/components/AppHeader'
 import { Box, BoxProps } from '@mui/material'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
+import { PageMetaProvider } from '@/context/page-meta-context'
 
 
 interface Props {
@@ -23,11 +24,15 @@ const noPageScrollInnerBoxProps: BoxProps = {
     sx: { width: '100%', flexBasis: '100%', flexGrow: 0, overflow: 'hidden' }, display: 'flex', flexDirection: 'column',
 }
 
+
 export function PageLayout({ children, noPageScroll }: Props) {
     const outerBoxProps = noPageScroll ? noPageScrollOuterBoxProps : standardOuterBoxProps;
     const innerBoxProps = noPageScroll ? noPageScrollInnerBoxProps : standardInnerBoxProps;
+
+    const [headerContent, setHeaderContent] = useState<ReactNode>(null)
+
     return (
-        <>
+        <PageMetaProvider value={{ setHeaderContent }}>
             <Head>
                 <title>Point and Click</title>
                 <meta name="description" content="Point and Click" />
@@ -36,11 +41,13 @@ export function PageLayout({ children, noPageScroll }: Props) {
             </Head>
 
             <Box {...outerBoxProps} className='LAYOUT_OUTER'>
-                <AppHeader position={noPageScroll ? 'relative' : undefined} />
+                <AppHeader position={noPageScroll ? 'relative' : undefined} >
+                    {headerContent}
+                </AppHeader>
                 <Box {...innerBoxProps} className='LAYOUT_INNER'>
                     {children}
                 </Box>
             </Box>
-        </>
+        </PageMetaProvider>
     )
 }
