@@ -39,7 +39,7 @@ function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order:
  * make a actor follow their next order
  * @param subject 
  * @param cellMatrix 
- * @param orders 
+ * @param orders a list of orders, either from a sequence.actorOrders or GameState.actorOrders
  * @returns whether they just finished an order that triggers the pendingInteraction
  */
 export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: Order[] | undefined, state: GameState, sprite?: Sprite): boolean {

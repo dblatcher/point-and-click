@@ -1,15 +1,16 @@
-import { cellSize, GameProps, GameState } from "."
-import { CommandTarget, ActorData, Consequence, Order } from "@/definitions"
-import { cloneData } from "@/lib/clone"
+import { ActorData, CommandTarget, Consequence } from "@/definitions"
 import { changeRoom } from "@/lib/changeRoom"
-import { findById } from "@/lib/util"
+import { cloneData } from "@/lib/clone"
 import { generateCellMatrix } from "@/lib/pathfinding/cells"
+import { findById } from "@/lib/util"
 import soundService from "@/services/soundService"
+import { cellSize, GameProps, GameState } from "."
+import { issueOrdersOutsideSequence } from "./orders/issueOrders"
 
 
 export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
 
-    const { actors, items, rooms, currentRoomId, actorOrders } = state
+    const { actors, items, rooms, currentRoomId } = state
     const player = actors.find(_ => _.isPlayer)
     const getActor = (actorId?: string): (ActorData | undefined) =>
         actorId ? actors.find(_ => _.id === actorId) : player;
@@ -21,17 +22,8 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
             case 'order': {
                 const { actorId, orders } = consequence
                 const actor = getActor(actorId)
-                if (!actor) { return }
-                const clonedOrders = JSON.parse(JSON.stringify(orders)) as Order[]
-
-                if (consequence.replaceCurrentOrders) {
-                    actorOrders[actor.id] = clonedOrders
-                } else if (actorOrders[actor.id]) {
-                    actorOrders[actor.id].push(...clonedOrders)
-                } else {
-                    actorOrders[actor.id] = clonedOrders
-                }
-
+                if (!actor) { return }  
+                issueOrdersOutsideSequence(state, actor.id, orders, consequence.replaceCurrentOrders)
                 break;
             }
             case 'changeRoom': {

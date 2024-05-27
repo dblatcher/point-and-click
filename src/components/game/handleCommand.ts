@@ -7,6 +7,7 @@ import { findById } from "@/lib/util";
 import { getDefaultResponseText, matchInteraction, describeCommand } from "@/lib/commandFunctions";
 import { getTargetPoint } from "@/lib/roomFunctions";
 import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
+import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 
 function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
     const { actors, rooms, currentRoomId } = state
@@ -14,25 +15,21 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
     const currentRoom = findById(currentRoomId, rooms)
 
     if (!player || !currentRoom) { return state }
-    if (!state.actorOrders[player.id]) {
-        state.actorOrders[player.id] = []
-    }
 
     if (command.verb.isMoveVerb && (command.target.type === 'actor' || command.target.type === 'hotspot')) {
-
         const point = getTargetPoint(command.target, currentRoom)
         const log = makeDebugEntry(`walk to point is ${point.x}, ${point.y}`, 'pathfinding')
         state.emitter.emit('debugLog', log)
-        state.actorOrders[player.id].push({
+        issueOrdersOutsideSequence(state, player.id, [{
             type: 'move', steps: [
                 { ...point }
             ]
-        })
+        }])
     } else {
         const text = getDefaultResponseText(command, unreachable)
-        state.actorOrders[player.id].push({
+        issueOrdersOutsideSequence(state, player.id, [{
             type: 'say', text, time: 250
-        })
+        }])
     }
     return state
 }

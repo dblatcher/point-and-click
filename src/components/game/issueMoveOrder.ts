@@ -3,6 +3,7 @@ import { MoveOrder } from "@/definitions";
 import { Point } from "@/lib/pathfinding/geometry";
 import { findPath } from "@/lib/pathfinding/pathfind";
 import { makeDebugEntry } from "@/lib/inGameDebugging";
+import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 
 export function issueMoveOrder(
     destination: Point,
@@ -20,16 +21,7 @@ export function issueMoveOrder(
         const steps = ignoreObstacles ? [destination] : findPath({ x: actor.x, y: actor.y }, destination, cellMatrix, cellSize)
         const newOrder: MoveOrder = { type: 'move', steps, pathIsSet: true }
         state.emitter.emit('debugLog', makeDebugEntry(`move: [${actor.x}, ${actor.y}] -> [${destination.x},${destination.y}], steps:${steps.length}`, 'order'))
-
-        if (!state.actorOrders[actor.id]) {
-            state.actorOrders[actor.id] = []
-        }
-        if (appendToExisting) {
-            state.actorOrders[actor.id].push(newOrder)
-        } else {
-            state.actorOrders[actor.id] = [newOrder] // clears any existing orders, even if the point was unreachable
-        }
-
+        issueOrdersOutsideSequence(state, actor.id, [newOrder], !appendToExisting)
         return { actors }
     }
 }
