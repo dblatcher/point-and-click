@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { RoomDescription } from "./RoomDescription";
 import { DebugLog } from "../DebugLog";
+import { NarrativeFeed } from "./NarrativeFeed";
 
 
 export const TextBasedLayout = ({
@@ -31,7 +32,7 @@ export const TextBasedLayout = ({
         {saveMenu}
         <SoundToggle />
 
-<DebugLog />
+        <DebugLog />
         <Box display={'flex'}>
             <figure role='img'>
                 {children}
@@ -39,6 +40,7 @@ export const TextBasedLayout = ({
             <div>
                 <RoomDescription />
             </div>
+            <NarrativeFeed />
         </Box>
         <EndingWrapper />
         {isConversationRunning ? (
