@@ -7,12 +7,12 @@ import { OrderReport } from "@/lib/game-event-emitter";
 const orderReportToFeedLine = (orderReport: OrderReport): string => {
 
     switch (orderReport.order.type) {
-
         case "say":
             return `${orderReport.actorId} says "${orderReport.order.text}"`
+        case "goTo":
+            return `${orderReport.actorId} goes to ${orderReport.order.targetId}.`
         case "move":
         case "act":
-        case "goTo":
 
         default:
             return `${orderReport.actorId}: ${orderReport.order.type}`

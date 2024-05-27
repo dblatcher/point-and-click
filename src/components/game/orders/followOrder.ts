@@ -52,10 +52,14 @@ export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: 
         }
         executeMove(nextOrder, subject, sprite)
     } else if (nextOrder.type === 'say') {
+        if (!nextOrder._started) {
+            state.emitter.emit('order', { order: nextOrder, actorId: subject.id })
+        }
         exectuteSay(nextOrder)
     } else if (nextOrder.type === 'act') {
         executeAction(nextOrder)
     } else if (nextOrder.type === 'goTo') {
+        state.emitter.emit('order', { order: nextOrder, actorId: subject.id })
         const moveOrder = makeMoveOrderFromGoto(nextOrder, state)
         orders.shift()
         orders.unshift(moveOrder)

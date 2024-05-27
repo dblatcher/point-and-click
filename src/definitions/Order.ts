@@ -26,6 +26,7 @@ export const SayOrderSchema = z.object({
     animation: z.optional(z.string()),
     text: z.string(),
     time: z.number(),
+    _started: z.oboolean(),
 })
 export type SayOrder = z.infer<typeof SayOrderSchema>
 
