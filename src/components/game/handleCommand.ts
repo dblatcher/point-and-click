@@ -21,7 +21,8 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
     if (command.verb.isMoveVerb && (command.target.type === 'actor' || command.target.type === 'hotspot')) {
 
         const point = getTargetPoint(command.target, currentRoom)
-        state.debugLog.push(makeDebugEntry(`walk to point is ${point.x}, ${point.y}`, 'pathfinding'))
+        const log = makeDebugEntry(`walk to point is ${point.x}, ${point.y}`, 'pathfinding')
+        state.emitter.emit('debugLog', log)
         state.actorOrders[player.id].push({
             type: 'move', steps: [
                 { ...point }
@@ -62,7 +63,7 @@ function makeGoToOrder(player: ActorData, target: { x: number; y: number }): Ord
 export function handleCommand(command: Command, props: GameProps): { (state: GameState): Partial<GameState> } {
 
     return (state): GameState => {
-        const { currentRoomId, rooms, debugLog, actors, cellMatrix = [] } = state
+        const { currentRoomId, rooms, actors, cellMatrix = [] } = state
         const currentRoom = findById(currentRoomId, rooms)
         if (!currentRoom) { return state }
 
@@ -71,7 +72,9 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
         const mustReachFirst = interaction && (command.verb.isMoveVerb || interaction.mustReachFirst)
 
         if (interaction && mustReachFirst && command.target.type !== 'item') {
-            debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command'))
+            const log = makeDebugEntry(`[${describeCommand(command)}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command')
+            state.emitter.emit('debugLog', log)
+
             const targetPoint = getTargetPoint(command.target, currentRoom)
 
             if (player) {
@@ -81,16 +84,19 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                     const execute = makeConsequenceExecutor(state, props)
                     execute(makeGoToOrder(player, targetPoint))
                 } else {
-                    debugLog.push(makeDebugEntry(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding'))
+                    const log = makeDebugEntry(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding')
+                    state.emitter.emit('debugLog', log)
                     doDefaultResponse(command, state, true)
                 }
             }
         } else if (interaction) {
-            debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: ${describeConsequences(interaction)}`, 'command'))
+            const log = makeDebugEntry(`[${describeCommand(command)}]: ${describeConsequences(interaction)}`, 'command')
+            state.emitter.emit('debugLog', log)
             const execute = makeConsequenceExecutor(state, props)
             interaction.consequences.forEach(execute)
         } else {
-            debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: (no match)`, 'command'))
+            const log = makeDebugEntry(`[${describeCommand(command)}]: (no match)`, 'command')
+            state.emitter.emit('debugLog', log)
             doDefaultResponse(command, state)
         }
 
@@ -105,7 +111,7 @@ export function doPendingInteraction(state: GameState, props: GameProps): GameSt
     state.pendingInteraction?.consequences.forEach(execute)
 
     if (state.pendingInteraction) {
-        state.debugLog.push(makeDebugEntry(
+        state.emitter.emit('debugLog', makeDebugEntry(
             `Pending interaction: ${describeConsequences(state.pendingInteraction)}`,
             'command'
         ))

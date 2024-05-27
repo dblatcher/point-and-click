@@ -1,14 +1,26 @@
 
 import { Order } from "@/definitions";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGameState } from "@/context/game-state-context";
 import styles from "./styles.module.css";
+import { LogEntry } from "@/lib/inGameDebugging";
 
 
 export const DebugLog = () => {
+    const state = useGameState();
+    const { emitter } = state
+    const [log, setLog] = useState<LogEntry[]>([])
 
-    const state = useGameState()
-    const log = state.debugLog
+    useEffect(() => {
+        const logEvents = (newEntry: LogEntry) => {
+            setLog([...log, newEntry])
+        }
+        emitter.on('debugLog', logEvents)
+        return () => {
+            emitter.off('debugLog', logEvents)
+        }
+    })
+
 
     const listRef = useRef<HTMLUListElement>(null)
     useEffect(() => {
@@ -102,16 +114,19 @@ export const DebugLog = () => {
 
                 </div>
 
-                <ul className={styles.loglist} ref={listRef} style={{ height: '100px' }}>
-                    {log.map((entry, index) => (
-                        <li key={index}>
-                            <b>
-                                {entry.time.toLocaleTimeString()}:
-                            </b>
-                            {entry.content}
-                        </li>
-                    ))}
-                </ul>
+                <div style={{ flex: 1 }}>
+                    <ul className={styles.loglist} ref={listRef} style={{ height: '100px' }}>
+                        {log.map((entry, index) => (
+                            <li key={index}>
+                                <b>
+                                    {entry.time.toLocaleTimeString()}:
+                                </b>
+                                {entry.content}
+                            </li>
+                        ))}
+                    </ul>
+                    <button onClick={() => { setLog([]) }}>clear log</button>
+                </div>
             </div>
             <hr />
         </aside >

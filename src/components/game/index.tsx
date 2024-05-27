@@ -4,7 +4,6 @@ import { Component } from "react";
 //lib
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { makeDebugEntry, type LogEntry } from "@/lib/inGameDebugging";
 import { CellMatrix, generateCellMatrix } from "@/lib/pathfinding/cells";
 import { buildContentsList } from "@/lib/put-contents-in-order";
 import { getViewAngleCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
@@ -23,6 +22,7 @@ import { Room } from "../svg/Room";
 import { GameStateProvider } from "@/context/game-state-context";
 import { UiComponentSet } from "./uiComponentSet";
 import { GameInfoProvider } from "@/context/game-info-provider";
+import { GameEventEmitter } from "@/lib/game-event-emitter";
 
 
 export type GameProps = Readonly<{
@@ -43,10 +43,10 @@ export type GameState = GameData & {
     currentVerbId: string;
     currentItemId?: string;
     hoverTarget?: CommandTarget;
-    debugLog: LogEntry[];
 
     roomWidth: number;
     roomHeight: number;
+    emitter: GameEventEmitter
 }
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
@@ -63,7 +63,7 @@ export const cellSize = 5
 const renderCells = false
 const TIMER_SPEED = 10
 
-type SetGameStateFn = {(state:GameState):GameState}
+type SetGameStateFn = { (state: GameState): GameState }
 
 export default class Game extends Component<GameProps, GameState> {
 
@@ -109,12 +109,13 @@ export default class Game extends Component<GameProps, GameState> {
             actorOrders: props.actorOrders || {},
             conversations,
             currentConversationId: props.currentConversationId,
-            debugLog: [makeDebugEntry(`Running: ${props.id}`)],
             flagMap,
             gameNotBegun: false,
 
             roomHeight: 400,
             roomWidth: 800,
+
+            emitter: new GameEventEmitter(),
         }
     }
 

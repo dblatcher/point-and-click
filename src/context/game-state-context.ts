@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
 import { GameState } from '@/components/game'
 import { findById } from '@/lib/util'
+import { GameEventEmitter } from '../lib/game-event-emitter'
 
 const gameStateContext = createContext<GameState>(
     {
@@ -17,11 +18,11 @@ const gameStateContext = createContext<GameState>(
         actorOrders: {},
         conversations: [],
         currentConversationId: '',
-        debugLog: [],
         flagMap: {},
         gameNotBegun: false,
         roomHeight: 400,
         roomWidth: 800,
+        emitter: new GameEventEmitter(),
     }
 )
 
