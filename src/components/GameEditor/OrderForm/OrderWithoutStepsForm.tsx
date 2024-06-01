@@ -43,7 +43,7 @@ export class OrderWithoutStepsForm extends Component<Props> {
                 )}
                 {type === 'goTo' && (
                     <SchemaForm
-                        schema={GotoOrderSchema}
+                        schema={GotoOrderSchema.omit({ _started: true })}
                         data={this.props.data}
                         changeValue={this.handleSchemaFormChange}
                         suggestions={{

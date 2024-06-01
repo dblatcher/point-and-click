@@ -46,23 +46,29 @@ export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: 
     if (!orders || orders.length === 0) { return false }
     const [nextOrder] = orders
 
-    if (nextOrder.type === 'move') {
-        if (!nextOrder.pathIsSet) {
-            findPathBetweenSteps(subject, cellMatrix, nextOrder)
-        }
-        executeMove(nextOrder, subject, sprite)
-    } else if (nextOrder.type === 'say') {
-        if (!nextOrder._started) {
-            state.emitter.emit('order', { order: nextOrder, actorId: subject.id })
-        }
-        exectuteSay(nextOrder)
-    } else if (nextOrder.type === 'act') {
-        executeAction(nextOrder)
-    } else if (nextOrder.type === 'goTo') {
+    if (!nextOrder._started) {
         state.emitter.emit('order', { order: nextOrder, actorId: subject.id })
-        const moveOrder = makeMoveOrderFromGoto(nextOrder, state)
-        orders.shift()
-        orders.unshift(moveOrder)
+        nextOrder._started = true
+    }
+    switch (nextOrder.type) {
+        case "move":
+            if (!nextOrder.pathIsSet) {
+                findPathBetweenSteps(subject, cellMatrix, nextOrder)
+            }
+            executeMove(nextOrder, subject, sprite)
+            break;
+        case "say":
+            exectuteSay(nextOrder)
+            break
+        case "act":
+            executeAction(nextOrder)
+            break;
+        case "goTo": {
+            const moveOrder = makeMoveOrderFromGoto(nextOrder, state)
+            orders.shift()
+            orders.unshift(moveOrder)
+            break;
+        }
     }
 
     if ('steps' in nextOrder) {

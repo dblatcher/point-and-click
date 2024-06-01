@@ -9,7 +9,8 @@ export const MoveOrderSchema = z.object({
         x: z.number(),
         y: z.number(),
         speed: z.optional(z.number()),
-    }))
+    })),
+    _started: z.oboolean(),
 })
 export type MoveOrder = z.infer<typeof MoveOrderSchema>
 
@@ -18,6 +19,7 @@ export const GotoOrderSchema = z.object({
     animation: z.optional(z.string()),
     speed: z.optional(z.number()),
     targetId: z.string(),
+    _started: z.oboolean(),
 })
 export type GotoOrder = z.infer<typeof GotoOrderSchema>
 
@@ -37,7 +39,8 @@ export const ActOrderSchema = z.object({
         duration: z.number(),
         timeElapsed: z.optional(z.number()),
         reverse: z.optional(z.boolean()),
-    }))
+    })),
+    _started: z.oboolean(),
 })
 export type ActOrder = z.infer<typeof ActOrderSchema>
 

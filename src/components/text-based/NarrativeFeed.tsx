@@ -4,18 +4,24 @@ import { useGameState } from "@/context/game-state-context";
 import { OrderReport } from "@/lib/game-event-emitter";
 
 
+// TO DO - provide the actor name and name of go to target
 const orderReportToFeedLine = (orderReport: OrderReport): string => {
-
-    switch (orderReport.order.type) {
+    const { actorId, order } = orderReport
+    switch (order.type) {
         case "say":
-            return `${orderReport.actorId} says "${orderReport.order.text}"`
+            const verb = order.animation ?? 'says'
+            return `${actorId} ${verb} "${order.text}"`
         case "goTo":
-            return `${orderReport.actorId} goes to ${orderReport.order.targetId}.`
-        case "move":
+            return `${actorId} goes to ${order.targetId}.`
         case "act":
-
-        default:
-            return `${orderReport.actorId}: ${orderReport.order.type}`
+            return `${actorId} does ${order.steps.map(step => step.animation).join()}.`
+        case "move": {
+            const couldNotReach = order.steps.length === 0
+            if (couldNotReach) {
+                return `${actorId} wanted to move could not find a way to get there.`
+            }
+            return `${actorId} moves.`
+        }
     }
 }
 
@@ -26,7 +32,6 @@ export const NarrativeFeed = () => {
 
     useEffect(() => {
         const addToFeed = (orderReport: { order: Order, actorId: string }) => {
-            console.log(orderReport)
             setFeed([...feed, orderReportToFeedLine(orderReport)])
         }
         emitter.on('order', addToFeed)
@@ -36,6 +41,7 @@ export const NarrativeFeed = () => {
     })
 
 
+    // to do - add the scrolling css for this or find a nice MUI alternative
     const listRef = useRef<HTMLUListElement>(null)
     useEffect(() => {
         const { current: listElement } = listRef

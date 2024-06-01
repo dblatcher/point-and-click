@@ -39,6 +39,7 @@ export function makeMoveOrderFromGoto(goToOrder: GotoOrder, state: GameState): M
             ...getTargetPoint(target, currentRoom),
             speed,
             animation,
-        }]
+        }],
+        _started: true, // treat the 'move' as started since it was created from the goTo which has been announced
     }
 }
