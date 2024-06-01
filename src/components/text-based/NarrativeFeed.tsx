@@ -61,8 +61,13 @@ export const NarrativeFeed = () => {
 
     return <ScrollingFeed feed={formattedFeed} maxHeight={160}
         boxProps={{
+            component: 'section',
             flex: 1,
             paddingX: 1,
+            role: 'log',
+            'aria-atomic': true,
+            'aria-live': "assertive",
+            'aria-label': 'in-game events'
         }}
         listProps={{
             sx: {

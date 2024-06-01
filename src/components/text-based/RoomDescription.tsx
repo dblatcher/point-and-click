@@ -1,4 +1,9 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context"
+import { Box, Typography } from "@mui/material"
+import { ReactNode } from "react"
+
+
+const P = ({ children }: { children: ReactNode }) => <Typography lineHeight={1}>{children}</Typography>
 
 export const RoomDescription = () => {
 
@@ -13,31 +18,36 @@ export const RoomDescription = () => {
     )
 
     return (
-        <article>
+        <Box component={'section'}
+            aria-live="polite"
+            sx={{
+                paddingX: 1
+            }}
+        >
             {room && <>
-                <p>You {player && `(${player.name})`} are in {room?.id}</p>
+                <P>You {player && `(${player.name})`} are in {room?.id}</P>
 
                 {hotspots.map(
                     hotspot => (
-                        <p key={hotspot.id}>
+                        <P key={hotspot.id}>
                             There is a {hotspot.name ?? hotspot.id} here.
-                        </p>
+                        </P>
                     )
                 )}
 
                 {actorsInRoom.map(
                     actor => (
-                        <p key={actor.id}>
+                        <P key={actor.id}>
                             {actor.name ?? actor.id} is here.
                             {actor.status && (
                                 <>It is {actor.status}.</>
                             )}
-                        </p>
+                        </P>
                     )
                 )}
 
             </>}
-        </article>
+        </Box>
     )
 
 }

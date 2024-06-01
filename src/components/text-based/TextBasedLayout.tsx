@@ -8,9 +8,8 @@ import { useGameStateDerivations } from "@/context/game-state-context";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { GameLayoutProps } from "../game/uiComponentSet";
-import { RoomDescription } from "./RoomDescription";
-import { DebugLog } from "../DebugLog";
 import { NarrativeFeed } from "./NarrativeFeed";
+import { RoomDescription } from "./RoomDescription";
 
 
 export const TextBasedLayout = ({
@@ -32,27 +31,27 @@ export const TextBasedLayout = ({
         {saveMenu}
         <SoundToggle />
 
-        <DebugLog />
+        <Box display={'flex'}>
+            <RoomDescription />
+            <NarrativeFeed />
+        </Box>
+        <EndingWrapper />
+
         <Box display={'flex'}>
             <figure role='img'>
                 {children}
             </figure>
-            <div>
-                <RoomDescription />
-            </div>
-            <NarrativeFeed />
+            {isConversationRunning ? (
+                <div>
+                    {!isSequenceRunning && <ConversationMenu select={selectConversation} />}
+                </div>
+            ) : (
+                <div>
+                    <CommandLine />
+                    <VerbMenu select={selectVerb} />
+                    <ItemMenu handleHover={handleHover} select={selectItem} />
+                </div>
+            )}
         </Box>
-        <EndingWrapper />
-        {isConversationRunning ? (
-            <>
-                {!isSequenceRunning && <ConversationMenu select={selectConversation} />}
-            </>
-        ) : (
-            <>
-                <CommandLine />
-                <VerbMenu select={selectVerb} />
-                <ItemMenu handleHover={handleHover} select={selectItem} />
-            </>
-        )}
     </main>)
 }
