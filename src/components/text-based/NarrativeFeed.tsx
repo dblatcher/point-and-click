@@ -1,7 +1,9 @@
 import { useGameState } from "@/context/game-state-context";
 import { describeCommand } from "@/lib/commandFunctions";
 import { CommandReport, OrderReport } from "@/lib/game-event-emitter";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { ScrollingFeed } from "../ScrollingFeed";
+import { Typography } from "@mui/material";
 
 
 
@@ -55,26 +57,18 @@ export const NarrativeFeed = () => {
         }
     })
 
+    const formattedFeed = feed.map((text, index) => <Typography key={index}>{text}</Typography>)
 
-    // to do - add the scrolling css for this or find a nice MUI alternative
-    const listRef = useRef<HTMLUListElement>(null)
-    useEffect(() => {
-        const { current: listElement } = listRef
-        if (!listElement) { return }
-        listElement.scrollTo({ left: 0, top: listElement.scrollHeight })
-    }, [feed.length])
-
-    return (
-        <aside>
-            <div style={{ flex: 1 }}>
-                <ul>
-                    {feed.map((entry, index) => (
-                        <li key={index}>
-                            {entry}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </aside>
-    );
+    return <ScrollingFeed feed={formattedFeed} maxHeight={160}
+        boxProps={{
+            flex: 1,
+            paddingX: 1,
+        }}
+        listProps={{
+            sx: {
+                listStyle: 'none',
+                padding: 0
+            }
+        }}
+    />
 };
