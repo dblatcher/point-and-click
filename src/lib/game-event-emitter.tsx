@@ -1,8 +1,8 @@
 import { LogEntry } from "@/lib/inGameDebugging";
-import { Command, Order } from "@/definitions";
+import { ActorData, Command, Order } from "@/definitions";
 import { TypedEmitter } from "tiny-typed-emitter";
 
-export interface OrderReport { order: Order, actorId: string }
+export interface OrderReport { order: Order, actor: ActorData }
 export interface CommandReport { command: Command }
 
 export interface GameEvents {

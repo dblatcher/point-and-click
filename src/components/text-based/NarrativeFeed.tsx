@@ -1,27 +1,30 @@
-import { Order } from "@/definitions";
-import { useEffect, useRef, useState } from "react";
 import { useGameState } from "@/context/game-state-context";
-import { CommandReport, OrderReport } from "@/lib/game-event-emitter";
 import { describeCommand } from "@/lib/commandFunctions";
+import { CommandReport, OrderReport } from "@/lib/game-event-emitter";
+import { useEffect, useRef, useState } from "react";
 
 
-// TO DO - provide the actor name and name of go to target
+
+// TO DO - provide the name of go to target
+// TO DO - proper sentence grammar!
+// TO DO = optional custom text descriptions of orders!
 const orderReportToFeedLine = (orderReport: OrderReport): string => {
-    const { actorId, order } = orderReport
+    const { actor, order } = orderReport;
+    const actorName = actor.isPlayer ? 'you' : actor.name ?? actor.id;
     switch (order.type) {
         case "say":
             const verb = order.animation ?? 'says'
-            return `${actorId} ${verb} "${order.text}"`
+            return `${actorName} ${verb} "${order.text}"`
         case "goTo":
-            return `${actorId} goes to ${order.targetId}.`
+            return `${actorName} goes to ${order.targetId}.`
         case "act":
-            return `${actorId} does ${order.steps.map(step => step.animation).join()}.`
+            return `${actorName} does ${order.steps.map(step => step.animation).join()}.`
         case "move": {
             const couldNotReach = order.steps.length === 0
             if (couldNotReach) {
-                return `${actorId} wanted to move could not find a way to get there.`
+                return `${actorName} wanted to move could not find a way to get there.`
             }
-            return `${actorId} moves.`
+            return `${actorName} moves.`
         }
     }
 }
