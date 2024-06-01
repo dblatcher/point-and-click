@@ -1,7 +1,8 @@
 import { Order } from "@/definitions";
 import { useEffect, useRef, useState } from "react";
 import { useGameState } from "@/context/game-state-context";
-import { OrderReport } from "@/lib/game-event-emitter";
+import { CommandReport, OrderReport } from "@/lib/game-event-emitter";
+import { describeCommand } from "@/lib/commandFunctions";
 
 
 // TO DO - provide the actor name and name of go to target
@@ -25,18 +26,29 @@ const orderReportToFeedLine = (orderReport: OrderReport): string => {
     }
 }
 
+const commandReportToFeedLine = (commandReport: CommandReport): string => {
+    const { command } = commandReport
+
+    return ` > ${describeCommand(command, true)}`
+}
+
 export const NarrativeFeed = () => {
     const state = useGameState();
     const { emitter } = state
     const [feed, setFeed] = useState<string[]>([])
 
     useEffect(() => {
-        const addToFeed = (orderReport: { order: Order, actorId: string }) => {
+        const addOrderToFeed = (orderReport: OrderReport) => {
             setFeed([...feed, orderReportToFeedLine(orderReport)])
         }
-        emitter.on('order', addToFeed)
+        const addCommandToFeed = (commandReport: CommandReport) => {
+            setFeed([...feed, commandReportToFeedLine(commandReport)])
+        }
+        emitter.on('order', addOrderToFeed)
+        emitter.on('command', addCommandToFeed)
         return () => {
-            emitter.off('order', addToFeed)
+            emitter.off('order', addOrderToFeed)
+            emitter.off('command', addCommandToFeed)
         }
     })
 

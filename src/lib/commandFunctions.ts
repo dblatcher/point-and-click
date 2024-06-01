@@ -13,9 +13,9 @@ export const describeCommand = (command: Command, useNames = false): string => {
 
     if (useNames) {
         if (item) {
-            return `${verb.label}  ${item.name} ${verb.preposition} ${target.name}`
+            return `${verb.label}  ${item.name ?? item.id} ${verb.preposition ?? 'with'} ${target.name ?? target.id}`
         }
-        return `${verb.label} ${target.name}`
+        return `${verb.label} ${target.name ?? target.id}`
     }
 
     if (item) {

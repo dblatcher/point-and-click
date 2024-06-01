@@ -60,7 +60,7 @@ function makeGoToOrder(player: ActorData, target: { x: number; y: number }): Ord
 export function handleCommand(command: Command, props: GameProps): { (state: GameState): Partial<GameState> } {
 
     return (state): GameState => {
-        const { currentRoomId, rooms, actors, cellMatrix = [] } = state
+        const { currentRoomId, rooms, actors, cellMatrix = [], emitter } = state
         const currentRoom = findById(currentRoomId, rooms)
         if (!currentRoom) { return state }
 
@@ -68,9 +68,12 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
         const interaction = matchInteraction(command, currentRoom, state.interactions, state.flagMap)
         const mustReachFirst = interaction && (command.verb.isMoveVerb || interaction.mustReachFirst)
 
+        const descriptionForLog = describeCommand(command)
+        emitter.emit('command', { command })
+
         if (interaction && mustReachFirst && command.target.type !== 'item') {
-            const log = makeDebugEntry(`[${describeCommand(command)}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command')
-            state.emitter.emit('debugLog', log)
+            const log = makeDebugEntry(`[${descriptionForLog}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command')
+            emitter.emit('debugLog', log)
 
             const targetPoint = getTargetPoint(command.target, currentRoom)
 
@@ -82,18 +85,18 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                     execute(makeGoToOrder(player, targetPoint))
                 } else {
                     const log = makeDebugEntry(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding')
-                    state.emitter.emit('debugLog', log)
+                    emitter.emit('debugLog', log)
                     doDefaultResponse(command, state, true)
                 }
             }
         } else if (interaction) {
-            const log = makeDebugEntry(`[${describeCommand(command)}]: ${describeConsequences(interaction)}`, 'command')
-            state.emitter.emit('debugLog', log)
+            const log = makeDebugEntry(`[${descriptionForLog}]: ${describeConsequences(interaction)}`, 'command')
+            emitter.emit('debugLog', log)
             const execute = makeConsequenceExecutor(state, props)
             interaction.consequences.forEach(execute)
         } else {
-            const log = makeDebugEntry(`[${describeCommand(command)}]: (no match)`, 'command')
-            state.emitter.emit('debugLog', log)
+            const log = makeDebugEntry(`[${descriptionForLog}]: (no match)`, 'command')
+            emitter.emit('debugLog', log)
             doDefaultResponse(command, state)
         }
 
