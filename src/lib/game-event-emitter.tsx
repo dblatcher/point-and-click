@@ -4,7 +4,7 @@ import { TypedEmitter } from "tiny-typed-emitter";
 
 export interface OrderReport { order: Order, actor: ActorData }
 export interface CommandReport { command: Command }
-export interface ConsequenceReport { consequence: Consequence, success: boolean }
+export interface ConsequenceReport { consequence: Consequence, success: boolean, offscreen: boolean }
 
 export interface GameEvents {
     'debugLog': { (logentry: LogEntry): void }

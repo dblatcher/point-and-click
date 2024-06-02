@@ -17,6 +17,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
     const currentRoom = rooms.find(_ => _.id === currentRoomId)
 
     let conseqeunceSuccess = false
+    let isOffscreen = false
 
     return (consequence: Consequence): void => {
 
@@ -29,6 +30,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 }
                 issueOrdersOutsideSequence(state, actor.id, orders, consequence.replaceCurrentOrders)
                 conseqeunceSuccess = true
+                isOffscreen = actor.room !== currentRoomId
                 break;
             }
             case 'changeRoom': {
@@ -54,20 +56,23 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                     item.actorId = undefined
                     conseqeunceSuccess = true
                 }
+                isOffscreen = actor && actor.room !== currentRoomId
                 break;
             }
             case 'removeActor': {
                 const { actorId } = consequence
                 const actor = actors.find(_ => _.id === actorId)
                 if (!actor) { break }
-                actor.room = undefined;
                 conseqeunceSuccess = true
+                isOffscreen = actor.room !== currentRoomId
+                actor.room = undefined;
                 break;
             }
             case 'teleportActor': {
                 const { actorId, roomId, x, y } = consequence
                 const actor = actors.find(_ => _.id === actorId)
                 if (!actor) { break }
+                isOffscreen = !actor.isPlayer && actor.room !== currentRoomId && roomId !== currentRoomId;
                 actor.room = roomId || actor.room
                 actor.x = x
                 actor.y = y
@@ -80,6 +85,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 switch (targetType) {
                     case 'actor':
                         target = actors.find(_ => _.id === targetId);
+                        isOffscreen = target?.room !== currentRoomId
                         break;
                     case 'item':
                         target = items.find(_ => _.id === targetId);
@@ -141,6 +147,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 if (!room) {
                     break
                 }
+                isOffscreen = room.id !== currentRoomId
                 const zoneList = zoneType === 'obstacle'
                     ? room.obstacleAreas
                     : zoneType === 'walkable'
@@ -199,6 +206,6 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
             }
         }
 
-        emitter.emit('consequence', { consequence, success: conseqeunceSuccess })
+        emitter.emit('consequence', { consequence, success: conseqeunceSuccess, offscreen: isOffscreen })
     }
 }

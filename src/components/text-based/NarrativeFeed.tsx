@@ -1,7 +1,7 @@
 import { useGameState } from "@/context/game-state-context";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
 import { CommandReport, ConsequenceReport, OrderReport } from "@/lib/game-event-emitter";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ScrollingFeed } from "../ScrollingFeed";
 import { Typography } from "@mui/material";
 import { GameState } from "../game";
@@ -9,7 +9,6 @@ import { findById } from "@/lib/util";
 
 
 
-// TO DO - provide the name of go to target
 // TO DO - proper sentence grammar!
 // TO DO = optional custom text descriptions of orders!
 const orderReportToFeedLine = (orderReport: OrderReport): string => {
@@ -39,8 +38,8 @@ const commandReportToFeedLine = (commandReport: CommandReport): string => {
 }
 
 const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameState): string[] => {
-    const { consequence, success } = consequenceReport
-    if (!success) {
+    const { consequence, success, offscreen } = consequenceReport
+    if (!success || offscreen) {
         return []
     }
 
@@ -65,14 +64,26 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
             }
         }
         case "removeActor":
-            // issue- will be reported even if the actor is removed from a non-current room (ie 'offscreen')
-            // need an extra property on the report
             return [`${getActorName()} has left.`]
         case "changeStatus":
             const target = findTarget(consequence, state, true)
             return [`${target?.name ?? consequence.targetId} is now ${consequence.status}.`]
-        case "teleportActor":
+        case "teleportActor": {
+            const actor = findById(consequence.actorId, state.actors);
+            if (!actor) {
+                return []
+            }
+            // issue! teleporting from within the same room is treated the same as teleporting from another room 
+            const wasArrival = actor.room === state.currentRoomId
+
+            if (wasArrival) {
+                return [`${getActorName()} just arrived in ${state.currentRoomId}.`]
+            } else {
+                return [`${getActorName()} just left ${state.currentRoomId}.`]
+            }
+        }
         case "toggleZone":
+            // TO DO - how to describe a zone toggle?
         case "conversation":
         case "ending":
         case "soundEffect":
@@ -88,16 +99,20 @@ export const NarrativeFeed = () => {
     const state = useGameState();
     const { emitter } = state
     const [feed, setFeed] = useState<string[]>([])
+    const feedRef = useRef<string[]>([])
 
     useEffect(() => {
         const addOrderToFeed = (orderReport: OrderReport) => {
-            setFeed([...feed, orderReportToFeedLine(orderReport)])
+            feedRef.current.push(orderReportToFeedLine(orderReport))
+            setFeed(feedRef.current)
         }
         const addCommandToFeed = (commandReport: CommandReport) => {
-            setFeed([...feed, commandReportToFeedLine(commandReport)])
+            feedRef.current.push(commandReportToFeedLine(commandReport))
+            setFeed(feedRef.current)
         }
         const addConsequenecToFeed = (consequenceReport: ConsequenceReport) => {
-            setFeed([...feed, ...consequenceReportToFeedLines(consequenceReport, state)])
+            feedRef.current.push(...consequenceReportToFeedLines(consequenceReport, state))
+            setFeed(feedRef.current)
         }
         emitter.on('order', addOrderToFeed)
         emitter.on('command', addCommandToFeed)

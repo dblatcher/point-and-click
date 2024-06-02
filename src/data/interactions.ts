@@ -14,6 +14,13 @@ export const interactions: Interaction[] = [
                         time: 100,
                     }
                 ]
+            },
+            {
+                type: 'teleportActor',
+                actorId: 'EVIL_SKINNER',
+                roomId: 'OUTSIDE',
+                x:100,
+                y:100
             }
         ]
     },
@@ -286,7 +293,7 @@ export const interactions: Interaction[] = [
         mustReachFirst: true,
         consequences: [
             {
-                type: 'order', actorId:'MARIO', orders: [
+                type: 'order', actorId: 'MARIO', orders: [
                     {
                         type: 'goTo',
                         targetId: 'FIRE',
@@ -303,8 +310,8 @@ export const interactions: Interaction[] = [
         verbId: 'TALK',
         targetId: 'BUCKET',
         consequences: [
-            {type:'sequence', sequence:'CHAIN_1'},
-            {type:'sequence', sequence:'CHAIN_2'}
+            { type: 'sequence', sequence: 'CHAIN_1' },
+            { type: 'sequence', sequence: 'CHAIN_2' }
         ]
     }
 ]
