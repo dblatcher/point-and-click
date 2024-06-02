@@ -32,6 +32,8 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
     return { branchIdList, choiceRefList }
 }
 
+//TO DO - add a control for narratives
+
 export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) => {
     const { gameDesign } = useGameDesign()
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)

@@ -43,6 +43,10 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
         return []
     }
 
+    if (consequence.narrative) {
+        return consequence.narrative
+    }
+
     const getActorName = () => {
         if (!('actorId' in consequence)) {
             return 'you'

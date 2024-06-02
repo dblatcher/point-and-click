@@ -14,13 +14,6 @@ export const interactions: Interaction[] = [
                         time: 100,
                     }
                 ]
-            },
-            {
-                type: 'teleportActor',
-                actorId: 'EVIL_SKINNER',
-                roomId: 'OUTSIDE',
-                x:100,
-                y:100
             }
         ]
     },
@@ -114,6 +107,10 @@ export const interactions: Interaction[] = [
                 roomId: 'INSIDE',
                 takePlayer: true,
                 y: 5, x: 100,
+                narrative: [
+                    'You push through the bush and find a path leading into a wall with an open window.',
+                    'You climb inside.'
+                ]
             },
             {
                 type: 'order',
@@ -137,6 +134,9 @@ export const interactions: Interaction[] = [
                 roomId: 'OUTSIDE',
                 takePlayer: true,
                 y: 12, x: 230,
+                narrative: [
+                    'You clamber back out of the window.'
+                ]
             },
             {
                 type: 'order',
@@ -267,8 +267,15 @@ export const interactions: Interaction[] = [
         verbId: 'USE',
         targetId: 'FIRE',
         itemId: 'MATCHES',
+        mustReachFirst: true,
         consequences: [
-            { type: 'sequence', sequence: 'LIGHT_FIRE' }
+            {
+                type: 'sequence',
+                sequence: 'LIGHT_FIRE',
+                narrative: [
+                    'You take the matches out and strike one on the box, then hold the tiny flame to the kindling.'
+                ]
+            }
         ]
     },
     {
