@@ -176,5 +176,9 @@ export const ImmediateConsequenceSchema = z.union([
     ChangeRoomConsequenceSchema,
     ConversationChoiceConsequenceSchema,
 ])
+/**
+ * The subset of consequences that are don't take multiple cycles
+ * to happen - all of them except Orders and Sequences
+ */
 export type ImmediateConsequence = z.infer<typeof ImmediateConsequenceSchema>
 export const immediateConsequenceTypes: ConsequenceType[] = ImmediateConsequenceSchema.options.map(member => member.shape.type.value)
