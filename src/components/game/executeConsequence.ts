@@ -206,6 +206,6 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
             }
         }
 
-        emitter.emit('consequence', { consequence, success: conseqeunceSuccess, offscreen: isOffscreen })
+        emitter.emit('in-game-event', { type: 'consequence', consequence, success: conseqeunceSuccess, offscreen: isOffscreen })
     }
 }

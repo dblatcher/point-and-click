@@ -47,7 +47,7 @@ export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: 
     const [nextOrder] = orders
 
     if (!nextOrder._started) {
-        state.emitter.emit('order', { order: nextOrder, actor: subject })
+        state.emitter.emit('in-game-event', { type: 'order', order: nextOrder, actor: subject })
         nextOrder._started = true
     }
     switch (nextOrder.type) {

@@ -69,7 +69,7 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
         const mustReachFirst = interaction && (command.verb.isMoveVerb || interaction.mustReachFirst)
 
         const descriptionForLog = describeCommand(command)
-        emitter.emit('command', { command })
+        emitter.emit('in-game-event', { type: 'command', command })
 
         if (interaction && mustReachFirst && command.target.type !== 'item') {
             const log = makeDebugEntry(`[${descriptionForLog}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command')

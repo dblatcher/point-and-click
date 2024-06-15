@@ -1,7 +1,7 @@
 import { useGameState } from "@/context/game-state-context";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
-import { CommandReport, ConsequenceReport, OrderReport } from "@/lib/game-event-emitter";
-import { useEffect, useRef, useState } from "react";
+import { CommandReport, ConsequenceReport, InGameEvent, OrderReport } from "@/lib/game-event-emitter";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollingFeed } from "../ScrollingFeed";
 import { Typography } from "@mui/material";
 import { GameState } from "../game";
@@ -87,7 +87,7 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
             }
         }
         case "toggleZone":
-            // TO DO - how to describe a zone toggle?
+        // TO DO - how to describe a zone toggle?
         case "conversation":
         case "ending":
         case "soundEffect":
@@ -106,25 +106,24 @@ export const NarrativeFeed = () => {
     const feedRef = useRef<string[]>([])
 
     useEffect(() => {
-        const addOrderToFeed = (orderReport: OrderReport) => {
-            feedRef.current.push(orderReportToFeedLine(orderReport))
+        const handleInGameEvent = (inGameEvent: InGameEvent) => {
+            switch (inGameEvent.type) {
+                case "order":
+                    feedRef.current.push(orderReportToFeedLine(inGameEvent))
+                    break;
+                case "command":
+                    feedRef.current.push(commandReportToFeedLine(inGameEvent))
+                    break
+                case "consequence":
+                    feedRef.current.push(...consequenceReportToFeedLines(inGameEvent, state))
+                    break
+            }
             setFeed(feedRef.current)
         }
-        const addCommandToFeed = (commandReport: CommandReport) => {
-            feedRef.current.push(commandReportToFeedLine(commandReport))
-            setFeed(feedRef.current)
-        }
-        const addConsequenecToFeed = (consequenceReport: ConsequenceReport) => {
-            feedRef.current.push(...consequenceReportToFeedLines(consequenceReport, state))
-            setFeed(feedRef.current)
-        }
-        emitter.on('order', addOrderToFeed)
-        emitter.on('command', addCommandToFeed)
-        emitter.on('consequence', addConsequenecToFeed)
+
+        emitter.on('in-game-event', handleInGameEvent)
         return () => {
-            emitter.off('order', addOrderToFeed)
-            emitter.off('command', addCommandToFeed)
-            emitter.off('consequence', addConsequenecToFeed)
+            emitter.off('in-game-event', handleInGameEvent)
         }
     })
 
