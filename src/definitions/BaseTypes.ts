@@ -31,3 +31,5 @@ export const PositionSchema = z.object({
 
 export type Position = z.infer<typeof PositionSchema>
 
+export const NarrativeSchema = z.string().array().optional();
+export type Narrative = z.infer<typeof NarrativeSchema>;
