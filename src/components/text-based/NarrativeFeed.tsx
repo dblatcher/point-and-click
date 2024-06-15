@@ -25,7 +25,7 @@ const orderReportToFeedLine = (orderReport: OrderReport): string => {
         case "move": {
             const couldNotReach = order.steps.length === 0
             if (couldNotReach) {
-                return `${actorName} wanted to move could not find a way to get there.`
+                return `${actorName} wanted to move but could not find a way to get there.`
             }
             return `${actorName} moves.`
         }
