@@ -1,6 +1,13 @@
 import { z } from "zod"
+import { NarrativeSchema } from "./BaseTypes"
+
+const orderBase = {
+    _started: z.oboolean(),
+    narrative: NarrativeSchema,
+}
 
 export const MoveOrderSchema = z.object({
+    ...orderBase,
     type: z.literal('move'),
     pathIsSet: z.optional(z.boolean()),
     doPendingInteractionWhenFinished: z.optional(z.boolean()),
@@ -10,29 +17,29 @@ export const MoveOrderSchema = z.object({
         y: z.number(),
         speed: z.optional(z.number()),
     })),
-    _started: z.oboolean(),
 })
 export type MoveOrder = z.infer<typeof MoveOrderSchema>
 
 export const GotoOrderSchema = z.object({
+    ...orderBase,
     type: z.literal('goTo'),
     animation: z.optional(z.string()),
     speed: z.optional(z.number()),
     targetId: z.string(),
-    _started: z.oboolean(),
 })
 export type GotoOrder = z.infer<typeof GotoOrderSchema>
 
 export const SayOrderSchema = z.object({
+    ...orderBase,
     type: z.literal('say'),
     animation: z.optional(z.string()),
     text: z.string(),
     time: z.number(),
-    _started: z.oboolean(),
 })
 export type SayOrder = z.infer<typeof SayOrderSchema>
 
 export const ActOrderSchema = z.object({
+    ...orderBase,
     type: z.literal('act'),
     steps: z.array(z.object({
         animation: z.optional(z.string()),
@@ -40,7 +47,6 @@ export const ActOrderSchema = z.object({
         timeElapsed: z.optional(z.number()),
         reverse: z.optional(z.boolean()),
     })),
-    _started: z.oboolean(),
 })
 export type ActOrder = z.infer<typeof ActOrderSchema>
 

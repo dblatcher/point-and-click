@@ -31,6 +31,10 @@ export const interactions: Interaction[] = [
                                 duration: 200,
                                 animation: 'think',
                             }
+                        ],
+                        narrative: [
+                            'You consider the bucket deeply.',
+                            'Having this item is a mystery.',
                         ]
                     },
                     {
