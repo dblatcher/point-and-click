@@ -1,33 +1,38 @@
 import { useGameState } from "@/context/game-state-context";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
 import { CommandReport, ConsequenceReport, InGameEvent, OrderReport } from "@/lib/game-event-emitter";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { ScrollingFeed } from "../ScrollingFeed";
-import { Typography } from "@mui/material";
-import { GameState } from "../game";
 import { findById } from "@/lib/util";
+import { Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import { ScrollingFeed } from "../ScrollingFeed";
+import { GameState } from "../game";
 
 
 
 // TO DO - proper sentence grammar!
 // TO DO = optional custom text descriptions of orders!
-const orderReportToFeedLine = (orderReport: OrderReport): string => {
+const orderReportToFeedLine = (orderReport: OrderReport): string[] => {
     const { actor, order } = orderReport;
+
+    if (order.narrative) {
+        return order.narrative
+    }
+
     const actorName = actor.isPlayer ? 'you' : actor.name ?? actor.id;
     switch (order.type) {
         case "say":
             const verb = order.animation ?? 'says'
-            return `${actorName} ${verb} "${order.text}"`
+            return [`${actorName} ${verb} "${order.text}"`]
         case "goTo":
-            return `${actorName} goes to ${order.targetId}.`
+            return [`${actorName} goes to ${order.targetId}.`]
         case "act":
-            return `${actorName} does ${order.steps.map(step => step.animation).join()}.`
+            return [`${actorName} does ${order.steps.map(step => step.animation).join()}.`]
         case "move": {
             const couldNotReach = order.steps.length === 0
             if (couldNotReach) {
-                return `${actorName} wanted to move but could not find a way to get there.`
+                return [`${actorName} wanted to move but could not find a way to get there.`]
             }
-            return `${actorName} moves.`
+            return [`${actorName} moves.`]
         }
     }
 }
@@ -108,12 +113,12 @@ export const NarrativeFeed = () => {
     useEffect(() => {
         const handleInGameEvent = (inGameEvent: InGameEvent) => {
             switch (inGameEvent.type) {
-                case "order":
-                    feedRef.current.push(orderReportToFeedLine(inGameEvent))
-                    break;
                 case "command":
                     feedRef.current.push(commandReportToFeedLine(inGameEvent))
                     break
+                case "order":
+                    feedRef.current.push(...orderReportToFeedLine(inGameEvent))
+                    break;
                 case "consequence":
                     feedRef.current.push(...consequenceReportToFeedLines(inGameEvent, state))
                     break
