@@ -163,7 +163,23 @@ export const interactions: Interaction[] = [
                 type: 'order', orders: [
                     {
                         type: 'say',
-                        text: 'I took the sun. Really...[SHOULD NOt BE SEEN]',
+                        text: 'I cannot take the sun.',
+                        time: 100,
+                    }
+                ]
+            },
+        ]
+    },
+    {
+        verbId: 'TAKE',
+        targetId: 'flag',
+        mustReachFirst: true,
+        consequences: [
+            {
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: '[SHOULD NOt BE SEEN because this target is out of reach]',
                         time: 100,
                     }
                 ]
@@ -308,13 +324,19 @@ export const interactions: Interaction[] = [
                     {
                         type: 'goTo',
                         targetId: 'FIRE',
+                        narrative: [
+                            'Mario stumbles towards the fire. After regaining his composure, he wanders back to the bush he was sanding near before you shoved him.'
+                        ]
                     },
                     {
                         type: 'goTo',
                         targetId: 'bush',
+                        narrative: [
+
+                        ],
                     },
-                ]
-            }
+                ],
+            },
         ]
     },
     {

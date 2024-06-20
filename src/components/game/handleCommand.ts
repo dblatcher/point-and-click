@@ -36,8 +36,10 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
 
 const describeConsequences = (interaction: Interaction): string => `(${interaction.consequences?.map(_ => _.type).join()})`
 
-
-function makeGoToOrder(player: ActorData, target: { x: number; y: number }): OrderConsequence {
+// TO DO - have some control of the narrative for this.
+// Should it be empty? if we can eliminate the delay by making movements instant, then not needed.
+// If running visuals with the animation and text, do need a narrative...
+function makeGoToOrder(player: ActorData, targetPoint: { x: number; y: number }, targetDescription: string): OrderConsequence {
     return {
         type: 'order',
         actorId: player.id,
@@ -48,9 +50,12 @@ function makeGoToOrder(player: ActorData, target: { x: number; y: number }): Ord
                 doPendingInteractionWhenFinished: true,
                 steps: [
                     {
-                        x: target.x,
-                        y: target.y,
+                        x: targetPoint.x,
+                        y: targetPoint.y,
                     }
+                ],
+                narrative: [
+                    `making your way to ${targetDescription}...`
                 ]
             },
         ]
@@ -82,7 +87,7 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                 if (isReachable) {
                     state.pendingInteraction = interaction
                     const execute = makeConsequenceExecutor(state, props)
-                    execute(makeGoToOrder(player, targetPoint))
+                    execute(makeGoToOrder(player, targetPoint, command.target.name ?? command.target.id))
                 } else {
                     const log = makeDebugEntry(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding')
                     emitter.emit('debugLog', log)

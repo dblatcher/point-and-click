@@ -40,6 +40,6 @@ export function makeMoveOrderFromGoto(goToOrder: GotoOrder, state: GameState): M
             speed,
             animation,
         }],
-        _started: true, // treat the 'move' as started since it was created from the goTo which has been announced
+        narrative: [], // have empty narrative, since goTo order it was created from has been announced
     }
 }
