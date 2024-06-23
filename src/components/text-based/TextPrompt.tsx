@@ -63,6 +63,24 @@ const findTargetInRemainingWords = (
     return matchingActor || matchingItem || matchingHotspot
 }
 
+const promptToHelpText = (
+    promptText: string,
+    verbs: Verb[],
+    inventory: ItemData[],
+): string | undefined => {
+    switch (promptText.trim().toUpperCase()) {
+        case 'HELP':
+            return 'For a list of available verbs, type "verbs" or "V". For a list of what your character is carrying, type "inventory" or "I".'
+        case 'V':
+        case 'VERBS':
+            return `Available verbs: ${verbs.map(verb => `"${verb.label}"`).join(", ")}.`
+        case 'I':
+        case 'INVENTORY':
+            return `You have: ${inventory.map(item => item.name ?? item.name).join(", ")}.`
+        default:
+            return undefined
+    }
+}
 
 const promptToCommand = (
     promptText: string,
@@ -90,17 +108,18 @@ const promptToCommand = (
 
 // TO DO - needs to be disabled when UI should be disabled
 export const TextPrompt = ({ sendCommand }: Props) => {
-
     const { verbs } = useGameInfo()
     const { inventory } = useGameStateDerivations()
     const gameState = useGameState()
-
-
     const [promptText, setPromptText] = useState('')
 
     const handleSubmit = () => {
+        const helpText = promptToHelpText(promptText, verbs, inventory)
         const command = promptToCommand(promptText, verbs, inventory, gameState)
-        if (command) {
+
+        if (helpText) {
+            gameState.emitter.emit('prompt-feedback', { message: helpText })
+        } else if (command) {
             sendCommand(command)
         } else {
             gameState.emitter.emit('prompt-feedback', { message: 'Did not understand your command' })
@@ -126,5 +145,4 @@ export const TextPrompt = ({ sendCommand }: Props) => {
             />
         </Box >
     )
-
 }
