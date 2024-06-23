@@ -1,6 +1,6 @@
 import { useGameState } from "@/context/game-state-context";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
-import { CommandReport, ConsequenceReport, InGameEvent, OrderReport } from "@/lib/game-event-emitter";
+import { CommandReport, ConsequenceReport, InGameEvent, OrderReport, PromptFeedbackReport } from "@/lib/game-event-emitter";
 import { findById } from "@/lib/util";
 import { Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
@@ -126,15 +126,22 @@ export const NarrativeFeed = () => {
             setFeed(feedRef.current)
         }
 
+        const handlePromptFeedback = (feedback: PromptFeedbackReport) => {
+            feedRef.current.push(`** ${feedback.message} **`)
+            setFeed(feedRef.current)
+        }
+
         emitter.on('in-game-event', handleInGameEvent)
+        emitter.on('prompt-feedback', handlePromptFeedback)
         return () => {
             emitter.off('in-game-event', handleInGameEvent)
+            emitter.off('prompt-feedback', handlePromptFeedback)
         }
     })
 
     const formattedFeed = feed.map((text, index) => <Typography key={index}>{text}</Typography>)
 
-    return <ScrollingFeed feed={formattedFeed} maxHeight={160}
+    return <ScrollingFeed feed={formattedFeed} maxHeight={250}
         boxProps={{
             component: 'section',
             flex: 1,

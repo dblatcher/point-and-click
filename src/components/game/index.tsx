@@ -293,6 +293,11 @@ export default class Game extends Component<GameProps, GameState> {
                         selectItem={this.handleTargetClick}
                         handleHover={this.handleHover}
                         setScreenSize={this.setScreenSize}
+                        sendCommand={(command) => {
+                            this.setState(
+                                handleCommand(command, this.props) as SetGameStateFn
+                            )
+                        }}
                         saveMenu={
                             <SaveMenuComponent
                                 load={load ? () => { load() } : undefined}

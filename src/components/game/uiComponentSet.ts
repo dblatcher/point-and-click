@@ -1,4 +1,4 @@
-import { Verb, ItemData, ConversationChoice } from "@/definitions";
+import { Verb, ItemData, ConversationChoice, Command } from "@/definitions";
 import { FunctionComponent, ReactNode } from "react";
 import { HandleHoverFunction } from ".";
 
@@ -39,6 +39,7 @@ export type GameLayoutProps = {
     selectItem: { (item: ItemData): void };
     handleHover?: HandleHoverFunction;
     setScreenSize: { (roomWidth?: number, roomHeight?: number): void }
+    sendCommand: { (command: Command): void };
 }
 
 export type UiComponentSet = {

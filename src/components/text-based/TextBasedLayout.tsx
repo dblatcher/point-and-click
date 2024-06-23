@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { NarrativeFeed } from "./NarrativeFeed";
 import { RoomDescription } from "./RoomDescription";
+import { TextPrompt } from "./TextPrompt";
 
 
 export const TextBasedLayout = ({
@@ -17,6 +18,7 @@ export const TextBasedLayout = ({
     selectVerb, selectConversation, selectItem, handleHover,
     setScreenSize,
     saveMenu,
+    sendCommand,
 }: GameLayoutProps) => {
     const [initialResizeDone, setInitialResizeDone] = useState(false)
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
@@ -31,10 +33,14 @@ export const TextBasedLayout = ({
         {saveMenu}
         <SoundToggle />
 
-        <Box display={'flex'}>
+        <Box display={'flex'} minHeight={300}>
             <RoomDescription />
-            <NarrativeFeed />
+            <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
+                <NarrativeFeed />
+                <TextPrompt sendCommand={sendCommand} />
+            </Box>
         </Box>
+
         <EndingWrapper />
 
         <Box display={'flex'}>
