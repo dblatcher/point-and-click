@@ -1,13 +1,15 @@
 import { useGameState } from "@/context/game-state-context";
 import { InGameEvent, PromptFeedbackReport } from "@/lib/game-event-emitter";
-import { commandReportToFeedLine, consequenceReportToFeedLines, orderReportToFeedLine, stringToFeedItem } from "@/lib/text-based/create-feed-items";
+import { commandReportToFeedLine, consequenceReportToFeedLines, orderReportToFeedLine } from "@/lib/text-based/create-feed-items";
 import { FeedItem } from "@/lib/text-based/types";
 import { useEffect, useRef, useState } from "react";
 import { ScrollingFeed } from "../ScrollingFeed";
 import { FeedLine } from "./FeedLine";
+import { useGameInfo } from "@/context/game-info-provider";
 
 export const NarrativeFeed = () => {
     const state = useGameState();
+    const {endings} = useGameInfo()
     const { emitter } = state
     const [feed, setFeed] = useState<FeedItem[]>([])
     const feedRef = useRef<FeedItem[]>([])
@@ -22,7 +24,7 @@ export const NarrativeFeed = () => {
                     feedRef.current.push(...orderReportToFeedLine(inGameEvent))
                     break;
                 case "consequence":
-                    feedRef.current.push(...consequenceReportToFeedLines(inGameEvent, state).map(stringToFeedItem))
+                    feedRef.current.push(...consequenceReportToFeedLines(inGameEvent, state, endings))
                     break
             }
             setFeed(feedRef.current)

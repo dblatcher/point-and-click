@@ -1,12 +1,14 @@
 import { GameState } from "@/components/game";
+import { Ending } from "@/definitions";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
 import { CommandReport, ConsequenceReport, OrderReport } from "@/lib/game-event-emitter";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
 
-export const stringToFeedItem = (message: string) => ({
+const stringToFeedItem = (message: string) => ({
     message
 });
+
 // TO DO - proper sentence grammar!
 export const orderReportToFeedLine = (orderReport: OrderReport): FeedItem[] => {
     const { actor, order } = orderReport;
@@ -40,14 +42,14 @@ export const commandReportToFeedLine = (commandReport: CommandReport): FeedItem 
         type: 'command'
     };
 };
-export const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameState): string[] => {
+export const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameState, endings: Ending[]): FeedItem[] => {
     const { consequence, success, offscreen } = consequenceReport;
     if (!success || offscreen) {
         return [];
     }
 
     if (consequence.narrative) {
-        return consequence.narrative;
+        return consequence.narrative.map(stringToFeedItem);
     }
 
     const getActorName = () => {
@@ -60,39 +62,51 @@ export const consequenceReportToFeedLines = (consequenceReport: ConsequenceRepor
 
     switch (consequence.type) {
         case "changeRoom":
-            return consequence.takePlayer ? [`You enter ${consequence.roomId}.`] : [`Meanwhile, in ${consequence.roomId}...`];
+            return [stringToFeedItem(
+                consequence.takePlayer
+                    ? `You enter ${consequence.roomId}.`
+                    : `Meanwhile, in ${consequence.roomId}...`
+            )];
         case "inventory": {
             const item = findById(consequence.itemId, state.items);
             const itemName = item?.name ?? consequence.itemId;
             if (consequence.addOrRemove === 'ADD') {
-                return [`${getActorName()} now has the ${itemName}.`];
+                return [stringToFeedItem(`${getActorName()} now has the ${itemName}.`)];
             } else {
-                return [`${getActorName()} no longer has the ${itemName}.`];
+                return [stringToFeedItem(`${getActorName()} no longer has the ${itemName}.`)];
             }
         }
         case "removeActor":
-            return [`${getActorName()} has left.`];
+            return [stringToFeedItem(`${getActorName()} has left.`)];
         case "changeStatus":
             const target = findTarget(consequence, state, true);
-            return [`${target?.name ?? consequence.targetId} is now ${consequence.status}.`];
+            return [stringToFeedItem(`${target?.name ?? consequence.targetId} is now ${consequence.status}.`)];
         case "teleportActor": {
             const actor = findById(consequence.actorId, state.actors);
             if (!actor) {
                 return [];
             }
             // issue! teleporting from within the same room is treated the same as teleporting from another room 
-            const wasArrival = actor.room === state.currentRoomId;
-
-            if (wasArrival) {
-                return [`${getActorName()} just arrived in ${state.currentRoomId}.`];
-            } else {
-                return [`${getActorName()} just left ${state.currentRoomId}.`];
+            const text = actor.room === state.currentRoomId
+                ? `${getActorName()} just arrived in ${state.currentRoomId}.`
+                : `${getActorName()} just left ${state.currentRoomId}.`
+            return [stringToFeedItem(text)];
+        }
+        case "conversation":
+            if (consequence.end) {
+                return [{ message: 'conversation mode over', type: 'system' }]
             }
+            return [{ message: 'conversation mode', type: 'system' }]
+        case "ending": {
+            const ending = findById(consequence.endingId, endings)
+
+            return ending ? [
+                { message: ending?.message },
+                { message: `GAME OVER`, type: 'system' }
+            ] : [{ message: `GAME OVER`, type: 'system' }]
         }
         case "toggleZone":
         // TO DO - how to describe a zone toggle?
-        case "conversation":
-        case "ending":
         case "soundEffect":
         case "flag":
         case "conversationChoice":
