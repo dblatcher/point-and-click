@@ -5,6 +5,7 @@ import { Box, TextField } from "@mui/material"
 import { useRef, useState } from "react"
 import { clamp } from "@/lib/util"
 import { promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
+import { standard } from "@/lib/text-based/standard-text"
 
 interface Props {
     sendCommand: { (command: Command): void }
@@ -43,11 +44,11 @@ export const TextPrompt = ({ sendCommand }: Props) => {
         if (helpFeedback) {
             gameState.emitter.emit('prompt-feedback', helpFeedback)
         } else if (isGameEnded) {
-            gameState.emitter.emit('prompt-feedback', { message: 'The game is over.', type: 'system' })
+            gameState.emitter.emit('prompt-feedback', { message: standard.GAME_OVER_CANNOT_COMMAND, type: 'system' })
         } else if (command) {
             sendCommand(command)
         } else {
-            gameState.emitter.emit('prompt-feedback', { message: 'Did not understand your command', type: 'system' })
+            gameState.emitter.emit('prompt-feedback', { message: standard.PROMPT_NOT_UNDERSTOOD, type: 'system' })
         }
         setPromptFromHistory(undefined)
     }

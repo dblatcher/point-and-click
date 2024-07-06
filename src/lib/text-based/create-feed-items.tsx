@@ -4,6 +4,7 @@ import { describeCommand, findTarget } from "@/lib/commandFunctions";
 import { CommandReport, ConsequenceReport, OrderReport } from "@/lib/game-event-emitter";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
+import { standard } from "./standard-text";
 
 const stringToFeedItem = (message: string) => ({
     message
@@ -94,9 +95,9 @@ export const consequenceReportToFeedLines = (consequenceReport: ConsequenceRepor
         }
         case "conversation":
             if (consequence.end) {
-                return [{ message: 'conversation mode over', type: 'system' }]
+                return [{ message: standard.CONVERSATION_END, type: 'system' }]
             }
-            return [{ message: 'conversation mode', type: 'system' }]
+            return [{ message: standard.CONVERSATION_START, type: 'system' }]
         case "ending": {
             const ending = findById(consequence.endingId, endings)
 
