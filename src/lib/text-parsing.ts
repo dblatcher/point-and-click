@@ -1,6 +1,6 @@
 import { GameState } from "@/components/game";
 import { Verb, ItemData, Command, ActorData, HotspotZone } from "@/definitions";
-
+import { PromptFeedbackReport } from "./game-event-emitter";
 
 
 const ignoreList = new Set<string>(['the', 'a', 'my',])
@@ -78,22 +78,32 @@ export const promptToCommand = (
     return {
         verb, target, item
     }
-}; 
+};
 
-export const promptToHelpText = (
+export const promptToHelpFeedback = (
     promptText: string,
     verbs: Verb[],
     inventory: ItemData[]
-): string | undefined => {
+): PromptFeedbackReport | undefined => {
     switch (promptText.trim().toUpperCase()) {
         case 'HELP':
-            return 'For a list of available verbs, type "verbs" or "V". For a list of what your character is carrying, type "inventory" or "I".'
+            return {
+                message: 'For a list of available verbs, type "verbs" or "V". For a list of what your character is carrying, type "inventory" or "I".',
+                type: 'system',
+            }
         case 'V':
         case 'VERBS':
-            return `Available verbs: ${verbs.map(verb => `"${verb.label}"`).join(", ")}.`
+            return {
+                message: `Available verbs:`,
+                type: 'system',
+                list: verbs.map(verb => verb.label),
+            }
         case 'I':
         case 'INVENTORY':
-            return `You have: ${inventory.map(item => item.name ?? item.name).join(", ")}.`
+            return {
+                message: `You have:`,
+                list: inventory.map(item => item.name ?? item.id),
+            }
         default:
             return undefined
     }

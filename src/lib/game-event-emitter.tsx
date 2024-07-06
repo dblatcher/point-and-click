@@ -5,7 +5,7 @@ import { TypedEmitter } from "tiny-typed-emitter";
 export interface OrderReport { type: 'order', order: Order, actor: ActorData }
 export interface CommandReport { type: 'command', command: Command }
 export interface ConsequenceReport { type: 'consequence', consequence: Consequence, success: boolean, offscreen: boolean }
-export interface PromptFeedbackReport { message: string }
+export interface PromptFeedbackReport { message: string, type?: 'system', list?: string[] }
 
 export type InGameEvent = OrderReport | CommandReport | ConsequenceReport
 

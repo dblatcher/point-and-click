@@ -4,7 +4,7 @@ import { Command } from "@/definitions"
 import { Box, TextField } from "@mui/material"
 import { useRef, useState } from "react"
 import { clamp } from "@/lib/util"
-import { promptToCommand, promptToHelpText } from "@/lib/text-parsing"
+import { promptToCommand, promptToHelpFeedback } from "@/lib/text-parsing"
 
 interface Props {
     sendCommand: { (command: Command): void }
@@ -38,14 +38,14 @@ export const TextPrompt = ({ sendCommand }: Props) => {
 
     const handleSubmit = () => {
         addToHistory(promptText)
-        const helpText = promptToHelpText(promptText, verbs, inventory)
+        const helpFeedback = promptToHelpFeedback(promptText, verbs, inventory)
         const command = promptToCommand(promptText, verbs, inventory, gameState)
-        if (helpText) {
-            gameState.emitter.emit('prompt-feedback', { message: helpText })
+        if (helpFeedback) {
+            gameState.emitter.emit('prompt-feedback', helpFeedback)
         } else if (command) {
             sendCommand(command)
         } else {
-            gameState.emitter.emit('prompt-feedback', { message: 'Did not understand your command' })
+            gameState.emitter.emit('prompt-feedback', { message: 'Did not understand your command', type: 'system' })
         }
         setPromptFromHistory(undefined)
     }

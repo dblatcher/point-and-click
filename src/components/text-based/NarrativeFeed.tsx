@@ -8,8 +8,9 @@ import { ScrollingFeed } from "../ScrollingFeed";
 import { GameState } from "../game";
 
 type FeedItem = {
-    message: string
-    type?: 'feedback' | 'command'
+    message: string,
+    list?: string[],
+    type?: 'system' | 'command'
 }
 
 const stringToFeedItem = (message: string) => ({
@@ -118,25 +119,38 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
 const FeedLine = ({ feedItem }: { feedItem: FeedItem }) => {
 
     const style: CSSProperties = {
-        fontFamily: feedItem.type === 'feedback' ? 'monospace' : undefined,
+        fontFamily: feedItem.type === 'system' ? 'monospace' : undefined,
         fontWeight: feedItem.type === 'command' ? 'bold' : undefined
     }
 
     return (
-        <Typography
-            style={style}
-        >
-            {feedItem.type === 'command' && (
-                <b>{'>'}</b>
+        <>
+            <Typography
+                style={style}
+            >
+                {feedItem.type === 'command' && (
+                    <b aria-hidden>{'>'}</b>
+                )}
+                {feedItem.type === 'system' && (
+                    <b aria-hidden>{'**'}</b>
+                )}
+                {feedItem.message}
+                {feedItem.type === 'system' && (
+                    <b aria-hidden>{'**'}</b>
+                )}
+            </Typography>
+            {feedItem.list && (
+                <ul>
+                    {feedItem.list.map((text, index) => (
+                        <Typography
+                            key={index}
+                            style={style}
+                            component={'li'}
+                        >{text}</Typography>
+                    ))}
+                </ul>
             )}
-            {feedItem.type === 'feedback' && (
-                <b>{'**'}</b>
-            )}
-            {feedItem.message}
-            {feedItem.type === 'feedback' && (
-                <b>{'**'}</b>
-            )}
-        </Typography>
+        </>
     )
 }
 
@@ -165,7 +179,8 @@ export const NarrativeFeed = () => {
         const handlePromptFeedback = (feedback: PromptFeedbackReport) => {
             feedRef.current.push({
                 message: feedback.message,
-                type: 'feedback',
+                type: feedback.type,
+                list: feedback.list,
             })
             setFeed(feedRef.current)
         }
