@@ -1,6 +1,6 @@
 import { GameState } from "@/components/game";
 import { Verb, ItemData, Command, ActorData, HotspotZone } from "@/definitions";
-import { PromptFeedbackReport } from "./game-event-emitter";
+import { PromptFeedbackReport } from "../game-event-emitter";
 
 
 const ignoreList = new Set<string>(['the', 'a', 'my',])

@@ -4,7 +4,7 @@ import { Command } from "@/definitions"
 import { Box, TextField } from "@mui/material"
 import { useRef, useState } from "react"
 import { clamp } from "@/lib/util"
-import { promptToCommand, promptToHelpFeedback } from "@/lib/text-parsing"
+import { promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
 
 interface Props {
     sendCommand: { (command: Command): void }
