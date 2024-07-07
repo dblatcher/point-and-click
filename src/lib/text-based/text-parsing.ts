@@ -1,6 +1,7 @@
 import { GameState } from "@/components/game";
 import { Verb, ItemData, Command, ActorData, HotspotZone } from "@/definitions";
 import { PromptFeedbackReport } from "../game-event-emitter";
+import { makeRoomDescription } from "./create-feed-items";
 
 
 const ignoreList = new Set<string>(['the', 'a', 'my',])
@@ -83,12 +84,19 @@ export const promptToCommand = (
 export const promptToHelpFeedback = (
     promptText: string,
     verbs: Verb[],
-    inventory: ItemData[]
+    inventory: ItemData[],
+    state: GameState,
+    player: ActorData | undefined
 ): PromptFeedbackReport | undefined => {
     switch (promptText.trim().toUpperCase()) {
         case 'HELP':
             return {
-                message: 'For a list of available verbs, type "verbs" or "V". For a list of what your character is carrying, type "inventory" or "I".',
+                message: 'Game help',
+                list: [
+                    'For a list of available verbs, type "verbs" or "V".',
+                    'For a list of what your character is carrying, type "inventory" or "I".',
+                    'For the the description of your characters location, type "look" or "l".',
+                ],
                 type: 'system',
             }
         case 'V':
@@ -104,6 +112,9 @@ export const promptToHelpFeedback = (
                 message: `You have:`,
                 list: inventory.map(item => item.name ?? item.id),
             }
+        case 'L':
+        case 'LOOK':
+            return { ...makeRoomDescription(state, player), type: undefined }
         default:
             return undefined
     }

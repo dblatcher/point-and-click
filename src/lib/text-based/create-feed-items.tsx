@@ -133,7 +133,7 @@ export const makeRoomDescription = (state: GameState, player?: ActorData): FeedI
         }
     }
 
-    const message = `You ${player && `(${player.name})`} are in ${room.name ?? room.id}`
+    const message = `You ${player ? `(${player.name})` : ''} are in ${room.name ?? room.id}`
 
     const hotspotMessages = hotspots.map(hotspot => 
         `There is a ${hotspot.name ?? hotspot.id} here.`

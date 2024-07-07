@@ -16,7 +16,7 @@ const maxHistoryLength = 20
 // TO DO - needs to be disabled when UI should be disabled
 export const TextPrompt = ({ sendCommand }: Props) => {
     const { verbs } = useGameInfo()
-    const { inventory, isGameEnded } = useGameStateDerivations()
+    const { inventory, isGameEnded, player } = useGameStateDerivations()
     const gameState = useGameState()
     const [promptText, setPromptText] = useState('')
     const [historyIndex, setHistoryIndex] = useState<number | undefined>(undefined)
@@ -39,7 +39,7 @@ export const TextPrompt = ({ sendCommand }: Props) => {
 
     const handleSubmit = () => {
         addToHistory(promptText)
-        const helpFeedback = promptToHelpFeedback(promptText, verbs, inventory)
+        const helpFeedback = promptToHelpFeedback(promptText, verbs, inventory, gameState, player)
         const command = promptToCommand(promptText, verbs, inventory, gameState)
         if (helpFeedback) {
             gameState.emitter.emit('prompt-feedback', helpFeedback)
