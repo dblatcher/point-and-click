@@ -35,7 +35,7 @@ export const FeedLine = ({ feedItem }: Props) => {
                     {feedItem.list.map((text, index) => (
                         <Typography
                             key={index}
-                            style={style}
+                            style={{ ...style, lineHeight: 1.1 }}
                             component={'li'}
                         >{text}</Typography>
                     ))}

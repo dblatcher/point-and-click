@@ -1,21 +1,14 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context"
 import { Box, Typography } from "@mui/material"
-import { ReactNode } from "react"
+import { FeedLine } from "./FeedLine"
+import { makeRoomDescription } from "@/lib/text-based/create-feed-items"
 
-
-const P = ({ children }: { children: ReactNode }) => <Typography lineHeight={1}>{children}</Typography>
 
 export const RoomDescription = () => {
-
-    const { currentRoomId, rooms, actors } = useGameState()
+    const state = useGameState()
+    const { currentRoomId, rooms } = state
     const { player } = useGameStateDerivations()
-
     const room = rooms.find(room => room.id === currentRoomId)
-    const hotspots = room?.hotspots ?? []
-    const actorsInRoom = actors.filter(actor =>
-        actor.room === currentRoomId &&
-        actor.id !== player?.id
-    )
 
     return (
         <Box component={'section'}
@@ -25,28 +18,8 @@ export const RoomDescription = () => {
             }}
         >
             {room && <>
-                <Typography fontWeight={'bold'} textTransform={'uppercase'}>{room.name??room.id}</Typography>
-                <P>You {player && `(${player.name})`} are in {room.name ?? room.id}</P>
-
-                {hotspots.map(
-                    hotspot => (
-                        <P key={hotspot.id}>
-                            There is a {hotspot.name ?? hotspot.id} here.
-                        </P>
-                    )
-                )}
-
-                {actorsInRoom.map(
-                    actor => (
-                        <P key={actor.id}>
-                            {actor.name ?? actor.id} is here.
-                            {actor.status && (
-                                <>It is {actor.status}.</>
-                            )}
-                        </P>
-                    )
-                )}
-
+                <Typography fontWeight={'bold'} textTransform={'uppercase'}>{room.name ?? room.id}</Typography>
+                <FeedLine feedItem={makeRoomDescription(state, player)} />
             </>}
         </Box>
     )

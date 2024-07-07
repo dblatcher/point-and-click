@@ -1,5 +1,5 @@
 import { GameState } from "@/components/game";
-import { Ending } from "@/definitions";
+import { ActorData, Ending } from "@/definitions";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
 import { CommandReport, ConsequenceReport, OrderReport } from "@/lib/game-event-emitter";
 import { FeedItem } from "@/lib/text-based/types";
@@ -116,3 +116,35 @@ export const consequenceReportToFeedLines = (consequenceReport: ConsequenceRepor
             return [];
     }
 };
+
+export const makeRoomDescription = (state: GameState, player?: ActorData): FeedItem => {
+    const { currentRoomId, rooms, actors } = state
+    const room = rooms.find(room => room.id === currentRoomId)
+    const hotspots = room?.hotspots ?? []
+    const actorsInRoom = actors.filter(actor =>
+        actor.room === currentRoomId &&
+        actor.id !== player?.id
+    )
+
+    if (!room) {
+        return {
+            message: 'ERROR - no room',
+            type: 'system'
+        }
+    }
+
+    const message = `You ${player && `(${player.name})`} are in ${room.name ?? room.id}`
+
+    const hotspotMessages = hotspots.map(hotspot => 
+        `There is a ${hotspot.name ?? hotspot.id} here.`
+    )
+
+    const actorMessages = actorsInRoom.map(actor => 
+        `${actor.name ?? actor.id} is here. ${actor.status ? `It is ${actor.status}.` : '' }`
+    )
+
+    return {
+        message,
+        list: [...hotspotMessages, ...actorMessages]
+    }
+}
