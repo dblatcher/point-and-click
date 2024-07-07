@@ -25,7 +25,8 @@ export const RoomDescription = () => {
             }}
         >
             {room && <>
-                <P>You {player && `(${player.name})`} are in {room?.id}</P>
+                <Typography fontWeight={'bold'} textTransform={'uppercase'}>{room.name??room.id}</Typography>
+                <P>You {player && `(${player.name})`} are in {room.name ?? room.id}</P>
 
                 {hotspots.map(
                     hotspot => (

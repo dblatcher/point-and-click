@@ -21,5 +21,6 @@ export const RoomDataSchema = z.object({
     walkableAreas: z.optional(ZoneSchema.array()),
     scaling: z.optional(ScaleLevelSchema),
     backgroundColor: z.string().optional(),
+    name: z.string().optional(),
 })
 export type RoomData = z.infer<typeof RoomDataSchema>

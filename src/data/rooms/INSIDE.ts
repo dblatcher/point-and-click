@@ -2,6 +2,7 @@ import { RoomData } from "@/definitions/RoomData"
 
 export const INSIDE: RoomData = {
   id: "INSIDE",
+  name: "the red shed",
   frameWidth: 320,
   width: 480,
   height: 200,
