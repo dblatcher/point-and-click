@@ -33,9 +33,11 @@ export const TextBasedLayout = ({
         {saveMenu}
         <SoundToggle />
 
-        <Box display={'flex'} minHeight={300}>
-            <RoomDescription />
-            <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
+        <Box display={'flex'} minHeight={300} padding={1}>
+            <Box display={'flex'} justifyContent={'space-between'} flex={1}>
+                <RoomDescription />
+            </Box>
+            <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} flex={2}>
                 <NarrativeFeed />
                 <TextPrompt sendCommand={sendCommand} />
             </Box>
