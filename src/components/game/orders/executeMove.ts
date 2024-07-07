@@ -25,7 +25,21 @@ function determineDirection(postion: Point, desination: Point, availableDirectio
     return vertical
 }
 
+// TO DO - make this part of the game config for text mode
+const INSTANT = false
+
 export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Sprite): void {
+
+    if (INSTANT) {
+        const finalStep = moveOrder.steps[moveOrder.steps.length - 1]
+        if (finalStep) {
+            actor.x = finalStep.x
+            actor.y = finalStep.y
+            moveOrder.steps.splice(0, moveOrder.steps.length)
+        }
+        return
+    }
+
     const { x, y, speed: actorSpeed = 1 } = actor
     const [nextStep] = moveOrder.steps;
     if (!nextStep) { return }
