@@ -6,6 +6,7 @@ import { findById } from "@/lib/util"
 import soundService from "@/services/soundService"
 import { cellSize, GameProps, GameState } from "."
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
+import { reportConversationBranch } from "@/lib/game-event-emitter"
 
 
 export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
@@ -128,6 +129,9 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 }
                 state.currentConversationId = end ? undefined : conversationId
                 conseqeunceSuccess = true
+
+                // TO DO - how to make sure this only happens after any previous consequences have finished?
+                reportConversationBranch(state)
                 break;
             }
             case 'ending': {

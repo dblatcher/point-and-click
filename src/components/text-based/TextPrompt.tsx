@@ -1,22 +1,27 @@
 import { useGameInfo } from "@/context/game-info-provider"
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context"
-import { Command } from "@/definitions"
+import { Command, ConversationChoice } from "@/definitions"
 import { Box, TextField } from "@mui/material"
 import { useRef, useState } from "react"
 import { clamp } from "@/lib/util"
 import { promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
 import { standard } from "@/lib/text-based/standard-text"
+import { reportConversationBranch } from "@/lib/game-event-emitter"
 
 interface Props {
     sendCommand: { (command: Command): void }
+    selectConversationChoice: { (choice: ConversationChoice): void };
 }
 
 const maxHistoryLength = 20
 
 // TO DO - needs to be disabled when UI should be disabled
-export const TextPrompt = ({ sendCommand }: Props) => {
+export const TextPrompt = ({
+    sendCommand,
+    selectConversationChoice,
+}: Props) => {
     const { verbs } = useGameInfo()
-    const { inventory, isGameEnded, player } = useGameStateDerivations()
+    const { inventory, isGameEnded, player, currentConversation: conversation } = useGameStateDerivations()
     const gameState = useGameState()
     const [promptText, setPromptText] = useState('')
     const [historyIndex, setHistoryIndex] = useState<number | undefined>(undefined)
@@ -37,7 +42,17 @@ export const TextPrompt = ({ sendCommand }: Props) => {
         setHistoryIndex(newHistoryIndex)
     }
 
+    // TO DO - refactor this to be nicer
     const handleSubmit = () => {
+        if (conversation) {
+            const helpFeedback = promptToHelpFeedback(promptText, verbs, inventory, gameState, player)
+            if (helpFeedback) {
+                gameState.emitter.emit('prompt-feedback', helpFeedback)
+                return
+            }
+            return interpretPromptAsConversationChoice()
+        }
+
         addToHistory(promptText)
         const helpFeedback = promptToHelpFeedback(promptText, verbs, inventory, gameState, player)
         const command = promptToCommand(promptText, verbs, inventory, gameState)
@@ -51,6 +66,36 @@ export const TextPrompt = ({ sendCommand }: Props) => {
             gameState.emitter.emit('prompt-feedback', { message: standard.PROMPT_NOT_UNDERSTOOD, type: 'system' })
         }
         setPromptFromHistory(undefined)
+    }
+
+    const interpretPromptAsConversationChoice = () => {
+        if (!conversation) {
+            console.warn('no convo')
+            setPromptText('')
+            return
+        }
+        const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
+        if (!branch) {
+            console.warn('no branch')
+            setPromptText('')
+            return
+        }
+        const inputtedNumber = Number(promptText)
+        if (isNaN(inputtedNumber)) {
+            reportConversationBranch(gameState)
+            setPromptText('')
+            return
+        }
+        const availableChoices = branch.choices.filter(choice => !choice.disabled)
+        const choice = availableChoices[inputtedNumber - 1] // not presenting users with zero-based list
+        if (!choice) {
+            reportConversationBranch(gameState)
+            setPromptText('')
+            return
+        }
+        gameState.emitter.emit('prompt-feedback', { message: `You choose: ${choice.text}`, type: 'system' })
+        setPromptText('')
+        return selectConversationChoice(choice)
     }
 
     const scrollThroughHistory = (key: 'ArrowUp' | 'ArrowDown') => {

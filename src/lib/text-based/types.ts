@@ -1,5 +1,5 @@
 export type FeedItem = {
     message: string;
     list?: string[];
-    type?: 'system' | 'command';
+    type?: 'system' | 'command' | 'dialogue';
 };

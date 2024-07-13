@@ -1,7 +1,7 @@
 import { GameState } from "@/components/game";
 import { ActorData, Ending } from "@/definitions";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
-import { CommandReport, ConsequenceReport, OrderReport } from "@/lib/game-event-emitter";
+import { CommandReport, ConsequenceReport, ConversationBranchReport, OrderReport } from "@/lib/game-event-emitter";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
 import { standard } from "./standard-text";
@@ -42,6 +42,14 @@ export const commandReportToFeedLine = (commandReport: CommandReport): FeedItem 
         message: describeCommand(command, true),
         type: 'command'
     };
+};
+export const conversationBranchReportToFeedLines = (commandReport: ConversationBranchReport): [FeedItem] => {
+    const { branch } = commandReport;
+    return [{
+        message: standard.PLEASE_CHOOSE_DIALOG,
+        list: branch.choices.filter(choice => !choice.disabled).map((choice) => choice.text),
+        type: 'dialogue'
+    }];
 };
 export const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameState, endings: Ending[]): FeedItem[] => {
     const { consequence, success, offscreen } = consequenceReport;
@@ -135,12 +143,12 @@ export const makeRoomDescription = (state: GameState, player?: ActorData): FeedI
 
     const message = `You ${player ? `(${player.name})` : ''} are in ${room.name ?? room.id}`
 
-    const hotspotMessages = hotspots.map(hotspot => 
+    const hotspotMessages = hotspots.map(hotspot =>
         `There is a ${hotspot.name ?? hotspot.id} here.`
     )
 
-    const actorMessages = actorsInRoom.map(actor => 
-        `${actor.name ?? actor.id} is here. ${actor.status ? `It is ${actor.status}.` : '' }`
+    const actorMessages = actorsInRoom.map(actor =>
+        `${actor.name ?? actor.id} is here. ${actor.status ? `It is ${actor.status}.` : ''}`
     )
 
     return {

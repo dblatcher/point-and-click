@@ -1,10 +1,17 @@
 import { FeedItem } from "@/lib/text-based/types";
 import { Typography } from "@mui/material";
-import { CSSProperties } from "react";
+import React, { CSSProperties, ReactNode } from "react";
 
 
 interface Props {
     feedItem: FeedItem;
+}
+
+const List: React.FunctionComponent<{ type: FeedItem['type'], children: ReactNode }> = ({ type, children }) => {
+    if (type == 'dialogue') {
+        return <ol>{children}</ol>
+    }
+    return <ul>{children}</ul>
 }
 
 export const FeedLine = ({ feedItem }: Props) => {
@@ -31,7 +38,7 @@ export const FeedLine = ({ feedItem }: Props) => {
                 )}
             </Typography>
             {feedItem.list && (
-                <ul>
+                <List type={feedItem.type}>
                     {feedItem.list.map((text, index) => (
                         <Typography
                             key={index}
@@ -39,7 +46,7 @@ export const FeedLine = ({ feedItem }: Props) => {
                             component={'li'}
                         >{text}</Typography>
                     ))}
-                </ul>
+                </List>
             )}
         </>
     );

@@ -4,6 +4,7 @@ import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
 import { findById } from "@/lib/util";
+import { reportConversationBranch } from "@/lib/game-event-emitter";
 
 
 function validateOrderIdsAndClearEmpties(
@@ -58,6 +59,11 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
         console.log(`stage finished, ${sequenceRunning.stages.length} left.`)
         removeHoverTargetIfGone(state)
         removeItemIfGone(state)
+    }
+
+    const sequenceIsFinished = sequenceRunning.stages.length === 0
+    if (sequenceIsFinished && state.currentConversationId) {
+        reportConversationBranch(state)
     }
 
     return {

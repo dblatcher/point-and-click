@@ -102,6 +102,7 @@ export const promptToHelpFeedback = (
                     'For a list of available verbs, type "verbs" or "V".',
                     'For a list of what your character is carrying, type "inventory" or "I".',
                     'For the the description of your characters location, type "look" or "l".',
+                    'When in a conversation, just type the number of the dialoge choice you want.'
                 ],
                 type: 'system',
             }

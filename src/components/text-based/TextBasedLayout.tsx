@@ -39,7 +39,7 @@ export const TextBasedLayout = ({
             </Box>
             <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} flex={2}>
                 <NarrativeFeed />
-                <TextPrompt sendCommand={sendCommand} />
+                <TextPrompt sendCommand={sendCommand} selectConversationChoice={selectConversation} />
             </Box>
         </Box>
 

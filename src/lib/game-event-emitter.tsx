@@ -1,13 +1,16 @@
 import { LogEntry } from "@/lib/inGameDebugging";
-import { ActorData, Command, Consequence, Order } from "@/definitions";
+import { ActorData, Command, Consequence, ConversationBranch, Order } from "@/definitions";
 import { TypedEmitter } from "tiny-typed-emitter";
+import { GameState } from "@/components/game";
+import { findById } from "./util";
 
 export interface OrderReport { type: 'order', order: Order, actor: ActorData }
 export interface CommandReport { type: 'command', command: Command }
 export interface ConsequenceReport { type: 'consequence', consequence: Consequence, success: boolean, offscreen: boolean }
-export interface PromptFeedbackReport { message: string, type?: 'system', list?: string[] }
+export interface ConversationBranchReport { type: 'conversation-branch', branch: ConversationBranch }
+export interface PromptFeedbackReport { message: string, type?: 'system' | 'dialogue', list?: string[] }
 
-export type InGameEvent = OrderReport | CommandReport | ConsequenceReport
+export type InGameEvent = OrderReport | CommandReport | ConsequenceReport | ConversationBranchReport
 
 export interface GameEvents {
     'debugLog': { (logentry: LogEntry): void }
@@ -17,4 +20,14 @@ export interface GameEvents {
 
 export class GameEventEmitter extends TypedEmitter<GameEvents> {
 
+}
+
+export const reportConversationBranch = (state: GameState) => {
+    const conversation = findById(state.currentConversationId, state.conversations)
+    if (conversation) {
+        const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
+        if (branch) {
+            state.emitter.emit('in-game-event', { type: 'conversation-branch', branch })
+        }
+    }
 }
