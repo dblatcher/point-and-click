@@ -73,12 +73,18 @@ export const promptToCommand = (
     const currentRoom = gameState.rooms.find(room => room.id == gameState.currentRoomId)
     const roomHotpots = currentRoom?.hotspots ?? []
     const target = findTargetInRemainingWords(wordsMinusVerbAndMaybeItem, actorsInRoom, inventory, roomHotpots)
-    if (!target) {
-        return undefined
+
+    if (target) {
+        return {
+            verb, target, item
+        }
     }
-    return {
-        verb, target, item
+    if (item) {
+        return {
+            verb, target: item
+        }
     }
+    return undefined
 };
 
 export const promptToHelpFeedback = (
