@@ -11,11 +11,17 @@ const stringToFeedItem = (message: string) => ({
 });
 
 // TO DO - proper sentence grammar!
-const orderReportToFeedLine = (orderReport: OrderReport): FeedItem[] => {
+const orderReportToFeedLine = (orderReport: OrderReport, state:GameState): FeedItem[] => {
     const { actor, order } = orderReport;
 
     if (order.narrative) {
         return order.narrative.map(stringToFeedItem);
+    }
+
+    // don't show generic order descriptions if part of a stage with a narrative
+    const runningStage = state.sequenceRunning?.stages[0]
+    if (runningStage?.narrative) {
+        return []
     }
 
     const actorName = actor.isPlayer ? 'you' : actor.name ?? actor.id;
@@ -137,7 +143,7 @@ export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameStat
         case "command":
             return [commandReportToFeedLine(inGameEvent)]
         case "order":
-            return orderReportToFeedLine(inGameEvent)
+            return orderReportToFeedLine(inGameEvent, state)
         case "consequence":
             return consequenceReportToFeedLines(inGameEvent, state, endings)
         case "conversation-branch":
