@@ -3,13 +3,14 @@ import { ActorData, Command, Consequence, ConversationBranch, Order, Stage } fro
 import { TypedEmitter } from "tiny-typed-emitter";
 import { GameState } from "@/components/game";
 import { findById } from "./util";
+import { FeedItem} from "./text-based/types";
 
 export interface OrderReport { type: 'order', order: Order, actor: ActorData }
 export interface CommandReport { type: 'command', command: Command }
 export interface ConsequenceReport { type: 'consequence', consequence: Consequence, success: boolean, offscreen: boolean }
 export interface ConversationBranchReport { type: 'conversation-branch', branch: ConversationBranch }
 export interface SequenceStageReport { type: 'sequence-stage', stage: Stage }
-export interface PromptFeedbackReport { message: string, type?: 'system' | 'dialogue', list?: string[] }
+export type PromptFeedbackReport = FeedItem;
 
 export type InGameEvent = OrderReport | CommandReport | ConsequenceReport | ConversationBranchReport | SequenceStageReport
 

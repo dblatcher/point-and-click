@@ -93,7 +93,7 @@ export const TextPrompt = ({
             setPromptText('')
             return
         }
-        gameState.emitter.emit('prompt-feedback', { message: `You choose: ${choice.text}`, type: 'system' })
+        gameState.emitter.emit('prompt-feedback', { message: `"${choice.text}"`, type: 'command' })
         setPromptText('')
         return selectConversationChoice(choice)
     }
