@@ -1,6 +1,6 @@
 import { useGameInfo } from "@/context/game-info-provider"
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context"
-import { Command, ConversationChoice } from "@/definitions"
+import { Command, Conversation, ConversationChoice } from "@/definitions"
 import { Box, TextField } from "@mui/material"
 import { useRef, useState } from "react"
 import { clamp } from "@/lib/util"
@@ -42,60 +42,56 @@ export const TextPrompt = ({
         setHistoryIndex(newHistoryIndex)
     }
 
-    // TO DO - refactor this to be nicer
     const handleSubmit = () => {
-        if (conversation) {
-            const helpFeedback = promptToHelpFeedback(promptText, verbs, inventory, gameState, player)
-            if (helpFeedback) {
-                gameState.emitter.emit('prompt-feedback', helpFeedback)
-                return
-            }
-            return interpretPromptAsConversationChoice()
-        }
-
-        addToHistory(promptText)
         const helpFeedback = promptToHelpFeedback(promptText, verbs, inventory, gameState, player)
-        const command = promptToCommand(promptText, verbs, inventory, gameState)
         if (helpFeedback) {
             gameState.emitter.emit('prompt-feedback', helpFeedback)
-        } else if (isGameEnded) {
-            gameState.emitter.emit('prompt-feedback', { message: standard.GAME_OVER_CANNOT_COMMAND, type: 'system' })
-        } else if (command) {
-            sendCommand(command)
+        } else if (conversation) {
+            interpretPromptAsConversationChoice(conversation)
         } else {
-            gameState.emitter.emit('prompt-feedback', { message: standard.PROMPT_NOT_UNDERSTOOD, type: 'system' })
+            interpretPromptAsCommand()
         }
-        setPromptFromHistory(undefined)
+
+        // do not add people typing dialogue numbers to history
+        if (!!helpFeedback || !conversation) {
+            addToHistory(promptText)
+        }
+        setPromptText('')
+        setHistoryIndex(undefined)
     }
 
-    const interpretPromptAsConversationChoice = () => {
-        if (!conversation) {
-            console.warn('no convo')
-            setPromptText('')
-            return
-        }
+    const interpretPromptAsConversationChoice = (conversation: Conversation) => {
         const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
         if (!branch) {
-            console.warn('no branch')
-            setPromptText('')
-            return
-        }
-        const inputtedNumber = Number(promptText)
-        if (isNaN(inputtedNumber)) {
-            reportConversationBranch(gameState)
-            setPromptText('')
+            console.error('no branch')
             return
         }
         const availableChoices = branch.choices.filter(choice => !choice.disabled)
+        const inputtedNumber = Number(promptText)
+        if (isNaN(inputtedNumber)) {
+            gameState.emitter.emit('prompt-feedback', { message: standard.INVALID_DIALOG_PROMPT, type: 'system' })
+            reportConversationBranch(gameState)
+            return
+        }
         const choice = availableChoices[inputtedNumber - 1] // not presenting users with zero-based list
         if (!choice) {
+            gameState.emitter.emit('prompt-feedback', { message: standard.INVALID_DIALOG_PROMPT, type: 'system' })
             reportConversationBranch(gameState)
-            setPromptText('')
             return
         }
         gameState.emitter.emit('prompt-feedback', { message: `"${choice.text}"`, type: 'command' })
-        setPromptText('')
-        return selectConversationChoice(choice)
+        selectConversationChoice(choice)
+    }
+
+    const interpretPromptAsCommand = () => {
+        const command = promptToCommand(promptText, verbs, inventory, gameState)
+        if (isGameEnded) {
+            return gameState.emitter.emit('prompt-feedback', { message: standard.GAME_OVER_CANNOT_COMMAND, type: 'system' })
+        }
+        if (!command) {
+            return gameState.emitter.emit('prompt-feedback', { message: standard.PROMPT_NOT_UNDERSTOOD, type: 'system' })
+        }
+        sendCommand(command)
     }
 
     const scrollThroughHistory = (key: 'ArrowUp' | 'ArrowDown') => {
