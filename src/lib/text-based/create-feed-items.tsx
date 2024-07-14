@@ -1,7 +1,7 @@
 import { GameState } from "@/components/game";
 import { ActorData, Ending } from "@/definitions";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
-import { CommandReport, ConsequenceReport, ConversationBranchReport, OrderReport, SequenceStageReport } from "@/lib/game-event-emitter";
+import { CommandReport, ConsequenceReport, ConversationBranchReport, InGameEvent, OrderReport, SequenceStageReport } from "@/lib/game-event-emitter";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
 import { standard } from "./standard-text";
@@ -11,7 +11,7 @@ const stringToFeedItem = (message: string) => ({
 });
 
 // TO DO - proper sentence grammar!
-export const orderReportToFeedLine = (orderReport: OrderReport): FeedItem[] => {
+const orderReportToFeedLine = (orderReport: OrderReport): FeedItem[] => {
     const { actor, order } = orderReport;
 
     if (order.narrative) {
@@ -36,14 +36,14 @@ export const orderReportToFeedLine = (orderReport: OrderReport): FeedItem[] => {
         }
     }
 };
-export const commandReportToFeedLine = (commandReport: CommandReport): FeedItem => {
+const commandReportToFeedLine = (commandReport: CommandReport): FeedItem => {
     const { command } = commandReport;
     return {
         message: describeCommand(command, true),
         type: 'command'
     };
 };
-export const conversationBranchReportToFeedLines = (commandReport: ConversationBranchReport): [FeedItem] => {
+const conversationBranchReportToFeedLines = (commandReport: ConversationBranchReport): [FeedItem] => {
     const { branch } = commandReport;
     return [{
         message: standard.PLEASE_CHOOSE_DIALOG,
@@ -51,7 +51,7 @@ export const conversationBranchReportToFeedLines = (commandReport: ConversationB
         type: 'dialogue'
     }];
 };
-export const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameState, endings: Ending[]): FeedItem[] => {
+const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameState, endings: Ending[]): FeedItem[] => {
     const { consequence, success, offscreen } = consequenceReport;
     if (!success || offscreen) {
         return [];
@@ -124,13 +124,28 @@ export const consequenceReportToFeedLines = (consequenceReport: ConsequenceRepor
             return [];
     }
 };
-export const sequenceStageReportToFeedLines = (sequenceStageReport: SequenceStageReport, state: GameState): FeedItem[] => {
+const sequenceStageReportToFeedLines = (sequenceStageReport: SequenceStageReport, state: GameState): FeedItem[] => {
     const { stage } = sequenceStageReport;
     if (stage.narrative) {
         return stage.narrative.map(stringToFeedItem);
     }
     return []
 };
+
+export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameState, endings: Ending[]): FeedItem[] => {
+    switch (inGameEvent.type) {
+        case "command":
+            return [commandReportToFeedLine(inGameEvent)]
+        case "order":
+            return orderReportToFeedLine(inGameEvent)
+        case "consequence":
+            return consequenceReportToFeedLines(inGameEvent, state, endings)
+        case "conversation-branch":
+            return conversationBranchReportToFeedLines(inGameEvent)
+        case "sequence-stage":
+            return sequenceStageReportToFeedLines(inGameEvent, state)
+    }
+}
 
 export const makeRoomDescription = (state: GameState, player?: ActorData): FeedItem => {
     const { currentRoomId, rooms, actors } = state

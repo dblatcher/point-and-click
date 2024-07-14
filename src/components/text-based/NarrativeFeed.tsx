@@ -1,6 +1,6 @@
 import { useGameState } from "@/context/game-state-context";
 import { InGameEvent, PromptFeedbackReport } from "@/lib/game-event-emitter";
-import { commandReportToFeedLine, consequenceReportToFeedLines, conversationBranchReportToFeedLines, orderReportToFeedLine, sequenceStageReportToFeedLines } from "@/lib/text-based/create-feed-items";
+import { inGameEventToFeedLines } from "@/lib/text-based/create-feed-items";
 import { FeedItem } from "@/lib/text-based/types";
 import { useEffect, useRef, useState } from "react";
 import { ScrollingFeed } from "../ScrollingFeed";
@@ -16,23 +16,7 @@ export const NarrativeFeed = () => {
 
     useEffect(() => {
         const handleInGameEvent = (inGameEvent: InGameEvent) => {
-            switch (inGameEvent.type) {
-                case "command":
-                    feedRef.current.push(commandReportToFeedLine(inGameEvent))
-                    break
-                case "order":
-                    feedRef.current.push(...orderReportToFeedLine(inGameEvent))
-                    break;
-                case "consequence":
-                    feedRef.current.push(...consequenceReportToFeedLines(inGameEvent, state, endings))
-                    break
-                case "conversation-branch":
-                    feedRef.current.push(...conversationBranchReportToFeedLines(inGameEvent))
-                    break
-                case "sequence-stage":
-                    feedRef.current.push(...sequenceStageReportToFeedLines(inGameEvent, state))
-                    break
-            }
+            feedRef.current.push(...inGameEventToFeedLines(inGameEvent, state, endings))
             setFeed(feedRef.current)
         }
 
