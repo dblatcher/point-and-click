@@ -61,8 +61,12 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
         removeItemIfGone(state)
     }
 
-    const sequenceIsFinished = sequenceRunning.stages.length === 0
-    if (sequenceIsFinished && state.currentConversationId) {
+    const [nextStage] = sequenceRunning.stages;
+    if (stageIsFinished && nextStage) {
+        state.emitter.emit('in-game-event', { type: 'sequence-stage', stage: nextStage })
+    }
+
+    if (!nextStage && state.currentConversationId) {
         reportConversationBranch(state)
     }
 

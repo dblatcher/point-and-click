@@ -1,7 +1,7 @@
 import { GameState } from "@/components/game";
 import { ActorData, Ending } from "@/definitions";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
-import { CommandReport, ConsequenceReport, ConversationBranchReport, OrderReport } from "@/lib/game-event-emitter";
+import { CommandReport, ConsequenceReport, ConversationBranchReport, OrderReport, SequenceStageReport } from "@/lib/game-event-emitter";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
 import { standard } from "./standard-text";
@@ -123,6 +123,13 @@ export const consequenceReportToFeedLines = (consequenceReport: ConsequenceRepor
         case "order":
             return [];
     }
+};
+export const sequenceStageReportToFeedLines = (sequenceStageReport: SequenceStageReport, state: GameState): FeedItem[] => {
+    const { stage } = sequenceStageReport;
+    if (stage.narrative) {
+        return stage.narrative.map(stringToFeedItem);
+    }
+    return []
 };
 
 export const makeRoomDescription = (state: GameState, player?: ActorData): FeedItem => {

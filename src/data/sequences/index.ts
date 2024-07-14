@@ -37,6 +37,10 @@ export const sequences: Sequence[] = [
         id: 'CHAIN_2',
         stages: [
             {
+                narrative: [
+                    "You mumble something and wonder towards Mario.",
+                    "Nothing happens."
+                ],
                 actorOrders: {
                     PLAYER: [
                         {

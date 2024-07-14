@@ -1,6 +1,6 @@
 import { useGameState } from "@/context/game-state-context";
 import { InGameEvent, PromptFeedbackReport } from "@/lib/game-event-emitter";
-import { commandReportToFeedLine, consequenceReportToFeedLines, conversationBranchReportToFeedLines, orderReportToFeedLine } from "@/lib/text-based/create-feed-items";
+import { commandReportToFeedLine, consequenceReportToFeedLines, conversationBranchReportToFeedLines, orderReportToFeedLine, sequenceStageReportToFeedLines } from "@/lib/text-based/create-feed-items";
 import { FeedItem } from "@/lib/text-based/types";
 import { useEffect, useRef, useState } from "react";
 import { ScrollingFeed } from "../ScrollingFeed";
@@ -9,7 +9,7 @@ import { useGameInfo } from "@/context/game-info-provider";
 
 export const NarrativeFeed = () => {
     const state = useGameState();
-    const {endings} = useGameInfo()
+    const { endings } = useGameInfo()
     const { emitter } = state
     const [feed, setFeed] = useState<FeedItem[]>([])
     const feedRef = useRef<FeedItem[]>([])
@@ -28,6 +28,9 @@ export const NarrativeFeed = () => {
                     break
                 case "conversation-branch":
                     feedRef.current.push(...conversationBranchReportToFeedLines(inGameEvent))
+                    break
+                case "sequence-stage":
+                    feedRef.current.push(...sequenceStageReportToFeedLines(inGameEvent, state))
                     break
             }
             setFeed(feedRef.current)
