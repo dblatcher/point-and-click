@@ -21,7 +21,7 @@ export const TextPrompt = ({
     selectConversationChoice,
 }: Props) => {
     const { verbs } = useGameInfo()
-    const { inventory, isGameEnded, player, currentConversation: conversation } = useGameStateDerivations()
+    const { inventory, isGameEnded, player, currentConversation: conversation, isSequenceRunning } = useGameStateDerivations()
     const gameState = useGameState()
     const [promptText, setPromptText] = useState('')
     const [historyIndex, setHistoryIndex] = useState<number | undefined>(undefined)
@@ -43,6 +43,9 @@ export const TextPrompt = ({
     }
 
     const handleSubmit = () => {
+        if (isSequenceRunning) {
+            return
+        }
         const helpFeedback = promptToHelpFeedback(promptText, verbs, inventory, gameState, player)
         if (helpFeedback) {
             gameState.emitter.emit('prompt-feedback', helpFeedback)

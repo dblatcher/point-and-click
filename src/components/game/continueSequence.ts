@@ -42,7 +42,14 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     const { actorOrders: stageActorOrders = {} } = currentStage
     validateOrderIdsAndClearEmpties(stageActorOrders, actors)
 
-    actors.forEach(actor => followOrder(actor, cellMatrix, stageActorOrders[actor.id], state, findById(actor.sprite, props._sprites)))
+    actors.forEach(actor => followOrder(
+        actor, 
+        cellMatrix, 
+        stageActorOrders[actor.id], 
+        state, 
+        findById(actor.sprite, props._sprites),
+        props.instantMode,
+    ))
 
     if (currentStage.immediateConsequences) {
         const consequenceExecutor = makeConsequenceExecutor(state, props)

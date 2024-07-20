@@ -33,6 +33,7 @@ export type GameProps = Readonly<{
     showDebugLog?: boolean;
     startPaused?: boolean;
     uiComponents?: UiComponentSet;
+    instantMode?: boolean;
 } & GameCondition>
 
 export type GameState = GameData & {
@@ -194,7 +195,13 @@ export default class Game extends Component<GameProps, GameState> {
             const { cellMatrix = [] } = state
             let pendingInteractionShouldBeDone = false;
             state.actors.forEach(actor => {
-                const triggersPendingInteraction = followOrder(actor, cellMatrix, state.actorOrders[actor.id], state, findById(actor.sprite, this.props._sprites))
+                const triggersPendingInteraction = followOrder(
+                    actor, cellMatrix, 
+                    state.actorOrders[actor.id], 
+                    state, 
+                    findById(actor.sprite, this.props._sprites),
+                    this.props.instantMode
+                )
                 if (triggersPendingInteraction) {
                     pendingInteractionShouldBeDone = true
                 }

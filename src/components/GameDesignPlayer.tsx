@@ -15,6 +15,7 @@ type Props = {
   imageAssets: ImageAsset[];
   soundAssets: SoundAsset[];
   uiComponents?: UiComponentSet;
+  instantMode?: boolean;
 }
 
 type State = {
@@ -108,7 +109,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
   render() {
     const { gameCondition, timestamp } = this.state
-    const { uiComponents } = this.props
+    const { uiComponents, instantMode } = this.props
     return <>
       {gameCondition && (
         <SpritesProvider value={this.sprites}>
@@ -120,6 +121,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
             key={timestamp}
             _sprites={this.sprites}
             uiComponents={uiComponents}
+            instantMode={instantMode}
           />
         </SpritesProvider>
       )}
