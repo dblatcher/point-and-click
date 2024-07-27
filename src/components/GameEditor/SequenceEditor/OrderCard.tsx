@@ -32,5 +32,6 @@ export const OrderCard = ({ order, handleEditButton }: Props) => (
         handleClick={handleEditButton}
         description={getDescription(order)}
         title={order.type}
+        narrative={order.narrative}
     />
 )

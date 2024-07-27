@@ -1,4 +1,4 @@
-*Narratives* are textual descriptions of something happening in the game, such as a *Sequence* or an *Order* carried out by an *Actor*.
+*Narratives* are textual descriptions of something happening in the game, such as a *Sequence*, *Order* carried out by an *Actor* or *Consequence* of an *Interaction* or *Conversation Choice*.
 
 They are displayed:
  - in text-based mode. If an *Order* does not have a sequence a basic description (eg "Mario does walk") is printed to the feed instead.

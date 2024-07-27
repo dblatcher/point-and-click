@@ -13,6 +13,8 @@ import { EditorBox } from "../EditorBox";
 import { OrderForm } from "../OrderForm";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
+import { Narrative } from "@/definitions/BaseTypes";
+import { NarrativeEditor } from "../NarrativeEditor";
 
 interface Props {
     consequence: AnyConsequence;
@@ -31,8 +33,6 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
 
     return { branchIdList, choiceRefList }
 }
-
-//TO DO - add a control for narratives
 
 export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) => {
     const { gameDesign } = useGameDesign()
@@ -87,6 +87,10 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         updateProperty('orders', ordersCopy)
     }
 
+    const updateNarrative = (newNarrative: Narrative | undefined) => {
+        update({ ...consequence, narrative: newNarrative })
+    }
+
     return (
         <Box>
             <Box paddingY={2} marginBottom={2}>
@@ -138,6 +142,8 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                     mutateList={newList => { updateProperty('orders', newList) }}
                 />
             )}
+
+            <NarrativeEditor narrative={consequence.narrative} update={updateNarrative} />
         </Box>
     )
 }

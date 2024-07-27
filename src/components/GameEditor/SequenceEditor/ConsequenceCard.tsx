@@ -43,5 +43,6 @@ export const ConsequenceCard = ({ consequence, handleEditButton }: Props) => (
         handleClick={handleEditButton}
         description={getDescription(consequence)}
         title={consequence.type}
+        narrative={consequence.narrative}
     />
 )
