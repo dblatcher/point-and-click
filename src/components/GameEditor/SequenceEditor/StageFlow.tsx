@@ -6,6 +6,8 @@ import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { OrderCard } from "./OrderCard";
 import { ConsequenceCard } from "./ConsequenceCard";
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import { NarrativeEditor } from "../NarrativeEditor";
+import { Narrative } from "@/definitions/BaseTypes";
 
 
 interface Props {
@@ -18,6 +20,7 @@ interface Props {
     changeOrderList: { (newList: Order[], stageIndex: number, actorId: string): void }
     setAddActorParams: { (params: { stage: number }): void }
     removeActorFromAll: { (actorId: string): void }
+    changeConsequenceNarrative: { (newNarrative: Narrative | undefined, stageIndex: number): void }
 }
 
 type ConsequenceDialogParams = {
@@ -35,7 +38,7 @@ export const StageFlow = ({
     stage, stageIndex, actorIds,
     changeConsequenceList,
     setConsequenceParams, setOrderParams, setAddActorParams,
-    changeOrderList, removeActorFromAll
+    changeOrderList, removeActorFromAll, changeConsequenceNarrative,
 }: Props) => {
 
     return (
@@ -108,13 +111,14 @@ export const StageFlow = ({
                     </Grid>
                 ))}
 
-                <Grid item display={'flex'}>
+                <Grid item display={'flex'} flexDirection={'column'}>
                     <Box padding={1} alignSelf={'center'}>
                         <Button variant="outlined"
                             onClick={() => { setAddActorParams({ stage: stageIndex }) }}>
                             other actor
                         </Button>
                     </Box>
+                    <NarrativeEditor narrative={stage.narrative} update={(newNarrative) => changeConsequenceNarrative(newNarrative, stageIndex)} />
                 </Grid>
             </Grid>
         </Box>

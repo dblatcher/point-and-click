@@ -108,7 +108,7 @@ export const ArrayControl = <T,>({
         if (!createItem) { return }
         const listCopy = [...list]
         const newItem = createItem()
-        if (!newItem) { return }
+        if (typeof newItem === 'undefined') { return }
         listCopy.splice(index, 0, newItem)
         mutateList(listCopy)
     }

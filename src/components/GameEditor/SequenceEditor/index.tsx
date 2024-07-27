@@ -7,6 +7,7 @@ import { Grid } from "@mui/material";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { SequenceFlow } from "./SequenceFlow";
+import { Narrative } from "@/definitions/BaseTypes";
 
 
 type Props = {
@@ -74,6 +75,15 @@ export const SequenceEditor = (props: Props) => {
         })
     }
 
+    const changeConsequenceNarrative = (newNarrative: Narrative | undefined, stageIndex: number) => {
+        updateFromPartial(state => {
+            const { stages } = state
+            const stage = stages[stageIndex]
+            if (!stage) { return {} }
+            stage.narrative = newNarrative
+            return { stages }
+        })
+    }
 
     const { isSubSection, data: sequence } = props
     return (
@@ -115,6 +125,7 @@ export const SequenceEditor = (props: Props) => {
                 changeConsequenceList={changeConsequenceList}
                 changeOrder={changeOrder}
                 changeOrderList={changeOrderList}
+                changeConsequenceNarrative={changeConsequenceNarrative}
             />
         </article>
     )

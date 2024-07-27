@@ -4,7 +4,7 @@ import { PromptFeedbackReport } from "../game-event-emitter";
 import { makeRoomDescription } from "./create-feed-items";
 
 
-const ignoreList = new Set<string>(['the', 'a', 'my',])
+const ignoreList = new Set<string>([])
 
 const splitPhrase = (phrase: string) => phrase.split(" ").map(word => word.trim().toLowerCase())
 
