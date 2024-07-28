@@ -111,13 +111,11 @@ export const StageFlow = ({
                     </Grid>
                 ))}
 
-                <Grid item display={'flex'} flexDirection={'column'}>
-                    <Box padding={1} alignSelf={'center'}>
-                        <Button variant="outlined"
-                            onClick={() => { setAddActorParams({ stage: stageIndex }) }}>
-                            other actor
-                        </Button>
-                    </Box>
+                <Grid item display={'flex'} flexDirection={'column'} justifyContent={'flex-end'} padding={2} gap={5}>
+                    <Button variant="outlined"
+                        onClick={() => { setAddActorParams({ stage: stageIndex }) }}>
+                        other actor
+                    </Button>
                     <NarrativeEditor narrative={stage.narrative} update={(newNarrative) => changeConsequenceNarrative(newNarrative, stageIndex)} />
                 </Grid>
             </Grid>

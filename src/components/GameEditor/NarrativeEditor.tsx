@@ -1,5 +1,5 @@
 import { Narrative } from "@/definitions/BaseTypes";
-import { Box, Button, Dialog, DialogContent, DialogTitle, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import { ArrayControl } from "./ArrayControl";
 import { StringInput } from "../SchemaForm/StringInput";
@@ -30,33 +30,28 @@ export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, upd
     }
 
     return <>
-        <Box padding={1} alignSelf={'center'}>
-            <Button
-                variant="contained"
-                onClick={() => setDialogOpen(true)}
-                startIcon={<DescriptionOutlinedIcon />}
-            >{buttonLabel}</Button>
-        </Box>
-
+        <Button
+            variant="contained"
+            onClick={() => setDialogOpen(true)}
+            startIcon={<DescriptionOutlinedIcon />}
+        >{buttonLabel}</Button>
         <Dialog
             open={dialogOpen}
             onClose={() => setDialogOpen(false)}
         >
             <DialogTitle sx={{ backgroundColor: palette.secondary.light }}>
                 <Stack direction={'row'} alignItems={'center'}>
-                    <DescriptionOutlinedIcon fontSize="large"/>
+                    <DescriptionOutlinedIcon fontSize="large" />
                     Edit Narrative
                     <HelpButton helpTopic="narrative" />
                 </Stack>
             </DialogTitle>
             <DialogContent sx={{ minWidth: 300 }}>
                 <Box paddingTop={5}>
-                    {!narrative && <>
-                        <Typography>No narrative</Typography>
-                        <Button onClick={createNew}>start narrative</Button>
-                    </>
+                    {!narrative && <Typography>No narrative</Typography>
                     }
                     {narrative && <>
+                        <Typography>lines in narrative: {narrative.length}</Typography>
                         <ArrayControl
                             list={narrative}
                             mutateList={update}
@@ -67,10 +62,16 @@ export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, upd
                             )}
                             createItem={() => ""}
                         />
-                        <Button onClick={() => update(undefined)}>clear</Button>
                     </>}
                 </Box>
             </DialogContent>
+            <DialogActions>
+                {narrative
+                    ? <Button onClick={() => update(undefined)}>clear</Button>
+                    : <Button onClick={createNew}>start narrative</Button>
+                }
+                <Button onClick={() => { setDialogOpen(false) }}>close</Button>
+            </DialogActions>
         </Dialog>
     </>
 }
