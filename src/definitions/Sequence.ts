@@ -9,6 +9,7 @@ export const StageSchema = z.object({
     ),
     immediateConsequences: z.optional(ImmediateConsequenceSchema.array()),
     narrative: NarrativeSchema,
+    _started: z.oboolean(),
 })
 export type Stage = z.infer<typeof StageSchema>
 

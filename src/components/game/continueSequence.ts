@@ -39,6 +39,12 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     const [currentStage] = sequenceRunning.stages
     if (!currentStage) { return {} }
 
+    if(!currentStage._started) {
+        currentStage._started = true
+        console.log('starting stage', currentStage)
+        state.emitter.emit('in-game-event', { type: 'sequence-stage', stage: currentStage })
+    }
+
     const { actorOrders: stageActorOrders = {} } = currentStage
     validateOrderIdsAndClearEmpties(stageActorOrders, actors)
 
@@ -60,18 +66,14 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
         delete currentStage.immediateConsequences
     }
 
-    const stageIsFinished = Object.keys(stageActorOrders).length === 0
-    if (stageIsFinished) {
+    const currentStageIsFinished = Object.keys(stageActorOrders).length === 0
+    if (currentStageIsFinished) {
         sequenceRunning.stages.shift()
-        console.log(`stage finished, ${sequenceRunning.stages.length} left.`)
         removeHoverTargetIfGone(state)
         removeItemIfGone(state)
     }
 
     const [nextStage] = sequenceRunning.stages;
-    if (stageIsFinished && nextStage) {
-        state.emitter.emit('in-game-event', { type: 'sequence-stage', stage: nextStage })
-    }
 
     if (!nextStage && state.currentConversationId) {
         reportConversationBranch(state)

@@ -15,14 +15,14 @@ import { handleConversationChoice } from "./handleConversationChoice";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { followOrder } from "./orders/followOrder";
 // components
+import { GameInfoProvider } from "@/context/game-info-provider";
+import { GameStateProvider } from "@/context/game-state-context";
+import { GameEventEmitter } from "@/lib/game-event-emitter";
 import { DebugLog } from "../DebugLog";
 import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
-import { GameStateProvider } from "@/context/game-state-context";
 import { UiComponentSet } from "./uiComponentSet";
-import { GameInfoProvider } from "@/context/game-info-provider";
-import { GameEventEmitter } from "@/lib/game-event-emitter";
 
 
 export type GameProps = Readonly<{
