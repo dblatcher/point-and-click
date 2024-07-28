@@ -32,10 +32,12 @@ export const interactions: Interaction[] = [
                                 animation: 'think',
                             }
                         ],
-                        narrative: [
-                            'You consider the bucket deeply.',
-                            'Having this item is a mystery.',
-                        ]
+                        narrative: {
+                            text: [
+                                'You consider the bucket deeply.',
+                                'Having this item is a mystery.',
+                            ]
+                        }
                     },
                     {
                         type: 'say',
@@ -111,10 +113,12 @@ export const interactions: Interaction[] = [
                 roomId: 'INSIDE',
                 takePlayer: true,
                 y: 5, x: 100,
-                narrative: [
-                    'You push through the bush and find a path leading into a wall with an open window.',
-                    'You climb inside.'
-                ]
+                narrative: {
+                    text: [
+                        'You push through the bush and find a path leading into a wall with an open window.',
+                        'You climb inside.'
+                    ]
+                }
             },
             {
                 type: 'order',
@@ -138,9 +142,11 @@ export const interactions: Interaction[] = [
                 roomId: 'OUTSIDE',
                 takePlayer: true,
                 y: 12, x: 230,
-                narrative: [
-                    'You clamber back out of the window.'
-                ]
+                narrative: {
+                    text: [
+                        'You clamber back out of the window.'
+                    ]
+                }
             },
             {
                 type: 'order',
@@ -292,9 +298,11 @@ export const interactions: Interaction[] = [
             {
                 type: 'sequence',
                 sequence: 'LIGHT_FIRE',
-                narrative: [
-                    'You take the matches out and strike one on the box, then hold the tiny flame to the kindling.'
-                ]
+                narrative: {
+                    text: [
+                        'You take the matches out and strike one on the box, then hold the tiny flame to the kindling.'
+                    ]
+                }
             }
         ]
     },
@@ -324,16 +332,18 @@ export const interactions: Interaction[] = [
                     {
                         type: 'goTo',
                         targetId: 'FIRE',
-                        narrative: [
-                            'Mario stumbles towards the fire. After regaining his composure, he wanders back to the bush he was sanding near before you shoved him.'
-                        ]
+                        narrative: {
+                            text: [
+                                'Mario stumbles towards the fire. After regaining his composure, he wanders back to the bush he was sanding near before you shoved him.'
+                            ]
+                        }
                     },
                     {
                         type: 'goTo',
                         targetId: 'bush',
-                        narrative: [
-
-                        ],
+                        narrative: {
+                            text: []
+                        },
                     },
                 ],
             },

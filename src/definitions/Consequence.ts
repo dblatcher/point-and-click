@@ -7,7 +7,7 @@ const OrderConsequenceSchema = z.object({
     actorId: z.string().optional(),
     orders: z.array(orderSchema),
     replaceCurrentOrders: z.optional(z.boolean()),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 export type OrderConsequence = z.infer<typeof OrderConsequenceSchema>
 
@@ -17,7 +17,7 @@ const ChangeRoomConsequenceSchema = z.object({
     takePlayer: z.boolean(),
     x: z.optional(z.number()),
     y: z.optional(z.number()),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 const InventoryConsequenceSchema = z.object({
@@ -25,13 +25,13 @@ const InventoryConsequenceSchema = z.object({
     itemId: z.string(),
     actorId: z.string().optional(),
     addOrRemove: z.enum(['ADD', 'REMOVE']),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 const RemoveActorConsequenceSchema = z.object({
     type: z.literal('removeActor'),
     actorId: z.string(),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 const ChangeStatusConsequenceSchema = z.object({
@@ -39,26 +39,26 @@ const ChangeStatusConsequenceSchema = z.object({
     targetId: z.string(),
     targetType: z.enum(['actor', 'item', 'hotspot']),
     status: z.string(),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 const SequenceConsequenceSchema = z.object({
     type: z.literal('sequence'),
     sequence: z.string(),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 const ConversationConsequenceSchema = z.object({
     type: z.literal('conversation'),
     conversationId: z.string(),
     end: z.optional(z.boolean()),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 const EndingConsequenceSchema = z.object({
     type: z.literal('ending'),
     endingId: z.string(),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 const TeleportActorConsequenceSchema = z.object({
@@ -67,7 +67,7 @@ const TeleportActorConsequenceSchema = z.object({
     roomId: z.optional(z.string()),
     x: z.number(),
     y: z.number(),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 const ToggleZoneConsequenceSchema = z.object({
@@ -76,7 +76,7 @@ const ToggleZoneConsequenceSchema = z.object({
     on: z.boolean(),
     ref: z.string(),
     zoneType: z.enum(['hotspot', 'obstacle', 'walkable']),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 export type ZoneType = z.infer<typeof ToggleZoneConsequenceSchema.shape.zoneType>
 export const zoneTypes: ZoneType[] = ToggleZoneConsequenceSchema.shape.zoneType.options
@@ -85,14 +85,14 @@ const SoundEffectConsequenceSchema = z.object({
     type: z.literal('soundEffect'),
     sound: z.string(),
     volume: z.number().optional(),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 const FlagConsequenceSchema = z.object({
     type: z.literal('flag'),
     on: z.boolean(),
     flag: z.string(),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 const ConversationChoiceConsequenceSchema = z.object({
@@ -101,7 +101,7 @@ const ConversationChoiceConsequenceSchema = z.object({
     conversationId: z.string(),
     branchId: z.string(),
     choiceRef: z.string(),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 })
 
 export const ConsequenceSchema = z.union([

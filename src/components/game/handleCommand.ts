@@ -54,9 +54,11 @@ function makeGoToOrder(player: ActorData, targetPoint: { x: number; y: number },
                         y: targetPoint.y,
                     }
                 ],
-                narrative: [
-                    `making your way to ${targetDescription}...`
-                ]
+                narrative: {
+                    text: [
+                        `making your way to ${targetDescription}...`
+                    ]
+                }
             },
         ]
     }

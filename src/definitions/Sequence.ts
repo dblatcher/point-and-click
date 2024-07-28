@@ -8,7 +8,7 @@ export const StageSchema = z.object({
         z.record(z.string(), orderSchema.array())
     ),
     immediateConsequences: z.optional(ImmediateConsequenceSchema.array()),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
     _started: z.oboolean(),
 })
 export type Stage = z.infer<typeof StageSchema>

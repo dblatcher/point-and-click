@@ -12,6 +12,7 @@ interface Props {
     update: { (newNarrative: Narrative | undefined): void }
 }
 
+const makeEmptyNarrative = () => ({ text: [""] })
 
 export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, update }) => {
     const { palette } = useTheme()
@@ -21,12 +22,18 @@ export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, upd
     const updateLine = (newLine: string, index: number) => {
         if (!narrative) { return }
         const copy = cloneData(narrative)
-        copy[index] = newLine
+        copy.text[index] = newLine
+        update(copy)
+    }
+
+    const updateText = (newText: string[]) => {
+        const copy = cloneData(narrative ?? makeEmptyNarrative())
+        copy.text = newText
         update(copy)
     }
 
     const createNew = () => {
-        return update([""])
+        return update(makeEmptyNarrative())
     }
 
     return <>
@@ -51,10 +58,10 @@ export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, upd
                     {!narrative && <Typography>No narrative</Typography>
                     }
                     {narrative && <>
-                        <Typography>lines in narrative: {narrative.length}</Typography>
+                        <Typography>lines in narrative: {narrative.text.length}</Typography>
                         <ArrayControl
-                            list={narrative}
-                            mutateList={update}
+                            list={narrative.text}
+                            mutateList={updateText}
                             describeItem={(line, index) => (
                                 <Box key={index}>
                                     <StringInput value={line} inputHandler={(newLine) => { updateLine(newLine, index) }} />

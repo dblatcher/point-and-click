@@ -15,7 +15,7 @@ const orderReportToFeedLine = (orderReport: OrderReport, state:GameState): FeedI
     const { actor, order } = orderReport;
 
     if (order.narrative) {
-        return order.narrative.map(stringToFeedItem);
+        return order.narrative.text.map(stringToFeedItem);
     }
 
     // don't show generic order descriptions if part of a stage with a narrative
@@ -64,7 +64,7 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
     }
 
     if (consequence.narrative) {
-        return consequence.narrative.map(stringToFeedItem);
+        return consequence.narrative.text.map(stringToFeedItem);
     }
 
     const getActorName = () => {
@@ -133,7 +133,7 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
 const sequenceStageReportToFeedLines = (sequenceStageReport: SequenceStageReport, state: GameState): FeedItem[] => {
     const { stage } = sequenceStageReport;
     if (stage.narrative) {
-        return stage.narrative.map(stringToFeedItem);
+        return stage.narrative.text.map(stringToFeedItem);
     }
     return []
 };

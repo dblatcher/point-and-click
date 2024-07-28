@@ -3,7 +3,7 @@ import { NarrativeSchema } from "./BaseTypes"
 
 const orderBase = {
     _started: z.oboolean(),
-    narrative: NarrativeSchema,
+    narrative: NarrativeSchema.optional(),
 }
 
 export const MoveOrderSchema = z.object({
