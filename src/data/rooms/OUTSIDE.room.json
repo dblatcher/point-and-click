@@ -109,5 +109,11 @@
       "name": "tree"
     }
   ],
-  "obstacleAreas": [{ "x": 0, "y": 640, "rect": [640, 620] }]
+  "obstacleAreas": [{ "x": 0, "y": 640, "rect": [640, 620] }],
+  "narrative": {
+    "text": [
+      "You are in a garden with many tree an a bush with that actually leads inside.",
+      "The sun is shining behind a hill in the distance."
+    ]
+  }
 }

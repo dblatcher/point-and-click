@@ -11,7 +11,7 @@ const stringToFeedItem = (message: string) => ({
 });
 
 // TO DO - proper sentence grammar!
-const orderReportToFeedLine = (orderReport: OrderReport, state:GameState): FeedItem[] => {
+const orderReportToFeedLine = (orderReport: OrderReport, state: GameState): FeedItem[] => {
     const { actor, order } = orderReport;
 
     if (order.narrative) {
@@ -169,7 +169,9 @@ export const makeRoomDescription = (state: GameState, player?: ActorData): FeedI
         }
     }
 
-    const message = `You ${player ? `(${player.name})` : ''} are in ${room.name ?? room.id}`
+    const message = room.narrative 
+        ? room.narrative.text.join(" ") 
+        : `You ${player ? `(${player.name})` : ''} are in ${room.name ?? room.id}`
 
     const hotspotMessages = hotspots.map(hotspot =>
         `There is a ${hotspot.name ?? hotspot.id} here.`
