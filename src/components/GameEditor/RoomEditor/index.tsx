@@ -9,6 +9,8 @@ import { BackgroundControl } from "./background/BackgroundControl";
 import { ZoneFeaturesControl } from "./zones/ZoneFeatureControls";
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import { useGameDesign } from "@/context/game-design-context";
+import { NarrativeEditor } from "../NarrativeEditor";
+import { RoomDescriptionControl } from "./RoomDescriptionControl";
 
 export type RoomEditorState = {
     tabOpen: number;
@@ -47,15 +49,7 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
             <Tab label="Sprite Scaling" value={RoomEditorTab.SpriteScaling} />
         </Tabs>
         {/* TO DO - nice layout */}
-        {tabOpen === RoomEditorTab.NameAndDescription && (<>
-            <StringInput optional
-                label="room name"
-                value={data.name ?? ''}
-                inputHandler={(value) => {
-                    performUpdate('rooms', { ...data, name: value })
-                }}
-            />
-        </>)}
+        {tabOpen === RoomEditorTab.NameAndDescription && <RoomDescriptionControl room={data} />}
         {tabOpen === RoomEditorTab.BackgroundAndDimension && (
             <>
                 <DimensionControl room={data} />

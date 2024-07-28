@@ -10,11 +10,38 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 interface Props {
     narrative?: Narrative
     update: { (newNarrative: Narrative | undefined): void }
+    noDialog?: boolean
 }
 
 const makeEmptyNarrative = () => ({ text: [""] })
 
-export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, update }) => {
+const TextControl = ({ narrative, updateText, updateLine }: {
+    narrative?: Narrative,
+    updateText: { (newText: string[]): void }
+    updateLine: { (text: string, index: number): void }
+}) => {
+    return (
+        <Box paddingTop={5}>
+            {!narrative && <Typography>No narrative</Typography>
+            }
+            {narrative && <>
+                <Typography>lines in narrative: {narrative.text.length}</Typography>
+                <ArrayControl
+                    list={narrative.text}
+                    mutateList={updateText}
+                    describeItem={(line, index) => (
+                        <Box key={index}>
+                            <StringInput value={line} inputHandler={(newLine) => { updateLine(newLine, index) }} />
+                        </Box>
+                    )}
+                    createItem={() => ""}
+                />
+            </>}
+        </Box>
+    )
+}
+
+export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, update, noDialog }) => {
     const { palette } = useTheme()
     const [dialogOpen, setDialogOpen] = useState(false)
     const buttonLabel = !!narrative ? 'edit narrative' : 'add narrative'
@@ -36,6 +63,16 @@ export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, upd
         return update(makeEmptyNarrative())
     }
 
+    if (noDialog) {
+        return <Box>
+            <TextControl {...{ narrative, updateLine, updateText }} />
+            {narrative
+                ? <Button onClick={() => update(undefined)}>clear</Button>
+                : <Button onClick={createNew}>start narrative</Button>
+            }
+        </Box>
+    }
+
     return <>
         <Button
             variant="contained"
@@ -54,23 +91,7 @@ export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, upd
                 </Stack>
             </DialogTitle>
             <DialogContent sx={{ minWidth: 300 }}>
-                <Box paddingTop={5}>
-                    {!narrative && <Typography>No narrative</Typography>
-                    }
-                    {narrative && <>
-                        <Typography>lines in narrative: {narrative.text.length}</Typography>
-                        <ArrayControl
-                            list={narrative.text}
-                            mutateList={updateText}
-                            describeItem={(line, index) => (
-                                <Box key={index}>
-                                    <StringInput value={line} inputHandler={(newLine) => { updateLine(newLine, index) }} />
-                                </Box>
-                            )}
-                            createItem={() => ""}
-                        />
-                    </>}
-                </Box>
+                <TextControl {...{ narrative, updateLine, updateText }} />
             </DialogContent>
             <DialogActions>
                 {narrative
