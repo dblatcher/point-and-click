@@ -1,7 +1,7 @@
 import { GameCondition, GameDesign } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { SoundAsset, ImageAsset } from "@/services/assets";
-import { Snackbar, Alert, Card, Grid } from "@mui/material";
+import { Snackbar, Alert, Card, Grid, Button, Box, Radio, FormControl, FormControlLabel, FormLabel, RadioGroup } from "@mui/material";
 import React from "react";
 import { GameDesignPlayer } from "./GameDesignPlayer";
 import { LoadDesignButton } from "./LoadDesignButton";
@@ -11,6 +11,17 @@ import { MarkDown } from "./MarkDown";
 import { GameList } from "./GameList";
 import { materialUiComponents } from "./game-mui-ux";
 import { TextBasedLayout } from "./text-based/TextBasedLayout";
+import { UiComponentSet } from "./game/uiComponentSet";
+import { Layout as SimpleLayout } from "./game-ui/Layout";
+
+
+const layouts = {
+    material: materialUiComponents,
+    textBased: { GameLayoutComponent: TextBasedLayout },
+    simple: { GameLayoutComponent: SimpleLayout }
+} satisfies Record<string, UiComponentSet>
+type LayoutOption = keyof typeof layouts;
+const layoutOptions = Object.keys(layouts) as LayoutOption[]
 
 type State = {
     design?: GameDesign
@@ -19,6 +30,7 @@ type State = {
     timestamp: number;
     loadingSuccessMessage?: string;
     loadingErrorMessage?: string;
+    layoutOption: LayoutOption;
 }
 
 export class GameDesignLoader extends React.Component<{}, State> {
@@ -29,6 +41,7 @@ export class GameDesignLoader extends React.Component<{}, State> {
             design: undefined,
             timestamp: Date.now(),
             loadingSuccessMessage: undefined,
+            layoutOption: layoutOptions[0],
         }
 
         this.loadGameDesign = this.loadGameDesign.bind(this)
@@ -92,10 +105,26 @@ export class GameDesignLoader extends React.Component<{}, State> {
                     <Grid container spacing={2} padding={2}
                         justifyContent="center"
                         alignItems="center">
-                        <Grid item xs={3}>
+                        <Grid item xs={3} gap={2}>
                             <LoadDesignButton
                                 onLoad={this.loadGameDesign}
                                 onError={this.handleLoadFail} />
+                        </Grid>
+                        <Grid item xs={3} gap={2}>
+                            <FormControl>
+                                <FormLabel id="layout-radio-buttons-group-label">Layout</FormLabel>
+                                <RadioGroup
+                                    aria-labelledby="layout-radio-buttons-group-label"
+                                    defaultValue={layoutOptions[0]}
+                                    name="layout-radio-buttons-group"
+                                    value={this.state.layoutOption}
+                                    onChange={option => { this.setState({ layoutOption: option.target.value as LayoutOption }) }}
+                                >
+                                    {layoutOptions.map(option => (
+                                        <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
+                                    ))}
+                                </RadioGroup>
+                            </FormControl>
                         </Grid>
                         <Grid item xs={6}>
                             <Card sx={{ padding: 2 }}>
@@ -107,16 +136,22 @@ export class GameDesignLoader extends React.Component<{}, State> {
                 </>
             )}
 
-            {design && (
+            {design && (<>
                 <GameDesignPlayer
                     gameDesign={design}
                     imageAssets={imageAssets}
                     soundAssets={soundAssets}
-                    uiComponents={{
-                        GameLayoutComponent: TextBasedLayout
-                    }}
+                    uiComponents={layouts[this.state.layoutOption]}
                 />
-            )}
+                <Button onClick={() => {
+                    return this.setState({
+                        design: undefined,
+                        imageAssets: undefined,
+                        soundAssets: undefined
+                    })
+                }}>Eject game</Button>
+            </>)}
+
 
             <Snackbar open={!!loadingSuccessMessage} autoHideDuration={6000} onClose={this.handleMessageClose}>
                 <Alert onClose={this.handleMessageClose} severity="success" sx={{ width: '100%' }}>
@@ -128,7 +163,7 @@ export class GameDesignLoader extends React.Component<{}, State> {
                     {loadingErrorMessage}
                 </Alert>
             </Snackbar>
-        </div>
+        </div >
     }
 
 }
