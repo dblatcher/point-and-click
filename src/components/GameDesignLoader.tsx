@@ -1,18 +1,18 @@
+import selectADesignContent from "@/content/selectADesign.md";
 import { GameCondition, GameDesign } from "@/definitions";
 import { cloneData } from "@/lib/clone";
-import { SoundAsset, ImageAsset } from "@/services/assets";
-import { Snackbar, Alert, Card, Grid, Button, Box, Radio, FormControl, FormControlLabel, FormLabel, RadioGroup } from "@mui/material";
+import { ImageAsset, SoundAsset } from "@/services/assets";
+import { Alert, Button, Card, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Snackbar } from "@mui/material";
 import React from "react";
 import { GameDesignPlayer } from "./GameDesignPlayer";
 import { LoadDesignButton } from "./LoadDesignButton";
-import selectADesignContent from "@/content/selectADesign.md";
 
-import { MarkDown } from "./MarkDown";
 import { GameList } from "./GameList";
+import { MarkDown } from "./MarkDown";
 import { materialUiComponents } from "./game-mui-ux";
-import { TextBasedLayout } from "./text-based/TextBasedLayout";
-import { UiComponentSet } from "./game/uiComponentSet";
 import { Layout as SimpleLayout } from "./game-ui/Layout";
+import { UiComponentSet } from "./game/uiComponentSet";
+import { TextBasedLayout } from "./text-based/TextBasedLayout";
 
 
 const layouts = {
