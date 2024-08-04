@@ -48,7 +48,7 @@ export const StringInput: FunctionComponent<
         return <Autocomplete
             fullWidth
             disableClearable
-            options={suggestions}
+            options={Array.from(new Set(suggestions))}
             freeSolo
             onInput={sendValue}
             onSelect={sendValue}
