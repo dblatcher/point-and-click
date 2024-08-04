@@ -3,7 +3,7 @@ import { useGameDesign } from "@/context/game-design-context";
 import { Order } from "@/definitions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { findById } from "@/lib/util";
-import { Dialog, DialogContent, DialogTitle, Stack, useTheme } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, useTheme } from "@mui/material";
 import { OrderForm } from "../OrderForm";
 import { getOrderIcon } from "./get-icons";
 
@@ -45,6 +45,9 @@ export const OrderDialog = ({ sequenceId, stage, index, actorId, close, changeOr
                         updateData={(newOrder) => { changeOrder(newOrder, index) }}
                     />
                 )}
+                <DialogActions>
+                    <Button onClick={close}>done</Button>
+                </DialogActions>
             </DialogContent>
         </Dialog>
     )
