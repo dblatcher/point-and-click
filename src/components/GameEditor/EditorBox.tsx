@@ -36,9 +36,7 @@ export const EditorBox = ({ title, children, themePalette = 'primary', boxProps 
                         paddingX: 2,
                     }}>
                     {leftContent}
-                    <Typography component={'span'}
-                        variant='overline'
-                    >{title}</Typography>
+                    <Typography component={'span'}>{title}</Typography>
                     <Box>
                         {barContent}
                     </Box>
