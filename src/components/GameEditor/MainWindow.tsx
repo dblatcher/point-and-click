@@ -80,7 +80,7 @@ export const MainWindow = ({ tabOpen, gameItemIds }: Props) => {
                     createBlank={makeBlankConversation}
                     schema={ConversationSchema}
                     designProperty="conversations"
-                    itemTypeName="convesation"
+                    itemTypeName="conversation"
                 />
         case 'sprites':
             return currentSprite

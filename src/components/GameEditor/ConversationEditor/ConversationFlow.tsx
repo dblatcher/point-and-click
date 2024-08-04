@@ -12,6 +12,7 @@ import { LineBetweenNodes } from "./LineBetweenNodes"
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import StarIcon from '@mui/icons-material/Star';
 import Checkbox from '@mui/material/Checkbox';
+import { formatIdInput } from "../helpers"
 
 interface Props {
     conversation: Conversation
@@ -211,6 +212,7 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                     label="Add Branch"
                     onEntry={(entry) => { addNewBranch(entry) }}
                     confirmationText="enter branch name"
+                    modifyInput={formatIdInput}
                     buttonProps={{
                         size: 'large',
                         variant: "contained",
