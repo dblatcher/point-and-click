@@ -51,7 +51,12 @@ export const StringInput: FunctionComponent<
             options={Array.from(new Set(suggestions))}
             freeSolo
             onInput={sendValue}
-            onSelect={sendValue}
+            onChange={(e) => {
+                const value = e.currentTarget.textContent
+                if (value) {
+                    props.inputHandler(value);
+                }
+            }}
             value={props.value}
             renderInput={(params) => <TextField
                 {...params}
