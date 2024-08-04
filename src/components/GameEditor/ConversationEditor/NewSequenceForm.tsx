@@ -27,7 +27,7 @@ export const NewSequenceForm: FunctionComponent<Props> = ({ addSequence, existin
                 value={newId}
                 inputHandler={setNewId}
                 suggestions={suggestedIds} />
-            <IconButton onClick={handleSubmit}
+            <IconButton onClick={handleSubmit} color='primary'
                 disabled={!idIsAvailable}>
                 <AddIcon />
             </IconButton>
