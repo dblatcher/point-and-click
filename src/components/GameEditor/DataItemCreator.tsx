@@ -122,6 +122,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                             sx: { width: '100%' },
                         }}
                         confirmationText={`Enter ${itemTypeName} id`}
+                        keyboardShortcut="#"
                     />
                 </Grid>
                 {includeLoadButton && (

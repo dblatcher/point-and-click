@@ -7,7 +7,7 @@ import { RoomDataSchema } from "@/definitions/RoomData";
 import { SpriteDataSchema } from "@/definitions/SpriteSheet";
 import { findById } from "@/lib/util";
 import { Box } from "@mui/material";
-import { TabId } from "../../lib/editor-config";
+import { TabId, tabOrder } from "../../lib/editor-config";
 import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
 import { DataItemCreator } from "./DataItemCreator";
@@ -23,16 +23,39 @@ import { SpriteEditor } from "./SpriteEditor";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
 import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb } from "./defaults";
+import { useKeyBoard } from '@/hooks/use-keyboard';
 
 type Props = {
     tabOpen?: TabId;
     gameItemIds: Partial<Record<GameDataItemType, string>>
+    openInEditor: { (tabType: TabId, itemId?: string): void }
 }
 
-export const MainWindow = ({ tabOpen, gameItemIds }: Props) => {
+export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
     const {
         gameDesign, performUpdate, deleteArrayItem, changeInteraction,
     } = useGameDesign()
+
+    useKeyBoard([
+        {
+            key: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+            handler: ({ key }) => {
+                const tabId = tabOrder[Number(key) - 1]?.id
+                if (!tabId) { return }
+                openInEditor(tabId)
+            }
+        },
+        {
+            key: ['0', '-', '='],
+            handler: ({ key }) => {
+                switch(key) {
+                    case '0' : return openInEditor(tabOrder[9].id)
+                    case '-' : return openInEditor(tabOrder[10].id)
+                    case '=' : return openInEditor(tabOrder[11].id)
+                }
+            }
+        }
+    ])
 
     const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
     const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)

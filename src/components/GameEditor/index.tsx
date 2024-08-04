@@ -49,7 +49,7 @@ function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[
     return list
 }
 
-export default class GameEditor extends Component<Props, State>{
+export default class GameEditor extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
@@ -282,16 +282,21 @@ export default class GameEditor extends Component<Props, State>{
                                     </IconButton>
                                 </Stack>
                                 <ButtonGroup orientation="vertical">
-                                    {tabOrder.map(tab => (
-                                        <Button key={tab.id}
+                                    {tabOrder.map((tab, index) => (
+                                        <Button key={tab.id} size="small"
                                             variant={tab.id === tabOpen ? 'contained' : 'outlined'}
-                                            onClick={() => { openInEditor(tab.id) }}>{tab.label}</Button>
+                                            onClick={() => { openInEditor(tab.id) }}
+                                            startIcon={<span>{index + 1}</span>}
+                                        >{tab.label}</Button>
                                     ))}
                                 </ButtonGroup>
                             </Stack>
 
                             <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
-                                <MainWindow gameItemIds={gameItemIds}  tabOpen={tabOpen}/>
+                                <MainWindow
+                                    gameItemIds={gameItemIds}
+                                    tabOpen={tabOpen}
+                                    openInEditor={openInEditor} />
                             </Box>
 
                             <TestGameDialog
