@@ -10,6 +10,7 @@ import { EditorHeading } from "../EditorHeading";
 import { InteractionDialog } from "./InteractionDialog";
 import { InteractionTableRow } from "./InteractionTableRow";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { InteractionTableHeaders } from "./InteractionTableHeaders";
 
 
 interface Props {
@@ -110,7 +111,6 @@ export class InteractionEditor extends Component<Props, State> {
         const { interactions, verbs, items, rooms } = gameDesign
         const { verbFilter = '', itemFilter = '', targetFilter = '', roomFilter = '', interactionUnderConstruction, edittedIndex } = this.state
         const { filteredInteractions, filteredTargets } = this
-
         return (
             <article>
                 <EditorHeading heading="Interactions" />
@@ -120,15 +120,7 @@ export class InteractionEditor extends Component<Props, State> {
                             <Typography>Showing {filteredInteractions.length}/{interactions.length} interactions</Typography>
                         </caption>
                         <TableHead>
-                            <TableRow>
-                                <TableCell>verb</TableCell>
-                                <TableCell>target</TableCell>
-                                <TableCell>item</TableCell>
-                                <TableCell>room</TableCell>
-                                <TableCell rowSpan={2}>consequences</TableCell>
-                                <TableCell rowSpan={2} style={{ width: '4em' }}>must be true</TableCell>
-                                <TableCell rowSpan={2} style={{ width: '4em' }}>must be false</TableCell>
-                            </TableRow>
+                            <InteractionTableHeaders />
                             <TableRow>
                                 <TableCell>
                                     <Box minWidth={80}>

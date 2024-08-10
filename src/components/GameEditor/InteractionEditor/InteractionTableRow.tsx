@@ -9,8 +9,8 @@ import EditIcon from '@mui/icons-material/Edit';
 interface Props {
     index: number;
     interaction: Interaction;
-    changeOrder: { (index: number, direction: 'up' | 'down'): void }
-    deleteInteraction: { (index: number): void }
+    changeOrder?: { (index: number, direction: 'up' | 'down'): void }
+    deleteInteraction?: { (index: number): void }
     openEditor: { (): void }
 }
 
@@ -66,20 +66,24 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
                         <EditIcon color="primary" />
                     </IconButton>
 
-                    <IconButton onClick={() => changeOrder(index, 'up')}>
-                        <ArrowUpwardIcon />
-                    </IconButton>
+                    {changeOrder && (<>
+                        <IconButton onClick={() => changeOrder(index, 'up')}>
+                            <ArrowUpwardIcon />
+                        </IconButton>
 
-                    <IconButton onClick={() => changeOrder(index, 'down')}>
-                        <ArrowDownwardIcon />
-                    </IconButton>
+                        <IconButton onClick={() => changeOrder(index, 'down')}>
+                            <ArrowDownwardIcon />
+                        </IconButton>
+                    </>)}
 
-                    <ButtonWithConfirm
-                        useIconButton={true}
-                        icon={<ClearIcon />}
-                        label="delete this interaction"
-                        onClick={() => { deleteInteraction(index) }}
-                    />
+                    {deleteInteraction && (
+                        <ButtonWithConfirm
+                            useIconButton={true}
+                            icon={<ClearIcon />}
+                            label="delete this interaction"
+                            onClick={() => { deleteInteraction(index) }}
+                        />
+                    )}
                 </Stack>
             </TableCell>
         </TableRow >

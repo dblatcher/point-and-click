@@ -176,6 +176,7 @@ export const ZoneFeaturesControl = ({
 
                 {openTab === ZoneTypeTab.Hotspot && (
                     <HotspotSetEditor
+                        roomId={room.id}
                         hotspots={room.hotspots ?? []}
                         setClickEffect={setClickEffect}
                         changeZone={changeZone}

@@ -7,6 +7,7 @@ import { ShapeChangeFunction } from "./ShapeControl";
 import { ZonePicker } from "./ZonePicker";
 
 interface Props {
+    roomId: string,
     hotspots: HotspotZone[],
     openIndex?: number
     changeZone: ShapeChangeFunction
@@ -16,7 +17,7 @@ interface Props {
     setClickEffect: { (clickEffect: ClickEffect): void }
 }
 
-export const HotspotSetEditor = ({ hotspots, openIndex, changeZone, selectZone, removeZone, setClickEffect, clickEffect }: Props) => {
+export const HotspotSetEditor = ({ roomId, hotspots, openIndex, changeZone, selectZone, removeZone, setClickEffect, clickEffect }: Props) => {
 
     const activeHotspot = typeof openIndex === 'number'
         ? hotspots[openIndex]
@@ -43,6 +44,7 @@ export const HotspotSetEditor = ({ hotspots, openIndex, changeZone, selectZone, 
                     />
                     {activeHotspot && typeof openIndex === 'number' && (
                         <HotspotControl hotspot={activeHotspot} index={openIndex}
+                            roomId={roomId}
                             setClickEffect={setClickEffect}
                             change={changeZone}
                             remove={removeZone} />
