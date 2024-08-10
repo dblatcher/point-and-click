@@ -23,15 +23,15 @@ type RoomEditorProps = {
 enum RoomEditorTab {
     NameAndDescription,
     BackgroundAndDimension,
-    ZoneFeatures,
-    SpriteScaling
+    WalkableAreas,
+    SpriteScaling,
+    Hotspots,
 }
 
 export const RoomEditor = ({ data }: RoomEditorProps) => {
 
     const [tabOpen, setTabOpen] = useState(RoomEditorTab.BackgroundAndDimension)
     const { id } = data
-    const { performUpdate } = useGameDesign()
 
     return <Stack component={'article'} spacing={1} height={'100%'}>
         <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} >
@@ -45,10 +45,10 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
         <Tabs value={tabOpen} onChange={(event, tabOpen) => setTabOpen(tabOpen)}>
             <Tab label="Name and description" value={RoomEditorTab.NameAndDescription} />
             <Tab label="Background and dimensions" value={RoomEditorTab.BackgroundAndDimension} />
-            <Tab label="Zones" value={RoomEditorTab.ZoneFeatures} />
+            <Tab label="Walkable Space" value={RoomEditorTab.WalkableAreas} />
+            <Tab label="Hotspots" value={RoomEditorTab.Hotspots} />
             <Tab label="Sprite Scaling" value={RoomEditorTab.SpriteScaling} />
         </Tabs>
-        {/* TO DO - nice layout */}
         {tabOpen === RoomEditorTab.NameAndDescription && <RoomDescriptionControl room={data} />}
         {tabOpen === RoomEditorTab.BackgroundAndDimension && (
             <>
@@ -57,12 +57,17 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
             </>
         )}
 
-        {tabOpen === RoomEditorTab.ZoneFeatures && (
+        {tabOpen === RoomEditorTab.WalkableAreas && (
             <ZoneFeaturesControl room={data} />
         )}
 
         {tabOpen === RoomEditorTab.SpriteScaling && (
             <ScalingControl room={data} />
         )}
+
+        {tabOpen === RoomEditorTab.Hotspots && (
+            <ZoneFeaturesControl room={data} zoneType="hotspots"/>
+        )}
+
     </Stack>
 }
