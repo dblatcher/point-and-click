@@ -5,15 +5,12 @@ import { useGameDesign } from "@/context/game-design-context";
 import { HotspotZone } from "@/definitions";
 import { clamp } from "@/lib/util";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from '@mui/icons-material/Edit';
-import { Box, Button, ButtonGroup, Stack } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, ButtonGroup } from "@mui/material";
 import { AccoridanedContent } from "../../AccordianedContent";
-import { InteractionDialog } from "../../InteractionEditor/InteractionDialog";
-import { PickInteractionDialog } from "../../InteractionEditor/PickInteractionDialog";
+import { ButtonWithConfirm } from "../../ButtonWithConfirm";
+import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
 import { ClickEffect } from "../ClickEffect";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
-import { ButtonWithConfirm } from "../../ButtonWithConfirm";
 
 interface Props {
     roomId: string;
@@ -26,27 +23,9 @@ interface Props {
 
 export function HotspotControl({ roomId, hotspot, index, change, remove, setClickEffect }: Props) {
     const { parallax, type, walkToX, walkToY, id, status, name } = hotspot
-    const { gameDesign, changeInteraction } = useGameDesign()
-    const [interactionDialogOpen, setInteractionDialogOpen] = useState(false)
-    const [pickInteractionDialogOpen, setPickInteractionDialogOpen] = useState(false)
-    const [interactionIndex, setInteractionIndex] = useState<number | undefined>(undefined)
-
-    const handleInteractionButton = () => {
-        if (gameDesign.interactions.some(interaction => interaction.targetId === id)) {
-            setPickInteractionDialogOpen(true)
-        } else {
-            setInteractionDialogOpen(true)
-        }
-    }
-
-    const handlePickInteractionIndex = (index: number | undefined) => {
-        setInteractionDialogOpen(true)
-        setPickInteractionDialogOpen(false)
-        setInteractionIndex(index)
-    }
 
     return (
-        <Box component={'article'} spacing={0}>
+        <Box component={'article'}>
             <AccoridanedContent tabs={[
                 {
                     label: 'hotspot',
@@ -61,10 +40,10 @@ export function HotspotControl({ roomId, hotspot, index, change, remove, setClic
                             label="status" value={status || ''}
                             inputHandler={(value) => change(index, 'status', value, type)} />
                         <ButtonGroup>
-                            <Button onClick={handleInteractionButton}
-                                variant="outlined"
-                                startIcon={<EditIcon />}
-                            >interactions</Button>
+                            <InteractionsDialogsButton
+                                criteria={interaction => interaction.targetId === id && (!interaction.roomId || interaction.roomId === roomId)}
+                                newPartial={{ roomId, targetId: id }}
+                            />
                             <ButtonWithConfirm
                                 label="Delete Hotspot"
                                 onClick={() => { remove(index, 'hotspot') }}
@@ -112,28 +91,6 @@ export function HotspotControl({ roomId, hotspot, index, change, remove, setClic
                     </>
                 },
             ]} />
-
-
-            {interactionDialogOpen &&
-                <InteractionDialog
-                    initialState={typeof interactionIndex === 'number' ? gameDesign.interactions[interactionIndex] : {
-                        targetId: id,
-                        roomId,
-                    }}
-                    cancelFunction={() => { setInteractionDialogOpen(false) }}
-                    confirm={(interaction) => {
-                        setInteractionDialogOpen(false)
-                        changeInteraction(interaction, interactionIndex)
-                    }}
-                />
-            }
-
-            <PickInteractionDialog
-                isOpen={pickInteractionDialogOpen}
-                close={() => setPickInteractionDialogOpen(false)}
-                pickIndex={handlePickInteractionIndex}
-                criteria={interaction => interaction.targetId === id && (!interaction.roomId || interaction.roomId === roomId)}
-            />
         </Box>
     )
 }

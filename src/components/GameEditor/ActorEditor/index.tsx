@@ -17,6 +17,7 @@ import { RecordEditor } from "../RecordEditor";
 import { SpritePreview } from "../SpritePreview";
 import { PositionPreview } from "./PositionPreview";
 import { SoundValueForm } from "./SoundValueForm";
+import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
 
 
 type Props = {
@@ -168,6 +169,11 @@ export const ActorEditor = (props: Props) => {
                                     setValue={value => {
                                         changeValue('dialogueColor', value)
                                     }} />
+
+                                <InteractionsDialogsButton
+                                    criteria={(interaction) => interaction.targetId === props.data.id}
+                                    newPartial={{ targetId: props.data.id }}
+                                />
                             </Box>
                         },
                         {
