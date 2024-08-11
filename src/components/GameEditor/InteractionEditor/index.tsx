@@ -197,7 +197,6 @@ export class InteractionEditor extends Component<Props, State> {
                 {interactionUnderConstruction &&
                     <InteractionDialog key={edittedIndex}
                         confirm={this.saveInteraction}
-                        gameDesign={this.props.gameDesign}
                         initialState={interactionUnderConstruction}
                         cancelFunction={() => {
                             this.setState({

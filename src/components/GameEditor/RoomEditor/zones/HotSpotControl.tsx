@@ -116,7 +116,6 @@ export function HotspotControl({ roomId, hotspot, index, change, remove, setClic
 
             {interactionDialogOpen &&
                 <InteractionDialog
-                    gameDesign={gameDesign}
                     initialState={typeof interactionIndex === 'number' ? gameDesign.interactions[interactionIndex] : {
                         targetId: id,
                         roomId,
