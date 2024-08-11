@@ -4,13 +4,10 @@ import { useState } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { DimensionControl } from "./DimensionControl";
+import { RoomDescriptionControl } from "./RoomDescriptionControl";
 import { ScalingControl } from "./ScalingControl";
 import { BackgroundControl } from "./background/BackgroundControl";
 import { ZoneFeaturesControl } from "./zones/ZoneFeatureControls";
-import { StringInput } from "@/components/SchemaForm/StringInput";
-import { useGameDesign } from "@/context/game-design-context";
-import { NarrativeEditor } from "../NarrativeEditor";
-import { RoomDescriptionControl } from "./RoomDescriptionControl";
 
 export type RoomEditorState = {
     tabOpen: number;
