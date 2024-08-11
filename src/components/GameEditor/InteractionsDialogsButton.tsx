@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EditIcon } from '@/components/GameEditor/material-icons';
+import { InteractionIcon } from '@/components/GameEditor/material-icons';
 import { Button } from "@mui/material";
 import { InteractionDialog } from "./InteractionEditor/InteractionDialog";
 import { useGameDesign } from "@/context/game-design-context";
@@ -35,7 +35,7 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newP
     return <>
         <Button onClick={handleInteractionButton}
             variant="outlined"
-            startIcon={<EditIcon />}
+            startIcon={<InteractionIcon />}
         >interactions</Button>
 
         {(interactionDialogOpen) &&

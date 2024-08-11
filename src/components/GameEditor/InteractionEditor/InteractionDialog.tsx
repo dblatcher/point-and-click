@@ -16,6 +16,7 @@ import { ConsequenceCard } from "../SequenceEditor/ConsequenceCard";
 import { ConsequenceDialog } from "../SequenceEditor/ConsequenceDialog";
 import { makeNewConsequence } from "../defaults";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { InteractionIcon } from "../material-icons";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -79,7 +80,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
 
     const dialogTitle = () => {
         if (!interaction) { return '' }
-        const { verbId, targetId, itemId } = interaction
+        const { verbId = '[VERB]', targetId ='[TARGET]', itemId } = interaction
         return `${verbId} ${targetId} ${itemId ? `with ${itemId}` : ''}`
     }
 
@@ -96,7 +97,10 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
 
     return (
         <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'}>
-            <DialogTitle>Edit Interactions: {dialogTitle()}</DialogTitle>
+            <DialogTitle sx={{alignItems:'center', display:'flex'}}>
+                <InteractionIcon />
+                Edit Interaction: {dialogTitle()}
+            </DialogTitle>
             <DialogContent>
                 <EditorBox title="Command">
                     <Stack direction={'row'}

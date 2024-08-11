@@ -1,10 +1,10 @@
 import { useGameDesign } from "@/context/game-design-context"
 import { Interaction } from "@/definitions"
 import { Button, Dialog, DialogContent, DialogTitle, Stack, Table, TableBody, TableContainer, TableHead } from "@mui/material"
-import React from "react"
+import React, { Fragment } from "react"
 import { InteractionTableRow } from "./InteractionTableRow"
 import { InteractionTableHeaders } from "./InteractionTableHeaders"
-import {AddIcon} from "@/components/GameEditor/material-icons";
+import { AddIcon, InteractionIcon } from "@/components/GameEditor/material-icons";
 
 interface Props {
     close: { (): void },
@@ -23,7 +23,10 @@ export const PickInteractionDialog: React.FunctionComponent<Props> = ({ close, i
 
     return (
         <Dialog open={isOpen} onClose={close}>
-            <DialogTitle>Pick Interaction</DialogTitle>
+            <DialogTitle sx={{ alignItems: 'center', display: 'flex' }}>
+                <InteractionIcon />
+                Pick Interaction
+            </DialogTitle>
             <DialogContent>
                 <Stack spacing={4}>
                     <TableContainer>
@@ -33,7 +36,7 @@ export const PickInteractionDialog: React.FunctionComponent<Props> = ({ close, i
                             </TableHead>
                             <TableBody>
                                 {interactions.map((interaction, index) => {
-                                    if (!filteredInteractions.includes(interaction)) { return <></> }
+                                    if (!filteredInteractions.includes(interaction)) { return <Fragment key={index}></Fragment> }
                                     return (<InteractionTableRow key={index}
                                         interaction={interaction}
                                         index={index}

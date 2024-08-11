@@ -26,6 +26,7 @@ import PhotoOutlinedIcon from '@mui/icons-material/PhotoOutlined';
 import LogOut from '@mui/icons-material/Logout';
 import RepeatOneIcon from '@mui/icons-material/RepeatOne';
 import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
+import InteractionIcon from '@mui/icons-material/Mediation';
 
 export {
     AddIcon,
@@ -45,6 +46,7 @@ export {
     HelpIcon,
     HideImageOutlinedIcon,
     LogOut,
+    InteractionIcon,
     PhotoOutlinedIcon,
     PlayCircleFilledOutlinedIcon,
     PlayCircleOutlineOutlinedIcon,
