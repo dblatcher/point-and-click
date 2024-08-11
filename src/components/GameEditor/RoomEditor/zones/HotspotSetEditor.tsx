@@ -1,6 +1,6 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { HotspotZone } from "@/definitions";
-import { Alert, Stack } from "@mui/material";
+import { Alert, Stack, Typography } from "@mui/material";
 import { ClickEffect } from "../ClickEffect";
 import { HotspotControl } from "./HotSpotControl";
 import { NewZoneButtons } from "./NewZoneButtons";
@@ -25,11 +25,6 @@ export const HotspotSetEditor = ({ roomId, hotspots, openIndex, changeZone, sele
 
     return (
         <>
-            <NewZoneButtons
-                type="hotspot"
-                clickEffect={clickEffect}
-                setClickEffect={setClickEffect}
-            />
             {hotspots.length === 0 ? (
                 <Alert severity="info">
                     No <b>hotspots</b> for this room yet. Select a shape from the buttons above to add one.
@@ -52,6 +47,14 @@ export const HotspotSetEditor = ({ roomId, hotspots, openIndex, changeZone, sele
                     )}
                 </Stack>
             )}
+
+            <Typography variant="overline" marginTop={4} display={'block'}>New Hotspot</Typography>
+            <NewZoneButtons
+                orientation="vertical"
+                type="hotspot"
+                clickEffect={clickEffect}
+                setClickEffect={setClickEffect}
+            />
         </>
     )
 }
