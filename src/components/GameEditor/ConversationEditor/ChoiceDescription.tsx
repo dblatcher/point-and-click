@@ -1,8 +1,6 @@
 import { ConversationChoice } from "@/definitions";
-import LogOut from '@mui/icons-material/Logout';
-import RepeatOneIcon from '@mui/icons-material/RepeatOne';
-import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
 import { Button, Tooltip, Typography } from "@mui/material";
+import { LogOut, SpeakerNotesOffIcon, RepeatOneIcon } from "@/components/GameEditor/material-icons"
 
 function truncateLine(text: string, length: number) {
     if (text.length <= length) {

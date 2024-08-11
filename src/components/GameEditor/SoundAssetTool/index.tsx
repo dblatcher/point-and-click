@@ -13,7 +13,6 @@ import {
   soundAssetCategories,
 } from "@/services/assets";
 import soundService from "@/services/soundService";
-import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import { Button, Grid } from "@mui/material";
 import { Component, RefObject, createRef } from "react";
 import { EditorBox } from "../EditorBox";
@@ -21,6 +20,7 @@ import { EditorHeading } from "../EditorHeading";
 import { FileAssetSelector } from "../FileAssetSelector";
 import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { SoundAssetForm } from "./SoundAssetForm";
+import { PlayCircleOutlineOutlinedIcon } from "../material-icons";
 
 type State = {
   saveWarning?: string;

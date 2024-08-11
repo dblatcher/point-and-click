@@ -1,5 +1,5 @@
 import { downloadJsonFile } from '@/lib/files';
-import DownloadIcon from '@mui/icons-material/Download';
+import { DownloadIcon } from "@/components/GameEditor/material-icons"
 import { Button, ButtonProps } from '@mui/material';
 
 interface Props {

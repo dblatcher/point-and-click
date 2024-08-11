@@ -2,7 +2,7 @@ import { StringInput } from "@/components/SchemaForm/inputs";
 import { defaultTheme } from "@/theme";
 import { Button, ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ThemeProvider } from "@mui/material";
 import { ReactNode, useState } from "react";
-import AddIcon from "@mui/icons-material/Add"
+import { AddIcon } from "@/components/GameEditor/material-icons"
 import { useKeyBoard } from "@/hooks/use-keyboard";
 
 interface Props {

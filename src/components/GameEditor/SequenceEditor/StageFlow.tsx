@@ -5,9 +5,9 @@ import { EditorBox } from "../EditorBox";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { OrderCard } from "./OrderCard";
 import { ConsequenceCard } from "./ConsequenceCard";
-import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { NarrativeEditor } from "../NarrativeEditor";
 import { Narrative } from "@/definitions/BaseTypes";
+import { ClearOutlinedIcon } from "../material-icons";
 
 
 interface Props {

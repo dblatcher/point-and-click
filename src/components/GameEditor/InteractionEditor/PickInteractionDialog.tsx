@@ -4,7 +4,7 @@ import { Button, Dialog, DialogContent, DialogTitle, Stack, Table, TableBody, Ta
 import React from "react"
 import { InteractionTableRow } from "./InteractionTableRow"
 import { InteractionTableHeaders } from "./InteractionTableHeaders"
-import AddIcon from "@mui/icons-material/Add";
+import {AddIcon} from "@/components/GameEditor/material-icons";
 
 interface Props {
     close: { (): void },

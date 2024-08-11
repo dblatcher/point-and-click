@@ -10,7 +10,6 @@ import { findIndexById } from "@/lib/util";
 import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import { editorTheme } from "@/theme";
-import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
 import { Box, Button, ButtonGroup, Container, IconButton, Stack, ThemeProvider } from "@mui/material";
 import { Component } from "react";
 import { TabId, tabOrder } from "../../lib/editor-config";
@@ -19,6 +18,7 @@ import { testSprite } from "./RoomEditor/testSprite";
 import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
+import { PlayCircleFilledOutlinedIcon } from "./material-icons";
 
 
 type State = {

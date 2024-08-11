@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import EditIcon from '@mui/icons-material/Edit';
+import { EditIcon } from '@/components/GameEditor/material-icons';
 import { Button } from "@mui/material";
 import { InteractionDialog } from "./InteractionEditor/InteractionDialog";
 import { useGameDesign } from "@/context/game-design-context";
@@ -12,9 +12,7 @@ interface Props {
 }
 
 export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newPartial, criteria }) => {
-
     const { gameDesign, changeInteraction } = useGameDesign()
-
     const [interactionDialogOpen, setInteractionDialogOpen] = useState(false)
     const [pickInteractionDialogOpen, setPickInteractionDialogOpen] = useState(false)
     const [interactionIndex, setInteractionIndex] = useState<number | undefined>(undefined)
@@ -35,7 +33,6 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newP
     }
 
     return <>
-
         <Button onClick={handleInteractionButton}
             variant="outlined"
             startIcon={<EditIcon />}
@@ -59,5 +56,4 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newP
             criteria={criteria}
         />
     </>
-
 }

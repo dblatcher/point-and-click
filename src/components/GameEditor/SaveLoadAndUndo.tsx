@@ -9,9 +9,7 @@ import imageService from "@/services/imageService";
 import { populateServices } from "@/services/populateServices";
 import soundService from "@/services/soundService";
 import { Alert, ButtonGroup, IconButton, Tooltip, Badge } from "@mui/material"
-import Download from "@mui/icons-material/Download"
-import Upload from "@mui/icons-material/Upload"
-import Undo from "@mui/icons-material/Undo"
+import { DownloadIcon, UploadIcon, UndoIcon } from "@/components/GameEditor/material-icons"
 
 interface Props {
   gameDesign: GameDesign;
@@ -74,7 +72,7 @@ export const SaveLoadAndUndo: FunctionComponent<Props> = ({
           aria-label={saveLabel}
           onClick={downloadAll}
         >
-          <Download fontSize="large"/>
+          <DownloadIcon fontSize="large" />
         </IconButton>
       </Tooltip>
 
@@ -83,14 +81,14 @@ export const SaveLoadAndUndo: FunctionComponent<Props> = ({
           aria-label={loadLabel}
           onClick={uploadAll}
         >
-          <Upload fontSize="large"/>
+          <UploadIcon fontSize="large" />
         </IconButton>
       </Tooltip>
 
       <Tooltip title={undoLabel}>
         <IconButton aria-label={undoLabel} onClick={undo}>
           <Badge badgeContent={history.length} color='primary'>
-            <Undo fontSize="large"/>
+            <UndoIcon fontSize="large" />
           </Badge>
         </IconButton>
       </Tooltip>

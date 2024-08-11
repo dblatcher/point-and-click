@@ -3,7 +3,7 @@ import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { BackgroundLayer } from "@/definitions";
 import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
-import AddIcon from "@mui/icons-material/Add";
+import {AddIcon} from "@/components/GameEditor/material-icons";
 import { Box, IconButton, Stack } from "@mui/material";
 import { useState } from "react";
 import { BackDrop } from "./Backdrop";

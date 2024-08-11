@@ -1,10 +1,7 @@
 import { Interaction } from "@/definitions";
 import { IconButton, Tooltip, Typography, TableCell, TableRow, Stack } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ClearIcon from '@mui/icons-material/Clear';
-import EditIcon from '@mui/icons-material/Edit';
+import { ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon } from "../material-icons";
 
 interface Props {
     index: number;

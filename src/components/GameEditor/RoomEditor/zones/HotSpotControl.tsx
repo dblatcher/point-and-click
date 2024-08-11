@@ -1,10 +1,9 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { OptionalNumberInput, } from "@/components/SchemaForm/OptionalNumberInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
-import { useGameDesign } from "@/context/game-design-context";
 import { HotspotZone } from "@/definitions";
 import { clamp } from "@/lib/util";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { DeleteIcon } from "@/components/GameEditor/material-icons";
 import { Box, Button, ButtonGroup } from "@mui/material";
 import { AccoridanedContent } from "../../AccordianedContent";
 import { ButtonWithConfirm } from "../../ButtonWithConfirm";

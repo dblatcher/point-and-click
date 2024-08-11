@@ -1,5 +1,5 @@
 import { StringInput } from '@/components/SchemaForm/inputs';
-import AddIcon from "@mui/icons-material/Add";
+import {AddIcon} from "@/components/GameEditor/material-icons";
 import { IconButton, Stack } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 import { Sequence } from '../../../definitions/Sequence';

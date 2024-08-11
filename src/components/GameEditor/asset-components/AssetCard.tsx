@@ -1,7 +1,6 @@
 import { FileAsset, isSoundAsset } from "@/services/assets";
 import { ConceptCard } from "../ConceptCard";
-import AudioFileOutlinedIcon from '@mui/icons-material/AudioFileOutlined';
-import PhotoOutlinedIcon from '@mui/icons-material/PhotoOutlined';
+import { AudioFileOutlinedIcon, PhotoOutlinedIcon } from "@/components/GameEditor/material-icons"
 
 interface Props {
     asset: FileAsset

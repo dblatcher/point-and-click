@@ -1,11 +1,11 @@
+import { DescriptionOutlinedIcon } from '@/components/GameEditor/material-icons';
 import { Narrative } from "@/definitions/BaseTypes";
+import { cloneData } from "@/lib/clone";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography, useTheme } from "@mui/material";
 import React, { useState } from "react";
-import { ArrayControl } from "./ArrayControl";
 import { StringInput } from "../SchemaForm/StringInput";
-import { cloneData } from "@/lib/clone";
+import { ArrayControl } from "./ArrayControl";
 import { HelpButton } from "./HelpButton";
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 
 interface Props {
     narrative?: Narrative

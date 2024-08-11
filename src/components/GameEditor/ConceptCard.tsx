@@ -1,7 +1,6 @@
 import { Narrative } from '@/definitions/BaseTypes';
-import type AnimationIcon from '@mui/icons-material/Animation';
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import { DescriptionOutlinedIcon, type AnimationIcon } from './material-icons';
 
 interface Props {
     Icon: typeof AnimationIcon;

@@ -1,7 +1,7 @@
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { OptionalStringInput } from "@/components/SchemaForm/OptionalStringInput";
 import { Zone } from "@/definitions";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { DeleteIcon } from "@/components/GameEditor/material-icons";
 import { Box, Button, Stack } from "@mui/material";
 import { EditorBox } from "../../EditorBox";
 import { ClickEffect } from "../ClickEffect";

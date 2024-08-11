@@ -1,5 +1,5 @@
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
+import {AddIcon} from "@/components/GameEditor/material-icons";
+import { DeleteIcon } from "@/components/GameEditor/material-icons";
 import { Box, IconButton, Stack, StackProps, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import { ButtonWithTextInput } from "../ButtonWithTextInput";

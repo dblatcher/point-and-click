@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Box, useTheme, List, ListItemButton, ListItemText, ListItemIcon } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add"
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { AddIcon, ExpandMoreIcon } from "@/components/GameEditor/material-icons"
 
 export type EntryClickFunction = { (folderId: string, data: { id: string }, isForNew?: boolean): void }
 export type FolderClickFunction = { (folderId: string): void }

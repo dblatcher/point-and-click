@@ -3,10 +3,10 @@ import { StringInput } from "@/components/SchemaForm/StringInput";
 import {
     SoundAsset, soundAssetCategories
 } from "@/services/assets";
-import UploadIcon from "@mui/icons-material/Upload";
 import { Box, Button, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
 import { SaveButtonsAndWarning } from "../asset-components/SaveButtonsAndWarning";
+import { UploadIcon } from "../material-icons";
 
 interface Props {
     soundAsset: Partial<SoundAsset>;

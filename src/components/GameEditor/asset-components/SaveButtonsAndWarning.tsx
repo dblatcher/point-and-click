@@ -1,5 +1,4 @@
-import AddIcon from "@mui/icons-material/Add";
-import SaveIcon from '@mui/icons-material/Save';
+import { AddIcon, SaveIcon } from "@/components/GameEditor/material-icons";
 import { Alert, Box, Button } from "@mui/material";
 
 interface Props {
@@ -12,7 +11,9 @@ interface Props {
 export const SaveButtonsAndWarning = ({ saveAssetChanges, isNewAsset, saveWarning }: Props) => {
     return (
         <>
-            <Box display={'flex'} justifyContent={'flex-end'} paddingTop={2}>
+            <Box display={'flex'}
+                justifyContent={'flex-end'}
+                paddingTop={2}>
                 {isNewAsset ? (
                     <Button variant="contained"
                         startIcon={<AddIcon />}

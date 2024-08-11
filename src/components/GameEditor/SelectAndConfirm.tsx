@@ -1,7 +1,7 @@
 import { SelectInput } from "@/components/SchemaForm/inputs";
 import { Box, BoxProps, IconButton } from "@mui/material";
 import { useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
+import {AddIcon} from "@/components/GameEditor/material-icons";
 
 interface Props {
     label?: string

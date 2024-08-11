@@ -3,7 +3,7 @@ import { SelectInput } from "@/components/SchemaForm/inputs";
 import { GameDesign, Interaction } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import AddIcon from "@mui/icons-material/Add";
+import {AddIcon} from "@/components/GameEditor/material-icons";
 import { Box, Button, Paper, Table, TableContainer, TableBody, TableHead, TableRow, TableCell, Typography } from "@mui/material";
 import { Component } from "react";
 import { EditorHeading } from "../EditorHeading";

@@ -1,9 +1,6 @@
-import AddIcon from "@mui/icons-material/Add";
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, ButtonGroup, IconButton, Paper, Stack, StackProps } from "@mui/material";
 import { Fragment, ReactNode } from "react";
+import { AddIcon, ArrowUpwardIcon, ArrowDownwardIcon, DeleteIcon } from "./material-icons";
 
 
 type Color = "success" | "primary" | "secondary" | "error" | "info" | "warning"

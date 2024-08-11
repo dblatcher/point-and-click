@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { ClickEffect } from "../ClickEffect";
 import { ButtonGroup, Button, ButtonGroupProps } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add"
+import {AddIcon} from "@/components/GameEditor/material-icons"
 
 interface Props {
     type: 'obstacle' | 'walkable' | 'hotspot';

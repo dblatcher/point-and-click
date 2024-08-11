@@ -2,7 +2,7 @@ import { FunctionComponent, useState } from "react";
 import { StringInput } from "@/components/SchemaForm/inputs";
 import { Sprite } from "@/lib/Sprite";
 import { Box, Alert, Stack, IconButton } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add"
+import { AddIcon } from "@/components/GameEditor/material-icons"
 import { EditorBox } from "../EditorBox";
 
 interface Props {

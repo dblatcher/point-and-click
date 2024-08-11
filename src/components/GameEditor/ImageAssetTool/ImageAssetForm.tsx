@@ -2,10 +2,10 @@ import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ImageAsset, imageAssetCategories } from "@/services/assets";
-import UploadIcon from "@mui/icons-material/Upload";
 import { Box, Button, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
 import { SaveButtonsAndWarning } from "../asset-components/SaveButtonsAndWarning";
+import { UploadIcon } from "../material-icons";
 
 interface Props {
     imageAsset: Partial<ImageAsset>;
