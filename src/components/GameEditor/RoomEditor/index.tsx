@@ -45,7 +45,7 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
         <Tabs value={tabOpen} onChange={(event, tabOpen) => setTabOpen(tabOpen)}>
             <Tab label="Name and description" value={RoomEditorTab.NameAndDescription} />
             <Tab label="Background and dimensions" value={RoomEditorTab.BackgroundAndDimension} />
-            <Tab label="Walkable Space" value={RoomEditorTab.WalkableAreas} />
+            <Tab label="Walkable Zones" value={RoomEditorTab.WalkableAreas} />
             <Tab label="Hotspots" value={RoomEditorTab.Hotspots} />
             <Tab label="Sprite Scaling" value={RoomEditorTab.SpriteScaling} />
         </Tabs>

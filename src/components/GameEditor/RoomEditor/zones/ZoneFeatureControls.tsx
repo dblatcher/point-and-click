@@ -134,13 +134,19 @@ export const ZoneFeaturesControl = ({
                 if (isNaN(zoneIndex)) { return }
                 return setActiveObstacleIndex(zoneIndex)
             }
-            case 'HOTSPOT':
-                if (!data) {
-                    return setActiveHotspotIndex(undefined)
-                }
-                const zoneIndex = room.hotspots?.indexOf(data as HotspotZone) || 0
-                return setActiveHotspotIndex(zoneIndex)
         }
+    }
+
+    const selectHotspot = (id?: string) => {
+        if (!id) {
+            return setActiveHotspotIndex(undefined)
+        }
+        const { hotspots = [] } = room;
+        const zoneIndex = hotspots.findIndex(hotspot => hotspot.id === id)
+        if (zoneIndex === -1) {
+            setActiveHotspotIndex(undefined)
+        }
+        return setActiveHotspotIndex(zoneIndex)
     }
 
     const handleRoomClick = (
@@ -203,8 +209,7 @@ export const ZoneFeaturesControl = ({
                     </>
                 )}
 
-
-                {!!zoneType && (
+                {zoneType === 'hotspots' && (
                     <HotspotSetEditor
                         roomId={room.id}
                         hotspots={room.hotspots ?? []}
@@ -212,10 +217,11 @@ export const ZoneFeaturesControl = ({
                         changeZone={changeZone}
                         removeZone={removeZone}
                         openIndex={activeHotspotIndex}
-                        selectZone={selectZone}
+                        selectHotspot={selectHotspot}
                         clickEffect={clickEffect}
                     />
                 )}
+
             </Grid>
             <Grid item flex={1}>
                 <div style={{ position: 'sticky', top: 1 }}>

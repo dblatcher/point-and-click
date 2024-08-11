@@ -1,23 +1,23 @@
+import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { HotspotZone } from "@/definitions";
 import { Alert, Stack } from "@mui/material";
 import { ClickEffect } from "../ClickEffect";
 import { HotspotControl } from "./HotSpotControl";
 import { NewZoneButtons } from "./NewZoneButtons";
 import { ShapeChangeFunction } from "./ShapeControl";
-import { ZonePicker } from "./ZonePicker";
 
 interface Props {
     roomId: string,
     hotspots: HotspotZone[],
     openIndex?: number
     changeZone: ShapeChangeFunction
-    selectZone: { (folderId: string, data?: { id: string }): void }
+    selectHotspot: { (id?: string): void }
     removeZone: { (index: number, type: "hotspot" | "obstacle" | "walkable"): void }
     clickEffect?: ClickEffect
     setClickEffect: { (clickEffect: ClickEffect): void }
 }
 
-export const HotspotSetEditor = ({ roomId, hotspots, openIndex, changeZone, selectZone, removeZone, setClickEffect, clickEffect }: Props) => {
+export const HotspotSetEditor = ({ roomId, hotspots, openIndex, changeZone, selectHotspot, removeZone, setClickEffect, clickEffect }: Props) => {
 
     const activeHotspot = typeof openIndex === 'number'
         ? hotspots[openIndex]
@@ -36,11 +36,12 @@ export const HotspotSetEditor = ({ roomId, hotspots, openIndex, changeZone, sele
                 </Alert>
             ) : (
                 <Stack>
-                    <ZonePicker
-                        type={'hotspot'}
-                        zones={hotspots}
-                        activeZoneIndex={openIndex}
-                        selectZone={selectZone}
+                    <SelectInput
+                        label="pick hotspot"
+                        inputHandler={selectHotspot}
+                        optional
+                        value={activeHotspot?.id}
+                        options={hotspots.map(hotspot => hotspot.id)}
                     />
                     {activeHotspot && typeof openIndex === 'number' && (
                         <HotspotControl hotspot={activeHotspot} index={openIndex}

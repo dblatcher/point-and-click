@@ -1,18 +1,19 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { OptionalNumberInput, } from "@/components/SchemaForm/OptionalNumberInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
+import { useGameDesign } from "@/context/game-design-context";
 import { HotspotZone } from "@/definitions";
 import { clamp } from "@/lib/util";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, Button, Stack } from "@mui/material";
-import { EditorBox } from "../../EditorBox";
+import EditIcon from '@mui/icons-material/Edit';
+import { Box, Button, ButtonGroup, Stack } from "@mui/material";
+import { useState } from "react";
+import { AccoridanedContent } from "../../AccordianedContent";
+import { InteractionDialog } from "../../InteractionEditor/InteractionDialog";
+import { PickInteractionDialog } from "../../InteractionEditor/PickInteractionDialog";
 import { ClickEffect } from "../ClickEffect";
 import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
-import { useState } from "react";
-import { InteractionDialog } from "../../InteractionEditor/InteractionDialog";
-import { useGameDesign } from "@/context/game-design-context";
-import EditIcon from '@mui/icons-material/Edit';
-import { PickInteractionDialog } from "../../InteractionEditor/PickInteractionDialog";
+import { ButtonWithConfirm } from "../../ButtonWithConfirm";
 
 interface Props {
     roomId: string;
@@ -45,64 +46,73 @@ export function HotspotControl({ roomId, hotspot, index, change, remove, setClic
     }
 
     return (
-        <Stack component={'article'} spacing={0}>
-            <EditorBox boxProps={{ paddingBottom: 1 }}>
-                <StringInput
-                    label="id" value={id}
-                    inputHandler={(value) => change(index, 'id', value, type)} />
-                <StringInput
-                    label="name" value={name || ''}
-                    inputHandler={(value) => change(index, 'name', value, type)} />
-                <StringInput
-                    label="status" value={status || ''}
-                    inputHandler={(value) => change(index, 'status', value, type)} />
-                <Button fullWidth
-                    onClick={handleInteractionButton}
-                    variant="contained"
-                    startIcon={<EditIcon />}
-                >interactions</Button>
-            </EditorBox>
+        <Box component={'article'} spacing={0}>
+            <AccoridanedContent tabs={[
+                {
+                    label: 'hotspot',
+                    content: <>
+                        <StringInput
+                            label="id" value={id}
+                            inputHandler={(value) => change(index, 'id', value, type)} />
+                        <StringInput
+                            label="name" value={name || ''}
+                            inputHandler={(value) => change(index, 'name', value, type)} />
+                        <StringInput
+                            label="status" value={status || ''}
+                            inputHandler={(value) => change(index, 'status', value, type)} />
+                        <ButtonGroup>
+                            <Button onClick={handleInteractionButton}
+                                variant="outlined"
+                                startIcon={<EditIcon />}
+                            >interactions</Button>
+                            <ButtonWithConfirm
+                                label="Delete Hotspot"
+                                onClick={() => { remove(index, 'hotspot') }}
+                                confirmationText={`Delete hotspot "${hotspot.id}"`}
+                                buttonProps={{
+                                    variant: "outlined",
+                                    color: 'warning',
+                                    startIcon: <DeleteIcon />
+                                }}
+                            />
+                        </ButtonGroup>
+                    </>
+                },
+                {
+                    label: 'walk to point', content: (
+                        <Box>
+                            <OptionalNumberInput
+                                value={walkToX} label="X: "
+                                inputHandler={value => { change(index, 'walkToX', value, type) }} />
+                            <OptionalNumberInput
+                                value={walkToY} label="Y: "
+                                inputHandler={value => { change(index, 'walkToY', value, type) }} />
+                            <Button
+                                variant="outlined"
+                                onClick={() => { setClickEffect({ type: 'HOTSPOT_WALKTO_POINT', index }) }}
+                            >select point</Button>
+                        </Box>
+                    )
+                },
+                {
+                    label: 'shape and position', content: <>
+                        <Box maxWidth={100}>
+                            <NumberInput value={parallax}
+                                inputHandler={(value) => { change(index, 'parallax', clamp(value, 2, 0), type) }}
+                                label="parallax"
+                                max={2} min={0} step={.05}
+                            />
+                        </Box>
+                        <ShapeControl
+                            shape={hotspot} index={index}
+                            setClickEffect={setClickEffect}
+                            type='hotspot'
+                            change={change}
+                            remove={remove} />
+                    </>
+                },
+            ]} />
 
-            <EditorBox title="shape and position">
-                <Box maxWidth={100}>
-                    <NumberInput value={parallax}
-                        inputHandler={(value) => { change(index, 'parallax', clamp(value, 2, 0), type) }}
-                        label="parallax"
-                        max={2} min={0} step={.05}
-                    />
-                </Box>
-                <ShapeControl
-                    shape={hotspot} index={index}
-                    setClickEffect={setClickEffect}
-                    type='hotspot'
-                    change={change}
-                    remove={remove} />
-            </EditorBox>
-
-            <EditorBox title="walk to point">
-                <OptionalNumberInput
-                    value={walkToX} label="X: "
-                    inputHandler={value => { change(index, 'walkToX', value, type) }} />
-                <OptionalNumberInput
-                    value={walkToY} label="Y: "
-                    inputHandler={value => { change(index, 'walkToY', value, type) }} />
-                <Button
-                    variant="outlined"
-                    onClick={() => { setClickEffect({ type: 'HOTSPOT_WALKTO_POINT', index }) }}
-                >select point</Button>
-            </EditorBox>
-
-
-            <Box>
-                <Button fullWidth
-                    sx={{ marginTop: 1 }}
-                    variant="contained"
-                    color='warning'
-                    startIcon={<DeleteIcon />}
-                    onClick={() => { remove(index, 'hotspot') }}
-                >delete hotspot
-                </Button>
-            </Box>
 
             {interactionDialogOpen &&
                 <InteractionDialog
@@ -125,8 +135,6 @@ export function HotspotControl({ roomId, hotspot, index, change, remove, setClic
                 pickIndex={handlePickInteractionIndex}
                 criteria={interaction => interaction.targetId === id && (!interaction.roomId || interaction.roomId === roomId)}
             />
-
-        </Stack>
+        </Box>
     )
-
 }
