@@ -19,16 +19,15 @@ export const AnimationFrameList = ({
     selectedFrame,
     direction
 }: Props) => {
-    const addDirection = (direction: Direction) => {
-        return editCycle(animKey, direction, [])
-    }
     const animationInDirection = animation[direction]
 
-    return (<>
-        {animationInDirection ?
-            (<Stack>
-                {!selectedFrame && <Alert severity='info'>Pick a frame to insert</Alert>}
-                {animationInDirection.length === 0 && <Alert severity='info'>Add the first frame</Alert>}
+    const noFramesYet = !animationInDirection || animationInDirection.length === 0;
+
+    return (
+        <Stack>
+            {!selectedFrame && <Alert severity='info'>Pick a frame to insert</Alert>}
+            {noFramesYet && <Alert severity='info'>Add the first frame</Alert>}
+            {animationInDirection &&
                 <ArrayControl
                     list={animationInDirection}
                     insertText="insert frame"
@@ -52,16 +51,7 @@ export const AnimationFrameList = ({
                     )}
                     createItem={selectedFrame ? () => ({ ...selectedFrame }) : undefined}
                 />
-            </Stack>
-            ) : (
-                <Box>
-                    <Button
-                        variant="contained"
-                        onClick={() => { addDirection(direction) }}
-                    >create frame list for: {direction}
-                    </Button>
-                </Box>
-            )
-        }
-    </>)
+            }
+        </Stack>
+    )
 }
