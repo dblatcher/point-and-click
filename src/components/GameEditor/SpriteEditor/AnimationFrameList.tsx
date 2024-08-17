@@ -1,5 +1,5 @@
 import { Direction, SpriteFrame } from "@/definitions";
-import { Alert, Box, Button, Stack } from "@mui/material";
+import { Alert, Button, Stack } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { FramePreview } from "./FramePreview";
 
@@ -20,7 +20,6 @@ export const AnimationFrameList = ({
     direction
 }: Props) => {
     const animationInDirection = animation[direction]
-
     const noFramesYet = !animationInDirection || animationInDirection.length === 0;
 
     return (
@@ -42,8 +41,8 @@ export const AnimationFrameList = ({
                             onClick={() => { pickFrame(frame.row, frame.col, frame.imageId) }}
                         >
                             <FramePreview
-                                height={80}
-                                width={80}
+                                height={60}
+                                width={60}
                                 frame={frame} />
                             <p>{frame.imageId}</p>
                             <p>[{frame.col}, {frame.row}]</p>

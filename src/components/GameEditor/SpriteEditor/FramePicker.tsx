@@ -86,20 +86,19 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
 
     return (
         <EditorBox title="Pick frame">
-            {!noOptions && (
-                <Stack direction={'row'} justifyContent={'space-between'}>
-                    <BooleanInput value={showInOneRow} inputHandler={setShowInOneRow} label="arrange frames in one list" />
-                    <Box width={100}>
-                        <SelectInput
-                            label="button size"
-                            value={buttonSize}
-                            options={['small', 'medium', 'large']}
-                            inputHandler={value => {
-                                setButtonSize(value as ButtonSize)
-                            }} />
-                    </Box>
-                </Stack>
-            )}
+
+            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
+                {!fixedSheet && (
+                    <FileAssetSelector legend="sprite sheet"
+                        format="select"
+                        service={imageService}
+                        selectedItemId={sheetId}
+                        select={(item): void => { pickFrame(0, 0, item.id) }} />
+                )}
+                <Typography variant='h6'>
+                    {sheetId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
+                </Typography>
+            </Stack>
 
             {image && (<>
                 {showInOneRow ? (<>
@@ -122,18 +121,20 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
                 )}
             </>)}
 
-            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
-                {!fixedSheet && (
-                    <FileAssetSelector legend="sprite sheet"
-                        format="select"
-                        service={imageService}
-                        selectedItemId={sheetId}
-                        select={(item): void => { pickFrame(0, 0, item.id) }} />
-                )}
-                <Typography variant='h6'>
-                    {sheetId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
-                </Typography>
-            </Stack>
+            {!noOptions && (
+                <Stack direction={'row'} justifyContent={'space-between'} paddingTop={2}>
+                    <BooleanInput value={showInOneRow} inputHandler={setShowInOneRow} label="arrange frames in one list" />
+                    <Box width={100}>
+                        <SelectInput
+                            label="button size"
+                            value={buttonSize}
+                            options={['small', 'medium', 'large']}
+                            inputHandler={value => {
+                                setButtonSize(value as ButtonSize)
+                            }} />
+                    </Box>
+                </Stack>
+            )}
         </EditorBox>
     )
 }
