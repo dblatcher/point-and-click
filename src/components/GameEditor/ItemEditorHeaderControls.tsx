@@ -32,7 +32,7 @@ export const ItemEditorHeaderControls = <DataType extends GameDataItem>({ dataIt
                 />
             }
         </ButtonGroup>
-        <Box>
+        <Box minWidth={150}>
             <SelectInput
                 label={`pick ${itemTypeName}`}
                 options={listIds(list)}

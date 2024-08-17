@@ -66,7 +66,7 @@ export const ItemEditor = ({ item }: Props) => {
                 />
             </EditorHeading>
 
-            <Grid container spacing={2} justifyContent={'space-between'}>
+            <Grid container spacing={2} justifyContent={'space-between'} width={'100%'}>
                 <Grid item>
                     <Stack spacing={2} maxWidth={'md'}>
                         <StringInput
