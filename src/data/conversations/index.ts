@@ -10,7 +10,26 @@ const chat: Conversation = {
                     text: 'hello there, lets talk about tools',
                     ref: 'ASK_ABOUT_TOOLS',
                     nextBranch: 'tools',
-                    sequence: "CHAT_HELLO_0",
+                    choiceSequence: {
+                        id: '',
+                        stages: [
+                            {
+                                actorOrders: {
+                                    PLAYER: [
+                                        { type: 'say', text: 'hello there, lets talk about tools', time: 100 },
+                                        { type: 'say', text: 'I am doing dialogue', time: 100 }
+                                    ]
+                                }
+                            },
+                            {
+                                actorOrders: {
+                                    MARIO: [
+                                        { type: 'say', text: 'hello!', time: 100 },
+                                    ]
+                                }
+                            },
+                        ]
+                    }
                 },
                 {
                     text: 'hello there, lets talk about fish',

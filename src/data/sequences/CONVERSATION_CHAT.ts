@@ -1,26 +1,5 @@
 import { Sequence } from "@/definitions/Sequence";
 
-const CHAT_HELLO_0: Sequence = {
-    id: "CHAT_HELLO_0",
-    stages: [
-        {
-            actorOrders: {
-                PLAYER: [
-                    { type: 'say', text: 'hello there, lets talk about tools', time: 100 },
-                    { type: 'say', text: 'I am doing dialogue', time: 100 }
-                ]
-            }
-        },
-        {
-            actorOrders: {
-                MARIO: [
-                    { type: 'say', text: 'hello!', time: 100 },
-                ]
-            }
-        },
-    ]
-}
-
 const CHAT_HELLO_1: Sequence = {
     id: "CHAT_HELLO_1",
     stages: [
@@ -134,5 +113,5 @@ const CHAT_TOOLS_3: Sequence = {
 }
 
 export {
-    CHAT_HELLO_0, CHAT_HELLO_1, CHAT_HELLO_2, CHAT_TOOLS_0, CHAT_TOOLS_1, CHAT_TOOLS_2, CHAT_TOOLS_3
+    CHAT_HELLO_1, CHAT_HELLO_2, CHAT_TOOLS_0, CHAT_TOOLS_1, CHAT_TOOLS_2, CHAT_TOOLS_3
 }
