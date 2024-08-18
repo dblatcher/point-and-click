@@ -68,16 +68,19 @@ export const makeBlankConversationBranch = (): ConversationBranch => ({
     choices: []
 })
 
-export const makeBlankStage = (): Stage => ({
-    actorOrders: {},
+export const makeBlankStage = (actorIds: string[] = []): Stage => ({
+    actorOrders: actorIds.reduce<Record<string, Order[]>>((prev, next) => {
+        prev[next] = []
+        return prev
+    }, {}),
     immediateConsequences: [],
 })
 
-export const makeBlankSequence = (id = "NEW_SEQEUNCE"): Sequence => ({
+export const makeBlankSequence = (id = "NEW_SEQEUNCE", actorIds?: string[]): Sequence => ({
     id,
     description: "",
     stages: [
-        makeBlankStage()
+        makeBlankStage(actorIds)
     ]
 })
 

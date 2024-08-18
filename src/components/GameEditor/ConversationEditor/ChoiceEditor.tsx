@@ -24,11 +24,13 @@ interface Props {
             indexOfSet: number,
             newRefSet: ChoiceRefSet): void
     };
+    actorIdsForSequences: string[];
 }
 
 export const ChoiceEditor = ({
     choice, conversation, openBranchId, activeChoiceIndex,
-    addSequence, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem
+    addSequence, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem,
+    actorIdsForSequences
 }: Props) => {
 
     const { gameDesign: design } = useGameDesign()
@@ -89,6 +91,7 @@ export const ChoiceEditor = ({
                 ]}
                 existingIds={listIds(design.sequences)}
                 addSequence={addSequence}
+                defaultActorIds={actorIdsForSequences}
             />
         </Stack>
     </Stack>
