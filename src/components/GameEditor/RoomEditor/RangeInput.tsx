@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack, StackProps, Typography } from "@mui/material";
 import { ChangeEventHandler } from "react";
 
 
@@ -11,12 +11,13 @@ interface Props {
     disabled?: boolean;
     onChange: ChangeEventHandler<HTMLInputElement>;
     formattedValue?: string
+    stackProps?: StackProps
 }
 
 
-export const RangeInput = ({ label, value, max, min = 0, step = 10, disabled, onChange, formattedValue = value.toString() }: Props) => {
+export const RangeInput = ({ label, value, max, min = 0, step = 10, disabled, onChange, formattedValue = value.toString(), stackProps }: Props) => {
     return (
-        <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+        <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} {...stackProps}>
             <Typography component={'label'} variant="body2">{label}</Typography>
             <input type='range' value={value}
                 max={max} min={min} step={step}

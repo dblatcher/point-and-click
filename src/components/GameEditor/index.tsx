@@ -14,7 +14,6 @@ import { Box, Button, ButtonGroup, Container, IconButton, Stack, ThemeProvider }
 import { Component } from "react";
 import { TabId, tabOrder } from "../../lib/editor-config";
 import { MainWindow } from "./MainWindow";
-import { testSprite } from "./RoomEditor/testSprite";
 import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
@@ -240,7 +239,7 @@ export default class GameEditor extends Component<Props, State> {
         } = this.state
         const { performUpdate, deleteArrayItem, openInEditor, changeInteraction } = this
 
-        const sprites = [testSprite, ...gameDesign.sprites.map(data => new Sprite(data))]
+        const sprites = [...gameDesign.sprites.map(data => new Sprite(data))]
 
         return (
             <ThemeProvider theme={editorTheme}>

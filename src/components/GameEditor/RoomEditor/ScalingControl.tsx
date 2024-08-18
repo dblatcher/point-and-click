@@ -2,32 +2,34 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { ActorData, RoomData, ScaleLevel } from "@/definitions";
 import { cloneData } from "@/lib/clone";
-import { clamp, eventToNumber } from "@/lib/util";
-import { Alert, Box, Grid, Stack, Typography } from "@mui/material";
+import { clamp, eventToNumber, findById } from "@/lib/util";
+import { Alert, Box, Button, Grid, Stack, Typography } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { useGameDesign } from "@/context/game-design-context";
 import { useState } from "react";
 import { Room } from "@/components/svg/Room";
 import HorizontalLine from "@/components/svg/HorizontalLine";
-import { makeTestActor } from "./testSprite";
 import { RangeInput } from "./RangeInput";
 import { locateClickInWorld } from "@/lib/roomFunctions";
 import { ViewAngleSlider } from "./ViewAngleSlider";
 import { EditorBox } from "../EditorBox";
+import { PickActorDialog } from "../PickActorDialog";
 
 interface Props {
     room: RoomData;
 }
 
-const initialTestActor = makeTestActor({ x: 100, y: 100 });
 
 export const ScalingControl = ({ room }: Props) => {
-    const [scale, setScale] = useState(.75)
+    const [scale, setScale] = useState(1.5)
     const [viewAngle, setViewAngle] = useState(0)
     const [hue, setHue] = useState(0)
-    const [testActor, setTestActor] = useState<ActorData>(initialTestActor)
+    const [testSpriteX, setTestSpriteX] = useState(100)
+    const [testSpriteY, setTestSpriteY] = useState(100)
+    const [testActor, setTestActor] = useState<ActorData | undefined>(undefined)
+    const [actorDialogOpen, setActorDialogOpen] = useState<boolean>(false)
     const { scaling = [], height } = room
-    const { performUpdate } = useGameDesign()
+    const { performUpdate, gameDesign } = useGameDesign()
 
     const change = (scaling: ScaleLevel) => {
         performUpdate('rooms', { ...room, scaling })
@@ -49,13 +51,17 @@ export const ScalingControl = ({ room }: Props) => {
 
     const handleClick = (clickX: number, clickY: number) => {
         const { x, y } = locateClickInWorld(clickX, clickY, viewAngle, room)
-        const newActor = { ...testActor, x, y }
-        setTestActor(newActor)
+        setTestSpriteX(x)
+        setTestSpriteY(y)
+        if (testActor) {
+            const newActor = { ...testActor, x, y }
+            setTestActor(newActor)
+        }
     }
 
 
     return (<Box>
-        <Grid container>
+        <Grid container marginBottom={2}>
             <Grid item xs={2}>
                 <Typography>Scale lines</Typography>
                 <ArrayControl
@@ -83,6 +89,7 @@ export const ScalingControl = ({ room }: Props) => {
                     createItem={addNew}
                     createButton="END"
                 />
+                <Alert>click room to position test sprite</Alert>
             </Grid>
             <Grid item xs={10}>
                 <div style={{ cursor: 'crosshair' }}>
@@ -91,7 +98,7 @@ export const ScalingControl = ({ room }: Props) => {
                         handleRoomClick={handleClick}
                         maxHeight={room.height * scale}
                         maxWidth={room.frameWidth * scale}
-                        contents={[{ data: testActor }]}
+                        contents={testActor ? [{ data: testActor }] : []}
                     >
                         {scaling.map((yAndScale, index) => (
                             <HorizontalLine key={index}
@@ -109,34 +116,68 @@ export const ScalingControl = ({ room }: Props) => {
             </Grid>
         </Grid>
 
-        <EditorBox boxProps={{ maxWidth: 200 }} title="Test Sprite">
-            <RangeInput
-                label="base height"
-                value={testActor.height}
-                max={200} min={10}
-                onChange={event => {
-                    setTestActor({ ...testActor, height: eventToNumber(event.nativeEvent) })
-                }}
-            />
-            <RangeInput
-                label="base width"
-                value={testActor.width}
-                max={200} min={10}
-                onChange={event => {
-                    setTestActor({ ...testActor, width: eventToNumber(event.nativeEvent) })
-                }}
-            />
-            <RangeInput
-                label="hue-rotate"
-                value={hue}
-                max={360} min={0}
-                onChange={event => {
-                    const value = eventToNumber(event.nativeEvent);
-                    setHue(value)
-                    setTestActor({ ...testActor, filter: `hue-rotate(${value}deg)` })
-                }}
-            />
-            <Alert>click room to position test sprite</Alert>
+        <EditorBox
+            title={`Test Sprite: ${testActor?.id ?? '[none]'}`}
+            barContent={
+                <Button variant="contained" color="secondary"
+                    onClick={() => { setActorDialogOpen(true) }}
+                >Pick Actor for test sprite</Button>
+            }
+        >
+            <Grid container>
+                <Grid item xs={6} md={4} marginX={0}>
+                    <RangeInput stackProps={{ justifyContent: 'center' }}
+                        label="x"
+                        value={testSpriteX}
+                        max={room.width} min={0}
+                        onChange={event => {
+                            const x = eventToNumber(event.nativeEvent)
+                            setTestSpriteX(x)
+                            if (testActor) {
+                                setTestActor({ ...testActor, x })
+                            }
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={6} md={4} marginX={0}>
+                    <RangeInput stackProps={{ justifyContent: 'center' }}
+                        label="y"
+                        value={testSpriteY}
+                        max={room.height} min={0}
+                        onChange={event => {
+                            const y = eventToNumber(event.nativeEvent)
+                            setTestSpriteY(y)
+                            if (testActor) {
+                                setTestActor({ ...testActor, y })
+                            }
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={12} md={4} marginX={0}>
+                    <RangeInput stackProps={{ justifyContent: 'center' }}
+                        label="hue-rotate"
+                        value={hue}
+                        max={360} min={0}
+                        onChange={event => {
+                            const value = eventToNumber(event.nativeEvent);
+                            setHue(value)
+                            if (testActor) {
+                                setTestActor({ ...testActor, filter: `hue-rotate(${value}deg)` })
+                            }
+                        }}
+                    />
+                </Grid>
+            </Grid>
         </EditorBox>
+
+        <PickActorDialog
+            isOpen={actorDialogOpen}
+            close={() => { setActorDialogOpen(false) }}
+            onSelect={(actorId) => {
+                const actor = findById(actorId, gameDesign.actors)
+                if (actor) {
+                    setTestActor({ ...cloneData(actor), x: testSpriteX, y: testSpriteY })
+                }
+            }} />
     </Box >)
 }
