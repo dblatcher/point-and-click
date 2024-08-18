@@ -130,7 +130,10 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
                         paddingY: 1,
                     }}
                         startIcon={<AddIcon />}
-                        onClick={() => { addNewChoice(branchKey) }}
+                        onClick={() => { 
+                            addNewChoice(branchKey) 
+                            openEditor(branchKey, branch.choices.length)
+                        }}
                     >Add choice</Button>
                 </Box>
             </EditorBox>
@@ -141,7 +144,6 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
 export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openOrderDialog, deleteBranch, addNewBranch, changeDefaultBranch }: Props) => {
     const [nodePairs, setNodePairs] = useState<[Element, Element][]>([])
     const containerRef = useRef<HTMLElement>()
-    const { id } = conversation
     const heirarchy = getHeirarchy(conversation)
 
 
