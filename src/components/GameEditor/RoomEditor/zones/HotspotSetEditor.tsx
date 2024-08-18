@@ -1,10 +1,12 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { HotspotZone } from "@/definitions";
-import { Alert, Stack, Typography } from "@mui/material";
+import { Alert, Box, Stack, Typography } from "@mui/material";
 import { ClickEffect } from "../ClickEffect";
 import { HotspotControl } from "./HotSpotControl";
 import { NewZoneButtons } from "./NewZoneButtons";
 import { ShapeChangeFunction } from "./ShapeControl";
+import { Delete } from "@mui/icons-material";
+import { ButtonWithConfirm } from "../../ButtonWithConfirm";
 
 interface Props {
     roomId: string,
@@ -31,19 +33,31 @@ export const HotspotSetEditor = ({ roomId, hotspots, openIndex, changeZone, sele
                 </Alert>
             ) : (
                 <Stack>
-                    <SelectInput
-                        label="pick hotspot"
-                        inputHandler={selectHotspot}
-                        optional
-                        value={activeHotspot?.id}
-                        options={hotspots.map(hotspot => hotspot.id)}
-                    />
+                    <Box display={'flex'} alignItems={'center'}>
+                        <SelectInput
+                            label="pick hotspot"
+                            inputHandler={selectHotspot}
+                            optional
+                            value={activeHotspot?.id}
+                            options={hotspots.map(hotspot => hotspot.id)}
+                        />
+                        <ButtonWithConfirm label={`delete hotspot`}
+                            useIconButton
+                            buttonProps={{ disabled: typeof openIndex === 'undefined', color: 'warning' }}
+                            icon={<Delete fontSize="large" />}
+                            onClick={() => {
+                                if (typeof openIndex === 'number') {
+                                    removeZone(openIndex, 'hotspot')
+                                }
+                            }}
+                        />
+                    </Box>
+
                     {activeHotspot && typeof openIndex === 'number' && (
                         <HotspotControl hotspot={activeHotspot} index={openIndex}
                             roomId={roomId}
                             setClickEffect={setClickEffect}
-                            change={changeZone}
-                            remove={removeZone} />
+                            change={changeZone} />
                     )}
                 </Stack>
             )}

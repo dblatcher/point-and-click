@@ -1,4 +1,4 @@
-import { ClickPointIcon, DeleteIcon } from "@/components/GameEditor/material-icons";
+import { ClickPointIcon } from "@/components/GameEditor/material-icons";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { OptionalNumberInput, } from "@/components/SchemaForm/OptionalNumberInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
@@ -6,21 +6,19 @@ import { HotspotZone } from "@/definitions";
 import { clamp } from "@/lib/util";
 import { Box, ButtonGroup, IconButton } from "@mui/material";
 import { AccoridanedContent } from "../../AccordianedContent";
-import { ButtonWithConfirm } from "../../ButtonWithConfirm";
 import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
 import { ClickEffect } from "../ClickEffect";
-import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
+import { ShapeChangeFunction, ShapeControl } from "./ShapeControl";
 
 interface Props {
     roomId: string;
     hotspot: HotspotZone;
     index: number;
     change: ShapeChangeFunction;
-    remove: { (index: number, type: ValidShapeType): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export function HotspotControl({ roomId, hotspot, index, change, remove, setClickEffect }: Props) {
+export function HotspotControl({ roomId, hotspot, index, change, setClickEffect }: Props) {
     const { parallax, type, walkToX, walkToY, id, status, name } = hotspot
 
     return (
@@ -42,16 +40,6 @@ export function HotspotControl({ roomId, hotspot, index, change, remove, setClic
                             <InteractionsDialogsButton
                                 criteria={interaction => interaction.targetId === id && (!interaction.roomId || interaction.roomId === roomId)}
                                 newPartial={{ roomId, targetId: id }}
-                            />
-                            <ButtonWithConfirm
-                                label="Delete Hotspot"
-                                onClick={() => { remove(index, 'hotspot') }}
-                                confirmationText={`Delete hotspot "${hotspot.id}"`}
-                                buttonProps={{
-                                    variant: "outlined",
-                                    color: 'warning',
-                                    startIcon: <DeleteIcon />
-                                }}
                             />
                         </ButtonGroup>
                     </>
