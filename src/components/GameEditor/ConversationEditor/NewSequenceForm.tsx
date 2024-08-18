@@ -1,6 +1,6 @@
-import { StringInput } from '@/components/SchemaForm/inputs';
 import { AddIcon } from "@/components/GameEditor/material-icons";
-import { IconButton, Stack } from '@mui/material';
+import { StringInput } from '@/components/SchemaForm/inputs';
+import { Button, Stack } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 import { Sequence } from '../../../definitions/Sequence';
 import { makeBlankSequence } from '../defaults';
@@ -29,10 +29,13 @@ export const NewSequenceForm: FunctionComponent<Props> = ({ addSequence, existin
                 value={newId}
                 inputHandler={setNewId}
                 suggestions={suggestedIds} />
-            <IconButton onClick={handleSubmit} color='primary'
+            <Button onClick={handleSubmit}
+                sx={{ flexShrink: 0 }}
+                startIcon={<AddIcon />}
+                color='primary'
                 disabled={!idIsAvailable}>
-                <AddIcon />
-            </IconButton>
+                create sequence
+            </Button>
         </Stack>
     )
 }

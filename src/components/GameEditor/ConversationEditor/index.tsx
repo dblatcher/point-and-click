@@ -265,6 +265,7 @@ export const ConversationEditor = (props: Props) => {
                                 handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence
                             }}
                             actorIdsForSequences={actorIdsForSequences}
+                            openExternalSequence={() => setSequenceDialogOpen(true)}
                         />
                     </>)}
                 </DialogContent>

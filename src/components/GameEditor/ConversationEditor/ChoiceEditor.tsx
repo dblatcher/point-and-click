@@ -1,12 +1,13 @@
 import { FieldDef, FieldValue, SchemaForm } from "@/components/SchemaForm"
 import { ChoiceRefSet, Conversation, ConversationChoice, ConversationChoiceSchema } from "@/definitions/Conversation"
 import { listIds } from "@/lib/util"
-import { Box, Stack } from "@mui/material"
+import { Box, Button, Stack } from "@mui/material"
 import { SelectInput } from "@/components/SchemaForm/SelectInput"
 import { ChoiceListControl } from "./ChoiceListControl"
 import { NewSequenceForm } from "./NewSequenceForm"
 import { useGameDesign } from "@/context/game-design-context"
 import { Sequence } from "@/definitions"
+import { EditorBox } from "../EditorBox"
 
 
 interface Props {
@@ -25,11 +26,12 @@ interface Props {
             newRefSet: ChoiceRefSet): void
     };
     actorIdsForSequences: string[];
+    openExternalSequence: { (): void }
 }
 
 export const ChoiceEditor = ({
     choice, conversation, openBranchId, activeChoiceIndex,
-    addSequence, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem,
+    addSequence, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, openExternalSequence,
     actorIdsForSequences
 }: Props) => {
 
@@ -69,10 +71,11 @@ export const ChoiceEditor = ({
             remove={removeChoiceListItem}
         />
 
-        <Stack direction={'row'} spacing={2} justifyContent={'space-between'}>
+        <EditorBox title="external sequence" >
             <Box flex={1} paddingTop={2.5}>
                 <SelectInput
                     value={choice.sequence}
+                    optional
                     options={listIds(design.sequences)}
                     label="select sequence"
                     inputHandler={(value) => {
@@ -93,7 +96,12 @@ export const ChoiceEditor = ({
                 addSequence={addSequence}
                 defaultActorIds={actorIdsForSequences}
             />
-        </Stack>
+            <Button
+                variant="outlined"
+                disabled={!choice.sequence}
+                onClick={openExternalSequence}
+            >edit external sequence</Button>
+        </EditorBox>
     </Stack>
     )
 }
