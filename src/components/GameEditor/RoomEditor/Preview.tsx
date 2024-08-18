@@ -48,12 +48,14 @@ function getClickCaption(clickEffect?: ClickEffect): string {
             return `Click to add new point`
         case 'HOTSPOT_WALKTO_POINT':
             return 'Click to set walk to point'
+        case 'ZONE_POSITION':
+            return `Click to move ${clickEffect.zoneType}`
         default:
             return 'UNKNOWN!'
     }
 }
 
-export class Preview extends Component<Props, State>{
+export class Preview extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
@@ -101,7 +103,7 @@ export class Preview extends Component<Props, State>{
 
     get hotspotsToMark(): number[] {
         const { clickEffect } = this.props
-        if (clickEffect?.type === 'POLYGON_POINT_HOTSPOT') {
+        if (clickEffect?.type === 'POLYGON_POINT_HOTSPOT' || (clickEffect?.type === 'ZONE_POSITION' && clickEffect.zoneType == 'hotspot')) {
             return [clickEffect.index]
         }
         return [];
@@ -109,7 +111,7 @@ export class Preview extends Component<Props, State>{
 
     get obstaclesToMark(): number[] {
         const { clickEffect } = this.props
-        if (clickEffect?.type === 'POLYGON_POINT_OBSTACLE') {
+        if (clickEffect?.type === 'POLYGON_POINT_OBSTACLE' || (clickEffect?.type === 'ZONE_POSITION' && clickEffect.zoneType == 'obstacle')) {
             return [clickEffect.index]
         }
         return [];
@@ -117,7 +119,7 @@ export class Preview extends Component<Props, State>{
 
     get walkablesToMark(): number[] {
         const { clickEffect } = this.props
-        if (clickEffect?.type === 'POLYGON_POINT_WALKABLE') {
+        if (clickEffect?.type === 'POLYGON_POINT_WALKABLE' ||  (clickEffect?.type === 'ZONE_POSITION' && clickEffect.zoneType == 'walkable')) {
             return [clickEffect.index]
         }
         return [];

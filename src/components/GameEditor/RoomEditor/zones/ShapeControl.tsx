@@ -3,8 +3,9 @@ import { FunctionComponent } from "react";
 import { ClickEffect } from "../ClickEffect";
 import { HotspotZone, Shape, Zone, ZoneType } from "@/definitions";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { Stack, Button, Typography } from "@mui/material";
+import { Stack, Button, Typography, IconButton } from "@mui/material";
 import { ArrayControl } from "../../ArrayControl";
+import { ClickPointIcon } from "../../material-icons";
 
 export type ValidShapeType = ZoneType;
 export type ShapeChangeFunction = { (index: number, propery: Exclude<keyof HotspotZone | keyof Zone, 'type'>, newValue: unknown, type: ValidShapeType): void }
@@ -35,6 +36,11 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, c
             <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
                 <NumberInput label="X" value={x} inputHandler={value => { change(index, 'x', value, type) }} />
                 <NumberInput label="Y" value={y} inputHandler={value => { change(index, 'y', value, type) }} />
+                <IconButton aria-label="select position"
+                    onClick={() => { setClickEffect({ type: 'ZONE_POSITION', index, zoneType: type }) }}
+                >
+                    <ClickPointIcon fontSize="large" />
+                </IconButton>
             </Stack>
             {circle && (
                 <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
@@ -59,6 +65,7 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, c
                         )}
                     />
                     <Button variant="outlined" size="small"
+                        startIcon={<ClickPointIcon fontSize="large" />}
                         onClick={() => {
                             setClickEffect({
                                 type: type === 'hotspot' ? 'POLYGON_POINT_HOTSPOT' : 'POLYGON_POINT_OBSTACLE',

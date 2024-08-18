@@ -3,8 +3,8 @@ import { OptionalNumberInput, } from "@/components/SchemaForm/OptionalNumberInpu
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import { HotspotZone } from "@/definitions";
 import { clamp } from "@/lib/util";
-import { DeleteIcon } from "@/components/GameEditor/material-icons";
-import { Box, Button, ButtonGroup } from "@mui/material";
+import { ClickPointIcon, DeleteIcon } from "@/components/GameEditor/material-icons";
+import { Box, Button, ButtonGroup, IconButton } from "@mui/material";
 import { AccoridanedContent } from "../../AccordianedContent";
 import { ButtonWithConfirm } from "../../ButtonWithConfirm";
 import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
@@ -58,17 +58,23 @@ export function HotspotControl({ roomId, hotspot, index, change, remove, setClic
                 },
                 {
                     label: 'walk to point', content: (
-                        <Box>
-                            <OptionalNumberInput
-                                value={walkToX} label="X: "
-                                inputHandler={value => { change(index, 'walkToX', value, type) }} />
-                            <OptionalNumberInput
-                                value={walkToY} label="Y: "
-                                inputHandler={value => { change(index, 'walkToY', value, type) }} />
-                            <Button
-                                variant="outlined"
+                        <Box display={'flex'} flexWrap={'wrap'}>
+                            <Box>
+                                <OptionalNumberInput
+                                    value={walkToX} label="X: "
+                                    inputHandler={value => { change(index, 'walkToX', value, type) }} />
+                            </Box>
+                            <Box>
+                                <OptionalNumberInput
+                                    value={walkToY} label="Y: "
+                                    inputHandler={value => { change(index, 'walkToY', value, type) }} />
+
+                            </Box>
+                            <IconButton aria-label="select walk to point"
                                 onClick={() => { setClickEffect({ type: 'HOTSPOT_WALKTO_POINT', index }) }}
-                            >select point</Button>
+                            >
+                                <ClickPointIcon fontSize="large" />
+                            </IconButton>
                         </Box>
                     )
                 },

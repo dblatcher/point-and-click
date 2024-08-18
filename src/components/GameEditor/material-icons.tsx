@@ -27,6 +27,7 @@ import LogOut from '@mui/icons-material/Logout';
 import RepeatOneIcon from '@mui/icons-material/RepeatOne';
 import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
 import InteractionIcon from '@mui/icons-material/Mediation';
+import ClickPointIcon from '@mui/icons-material/Adjust';
 
 export {
     AddIcon,
@@ -36,6 +37,7 @@ export {
     AudioFileOutlinedIcon,
     ClearIcon,
     ClearOutlinedIcon,
+    ClickPointIcon,
     ContentCopyIcon,
     DeleteIcon,
     DesignServicesIcon,
