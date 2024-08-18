@@ -1,6 +1,6 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { findById, listIds } from "@/lib/util";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/inputs";
 import { SpritePreview } from "./SpritePreview";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const PickActorDialog = ({ isOpen, close, excluded, onSelect }: Props) => {
-    const { gameDesign } = useGameDesign()
+    const { gameDesign, openInEditor } = useGameDesign()
     const ids = listIds(gameDesign.actors)
     const filteredIds = excluded ? ids.filter((id) => !excluded.includes(id)) : ids
     const [actorId, setActorId] = useState<string | undefined>(filteredIds[0])
@@ -30,6 +30,14 @@ export const PickActorDialog = ({ isOpen, close, excluded, onSelect }: Props) =>
                             data={actor}
                         />
                     </>
+                    )}
+                    {gameDesign.actors.length === 0 && (
+                        <Alert>
+                            No actors defined yet.
+                            <Button onClick={() => { openInEditor('actors', undefined) }}>
+                                Go to Actor editor
+                            </Button>
+                        </Alert>
                     )}
                 </Box>
                 <SelectInput label="actorId" options={filteredIds} value={actorId} inputHandler={(choice) => setActorId(choice)} />
