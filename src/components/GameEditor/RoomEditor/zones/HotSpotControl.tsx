@@ -1,10 +1,10 @@
+import { ClickPointIcon, DeleteIcon } from "@/components/GameEditor/material-icons";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { OptionalNumberInput, } from "@/components/SchemaForm/OptionalNumberInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import { HotspotZone } from "@/definitions";
 import { clamp } from "@/lib/util";
-import { ClickPointIcon, DeleteIcon } from "@/components/GameEditor/material-icons";
-import { Box, Button, ButtonGroup, IconButton } from "@mui/material";
+import { Box, ButtonGroup, IconButton } from "@mui/material";
 import { AccoridanedContent } from "../../AccordianedContent";
 import { ButtonWithConfirm } from "../../ButtonWithConfirm";
 import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
@@ -59,7 +59,7 @@ export function HotspotControl({ roomId, hotspot, index, change, remove, setClic
                 {
                     label: 'walk to point', content: (
                         <Box display={'flex'} flexWrap={'wrap'}>
-                            <Box>
+                            <Box maxWidth={300}>
                                 <OptionalNumberInput
                                     value={walkToX} label="X: "
                                     inputHandler={value => { change(index, 'walkToX', value, type) }} />
@@ -91,8 +91,7 @@ export function HotspotControl({ roomId, hotspot, index, change, remove, setClic
                             shape={hotspot} index={index}
                             setClickEffect={setClickEffect}
                             type='hotspot'
-                            change={change}
-                            remove={remove} />
+                            change={change} />
                     </>
                 },
             ]} />

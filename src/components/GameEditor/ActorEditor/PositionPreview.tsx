@@ -5,8 +5,9 @@ import { useGameDesign } from "@/context/game-design-context";
 import { ActorData } from "@/definitions";
 import { getTargetPoint, getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { clamp, findById, listIds } from "@/lib/util";
-import { Alert, Box, Paper, PaperProps, Slider, Stack, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Paper, PaperProps, Slider, Stack, Typography } from "@mui/material";
 import { useState } from "react";
+import { ClickPointIcon } from "../material-icons";
 
 interface Props {
     actorData: ActorData;
@@ -35,15 +36,6 @@ export const PositionPreview = ({ actorData, reportClick, pickRoom }: Props) => 
         .sort(putActorsInDisplayOrder)
         .map(actor => ({ data: actor }))
 
-    const handleRole = (
-        event: React.MouseEvent<HTMLElement>,
-        newRole: string | null,
-    ) => {
-        if (newRole === 'position' || newRole === 'walkTo') {
-            setRole(newRole);
-        }
-    };
-
     return (
         <Box component={PaperSection} display={'inline-block'} padding={2} marginBottom={4}>
             <SelectInput
@@ -56,6 +48,18 @@ export const PositionPreview = ({ actorData, reportClick, pickRoom }: Props) => 
 
             {roomData ? (<>
 
+                <ButtonGroup sx={{ paddingBottom: 1 }}>
+                    <Button
+                        variant={role === 'position' ? 'contained' : 'outlined'}
+                        onClick={() => setRole('position')}
+                        startIcon={<ClickPointIcon />}
+                    >postion</Button>
+                    <Button
+                        variant={role === 'walkTo' ? 'contained' : 'outlined'}
+                        onClick={() => setRole('walkTo')}
+                        startIcon={<ClickPointIcon />}
+                    >walk to point</Button>
+                </ButtonGroup>
                 <Box
                     sx={{
                         cursor: 'crosshair',
@@ -83,13 +87,6 @@ export const PositionPreview = ({ actorData, reportClick, pickRoom }: Props) => 
                             {...getTargetPoint(actorData, roomData)}
                         />
                     </Room>
-                </Box>
-
-                <Box >
-                    <ToggleButtonGroup exclusive value={role} onChange={handleRole}>
-                        <ToggleButton value={'position'}>position</ToggleButton>
-                        <ToggleButton value={'walkTo'}>walk to point</ToggleButton>
-                    </ToggleButtonGroup>
                 </Box>
 
                 <Box padding={1}>

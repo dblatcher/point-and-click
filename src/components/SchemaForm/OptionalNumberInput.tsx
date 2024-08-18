@@ -44,7 +44,7 @@ export const OptionalNumberInput: FunctionComponent<
     const labelText = isDefined ? label : `${label}(undefined)`
 
     return (
-        <Stack direction='row' alignItems={'center'} spacing={1} minWidth={200}>
+        <Stack direction='row' alignItems={'center'} spacing={1} minWidth={150}>
             <TextField
                 label={labelText}
                 size='small'

@@ -14,12 +14,11 @@ interface Props {
     shape: Shape;
     index: number;
     type: ValidShapeType;
-    remove: { (index: number, type: ValidShapeType): void };
     change: ShapeChangeFunction;
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export const ShapeControl: FunctionComponent<Props> = ({ shape, remove, index, change, setClickEffect, type }: Props) => {
+export const ShapeControl: FunctionComponent<Props> = ({ shape, index, change, setClickEffect, type }: Props) => {
     const { x, y, circle, rect, polygon } = shape
 
     function changeRect(value: number, coor: 'x' | 'y'): void {

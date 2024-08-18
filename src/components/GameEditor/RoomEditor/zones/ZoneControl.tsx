@@ -1,22 +1,20 @@
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { OptionalStringInput } from "@/components/SchemaForm/OptionalStringInput";
 import { Zone } from "@/definitions";
-import { DeleteIcon } from "@/components/GameEditor/material-icons";
-import { Box, Button, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { EditorBox } from "../../EditorBox";
 import { ClickEffect } from "../ClickEffect";
-import { ShapeChangeFunction, ShapeControl, ValidShapeType } from "./ShapeControl";
+import { ShapeChangeFunction, ShapeControl } from "./ShapeControl";
 
 interface Props {
     zone: Zone;
     index: number;
     type: 'obstacle' | 'walkable';
     change: ShapeChangeFunction;
-    remove: { (index: number, type: ValidShapeType): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export function ZoneControl({ zone, index, change, remove, setClickEffect, type }: Props) {
+export function ZoneControl({ zone, index, change, setClickEffect, type }: Props) {
     return (
         <Stack component={'article'}>
             <EditorBox>
@@ -28,24 +26,12 @@ export function ZoneControl({ zone, index, change, remove, setClickEffect, type 
                     label="disabled: "
                     value={!!zone.disabled}
                     inputHandler={value => change(index, 'disabled', value, type)} />
-            </EditorBox>
-            <EditorBox title="shape and position">
                 <ShapeControl
                     shape={zone} index={index}
                     setClickEffect={setClickEffect}
                     type={type}
-                    change={change}
-                    remove={remove} />
+                    change={change} />
             </EditorBox>
-
-            <Box>
-                <Button fullWidth
-                    variant="contained"
-                    startIcon={<DeleteIcon />}
-                    onClick={() => { remove(index, type) }}
-                >delete {type}
-                </Button>
-            </Box>
         </Stack >
     )
 }

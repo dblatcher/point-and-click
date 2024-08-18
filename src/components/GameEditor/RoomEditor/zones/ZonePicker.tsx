@@ -23,7 +23,7 @@ export const ZonePicker = ({
 }: Props) => {
     const selectValue = typeof activeZoneIndex === 'number' ? activeZoneIndex : EMPTY_STRING;
     return (
-        <FormControl>
+        <FormControl sx={{ flex: 1 }}>
             <Select<number>
                 variant='filled'
                 value={selectValue} label={'zones'}
