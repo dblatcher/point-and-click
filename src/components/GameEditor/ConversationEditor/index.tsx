@@ -268,21 +268,20 @@ export const ConversationEditor = (props: Props) => {
                             choice={choice}
                             conversation={conversation}
                             openBranchId={openBranchId ?? ''}
-                            activeChoiceIndex={activeChoiceIndex ?? -1}
                             {...{
                                 handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence
                             }}
                             actorIdsForSequences={actorIdsForSequences}
-                            openExternalSequence={() => setExternalSequenceDialogOpen(true)}
                             handleChoiceSequenceChange={handleChoiceSequenceChange}
                         />
                     </>)}
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        variant="outlined"
-                        disabled={!choice?.sequence}
-                        onClick={() => { setExternalSequenceDialogOpen(true) }}>edit sequence</Button>
+                    {choice?.sequence && (
+                        <Button
+                            variant="outlined"
+                            onClick={() => { setExternalSequenceDialogOpen(true) }}>edit external sequence</Button>
+                    )}
                     <Button
                         variant="contained"
                         onClick={() => { setActiveChoiceIndex(undefined) }}>close</Button>

@@ -1,25 +1,22 @@
 import { FieldDef, FieldValue, SchemaForm } from "@/components/SchemaForm"
-import { ChoiceRefSet, Conversation, ConversationChoice, ConversationChoiceSchema } from "@/definitions/Conversation"
-import { listIds } from "@/lib/util"
-import { Box, Button, Stack } from "@mui/material"
 import { SelectInput } from "@/components/SchemaForm/SelectInput"
-import { ChoiceListControl } from "./ChoiceListControl"
-import { NewSequenceForm } from "./NewSequenceForm"
 import { useGameDesign } from "@/context/game-design-context"
 import { Sequence } from "@/definitions"
-import { EditorBox } from "../EditorBox"
+import { ChoiceRefSet, Conversation, ConversationChoice, ConversationChoiceSchema } from "@/definitions/Conversation"
+import { listIds } from "@/lib/util"
+import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material"
+import { useState } from "react"
+import { ButtonWithConfirm } from "../ButtonWithConfirm"
 import { SequenceEditor } from "../SequenceEditor"
 import { makeBlankSequence } from "../defaults"
-import { ButtonWithConfirm } from "../ButtonWithConfirm"
+import { DeleteIcon } from "../material-icons"
+import { ChoiceListControl } from "./ChoiceListControl"
 
 
 interface Props {
     choice: ConversationChoice
     conversation: Conversation
-
     openBranchId: string,
-    activeChoiceIndex: number
-    addSequence: { (sequence: Sequence): void };
     handleChoiceChange: { (value: FieldValue, field: FieldDef): void };
     addChoiceListItem: { (property: 'enablesChoices' | 'disablesChoices'): void };
     removeChoiceListItem: { (property: 'enablesChoices' | 'disablesChoices', index: number): void };
@@ -29,17 +26,17 @@ interface Props {
             newRefSet: ChoiceRefSet): void
     };
     actorIdsForSequences: string[];
-    openExternalSequence: { (): void }
     handleChoiceSequenceChange: { (sequence?: Sequence): void }
 }
 
 export const ChoiceEditor = ({
-    choice, conversation, openBranchId, activeChoiceIndex,
-    addSequence, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, openExternalSequence,
+    choice, conversation, openBranchId,
+    handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem,
     handleChoiceSequenceChange,
     actorIdsForSequences
 }: Props) => {
 
+    const [sequenceDialogOpen, setSequenceDialogOpen] = useState(false)
     const { gameDesign: design } = useGameDesign()
     const { id, branches } = conversation
 
@@ -53,7 +50,41 @@ export const ChoiceEditor = ({
             options={{
                 nextBranch: Object.keys(branches),
             }}
+            fieldAliases={{
+                nextBranch: 'changes branch to:',
+                once: 'can use only once',
+                disabled: 'starts disabled',
+                end: 'ends conversation',
+            }}
         />
+
+        <ButtonGroup>
+            {choice.choiceSequence ? (
+                <>
+                    <Button
+                        variant="outlined"
+                        onClick={() => { setSequenceDialogOpen(true) }}>
+                        edit sequence ({choice.choiceSequence?.stages.length} stages)
+                    </Button>
+                    <ButtonWithConfirm label="delete sequence"
+                        buttonProps={{
+                            variant: 'outlined',
+                            color: 'warning',
+                            startIcon: <DeleteIcon />,
+                        }}
+                        onClick={() => {
+                            handleChoiceSequenceChange(undefined)
+                        }} />
+                </>
+            ) : (
+                <Button
+                    variant="outlined"
+                    onClick={() => {
+                        handleChoiceSequenceChange(makeBlankSequence('', actorIdsForSequences))
+                    }}
+                >start sequence</Button>
+            )}
+        </ButtonGroup>
 
         <ChoiceListControl
             choices={choice.disablesChoices || []}
@@ -76,60 +107,49 @@ export const ChoiceEditor = ({
             remove={removeChoiceListItem}
         />
 
-        {/* TO DO - put in full width dialog */}
-        <EditorBox title="sequence">
-            {choice.choiceSequence && (
-                <>
-                <ButtonWithConfirm label="delete sequence" onClick={() => {
-                    handleChoiceSequenceChange(undefined)
-                }} />
+        <Box flex={1} paddingTop={2.5}>
+            <SelectInput
+                value={choice.sequence}
+                optional
+                options={listIds(design.sequences)}
+                label="use external sequence:"
+                inputHandler={(value) => {
+                    handleChoiceChange(value, {
+                        key: 'sequence',
+                        optional: true,
+                        type: 'ZodString',
+                        value: choice.sequence
+                    })
+                }}
+            />
+        </Box>
+
+        <Dialog
+            open={!!sequenceDialogOpen}
+            onClose={() => { setSequenceDialogOpen(false) }}
+            maxWidth={'xl'}
+            fullWidth
+        >
+            <DialogTitle>
+                <Typography>Sequence: <q>{choice.text}</q></Typography>
+            </DialogTitle>
+            <DialogContent>
+                {choice.choiceSequence && (
+
                     <SequenceEditor
                         data={choice.choiceSequence}
                         handleChoiceSequenceChange={handleChoiceSequenceChange}
                     />
-                </>
-            )}
-
-            {!choice.choiceSequence && (
+                )}
+            </DialogContent>
+            <DialogActions>
                 <Button
-                    onClick={() => {
-                        handleChoiceSequenceChange(makeBlankSequence('', actorIdsForSequences))
-                    }}
-                >start sequence</Button>
-            )}
-        </EditorBox>
+                    variant="contained"
+                    onClick={() => { setSequenceDialogOpen(false) }}>close</Button>
+            </DialogActions>
+        </Dialog>
 
-        <EditorBox title="external sequence" >
-            <Box flex={1} paddingTop={2.5}>
-                <SelectInput
-                    value={choice.sequence}
-                    optional
-                    options={listIds(design.sequences)}
-                    label="select sequence"
-                    inputHandler={(value) => {
-                        handleChoiceChange(value, {
-                            key: 'sequence',
-                            optional: true,
-                            type: 'ZodString',
-                            value: choice.sequence
-                        })
-                    }}
-                />
-            </Box>
-            <NewSequenceForm
-                suggestedIds={[
-                    `${id}-${openBranchId}-${activeChoiceIndex}`,
-                ]}
-                existingIds={listIds(design.sequences)}
-                addSequence={addSequence}
-                defaultActorIds={actorIdsForSequences}
-            />
-            <Button
-                variant="outlined"
-                disabled={!choice.sequence}
-                onClick={openExternalSequence}
-            >edit external sequence</Button>
-        </EditorBox>
+
     </Stack>
     )
 }
