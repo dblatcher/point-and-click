@@ -34,12 +34,41 @@ const chat: Conversation = {
                 {
                     text: 'hello there, lets talk about fish',
                     nextBranch: 'fish',
-                    sequence: "CHAT_HELLO_2",
+                    choiceSequence: {
+                        id: "",
+                        stages: [
+                            {
+                                actorOrders: {
+                                    PLAYER: [
+                                        { type: 'say', text: 'hello there, lets talk about fish', time: 100 },
+                                    ]
+                                }
+                            },
+                            {
+                                actorOrders: {
+                                    MARIO: [
+                                        { type: 'say', text: 'fish?', time: 100 },
+                                    ]
+                                }
+                            },
+                        ]
+                    }
                 },
                 {
                     text: 'good bye',
                     end: true,
-                    sequence: "CHAT_HELLO_1"
+                    choiceSequence: {
+                        id: "",
+                        stages: [
+                            {
+                                actorOrders: {
+                                    PLAYER: [
+                                        { type: 'say', text: 'good bye', time: 100 }
+                                    ]
+                                }
+                            },
+                        ]
+                    }
                 },
             ]
         },
@@ -48,7 +77,7 @@ const chat: Conversation = {
                 {
                     text: 'forget about fish. good bye',
                     end: true,
-                    sequence: "CHAT_HELLO_1"
+                    nextBranch: 'hello',
                 },
             ]
         },
@@ -63,7 +92,26 @@ const chat: Conversation = {
                     disablesChoices: [
                         { choiceRef: 'ASK_ABOUT_TOOLS', branchId: 'hello' }
                     ],
-                    sequence: "CHAT_TOOLS_0"
+                    choiceSequence: {
+                        id: "",
+                        stages: [
+                            {
+                                actorOrders: {
+                                    PLAYER: [
+                                        { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
+                                        { type: 'say', text: 'Do you have a hammer?', time: 100 },
+                                    ]
+                                }
+                            },
+                            {
+                                actorOrders: {
+                                    MARIO: [
+                                        { type: 'say', text: 'Yes.', time: 100 },
+                                    ]
+                                }
+                            },
+                        ]
+                    }
                 },
                 {
                     ref: 'ASK_FOR_HAMMER',
@@ -71,17 +119,69 @@ const chat: Conversation = {
                     nextBranch: 'hello',
                     disabled: true,
                     once: true,
-                    sequence: "CHAT_TOOLS_1"
+                    choiceSequence: {
+                        id: "",
+                        stages: [
+                            {
+                                actorOrders: {
+                                    PLAYER: [
+                                        { type: 'say', text: 'Can I have the hammer?', time: 100 },
+                                    ]
+                                }
+                            },
+                            {
+                                actorOrders: {
+                                    MARIO: [
+                                        { type: 'say', text: 'Here you go.', time: 100 },
+                                        { type: 'act', steps: [{ animation: 'walk', duration: 150 }] },
+                                    ]
+                                },
+                                immediateConsequences: [
+                                    { type: 'inventory', itemId: 'HAMMER', addOrRemove: 'ADD', }
+                                ]
+                            },
+                        ]
+                    }
                 },
                 {
                     text: 'Do you have a screwdriver?',
                     once: true,
-                    sequence: "CHAT_TOOLS_2"
+                    choiceSequence: {
+                        id: "",
+                        stages: [
+                            {
+                                actorOrders: {
+                                    PLAYER: [
+                                        { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
+                                        { type: 'say', text: 'Do you have a screwdriver?', time: 100 },
+                                    ]
+                                }
+                            },
+                            {
+                                actorOrders: {
+                                    MARIO: [
+                                        { type: 'say', text: 'No.', time: 100 },
+                                    ]
+                                }
+                            },
+                        ]
+                    }
                 },
                 {
                     text: 'Never mind.',
                     nextBranch: 'hello',
-                    sequence: "CHAT_TOOLS_3",
+                    choiceSequence: {
+                        id: "",
+                        stages: [
+                            {
+                                actorOrders: {
+                                    PLAYER: [
+                                        { type: 'say', text: 'Never mind.', time: 100 },
+                                    ]
+                                }
+                            },
+                        ]
+                    }
                 },
             ]
         }
