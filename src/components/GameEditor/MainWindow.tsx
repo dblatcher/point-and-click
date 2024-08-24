@@ -48,10 +48,10 @@ export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
         {
             key: ['0', '-', '='],
             handler: ({ key }) => {
-                switch(key) {
-                    case '0' : return openInEditor(tabOrder[9].id)
-                    case '-' : return openInEditor(tabOrder[10].id)
-                    case '=' : return openInEditor(tabOrder[11].id)
+                switch (key) {
+                    case '0': return openInEditor(tabOrder[9].id)
+                    case '-': return openInEditor(tabOrder[10].id)
+                    case '=': return openInEditor(tabOrder[11].id)
                 }
             }
         }
@@ -123,6 +123,7 @@ export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
         case 'sequences':
             return currentSequence
                 ? <SequenceEditor key={gameItemIds.sequences}
+                    heading='main'
                     data={currentSequence}
                 />
                 : <DataItemCreator

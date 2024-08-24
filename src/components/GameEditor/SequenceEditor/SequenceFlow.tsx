@@ -1,12 +1,12 @@
 import { Consequence, ImmediateConsequence, Order, Sequence, Stage } from "@/definitions";
+import { Narrative } from "@/definitions/BaseTypes";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
-import { getDefaultOrder, makeBlankStage } from "../defaults";
+import { makeBlankStage } from "../defaults";
+import { PickActorDialog } from "../PickActorDialog";
 import { ConsequenceDialog } from "./ConsequenceDialog";
 import { OrderDialog } from "./OrderDialog";
 import { StageFlow } from "./StageFlow";
-import { PickActorDialog } from "../PickActorDialog";
-import { Narrative } from "@/definitions/BaseTypes";
 
 interface Props {
     sequence: Sequence
@@ -100,7 +100,7 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
 
             {orderParams && (
                 <OrderDialog
-                    sequenceId={sequence.id}
+                    sequence={sequence}
                     {...orderParams}
                     changeOrder={(newOrder) => { changeOrder(newOrder, orderParams.stage, orderParams.actorId, orderParams.index) }}
                     close={() => { setOrderParams(undefined) }}

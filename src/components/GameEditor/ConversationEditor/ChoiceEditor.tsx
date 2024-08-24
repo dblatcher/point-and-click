@@ -8,6 +8,9 @@ import { NewSequenceForm } from "./NewSequenceForm"
 import { useGameDesign } from "@/context/game-design-context"
 import { Sequence } from "@/definitions"
 import { EditorBox } from "../EditorBox"
+import { SequenceEditor } from "../SequenceEditor"
+import { makeBlankSequence } from "../defaults"
+import { ButtonWithConfirm } from "../ButtonWithConfirm"
 
 
 interface Props {
@@ -27,11 +30,13 @@ interface Props {
     };
     actorIdsForSequences: string[];
     openExternalSequence: { (): void }
+    handleChoiceSequenceChange: { (sequence?: Sequence): void }
 }
 
 export const ChoiceEditor = ({
     choice, conversation, openBranchId, activeChoiceIndex,
     addSequence, handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, openExternalSequence,
+    handleChoiceSequenceChange,
     actorIdsForSequences
 }: Props) => {
 
@@ -70,6 +75,29 @@ export const ChoiceEditor = ({
             change={updateChoiceListItem}
             remove={removeChoiceListItem}
         />
+
+        {/* TO DO - put in full width dialog */}
+        <EditorBox title="sequence">
+            {choice.choiceSequence && (
+                <>
+                <ButtonWithConfirm label="delete sequence" onClick={() => {
+                    handleChoiceSequenceChange(undefined)
+                }} />
+                    <SequenceEditor
+                        data={choice.choiceSequence}
+                        handleChoiceSequenceChange={handleChoiceSequenceChange}
+                    />
+                </>
+            )}
+
+            {!choice.choiceSequence && (
+                <Button
+                    onClick={() => {
+                        handleChoiceSequenceChange(makeBlankSequence('', actorIdsForSequences))
+                    }}
+                >start sequence</Button>
+            )}
+        </EditorBox>
 
         <EditorBox title="external sequence" >
             <Box flex={1} paddingTop={2.5}>

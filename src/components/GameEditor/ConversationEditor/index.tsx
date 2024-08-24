@@ -12,10 +12,10 @@ import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { SequenceEditor } from "../SequenceEditor";
 import { makeBlankConversationChoice } from "../defaults";
+import { ActorsInvolvedList } from "./ActorsInvolvedList";
 import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ConversationFlow } from "./ConversationFlow";
-import { ActorsInvolvedList } from "./ActorsInvolvedList";
 
 type Props = {
     conversation: Conversation;
@@ -25,7 +25,7 @@ export const ConversationEditor = (props: Props) => {
 
     const [openBranchId, setOpenBranchId] = useState<string | undefined>(undefined)
     const [activeChoiceIndex, setActiveChoiceIndex] = useState<number | undefined>(0)
-    const [sequenceDialogOpen, setSequenceDialogOpen] = useState<boolean>(false)
+    const [externalSequenceDialogOpen, setExternalSequenceDialogOpen] = useState<boolean>(false)
     const [editOrderDialogBranchId, setEditOrderDialogBranchId] = useState<string | undefined>(undefined)
     const [actorsInvolved, setActorsInvolved] = useState<string[]>([])
 
@@ -112,6 +112,15 @@ export const ConversationEditor = (props: Props) => {
         updateFromPartial(getModifiedBranches())
     }
 
+    const handleChoiceSequenceChange = (sequence?: Sequence) => {
+        const { choice, branches } = getBranchAndChoice()
+        if (!choice) {
+            return
+        }
+        choice.choiceSequence = sequence
+        updateFromPartial({ branches })
+    }
+
     const addNewBranchAndOpenIt = (branchName: string) => {
         if (!branchName || conversation.branches[branchName]) {
             return
@@ -177,8 +186,7 @@ export const ConversationEditor = (props: Props) => {
 
     const { choice } = getBranchAndChoice()
     const branchInOrderDialog = editOrderDialogBranchId ? conversation.branches[editOrderDialogBranchId] : undefined
-    const sequenceForCurrentChoice = choice && findById(choice.sequence, gameDesign.sequences)
-
+    const externalSequenceForCurrentChoice = choice && findById(choice.sequence, gameDesign.sequences)
     const actorIdsForSequences = actorsInvolved.length === 0 ? gameDesign.actors.filter(a => a.isPlayer).map(a => a.id) : actorsInvolved
 
     return (
@@ -265,7 +273,8 @@ export const ConversationEditor = (props: Props) => {
                                 handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence
                             }}
                             actorIdsForSequences={actorIdsForSequences}
-                            openExternalSequence={() => setSequenceDialogOpen(true)}
+                            openExternalSequence={() => setExternalSequenceDialogOpen(true)}
+                            handleChoiceSequenceChange={handleChoiceSequenceChange}
                         />
                     </>)}
                 </DialogContent>
@@ -273,7 +282,7 @@ export const ConversationEditor = (props: Props) => {
                     <Button
                         variant="outlined"
                         disabled={!choice?.sequence}
-                        onClick={() => { setSequenceDialogOpen(true) }}>edit sequence</Button>
+                        onClick={() => { setExternalSequenceDialogOpen(true) }}>edit sequence</Button>
                     <Button
                         variant="contained"
                         onClick={() => { setActiveChoiceIndex(undefined) }}>close</Button>
@@ -281,22 +290,22 @@ export const ConversationEditor = (props: Props) => {
             </Dialog>
 
             <Dialog
-                open={!!sequenceDialogOpen}
-                onClose={() => { setSequenceDialogOpen(false) }}
+                open={!!externalSequenceDialogOpen}
+                onClose={() => { setExternalSequenceDialogOpen(false) }}
                 maxWidth={'xl'}
             >
-                {sequenceForCurrentChoice && (
+                {externalSequenceForCurrentChoice && (
                     <DialogContent>
                         <SequenceEditor key={choice.sequence}
-                            isSubSection
-                            data={sequenceForCurrentChoice}
+                            data={externalSequenceForCurrentChoice}
+                            heading='externalSequence'
                         />
                     </DialogContent>
                 )}
                 <DialogActions>
                     <Button
                         variant="contained"
-                        onClick={() => { setSequenceDialogOpen(false) }}>close</Button>
+                        onClick={() => { setExternalSequenceDialogOpen(false) }}>close</Button>
                 </DialogActions>
             </Dialog>
         </Stack >

@@ -1,18 +1,19 @@
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { Consequence, ImmediateConsequence, Order, Sequence } from "@/definitions";
+import { Narrative } from "@/definitions/BaseTypes";
 import { ImmediateConsequenceSchema } from "@/definitions/Consequence";
 import { cloneData } from "@/lib/clone";
 import { Grid } from "@mui/material";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { SequenceFlow } from "./SequenceFlow";
-import { Narrative } from "@/definitions/BaseTypes";
 
 
 type Props = {
     data: Sequence;
-    isSubSection?: boolean;
+    heading?: 'main' | 'externalSequence'
+    handleChoiceSequenceChange?: { (sequence: Sequence): void }
 }
 
 
@@ -20,9 +21,14 @@ export const SequenceEditor = (props: Props) => {
     const { performUpdate } = useGameDesign()
 
     const updateFromPartial = (input: Partial<Sequence> | { (state: Sequence): Partial<Sequence> }) => {
-        const { data } = props
+        const { data, handleChoiceSequenceChange } = props
         const modification = (typeof input === 'function')
             ? input(cloneData(data)) : input
+
+        if (handleChoiceSequenceChange) {
+            return handleChoiceSequenceChange({ ...data, ...modification })
+        }
+
         performUpdate('sequences', { ...data, ...modification })
     }
 
@@ -85,36 +91,38 @@ export const SequenceEditor = (props: Props) => {
         })
     }
 
-    const { isSubSection, data: sequence } = props
+    const { data: sequence, heading } = props
     return (
         <article>
-            {isSubSection
-                ? (<>
-                    <h3>Edit sequence: </h3>
+
+            {heading === 'main' && (<>
+                <EditorHeading heading="Sequence Editor" itemId={sequence?.id ?? '[new]'} >
+                    <ItemEditorHeaderControls
+                        dataItem={sequence}
+                        itemType='sequences'
+                        itemTypeName="sequence" />
+                </EditorHeading>
+
+                <Grid container spacing={4}>
+                    <Grid item xs={8}>
+                        <StringInput label="description" value={sequence.description || ''}
+                            inputHandler={(description) => {
+                                updateFromPartial({ description })
+                            }}
+                        />
+                    </Grid>
+                </Grid>
+            </>)}
+
+            {heading === 'externalSequence' &&
+                (<>
+                    <h3>Edit external sequence: </h3>
                     <div>ID: <b>{sequence?.id}</b></div>
                     <StringInput label="description" value={sequence.description || ''}
                         inputHandler={(description) => {
                             updateFromPartial({ description })
                         }}
                     />
-                </>)
-                : (<>
-                    <EditorHeading heading="Sequence Editor" itemId={sequence?.id ?? '[new]'} >
-                        <ItemEditorHeaderControls
-                            dataItem={sequence}
-                            itemType='sequences'
-                            itemTypeName="sequence" />
-                    </EditorHeading>
-
-                    <Grid container spacing={4}>
-                        <Grid item xs={8}>
-                            <StringInput label="description" value={sequence.description || ''}
-                                inputHandler={(description) => {
-                                    updateFromPartial({ description })
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
                 </>)
             }
 
