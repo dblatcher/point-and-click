@@ -106,7 +106,7 @@ export function handleConversationChoice(choice: ConversationChoice, sequences: 
             currentConversation.currentBranch = choice.nextBranch
         }
 
-        const originalSequence = choice.choiceSequence ?? findById(choice.sequence, sequences)
+        const originalSequence = findById(choice.sequence, sequences) ?? choice.choiceSequence
         if (choice.sequence && !originalSequence) {
             console.warn(`invalid sequenceId "${choice.sequence}" in conversation "${currentConversationId}"`)
         }
