@@ -4,6 +4,7 @@ import { readGameFromZipFile } from "@/lib/zipFiles";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { Button } from "@mui/material";
 import { FunctionComponent } from "react";
+import UploadIcon from '@mui/icons-material/Upload';
 
 interface Props {
     onLoad: { (design: GameDesign, imageAssets: ImageAsset[], soundAssets: SoundAsset[]): void }
@@ -29,5 +30,9 @@ export const LoadDesignButton: FunctionComponent<Props> = ({ onLoad, onError }) 
         onLoad(gameDesign, imageAssets, soundAssets)
     }
 
-    return <Button variant="contained" onClick={upload}>Select Game Design file</Button>
+    return <Button
+        variant="contained"
+        onClick={upload}
+        endIcon={<UploadIcon />}
+    >Play game from .game.zip file</Button>
 }

@@ -6,7 +6,6 @@ import { Alert, Button, Card, FormControl, FormControlLabel, FormLabel, Grid, Ra
 import React from "react";
 import { GameDesignPlayer } from "./GameDesignPlayer";
 import { LoadDesignButton } from "./LoadDesignButton";
-
 import { GameList } from "./GameList";
 import { MarkDown } from "./MarkDown";
 import { materialUiComponents } from "./game-mui-ux";
@@ -60,6 +59,8 @@ export class GameDesignLoader extends React.Component<{}, State> {
         });
     }
 
+
+
     async handleLoadFail(errorMessage: string) {
         this.setState({
             loadingErrorMessage: errorMessage,
@@ -105,15 +106,15 @@ export class GameDesignLoader extends React.Component<{}, State> {
                     <Grid container spacing={2} padding={2}
                         justifyContent="center"
                         alignItems="center">
-                        <Grid item xs={3} gap={2}>
+                        <Grid item xs={6} gap={2}>
                             <LoadDesignButton
                                 onLoad={this.loadGameDesign}
                                 onError={this.handleLoadFail} />
                         </Grid>
-                        <Grid item xs={3} gap={2}>
+                        <Grid item xs={6} gap={2}>
                             <FormControl>
                                 <FormLabel id="layout-radio-buttons-group-label">Layout</FormLabel>
-                                <RadioGroup
+                                <RadioGroup row
                                     aria-labelledby="layout-radio-buttons-group-label"
                                     defaultValue={layoutOptions[0]}
                                     name="layout-radio-buttons-group"
@@ -126,13 +127,14 @@ export class GameDesignLoader extends React.Component<{}, State> {
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={6}>
-                            <Card sx={{ padding: 2 }}>
-                                <MarkDown content={selectADesignContent} />
-                            </Card>
-                        </Grid>
                     </Grid>
-                    <GameList />
+                    <GameList
+                        onLoad={this.loadGameDesign}
+                        onError={this.handleLoadFail}
+                    />
+                    <Card sx={{ padding: 2, marginX: 2 }}>
+                        <MarkDown content={selectADesignContent} />
+                    </Card>
                 </>
             )}
 
@@ -163,7 +165,7 @@ export class GameDesignLoader extends React.Component<{}, State> {
                     {loadingErrorMessage}
                 </Alert>
             </Snackbar>
-        </div >
+        </div>
     }
 
 }
