@@ -1,7 +1,7 @@
 import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm"
 import { SelectInput } from "@/components/SchemaForm/SelectInput"
 import { useGameDesign } from "@/context/game-design-context"
-import { Sequence } from "@/definitions"
+import { SayOrder, Sequence } from "@/definitions"
 import { ChoiceRefSet, Conversation, ConversationChoice, ConversationChoiceSchema } from "@/definitions/Conversation"
 import { listIds } from "@/lib/util"
 import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, Typography } from "@mui/material"
@@ -39,6 +39,24 @@ export const ChoiceEditor = ({
     const [sequenceDialogOpen, setSequenceDialogOpen] = useState(false)
     const { gameDesign: design } = useGameDesign()
     const { id, branches } = conversation
+
+    const makeSequenceForChoice = (): Sequence => {
+        const sequence = makeBlankSequence('', actorIdsForSequences)
+        const player = design.actors.find(a => a.isPlayer)
+        const firstStage = sequence.stages[0]
+        if (player && firstStage) {
+            const orderToSayConversationText: SayOrder = {
+                type: 'say',
+                text: choice.text,
+                time: 250,
+            }
+            if (!firstStage.actorOrders) {
+                firstStage.actorOrders = {}
+            }
+            firstStage.actorOrders[player.id] = [orderToSayConversationText]
+        }
+        return sequence
+    }
 
     return (<Stack spacing={2} width={500}>
         <SchemaForm
@@ -86,13 +104,20 @@ export const ChoiceEditor = ({
                             handleChoiceUpdate({ choiceSequence: undefined })
                         }} />
                 </>
-            ) : (
+            ) : (<>
+                <Button
+                    variant="outlined"
+                    onClick={() => {
+                        handleChoiceUpdate({ choiceSequence: makeSequenceForChoice() })
+                    }}
+                >create sequence(player says text)</Button>
                 <Button
                     variant="outlined"
                     onClick={() => {
                         handleChoiceUpdate({ choiceSequence: makeBlankSequence('', actorIdsForSequences) })
                     }}
-                >create sequence</Button>
+                >create sequence(blank)</Button>
+            </>
             )}
         </ButtonGroup>
 
@@ -141,7 +166,6 @@ export const ChoiceEditor = ({
             </DialogTitle>
             <DialogContent>
                 {choice.choiceSequence && (
-
                     <SequenceEditor
                         data={choice.choiceSequence}
                         handleChoiceSequenceChange={(sequence) => handleChoiceUpdate({ choiceSequence: sequence })}
