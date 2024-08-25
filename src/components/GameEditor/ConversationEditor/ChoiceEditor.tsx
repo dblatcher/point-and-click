@@ -27,13 +27,12 @@ interface Props {
             newRefSet: ChoiceRefSet): void
     };
     actorIdsForSequences: string[];
-    handleChoiceSequenceChange: { (sequence?: Sequence): void }
 }
 
 export const ChoiceEditor = ({
     choice, conversation, openBranchId,
     addChoiceListItem, removeChoiceListItem, updateChoiceListItem,
-    handleChoiceSequenceChange, handleChoiceUpdate,
+    handleChoiceUpdate,
     actorIdsForSequences
 }: Props) => {
 
@@ -84,14 +83,14 @@ export const ChoiceEditor = ({
                             startIcon: <DeleteIcon />,
                         }}
                         onClick={() => {
-                            handleChoiceSequenceChange(undefined)
+                            handleChoiceUpdate({ choiceSequence: undefined })
                         }} />
                 </>
             ) : (
                 <Button
                     variant="outlined"
                     onClick={() => {
-                        handleChoiceSequenceChange(makeBlankSequence('', actorIdsForSequences))
+                        handleChoiceUpdate({ choiceSequence: makeBlankSequence('', actorIdsForSequences) })
                     }}
                 >create sequence</Button>
             )}
@@ -145,7 +144,7 @@ export const ChoiceEditor = ({
 
                     <SequenceEditor
                         data={choice.choiceSequence}
-                        handleChoiceSequenceChange={handleChoiceSequenceChange}
+                        handleChoiceSequenceChange={(sequence) => handleChoiceUpdate({ choiceSequence: sequence })}
                     />
                 )}
             </DialogContent>

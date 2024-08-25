@@ -110,15 +110,6 @@ export const ConversationEditor = (props: Props) => {
         updateFromPartial({branches})
     }
 
-    const handleChoiceSequenceChange = (sequence?: Sequence) => {
-        const { choice, branches } = getBranchAndChoice()
-        if (!choice) {
-            return
-        }
-        choice.choiceSequence = sequence
-        updateFromPartial({ branches })
-    }
-
     const addNewBranchAndOpenIt = (branchName: string) => {
         if (!branchName || conversation.branches[branchName]) {
             return
@@ -271,7 +262,6 @@ export const ConversationEditor = (props: Props) => {
                                 handleChoiceUpdate,
                             }}
                             actorIdsForSequences={actorIdsForSequences}
-                            handleChoiceSequenceChange={handleChoiceSequenceChange}
                         />
                     </>)}
                 </DialogContent>
