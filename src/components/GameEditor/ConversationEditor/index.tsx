@@ -1,5 +1,4 @@
 
-import { getModification, type FieldDef, type FieldValue } from "@/components/SchemaForm";
 import { useGameDesign } from "@/context/game-design-context";
 import { Sequence } from "@/definitions";
 import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice } from "@/definitions/Conversation";
@@ -102,14 +101,13 @@ export const ConversationEditor = (props: Props) => {
         updateFromPartial(getModifiedBranches())
     }
 
-    const handleChoiceChange = (value: FieldValue, field: FieldDef) => {
-        const getModifiedBranches = () => {
-            const { choice, branches } = getBranchAndChoice()
-            if (!choice) { return {} }
-            Object.assign(choice, getModification(value, field))
-            return { branches }
+    const handleChoiceUpdate = (mod: Partial<ConversationChoice>) => {
+        const { choice, branches } = getBranchAndChoice()
+        if (!choice) {
+            return
         }
-        updateFromPartial(getModifiedBranches())
+        Object.assign(choice, mod)
+        updateFromPartial({branches})
     }
 
     const handleChoiceSequenceChange = (sequence?: Sequence) => {
@@ -269,7 +267,8 @@ export const ConversationEditor = (props: Props) => {
                             conversation={conversation}
                             openBranchId={openBranchId ?? ''}
                             {...{
-                                handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence
+                                addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence,
+                                handleChoiceUpdate,
                             }}
                             actorIdsForSequences={actorIdsForSequences}
                             handleChoiceSequenceChange={handleChoiceSequenceChange}

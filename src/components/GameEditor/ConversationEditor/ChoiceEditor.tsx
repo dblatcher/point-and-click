@@ -1,23 +1,24 @@
-import { FieldDef, FieldValue, SchemaForm } from "@/components/SchemaForm"
+import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm"
 import { SelectInput } from "@/components/SchemaForm/SelectInput"
 import { useGameDesign } from "@/context/game-design-context"
 import { Sequence } from "@/definitions"
 import { ChoiceRefSet, Conversation, ConversationChoice, ConversationChoiceSchema } from "@/definitions/Conversation"
 import { listIds } from "@/lib/util"
-import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material"
+import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, Typography } from "@mui/material"
 import { useState } from "react"
 import { ButtonWithConfirm } from "../ButtonWithConfirm"
 import { SequenceEditor } from "../SequenceEditor"
 import { makeBlankSequence } from "../defaults"
 import { DeleteIcon } from "../material-icons"
 import { ChoiceListControl } from "./ChoiceListControl"
+import { HelpButton } from "../HelpButton"
 
 
 interface Props {
     choice: ConversationChoice
     conversation: Conversation
     openBranchId: string,
-    handleChoiceChange: { (value: FieldValue, field: FieldDef): void };
+    handleChoiceUpdate: { (mod: Partial<ConversationChoice>): void };
     addChoiceListItem: { (property: 'enablesChoices' | 'disablesChoices'): void };
     removeChoiceListItem: { (property: 'enablesChoices' | 'disablesChoices', index: number): void };
     updateChoiceListItem: {
@@ -31,8 +32,8 @@ interface Props {
 
 export const ChoiceEditor = ({
     choice, conversation, openBranchId,
-    handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem,
-    handleChoiceSequenceChange,
+    addChoiceListItem, removeChoiceListItem, updateChoiceListItem,
+    handleChoiceSequenceChange, handleChoiceUpdate,
     actorIdsForSequences
 }: Props) => {
 
@@ -46,7 +47,9 @@ export const ChoiceEditor = ({
                 'sequence': true
             })}
             data={choice}
-            changeValue={handleChoiceChange}
+            changeValue={(value, field) => {
+                handleChoiceUpdate(getModification(value, field) as Partial<ConversationChoice>)
+            }}
             options={{
                 nextBranch: Object.keys(branches),
             }}
@@ -58,11 +61,19 @@ export const ChoiceEditor = ({
             }}
         />
 
+        <Divider textAlign="left">
+            <Stack direction={'row'} alignItems={'center'}>
+                <Typography fontWeight={700}>resulting sequence</Typography>
+                <HelpButton helpTopic="conversation choice sequences" />
+            </Stack>
+        </Divider>
+
         <ButtonGroup>
             {choice.choiceSequence ? (
                 <>
                     <Button
                         variant="outlined"
+                        disabled={!!choice.sequence}
                         onClick={() => { setSequenceDialogOpen(true) }}>
                         edit sequence ({choice.choiceSequence?.stages.length} stages)
                     </Button>
@@ -82,9 +93,22 @@ export const ChoiceEditor = ({
                     onClick={() => {
                         handleChoiceSequenceChange(makeBlankSequence('', actorIdsForSequences))
                     }}
-                >start sequence</Button>
+                >create sequence</Button>
             )}
         </ButtonGroup>
+
+        <Box flex={1} paddingTop={2.5}>
+            <SelectInput
+                value={choice.sequence}
+                optional
+                options={listIds(design.sequences)}
+                label="use external sequence:"
+                inputHandler={(value) => {
+                    handleChoiceUpdate({ sequence: value })
+                }}
+            />
+        </Box>
+        <Divider textAlign="left"><Typography fontWeight={700}>effect on other choices</Typography></Divider>
 
         <ChoiceListControl
             choices={choice.disablesChoices || []}
@@ -106,23 +130,6 @@ export const ChoiceEditor = ({
             change={updateChoiceListItem}
             remove={removeChoiceListItem}
         />
-
-        <Box flex={1} paddingTop={2.5}>
-            <SelectInput
-                value={choice.sequence}
-                optional
-                options={listIds(design.sequences)}
-                label="use external sequence:"
-                inputHandler={(value) => {
-                    handleChoiceChange(value, {
-                        key: 'sequence',
-                        optional: true,
-                        type: 'ZodString',
-                        value: choice.sequence
-                    })
-                }}
-            />
-        </Box>
 
         <Dialog
             open={!!sequenceDialogOpen}
