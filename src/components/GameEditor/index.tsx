@@ -18,6 +18,7 @@ import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
+import soundService from "@/services/soundService";
 
 
 type State = {
@@ -52,10 +53,6 @@ export default class GameEditor extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-
-        if (props.usePrebuiltGame) {
-            populateServicesForPreBuiltGame()
-        }
 
         const gameDesign = props.usePrebuiltGame ? { ...prebuiltGameDesign } : {
             id: "NEW_GAME",
@@ -98,6 +95,11 @@ export default class GameEditor extends Component<Props, State> {
     }
 
     componentDidMount() {
+        imageService.removeAll()
+        soundService.removeAll()
+        if (this.props.usePrebuiltGame) {
+            populateServicesForPreBuiltGame()
+        }
         imageService.on('update', this.respondToServiceUpdate)
     }
 

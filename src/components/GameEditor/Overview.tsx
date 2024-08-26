@@ -92,7 +92,6 @@ export const Overview = () => {
           </Table>
         </TableContainer>
       </Stack>
-
       <EditorHeading heading="Flags" />
       <FlagMapControl />
     </Stack>
