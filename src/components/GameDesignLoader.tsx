@@ -2,14 +2,15 @@ import selectADesignContent from "@/content/selectADesign.md";
 import { GameCondition, GameDesign } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { ImageAsset, SoundAsset } from "@/services/assets";
-import { Alert, Button, Card, Grid, Snackbar } from "@mui/material";
+import { Alert, Card, Grid, Snackbar } from "@mui/material";
 import React from "react";
 import { GameDesignPlayer } from "./GameDesignPlayer";
 import { GameList } from "./GameList";
 import { LayoutRadioButtons } from "./LayoutRadioButtons";
+import { LayoutOption, layoutOptions, layouts } from "./layouts";
 import { LoadDesignButton } from "./LoadDesignButton";
 import { MarkDown } from "./MarkDown";
-import { LayoutOption, layoutOptions, layouts } from "./layouts";
+import { PlayerHeaderContent } from "./PlayerHeaderContent";
 
 
 type State = {
@@ -87,7 +88,13 @@ export class GameDesignLoader extends React.Component<{}, State> {
         const { design, imageAssets = [], soundAssets = [], loadingSuccessMessage, loadingErrorMessage } = this.state
 
         return <div>
-
+            <PlayerHeaderContent design={design} eject={() => {
+                return this.setState({
+                    design: undefined,
+                    imageAssets: undefined,
+                    soundAssets: undefined
+                })
+            }} />
             {!design && (
                 <>
                     <Grid container spacing={2} padding={2}
@@ -115,21 +122,14 @@ export class GameDesignLoader extends React.Component<{}, State> {
                 </>
             )}
 
-            {design && (<>
+            {design && (
                 <GameDesignPlayer
                     gameDesign={design}
                     imageAssets={imageAssets}
                     soundAssets={soundAssets}
                     uiComponents={layouts[this.state.layoutOption]}
                 />
-                <Button onClick={() => {
-                    return this.setState({
-                        design: undefined,
-                        imageAssets: undefined,
-                        soundAssets: undefined
-                    })
-                }}>Eject game</Button>
-            </>)}
+            )}
 
 
             <Snackbar open={!!loadingSuccessMessage} autoHideDuration={6000} onClose={this.handleMessageClose}>
