@@ -4,11 +4,11 @@ import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { ActorData, HotspotZone, RoomData } from "@/definitions";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
-import { eventToBoolean, eventToNumber } from "@/lib/util";
+import { eventToBoolean } from "@/lib/util";
 import { Box, Checkbox, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
 import { ChangeEventHandler, Component } from "react";
 import { ClickEffect } from "./ClickEffect";
-import { RangeInput } from "./RangeInput";
+import { ViewAngleSlider } from "./ViewAngleSlider";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -119,7 +119,7 @@ export class Preview extends Component<Props, State> {
 
     get walkablesToMark(): number[] {
         const { clickEffect } = this.props
-        if (clickEffect?.type === 'POLYGON_POINT_WALKABLE' ||  (clickEffect?.type === 'ZONE_POSITION' && clickEffect.zoneType == 'walkable')) {
+        if (clickEffect?.type === 'POLYGON_POINT_WALKABLE' || (clickEffect?.type === 'ZONE_POSITION' && clickEffect.zoneType == 'walkable')) {
             return [clickEffect.index]
         }
         return [];
@@ -204,15 +204,7 @@ export class Preview extends Component<Props, State> {
                         </Room>
                     </Box>
                     <Box>
-                        <RangeInput
-                            label="angle"
-                            value={viewAngle}
-                            formattedValue={`${Math.sign(viewAngle) !== -1 ? '+' : '-'}${Math.abs(viewAngle).toFixed(2)}`}
-                            max={1} min={-1} step={.01}
-                            onChange={
-                                (event) => this.setState({ viewAngle: eventToNumber(event.nativeEvent) })
-                            } />
-
+                        <ViewAngleSlider viewAngle={viewAngle} setViewAngle={viewAngle => this.setState({ viewAngle })} />
                         <Divider />
 
                         <Grid container>
