@@ -1,7 +1,7 @@
 
 import { ActorData, Direction, SpriteData, SpriteFrame } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
-import { Button, Container, DialogActions, Dialog, DialogContent, DialogTitle, Grid, Stack, Box } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { SpritePreview } from "../SpritePreview";
 import { AnimationFrameList } from "./AnimationFrameList";

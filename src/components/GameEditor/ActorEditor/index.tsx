@@ -205,10 +205,7 @@ export const ActorEditor = (props: Props) => {
                                             min={0} max={props.data.height}
                                             inputHandler={value => { changeValue('baseline', value) }} />
                                     </Stack>
-                                    <SpritePreview data={{
-                                        ...actor,
-                                        x: actor.width / 2, y: 0
-                                    }} />
+                                    <SpritePreview data={actor} />
                                 </Stack>
                             )
                         },

@@ -25,7 +25,8 @@ export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine }: P
         ...data,
         width: scale * data.width,
         height: scale * data.height,
-        x: roomData.width / 2
+        x: roomData.width / 2,
+        y:0
     }
     return (
         <Room data={roomData}

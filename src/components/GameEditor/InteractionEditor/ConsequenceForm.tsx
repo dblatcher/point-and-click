@@ -16,6 +16,7 @@ import { OrderForm } from "../OrderForm";
 import { RoomLocationPicker } from "../RoomLocationPicker";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
+import { SpritePreview } from "../SpritePreview";
 
 interface Props {
     consequence: AnyConsequence;
@@ -94,6 +95,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
 
     const roomData = consequence.type === 'changeRoom' || consequence.type === 'teleportActor' ? findById(consequence.roomId, gameDesign.rooms) : undefined
 
+    const actor = findById(consequence.actorId, gameDesign.actors)
 
     return (
         <Box display={'flex'}>
@@ -158,6 +160,12 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                         targetPoint={{ x: consequence.x ?? 0, y: consequence.y ?? 0 }}
                         onClick={point => update({ ...consequence, ...point })}
                     />
+                </Box>
+            )}
+
+            {actor && (
+                <Box paddingY={2} paddingLeft={2}>
+                    <SpritePreview data={actor} noBaseLine/>
                 </Box>
             )}
         </Box>
