@@ -2,25 +2,15 @@ import selectADesignContent from "@/content/selectADesign.md";
 import { GameCondition, GameDesign } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { ImageAsset, SoundAsset } from "@/services/assets";
-import { Alert, Button, Card, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Snackbar } from "@mui/material";
+import { Alert, Button, Card, Grid, Snackbar } from "@mui/material";
 import React from "react";
 import { GameDesignPlayer } from "./GameDesignPlayer";
-import { LoadDesignButton } from "./LoadDesignButton";
 import { GameList } from "./GameList";
+import { LayoutRadioButtons } from "./LayoutRadioButtons";
+import { LoadDesignButton } from "./LoadDesignButton";
 import { MarkDown } from "./MarkDown";
-import { materialUiComponents } from "./game-mui-ux";
-import { Layout as SimpleLayout } from "./game-ui/Layout";
-import { UiComponentSet } from "./game/uiComponentSet";
-import { TextBasedLayout } from "./text-based/TextBasedLayout";
+import { LayoutOption, layoutOptions, layouts } from "./layouts";
 
-
-const layouts = {
-    material: materialUiComponents,
-    textBased: { GameLayoutComponent: TextBasedLayout },
-    simple: { GameLayoutComponent: SimpleLayout }
-} satisfies Record<string, UiComponentSet>
-type LayoutOption = keyof typeof layouts;
-const layoutOptions = Object.keys(layouts) as LayoutOption[]
 
 type State = {
     design?: GameDesign
@@ -59,8 +49,6 @@ export class GameDesignLoader extends React.Component<{}, State> {
         });
     }
 
-
-
     async handleLoadFail(errorMessage: string) {
         this.setState({
             loadingErrorMessage: errorMessage,
@@ -78,7 +66,6 @@ export class GameDesignLoader extends React.Component<{}, State> {
         }
         return undefined;
     }
-
 
     handleMessageClose(event?: React.SyntheticEvent | Event, reason?: string) {
         if (reason === 'clickaway') {
@@ -112,20 +99,10 @@ export class GameDesignLoader extends React.Component<{}, State> {
                                 onError={this.handleLoadFail} />
                         </Grid>
                         <Grid item xs={6} gap={2}>
-                            <FormControl>
-                                <FormLabel id="layout-radio-buttons-group-label">Layout</FormLabel>
-                                <RadioGroup row
-                                    aria-labelledby="layout-radio-buttons-group-label"
-                                    defaultValue={layoutOptions[0]}
-                                    name="layout-radio-buttons-group"
-                                    value={this.state.layoutOption}
-                                    onChange={option => { this.setState({ layoutOption: option.target.value as LayoutOption }) }}
-                                >
-                                    {layoutOptions.map(option => (
-                                        <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
-                                    ))}
-                                </RadioGroup>
-                            </FormControl>
+                            <LayoutRadioButtons
+                                layoutOption={this.state.layoutOption}
+                                setLayoutOption={(layoutOption) => { this.setState({ layoutOption }) }}
+                            />
                         </Grid>
                     </Grid>
                     <GameList
