@@ -2,6 +2,7 @@ import { SchemaForm, getModification } from "@/components/SchemaForm";
 import { SelectInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
 import { AnyConsequence, Consequence, ConsequenceType, GameDesign, Order } from "@/definitions";
+import { Narrative } from "@/definitions/BaseTypes";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
@@ -10,11 +11,11 @@ import soundService from "@/services/soundService";
 import { Box } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
+import { NarrativeEditor } from "../NarrativeEditor";
 import { OrderForm } from "../OrderForm";
+import { RoomLocationPicker } from "../RoomLocationPicker";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
-import { Narrative } from "@/definitions/BaseTypes";
-import { NarrativeEditor } from "../NarrativeEditor";
 
 interface Props {
     consequence: AnyConsequence;
@@ -91,59 +92,74 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         update({ ...consequence, narrative: newNarrative })
     }
 
+    const roomData = consequence.type === 'changeRoom' || consequence.type === 'teleportActor' ? findById(consequence.roomId, gameDesign.rooms) : undefined
+
+
     return (
-        <Box>
-            <Box paddingY={2} marginBottom={2}>
-                <SelectInput value={consequence.type}
-                    label={'type'}
-                    options={optionListIds.type}
-                    descriptions={optionListDescriptions.type}
-                    inputHandler={changeType}
+        <Box display={'flex'}>
+            <Box paddingY={2}>
+                <Box marginBottom={2}>
+                    <SelectInput value={consequence.type}
+                        label={'type'}
+                        options={optionListIds.type}
+                        descriptions={optionListDescriptions.type}
+                        inputHandler={changeType}
+                    />
+                </Box>
+
+                <SchemaForm
+                    schema={consequenceMap[consequence.type] as any}
+                    numberConfig={{
+                        time: { min: 0 },
+                        volume: {
+                            step: .1,
+                            max: 2,
+                            min: 0,
+                        }
+                    }}
+                    options={optionListIds}
+                    suggestions={{
+                        targetId: targetIds,
+                        status: getStatusSuggestions(consequence.targetId, gameDesign)
+                    }}
+                    data={consequence}
+                    changeValue={(value, field) => {
+                        update({
+                            ...consequence,
+                            ...getModification(value, field)
+                        })
+                    }}
                 />
+                {consequence.orders && (
+                    <ArrayControl color="secondary"
+                        list={consequence.orders}
+                        describeItem={(order, index) =>
+                            <EditorBox title={`${order.type} order`} themePalette="secondary">
+                                <OrderForm
+                                    animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
+                                    targetIdOptions={targetIdsWithoutItems}
+                                    targetIdDescriptions={targetDescriptionsWithoutItems}
+                                    updateData={(newOrder) => { editOrder(newOrder, index) }}
+                                    data={order} key={index} />
+                            </EditorBox>
+                        }
+                        createItem={() => getDefaultOrder('say')}
+                        mutateList={newList => { updateProperty('orders', newList) }}
+                    />
+                )}
+                <NarrativeEditor narrative={consequence.narrative} update={updateNarrative} />
             </Box>
 
-            <SchemaForm
-                schema={consequenceMap[consequence.type] as any}
-                numberConfig={{
-                    time: { min: 0 },
-                    volume: {
-                        step: .1,
-                        max: 2,
-                        min: 0,
-                    }
-                }}
-                options={optionListIds}
-                suggestions={{
-                    targetId: targetIds,
-                    status: getStatusSuggestions(consequence.targetId, gameDesign)
-                }}
-                data={consequence}
-                changeValue={(value, field) => {
-                    update({
-                        ...consequence,
-                        ...getModification(value, field)
-                    })
-                }}
-            />
-            {consequence.orders && (
-                <ArrayControl color="secondary"
-                    list={consequence.orders}
-                    describeItem={(order, index) =>
-                        <EditorBox title={`${order.type} order`} themePalette="secondary">
-                            <OrderForm
-                                animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
-                                targetIdOptions={targetIdsWithoutItems}
-                                targetIdDescriptions={targetDescriptionsWithoutItems}
-                                updateData={(newOrder) => { editOrder(newOrder, index) }}
-                                data={order} key={index} />
-                        </EditorBox>
-                    }
-                    createItem={() => getDefaultOrder('say')}
-                    mutateList={newList => { updateProperty('orders', newList) }}
-                />
+            {roomData && (
+                <Box paddingY={2} paddingLeft={2}>
+                    <RoomLocationPicker
+                        roomData={roomData}
+                        previewWidth={300}
+                        targetPoint={{ x: consequence.x ?? 0, y: consequence.y ?? 0 }}
+                        onClick={point => update({ ...consequence, ...point })}
+                    />
+                </Box>
             )}
-
-            <NarrativeEditor narrative={consequence.narrative} update={updateNarrative} />
         </Box>
     )
 }

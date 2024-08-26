@@ -1,13 +1,12 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
-import { MarkerShape } from "@/components/svg/MarkerShape";
-import { Room } from "@/components/svg/Room";
 import { useGameDesign } from "@/context/game-design-context";
 import { ActorData } from "@/definitions";
-import { getTargetPoint, getViewAngleCenteredOn, locateClickInWorld, putActorsInDisplayOrder } from "@/lib/roomFunctions";
+import { getTargetPoint, getViewAngleCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { clamp, findById, listIds } from "@/lib/util";
 import { Alert, Box, Button, ButtonGroup, Paper, PaperProps, Slider, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ClickPointIcon } from "../material-icons";
+import { RoomLocationPicker } from "../RoomLocationPicker";
 
 interface Props {
     actorData: ActorData;
@@ -60,34 +59,17 @@ export const PositionPreview = ({ actorData, reportClick, pickRoom }: Props) => 
                         startIcon={<ClickPointIcon />}
                     >walk to point</Button>
                 </ButtonGroup>
-                <Box
-                    sx={{
-                        cursor: 'crosshair',
-                        position: 'relative',
-                    }}
-                >
-                    <Room
-                        data={roomData}
-                        contents={contents}
-                        viewAngle={viewAngle}
-                        showObstacleAreas={true}
 
-                        handleRoomClick={(x, y) => {
-                            const point = locateClickInWorld(x, y, viewAngle, roomData)
-                            reportClick({ x: Math.round(point.x), y: Math.round(point.y) }, role)
-                        }}
-                        maxWidth={previewWidth}
-                        maxHeight={previewWidth}
-                        forPreview={true}
-                    >
-                        <MarkerShape
-                            roomData={roomData}
-                            viewAngle={viewAngle}
-                            color={'red'}
-                            {...getTargetPoint(actorData, roomData)}
-                        />
-                    </Room>
-                </Box>
+                <RoomLocationPicker
+                    roomData={roomData}
+                    targetPoint={getTargetPoint(actorData, roomData)}
+                    contents={contents}
+                    viewAngle={viewAngle}
+                    previewWidth={previewWidth}
+                    onClick={(point) => {
+                        reportClick(point, role)
+                    }}
+                />
 
                 <Box padding={1}>
                     <Stack direction={'row'} alignItems={'center'} minWidth={300}>
