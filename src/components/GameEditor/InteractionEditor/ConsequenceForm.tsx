@@ -180,7 +180,10 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                     <RoomLocationPicker
                         viewAngle={zone ? getViewAngleCenteredOn(zone.x, roomData) : 0}
                         roomData={roomData}
-                        previewWidth={300} />
+                        previewWidth={300}
+                        obstacleRefToFocus={consequence.zoneType === 'obstacle' ? consequence.ref : undefined}
+                        walkableRefToFocus={consequence.zoneType === 'walkable' ? consequence.ref : undefined}
+                    />
                 </Box>
             )}
             {actor && (

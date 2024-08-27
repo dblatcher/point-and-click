@@ -32,6 +32,8 @@ interface Props {
     children?: ReactNode;
     forPreview?: boolean;
     fontFamily?: string;
+    obstacleRefToFocus?: string;
+    walkableRefToFocus?: string;
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -54,6 +56,8 @@ export const Room: FunctionComponent<Props> = ({
     contents = [],
     forPreview = false,
     fontFamily,
+    obstacleRefToFocus,
+    walkableRefToFocus,
     children,
 }: Props) => {
     const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], } = data;
@@ -74,6 +78,11 @@ export const Room: FunctionComponent<Props> = ({
         margin: forPreview ? 0 : undefined,
         backgroundColor: data.backgroundColor,
     }
+
+    const obstacleInFocus = obstacleRefToFocus ? obstacleAreas.find(z => z.ref === obstacleRefToFocus) : undefined
+    const walkableInFocus = walkableRefToFocus ? walkableAreas.find(z => z.ref === walkableRefToFocus) : undefined
+    const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
+    const left = center - data.width / 2
 
     return (
         <figure
@@ -97,8 +106,6 @@ export const Room: FunctionComponent<Props> = ({
                     )}
 
                 {showObstacleAreas && walkableAreas.map((zone, index) => {
-                    const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
-                    const left = center - data.width / 2
                     const classes = zone.disabled ? [styles.walkableArea, styles.disabledZone].join(" ") : styles.walkableArea;
                     return <ZoneSvg key={index}
                         className={classes}
@@ -111,8 +118,6 @@ export const Room: FunctionComponent<Props> = ({
                 })}
 
                 {showObstacleAreas && obstacleAreas.map((zone, index) => {
-                    const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
-                    const left = center - data.width / 2
                     const classes = zone.disabled ? [styles.obstacleArea, styles.disabledZone].join(" ") : styles.obstacleArea;
                     return <ZoneSvg key={index}
                         className={classes}
@@ -123,6 +128,25 @@ export const Room: FunctionComponent<Props> = ({
                         markVertices={markObstacleVertices.includes(index)}
                     />
                 })}
+
+                {obstacleInFocus && (
+                    <ZoneSvg
+                        className={[styles.obstacleArea, styles.blink].join(" ")}
+                        stopPropagation={false}
+                        zone={obstacleInFocus}
+                        x={obstacleInFocus.x + left}
+                        y={data.height - obstacleInFocus.y}
+                    />
+                )}
+                {walkableInFocus && (
+                    <ZoneSvg
+                        className={[styles.walkableArea, styles.blink].join(" ")}
+                        stopPropagation={false}
+                        zone={walkableInFocus}
+                        x={walkableInFocus.x + left}
+                        y={data.height - walkableInFocus.y}
+                    />
+                )}
 
                 {obstacleCells &&
                     <ObstacleCellOverlay roomData={data} viewAngle={viewAngle} cellMatrix={obstacleCells} />

@@ -41,9 +41,21 @@
     }
   }
 
+  @keyframes blinking {
+    0% {
+        filter: opacity(1)
+    }
+    100% {
+        filter: opacity(0)
+    }
+  }
+
 .flash {
     fill: white;
     animation: .5s linear 1s infinite alternate flashing;
+}
+.blink {
+    animation: 1s ease-in 0s infinite alternate blinking;
 }
 
 .obstacleArea {
