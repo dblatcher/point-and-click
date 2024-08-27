@@ -15,12 +15,13 @@ interface Props {
     viewAngle?: number,
     previewWidth?: number,
     onClick?: { (point: { x: number; y: number }): void };
+    showObstacleAreas?: boolean
 }
 
 export const RoomLocationPicker = ({
     roomData, contents = [], targetPoint,
     viewAngle: viewAngleProp, previewWidth = 600,
-    onClick
+    onClick, showObstacleAreas,
 }: Props) => {
 
     const [viewAngleState, setViewAngleState] = useState(0)
@@ -36,7 +37,7 @@ export const RoomLocationPicker = ({
             data={roomData}
             contents={contents}
             viewAngle={viewAngle}
-            showObstacleAreas={true}
+            showObstacleAreas={showObstacleAreas}
             handleRoomClick={(x, y) => {
                 if (onClick) {
                     const point = locateClickInWorld(x, y, viewAngle, roomData)

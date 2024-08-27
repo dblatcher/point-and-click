@@ -168,6 +168,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                 <Box paddingY={2} paddingLeft={2}>
                     <RoomLocationPicker
                         roomData={roomData}
+                        showObstacleAreas={true}
                         previewWidth={300}
                         targetPoint={{ x: consequence.x ?? 0, y: consequence.y ?? 0 }}
                         onClick={point => update({ ...consequence, ...point })}
