@@ -2,7 +2,7 @@ import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { ActorData } from "@/definitions";
 import { getTargetPoint, getViewAngleCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
-import { clamp, findById, listIds } from "@/lib/util";
+import { findById, listIds } from "@/lib/util";
 import { Alert, Box, Button, ButtonGroup, Paper, PaperProps, Slider, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ClickPointIcon } from "../material-icons";
@@ -29,7 +29,7 @@ export const PositionPreview = ({ actorData, reportClick, pickRoom }: Props) => 
         ? gameDesign.actors.filter(actor => actor.room === roomData.id && actor.id !== actorData.id)
         : []
 
-    const viewAngle = roomData ? clamp(getViewAngleCenteredOn(actorData.x, roomData), 1, -1) : 0
+    const viewAngle = roomData ? getViewAngleCenteredOn(actorData.x, roomData) : 0
 
     const contents = [...otherActors, actorData]
         .sort(putActorsInDisplayOrder)

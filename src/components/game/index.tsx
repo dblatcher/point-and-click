@@ -7,7 +7,7 @@ import { cloneData } from "@/lib/clone";
 import { CellMatrix, generateCellMatrix } from "@/lib/pathfinding/cells";
 import { buildContentsList } from "@/lib/put-contents-in-order";
 import { getViewAngleCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
-import { clamp, findById } from "@/lib/util";
+import { findById } from "@/lib/util";
 // state logic
 import { continueSequence } from "./continueSequence";
 import { doPendingInteraction, handleCommand } from "./handleCommand";
@@ -217,7 +217,7 @@ export default class Game extends Component<GameProps, GameState> {
         const { currentRoom } = this
         const { player } = this
         if (!player || !currentRoom) { return }
-        const viewAngle = clamp(getViewAngleCenteredOn(player.x, currentRoom), 1, -1)
+        const viewAngle = getViewAngleCenteredOn(player.x, currentRoom)
         this.setState({ viewAngle })
     }
 
