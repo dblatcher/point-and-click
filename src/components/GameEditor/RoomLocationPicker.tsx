@@ -14,7 +14,7 @@ interface Props {
     targetPoint?: Point,
     viewAngle?: number,
     previewWidth?: number,
-    onClick: { (point: { x: number; y: number }): void };
+    onClick?: { (point: { x: number; y: number }): void };
 }
 
 export const RoomLocationPicker = ({
@@ -28,7 +28,7 @@ export const RoomLocationPicker = ({
 
     return <Box
         sx={{
-            cursor: 'crosshair',
+            cursor: onClick ? 'crosshair' : 'default',
             position: 'relative',
         }}
     >
@@ -37,10 +37,11 @@ export const RoomLocationPicker = ({
             contents={contents}
             viewAngle={viewAngle}
             showObstacleAreas={true}
-
             handleRoomClick={(x, y) => {
-                const point = locateClickInWorld(x, y, viewAngle, roomData)
-                onClick({ x: Math.round(point.x), y: Math.round(point.y) })
+                if (onClick) {
+                    const point = locateClickInWorld(x, y, viewAngle, roomData)
+                    onClick({ x: Math.round(point.x), y: Math.round(point.y) })
+                }
             }}
             maxWidth={previewWidth}
             maxHeight={previewWidth}

@@ -1,7 +1,7 @@
 import { SchemaForm, getModification } from "@/components/SchemaForm";
 import { SelectInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
-import { AnyConsequence, Consequence, ConsequenceType, GameDesign, Order } from "@/definitions";
+import { AnyConsequence, Consequence, ConsequenceType, GameDesign, Order, RoomData, Zone } from "@/definitions";
 import { Narrative } from "@/definitions/BaseTypes";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
@@ -17,6 +17,7 @@ import { RoomLocationPicker } from "../RoomLocationPicker";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
 import { SpritePreview } from "../SpritePreview";
+import { getViewAngleCenteredOn } from "@/lib/roomFunctions";
 
 interface Props {
     consequence: AnyConsequence;
@@ -34,6 +35,17 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
         : []
 
     return { branchIdList, choiceRefList }
+}
+
+const getZone = (consequence: AnyConsequence, roomData?: RoomData): Zone | undefined => {
+    const { type, ref } = consequence
+    if (type !== 'toggleZone' || !ref || !roomData) {
+        return undefined
+    }
+    const hotspot = roomData.hotspots?.find(zone => zone.id === ref)
+    const obstacle = roomData.obstacleAreas?.find(zone => zone.ref === ref);
+    const walkable = roomData.walkableAreas?.find(zone => zone.ref === ref);
+    return hotspot ?? obstacle ?? walkable
 }
 
 export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) => {
@@ -93,9 +105,9 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         update({ ...consequence, narrative: newNarrative })
     }
 
-    const roomData = consequence.type === 'changeRoom' || consequence.type === 'teleportActor' ? findById(consequence.roomId, gameDesign.rooms) : undefined
-
+    const roomData = findById(consequence.roomId, gameDesign.rooms);
     const actor = findById(consequence.actorId, gameDesign.actors)
+    const zone = getZone(consequence, roomData)
 
     return (
         <Box display={'flex'}>
@@ -152,7 +164,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                 <NarrativeEditor narrative={consequence.narrative} update={updateNarrative} />
             </Box>
 
-            {roomData && (
+            {roomData && (consequence.type === 'changeRoom' || consequence.type === 'teleportActor') && (
                 <Box paddingY={2} paddingLeft={2}>
                     <RoomLocationPicker
                         roomData={roomData}
@@ -162,10 +174,17 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                     />
                 </Box>
             )}
-
+            {roomData && (consequence.type === 'toggleZone') && (
+                <Box paddingY={2} paddingLeft={2}>
+                    <RoomLocationPicker
+                        viewAngle={zone ? getViewAngleCenteredOn(zone.x, roomData) : 0}
+                        roomData={roomData}
+                        previewWidth={300} />
+                </Box>
+            )}
             {actor && (
                 <Box paddingY={2} paddingLeft={2}>
-                    <SpritePreview data={actor} noBaseLine/>
+                    <SpritePreview data={actor} noBaseLine />
                 </Box>
             )}
         </Box>
