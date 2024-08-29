@@ -18,12 +18,14 @@ interface Props {
     showObstacleAreas?: boolean
     obstacleRefToFocus?: string
     walkableRefToFocus?: string
+    flashHotspot?: number
 }
 
 export const RoomLocationPicker = ({
     roomData, contents = [], targetPoint,
     viewAngle: viewAngleProp, previewWidth = 600,
-    onClick, showObstacleAreas, obstacleRefToFocus, walkableRefToFocus
+    onClick, showObstacleAreas, obstacleRefToFocus, walkableRefToFocus,
+    flashHotspot
 }: Props) => {
 
     const [viewAngleState, setViewAngleState] = useState(0)
@@ -51,6 +53,7 @@ export const RoomLocationPicker = ({
             forPreview={true}
             obstacleRefToFocus={obstacleRefToFocus}
             walkableRefToFocus={walkableRefToFocus}
+            flashHotspot={flashHotspot}
         >
             {targetPoint && (
                 <MarkerShape
