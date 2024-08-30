@@ -8,26 +8,38 @@ type Props = {
     overrideSprite?: Sprite;
     scale?: number;
     noBaseLine?: boolean;
+    maxHeight?: number;
 }
 
 const makeRoomData = (data: ActorData, scale: number): RoomData => ({
-    height: (scale * data.height) + 10,
+    height: (scale * data.height),
     width: (scale * data.width * 1.5) + 10,
     frameWidth: (scale * data.width * 1.5) + 10,
     id: '',
     background: []
 })
 
-export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine }: Props) => {
-    const maxWidth = 100 * scale
-    const roomData = makeRoomData(data, scale)
+const getscale = (actor: ActorData, scale: number, maxHeight?: number) => {
+    if (!maxHeight) {
+        return scale
+    }
+    return maxHeight / actor.height
+}
+
+export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, maxHeight }: Props) => {
+
+    const effectiveScale = getscale(data, scale, maxHeight)
+    const roomData = makeRoomData(data, effectiveScale)
+
     const modifiedActorData: ActorData = {
         ...data,
-        width: scale * data.width,
-        height: scale * data.height,
+        width: effectiveScale * data.width,
+        height: effectiveScale * data.height,
         x: roomData.width / 2,
-        y:0
+        y: 0
     }
+
+    const maxWidth = maxHeight ? roomData.width : 100 * scale
     return (
         <Room data={roomData}
             showObstacleAreas={false}

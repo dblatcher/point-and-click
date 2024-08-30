@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { GameDataItem } from "@/definitions";
+import { ActorData, GameDataItem, RoomData } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { cloneData } from "@/lib/clone";
 import { uploadJsonData } from "@/lib/files";
@@ -12,12 +12,26 @@ import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { EditorHeading } from "./EditorHeading";
 import { formatIdInput } from "./helpers";
 import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
+import { RoomLocationPicker } from "./RoomLocationPicker";
+import { SpritePreview } from "./SpritePreview";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
     schema?: ZodObject<ZodRawShape>
     designProperty: GameDataItemType
     itemTypeName: string
+}
+
+const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
+    if (designProperty === 'rooms') {
+        const roomData = item as RoomData
+        return <RoomLocationPicker roomData={roomData} previewHeight={60} viewAngle={0} />
+    }
+    if (designProperty === 'actors') {
+        const actorData = item as ActorData
+        return <SpritePreview data={{ ...actorData, status: 'default' }} noBaseLine maxHeight={60} />
+    }
+    return null
 }
 
 
@@ -69,7 +83,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
             <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'}>
                 {gameDesign[designProperty].map(item => (
                     <Fragment key={item.id}>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                             <Button
                                 startIcon={<EditIcon />}
                                 variant="contained"
@@ -100,6 +114,9 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                                 itemType={designProperty}
                                 itemTypeName={itemTypeName}
                             />
+                        </Grid>
+                        <Grid item xs={4} display={'flex'}>
+                            <ItemPreview item={item} designProperty={designProperty} />
                         </Grid>
                     </Fragment>
                 ))}

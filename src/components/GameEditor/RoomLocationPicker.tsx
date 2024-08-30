@@ -14,6 +14,7 @@ interface Props {
     targetPoint?: Point,
     viewAngle?: number,
     previewWidth?: number,
+    previewHeight?: number,
     onClick?: { (point: { x: number; y: number }): void };
     showObstacleAreas?: boolean
     obstacleRefToFocus?: string
@@ -23,7 +24,7 @@ interface Props {
 
 export const RoomLocationPicker = ({
     roomData, contents = [], targetPoint,
-    viewAngle: viewAngleProp, previewWidth = 600,
+    viewAngle: viewAngleProp, previewWidth = 600, previewHeight = previewWidth,
     onClick, showObstacleAreas, obstacleRefToFocus, walkableRefToFocus,
     flashHotspot
 }: Props) => {
@@ -49,7 +50,7 @@ export const RoomLocationPicker = ({
                 }
             }}
             maxWidth={previewWidth}
-            maxHeight={previewWidth}
+            maxHeight={previewHeight}
             forPreview={true}
             obstacleRefToFocus={obstacleRefToFocus}
             walkableRefToFocus={walkableRefToFocus}
