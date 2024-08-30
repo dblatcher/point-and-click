@@ -26,22 +26,22 @@ const ActStepFields = (props: {
     const { step, index, animationSuggestions, changeStep } = props
 
     return <>
-        <Box display={'flex'} flexWrap={'wrap'}>
-            <StringInput label="animation" 
-                value={step.animation ?? ''} 
-                suggestions={animationSuggestions} 
-                inputHandler={( animation) => changeStep({animation}, index)} 
+        <Box display={'flex'} gap={1}>
+            <StringInput label="animation"
+                value={step.animation ?? ''}
+                suggestions={animationSuggestions}
+                inputHandler={(animation) => changeStep({ animation }, index)}
             />
-            <NumberInput label="duration" 
-                value={step.duration} 
-                inputHandler={(duration) => changeStep({duration}, index)} 
+            <NumberInput label="duration"
+                value={step.duration}
+                inputHandler={(duration) => changeStep({ duration }, index)}
             />
-            <BooleanInput label="reverse" 
-                value={step.reverse ?? false} 
-                inputHandler={(reverse) => changeStep({reverse}, index)} 
+            <BooleanInput label="reverse"
+                value={step.reverse ?? false}
+                inputHandler={(reverse) => changeStep({ reverse }, index)}
             />
         </Box>
-      </>
+    </>
 }
 
 export class OrderWithStepsForm extends Component<Props> {
@@ -113,10 +113,14 @@ export class OrderWithStepsForm extends Component<Props> {
         return (
             <>
                 <Box marginTop={2}>
-                    <Typography variant="caption" >Steps</Typography>
+                    {steps.length === 0 ? (
+                        <Typography variant="caption">Insert first step:</Typography>
+                    ) : <Typography variant="caption">Steps x{steps.length}</Typography>
+                    }
                 </Box>
                 {type === 'act' && (
                     <ArrayControl
+                        deleteIcon="clear"
                         list={steps}
                         describeItem={(step, index) => (
                             <ActStepFields index={index}
@@ -134,6 +138,7 @@ export class OrderWithStepsForm extends Component<Props> {
                 {type === 'move' && (
                     <ArrayControl
                         list={steps}
+                        deleteIcon="clear"
                         describeItem={(step, index) => (
                             <SchemaForm key={index}
                                 changeValue={(value, field) => { changeStep(value, field, index) }}
@@ -145,9 +150,6 @@ export class OrderWithStepsForm extends Component<Props> {
                         createItem={makeNewStep[type]}
                         frame="PLAIN"
                     />
-                )}
-                {steps.length === 0 && (
-                    <Typography variant="caption">Insert first step:</Typography>
                 )}
             </>
         )

@@ -1,6 +1,6 @@
 import { Box, ButtonGroup, IconButton, Paper, Stack, StackProps } from "@mui/material";
 import { Fragment, ReactNode } from "react";
-import { AddIcon, ArrowUpwardIcon, ArrowDownwardIcon, DeleteIcon } from "./material-icons";
+import { AddIcon, ArrowUpwardIcon, ArrowDownwardIcon, DeleteIcon, ClearIcon } from "./material-icons";
 
 
 type Color = "success" | "primary" | "secondary" | "error" | "info" | "warning"
@@ -21,7 +21,8 @@ interface Props<T> {
     frame?: Framing
     buttonSize?: ButtonSize
     horizontalMoveButtons?: boolean
-    stackProps?:StackProps
+    stackProps?: StackProps;
+    deleteIcon?: 'delete' | 'clear';
 }
 
 
@@ -56,17 +57,20 @@ const InsertButton = ({ index, handleInsert, color, buttonSize }: {
         </Box>
     </Box>
 )
-const DeleteButton = ({ index, handleDelete, color, buttonSize }: {
+const DeleteButton = ({ index, handleDelete, color, buttonSize, deleteIcon }: {
     index: number;
     handleDelete: { (index: number): void }
     color?: Color
     buttonSize?: ButtonSize
+    deleteIcon: 'delete' | 'clear'
 }) => (
     <IconButton size={buttonSize}
         color={color}
         onClick={() => { handleDelete(index) }}
         title="delete"
-    ><DeleteIcon />
+    >
+        {deleteIcon === 'delete' && <DeleteIcon />}
+        {deleteIcon === 'clear' && <ClearIcon />}
     </IconButton>
 )
 
@@ -93,6 +97,7 @@ export const ArrayControl = <T,>({
     buttonSize = 'large',
     horizontalMoveButtons = false,
     stackProps,
+    deleteIcon = 'delete'
 }: Props<T>) => {
 
     const handleDelete = (index: number) => {
@@ -146,7 +151,11 @@ export const ArrayControl = <T,>({
 
                             {!noDeleteButtons && (
                                 <Box position={'relative'} component={'aside'}>
-                                    <DeleteButton index={index} handleDelete={handleDelete} color={color} buttonSize={buttonSize} />
+                                    <DeleteButton index={index}
+                                        handleDelete={handleDelete}
+                                        color={color}
+                                        buttonSize={buttonSize}
+                                        deleteIcon={deleteIcon} />
                                 </Box>
                             )}
 
