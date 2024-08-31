@@ -1,11 +1,11 @@
 import { AddIcon, ContentCopyIcon, EditIcon, UploadIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
-import { ActorData, GameDataItem, RoomData } from "@/definitions";
+import { ActorData, GameDataItem, ItemData, RoomData } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { cloneData } from "@/lib/clone";
 import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
-import { Alert, Button, ButtonGroup, Grid, Stack, Typography } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Grid, Stack, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import { ZodSchema } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
@@ -15,6 +15,7 @@ import { formatIdInput } from "./helpers";
 import { RoomLocationPicker } from "./RoomLocationPicker";
 import { SpritePreview } from "./SpritePreview";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
+import { FramePreview } from "./SpriteEditor/FramePreview";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -31,6 +32,13 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
     if (designProperty === 'actors') {
         const actorData = item as ActorData
         return <SpritePreview data={{ ...actorData, status: 'default' }} noBaseLine maxHeight={60} />
+    }
+    if (designProperty === 'items') {
+        const { imageId, row = 0, col = 0 } = item as ItemData
+        if (imageId) {
+            return <FramePreview frame={{ imageId, row, col }} height={50} width={50} />
+        }
+        return <Box sx={{height:50}}></Box>
     }
     return null
 }
