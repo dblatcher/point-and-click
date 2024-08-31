@@ -9,9 +9,10 @@ import { PickInteractionDialog } from "./InteractionEditor/PickInteractionDialog
 interface Props {
     newPartial: Partial<Interaction>
     criteria: { (interaction: Interaction): boolean }
+    disabled?: boolean;
 }
 
-export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newPartial, criteria }) => {
+export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newPartial, criteria, disabled }) => {
     const { gameDesign, changeInteraction } = useGameDesign()
     const [interactionDialogOpen, setInteractionDialogOpen] = useState(false)
     const [pickInteractionDialogOpen, setPickInteractionDialogOpen] = useState(false)
@@ -35,6 +36,7 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newP
     return <>
         <Button onClick={handleInteractionButton}
             variant="outlined"
+            disabled={disabled}
             startIcon={<InteractionIcon />}
         >interactions</Button>
 

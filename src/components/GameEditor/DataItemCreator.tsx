@@ -38,7 +38,7 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
         if (imageId) {
             return <FramePreview frame={{ imageId, row, col }} height={50} width={50} />
         }
-        return <Box sx={{height:50}}></Box>
+        return <Box sx={{ height: 50 }}></Box>
     }
     return null
 }
@@ -46,7 +46,8 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
 const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
     const { id } = item
     if (designProperty === 'actors') {
-        return <InteractionsDialogsButton criteria={i => i.targetId === id} newPartial={{ targetId: id }} />
+        const { noInteraction } = item as ActorData
+        return <InteractionsDialogsButton disabled={noInteraction} criteria={i => i.targetId === id} newPartial={{ targetId: id }} />
     }
     if (designProperty === 'items') {
         return <InteractionsDialogsButton criteria={i => i.targetId === id || i.itemId === id} newPartial={{ itemId: id }} />
