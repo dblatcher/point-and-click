@@ -28,6 +28,7 @@ import RepeatOneIcon from '@mui/icons-material/RepeatOne';
 import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
 import InteractionIcon from '@mui/icons-material/Mediation';
 import ClickPointIcon from '@mui/icons-material/Adjust';
+import LinkIcon from '@mui/icons-material/Link';
 
 export {
     AddIcon,
@@ -47,6 +48,7 @@ export {
     ExpandMoreIcon,
     HelpIcon,
     HideImageOutlinedIcon,
+    LinkIcon,
     LogOut,
     InteractionIcon,
     PhotoOutlinedIcon,
