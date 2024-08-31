@@ -1,23 +1,23 @@
+import { AddIcon, ContentCopyIcon, EditIcon, UploadIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
 import { ActorData, GameDataItem, RoomData } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { cloneData } from "@/lib/clone";
+import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
-import { AddIcon, ContentCopyIcon, EditIcon, UploadIcon } from "@/components/GameEditor/material-icons";
 import { Alert, Button, Grid, Stack, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
-import { ZodObject, ZodRawShape } from "zod";
+import { ZodSchema } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { EditorHeading } from "./EditorHeading";
 import { formatIdInput } from "./helpers";
-import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
 import { RoomLocationPicker } from "./RoomLocationPicker";
 import { SpritePreview } from "./SpritePreview";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
-    schema?: ZodObject<ZodRawShape>
+    schema?: ZodSchema<DataType>
     designProperty: GameDataItemType
     itemTypeName: string
 }
