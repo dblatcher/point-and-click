@@ -5,7 +5,7 @@ import { GameDataItemType } from "@/definitions/Game";
 import { cloneData } from "@/lib/clone";
 import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
-import { Alert, Button, Grid, Stack, Typography } from "@mui/material";
+import { Alert, Button, ButtonGroup, Grid, Stack, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import { ZodSchema } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
@@ -14,6 +14,7 @@ import { EditorHeading } from "./EditorHeading";
 import { formatIdInput } from "./helpers";
 import { RoomLocationPicker } from "./RoomLocationPicker";
 import { SpritePreview } from "./SpritePreview";
+import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -34,6 +35,16 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
     return null
 }
 
+const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
+    const { id } = item
+    if (designProperty === 'actors') {
+        return <InteractionsDialogsButton criteria={i => i.targetId === id} newPartial={{ targetId: id }} />
+    }
+    if (designProperty === 'items') {
+        return <InteractionsDialogsButton criteria={i => i.targetId === id || i.itemId === id} newPartial={{ itemId: id }} />
+    }
+    return null
+}
 
 export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, schema, designProperty, itemTypeName }: Props<DataType>) => {
     const { gameDesign, performUpdate, openInEditor } = useGameDesign()
@@ -83,7 +94,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
             <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'}>
                 {gameDesign[designProperty].map(item => (
                     <Fragment key={item.id}>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <Button
                                 startIcon={<EditIcon />}
                                 variant="contained"
@@ -91,31 +102,31 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                                 onClick={() => openInEditor(designProperty, item.id)}
                             >{item.id}</Button>
                         </Grid>
-                        <Grid item xs={2}>
-                            <ButtonWithTextInput
-                                label={'copy'}
-                                buttonProps={{
-                                    startIcon: <ContentCopyIcon />,
-                                    variant: 'outlined',
-                                    sx: { width: '100%' },
-                                }}
-                                modifyInput={formatIdInput}
-                                onEntry={(newId) => handleDuplicate(newId, item)}
-                                confirmationText={`Enter ${itemTypeName} id`}
-                            />
+                        <Grid item xs={6}>
+                            <ButtonGroup>
+                                <ItemInteraction item={item} designProperty={designProperty} />
+                                <ButtonWithTextInput
+                                    label={'copy'}
+                                    buttonProps={{
+                                        startIcon: <ContentCopyIcon />,
+                                        variant: 'outlined',
+                                    }}
+                                    modifyInput={formatIdInput}
+                                    onEntry={(newId) => handleDuplicate(newId, item)}
+                                    confirmationText={`Enter ${itemTypeName} id`}
+                                />
+                                <DeleteDataItemButton
+                                    buttonProps={{
+                                        variant: 'outlined',
+                                    }}
+                                    dataItem={item}
+                                    itemType={designProperty}
+                                    itemTypeName={itemTypeName}
+                                />
+                            </ButtonGroup>
                         </Grid>
-                        <Grid item xs={2}>
-                            <DeleteDataItemButton
-                                buttonProps={{
-                                    variant: 'outlined',
-                                    sx: { width: '100%' },
-                                }}
-                                dataItem={item}
-                                itemType={designProperty}
-                                itemTypeName={itemTypeName}
-                            />
-                        </Grid>
-                        <Grid item xs={4} display={'flex'}>
+
+                        <Grid item xs={3} display={'flex'} justifyContent={'flex-end'}>
                             <ItemPreview item={item} designProperty={designProperty} />
                         </Grid>
                     </Fragment>
