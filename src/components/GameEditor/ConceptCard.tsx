@@ -30,6 +30,7 @@ export const ConceptCard = ({ Icon, handleClick, title, description, width, narr
                 <Box
                     display={'flex'}
                     justifyContent={'space-between'}
+                    maxWidth={width}
                     sx={{ paddingX: 1, paddingY: .25 }}
                 >
                     <Typography >

@@ -5,6 +5,7 @@ import { getOrderIcon } from "./get-icons";
 interface Props {
     order: Order;
     handleEditButton: { (): void }
+    width?: number
 }
 
 
@@ -26,12 +27,13 @@ const getDescription = (order: Order): string => {
 
 }
 
-export const OrderCard = ({ order, handleEditButton }: Props) => (
+export const OrderCard = ({ order, handleEditButton, width }: Props) => (
     <ConceptCard
         Icon={getOrderIcon(order)}
         handleClick={handleEditButton}
         description={getDescription(order)}
         title={order.type}
         narrative={order.narrative}
+        width={width}
     />
 )

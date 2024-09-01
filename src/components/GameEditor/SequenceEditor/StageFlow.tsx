@@ -58,6 +58,7 @@ export const StageFlow = ({
                                                 index: consequenceIndex,
                                             })
                                         }}
+                                        width={230}
                                     />
                                 )}
                                 mutateList={(newList) => {
@@ -101,6 +102,7 @@ export const StageFlow = ({
                                                     index: orderIndex,
                                                 })
                                             }}
+                                            width={230}
                                         />
                                     )}
                                     mutateList={(newList) => { changeOrderList(newList, stageIndex, actorId) }}
