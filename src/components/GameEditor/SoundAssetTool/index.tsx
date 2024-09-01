@@ -1,9 +1,9 @@
-import { SoundToggle } from "@/components/game-ui/SoundToggle";
 import { cloneData } from "@/lib/clone";
 import {
   fileToObjectUrl,
   makeDownloadFile,
   uploadFile,
+  urlToBlob,
 } from "@/lib/files";
 import { buildAssetZipBlob, readSoundAssetFromZipFile } from "@/lib/zipFiles";
 import { ServiceItem } from "@/services/Service";
@@ -13,14 +13,13 @@ import {
   soundAssetCategories,
 } from "@/services/assets";
 import soundService from "@/services/soundService";
-import { Button, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Component, RefObject, createRef } from "react";
-import { EditorBox } from "../EditorBox";
 import { EditorHeading } from "../EditorHeading";
 import { FileAssetSelector } from "../FileAssetSelector";
 import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { SoundAssetForm } from "./SoundAssetForm";
-import { PlayCircleOutlineOutlinedIcon } from "../material-icons";
+import { SoundPreview } from "./SoundPreview";
 
 type State = {
   saveWarning?: string;
@@ -32,7 +31,7 @@ type State = {
 
 export class SoundAssetTool extends Component<{}, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
-  file: File | null;
+  file: File | Blob | null;
 
   constructor(props: SoundAssetTool["props"]) {
     super(props);
@@ -42,6 +41,7 @@ export class SoundAssetTool extends Component<{}, State> {
       }
     };
     this.loadFile = this.loadFile.bind(this);
+    this.loadUrl = this.loadUrl.bind(this);
     this.loadFromZipFile = this.loadFromZipFile.bind(this);
     this.saveToService = this.saveToService.bind(this);
     this.openFromService = this.openFromService.bind(this);
@@ -53,11 +53,7 @@ export class SoundAssetTool extends Component<{}, State> {
     this.file = null;
   }
 
-  loadFile = async () => {
-    const file = await uploadFile();
-    if (!file) {
-      return;
-    }
+  setNewFile(file: Blob | File) {
     this.file = file
     const newUrl = fileToObjectUrl(file);
 
@@ -67,12 +63,30 @@ export class SoundAssetTool extends Component<{}, State> {
 
     this.setState({
       asset: {
-        id: file.name,
+        id: file.name ?? this.state.asset.id,
         originalFileName: file.name,
       },
       saveWarning: undefined,
       fileObjectUrl: newUrl,
     });
+  }
+
+  loadFile = async () => {
+    const file = await uploadFile();
+    if (!file) {
+      this.setState({ uploadWarning: 'failed to upload image file' })
+      return;
+    }
+    this.setNewFile(file)
+  };
+
+  loadUrl = async (url: string) => {
+    const { blob, failure } = await urlToBlob(url, 'audio')
+    if (!blob) {
+      this.setState({ uploadWarning: `failed to load sound URL: ${failure ?? ''}` })
+      return
+    }
+    this.setNewFile(blob)
   };
 
   clearForm() {
@@ -205,20 +219,13 @@ export class SoundAssetTool extends Component<{}, State> {
               isNewAsset={isNewAsset}
               saveAssetChanges={this.saveToService}
               saveWarning={saveWarning}
+              loadUrl={this.loadUrl}
+              hasFile={!!this.state.fileObjectUrl}
             />
-            <EditorBox title="play sound">
-              <SoundToggle />
-              {(asset.id && soundService.get(asset.id)) && (
-                <Button
-                  startIcon={<PlayCircleOutlineOutlinedIcon />}
-                  sx={{ marginLeft: 1 }}
-                  variant="outlined"
-                  onClick={() => { soundService.play(asset.id ?? '') }}
-                >
-                  play {asset.id}
-                </Button>
-              )}
-            </EditorBox>
+            <SoundPreview
+              asset={this.state.asset}
+              temporaryFileName={this.state.asset.originalFileName}
+              temporarySrc={this.state.fileObjectUrl} />
           </Grid>
 
           <Grid item>

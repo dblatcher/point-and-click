@@ -55,7 +55,7 @@ export const uploadFile = async (): Promise<undefined | File> => {
     return undefined
 }
 
-export const urlToBlob = async (urlString: string, validateAs?: 'image'): Promise<{ blob?: Blob, failure?: undefined } | { blob?: undefined, failure: string }> => {
+export const urlToBlob = async (urlString: string, validateAs?: 'image' | 'audio'): Promise<{ blob?: Blob, failure?: undefined } | { blob?: undefined, failure: string }> => {
     try {
         const url = new URL(urlString)
         const response = await fetch(url, { mode: 'cors' })
@@ -67,6 +67,11 @@ export const urlToBlob = async (urlString: string, validateAs?: 'image'): Promis
             case 'image':
                 if (!blob.type.startsWith('image')) {
                     return { failure: 'not image' }
+                }
+                break;
+            case 'audio':
+                if (!blob.type.startsWith('audio')) {
+                    return { failure: 'not audio' }
                 }
                 break;
         }
