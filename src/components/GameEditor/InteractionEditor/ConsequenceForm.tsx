@@ -17,6 +17,7 @@ import { SpritePreview } from "../SpritePreview";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
 import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
+import { SoundPreview } from "../SoundAssetTool/SoundPreview";
 
 interface Props {
     consequence: AnyConsequence;
@@ -96,6 +97,9 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
     const actor = findById(consequence.actorId, gameDesign.actors)
 
     const needsRoomPreview = ['changeRoom', 'teleportActor', 'toggleZone'].includes(consequence.type)
+    const needsSoundPreview = ['soundEffect'].includes(consequence.type)
+    const soundAsset = consequence.sound ? soundService.get(consequence.sound) : undefined
+
 
     return (
         <Box display={'flex'}>
@@ -154,6 +158,9 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
 
             {needsRoomPreview && <Box paddingY={2} paddingLeft={2}>
                 <ConsequenceFormRoom update={update} consequence={consequence} />
+            </Box>}
+            {needsSoundPreview && <Box paddingY={2} paddingLeft={2}>
+                <SoundPreview asset={soundAsset ?? {}} />
             </Box>}
 
             {actor && (

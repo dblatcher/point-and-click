@@ -10,6 +10,8 @@ import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import PersonRemoveAlt1OutlinedIcon from '@mui/icons-material/PersonRemoveAlt1Outlined';
 import PriorityHighOutlinedIcon from '@mui/icons-material/PriorityHighOutlined';
 import TransferWithinAStationOutlinedIcon from '@mui/icons-material/TransferWithinAStationOutlined';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 
 export const getOrderIcon = (order?: Order): typeof ChatOutlinedIcon => {
     switch (order?.type) {
@@ -39,11 +41,13 @@ export const getConsequenceIcon = (consequence?: Consequence): typeof ChatOutlin
             return PersonRemoveAlt1OutlinedIcon
         case "teleportActor":
             return TransferWithinAStationOutlinedIcon
+        case "soundEffect":
+            return VolumeUpIcon
+        case "flag":
+            return FlagOutlinedIcon;
         case "order":
         case "ending":
         case "toggleZone":
-        case "soundEffect":
-        case "flag":
         case "conversationChoice":
         case "sequence":
         case "changeStatus":

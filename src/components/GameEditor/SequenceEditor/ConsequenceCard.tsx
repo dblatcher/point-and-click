@@ -25,10 +25,11 @@ const getDescription = (consequence: Consequence): string => {
         case "order":
             return `${consequence.actorId ?? PLAYER}: ${consequence.orders.map(order => order.type).join('; ')}`
         case "flag":
-            return `set ${consequence.flag} to ${consequence.on ? 'ON' : 'OFF'}`
+            return `set ${consequence.flag ?? UNSET} to ${consequence.on ? 'ON' : 'OFF'}`
+        case "soundEffect":
+            return `play sfx: ${consequence.sound ?? UNSET}`
         case "ending":
         case "toggleZone":
-        case "soundEffect":
         case "conversationChoice":
         case "sequence":
         case "changeStatus":
