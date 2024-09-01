@@ -73,7 +73,7 @@ export class ImageAssetTool extends Component<{}, State> {
 
     this.setState({
       asset: {
-        id: file.name,
+        id: file.name ?? this.state.asset.id,
         originalFileName: file.name,
       },
       saveWarning: undefined,
