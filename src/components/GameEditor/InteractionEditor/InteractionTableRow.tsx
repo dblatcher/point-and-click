@@ -2,6 +2,8 @@ import { Interaction } from "@/definitions";
 import { IconButton, Tooltip, Typography, TableCell, TableRow, Stack } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon } from "../material-icons";
+import { getConsequenceIcon } from "../SequenceEditor/get-icons";
+import { ConsequenceIcon } from "../SequenceEditor/ConsequenceCard";
 
 interface Props {
     index: number;
@@ -26,6 +28,8 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
     const consequenceText = consequences.length ? `x${consequences.length}` : 'empty'
     const consequenceTitle = consequences.map(_ => _.type).join(", ")
 
+    const consequenceIcons = consequences.map(consequence => getConsequenceIcon(consequence))
+
     return (
         <TableRow key={index}>
             <TableCell>
@@ -41,10 +45,8 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
             <TableCell>
                 <Typography>{roomId}</Typography>
             </TableCell>
-            <TableCell align='center' >
-                <Tooltip title={consequenceTitle}>
-                    <Typography>{consequenceText}</Typography>
-                </Tooltip>
+            <TableCell>
+                {consequences.map((consequence, index) => <ConsequenceIcon key={index} consequence={consequence} />)}
             </TableCell>
             <TableCell align='center' >
                 <Tooltip title={trueFlagTitle}>

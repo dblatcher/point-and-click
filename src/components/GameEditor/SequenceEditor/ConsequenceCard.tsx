@@ -1,6 +1,7 @@
 import { ConceptCard } from "@/components/GameEditor/ConceptCard";
 import { Consequence } from "@/definitions";
 import { getConsequenceIcon } from "./get-icons";
+import { Tooltip } from "@mui/material";
 
 interface Props {
     consequence: Consequence;
@@ -13,7 +14,7 @@ const PLAYER = '[PLAYER]'
 const quoted = (text?: string) => text ? `"${text}"` : UNSET;
 const brackets = (text?: string) => text ? `(${text})` : '';
 
-const getDescription = (c: Consequence): string => {
+const getConsequenceDescription = (c: Consequence): string => {
     switch (c.type) {
         case "conversation":
             return `${c.end ? 'stop' : 'start'} ${c.conversationId}`
@@ -38,20 +39,24 @@ const getDescription = (c: Consequence): string => {
         case "sequence":
             return `run ${quoted(c.sequence)}`
         case "changeStatus":
-            return `${c.targetId??UNSET}${brackets(c.targetType)} status =  ${quoted(c.status)}`
+            return `${c.targetId ?? UNSET}${brackets(c.targetType)} status =  ${quoted(c.status)}`
         case "ending":
-            return quoted(c.endingId)
+            return `Ending: ${quoted(c.endingId)}`
         default:
             return "[description]"
     }
+}
 
+export const ConsequenceIcon = (props: { consequence: Consequence }) => {
+    const Icon = getConsequenceIcon(props.consequence)
+    return  <Tooltip title={getConsequenceDescription(props.consequence)} ><Icon/></Tooltip>
 }
 
 export const ConsequenceCard = ({ consequence, handleEditButton, width }: Props) => (
     <ConceptCard
         Icon={getConsequenceIcon(consequence)}
         handleClick={handleEditButton}
-        description={getDescription(consequence)}
+        description={getConsequenceDescription(consequence)}
         title={consequence.type}
         narrative={consequence.narrative}
         width={width}
