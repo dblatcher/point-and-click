@@ -14,6 +14,20 @@ export const initialActors: ActorData[] = [
         sprite: 'skinner',
         direction: 'left',
         dialogueColor: 'red',
+        soundEffectMap: {
+            walk: [
+                {
+                    soundId: 'beep',
+                    frameIndex: 2,
+                    volume: .25,
+                },
+                {
+                    soundId: 'beep',
+                    frameIndex: 1,
+                    volume: .4,
+                },
+            ]
+        }
     },
     {
         id: 'EVIL_SKINNER',
