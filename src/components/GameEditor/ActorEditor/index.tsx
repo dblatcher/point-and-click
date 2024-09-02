@@ -216,7 +216,7 @@ export const ActorEditor = (props: Props) => {
                             )
                         },
                         {
-                            label: 'position', content: (
+                            label: 'starting position', content: (
                                 <Stack spacing={2}>
                                     <SelectInput label="roomId"
                                         options={listIds(gameDesign.rooms)}
