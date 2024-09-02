@@ -115,7 +115,7 @@ export const ActorEditor = (props: Props) => {
 
 
     const actor = props.data
-    const { sprite: spriteId, width = 1, height = 1,  walkToX, walkToY, dialogueColor, room, x, y, direction } = actor
+    const { sprite: spriteId, width = 1, height = 1, walkToX, walkToY, dialogueColor, room, x, y, direction } = actor
     const spriteData = sprites.find(sprite => sprite.id === spriteId)?.data
     const statusSuggestions = getStatusSuggestions(props.data.id, {
         sprites: spriteData ? [spriteData] : [],
@@ -159,14 +159,6 @@ export const ActorEditor = (props: Props) => {
                                         changeValue(fieldDef.key as keyof ActorData, value)
                                     }}
                                 />
-
-                                <ColorInput
-                                    label="dialogue color"
-                                    value={dialogueColor || ''}
-                                    setValue={value => {
-                                        changeValue('dialogueColor', value)
-                                    }} />
-
                                 <InteractionsDialogsButton
                                     criteria={(interaction) => interaction.targetId === props.data.id}
                                     newPartial={{ targetId: props.data.id }}
@@ -174,7 +166,7 @@ export const ActorEditor = (props: Props) => {
                             </Box>
                         },
                         {
-                            label: 'sprite', content: (
+                            label: 'sprite and appearance', content: (
                                 <Stack direction={'row'} spacing={3}>
                                     <Stack spacing={2}>
 
@@ -201,6 +193,12 @@ export const ActorEditor = (props: Props) => {
                                             label="display baseline" value={props.data.baseline || 0}
                                             min={0} max={props.data.height}
                                             inputHandler={value => { changeValue('baseline', value) }} />
+                                        <ColorInput
+                                            label="dialogue color"
+                                            value={dialogueColor || ''}
+                                            setValue={value => {
+                                                changeValue('dialogueColor', value)
+                                            }} />
                                     </Stack>
                                     <SpritePreview data={actor} />
                                 </Stack>
