@@ -12,19 +12,16 @@ import { Box, Grid, Stack, Typography } from "@mui/material";
 import { AccoridanedContent } from "../AccordianedContent";
 import { ColorInput } from "../ColorInput";
 import { EditorHeading } from "../EditorHeading";
-import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
-import { RecordEditor } from "../RecordEditor";
-import { SpritePreview } from "../SpritePreview";
-import { PositionPreview } from "./PositionPreview";
-import { SoundValueForm } from "./SoundValueForm";
 import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
+import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
+import { SpritePreview } from "../SpritePreview";
+import { AnimationSounds } from "./AnimationSounds";
+import { PositionPreview } from "./PositionPreview";
 
 
 type Props = {
     data: ActorData;
 }
-
-const newSound = (): SoundValue => ({ soundId: "beep" })
 
 export const ActorEditor = (props: Props) => {
     const { gameDesign, performUpdate } = useGameDesign()
@@ -118,7 +115,7 @@ export const ActorEditor = (props: Props) => {
 
 
     const actor = props.data
-    const { sprite: spriteId, width = 1, height = 1, soundEffectMap = {}, walkToX, walkToY, dialogueColor, room, x, y, direction } = actor
+    const { sprite: spriteId, width = 1, height = 1,  walkToX, walkToY, dialogueColor, room, x, y, direction } = actor
     const spriteData = sprites.find(sprite => sprite.id === spriteId)?.data
     const statusSuggestions = getStatusSuggestions(props.data.id, {
         sprites: spriteData ? [spriteData] : [],
@@ -212,24 +209,10 @@ export const ActorEditor = (props: Props) => {
                         {
                             label: 'sounds',
                             content: (
-                                <>
-                                    {soundEffectMap && (
-                                        <RecordEditor
-                                            record={soundEffectMap}
-                                            addEntryLabel={'Pick animation to add sound effect for'}
-                                            describeValue={(key, value) =>
-                                                <SoundValueForm
-                                                    animation={key}
-                                                    data={value}
-                                                    updateData={(data) => { changeSoundMap(key, data) }}
-                                                />
-                                            }
-                                            setEntry={(key, value) => { changeSoundMap(key, value) }}
-                                            addEntry={(key) => { changeSoundMap(key, newSound()) }}
-                                            newKeySuggestions={statusSuggestions}
-                                        />
-                                    )}
-                                </>
+                                <AnimationSounds
+                                    actor={actor}
+                                    changeSoundMap={changeSoundMap} />
+
                             )
                         },
                         {
