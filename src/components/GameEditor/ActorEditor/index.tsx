@@ -86,7 +86,7 @@ export const ActorEditor = (props: Props) => {
         })
     }
 
-    const changeSoundMap = (key: string, value?: SoundValue): void => {
+    const changeSoundMap = (key: string, value?: SoundValue[]): void => {
         const makeMod = (): Partial<ActorData> => {
             const { soundEffectMap = {} } = cloneData(props.data)
             if (typeof value === 'undefined') {
@@ -210,7 +210,6 @@ export const ActorEditor = (props: Props) => {
                                 <AnimationSounds
                                     actor={actor}
                                     changeSoundMap={changeSoundMap} />
-
                             )
                         },
                         {
