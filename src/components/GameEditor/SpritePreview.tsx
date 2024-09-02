@@ -1,6 +1,6 @@
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { Room } from "@/components/svg/Room";
-import { ActorData, RoomData } from "@/definitions";
+import { ActorData, Direction, RoomData } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
 
 type Props = {
@@ -9,6 +9,8 @@ type Props = {
     scale?: number;
     noBaseLine?: boolean;
     maxHeight?: number;
+    animation?: string;
+    direction?: Direction;
 }
 
 const makeRoomData = (data: ActorData, scale: number): RoomData => ({
@@ -26,7 +28,7 @@ const getscale = (actor: ActorData, scale: number, maxHeight?: number) => {
     return maxHeight / actor.height
 }
 
-export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, maxHeight }: Props) => {
+export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, maxHeight, animation, direction }: Props) => {
 
     const effectiveScale = getscale(data, scale, maxHeight)
     const roomData = makeRoomData(data, effectiveScale)
@@ -36,6 +38,8 @@ export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, max
         width: effectiveScale * data.width,
         height: effectiveScale * data.height,
         x: roomData.width / 2,
+        status: animation ?? data.status,
+        direction: direction ?? data.direction,
         y: 0
     }
 

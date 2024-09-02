@@ -31,7 +31,7 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
     }
     if (designProperty === 'actors') {
         const actorData = item as ActorData
-        return <SpritePreview data={{ ...actorData, status: 'default' }} noBaseLine maxHeight={60} />
+        return <SpritePreview data={actorData} animation='default' noBaseLine maxHeight={60} />
     }
     if (designProperty === 'items') {
         const { imageId, row = 0, col = 0 } = item as ItemData
