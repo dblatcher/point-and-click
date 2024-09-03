@@ -2,10 +2,16 @@ import { useGameDesign } from "@/context/game-design-context";
 import { ActorData, SoundValue } from "@/definitions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import soundService from "@/services/soundService";
-import { Box, Typography } from "@mui/material";
-import React from "react";
+import { Badge, Box, Button, Card, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { SpritePreview } from "../SpritePreview";
 import { SoundValueForm } from "./SoundValueForm";
+import { AudioFileOutlinedIcon } from "../material-icons";
+import { useSprites } from "@/context/sprite-context";
+import { findById } from "@/lib/util";
+import { FramePreview } from "../SpriteEditor/FramePreview";
+import { SoundAssetTestButton } from "../SoundAssetTestButton";
+
 
 interface Props {
     actor: ActorData
@@ -22,44 +28,61 @@ const toSoundValueArray = (input: SoundValue | SoundValue[] | undefined): SoundV
 }
 
 export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeSoundMap }) => {
+    const [activeAnimationKey, setActiveAnimationKey] = useState<string | undefined>(undefined)
+    const sprites = useSprites()
     const { gameDesign } = useGameDesign()
+    const sprite = findById(actor.sprite, sprites)
+    if (!sprite) {
+        return <Box>NO SPRITE</Box>
+    }
+
     const { soundEffectMap = {} } = actor
     const statusSuggestions = getStatusSuggestions(actor.id, gameDesign)
+    const activeAnimationSounds = activeAnimationKey ? toSoundValueArray(soundEffectMap[activeAnimationKey]) : [];
 
+    const frames = activeAnimationKey ? sprite.getAnimation(activeAnimationKey, 'wait')[sprite.data.defaultDirection] ?? [] : []
 
-    return <Box>
+    return <Box display={'flex'} flexWrap={'wrap'} gap={2}>
 
-        {statusSuggestions.map(animation => {
+        {statusSuggestions.map(animation => (
+            <Badge key={animation} color="secondary" badgeContent={toSoundValueArray(soundEffectMap[animation]).length} showZero >
+                <Button variant="outlined" sx={{ display: 'flex', flexDirection: 'column', position: 'relative' }} onClick={() => { setActiveAnimationKey(animation) }}>
+                    <Typography>{animation}</Typography>
+                    <SpritePreview data={actor} animation={animation} scale={.6} noBaseLine />
 
-            const sounds = toSoundValueArray(soundEffectMap[animation])
+                    <AudioFileOutlinedIcon sx={{ position: 'absolute', left: 0, bottom: 0 }} />
+                </Button>
+            </Badge>
+        ))}
 
-            return <Box key={animation}>
-                <Typography>{animation}</Typography>
-                <SpritePreview data={actor} animation={animation} scale={.5} noBaseLine />
-                {sounds.map( (soundValue,index) => <SoundValueForm  key={index} 
-                    animation={animation} 
-                    data={soundValue} 
-                    updateData={(update)=>{
-                        console.log(animation, index, update)
-                    }} />
-                 )}
-            </Box>
-        })}
+        <Dialog open={!!activeAnimationKey} onClose={() => { setActiveAnimationKey(undefined) }}>
+            <DialogTitle>{activeAnimationKey}</DialogTitle>
+
+            <DialogContent>
+
+                <Box display={'flex'} flexDirection={'row'} gap={2}>
+                    {frames.map((frame, frameIndex) => {
+                        return <Box key={frameIndex} component={Card} paddingX={2}>
+                            {frameIndex + 1}
+                            <FramePreview frame={frame} width={actor.width} height={actor.height} />
+                            {activeAnimationSounds.filter(sv => sv.frameIndex === frameIndex).map((sv, index) =>
+                                <Box key={index}>
+                                    {sv.soundId}
+                                    <SoundAssetTestButton soundAssetId={sv.soundId} />
+
+                                </Box>
+                            )}
+                        </Box>
+                    })}
+                </Box>
+                {activeAnimationSounds.filter(sv => sv.frameIndex === undefined).map((sv, index) =>
+                    <Box key={index} component={Card} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+                        {sv.soundId}
+                        <SoundAssetTestButton soundAssetId={sv.soundId} />
+                    </Box>
+                )}
+            </DialogContent>
+        </Dialog>
+
     </Box>
-
-    // return <RecordEditor
-    //     record={soundEffectMap}
-    //     addEntryLabel={'Pick animation to add sound effect for'}
-    //     describeValue={(key, value) =>
-    //         <SoundValueForm
-    //             animation={key}
-    //             data={value}
-    //             updateData={(data) => { changeSoundMap(key, data) }}
-    //         />
-    //     }
-    //     setEntry={(key, value) => { changeSoundMap(key, value) }}
-    //     addEntry={(key) => { changeSoundMap(key, newSound()) }}
-    //     newKeySuggestions={statusSuggestions}
-    // />
-
 }
