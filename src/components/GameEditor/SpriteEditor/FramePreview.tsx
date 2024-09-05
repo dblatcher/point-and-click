@@ -8,10 +8,11 @@ interface Props {
     height: number;
     backgroundColor?: string;
     frame: SpriteFrame;
+    filter?: string
 }
 
 export const FramePreview: FunctionComponent<Props> = ({
-    width, height, backgroundColor, frame
+    width, height, backgroundColor, frame, filter
 }: Props) => {
 
     const divStyle: CSSProperties = {
@@ -21,6 +22,7 @@ export const FramePreview: FunctionComponent<Props> = ({
         width: '100%',
         height: '100%',
         margin: 0,
+        filter,
     }
 
     const image = imageService.get(frame.imageId)

@@ -1,6 +1,6 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { ActorData, SoundValue } from "@/definitions";
+import { ActorData, SoundValue, SpriteFrame } from "@/definitions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
@@ -12,6 +12,7 @@ import { AddIcon, AudioFileOutlinedIcon, ClearIcon } from "../material-icons";
 import { SoundAssetTestButton } from "../SoundAssetTestButton";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { SpritePreview } from "../SpritePreview";
+import imageService from "@/services/imageService";
 
 
 interface Props {
@@ -34,8 +35,8 @@ const SoundBoxes = (props: {
     boxProps?: BoxProps
 }) => {
     const { soundValues, handleDeleteSound, frameIndex: frameIndex, handleAddSound, boxProps } = props
-    const boxPropsWithDefaults:BoxProps = {
-        component:Card,
+    const boxPropsWithDefaults: BoxProps = {
+        component: Card,
         ...boxProps
     }
     return <>
@@ -50,8 +51,19 @@ const SoundBoxes = (props: {
                 )}
             </Fragment>
         )}
-        <IconButton color='primary' onClick={() => { handleAddSound(frameIndex) }}><AddIcon /></IconButton>
+        <Button
+            color='primary'
+            endIcon={<AddIcon />}
+            onClick={() => { handleAddSound(frameIndex) }}>add sound</Button>
     </>
+}
+
+const ActorFramePreview = (props: { frame: SpriteFrame, actor: ActorData }) => {
+    const { frame, actor } = props
+    const image = imageService.get(frame.imageId)
+    const heightScale = image?.heightScale ?? 1
+    const widthScale = image?.widthScale ?? 1
+    return <FramePreview frame={frame} width={actor.width * widthScale} height={actor.height * heightScale} filter={actor.filter} />
 }
 
 
@@ -100,7 +112,7 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
             </Badge>
         ))}
 
-        <Dialog open={!!activeAnimationKey} onClose={() => { setActiveAnimationKey(undefined) }}>
+        <Dialog open={!!activeAnimationKey} onClose={() => { setActiveAnimationKey(undefined) }} fullWidth>
             <DialogTitle>{activeAnimationKey}</DialogTitle>
 
             <DialogContent>
@@ -115,14 +127,14 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
                         setSoundId(item.id)
                     }} />
 
-                <Box display={'flex'} flexDirection={'row'} gap={2}>
+                <Box display={'flex'} flexDirection={'row'} gap={2} flexWrap={'wrap'}>
                     {frames.map((frame, frameIndex) => {
-                        return <Box key={frameIndex} component={Card} paddingX={2}>
-                            {frameIndex + 1}
-                            <FramePreview frame={frame} width={actor.width} height={actor.height} />
+                        return <Box key={frameIndex} component={Card} paddingX={2} minWidth={80} display={'flex'} flexDirection={'column'} alignItems={'center'} position={'relative'}>
+                            <ActorFramePreview frame={frame} actor={actor} />
                             <SoundBoxes frameIndex={frameIndex}
                                 {...{ handleAddSound, handleDeleteSound, soundValues: activeAnimationSounds }}
                             />
+                            <Typography position={'absolute'} left={0} top={0}> {frameIndex + 1}</Typography>
                         </Box>
                     })}
                 </Box>
