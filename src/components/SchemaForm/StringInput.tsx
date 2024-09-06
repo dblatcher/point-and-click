@@ -19,7 +19,7 @@ export const StringInput: FunctionComponent<
     };
 
     const commonProps: Partial<TextFieldProps> = {
-        fullWidth: true,
+        fullWidth: !props.notFullWidth,
         label: label,
         type,
         helperText: error,
@@ -46,7 +46,7 @@ export const StringInput: FunctionComponent<
 
     if (suggestions) {
         return <Autocomplete
-            fullWidth
+            fullWidth={!props.notFullWidth}
             disableClearable
             options={Array.from(new Set(suggestions))}
             freeSolo

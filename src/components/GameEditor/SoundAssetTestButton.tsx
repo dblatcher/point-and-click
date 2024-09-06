@@ -2,13 +2,15 @@ import soundService from "@/services/soundService"
 import { IconButton, IconButtonProps } from "@mui/material"
 import React, { useRef } from "react"
 import { PlayCircleOutlineOutlinedIcon } from "./material-icons"
+import { clamp } from "@/lib/util"
 
 type Props = IconButtonProps & {
     soundAssetId?: string
+    volume?: number
 }
 
 
-export const SoundAssetTestButton: React.FunctionComponent<Props> = ({ soundAssetId, ...rest }) => {
+export const SoundAssetTestButton: React.FunctionComponent<Props> = ({ soundAssetId, volume, ...rest }) => {
 
     const audioRef = useRef<HTMLAudioElement>(null)
     const asset = soundAssetId ? soundService.get(soundAssetId) : undefined
@@ -18,7 +20,7 @@ export const SoundAssetTestButton: React.FunctionComponent<Props> = ({ soundAsse
         if (!audioElement) {
             return
         }
-
+        audioElement.volume = clamp( volume ?? 1)
         audioElement.play()
     }
 
@@ -29,6 +31,4 @@ export const SoundAssetTestButton: React.FunctionComponent<Props> = ({ soundAsse
             src={asset?.href}
             key={asset?.href}></audio>
     </IconButton>
-
-
 } 

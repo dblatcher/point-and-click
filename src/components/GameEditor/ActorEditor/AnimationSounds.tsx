@@ -13,6 +13,7 @@ import { SoundAssetTestButton } from "../SoundAssetTestButton";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { SpritePreview } from "../SpritePreview";
 import imageService from "@/services/imageService";
+import { NumberInput } from "@/components/SchemaForm/NumberInput";
 
 
 interface Props {
@@ -32,9 +33,10 @@ const SoundBoxes = (props: {
     handleDeleteSound: { (index: number): void }
     frameIndex: number | undefined
     handleAddSound: { (frameIndex: number | undefined): void }
+    editSound: { (index: number, mod: Partial<SoundValue>): void }
     boxProps?: BoxProps
 }) => {
-    const { soundValues, handleDeleteSound, frameIndex: frameIndex, handleAddSound, boxProps } = props
+    const { soundValues, handleDeleteSound, frameIndex: frameIndex, handleAddSound, boxProps, editSound } = props
     const boxPropsWithDefaults: BoxProps = {
         component: Card,
         ...boxProps
@@ -44,8 +46,13 @@ const SoundBoxes = (props: {
             <Fragment key={index}>
                 {sv.frameIndex === frameIndex && (
                     <Box component={Card} {...boxPropsWithDefaults}>
-                        <SoundAssetTestButton soundAssetId={sv.soundId} />
+                        <SoundAssetTestButton soundAssetId={sv.soundId} volume={sv.volume} />
                         <Typography variant="caption">{sv.soundId}</Typography>
+                        <NumberInput label="volume"
+                            notFullWidth
+                            inputHandler={(volume) => { editSound(index, { volume }) }}
+                            value={sv.volume ?? 1}
+                            max={1} min={0} step={.1} />
                         <IconButton color="warning" onClick={() => handleDeleteSound(index)}><ClearIcon /></IconButton>
                     </Box>
                 )}
@@ -90,6 +97,15 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
         changeSoundMap(activeAnimationKey, [...activeAnimationSounds, newSoundValue])
     }
 
+    const editSound = (index: number, mod: Partial<SoundValue>) => {
+        if (!activeAnimationKey) {
+            return
+        }
+        const copy = cloneData(activeAnimationSounds)
+        copy[index] = { ...copy[index], ...mod }
+        changeSoundMap(activeAnimationKey, copy)
+    }
+
     const handleDeleteSound = (index: number) => {
         if (!activeAnimationKey) {
             return
@@ -132,7 +148,7 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
                         return <Box key={frameIndex} component={Card} paddingX={2} minWidth={80} display={'flex'} flexDirection={'column'} alignItems={'center'} position={'relative'}>
                             <ActorFramePreview frame={frame} actor={actor} />
                             <SoundBoxes frameIndex={frameIndex}
-                                {...{ handleAddSound, handleDeleteSound, soundValues: activeAnimationSounds }}
+                                {...{ handleAddSound, handleDeleteSound, soundValues: activeAnimationSounds, editSound }}
                             />
                             <Typography position={'absolute'} left={0} top={0}> {frameIndex + 1}</Typography>
                         </Box>
@@ -140,7 +156,7 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
                 </Box>
 
                 <SoundBoxes frameIndex={undefined}
-                    {...{ handleAddSound, handleDeleteSound, soundValues: activeAnimationSounds }}
+                    {...{ handleAddSound, handleDeleteSound, soundValues: activeAnimationSounds, editSound }}
                     boxProps={{
                         display: 'flex',
                         justifyContent: 'center',

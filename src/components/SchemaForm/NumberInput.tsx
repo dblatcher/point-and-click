@@ -1,4 +1,4 @@
-import { TextField, Input } from '@mui/material';
+import { TextField } from '@mui/material';
 import type { FormEventHandler, FunctionComponent } from 'react';
 import type { FieldProps } from './types';
 import { eventToNumber } from './util';
@@ -28,7 +28,7 @@ export const NumberInput: FunctionComponent<
 
     return (
         <TextField
-            fullWidth
+            fullWidth={!props.notFullWidth}
             size='small'
             variant='standard'
             label={props.label}
@@ -40,7 +40,7 @@ export const NumberInput: FunctionComponent<
             required={!props.optional}
             disabled={props.readOnly}
             inputProps={{
-                step:props.step,
+                step: props.step,
                 max: props.max,
                 min: props.min,
             }}

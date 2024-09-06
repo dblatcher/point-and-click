@@ -19,4 +19,5 @@ export type FieldProps = {
     error?: string;
     optional?: boolean;
     readOnly?: boolean;
+    notFullWidth?: boolean;
 };
