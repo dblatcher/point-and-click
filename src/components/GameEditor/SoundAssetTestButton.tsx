@@ -7,10 +7,11 @@ import { clamp } from "@/lib/util"
 type Props = IconButtonProps & {
     soundAssetId?: string
     volume?: number
+    fontSize?: "small" | "inherit" | "large" | "medium",
 }
 
 
-export const SoundAssetTestButton: React.FunctionComponent<Props> = ({ soundAssetId, volume, ...rest }) => {
+export const SoundAssetTestButton: React.FunctionComponent<Props> = ({ soundAssetId, volume, fontSize, ...rest }) => {
 
     const audioRef = useRef<HTMLAudioElement>(null)
     const asset = soundAssetId ? soundService.get(soundAssetId) : undefined
@@ -25,7 +26,7 @@ export const SoundAssetTestButton: React.FunctionComponent<Props> = ({ soundAsse
     }
 
     return <IconButton {...rest} onClick={handleClick} disabled={!asset}>
-        <PlayCircleOutlineOutlinedIcon fontSize={'large'} />
+        <PlayCircleOutlineOutlinedIcon  fontSize={fontSize}/>
         <audio
             ref={audioRef}
             src={asset?.href}

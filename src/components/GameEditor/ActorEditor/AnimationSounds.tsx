@@ -4,16 +4,15 @@ import { ActorData, SoundValue, SpriteFrame } from "@/definitions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
+import imageService from "@/services/imageService";
 import soundService from "@/services/soundService";
-import { Badge, Box, BoxProps, Button, Card, Dialog, DialogContent, DialogTitle, IconButton, Typography, useTheme } from "@mui/material";
-import React, { Fragment, useState } from "react";
+import { Badge, Box, Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { FileAssetSelector } from "../FileAssetSelector";
-import { AddIcon, AudioFileOutlinedIcon, ClearIcon } from "../material-icons";
-import { SoundAssetTestButton } from "../SoundAssetTestButton";
+import { AudioFileOutlinedIcon } from "../material-icons";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { SpritePreview } from "../SpritePreview";
-import imageService from "@/services/imageService";
-import { NumberInput } from "@/components/SchemaForm/NumberInput";
+import { SoundBoxes } from "./SoundBoxes";
 
 
 interface Props {
@@ -28,42 +27,7 @@ const toSoundValueArray = (input: SoundValue | SoundValue[] | undefined): SoundV
     return Array.isArray(input) ? input : [input]
 }
 
-const SoundBoxes = (props: {
-    soundValues: SoundValue[],
-    handleDeleteSound: { (index: number): void }
-    frameIndex: number | undefined
-    handleAddSound: { (frameIndex: number | undefined): void }
-    editSound: { (index: number, mod: Partial<SoundValue>): void }
-    boxProps?: BoxProps
-}) => {
-    const { soundValues, handleDeleteSound, frameIndex: frameIndex, handleAddSound, boxProps, editSound } = props
-    const boxPropsWithDefaults: BoxProps = {
-        component: Card,
-        ...boxProps
-    }
-    return <>
-        {soundValues.map((sv, index) =>
-            <Fragment key={index}>
-                {sv.frameIndex === frameIndex && (
-                    <Box component={Card} {...boxPropsWithDefaults}>
-                        <SoundAssetTestButton soundAssetId={sv.soundId} volume={sv.volume} />
-                        <Typography variant="caption">{sv.soundId}</Typography>
-                        <NumberInput label="volume"
-                            notFullWidth
-                            inputHandler={(volume) => { editSound(index, { volume }) }}
-                            value={sv.volume ?? 1}
-                            max={1} min={0} step={.1} />
-                        <IconButton color="warning" onClick={() => handleDeleteSound(index)}><ClearIcon /></IconButton>
-                    </Box>
-                )}
-            </Fragment>
-        )}
-        <Button
-            color='primary'
-            endIcon={<AddIcon />}
-            onClick={() => { handleAddSound(frameIndex) }}>add sound</Button>
-    </>
-}
+
 
 const ActorFramePreview = (props: { frame: SpriteFrame, actor: ActorData }) => {
     const { frame, actor } = props
@@ -129,7 +93,7 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
         ))}
 
         <Dialog open={!!activeAnimationKey} onClose={() => { setActiveAnimationKey(undefined) }} fullWidth>
-            <DialogTitle>{activeAnimationKey}</DialogTitle>
+            <DialogTitle>Set animation sounds: <b>{activeAnimationKey}</b></DialogTitle>
 
             <DialogContent>
 
@@ -145,7 +109,15 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
 
                 <Box display={'flex'} flexDirection={'row'} gap={2} flexWrap={'wrap'}>
                     {frames.map((frame, frameIndex) => {
-                        return <Box key={frameIndex} component={Card} paddingX={2} minWidth={80} display={'flex'} flexDirection={'column'} alignItems={'center'} position={'relative'}>
+                        return <Box key={frameIndex} 
+                            sx={{
+                                borderWidth:1,
+                                borderColor: 'primary.dark',
+                                borderStyle: 'solid',
+                                boxSizing: 'border-box',
+                            }}
+                            paddingX={2} minWidth={100} display={'flex'} flexDirection={'column'} alignItems={'center'} position={'relative'}
+                        >
                             <ActorFramePreview frame={frame} actor={actor} />
                             <SoundBoxes frameIndex={frameIndex}
                                 {...{ handleAddSound, handleDeleteSound, soundValues: activeAnimationSounds, editSound }}
@@ -155,15 +127,13 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
                     })}
                 </Box>
 
-                <SoundBoxes frameIndex={undefined}
+                <SoundBoxes frameIndex={undefined} continual
                     {...{ handleAddSound, handleDeleteSound, soundValues: activeAnimationSounds, editSound }}
-                    boxProps={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
                 />
             </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setActiveAnimationKey(undefined)}>done</Button>
+            </DialogActions>
         </Dialog>
     </Box>
 }
