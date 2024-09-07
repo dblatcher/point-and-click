@@ -1,15 +1,14 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { SoundValue } from "@/definitions";
-import { Box, BoxProps, Button, Card, IconButton, Typography } from "@mui/material";
+import { Box, BoxProps, IconButton, Typography } from "@mui/material";
 import { Fragment } from "react";
-import { AddIcon, ClearIcon } from "../material-icons";
+import { ClearIcon } from "../material-icons";
 import { SoundAssetTestButton } from "../SoundAssetTestButton";
 
 interface Props {
     soundValues: SoundValue[],
     frameIndex: number | undefined
     handleDeleteSound: { (index: number): void }
-    handleAddSound: { (frameIndex: number | undefined): void }
     editSound: { (index: number, mod: Partial<SoundValue>): void }
     continual?: boolean
 }
@@ -18,7 +17,6 @@ export const SoundBoxes = ({
     soundValues,
     frameIndex,
     handleDeleteSound,
-    handleAddSound,
     editSound,
     continual,
 }: Props) => {
@@ -61,10 +59,5 @@ export const SoundBoxes = ({
                 )}
             </Fragment>
         )}
-        <Button
-            color='primary'
-            variant="outlined"
-            endIcon={<AddIcon />}
-            onClick={() => { handleAddSound(frameIndex) }}>{continual ? 'add continual sound' : 'add sound'} </Button>
     </>
 }

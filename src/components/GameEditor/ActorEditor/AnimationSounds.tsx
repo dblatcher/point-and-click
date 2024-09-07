@@ -6,10 +6,10 @@ import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
 import imageService from "@/services/imageService";
 import soundService from "@/services/soundService";
-import { Badge, Box, Button, Card, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Badge, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { FileAssetSelector } from "../FileAssetSelector";
-import { AudioFileOutlinedIcon } from "../material-icons";
+import { AddIcon, AudioFileOutlinedIcon } from "../material-icons";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { SpritePreview } from "../SpritePreview";
 import { SoundBoxes } from "./SoundBoxes";
@@ -96,22 +96,18 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
             <DialogTitle>Set animation sounds: <b>{activeAnimationKey}</b></DialogTitle>
 
             <DialogContent>
-
                 <FileAssetSelector
                     selectedItemId={soundId}
                     service={soundService}
                     format="select"
                     legend="sfx to add"
-                    select={(item) => {
-                        console.log(item)
-                        setSoundId(item.id)
-                    }} />
+                    select={(item) => setSoundId(item.id)} />
 
                 <Box display={'flex'} flexDirection={'row'} gap={2} flexWrap={'wrap'}>
-                    {frames.map((frame, frameIndex) => {
-                        return <Box key={frameIndex} 
+                    {frames.map((frame, frameIndex) => (
+                        <Box key={frameIndex}
                             sx={{
-                                borderWidth:1,
+                                borderWidth: 1,
                                 borderColor: 'primary.dark',
                                 borderStyle: 'solid',
                                 boxSizing: 'border-box',
@@ -120,13 +116,23 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
                         >
                             <ActorFramePreview frame={frame} actor={actor} />
                             <SoundBoxes frameIndex={frameIndex}
-                                {...{ handleAddSound, handleDeleteSound, soundValues: activeAnimationSounds, editSound }}
+                                {...{ handleDeleteSound, soundValues: activeAnimationSounds, editSound }}
                             />
                             <Typography position={'absolute'} left={0} top={0}> {frameIndex + 1}</Typography>
+                            <Box position={'absolute'} right={0} top={0}>
+                                <IconButton color="primary" title="add sound" onClick={() => handleAddSound(frameIndex)} >
+                                    <AddIcon />
+                                    <AudioFileOutlinedIcon />
+                                </IconButton>
+                            </Box>
                         </Box>
-                    })}
+                    ))}
                 </Box>
 
+                <Button variant="outlined" fullWidth
+                    endIcon={<><AddIcon /><AudioFileOutlinedIcon /></>}
+                    onClick={() => handleAddSound(undefined)}
+                >Add continual sound</Button>
                 <SoundBoxes frameIndex={undefined} continual
                     {...{ handleAddSound, handleDeleteSound, soundValues: activeAnimationSounds, editSound }}
                 />
