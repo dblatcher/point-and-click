@@ -8,8 +8,8 @@ import { directions } from "@/definitions/SpriteSheet";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import { Box, Grid, Stack, Typography } from "@mui/material";
-import { AccoridanedContent } from "../AccordianedContent";
+import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { useState } from "react";
 import { ColorInput } from "../ColorInput";
 import { EditorHeading } from "../EditorHeading";
 import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
@@ -23,8 +23,16 @@ type Props = {
     data: ActorData;
 }
 
-export const ActorEditor = ({data}: Props) => {
+enum ActorEditorTab {
+    Details,
+    Appearance,
+    Sounds,
+    StartingPosition,
+}
+
+export const ActorEditor = ({ data }: Props) => {
     const { gameDesign, performUpdate } = useGameDesign()
+    const [tabOpen, setTabOpen] = useState(ActorEditorTab.Details)
     const sprites = useSprites()
 
     const changeValue = (propery: keyof ActorData, newValue: unknown): void => {
@@ -132,131 +140,121 @@ export const ActorEditor = ({data}: Props) => {
                 />
             </EditorHeading>
 
-            <Grid container flexWrap={'nowrap'} spacing={1}>
-                <Grid item xs={5}><>
-                    <AccoridanedContent tabs={[
-                        {
-                            label: 'Actor', content: <Box maxWidth={'sm'}>
-                                <SchemaForm
-                                    schema={ActorDataSchema.pick({
-                                        name: true,
-                                        status: true,
-                                        isPlayer: true,
-                                        speed: true,
-                                        noInteraction: true,
-                                    })}
-                                    suggestions={{
-                                        status: statusSuggestions,
-                                    }}
-                                    fieldAliases={{
-                                        speed: 'movement speed',
-                                        isPlayer: 'is player actor',
-                                        noInteraction: 'cannot interact with',
-                                    }}
-                                    data={data}
-                                    changeValue={(value, fieldDef) => {
-                                        changeValue(fieldDef.key as keyof ActorData, value)
-                                    }}
-                                />
-                                <InteractionsDialogsButton
-                                    criteria={(interaction) => interaction.targetId === data.id}
-                                    newPartial={{ targetId: data.id }}
-                                />
-                            </Box>
-                        },
-                        {
-                            label: 'sprite and appearance', content: (
-                                <Stack direction={'row'} spacing={3}>
-                                    <Stack spacing={2}>
+            <Tabs value={tabOpen} onChange={(_, tabOpen) => setTabOpen(tabOpen)}>
+                <Tab label="Details" value={ActorEditorTab.Details} />
+                <Tab label="Sprite" value={ActorEditorTab.Appearance} />
+                <Tab label="Sound" value={ActorEditorTab.Sounds} />
+                <Tab label="Start Position" value={ActorEditorTab.StartingPosition} />
+            </Tabs>
 
-                                        <SelectInput
-                                            value={spriteId}
-                                            options={listIds(sprites)}
-                                            label="pick sprite"
-                                            inputHandler={
-                                                id => updateFromPartial({ sprite: id })
-                                            }
-                                        />
+            {tabOpen === ActorEditorTab.Details &&
+                <Box maxWidth={'sm'}>
+                    <SchemaForm
+                        schema={ActorDataSchema.pick({
+                            name: true,
+                            status: true,
+                            isPlayer: true,
+                            speed: true,
+                            noInteraction: true,
+                        })}
+                        suggestions={{
+                            status: statusSuggestions,
+                        }}
+                        fieldAliases={{
+                            speed: 'movement speed',
+                            isPlayer: 'is player actor',
+                            noInteraction: 'cannot interact with',
+                        }}
+                        data={data}
+                        changeValue={(value, fieldDef) => {
+                            changeValue(fieldDef.key as keyof ActorData, value)
+                        }}
+                    />
+                    <InteractionsDialogsButton
+                        criteria={(interaction) => interaction.targetId === data.id}
+                        newPartial={{ targetId: data.id }}
+                    />
+                </Box>
+            }
+            {tabOpen === ActorEditorTab.Appearance &&
+                <Stack direction={'row'} spacing={3}>
+                    <Stack spacing={2}>
+                        <SelectInput
+                            value={spriteId}
+                            options={listIds(sprites)}
+                            label="pick sprite"
+                            inputHandler={
+                                id => updateFromPartial({ sprite: id })
+                            }
+                        />
 
-                                        <Stack direction={'row'} spacing={2}>
-                                            <NumberInput label="width" value={width}
-                                                inputHandler={(value) => changeValue('width', value)} />
-                                            <NumberInput label="height" value={height}
-                                                inputHandler={(value) => changeValue('height', value)} />
-                                        </Stack>
+                        <Stack direction={'row'} spacing={2}>
+                            <NumberInput label="width" value={width}
+                                inputHandler={(value) => changeValue('width', value)} />
+                            <NumberInput label="height" value={height}
+                                inputHandler={(value) => changeValue('height', value)} />
+                        </Stack>
 
-                                        <StringInput
-                                            label="filter" value={data.filter || ''}
-                                            inputHandler={(value) => changeValue('filter', value)} />
-                                        <NumberInput
-                                            label="display baseline" value={data.baseline || 0}
-                                            min={0} max={data.height}
-                                            inputHandler={value => { changeValue('baseline', value) }} />
-                                        <ColorInput
-                                            label="dialogue color"
-                                            value={dialogueColor || ''}
-                                            setValue={value => {
-                                                changeValue('dialogueColor', value)
-                                            }} />
-                                    </Stack>
-                                    <SpritePreview data={data} />
-                                </Stack>
-                            )
-                        },
-                        {
-                            label: 'sounds',
-                            content: (
-                                <AnimationSounds
-                                    actor={data}
-                                    changeSoundMap={changeSoundMap} />
-                            )
-                        },
-                        {
-                            label: 'starting position', content: (
-                                <Stack spacing={2}>
-                                    <SelectInput label="roomId"
-                                        options={listIds(gameDesign.rooms)}
-                                        value={room || ''}
-                                        optional={true}
-                                        inputHandler={roomId => { changeValue('room', roomId) }} />
-                                    <Stack direction={'row'} spacing={2} maxWidth={300}>
-                                        <NumberInput
-                                            label="x" value={x}
-                                            inputHandler={value => { changeValue('x', value) }} />
-                                        <NumberInput
-                                            label="y" value={y}
-                                            inputHandler={value => { changeValue('y', value) }} />
-                                        <SelectInput label="direction"
-                                            value={direction || 'left'}
-                                            options={directions}
-                                            inputHandler={(item) => { changeValue('direction', item) }} />
-                                    </Stack>
+                        <StringInput
+                            label="filter" value={data.filter || ''}
+                            inputHandler={(value) => changeValue('filter', value)} />
+                        <NumberInput
+                            label="display baseline" value={data.baseline || 0}
+                            min={0} max={data.height}
+                            inputHandler={value => { changeValue('baseline', value) }} />
+                        <ColorInput
+                            label="dialogue color"
+                            value={dialogueColor || ''}
+                            setValue={value => {
+                                changeValue('dialogueColor', value)
+                            }} />
+                    </Stack>
+                    <SpritePreview data={data} />
+                </Stack>
+            }
+            {tabOpen === ActorEditorTab.Sounds &&
+                <AnimationSounds
+                    actor={data}
+                    changeSoundMap={changeSoundMap} />
+            }
+            {tabOpen === ActorEditorTab.StartingPosition &&
+                <>
+                    <Stack spacing={2} maxWidth={'sm'}>
+                        <SelectInput label="Starting room"
 
-                                    <Stack direction={'row'} spacing={2}>
-                                        <Typography variant="caption">walk to point</Typography>
-                                        <OptionalNumberInput
-                                            value={walkToX} label="X: "
-                                            inputHandler={value => { changeValue('walkToX', value) }} />
-                                        <OptionalNumberInput
-                                            value={walkToY} label="Y: "
-                                            inputHandler={value => { changeValue('walkToY', value) }} />
-                                    </Stack>
-                                </Stack>
-                            )
-                        },
-                    ]} />
-                </>
-                </Grid>
-                <Grid item flex={1}>
-                    <div style={{ position: 'sticky', top: 1 }}>
+                            options={listIds(gameDesign.rooms)}
+                            value={room || ''}
+                            optional={true}
+                            inputHandler={roomId => { changeValue('room', roomId) }} />
+                        <Stack direction={'row'} spacing={2} maxWidth={300}>
+                            <NumberInput
+                                label="x" value={x}
+                                inputHandler={value => { changeValue('x', value) }} />
+                            <NumberInput
+                                label="y" value={y}
+                                inputHandler={value => { changeValue('y', value) }} />
+                            <SelectInput label="direction"
+                                value={direction || 'left'}
+                                options={directions}
+                                inputHandler={(item) => { changeValue('direction', item) }} />
+                        </Stack>
+
+                        <Stack direction={'row'} spacing={2}>
+                            <Typography variant="caption">walk to point</Typography>
+                            <OptionalNumberInput
+                                value={walkToX} label="X: "
+                                inputHandler={value => { changeValue('walkToX', value) }} />
+                            <OptionalNumberInput
+                                value={walkToY} label="Y: "
+                                inputHandler={value => { changeValue('walkToY', value) }} />
+                        </Stack>
                         <PositionPreview
                             actorData={data}
                             reportClick={handlePreviewClick}
-                            pickRoom={(roomId) => changeValue('room', roomId)}
                         />
-                    </div>
-                </Grid>
-            </Grid>
+                    </Stack>
+                </>
+            }
         </Stack>
     )
 }

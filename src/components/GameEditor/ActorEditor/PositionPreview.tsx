@@ -1,8 +1,7 @@
-import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { ActorData } from "@/definitions";
 import { getTargetPoint, getViewAngleCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
-import { findById, listIds } from "@/lib/util";
+import { findById } from "@/lib/util";
 import { Alert, Box, Button, ButtonGroup, Paper, PaperProps, Slider, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ClickPointIcon } from "../material-icons";
@@ -11,14 +10,13 @@ import { RoomLocationPicker } from "../RoomLocationPicker";
 interface Props {
     actorData: ActorData;
     reportClick: { (point: { x: number; y: number }, pointRole: PointRole): void };
-    pickRoom: { (roomId: string | undefined): void }
 }
 
 type PointRole = 'position' | 'walkTo';
 
 const PaperSection = (props: PaperProps) => <Paper component={'section'} {...props}>{props.children}</Paper>
 
-export const PositionPreview = ({ actorData, reportClick, pickRoom }: Props) => {
+export const PositionPreview = ({ actorData, reportClick }: Props) => {
     const [role, setRole] = useState<PointRole>('position')
     const [previewWidth, setPreviewWidth] = useState(600)
     const { gameDesign } = useGameDesign();
@@ -37,15 +35,7 @@ export const PositionPreview = ({ actorData, reportClick, pickRoom }: Props) => 
 
     return (
         <Box component={PaperSection} display={'inline-block'} padding={2} marginBottom={4}>
-            <SelectInput
-                label="starting room"
-                value={roomData?.id ?? ''}
-                inputHandler={pickRoom}
-                options={listIds(gameDesign.rooms)}
-                optional
-            />
-
-            {roomData ? (<>
+              {roomData ? (<>
 
                 <ButtonGroup sx={{ paddingBottom: 1 }}>
                     <Button
