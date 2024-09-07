@@ -1,5 +1,5 @@
 import { SchemaForm } from "@/components/SchemaForm";
-import { NumberInput, OptionalNumberInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
+import { NumberInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
 import { ActorData, Direction, Point } from "@/definitions";
@@ -8,7 +8,7 @@ import { directions } from "@/definitions/SpriteSheet";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Stack, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import { ColorInput } from "../ColorInput";
 import { EditorHeading } from "../EditorHeading";
@@ -108,21 +108,7 @@ export const ActorEditor = ({ data }: Props) => {
         updateFromPartial(makeMod())
     }
 
-    const handlePreviewClick = (point: Point, pointRole: 'position' | 'walkTo') => {
-        switch (pointRole) {
-            case 'position':
-                return updateFromPartial(point)
-            case 'walkTo': {
-                const { x, y } = data;
-                const walkToX = point.x - x
-                const walkToY = point.y - y
-                return updateFromPartial({ walkToX, walkToY })
-            }
-        }
-    }
-
-
-    const { sprite: spriteId, width = 1, height = 1, walkToX, walkToY, dialogueColor, room, x, y, direction } = data
+    const { sprite: spriteId, width = 1, height = 1, dialogueColor} = data
     const spriteData = sprites.find(sprite => sprite.id === spriteId)?.data
     const statusSuggestions = getStatusSuggestions(data.id, {
         sprites: spriteData ? [spriteData] : [],
@@ -218,42 +204,9 @@ export const ActorEditor = ({ data }: Props) => {
                     changeSoundMap={changeSoundMap} />
             }
             {tabOpen === ActorEditorTab.StartingPosition &&
-                <>
-                    <Stack spacing={2} maxWidth={'sm'}>
-                        <SelectInput label="Starting room"
-
-                            options={listIds(gameDesign.rooms)}
-                            value={room || ''}
-                            optional={true}
-                            inputHandler={roomId => { changeValue('room', roomId) }} />
-                        <Stack direction={'row'} spacing={2} maxWidth={300}>
-                            <NumberInput
-                                label="x" value={x}
-                                inputHandler={value => { changeValue('x', value) }} />
-                            <NumberInput
-                                label="y" value={y}
-                                inputHandler={value => { changeValue('y', value) }} />
-                            <SelectInput label="direction"
-                                value={direction || 'left'}
-                                options={directions}
-                                inputHandler={(item) => { changeValue('direction', item) }} />
-                        </Stack>
-
-                        <Stack direction={'row'} spacing={2}>
-                            <Typography variant="caption">walk to point</Typography>
-                            <OptionalNumberInput
-                                value={walkToX} label="X: "
-                                inputHandler={value => { changeValue('walkToX', value) }} />
-                            <OptionalNumberInput
-                                value={walkToY} label="Y: "
-                                inputHandler={value => { changeValue('walkToY', value) }} />
-                        </Stack>
-                        <PositionPreview
-                            actorData={data}
-                            reportClick={handlePreviewClick}
-                        />
-                    </Stack>
-                </>
+                <PositionPreview
+                    updateFromPartial={updateFromPartial}
+                    actorData={data} />
             }
         </Stack>
     )
