@@ -23,7 +23,7 @@ type Props = {
     data: ActorData;
 }
 
-export const ActorEditor = (props: Props) => {
+export const ActorEditor = ({data}: Props) => {
     const { gameDesign, performUpdate } = useGameDesign()
     const sprites = useSprites()
 
@@ -81,14 +81,14 @@ export const ActorEditor = (props: Props) => {
 
     const updateFromPartial = (modification: Partial<ActorData>): void => {
         performUpdate('actors', {
-            ...cloneData(props.data),
+            ...cloneData(data),
             ...modification,
         })
     }
 
     const changeSoundMap = (key: string, value?: SoundValue[]): void => {
         const makeMod = (): Partial<ActorData> => {
-            const { soundEffectMap = {} } = cloneData(props.data)
+            const { soundEffectMap = {} } = cloneData(data)
             if (typeof value === 'undefined') {
                 delete soundEffectMap[key]
             } else {
@@ -105,7 +105,7 @@ export const ActorEditor = (props: Props) => {
             case 'position':
                 return updateFromPartial(point)
             case 'walkTo': {
-                const { x, y } = props.data;
+                const { x, y } = data;
                 const walkToX = point.x - x
                 const walkToY = point.y - y
                 return updateFromPartial({ walkToX, walkToY })
@@ -114,20 +114,19 @@ export const ActorEditor = (props: Props) => {
     }
 
 
-    const actor = props.data
-    const { sprite: spriteId, width = 1, height = 1, walkToX, walkToY, dialogueColor, room, x, y, direction } = actor
+    const { sprite: spriteId, width = 1, height = 1, walkToX, walkToY, dialogueColor, room, x, y, direction } = data
     const spriteData = sprites.find(sprite => sprite.id === spriteId)?.data
-    const statusSuggestions = getStatusSuggestions(props.data.id, {
+    const statusSuggestions = getStatusSuggestions(data.id, {
         sprites: spriteData ? [spriteData] : [],
-        actors: [actor]
+        actors: [data]
     })
 
 
     return (
         <Stack component='article' spacing={1}>
-            <EditorHeading heading="Actor Editor" itemId={props.data.id} >
+            <EditorHeading heading="Actor Editor" itemId={data.id} >
                 <ItemEditorHeaderControls
-                    dataItem={actor}
+                    dataItem={data}
                     itemType="actors"
                     itemTypeName="actor"
                 />
@@ -154,14 +153,14 @@ export const ActorEditor = (props: Props) => {
                                         isPlayer: 'is player actor',
                                         noInteraction: 'cannot interact with',
                                     }}
-                                    data={props.data}
+                                    data={data}
                                     changeValue={(value, fieldDef) => {
                                         changeValue(fieldDef.key as keyof ActorData, value)
                                     }}
                                 />
                                 <InteractionsDialogsButton
-                                    criteria={(interaction) => interaction.targetId === props.data.id}
-                                    newPartial={{ targetId: props.data.id }}
+                                    criteria={(interaction) => interaction.targetId === data.id}
+                                    newPartial={{ targetId: data.id }}
                                 />
                             </Box>
                         },
@@ -187,11 +186,11 @@ export const ActorEditor = (props: Props) => {
                                         </Stack>
 
                                         <StringInput
-                                            label="filter" value={props.data.filter || ''}
+                                            label="filter" value={data.filter || ''}
                                             inputHandler={(value) => changeValue('filter', value)} />
                                         <NumberInput
-                                            label="display baseline" value={props.data.baseline || 0}
-                                            min={0} max={props.data.height}
+                                            label="display baseline" value={data.baseline || 0}
+                                            min={0} max={data.height}
                                             inputHandler={value => { changeValue('baseline', value) }} />
                                         <ColorInput
                                             label="dialogue color"
@@ -200,7 +199,7 @@ export const ActorEditor = (props: Props) => {
                                                 changeValue('dialogueColor', value)
                                             }} />
                                     </Stack>
-                                    <SpritePreview data={actor} />
+                                    <SpritePreview data={data} />
                                 </Stack>
                             )
                         },
@@ -208,7 +207,7 @@ export const ActorEditor = (props: Props) => {
                             label: 'sounds',
                             content: (
                                 <AnimationSounds
-                                    actor={actor}
+                                    actor={data}
                                     changeSoundMap={changeSoundMap} />
                             )
                         },
@@ -251,7 +250,7 @@ export const ActorEditor = (props: Props) => {
                 <Grid item flex={1}>
                     <div style={{ position: 'sticky', top: 1 }}>
                         <PositionPreview
-                            actorData={props.data}
+                            actorData={data}
                             reportClick={handlePreviewClick}
                             pickRoom={(roomId) => changeValue('room', roomId)}
                         />
