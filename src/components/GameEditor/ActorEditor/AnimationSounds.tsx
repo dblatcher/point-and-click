@@ -6,7 +6,7 @@ import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
 import imageService from "@/services/imageService";
 import soundService from "@/services/soundService";
-import { Badge, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { FileAssetSelector } from "../FileAssetSelector";
 import { AddIcon, AudioFileOutlinedIcon } from "../material-icons";
@@ -45,7 +45,12 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
     const { gameDesign } = useGameDesign()
     const sprite = findById(actor.sprite, sprites)
     if (!sprite) {
-        return <Box>NO SPRITE</Box>
+        return <Box>
+            <Alert severity="info">
+                <p>No sprite</p>
+                <p>To set animation sound effects for an actor, you must first choose a sprite.</p>
+            </Alert>
+        </Box>
     }
 
     const { soundEffectMap = {} } = actor
@@ -79,19 +84,21 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
         changeSoundMap(activeAnimationKey, copy)
     }
 
-    return <Box display={'flex'} flexWrap={'wrap'} gap={2}>
-
-        {statusSuggestions.map(animation => (
-            <Badge key={animation} color="secondary" badgeContent={toSoundValueArray(soundEffectMap[animation]).length} showZero >
-                <Button variant="outlined" sx={{ display: 'flex', flexDirection: 'column', position: 'relative' }} onClick={() => { setActiveAnimationKey(animation) }}>
+    return <>
+    <Typography>Animation sounds</Typography>
+        <Box display={'flex'} flexWrap={'wrap'} gap={2}>
+            {statusSuggestions.map(animation => (
+                <Button variant="outlined" key={animation}
+                    sx={{ display: 'flex', flexDirection: 'column', position: 'relative' }}
+                    onClick={() => { setActiveAnimationKey(animation) }}>
+                    <SpritePreview data={actor} animation={animation} noBaseLine />
                     <Typography>{animation}</Typography>
-                    <SpritePreview data={actor} animation={animation} scale={.6} noBaseLine />
 
-                    <AudioFileOutlinedIcon sx={{ position: 'absolute', left: 0, bottom: 0 }} />
+                    <AudioFileOutlinedIcon sx={{ position: 'absolute', left: 0, top: 0 }} />
+                    <Typography position={'absolute'} top={0} right={0}>{`x ${toSoundValueArray(soundEffectMap[animation]).length}`}</Typography>
                 </Button>
-            </Badge>
-        ))}
-
+            ))}
+        </Box>
         <Dialog open={!!activeAnimationKey} onClose={() => { setActiveAnimationKey(undefined) }} fullWidth>
             <DialogTitle>Set animation sounds: <b>{activeAnimationKey}</b></DialogTitle>
 
@@ -141,5 +148,5 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
                 <Button onClick={() => setActiveAnimationKey(undefined)}>done</Button>
             </DialogActions>
         </Dialog>
-    </Box>
+    </>
 }
