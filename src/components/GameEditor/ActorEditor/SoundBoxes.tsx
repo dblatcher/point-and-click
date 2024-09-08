@@ -37,24 +37,40 @@ export const SoundBoxes = ({
             marginY: 3,
         } : {}
     }
+
+
+    const renderContents = (sv: SoundValue, index: number) => {
+        const volumeControl = <NumberInput label="volume"
+            notFullWidth
+            inputHandler={(volume) => { editSound(index, { volume }) }}
+            value={sv.volume ?? 1}
+            max={1} min={0} step={.1} />
+        if (continual) {
+            return <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
+                <Typography>CONTINUAL: <strong>{sv.soundId}</strong></Typography>
+                {volumeControl}
+                <SoundAssetTestButton soundAssetId={sv.soundId} volume={sv.volume} fontSize="medium" />
+                <IconButton color="warning" onClick={() => handleDeleteSound(index)}><ClearIcon /></IconButton>
+            </Box>
+        }
+        return <>
+            <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
+                <Typography><strong>{sv.soundId}</strong></Typography>
+                <SoundAssetTestButton soundAssetId={sv.soundId} volume={sv.volume} fontSize="medium" />
+            </Box>
+            <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
+                {volumeControl}
+                <IconButton color="warning" onClick={() => handleDeleteSound(index)}><ClearIcon /></IconButton>
+            </Box>
+        </>
+    }
+
     return <>
         {soundValues.map((sv, index) =>
             <Fragment key={index}>
                 {sv.frameIndex === frameIndex && (
                     <Box {...outerBoxProps}>
-                        {continual && <Typography variant="caption">CONTINUAL:</Typography>}
-                        <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
-                            <Typography>{sv.soundId}</Typography>
-                            <NumberInput label="volume"
-                                notFullWidth
-                                inputHandler={(volume) => { editSound(index, { volume }) }}
-                                value={sv.volume ?? 1}
-                                max={1} min={0} step={.1} />
-                        </Box>
-                        <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
-                            <SoundAssetTestButton soundAssetId={sv.soundId} volume={sv.volume} fontSize="medium" />
-                            <IconButton color="warning" onClick={() => handleDeleteSound(index)}><ClearIcon /></IconButton>
-                        </Box>
+                        {renderContents(sv, index)}
                     </Box>
                 )}
             </Fragment>
