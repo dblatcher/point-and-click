@@ -17,14 +17,36 @@ export const initialActors: ActorData[] = [
         soundEffectMap: {
             walk: [
                 {
-                    soundId: 'beep',
-                    frameIndex: 2,
-                    volume: .25,
-                },
-                {
-                    soundId: 'beep',
+                    soundId: 'footstep-1',
                     frameIndex: 1,
                     volume: .4,
+                },
+                {
+                    soundId: 'footstep-2',
+                    frameIndex: 3,
+                    volume: .4,
+                },
+            ],
+            run: [
+                {
+                    soundId: 'footstep-1',
+                    frameIndex: 1,
+                    volume: .8,
+                },
+                {
+                    soundId: 'footstep-2',
+                    frameIndex: 3,
+                    volume: .8,
+                },
+                {
+                    soundId: 'footstep-1',
+                    frameIndex: 5,
+                    volume: .8,
+                },
+                {
+                    soundId: 'footstep-2',
+                    frameIndex: 7,
+                    volume: .8,
                 },
             ]
         }

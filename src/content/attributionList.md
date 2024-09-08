@@ -9,4 +9,7 @@ Image assets used in the 'Castle Life' demo game:
 - [https://opengameart.org/content/door-open-door-close-set](https://opengameart.org/content/door-open-door-close-set)
 - [https://opengameart.org/content/chest](https://opengameart.org/content/chest)
 
+Sound assets
+- [https://opengameart.org/content/100-cc0-sfx-2](https://opengameart.org/content/100-cc0-sfx-2)
+
 Please see the original source pages for licensing details.
