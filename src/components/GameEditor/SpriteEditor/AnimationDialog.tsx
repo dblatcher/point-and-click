@@ -56,8 +56,6 @@ export const AnimationDialog = ({
                 </DialogTitle>
 
                 <DialogContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
-
-
                     <Box position={'sticky'} top={1} overflow={'auto'}>
                         <FramePicker
                             pickFrame={pickFrame}
@@ -65,7 +63,6 @@ export const AnimationDialog = ({
                             row={selectedRow}
                             col={selectedCol} />
                     </Box>
-
 
                     {(animationSet) && (
                         <AnimationFrameList animKey={selectedAnimation}
