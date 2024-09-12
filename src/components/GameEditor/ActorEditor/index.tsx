@@ -128,7 +128,7 @@ export const ActorEditor = ({ data }: Props) => {
 
             <Tabs value={tabOpen} onChange={(_, tabOpen) => setTabOpen(tabOpen)}>
                 <Tab label="Details" value={ActorEditorTab.Details} />
-                <Tab label="Sprite" value={ActorEditorTab.Appearance} />
+                <Tab label="Images" value={ActorEditorTab.Appearance} />
                 <Tab label="Sound" value={ActorEditorTab.Sounds} />
                 <Tab label="Start Position" value={ActorEditorTab.StartingPosition} />
             </Tabs>
@@ -165,7 +165,7 @@ export const ActorEditor = ({ data }: Props) => {
             {tabOpen === ActorEditorTab.Appearance &&
                 <Stack direction={'row'} spacing={3}>
                     <Stack spacing={2}>
-                        <SelectInput
+                        <SelectInput optional
                             value={spriteId}
                             options={listIds(sprites)}
                             label="pick sprite"

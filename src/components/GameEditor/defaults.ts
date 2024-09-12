@@ -143,9 +143,8 @@ export const makeBlankActor = (): ActorData => ({
     name: undefined,
     status: undefined,
 
-    sprite: '',
     direction: 'left',
-    height: 150, width: 100,
+    height: 100, width: 50,
     x: 0, y: 0, room: undefined,
 
     isPlayer: false,

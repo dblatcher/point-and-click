@@ -16,7 +16,7 @@ export type Ident = z.infer<typeof IdentSchema>
 export const SpriteParamsSchema = z.object({
     height: z.number(),
     width: z.number(),
-    sprite: z.string(),
+    sprite: z.string().optional(),
     direction: z.optional(DirectionEnum),
     filter: z.optional(z.string()),
 })
