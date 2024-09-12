@@ -19,7 +19,7 @@ interface Props {
     selectedSheetId?: string;
 
     editCycle: { (animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined): void };
-    pickFrame: { (row: number, col: number, sheetId?: string): void };
+    pickFrame: { (row: number, col: number, imageId?: string): void };
     close: { (): void };
 }
 
@@ -61,7 +61,7 @@ export const AnimationDialog = ({
                     <Box position={'sticky'} top={1} overflow={'auto'}>
                         <FramePicker
                             pickFrame={pickFrame}
-                            sheetId={selectedSheetId}
+                            imageId={selectedSheetId}
                             row={selectedRow}
                             col={selectedCol} />
                     </Box>

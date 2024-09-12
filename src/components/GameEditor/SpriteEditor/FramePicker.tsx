@@ -11,8 +11,8 @@ import { FramePreview } from "./FramePreview";
 interface Props {
     row: number;
     col: number;
-    sheetId?: string;
-    pickFrame: { (row: number, col: number, sheetId?: string): void };
+    imageId?: string;
+    pickFrame: { (row: number, col: number, imageId?: string): void };
     fixedSheet?: boolean;
     noOptions?: boolean;
 }
@@ -52,10 +52,10 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
     }
 }
 
-export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickFrame, fixedSheet = false, noOptions = false }) => {
+export const FramePicker: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false }) => {
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
-    const image = sheetId ? imageService.get(sheetId) : undefined;
+    const image = imageId ? imageService.get(imageId) : undefined;
     const frameSize = frameSizeFromButtonSize(buttonSize)
 
     const buttonPropsGrid: FrameButtonProps[][] = []
@@ -70,7 +70,7 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
                         col: c,
                         image,
                         frameSize,
-                        onClick: () => { pickFrame(r, c, sheetId) }
+                        onClick: () => { pickFrame(r, c, imageId) }
                     }
                 )
             }
@@ -85,11 +85,11 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
                     <FileAssetSelector legend="sprite sheet"
                         format="select"
                         service={imageService}
-                        selectedItemId={sheetId}
+                        selectedItemId={imageId}
                         select={(item): void => { pickFrame(0, 0, item.id) }} />
                 )}
                 <Typography variant='h6'>
-                    {sheetId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
+                    {imageId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
                 </Typography>
             </Stack>
 

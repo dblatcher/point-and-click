@@ -135,7 +135,7 @@ export const ItemEditor = ({ item }: Props) => {
                         service={imageService}
                         selectedItemId={item.imageId} />
                     <FramePicker fixedSheet noOptions
-                        sheetId={item.imageId}
+                        imageId={item.imageId}
                         row={item.row || 0}
                         col={item.col || 0}
                         pickFrame={(row: number, col: number) => {

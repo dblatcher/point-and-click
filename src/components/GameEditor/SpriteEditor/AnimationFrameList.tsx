@@ -10,7 +10,7 @@ interface Props {
     animation: Partial<Record<Direction, SpriteFrame[]>>;
     editCycle: { (animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined): void };
     selectedFrame?: SpriteFrame;
-    pickFrame: { (row: number, col: number, sheetId?: string): void };
+    pickFrame: { (row: number, col: number, imageId?: string): void };
 }
 
 export const AnimationFrameList = ({

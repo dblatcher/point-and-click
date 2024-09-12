@@ -17,6 +17,7 @@ import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { SpritePreview } from "../SpritePreview";
 import { AnimationSounds } from "./AnimationSounds";
 import { PositionPreview } from "./PositionPreview";
+import { FrameePickDialogButton } from "../FramePickDialogButton";
 
 
 type Props = {
@@ -108,7 +109,7 @@ export const ActorEditor = ({ data }: Props) => {
         updateFromPartial(makeMod())
     }
 
-    const { sprite: spriteId, width = 1, height = 1, dialogueColor} = data
+    const { sprite: spriteId, width = 1, height = 1, dialogueColor } = data
     const spriteData = sprites.find(sprite => sprite.id === spriteId)?.data
     const statusSuggestions = getStatusSuggestions(data.id, {
         sprites: spriteData ? [spriteData] : [],
@@ -172,6 +173,18 @@ export const ActorEditor = ({ data }: Props) => {
                             inputHandler={
                                 id => updateFromPartial({ sprite: id })
                             }
+                        />
+
+                        <FrameePickDialogButton
+                            disabled={!!spriteId}
+                            row={data.defaultFrame?.row ?? 0}
+                            col={data.defaultFrame?.col ?? 0}
+                            imageId={data.defaultFrame?.imageId}
+                            pickFrame={(row, col, imageId) => {
+                                if (imageId) {
+                                    updateFromPartial({ defaultFrame: { row, col, imageId } })
+                                }
+                            }}
                         />
 
                         <Stack direction={'row'} spacing={2}>
