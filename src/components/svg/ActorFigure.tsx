@@ -119,55 +119,66 @@ export const ActorFigure: FunctionComponent<Props> = ({
 
     useInterval(updateFrame, animationRate)
 
-    if (!spriteObject) {
-        return <>
-            <FrameShape
-                frame={{ row: 0, col: 0 }}
-                asset={imageService.getAll()[0]}
-                // works - the Event definitions don't match, but stopPropagation is the only event method needed
-                clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
-                handleHover={processClick ? handleHover : undefined}
-                hoverData={data}
-                roomData={roomData}
-                viewAngle={viewAngle}
-                x={x} y={y}
-                height={height * spriteScale} width={width * spriteScale}
-                filter={filter}
-                status={data.status}
-            />
-        </>
-    }
-    return (
-        <>
-            <SpriteShape
-                spriteObject={spriteObject}
-                animationName={animationName}
-                direction={direction}
-                frameIndex={frameIndex}
-                // works - the Event definitions don't match, but stopPropagation is the only event method needed
-                clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
-                handleHover={processClick ? handleHover : undefined}
-                hoverData={data}
-                roomData={roomData}
-                viewAngle={viewAngle}
-                x={x} y={y}
-                height={height * spriteScale} width={width * spriteScale}
-                filter={filter}
-                status={data.status}
-            />
-
-            {(!forPreview && typeof soundValue?.frameIndex === 'undefined') &&
-                <PersistentSound
-                    soundValue={soundValue}
-                    animationRate={animationRate}
-                    isPaused={isPaused} />
-            }
-            {(!forPreview && typeof soundValue?.frameIndex === 'number') &&
-                <IntermitentSound
-                    soundValue={soundValue}
+    if (spriteObject) {
+        return (
+            <>
+                <SpriteShape
+                    spriteObject={spriteObject}
+                    animationName={animationName}
+                    direction={direction}
                     frameIndex={frameIndex}
-                    isPaused={isPaused} />
-            }
-        </>
-    )
+                    // works - the Event definitions don't match, but stopPropagation is the only event method needed
+                    clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
+                    handleHover={processClick ? handleHover : undefined}
+                    hoverData={data}
+                    roomData={roomData}
+                    viewAngle={viewAngle}
+                    x={x} y={y}
+                    height={height * spriteScale} width={width * spriteScale}
+                    filter={filter}
+                    status={data.status}
+                />
+
+                {(!forPreview && typeof soundValue?.frameIndex === 'undefined') &&
+                    <PersistentSound
+                        soundValue={soundValue}
+                        animationRate={animationRate}
+                        isPaused={isPaused} />
+                }
+                {(!forPreview && typeof soundValue?.frameIndex === 'number') &&
+                    <IntermitentSound
+                        soundValue={soundValue}
+                        frameIndex={frameIndex}
+                        isPaused={isPaused} />
+                }
+            </>
+        )
+    }
+
+    if (data.defaultFrame) {
+
+        const { row = 0, col = 0 } = data.defaultFrame
+        const asset = imageService.get(data.defaultFrame.imageId)
+        if (asset) {
+            return (
+                <FrameShape
+                    frame={{ row, col }}
+                    asset={asset}
+                    // works - the Event definitions don't match, but stopPropagation is the only event method needed
+                    clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
+                    handleHover={processClick ? handleHover : undefined}
+                    hoverData={data}
+                    roomData={roomData}
+                    viewAngle={viewAngle}
+                    x={x} y={y}
+                    height={height * spriteScale} width={width * spriteScale}
+                    filter={filter}
+                    status={data.status}
+                />
+            )
+        }
+    }
+
+
+    return null
 }

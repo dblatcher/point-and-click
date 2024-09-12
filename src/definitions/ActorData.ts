@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IdentSchema, PositionSchema, SpriteParamsSchema } from "./BaseTypes"
+import { IdentSchema, PositionSchema, SpriteParamsSchema, StaticFrameParamsSchema } from "./BaseTypes"
 
 export const SoundValueSchema = z.object({
     soundId: z.string(),
@@ -24,6 +24,7 @@ export const ActorDataSchema = IdentSchema
         soundEffectMap: SoundEffectMapSchema.optional(),
         walkToX: z.number().optional(),
         walkToY: z.number().optional(),
+        defaultFrame: StaticFrameParamsSchema.optional(),
     }))
 
 export type ActorData = z.infer<typeof ActorDataSchema>

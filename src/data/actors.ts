@@ -72,5 +72,8 @@ export const initialActors: ActorData[] = [
         width: 20,
         // sprite: 'tube'
         sprite: '',
+        defaultFrame: {
+            imageId:'tube.png'
+        }
     },
 ]
