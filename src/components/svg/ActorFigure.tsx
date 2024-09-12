@@ -1,18 +1,20 @@
 import { FunctionComponent, useLayoutEffect, useState } from "react";
 
-import { MouseEventHandler } from "react";
-import { RoomData, Order, ActorData } from "@/definitions"
+import { ActorData, Order, RoomData } from "@/definitions";
 import { getScale } from "@/lib/getScale";
 import { Sprite } from "@/lib/Sprite";
-import { useInterval } from "@/lib/useInterval"
+import { useInterval } from "@/lib/useInterval";
+import { MouseEventHandler } from "react";
 
-import { SpriteShape } from "./SpriteShape";
-import { HandleClickFunction, HandleHoverFunction } from "../game";
-import { PersistentSound } from "@/components/sound/PersistentSound";
 import { IntermitentSound } from "@/components/sound/IntermitentSound";
-import { SoundEffectMap, SoundValue } from "../../definitions/ActorData";
+import { PersistentSound } from "@/components/sound/PersistentSound";
 import { useSprites } from "@/context/sprite-context";
 import { findById } from "@/lib/util";
+import imageService from "@/services/imageService";
+import { SoundEffectMap, SoundValue } from "../../definitions/ActorData";
+import { HandleClickFunction, HandleHoverFunction } from "../game";
+import { FrameShape } from "./FrameShape";
+import { SpriteShape } from "./SpriteShape";
 
 interface Props {
     roomData: RoomData;
@@ -118,7 +120,22 @@ export const ActorFigure: FunctionComponent<Props> = ({
     useInterval(updateFrame, animationRate)
 
     if (!spriteObject) {
-        return null
+        return <>
+            <FrameShape
+                frame={{ row: 0, col: 0 }}
+                asset={imageService.getAll()[0]}
+                // works - the Event definitions don't match, but stopPropagation is the only event method needed
+                clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
+                handleHover={processClick ? handleHover : undefined}
+                hoverData={data}
+                roomData={roomData}
+                viewAngle={viewAngle}
+                x={x} y={y}
+                height={height * spriteScale} width={width * spriteScale}
+                filter={filter}
+                status={data.status}
+            />
+        </>
     }
     return (
         <>
