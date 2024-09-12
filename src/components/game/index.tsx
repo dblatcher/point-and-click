@@ -4,11 +4,10 @@ import { Component } from "react";
 //lib
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { makeDebugEntry, type LogEntry } from "@/lib/inGameDebugging";
 import { CellMatrix, generateCellMatrix } from "@/lib/pathfinding/cells";
 import { buildContentsList } from "@/lib/put-contents-in-order";
 import { getViewAngleCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
-import { clamp, findById } from "@/lib/util";
+import { findById } from "@/lib/util";
 // state logic
 import { continueSequence } from "./continueSequence";
 import { doPendingInteraction, handleCommand } from "./handleCommand";
@@ -16,13 +15,14 @@ import { handleConversationChoice } from "./handleConversationChoice";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { followOrder } from "./orders/followOrder";
 // components
+import { GameInfoProvider } from "@/context/game-info-provider";
+import { GameStateProvider } from "@/context/game-state-context";
+import { GameEventEmitter } from "@/lib/game-event-emitter";
 import { DebugLog } from "../DebugLog";
 import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
-import { GameStateProvider } from "@/context/game-state-context";
 import { UiComponentSet } from "./uiComponentSet";
-import { GameInfoProvider } from "@/context/game-info-provider";
 
 
 export type GameProps = Readonly<{
@@ -33,6 +33,7 @@ export type GameProps = Readonly<{
     showDebugLog?: boolean;
     startPaused?: boolean;
     uiComponents?: UiComponentSet;
+    instantMode?: boolean;
 } & GameCondition>
 
 export type GameState = GameData & {
@@ -43,10 +44,10 @@ export type GameState = GameData & {
     currentVerbId: string;
     currentItemId?: string;
     hoverTarget?: CommandTarget;
-    debugLog: LogEntry[];
 
     roomWidth: number;
     roomHeight: number;
+    emitter: GameEventEmitter
 }
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
@@ -63,7 +64,7 @@ export const cellSize = 5
 const renderCells = false
 const TIMER_SPEED = 10
 
-type SetGameStateFn = {(state:GameState):GameState}
+type SetGameStateFn = { (state: GameState): GameState }
 
 export default class Game extends Component<GameProps, GameState> {
 
@@ -109,12 +110,13 @@ export default class Game extends Component<GameProps, GameState> {
             actorOrders: props.actorOrders || {},
             conversations,
             currentConversationId: props.currentConversationId,
-            debugLog: [makeDebugEntry(`Running: ${props.id}`)],
             flagMap,
             gameNotBegun: false,
 
             roomHeight: 400,
             roomWidth: 800,
+
+            emitter: new GameEventEmitter(),
         }
     }
 
@@ -193,7 +195,13 @@ export default class Game extends Component<GameProps, GameState> {
             const { cellMatrix = [] } = state
             let pendingInteractionShouldBeDone = false;
             state.actors.forEach(actor => {
-                const triggersPendingInteraction = followOrder(actor, cellMatrix, state.actorOrders[actor.id], state, findById(actor.sprite, this.props._sprites))
+                const triggersPendingInteraction = followOrder(
+                    actor, cellMatrix, 
+                    state.actorOrders[actor.id], 
+                    state, 
+                    findById(actor.sprite, this.props._sprites),
+                    this.props.instantMode
+                )
                 if (triggersPendingInteraction) {
                     pendingInteractionShouldBeDone = true
                 }
@@ -209,7 +217,7 @@ export default class Game extends Component<GameProps, GameState> {
         const { currentRoom } = this
         const { player } = this
         if (!player || !currentRoom) { return }
-        const viewAngle = clamp(getViewAngleCenteredOn(player.x, currentRoom), 1, -1)
+        const viewAngle = getViewAngleCenteredOn(player.x, currentRoom)
         this.setState({ viewAngle })
     }
 
@@ -292,6 +300,11 @@ export default class Game extends Component<GameProps, GameState> {
                         selectItem={this.handleTargetClick}
                         handleHover={this.handleHover}
                         setScreenSize={this.setScreenSize}
+                        sendCommand={(command) => {
+                            this.setState(
+                                handleCommand(command, this.props) as SetGameStateFn
+                            )
+                        }}
                         saveMenu={
                             <SaveMenuComponent
                                 load={load ? () => { load() } : undefined}

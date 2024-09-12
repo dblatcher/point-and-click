@@ -8,7 +8,7 @@ export const SoundValueSchema = z.object({
 })
 export type SoundValue = z.infer<typeof SoundValueSchema>;
 
-const SoundEffectMapSchema = z.record(z.string(), SoundValueSchema.or(z.undefined()));
+const SoundEffectMapSchema = z.record(z.string(), SoundValueSchema.or(SoundValueSchema.array()).or(z.undefined()));
 export type SoundEffectMap = z.infer<typeof SoundEffectMapSchema>;
 
 export const ActorDataSchema = IdentSchema

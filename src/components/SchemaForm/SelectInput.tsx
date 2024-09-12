@@ -24,7 +24,7 @@ export const SelectInput: FunctionComponent<
     const valueAsString = value ?? EMPTY_STRING;
 
     return (
-        <FormControl fullWidth>
+        <FormControl fullWidth={!props.notFullWidth}>
             {label && (
                 <InputLabel id={`select-input-label-${label}-${options.toString()}`}>
                     {label}

@@ -11,4 +11,14 @@ export const soundAssets: SoundAsset[] = [
         href: './assets/sounds/fire.mp3',
         category: 'sfx',
     },
+    {
+        id: 'footstep-1',
+        href: './assets/sounds/sfx100v2_footstep_wood_01.ogg',
+        category: 'sfx',
+    },
+    {
+        id: 'footstep-2',
+        href: './assets/sounds/sfx100v2_footstep_wood_04.ogg',
+        category: 'sfx',
+    },
 ]

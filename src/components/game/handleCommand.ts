@@ -7,6 +7,7 @@ import { findById } from "@/lib/util";
 import { getDefaultResponseText, matchInteraction, describeCommand } from "@/lib/commandFunctions";
 import { getTargetPoint } from "@/lib/roomFunctions";
 import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
+import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 
 function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
     const { actors, rooms, currentRoomId } = state
@@ -14,32 +15,31 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
     const currentRoom = findById(currentRoomId, rooms)
 
     if (!player || !currentRoom) { return state }
-    if (!state.actorOrders[player.id]) {
-        state.actorOrders[player.id] = []
-    }
 
     if (command.verb.isMoveVerb && (command.target.type === 'actor' || command.target.type === 'hotspot')) {
-
         const point = getTargetPoint(command.target, currentRoom)
-        state.debugLog.push(makeDebugEntry(`walk to point is ${point.x}, ${point.y}`, 'pathfinding'))
-        state.actorOrders[player.id].push({
+        const log = makeDebugEntry(`walk to point is ${point.x}, ${point.y}`, 'pathfinding')
+        state.emitter.emit('debugLog', log)
+        issueOrdersOutsideSequence(state, player.id, [{
             type: 'move', steps: [
                 { ...point }
             ]
-        })
+        }])
     } else {
         const text = getDefaultResponseText(command, unreachable)
-        state.actorOrders[player.id].push({
+        issueOrdersOutsideSequence(state, player.id, [{
             type: 'say', text, time: 250
-        })
+        }])
     }
     return state
 }
 
 const describeConsequences = (interaction: Interaction): string => `(${interaction.consequences?.map(_ => _.type).join()})`
 
-
-function makeGoToOrder(player: ActorData, target: { x: number; y: number }): OrderConsequence {
+// TO DO - have some control of the narrative for this.
+// Should it be empty? if we can eliminate the delay by making movements instant, then not needed.
+// If running visuals with the animation and text, do need a narrative...
+function makeGoToOrder(player: ActorData, targetPoint: { x: number; y: number }, targetDescription: string): OrderConsequence {
     return {
         type: 'order',
         actorId: player.id,
@@ -50,10 +50,15 @@ function makeGoToOrder(player: ActorData, target: { x: number; y: number }): Ord
                 doPendingInteractionWhenFinished: true,
                 steps: [
                     {
-                        x: target.x,
-                        y: target.y,
+                        x: targetPoint.x,
+                        y: targetPoint.y,
                     }
-                ]
+                ],
+                narrative: {
+                    text: [
+                        `making your way to ${targetDescription}...`
+                    ]
+                }
             },
         ]
     }
@@ -62,7 +67,7 @@ function makeGoToOrder(player: ActorData, target: { x: number; y: number }): Ord
 export function handleCommand(command: Command, props: GameProps): { (state: GameState): Partial<GameState> } {
 
     return (state): GameState => {
-        const { currentRoomId, rooms, debugLog, actors, cellMatrix = [] } = state
+        const { currentRoomId, rooms, actors, cellMatrix = [], emitter } = state
         const currentRoom = findById(currentRoomId, rooms)
         if (!currentRoom) { return state }
 
@@ -70,8 +75,13 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
         const interaction = matchInteraction(command, currentRoom, state.interactions, state.flagMap)
         const mustReachFirst = interaction && (command.verb.isMoveVerb || interaction.mustReachFirst)
 
+        const descriptionForLog = describeCommand(command)
+        emitter.emit('in-game-event', { type: 'command', command })
+
         if (interaction && mustReachFirst && command.target.type !== 'item') {
-            debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command'))
+            const log = makeDebugEntry(`[${descriptionForLog}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command')
+            emitter.emit('debugLog', log)
+
             const targetPoint = getTargetPoint(command.target, currentRoom)
 
             if (player) {
@@ -79,18 +89,21 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
                 if (isReachable) {
                     state.pendingInteraction = interaction
                     const execute = makeConsequenceExecutor(state, props)
-                    execute(makeGoToOrder(player, targetPoint))
+                    execute(makeGoToOrder(player, targetPoint, command.target.name ?? command.target.id))
                 } else {
-                    debugLog.push(makeDebugEntry(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding'))
+                    const log = makeDebugEntry(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding')
+                    emitter.emit('debugLog', log)
                     doDefaultResponse(command, state, true)
                 }
             }
         } else if (interaction) {
-            debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: ${describeConsequences(interaction)}`, 'command'))
+            const log = makeDebugEntry(`[${descriptionForLog}]: ${describeConsequences(interaction)}`, 'command')
+            emitter.emit('debugLog', log)
             const execute = makeConsequenceExecutor(state, props)
             interaction.consequences.forEach(execute)
         } else {
-            debugLog.push(makeDebugEntry(`[${describeCommand(command)}]: (no match)`, 'command'))
+            const log = makeDebugEntry(`[${descriptionForLog}]: (no match)`, 'command')
+            emitter.emit('debugLog', log)
             doDefaultResponse(command, state)
         }
 
@@ -105,7 +118,7 @@ export function doPendingInteraction(state: GameState, props: GameProps): GameSt
     state.pendingInteraction?.consequences.forEach(execute)
 
     if (state.pendingInteraction) {
-        state.debugLog.push(makeDebugEntry(
+        state.emitter.emit('debugLog', makeDebugEntry(
             `Pending interaction: ${describeConsequences(state.pendingInteraction)}`,
             'command'
         ))

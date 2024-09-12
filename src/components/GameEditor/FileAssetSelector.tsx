@@ -1,7 +1,7 @@
 import { listIds } from "@/lib/util";
 import { Service } from "@/services/Service";
 import { FileAsset } from "@/services/assets";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { DeleteIcon } from "@/components/GameEditor/material-icons";
 import { Box, Grid, IconButton, List, ListItemButton, ListItemText } from "@mui/material";
 import { useEffect, useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";

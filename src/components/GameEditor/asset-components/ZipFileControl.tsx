@@ -1,6 +1,4 @@
-import DownloadIcon from '@mui/icons-material/Download';
-import UploadIcon from "@mui/icons-material/Upload";
-import AddIcon from "@mui/icons-material/Add";
+import { AddIcon, DownloadIcon, UploadIcon } from "@/components/GameEditor/material-icons";
 import { Alert, Button, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
 

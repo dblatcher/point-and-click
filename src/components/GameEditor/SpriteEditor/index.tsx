@@ -43,7 +43,6 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
         ) {
             return appendFrame(newSelectedRow, newSelectedCol, newSelectedSheetId)
         }
-
         setSelectedCol(newSelectedCol)
         setSelectedRow(newSelectedRow)
         if (newSelectedSheetId) {
@@ -52,6 +51,11 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
     }
 
     const appendFrame = (newSelectedRow: number, newSelectedCol: number, newSelectedSheetId: string) => {
+        const newFrame = {
+            row: newSelectedRow,
+            col: newSelectedCol,
+            imageId: newSelectedSheetId,
+        }
         const animations = cloneData(props.data.animations)
         const animation = selectedAnimation && animations[selectedAnimation]
         if (!animation) {
@@ -59,13 +63,10 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
         }
         const cycle = animation[selectedDirection ?? props.data.defaultDirection]
         if (!cycle) {
-            return
+            animation [selectedDirection ?? props.data.defaultDirection] = [newFrame]
+        } else {
+            cycle?.push(newFrame)
         }
-        cycle?.push({
-            row: newSelectedRow,
-            col: newSelectedCol,
-            imageId: newSelectedSheetId,
-        })
         updateFromPartial({ animations })
     }
 

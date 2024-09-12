@@ -6,11 +6,20 @@ interface Props {
     children: ReactNode;
     themePalette?: 'primary' | 'secondary';
     boxProps?: BoxProps;
+    contentBoxProps?: BoxProps;
     barContent?: ReactNode;
     leftContent?: ReactNode;
 }
 
-export const EditorBox = ({ title, children, themePalette = 'primary', boxProps = {}, barContent, leftContent }: Props) => {
+export const EditorBox = ({ 
+    title, 
+    children, 
+    themePalette = 'primary', 
+    boxProps = {}, 
+    barContent, 
+    contentBoxProps, 
+    leftContent,
+}: Props) => {
 
     const theme = useTheme()
     const colorScheme = theme.palette[themePalette]
@@ -36,9 +45,7 @@ export const EditorBox = ({ title, children, themePalette = 'primary', boxProps 
                         paddingX: 2,
                     }}>
                     {leftContent}
-                    <Typography component={'span'}
-                        variant='overline'
-                    >{title}</Typography>
+                    <Typography component={'span'}>{title}</Typography>
                     <Box>
                         {barContent}
                     </Box>
@@ -47,6 +54,7 @@ export const EditorBox = ({ title, children, themePalette = 'primary', boxProps 
             <Box component={'section'}
                 sx={{
                     padding: 1,
+                    ...contentBoxProps,
                 }}>
                 {children}
             </Box>

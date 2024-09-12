@@ -3,7 +3,7 @@ import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { ImageAsset } from "@/services/assets";
 import { Box, Typography } from "@mui/material";
 import { EditorBox } from "../EditorBox";
-import HideImageOutlinedIcon from '@mui/icons-material/HideImageOutlined';
+import { HideImageOutlinedIcon } from "../material-icons";
 
 interface Props {
     imageAsset: ImageAsset;
@@ -73,11 +73,11 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ imageAsset, canvas
                     />
                 ) : (
                     <Box display={'flex'} justifyContent={'center'} alignItems={'center'} flexDirection={'column'}
-                    sx={{
-                        width: '100%',
-                        height: '100%',
-                        minHeight: 150
-                    }}>
+                        sx={{
+                            width: '100%',
+                            height: '100%',
+                            minHeight: 150
+                        }}>
                         <HideImageOutlinedIcon sx={{
                             width: 100, height: 100
                         }} />

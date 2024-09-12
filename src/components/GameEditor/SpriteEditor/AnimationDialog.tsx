@@ -1,7 +1,7 @@
 
 import { ActorData, Direction, SpriteData, SpriteFrame } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
-import { Button, Container, DialogActions, Dialog, DialogContent, DialogTitle, Grid, Stack } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { SpritePreview } from "../SpritePreview";
 import { AnimationFrameList } from "./AnimationFrameList";
@@ -55,51 +55,49 @@ export const AnimationDialog = ({
                     {selectedAnimation}/{selectedDirection}{selectedDirection === defaultDirection && <span>(default)</span>}
                 </DialogTitle>
 
-                <DialogContent>
-                    <Container>
-                        <Stack direction={'row'} spacing={2}>
-                            <Stack spacing={2} flex={1}>
-                                <Grid item xs={6}>
-                                    <SpritePreview
-                                        noBaseLine
-                                        scale={3}
-                                        overrideSprite={overrideSprite}
-                                        data={actorData}
-                                    />
-                                </Grid>
+                <DialogContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
 
-                                {(animationSetForDirection && selectedDirection !== defaultDirection) && (
-                                    <ButtonWithConfirm
-                                        label={`Delete animation "${selectedAnimation} (${selectedDirection})"`}
-                                        onClick={() => editCycle(selectedAnimation, selectedDirection, undefined)} />
-                                )}
 
-                                <FramePicker
-                                    pickFrame={pickFrame}
-                                    sheetId={selectedSheetId}
-                                    row={selectedRow}
-                                    col={selectedCol} />
-                            </Stack>
+                    <Box position={'sticky'} top={1} overflow={'auto'}>
+                        <FramePicker
+                            pickFrame={pickFrame}
+                            sheetId={selectedSheetId}
+                            row={selectedRow}
+                            col={selectedCol} />
+                    </Box>
 
-                            {(animationSet) && (
-                                <AnimationFrameList animKey={selectedAnimation}
-                                    defaultDirection={defaultDirection}
-                                    direction={selectedDirection}
-                                    animation={animationSet}
-                                    editCycle={editCycle}
-                                    pickFrame={pickFrame}
-                                    selectedFrame={selectedSheetId ? {
-                                        row: selectedRow,
-                                        col: selectedCol,
-                                        imageId: selectedSheetId,
-                                    } : undefined}
-                                />
-                            )}
-                        </Stack>
-                    </Container>
+
+                    {(animationSet) && (
+                        <AnimationFrameList animKey={selectedAnimation}
+                            defaultDirection={defaultDirection}
+                            direction={selectedDirection}
+                            animation={animationSet}
+                            editCycle={editCycle}
+                            pickFrame={pickFrame}
+                            selectedFrame={selectedSheetId ? {
+                                row: selectedRow,
+                                col: selectedCol,
+                                imageId: selectedSheetId,
+                            } : undefined}
+                        />
+                    )}
+
+                    <Box position={'sticky'} top={1}>
+                        <SpritePreview
+                            noBaseLine
+                            scale={2}
+                            overrideSprite={overrideSprite}
+                            data={actorData}
+                        />
+                    </Box>
                 </DialogContent>
 
                 <DialogActions>
+                    {(animationSetForDirection && selectedDirection !== defaultDirection) && (
+                        <ButtonWithConfirm
+                            label={`Delete animation "${selectedAnimation} (${selectedDirection})"`}
+                            onClick={() => editCycle(selectedAnimation, selectedDirection, undefined)} />
+                    )}
                     <Button onClick={close}>close</Button>
                 </DialogActions>
             </>)}

@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from "@mui/material";
 import { FunctionComponent, ReactNode } from "react";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { ExpandMoreIcon } from '@/components/GameEditor/material-icons';
 
 export interface TabContents {
     label: string;

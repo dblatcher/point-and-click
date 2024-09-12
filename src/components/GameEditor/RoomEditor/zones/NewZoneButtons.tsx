@@ -1,18 +1,20 @@
 import { FunctionComponent } from "react";
 import { ClickEffect } from "../ClickEffect";
-import { ButtonGroup, Button } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add"
+import { ButtonGroup, Button, ButtonGroupProps } from "@mui/material";
+import {AddIcon} from "@/components/GameEditor/material-icons"
 
 interface Props {
     type: 'obstacle' | 'walkable' | 'hotspot';
     clickEffect?: ClickEffect;
     setClickEffect: { (clickEffect: ClickEffect): void }
+    orientation?: ButtonGroupProps['orientation']
 }
 
 export const NewZoneButtons: FunctionComponent<Props> = ({
     type,
     clickEffect,
     setClickEffect,
+    orientation='horizontal'
 }: Props) => {
 
     const clickEffectIsNewZone = (shapeToCheck: 'circle' | 'rect' | 'polygon'): boolean => {
@@ -24,7 +26,7 @@ export const NewZoneButtons: FunctionComponent<Props> = ({
     const effectType = type.toUpperCase() as "OBSTACLE" | "HOTSPOT" | "WALKABLE";
 
     return (
-        <ButtonGroup sx={{ paddingBottom: 1 }} size="small">
+        <ButtonGroup sx={{ paddingBottom: 1 }} size="small" orientation={orientation}>
             <Button
                 variant={clickEffectIsNewZone('circle') ? 'contained' : 'outlined'}
                 startIcon={<AddIcon />}

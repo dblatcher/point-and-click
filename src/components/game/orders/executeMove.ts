@@ -25,7 +25,19 @@ function determineDirection(postion: Point, desination: Point, availableDirectio
     return vertical
 }
 
-export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Sprite): void {
+
+export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Sprite, instantMode?:boolean): void {
+
+    if (instantMode) {
+        const finalStep = moveOrder.steps[moveOrder.steps.length - 1]
+        if (finalStep) {
+            actor.x = finalStep.x
+            actor.y = finalStep.y
+            moveOrder.steps.splice(0, moveOrder.steps.length)
+        }
+        return
+    }
+
     const { x, y, speed: actorSpeed = 1 } = actor
     const [nextStep] = moveOrder.steps;
     if (!nextStep) { return }

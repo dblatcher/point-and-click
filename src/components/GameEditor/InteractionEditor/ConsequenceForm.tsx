@@ -1,7 +1,8 @@
 import { SchemaForm, getModification } from "@/components/SchemaForm";
 import { SelectInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
-import { AnyConsequence, Consequence, ConsequenceType, GameDesign, Order } from "@/definitions";
+import { AnyConsequence, Consequence, ConsequenceType, GameDesign, Order, RoomData, Zone } from "@/definitions";
+import { Narrative } from "@/definitions/BaseTypes";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
@@ -10,9 +11,13 @@ import soundService from "@/services/soundService";
 import { Box } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
+import { NarrativeEditor } from "../NarrativeEditor";
 import { OrderForm } from "../OrderForm";
+import { SpritePreview } from "../SpritePreview";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
+import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
 import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
+import { SoundPreview } from "../SoundAssetTool/SoundPreview";
 
 interface Props {
     consequence: AnyConsequence;
@@ -85,56 +90,83 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         updateProperty('orders', ordersCopy)
     }
 
+    const updateNarrative = (newNarrative: Narrative | undefined) => {
+        update({ ...consequence, narrative: newNarrative })
+    }
+
+    const actor = findById(consequence.actorId, gameDesign.actors)
+
+    const needsRoomPreview = ['changeRoom', 'teleportActor', 'toggleZone'].includes(consequence.type)
+    const needsSoundPreview = ['soundEffect'].includes(consequence.type)
+    const soundAsset = consequence.sound ? soundService.get(consequence.sound) : undefined
+
+
     return (
-        <Box>
-            <Box paddingY={2} marginBottom={2}>
-                <SelectInput value={consequence.type}
-                    label={'type'}
-                    options={optionListIds.type}
-                    descriptions={optionListDescriptions.type}
-                    inputHandler={changeType}
+        <Box display={'flex'}>
+            <Box paddingY={2}>
+                <Box marginBottom={2}>
+                    <SelectInput value={consequence.type}
+                        label={'type'}
+                        options={optionListIds.type}
+                        descriptions={optionListDescriptions.type}
+                        inputHandler={changeType}
+                    />
+                </Box>
+
+                <SchemaForm
+                    schema={consequenceMap[consequence.type] as any}
+                    numberConfig={{
+                        time: { min: 0 },
+                        volume: {
+                            step: .1,
+                            max: 2,
+                            min: 0,
+                        }
+                    }}
+                    options={optionListIds}
+                    suggestions={{
+                        targetId: targetIds,
+                        status: getStatusSuggestions(consequence.targetId, gameDesign)
+                    }}
+                    data={consequence}
+                    changeValue={(value, field) => {
+                        update({
+                            ...consequence,
+                            ...getModification(value, field)
+                        })
+                    }}
                 />
+                {consequence.orders && (
+                    <ArrayControl color="secondary"
+                        list={consequence.orders}
+                        describeItem={(order, index) =>
+                            <EditorBox title={`${order.type} order`} themePalette="secondary">
+                                <OrderForm
+                                    animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
+                                    targetIdOptions={targetIdsWithoutItems}
+                                    targetIdDescriptions={targetDescriptionsWithoutItems}
+                                    updateData={(newOrder) => { editOrder(newOrder, index) }}
+                                    data={order} key={index} />
+                            </EditorBox>
+                        }
+                        createItem={() => getDefaultOrder('say')}
+                        mutateList={newList => { updateProperty('orders', newList) }}
+                    />
+                )}
+                <NarrativeEditor narrative={consequence.narrative} update={updateNarrative} />
             </Box>
 
-            <SchemaForm
-                schema={consequenceMap[consequence.type] as any}
-                numberConfig={{
-                    time: { min: 0 },
-                    volume: {
-                        step: .1,
-                        max: 2,
-                        min: 0,
-                    }
-                }}
-                options={optionListIds}
-                suggestions={{
-                    targetId: targetIds,
-                    status: getStatusSuggestions(consequence.targetId, gameDesign)
-                }}
-                data={consequence}
-                changeValue={(value, field) => {
-                    update({
-                        ...consequence,
-                        ...getModification(value, field)
-                    })
-                }}
-            />
-            {consequence.orders && (
-                <ArrayControl color="secondary"
-                    list={consequence.orders}
-                    describeItem={(order, index) =>
-                        <EditorBox title={`${order.type} order`} themePalette="secondary">
-                            <OrderForm
-                                animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
-                                targetIdOptions={targetIdsWithoutItems}
-                                targetIdDescriptions={targetDescriptionsWithoutItems}
-                                updateData={(newOrder) => { editOrder(newOrder, index) }}
-                                data={order} key={index} />
-                        </EditorBox>
-                    }
-                    createItem={() => getDefaultOrder('say')}
-                    mutateList={newList => { updateProperty('orders', newList) }}
-                />
+            {needsRoomPreview && <Box paddingY={2} paddingLeft={2}>
+                <ConsequenceFormRoom update={update} consequence={consequence} />
+            </Box>}
+            {needsSoundPreview && <Box paddingY={2} paddingLeft={2}>
+                <SoundPreview asset={soundAsset ?? {}} />
+            </Box>}
+
+            {actor && (
+                <Box paddingY={2} paddingLeft={2}>
+                    <SpritePreview data={actor} noBaseLine />
+                </Box>
             )}
         </Box>
     )

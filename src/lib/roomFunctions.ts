@@ -1,4 +1,5 @@
 import { RoomData, ActorData, HotspotZone } from "../definitions";
+import { clamp } from "./util";
 
 export const putActorsInDisplayOrder = (a: ActorData, b: ActorData) => (b.y + (b.baseline ? b.baseline : 0)) - (a.y + (a.baseline ? a.baseline : 0))
 
@@ -34,7 +35,7 @@ export function locateClickInWorld(clickXPosition: number, clickYposition: numbe
 export function getViewAngleCenteredOn(xPosition: number, roomData: RoomData) {
     const { width } = roomData
     const offCenter = 2 * (xPosition - width / 2) / width
-    return -offCenter * 2
+    return clamp( -offCenter * 2,1,-1)
 }
 
 export function getTargetPoint(target: ActorData | HotspotZone, roomData: RoomData): { x: number; y: number } {

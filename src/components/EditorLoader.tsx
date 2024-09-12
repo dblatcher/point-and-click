@@ -1,6 +1,6 @@
-import { Container, Divider, Box, Skeleton, Stack } from '@mui/material'
-import dynamic from 'next/dynamic'
 import type { Props } from "@/components/GameEditor"
+import { Container, Divider, Skeleton, Stack } from '@mui/material'
+import dynamic from 'next/dynamic'
 
 const DynamicComponent = dynamic<Props>(() => import('@/components/GameEditor', {}), {
   loading: () => (<>

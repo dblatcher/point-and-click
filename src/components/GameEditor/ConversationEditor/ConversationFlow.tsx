@@ -1,17 +1,14 @@
+import { AddIcon, DeleteIcon, StarIcon, StarOutlineIcon, SortIcon } from "@/components/GameEditor/material-icons"
 import { Conversation, ConversationBranch } from "@/definitions"
-import AddIcon from "@mui/icons-material/Add"
-import DeleteIcon from "@mui/icons-material/Delete"
-import SortIcon from '@mui/icons-material/Sort'
-import { Box, Button, Card, IconButton, Stack, Typography, useTheme } from "@mui/material"
+import { Box, Button, IconButton, Stack, useTheme } from "@mui/material"
+import Checkbox from '@mui/material/Checkbox'
 import { Fragment, useEffect, useRef, useState } from "react"
 import { ButtonWithConfirm } from "../ButtonWithConfirm"
 import { ButtonWithTextInput } from "../ButtonWithTextInput"
 import { EditorBox } from "../EditorBox"
+import { formatIdInput } from "../helpers"
 import { ChoiceDescription } from "./ChoiceDescription"
 import { LineBetweenNodes } from "./LineBetweenNodes"
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import StarIcon from '@mui/icons-material/Star';
-import Checkbox from '@mui/material/Checkbox';
 
 interface Props {
     conversation: Conversation
@@ -133,7 +130,10 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
                         paddingY: 1,
                     }}
                         startIcon={<AddIcon />}
-                        onClick={() => { addNewChoice(branchKey) }}
+                        onClick={() => { 
+                            addNewChoice(branchKey) 
+                            openEditor(branchKey, branch.choices.length)
+                        }}
                     >Add choice</Button>
                 </Box>
             </EditorBox>
@@ -144,7 +144,6 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
 export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openOrderDialog, deleteBranch, addNewBranch, changeDefaultBranch }: Props) => {
     const [nodePairs, setNodePairs] = useState<[Element, Element][]>([])
     const containerRef = useRef<HTMLElement>()
-    const { id } = conversation
     const heirarchy = getHeirarchy(conversation)
 
 
@@ -211,6 +210,7 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                     label="Add Branch"
                     onEntry={(entry) => { addNewBranch(entry) }}
                     confirmationText="enter branch name"
+                    modifyInput={formatIdInput}
                     buttonProps={{
                         size: 'large',
                         variant: "contained",

@@ -109,7 +109,7 @@ export const buildAssetZipBlob = async (
 };
 
 export const readImageAssetFromZipFile = async (
-  file: File
+  file: Blob
 ): Promise<ZipReadResult<ImageAsset[]>> => {
   const zip = await blobToZip(file);
 
@@ -164,7 +164,7 @@ export const readImageAssetFromZipFile = async (
 };
 
 export const readSoundAssetFromZipFile = async (
-  file: File
+  file: Blob
 ): Promise<ZipReadResult<SoundAsset[]>> => {
   const zip = await blobToZip(file);
 
@@ -257,7 +257,7 @@ export const buildGameZipBlob = async (
 };
 
 export const readGameFromZipFile = async (
-  file: File
+  file: Blob
 ): Promise<
   ZipReadResult<{
     gameDesign: GameDesign;

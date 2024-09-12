@@ -4,6 +4,7 @@ import { useState } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { DimensionControl } from "./DimensionControl";
+import { RoomDescriptionControl } from "./RoomDescriptionControl";
 import { ScalingControl } from "./ScalingControl";
 import { BackgroundControl } from "./background/BackgroundControl";
 import { ZoneFeaturesControl } from "./zones/ZoneFeatureControls";
@@ -17,9 +18,11 @@ type RoomEditorProps = {
 }
 
 enum RoomEditorTab {
+    NameAndDescription,
     BackgroundAndDimension,
-    ZoneFeatures,
-    SpriteScaling
+    WalkableAreas,
+    SpriteScaling,
+    Hotspots,
 }
 
 export const RoomEditor = ({ data }: RoomEditorProps) => {
@@ -37,11 +40,13 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
         </EditorHeading>
 
         <Tabs value={tabOpen} onChange={(event, tabOpen) => setTabOpen(tabOpen)}>
+            <Tab label="Name and description" value={RoomEditorTab.NameAndDescription} />
             <Tab label="Background and dimensions" value={RoomEditorTab.BackgroundAndDimension} />
-            <Tab label="Zones" value={RoomEditorTab.ZoneFeatures} />
+            <Tab label="Walkable Zones" value={RoomEditorTab.WalkableAreas} />
+            <Tab label="Hotspots" value={RoomEditorTab.Hotspots} />
             <Tab label="Sprite Scaling" value={RoomEditorTab.SpriteScaling} />
         </Tabs>
-
+        {tabOpen === RoomEditorTab.NameAndDescription && <RoomDescriptionControl room={data} />}
         {tabOpen === RoomEditorTab.BackgroundAndDimension && (
             <>
                 <DimensionControl room={data} />
@@ -49,12 +54,17 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
             </>
         )}
 
-        {tabOpen === RoomEditorTab.ZoneFeatures && (
+        {tabOpen === RoomEditorTab.WalkableAreas && (
             <ZoneFeaturesControl room={data} />
         )}
 
         {tabOpen === RoomEditorTab.SpriteScaling && (
             <ScalingControl room={data} />
         )}
+
+        {tabOpen === RoomEditorTab.Hotspots && (
+            <ZoneFeaturesControl room={data} zoneType="hotspots"/>
+        )}
+
     </Stack>
 }

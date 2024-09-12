@@ -2,7 +2,7 @@ import { FunctionComponent, useState } from "react";
 import { StringInput } from "@/components/SchemaForm/inputs";
 import { Sprite } from "@/lib/Sprite";
 import { Box, Alert, Stack, IconButton } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add"
+import { AddIcon } from "@/components/GameEditor/material-icons"
 import { EditorBox } from "../EditorBox";
 
 interface Props {
@@ -20,8 +20,8 @@ export const NewAnimationForm: FunctionComponent<Props> = ({ existingKeys, submi
         setAnimationKey('')
     }
 
-    const animationKeySuggestions = Object.values(Sprite.DEFAULT_ANIMATION)
-        .filter(value => !existingKeys.includes(value))
+    const animationKeySuggestions = Array.from(new Set(Object.values(Sprite.DEFAULT_ANIMATION)
+        .filter(value => !existingKeys.includes(value))))
 
     return (
         <EditorBox title="Add Animation" boxProps={{ minWidth: 220 }}>

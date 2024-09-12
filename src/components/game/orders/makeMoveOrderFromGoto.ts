@@ -39,6 +39,7 @@ export function makeMoveOrderFromGoto(goToOrder: GotoOrder, state: GameState): M
             ...getTargetPoint(target, currentRoom),
             speed,
             animation,
-        }]
+        }],
+        narrative: { text: [] }, // have empty narrative, since goTo order it was created from has been announced
     }
 }

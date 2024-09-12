@@ -1,4 +1,3 @@
-import { FunctionComponent } from "react"
 import { findValueAsType } from "@/lib/util";
 import { Order, orderTypes } from "@/definitions/Order";
 import { getDefaultOrder } from "../defaults";
@@ -6,6 +5,8 @@ import { OrderWithoutStepsForm } from "./OrderWithoutStepsForm";
 import { OrderWithStepsForm } from "./OrderWithStepsForm";
 import { Box } from "@mui/material";
 import { SelectInput } from "@/components/SchemaForm/inputs";
+import { NarrativeEditor } from "../NarrativeEditor";
+import { Narrative } from "@/definitions/BaseTypes";
 
 
 interface Props {
@@ -24,6 +25,10 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
         if (orderType) {
             updateData(getDefaultOrder(orderType))
         }
+    }
+
+    const updateNarrative = (newNarrative: Narrative | undefined) => {
+        updateData({ ...data, narrative: newNarrative })
     }
 
     const form = ('steps' in data) ? (
@@ -50,6 +55,7 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
                 inputHandler={changeType}
             />
             {form}
+            <NarrativeEditor narrative={data.narrative} update={updateNarrative} />
         </Box>
     )
 }

@@ -3,7 +3,7 @@ import { useGameDesign } from "@/context/game-design-context";
 import { usePageMeta } from "@/context/page-meta-context";
 import { FixedGameInfoSchema, GameContentsDataSchema } from "@/definitions/Game";
 import { listIds } from "@/lib/util";
-import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import { DesignServicesIcon } from '@/components/GameEditor/material-icons';
 import { Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { EditorBox } from "./EditorBox";
@@ -92,7 +92,6 @@ export const Overview = () => {
           </Table>
         </TableContainer>
       </Stack>
-
       <EditorHeading heading="Flags" />
       <FlagMapControl />
     </Stack>

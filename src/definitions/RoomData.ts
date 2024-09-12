@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { HotspotZoneSchema, ZoneSchema } from "./Zone"
+import { NarrativeSchema } from "./BaseTypes"
 
 const BackgroundLayerSchema = z.object({
     parallax: z.number(),
@@ -21,5 +22,7 @@ export const RoomDataSchema = z.object({
     walkableAreas: z.optional(ZoneSchema.array()),
     scaling: z.optional(ScaleLevelSchema),
     backgroundColor: z.string().optional(),
+    name: z.string().optional(),
+    narrative: NarrativeSchema.optional(), 
 })
 export type RoomData = z.infer<typeof RoomDataSchema>

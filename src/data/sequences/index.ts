@@ -2,12 +2,10 @@ import { Sequence } from "@/definitions/Sequence";
 import { DIALOGUE } from "./DIALOGUE";
 import { LIGHT_FIRE } from "./LIGHT_FIRE";
 import { PUT_OUT_FIRE } from "./PUT_OUT_FIRE";
-
-import * as CHAT from "./CONVERSATION_CHAT"
+import { intro } from "./intro";
 
 export const sequences: Sequence[] = [
-    DIALOGUE, PUT_OUT_FIRE, LIGHT_FIRE,
-    ...Object.values(CHAT),
+    DIALOGUE, PUT_OUT_FIRE, LIGHT_FIRE, intro,
     {
         id: 'CHAIN_1',
         stages: [
@@ -25,8 +23,8 @@ export const sequences: Sequence[] = [
                             time: 250,
                         },
                         {
-                            type:'goTo',
-                            targetId:'bush',
+                            type: 'goTo',
+                            targetId: 'bush',
                         }
                     ]
                 }
@@ -37,6 +35,12 @@ export const sequences: Sequence[] = [
         id: 'CHAIN_2',
         stages: [
             {
+                narrative: {
+                    text: [
+                        "You mumble something and wonder towards Mario.",
+                        "Nothing happens."
+                    ]
+                },
                 actorOrders: {
                     PLAYER: [
                         {
@@ -45,8 +49,8 @@ export const sequences: Sequence[] = [
                             time: 250,
                         },
                         {
-                            type:'goTo',
-                            targetId:'MARIO',
+                            type: 'goTo',
+                            targetId: 'MARIO',
                         }
                     ]
                 }

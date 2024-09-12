@@ -1,28 +1,59 @@
+import { AddIcon, ContentCopyIcon, EditIcon, UploadIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
-import { GameDataItem } from "@/definitions";
+import { ActorData, GameDataItem, ItemData, RoomData } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { cloneData } from "@/lib/clone";
+import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
-import AddIcon from "@mui/icons-material/Add";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import EditIcon from '@mui/icons-material/Edit';
-import UploadIcon from "@mui/icons-material/Upload";
-import { Alert, Button, Grid, Stack, Typography } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Grid, Stack, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
-import { ZodObject, ZodRawShape } from "zod";
+import { ZodSchema } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { EditorHeading } from "./EditorHeading";
 import { formatIdInput } from "./helpers";
-import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
+import { RoomLocationPicker } from "./RoomLocationPicker";
+import { SpritePreview } from "./SpritePreview";
+import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
+import { FramePreview } from "./SpriteEditor/FramePreview";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
-    schema?: ZodObject<ZodRawShape>
+    schema?: ZodSchema<DataType>
     designProperty: GameDataItemType
     itemTypeName: string
 }
 
+const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
+    if (designProperty === 'rooms') {
+        const roomData = item as RoomData
+        return <RoomLocationPicker roomData={roomData} previewHeight={60} viewAngle={0} />
+    }
+    if (designProperty === 'actors') {
+        const actorData = item as ActorData
+        return <SpritePreview data={actorData} animation='default' noBaseLine maxHeight={60} />
+    }
+    if (designProperty === 'items') {
+        const { imageId, row = 0, col = 0 } = item as ItemData
+        if (imageId) {
+            return <FramePreview frame={{ imageId, row, col }} height={50} width={50} />
+        }
+        return <Box sx={{ height: 50 }}></Box>
+    }
+    return null
+}
+
+const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
+    const { id } = item
+    if (designProperty === 'actors') {
+        const { noInteraction } = item as ActorData
+        return <InteractionsDialogsButton disabled={noInteraction} criteria={i => i.targetId === id} newPartial={{ targetId: id }} />
+    }
+    if (designProperty === 'items') {
+        return <InteractionsDialogsButton criteria={i => i.targetId === id || i.itemId === id} newPartial={{ itemId: id }} />
+    }
+    return null
+}
 
 export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, schema, designProperty, itemTypeName }: Props<DataType>) => {
     const { gameDesign, performUpdate, openInEditor } = useGameDesign()
@@ -72,7 +103,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
             <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'}>
                 {gameDesign[designProperty].map(item => (
                     <Fragment key={item.id}>
-                        <Grid item xs={6}>
+                        <Grid item xs={3}>
                             <Button
                                 startIcon={<EditIcon />}
                                 variant="contained"
@@ -80,29 +111,32 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                                 onClick={() => openInEditor(designProperty, item.id)}
                             >{item.id}</Button>
                         </Grid>
-                        <Grid item xs={2}>
-                            <ButtonWithTextInput
-                                label={'copy'}
-                                buttonProps={{
-                                    startIcon: <ContentCopyIcon />,
-                                    variant: 'outlined',
-                                    sx: { width: '100%' },
-                                }}
-                                modifyInput={formatIdInput}
-                                onEntry={(newId) => handleDuplicate(newId, item)}
-                                confirmationText={`Enter ${itemTypeName} id`}
-                            />
+                        <Grid item xs={6}>
+                            <ButtonGroup>
+                                <ItemInteraction item={item} designProperty={designProperty} />
+                                <ButtonWithTextInput
+                                    label={'copy'}
+                                    buttonProps={{
+                                        startIcon: <ContentCopyIcon />,
+                                        variant: 'outlined',
+                                    }}
+                                    modifyInput={formatIdInput}
+                                    onEntry={(newId) => handleDuplicate(newId, item)}
+                                    confirmationText={`Enter ${itemTypeName} id`}
+                                />
+                                <DeleteDataItemButton
+                                    buttonProps={{
+                                        variant: 'outlined',
+                                    }}
+                                    dataItem={item}
+                                    itemType={designProperty}
+                                    itemTypeName={itemTypeName}
+                                />
+                            </ButtonGroup>
                         </Grid>
-                        <Grid item xs={2}>
-                            <DeleteDataItemButton
-                                buttonProps={{
-                                    variant: 'outlined',
-                                    sx: { width: '100%' },
-                                }}
-                                dataItem={item}
-                                itemType={designProperty}
-                                itemTypeName={itemTypeName}
-                            />
+
+                        <Grid item xs={3} display={'flex'} justifyContent={'flex-end'}>
+                            <ItemPreview item={item} designProperty={designProperty} />
                         </Grid>
                     </Fragment>
                 ))}
@@ -122,6 +156,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                             sx: { width: '100%' },
                         }}
                         confirmationText={`Enter ${itemTypeName} id`}
+                        keyboardShortcut="#"
                     />
                 </Grid>
                 {includeLoadButton && (

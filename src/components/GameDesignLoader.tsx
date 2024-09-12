@@ -1,15 +1,17 @@
+import selectADesignContent from "@/content/selectADesign.md";
 import { GameCondition, GameDesign } from "@/definitions";
 import { cloneData } from "@/lib/clone";
-import { SoundAsset, ImageAsset } from "@/services/assets";
-import { Snackbar, Alert, Card, Grid } from "@mui/material";
+import { ImageAsset, SoundAsset } from "@/services/assets";
+import { Alert, Card, Grid, Snackbar } from "@mui/material";
 import React from "react";
 import { GameDesignPlayer } from "./GameDesignPlayer";
-import { LoadDesignButton } from "./LoadDesignButton";
-import selectADesignContent from "@/content/selectADesign.md";
-
-import { MarkDown } from "./MarkDown";
 import { GameList } from "./GameList";
-import { materialUiComponents } from "./game-mui-ux";
+import { LayoutRadioButtons } from "./LayoutRadioButtons";
+import { LayoutOption, layoutOptions, layouts } from "./layouts";
+import { LoadDesignButton } from "./LoadDesignButton";
+import { MarkDown } from "./MarkDown";
+import { PlayerHeaderContent } from "./PlayerHeaderContent";
+
 
 type State = {
     design?: GameDesign
@@ -18,6 +20,7 @@ type State = {
     timestamp: number;
     loadingSuccessMessage?: string;
     loadingErrorMessage?: string;
+    layoutOption: LayoutOption;
 }
 
 export class GameDesignLoader extends React.Component<{}, State> {
@@ -28,6 +31,7 @@ export class GameDesignLoader extends React.Component<{}, State> {
             design: undefined,
             timestamp: Date.now(),
             loadingSuccessMessage: undefined,
+            layoutOption: layoutOptions[0],
         }
 
         this.loadGameDesign = this.loadGameDesign.bind(this)
@@ -64,7 +68,6 @@ export class GameDesignLoader extends React.Component<{}, State> {
         return undefined;
     }
 
-
     handleMessageClose(event?: React.SyntheticEvent | Event, reason?: string) {
         if (reason === 'clickaway') {
             return;
@@ -85,24 +88,37 @@ export class GameDesignLoader extends React.Component<{}, State> {
         const { design, imageAssets = [], soundAssets = [], loadingSuccessMessage, loadingErrorMessage } = this.state
 
         return <div>
-
+            <PlayerHeaderContent design={design} eject={() => {
+                return this.setState({
+                    design: undefined,
+                    imageAssets: undefined,
+                    soundAssets: undefined
+                })
+            }} />
             {!design && (
                 <>
                     <Grid container spacing={2} padding={2}
                         justifyContent="center"
                         alignItems="center">
-                        <Grid item xs={3}>
+                        <Grid item xs={6} gap={2}>
                             <LoadDesignButton
                                 onLoad={this.loadGameDesign}
                                 onError={this.handleLoadFail} />
                         </Grid>
-                        <Grid item xs={6}>
-                            <Card sx={{ padding: 2 }}>
-                                <MarkDown content={selectADesignContent} />
-                            </Card>
+                        <Grid item xs={6} gap={2}>
+                            <LayoutRadioButtons
+                                layoutOption={this.state.layoutOption}
+                                setLayoutOption={(layoutOption) => { this.setState({ layoutOption }) }}
+                            />
                         </Grid>
                     </Grid>
-                    <GameList />
+                    <GameList
+                        onLoad={this.loadGameDesign}
+                        onError={this.handleLoadFail}
+                    />
+                    <Card sx={{ padding: 2, marginX: 2 }}>
+                        <MarkDown content={selectADesignContent} />
+                    </Card>
                 </>
             )}
 
@@ -111,9 +127,10 @@ export class GameDesignLoader extends React.Component<{}, State> {
                     gameDesign={design}
                     imageAssets={imageAssets}
                     soundAssets={soundAssets}
-                    uiComponents={materialUiComponents}
+                    uiComponents={layouts[this.state.layoutOption]}
                 />
             )}
+
 
             <Snackbar open={!!loadingSuccessMessage} autoHideDuration={6000} onClose={this.handleMessageClose}>
                 <Alert onClose={this.handleMessageClose} severity="success" sx={{ width: '100%' }}>

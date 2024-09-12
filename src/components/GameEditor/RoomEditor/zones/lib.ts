@@ -49,6 +49,33 @@ export type ChangesFromClick = {
     activeWalkableIndex?: number,
 }
 
+const getTargetPoint = (
+    pointClicked: { x: number; y: number },
+    clickEffect: ClickEffect,
+    viewAngle: number,
+    room: RoomData
+): { x: number; y: number } => {
+    const roundedPoint = {
+        x: Math.round(pointClicked.x),
+        y: Math.round(pointClicked.y),
+    }
+
+    const isForWalkableOrObstacle = clickEffect.type === 'ZONE_POSITION'
+        ? clickEffect.zoneType !== 'hotspot'
+        : [
+            'OBSTACLE', 'POLYGON_POINT_OBSTACLE', 'WALKABLE', 'POLYGON_POINT_WALKABLE', 'HOTSPOT_WALKTO_POINT'
+        ].includes(clickEffect.type)
+
+    if (isForWalkableOrObstacle) {
+        return locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngle, room)
+    }
+
+    return {
+        x: roundedPoint.x - getShift(viewAngle, 1, room),
+        y: room.height - roundedPoint.y
+    }
+}
+
 export const getChangesFromClick = (
     pointClicked: { x: number; y: number },
     viewAngle: number,
@@ -65,19 +92,8 @@ export const getChangesFromClick = (
 
 
     if (!clickEffect) { }
-    const roundedPoint = {
-        x: Math.round(pointClicked.x),
-        y: Math.round(pointClicked.y),
-    }
 
-    const targetPoint = [
-        'OBSTACLE', 'POLYGON_POINT_OBSTACLE', 'WALKABLE', 'POLYGON_POINT_WALKABLE', 'HOTSPOT_WALKTO_POINT'
-    ].includes(clickEffect.type)
-        ? locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngle, room)
-        : {
-            x: roundedPoint.x - getShift(viewAngle, 1, room),
-            y: room.height - roundedPoint.y
-        }
+    const targetPoint = getTargetPoint(pointClicked, clickEffect, viewAngle, room)
 
     switch (clickEffect.type) {
         case 'OBSTACLE':
@@ -120,6 +136,34 @@ export const getChangesFromClick = (
             hotspot.walkToX = targetPoint.x
             hotspot.walkToY = targetPoint.y
             break;
+        }
+        case "ZONE_POSITION": {
+            switch (clickEffect.zoneType) {
+                case "hotspot":
+                    const hotspot = hotspots[clickEffect.index]
+                    console.log(hotspot, targetPoint)
+                    if (hotspot) {
+                        hotspot.x = targetPoint.x
+                        hotspot.y = targetPoint.y
+                    }
+                    break;
+                case "obstacle":
+                    const obstacle = obstacleAreas[clickEffect.index]
+                    console.log(obstacle, targetPoint)
+                    if (obstacle) {
+                        obstacle.x = targetPoint.x
+                        obstacle.y = targetPoint.y
+                    }
+                    break;
+                case "walkable":
+                    const walkable = walkableAreas[clickEffect.index]
+                    console.log(walkable, targetPoint)
+                    if (walkable) {
+                        walkable.x = targetPoint.x
+                        walkable.y = targetPoint.y
+                    }
+                    break;
+            }
         }
     }
 

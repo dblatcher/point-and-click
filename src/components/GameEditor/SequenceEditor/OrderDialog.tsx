@@ -1,15 +1,14 @@
 import { getTargetLists } from "@/components/GameEditor/InteractionEditor/getTargetLists";
 import { useGameDesign } from "@/context/game-design-context";
-import { Order } from "@/definitions";
+import { Order, Sequence } from "@/definitions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
-import { findById } from "@/lib/util";
-import { Dialog, DialogContent, DialogTitle, Stack, useTheme } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, useTheme } from "@mui/material";
 import { OrderForm } from "../OrderForm";
 import { getOrderIcon } from "./get-icons";
 
 
 interface Props {
-    sequenceId: string
+    sequence?: Sequence
     stage: number
     actorId: string
     index: number
@@ -19,10 +18,9 @@ interface Props {
 
 
 
-export const OrderDialog = ({ sequenceId, stage, index, actorId, close, changeOrder }: Props) => {
+export const OrderDialog = ({ sequence, stage, index, actorId, close, changeOrder }: Props) => {
     const { palette } = useTheme()
     const { gameDesign } = useGameDesign()
-    const sequence = findById(sequenceId, gameDesign.sequences)
     const order: Order | undefined = sequence?.stages[stage].actorOrders?.[actorId]?.[index]
     const { ids: targetIdsWithoutItems, descriptions: targetDescriptionsWithoutItems } = getTargetLists(gameDesign, true)
     const IconForOrderType = getOrderIcon(order)
@@ -45,6 +43,9 @@ export const OrderDialog = ({ sequenceId, stage, index, actorId, close, changeOr
                         updateData={(newOrder) => { changeOrder(newOrder, index) }}
                     />
                 )}
+                <DialogActions>
+                    <Button onClick={close}>done</Button>
+                </DialogActions>
             </DialogContent>
         </Dialog>
     )

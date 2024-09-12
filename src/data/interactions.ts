@@ -31,7 +31,13 @@ export const interactions: Interaction[] = [
                                 duration: 200,
                                 animation: 'think',
                             }
-                        ]
+                        ],
+                        narrative: {
+                            text: [
+                                'You consider the bucket deeply.',
+                                'Having this item is a mystery.',
+                            ]
+                        }
                     },
                     {
                         type: 'say',
@@ -107,6 +113,12 @@ export const interactions: Interaction[] = [
                 roomId: 'INSIDE',
                 takePlayer: true,
                 y: 5, x: 100,
+                narrative: {
+                    text: [
+                        'You push through the bush and find a path leading into a wall with an open window.',
+                        'You climb inside.'
+                    ]
+                }
             },
             {
                 type: 'order',
@@ -130,6 +142,11 @@ export const interactions: Interaction[] = [
                 roomId: 'OUTSIDE',
                 takePlayer: true,
                 y: 12, x: 230,
+                narrative: {
+                    text: [
+                        'You clamber back out of the window.'
+                    ]
+                }
             },
             {
                 type: 'order',
@@ -152,7 +169,23 @@ export const interactions: Interaction[] = [
                 type: 'order', orders: [
                     {
                         type: 'say',
-                        text: 'I took the sun. Really...[SHOULD NOt BE SEEN]',
+                        text: 'I cannot take the sun.',
+                        time: 100,
+                    }
+                ]
+            },
+        ]
+    },
+    {
+        verbId: 'TAKE',
+        targetId: 'flag',
+        mustReachFirst: true,
+        consequences: [
+            {
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: '[SHOULD NOt BE SEEN because this target is out of reach]',
                         time: 100,
                     }
                 ]
@@ -260,8 +293,17 @@ export const interactions: Interaction[] = [
         verbId: 'USE',
         targetId: 'FIRE',
         itemId: 'MATCHES',
+        mustReachFirst: true,
         consequences: [
-            { type: 'sequence', sequence: 'LIGHT_FIRE' }
+            {
+                type: 'sequence',
+                sequence: 'LIGHT_FIRE',
+                narrative: {
+                    text: [
+                        'You take the matches out and strike one on the box, then hold the tiny flame to the kindling.'
+                    ]
+                }
+            }
         ]
     },
     {
@@ -286,25 +328,33 @@ export const interactions: Interaction[] = [
         mustReachFirst: true,
         consequences: [
             {
-                type: 'order', actorId:'MARIO', orders: [
+                type: 'order', actorId: 'MARIO', orders: [
                     {
                         type: 'goTo',
                         targetId: 'FIRE',
+                        narrative: {
+                            text: [
+                                'Mario stumbles towards the fire. After regaining his composure, he wanders back to the bush he was sanding near before you shoved him.'
+                            ]
+                        }
                     },
                     {
                         type: 'goTo',
                         targetId: 'bush',
+                        narrative: {
+                            text: []
+                        },
                     },
-                ]
-            }
+                ],
+            },
         ]
     },
     {
         verbId: 'TALK',
         targetId: 'BUCKET',
         consequences: [
-            {type:'sequence', sequence:'CHAIN_1'},
-            {type:'sequence', sequence:'CHAIN_2'}
+            { type: 'sequence', sequence: 'CHAIN_1' },
+            { type: 'sequence', sequence: 'CHAIN_2' }
         ]
     }
 ]

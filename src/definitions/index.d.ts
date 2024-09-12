@@ -1,3 +1,5 @@
+import { Narrative } from "./BaseTypes";
+
 export type Point = { x: number; y: number }
 
 export type { GameData, GameCondition, GameDataItem, GameDesign, GameContents } from "./Game";
@@ -20,4 +22,4 @@ export type { FlagMap, Flag } from "./Flag"
 
 export type { Direction, Ident, SpriteParams, Position } from "./BaseTypes"
 
-export type Stage = { actorOrders?: Record<string, Order[]>; immediateConsequences?: ImmediateConsequence[] }
+export type Stage = { actorOrders?: Record<string, Order[]>; immediateConsequences?: ImmediateConsequence[]; narrative?: Narrative }

@@ -10,15 +10,15 @@ import { findIndexById } from "@/lib/util";
 import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import { editorTheme } from "@/theme";
-import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
 import { Box, Button, ButtonGroup, Container, IconButton, Stack, ThemeProvider } from "@mui/material";
 import { Component } from "react";
 import { TabId, tabOrder } from "../../lib/editor-config";
 import { MainWindow } from "./MainWindow";
-import { testSprite } from "./RoomEditor/testSprite";
 import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
+import { PlayCircleFilledOutlinedIcon } from "./material-icons";
+import soundService from "@/services/soundService";
 
 
 type State = {
@@ -49,14 +49,10 @@ function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[
     return list
 }
 
-export default class GameEditor extends Component<Props, State>{
+export default class GameEditor extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props)
-
-        if (props.usePrebuiltGame) {
-            populateServicesForPreBuiltGame()
-        }
 
         const gameDesign = props.usePrebuiltGame ? { ...prebuiltGameDesign } : {
             id: "NEW_GAME",
@@ -99,6 +95,11 @@ export default class GameEditor extends Component<Props, State>{
     }
 
     componentDidMount() {
+        imageService.removeAll()
+        soundService.removeAll()
+        if (this.props.usePrebuiltGame) {
+            populateServicesForPreBuiltGame()
+        }
         imageService.on('update', this.respondToServiceUpdate)
     }
 
@@ -240,7 +241,7 @@ export default class GameEditor extends Component<Props, State>{
         } = this.state
         const { performUpdate, deleteArrayItem, openInEditor, changeInteraction } = this
 
-        const sprites = [testSprite, ...gameDesign.sprites.map(data => new Sprite(data))]
+        const sprites = [...gameDesign.sprites.map(data => new Sprite(data))]
 
         return (
             <ThemeProvider theme={editorTheme}>
@@ -282,16 +283,21 @@ export default class GameEditor extends Component<Props, State>{
                                     </IconButton>
                                 </Stack>
                                 <ButtonGroup orientation="vertical">
-                                    {tabOrder.map(tab => (
-                                        <Button key={tab.id}
+                                    {tabOrder.map((tab, index) => (
+                                        <Button key={tab.id} size="small"
                                             variant={tab.id === tabOpen ? 'contained' : 'outlined'}
-                                            onClick={() => { openInEditor(tab.id) }}>{tab.label}</Button>
+                                            onClick={() => { openInEditor(tab.id) }}
+                                            startIcon={<span>{index + 1}</span>}
+                                        >{tab.label}</Button>
                                     ))}
                                 </ButtonGroup>
                             </Stack>
 
                             <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
-                                <MainWindow gameItemIds={gameItemIds}  tabOpen={tabOpen}/>
+                                <MainWindow
+                                    gameItemIds={gameItemIds}
+                                    tabOpen={tabOpen}
+                                    openInEditor={openInEditor} />
                             </Box>
 
                             <TestGameDialog

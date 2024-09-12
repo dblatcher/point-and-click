@@ -1,7 +1,7 @@
-import HelpIcon from "@mui/icons-material/Help";
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, IconButtonProps } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 import { HelpText } from "./HelpText";
+import { HelpIcon } from "./material-icons";
 
 interface Props {
     helpTopic: string;

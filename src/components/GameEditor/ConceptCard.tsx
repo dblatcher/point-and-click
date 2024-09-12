@@ -1,6 +1,6 @@
-import type AnimationIcon from '@mui/icons-material/Animation';
+import { Narrative } from '@/definitions/BaseTypes';
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
-
+import { DescriptionOutlinedIcon, type AnimationIcon } from './material-icons';
 
 interface Props {
     Icon: typeof AnimationIcon;
@@ -8,9 +8,10 @@ interface Props {
     title: string;
     handleClick: { (): void }
     width?: number
+    narrative?: Narrative
 }
 
-export const ConceptCard = ({ Icon, handleClick, title, description, width }: Props) => {
+export const ConceptCard = ({ Icon, handleClick, title, description, width, narrative }: Props) => {
 
     return (
         <Card onClick={handleClick}
@@ -27,11 +28,15 @@ export const ConceptCard = ({ Icon, handleClick, title, description, width }: Pr
                     </Box>
                 </Box>
                 <Box
+                    display={'flex'}
+                    justifyContent={'space-between'}
+                    maxWidth={width}
                     sx={{ paddingX: 1, paddingY: .25 }}
                 >
                     <Typography >
                         {description}
                     </Typography>
+                    {narrative && <DescriptionOutlinedIcon />}
                 </Box>
             </CardActionArea>
         </Card >

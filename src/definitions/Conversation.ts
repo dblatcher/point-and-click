@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { SequenceSchema } from "./Sequence";
 
 const ChoiceRefSetSchema = z.object({
     conversationId: z.string().optional(),
@@ -11,13 +12,14 @@ export type ChoiceRefSet = z.infer<typeof ChoiceRefSetSchema>;
 export const ConversationChoiceSchema = z.object({
     ref: z.string().optional(),
     text: z.string(),
-    sequence: z.string(),
+    sequence: z.string().optional(),
     nextBranch: z.optional(z.string()),
     once: z.optional(z.boolean()),
     disabled: z.optional(z.boolean()),
     enablesChoices: z.array(ChoiceRefSetSchema).optional(),
     disablesChoices: z.array(ChoiceRefSetSchema).optional(),
     end: z.optional(z.boolean()),
+    choiceSequence: SequenceSchema.optional(),
 })
 
 export type ConversationChoice = z.infer <typeof ConversationChoiceSchema>

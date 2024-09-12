@@ -1,4 +1,4 @@
-On this page you can load a game design from a **.game.zip** file. There are some sample games to download below. 
+On this page you can play the pre-built sample games or upload a game to play from a **.game.zip** file. 
 
-You could make your own in the editor and download them from there. That's *quite* a lot of work.
+You can make and download your own games in the editor. That's *quite* a lot of work. The sample games can be downloaded and opened in the editor as an examples.
 

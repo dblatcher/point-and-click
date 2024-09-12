@@ -14,6 +14,7 @@ const navItems: { label: string, href: string }[] = [
     { label: 'homepage', href: '/' },
     { label: 'game loader', href: '/game-loader' },
     { label: 'prebuilt game', href: '/prebuilt-game' },
+    { label: 'text prebuilt game', href: '/prebuilt-text-game' },
     { label: 'game editor', href: '/editor' },
 ]
 

@@ -39,7 +39,7 @@ const getUnverifiedAnimationName = (currentOrder: Order | undefined, status: str
     const defaultAnimationFromOrder = currentOrder
         ? Sprite.DEFAULT_ANIMATION[currentOrder.type]
         : undefined
-    return specificAnimationFromOrder || defaultAnimationFromOrder || status;
+    return specificAnimationFromOrder || defaultAnimationFromOrder || status || 'default';
 }
 
 const getAnimationName = (currentOrder: Order | undefined, status: string | undefined, sprite?: Sprite): string => {
@@ -50,13 +50,15 @@ const getAnimationName = (currentOrder: Order | undefined, status: string | unde
         : Sprite.DEFAULT_ANIMATION[currentOrder?.type || 'wait'];
 }
 
-const getSoundValue = (
+const getSoundValues = (
     currentOrder: Order | undefined,
     status: string | undefined,
     soundMap: SoundEffectMap
-): SoundValue | undefined => {
+): SoundValue[] => {
     const animationName = getUnverifiedAnimationName(currentOrder, status)
-    return animationName ? soundMap[animationName] : undefined
+    const valueOrValueArray = animationName ? soundMap[animationName] : undefined
+    if (!valueOrValueArray) { return [] }
+    return Array.isArray(valueOrValueArray) ? valueOrValueArray : [valueOrValueArray]
 }
 
 
@@ -82,11 +84,14 @@ export const ActorFigure: FunctionComponent<Props> = ({
     const spriteObject = overrideSprite || findById(spriteId, sprites)
     const currentOrder: Order | undefined = orders[0]
     const animationName = getAnimationName(currentOrder, data.status, spriteObject)
-    const soundValue = getSoundValue(currentOrder, status, soundEffectMap)
+
+    const soundValues = getSoundValues(currentOrder, status, soundEffectMap)
+    const persistentSoundValues = soundValues.filter(sv => typeof sv.frameIndex === 'undefined')
+    const intermittentSoundValues = soundValues.filter(sv => typeof sv.frameIndex === 'number')
+
     const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
     const frames = spriteObject?.getFrames(animationName, direction) || []
     const spriteScale = getScale(y, roomData.scaling)
-
 
     const updateFrame = (): void => {
         if (!frames || isPaused) { return }
@@ -139,18 +144,21 @@ export const ActorFigure: FunctionComponent<Props> = ({
                     status={data.status}
                 />
 
-                {(!forPreview && typeof soundValue?.frameIndex === 'undefined') &&
-                    <PersistentSound
-                        soundValue={soundValue}
-                        animationRate={animationRate}
-                        isPaused={isPaused} />
-                }
-                {(!forPreview && typeof soundValue?.frameIndex === 'number') &&
-                    <IntermitentSound
-                        soundValue={soundValue}
-                        frameIndex={frameIndex}
-                        isPaused={isPaused} />
-                }
+                {!forPreview && <>
+                    {persistentSoundValues.map((soundValue, index) =>
+                        <PersistentSound
+                            key={index}
+                            soundValue={soundValue}
+                            animationRate={animationRate}
+                            isPaused={isPaused} />)}
+                    {intermittentSoundValues.map((soundValue, index) => (
+                        <IntermitentSound
+                            key={index}
+                            frameIndex={frameIndex}
+                            soundValue={soundValue}
+                            isPaused={isPaused} />
+                    ))}
+                </>}
             </>
         )
     }
@@ -182,3 +190,4 @@ export const ActorFigure: FunctionComponent<Props> = ({
 
     return null
 }
+

@@ -67,7 +67,7 @@ export const DimensionControl = ({ room }: Props) => {
             </LeftGridCell>
             <RightGridCell>
                 <Box bgcolor={room.backgroundColor ?? 'white'} width={room.width * scale} height={room.height * scale} position={'relative'}>
-                    {room.background.map((layer, index) => <BackDrop key={index} layer={layer} filter='saturate(.15)' />)}
+                    {room.background.map((layer, index) => <BackDrop key={index} layer={layer} filter='saturate(.15) brightness(.4)' />)}
                     <Box
                         boxSizing={'border-box'}
                         height={room.height * scale}

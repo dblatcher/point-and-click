@@ -4,6 +4,7 @@ import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
 import { findById } from "@/lib/util";
+import { reportConversationBranch } from "@/lib/game-event-emitter";
 
 
 function validateOrderIdsAndClearEmpties(
@@ -38,10 +39,23 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     const [currentStage] = sequenceRunning.stages
     if (!currentStage) { return {} }
 
+    if(!currentStage._started) {
+        currentStage._started = true
+        console.log('starting stage', currentStage)
+        state.emitter.emit('in-game-event', { type: 'sequence-stage', stage: currentStage })
+    }
+
     const { actorOrders: stageActorOrders = {} } = currentStage
     validateOrderIdsAndClearEmpties(stageActorOrders, actors)
 
-    actors.forEach(actor => followOrder(actor, cellMatrix, stageActorOrders[actor.id], state, findById(actor.sprite, props._sprites)))
+    actors.forEach(actor => followOrder(
+        actor, 
+        cellMatrix, 
+        stageActorOrders[actor.id], 
+        state, 
+        findById(actor.sprite, props._sprites),
+        props.instantMode,
+    ))
 
     if (currentStage.immediateConsequences) {
         const consequenceExecutor = makeConsequenceExecutor(state, props)
@@ -52,12 +66,17 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
         delete currentStage.immediateConsequences
     }
 
-    const stageIsFinished = Object.keys(stageActorOrders).length === 0
-    if (stageIsFinished) {
+    const currentStageIsFinished = Object.keys(stageActorOrders).length === 0
+    if (currentStageIsFinished) {
         sequenceRunning.stages.shift()
-        console.log(`stage finished, ${sequenceRunning.stages.length} left.`)
         removeHoverTargetIfGone(state)
         removeItemIfGone(state)
+    }
+
+    const [nextStage] = sequenceRunning.stages;
+
+    if (!nextStage && state.currentConversationId) {
+        reportConversationBranch(state)
     }
 
     return {

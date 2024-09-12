@@ -1,11 +1,12 @@
 import { BooleanInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
-import { Consequence, GameDesign, Interaction } from "@/definitions";
+import { useGameDesign } from "@/context/game-design-context";
+import { Consequence, Interaction } from "@/definitions";
 import { InteractionSchema } from "@/definitions/Interaction";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findTarget } from "@/lib/commandFunctions";
 import { listIds } from "@/lib/util";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { ButtonWithConfirm } from '../ButtonWithConfirm';
@@ -15,15 +16,17 @@ import { ConsequenceCard } from "../SequenceEditor/ConsequenceCard";
 import { ConsequenceDialog } from "../SequenceEditor/ConsequenceDialog";
 import { makeNewConsequence } from "../defaults";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { InteractionIcon } from "../material-icons";
 
 interface Props {
     initialState: Partial<Interaction>;
-    gameDesign: GameDesign;
     confirm: { (interaction: Interaction): void };
     cancelFunction: { (): void }
 }
 
-export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFunction }: Props) => {
+export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Props) => {
+
+    const { gameDesign } = useGameDesign()
 
     const [interaction, setInteraction] = useState<Partial<Interaction>>(Object.assign({ consequences: [] }, cloneData(initialState)))
     const [activeConsequenceIndex, setActiveConsequenceIndex] = useState<number | undefined>(undefined)
@@ -77,7 +80,7 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
 
     const dialogTitle = () => {
         if (!interaction) { return '' }
-        const { verbId, targetId, itemId } = interaction
+        const { verbId = '[VERB]', targetId ='[TARGET]', itemId } = interaction
         return `${verbId} ${targetId} ${itemId ? `with ${itemId}` : ''}`
     }
 
@@ -94,7 +97,10 @@ export const InteractionDialog = ({ initialState, gameDesign, confirm, cancelFun
 
     return (
         <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'}>
-            <DialogTitle>Edit Interactions: {dialogTitle()}</DialogTitle>
+            <DialogTitle sx={{alignItems:'center', display:'flex'}}>
+                <InteractionIcon />
+                Edit Interaction: {dialogTitle()}
+            </DialogTitle>
             <DialogContent>
                 <EditorBox title="Command">
                     <Stack direction={'row'}

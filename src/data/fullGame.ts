@@ -26,5 +26,5 @@ export const prebuiltGameDesign: GameDesign = {
     endings,
     sprites: spriteDataList,
     flagMap,
-    openingSequenceId: undefined,
+    openingSequenceId: 'intro',
 }

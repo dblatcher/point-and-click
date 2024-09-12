@@ -1,17 +1,17 @@
 
-import { getModification, type FieldDef, type FieldValue } from "@/components/SchemaForm";
 import { useGameDesign } from "@/context/game-design-context";
 import { Sequence } from "@/definitions";
 import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice } from "@/definitions/Conversation";
 import { cloneData } from "@/lib/clone";
 import { findById, listIds } from "@/lib/util";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { SequenceEditor } from "../SequenceEditor";
 import { makeBlankConversationChoice } from "../defaults";
+import { ActorsInvolvedList } from "./ActorsInvolvedList";
 import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ConversationFlow } from "./ConversationFlow";
@@ -24,8 +24,9 @@ export const ConversationEditor = (props: Props) => {
 
     const [openBranchId, setOpenBranchId] = useState<string | undefined>(undefined)
     const [activeChoiceIndex, setActiveChoiceIndex] = useState<number | undefined>(0)
-    const [sequenceDialogOpen, setSequenceDialogOpen] = useState<boolean>(false)
+    const [externalSequenceDialogOpen, setExternalSequenceDialogOpen] = useState<boolean>(false)
     const [editOrderDialogBranchId, setEditOrderDialogBranchId] = useState<string | undefined>(undefined)
+    const [actorsInvolved, setActorsInvolved] = useState<string[]>([])
 
     const { gameDesign, performUpdate } = useGameDesign()
     const { conversations } = gameDesign
@@ -100,14 +101,13 @@ export const ConversationEditor = (props: Props) => {
         updateFromPartial(getModifiedBranches())
     }
 
-    const handleChoiceChange = (value: FieldValue, field: FieldDef) => {
-        const getModifiedBranches = () => {
-            const { choice, branches } = getBranchAndChoice()
-            if (!choice) { return {} }
-            Object.assign(choice, getModification(value, field))
-            return { branches }
+    const handleChoiceUpdate = (mod: Partial<ConversationChoice>) => {
+        const { choice, branches } = getBranchAndChoice()
+        if (!choice) {
+            return
         }
-        updateFromPartial(getModifiedBranches())
+        Object.assign(choice, mod)
+        updateFromPartial({branches})
     }
 
     const addNewBranchAndOpenIt = (branchName: string) => {
@@ -175,11 +175,11 @@ export const ConversationEditor = (props: Props) => {
 
     const { choice } = getBranchAndChoice()
     const branchInOrderDialog = editOrderDialogBranchId ? conversation.branches[editOrderDialogBranchId] : undefined
-
-    const sequenceForCurrentChoice = choice && findById(choice.sequence, gameDesign.sequences)
+    const externalSequenceForCurrentChoice = choice && findById(choice.sequence, gameDesign.sequences)
+    const actorIdsForSequences = actorsInvolved.length === 0 ? gameDesign.actors.filter(a => a.isPlayer).map(a => a.id) : actorsInvolved
 
     return (
-        <Stack component={'article'} spacing={2}>
+        <Stack component={'article'} spacing={2} >
             <EditorHeading heading={`Conversation Editor`} itemId={conversation.id} >
                 <ItemEditorHeaderControls
                     dataItem={conversation}
@@ -188,30 +188,39 @@ export const ConversationEditor = (props: Props) => {
                 />
             </EditorHeading>
 
-            <ConversationFlow conversation={conversation} key={JSON.stringify(cloneData(conversation))}
-                openEditor={(branchKey, choiceIndex) => {
-                    setOpenBranchId(branchKey)
-                    setActiveChoiceIndex(choiceIndex)
-                }}
-                openOrderDialog={(branchKey) => {
-                    setEditOrderDialogBranchId(branchKey)
-                }}
-                addNewChoice={addNewChoice}
-                deleteBranch={branchKey => {
-                    updateFromPartial(
-                        {
-                            branches: {
-                                ...cloneData(conversation).branches,
-                                [branchKey]: undefined
+            <Box position={'relative'}>
+                <ConversationFlow conversation={conversation} key={JSON.stringify(cloneData(conversation))}
+                    openEditor={(branchKey, choiceIndex) => {
+                        setOpenBranchId(branchKey)
+                        setActiveChoiceIndex(choiceIndex)
+                    }}
+                    openOrderDialog={(branchKey) => {
+                        setEditOrderDialogBranchId(branchKey)
+                    }}
+                    addNewChoice={addNewChoice}
+                    deleteBranch={branchKey => {
+                        updateFromPartial(
+                            {
+                                branches: {
+                                    ...cloneData(conversation).branches,
+                                    [branchKey]: undefined
+                                }
                             }
-                        }
-                    )
+                        )
+                    }}
+                    changeDefaultBranch={branchKey => {
+                        if (branchKey) { changeValue('defaultBranch', branchKey) }
+                    }}
+                    addNewBranch={addNewBranchAndOpenIt}
+                />
+
+                <ActorsInvolvedList boxProps={{
+                    position: 'absolute',
+                    top: 0
                 }}
-                changeDefaultBranch={branchKey => {
-                    if (branchKey) { changeValue('defaultBranch', branchKey) }
-                }}
-                addNewBranch={addNewBranchAndOpenIt}
-            />
+                    setActorsInvolved={setActorsInvolved}
+                    actorsInvolved={actorsInvolved} />
+            </Box>
 
             <Dialog open={!!editOrderDialogBranchId}
                 onClose={() => {
@@ -248,18 +257,20 @@ export const ConversationEditor = (props: Props) => {
                             choice={choice}
                             conversation={conversation}
                             openBranchId={openBranchId ?? ''}
-                            activeChoiceIndex={activeChoiceIndex ?? -1}
                             {...{
-                                handleChoiceChange, addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence
+                                addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence,
+                                handleChoiceUpdate,
                             }}
+                            actorIdsForSequences={actorIdsForSequences}
                         />
                     </>)}
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        variant="outlined"
-                        disabled={!choice?.sequence}
-                        onClick={() => { setSequenceDialogOpen(true) }}>edit sequence</Button>
+                    {choice?.sequence && (
+                        <Button
+                            variant="outlined"
+                            onClick={() => { setExternalSequenceDialogOpen(true) }}>edit external sequence</Button>
+                    )}
                     <Button
                         variant="contained"
                         onClick={() => { setActiveChoiceIndex(undefined) }}>close</Button>
@@ -267,22 +278,22 @@ export const ConversationEditor = (props: Props) => {
             </Dialog>
 
             <Dialog
-                open={!!sequenceDialogOpen}
-                onClose={() => { setSequenceDialogOpen(false) }}
+                open={!!externalSequenceDialogOpen}
+                onClose={() => { setExternalSequenceDialogOpen(false) }}
                 maxWidth={'xl'}
             >
-                {sequenceForCurrentChoice && (
+                {externalSequenceForCurrentChoice && (
                     <DialogContent>
                         <SequenceEditor key={choice.sequence}
-                            isSubSection
-                            data={sequenceForCurrentChoice}
+                            data={externalSequenceForCurrentChoice}
+                            heading='externalSequence'
                         />
                     </DialogContent>
                 )}
                 <DialogActions>
                     <Button
                         variant="contained"
-                        onClick={() => { setSequenceDialogOpen(false) }}>close</Button>
+                        onClick={() => { setExternalSequenceDialogOpen(false) }}>close</Button>
                 </DialogActions>
             </Dialog>
         </Stack >

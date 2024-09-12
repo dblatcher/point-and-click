@@ -14,6 +14,7 @@ import { EditorHeading } from "./EditorHeading";
 import { FileAssetSelector } from "./FileAssetSelector";
 import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
 import { FramePicker } from "./SpriteEditor/FramePicker";
+import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 
 type Props = {
     item: ItemData;
@@ -65,7 +66,7 @@ export const ItemEditor = ({ item }: Props) => {
                 />
             </EditorHeading>
 
-            <Grid container spacing={2}>
+            <Grid container spacing={2} justifyContent={'space-between'} width={'100%'}>
                 <Grid item>
                     <Stack spacing={2} maxWidth={'md'}>
                         <StringInput
@@ -83,6 +84,20 @@ export const ItemEditor = ({ item }: Props) => {
                         >
                             pick icon
                         </Button>
+                        <Box display={'flex'}>
+                            <Typography>as target:</Typography>
+                            <InteractionsDialogsButton
+                                criteria={(interaction) => interaction.targetId === id}
+                                newPartial={{ targetId: id }}
+                            />
+                        </Box>
+                        <Box display={'flex'}>
+                            <Typography>as item:</Typography>
+                            <InteractionsDialogsButton
+                                criteria={(interaction) => interaction.itemId === id}
+                                newPartial={{ itemId: id }}
+                            />
+                        </Box>
                     </Stack>
                 </Grid>
                 <Grid item>

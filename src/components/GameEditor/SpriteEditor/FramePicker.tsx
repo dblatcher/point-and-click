@@ -6,6 +6,7 @@ import { Box, Button, Typography, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
 import { FileAssetSelector } from "../FileAssetSelector";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
+import { FramePreview } from "./FramePreview";
 
 interface Props {
     row: number;
@@ -25,25 +26,17 @@ interface FrameButtonProps {
     frameSize: number
 }
 const FrameButton = ({ image, row, col, onClick, isSelected, frameSize }: FrameButtonProps) => {
-    const { href, cols = 1, rows = 1, widthScale = 1, heightScale = 1 } = image
-    const imageStyle = {
-        backgroundImage: `url(${href})`,
-        backgroundPositionX: `${-100 * col}%`,
-        backgroundPositionY: `${-100 * row}%`,
-        backgroundSize: `${100 * cols}% ${100 * rows}%`,
-        width: '100%',
-        height: '100%',
-        filter: undefined
-    }
+    const { widthScale = 1, heightScale = 1, id: imageId } = image
 
     return (
         <Button
             size="small"
             onClick={onClick} variant={isSelected ? 'contained' : 'outlined'}
         >
-            <Box height={frameSize * widthScale} width={frameSize * heightScale}>
-                <div style={imageStyle} />
-            </Box>
+            <FramePreview 
+                height={frameSize * widthScale} 
+                width={frameSize * heightScale}
+                frame={{ row, col, imageId }} />
         </Button >
     )
 }
@@ -86,20 +79,19 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
 
     return (
         <EditorBox title="Pick frame">
-            {!noOptions && (
-                <Stack direction={'row'} justifyContent={'space-between'}>
-                    <BooleanInput value={showInOneRow} inputHandler={setShowInOneRow} label="arrange frames in one list" />
-                    <Box width={100}>
-                        <SelectInput
-                            label="button size"
-                            value={buttonSize}
-                            options={['small', 'medium', 'large']}
-                            inputHandler={value => {
-                                setButtonSize(value as ButtonSize)
-                            }} />
-                    </Box>
-                </Stack>
-            )}
+
+            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
+                {!fixedSheet && (
+                    <FileAssetSelector legend="sprite sheet"
+                        format="select"
+                        service={imageService}
+                        selectedItemId={sheetId}
+                        select={(item): void => { pickFrame(0, 0, item.id) }} />
+                )}
+                <Typography variant='h6'>
+                    {sheetId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
+                </Typography>
+            </Stack>
 
             {image && (<>
                 {showInOneRow ? (<>
@@ -122,18 +114,20 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
                 )}
             </>)}
 
-            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
-                {!fixedSheet && (
-                    <FileAssetSelector legend="sprite sheet"
-                        format="select"
-                        service={imageService}
-                        selectedItemId={sheetId}
-                        select={(item): void => { pickFrame(0, 0, item.id) }} />
-                )}
-                <Typography variant='h6'>
-                    {sheetId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
-                </Typography>
-            </Stack>
+            {!noOptions && (
+                <Stack direction={'row'} justifyContent={'space-between'} paddingTop={2}>
+                    <BooleanInput value={showInOneRow} inputHandler={setShowInOneRow} label="arrange frames in one list" />
+                    <Box width={100}>
+                        <SelectInput
+                            label="button size"
+                            value={buttonSize}
+                            options={['small', 'medium', 'large']}
+                            inputHandler={value => {
+                                setButtonSize(value as ButtonSize)
+                            }} />
+                    </Box>
+                </Stack>
+            )}
         </EditorBox>
     )
 }

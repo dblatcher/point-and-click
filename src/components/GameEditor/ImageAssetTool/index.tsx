@@ -3,6 +3,7 @@ import {
   fileToObjectUrl,
   makeDownloadFile,
   uploadFile,
+  urlToBlob,
 } from "@/lib/files";
 import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
 import { ServiceItem } from "@/services/Service";
@@ -32,7 +33,7 @@ type State = {
 
 export class ImageAssetTool extends Component<{}, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
-  file: File | null;
+  file: File | Blob | null;
 
   constructor(props: ImageAssetTool["props"]) {
     super(props);
@@ -42,6 +43,7 @@ export class ImageAssetTool extends Component<{}, State> {
       }
     };
     this.loadFile = this.loadFile.bind(this);
+    this.loadUrl = this.loadUrl.bind(this);
     this.saveToService = this.saveToService.bind(this);
     this.openFromService = this.openFromService.bind(this);
     this.zipImages = this.zipImages.bind(this);
@@ -61,11 +63,7 @@ export class ImageAssetTool extends Component<{}, State> {
     }
   }
 
-  loadFile = async () => {
-    const file = await uploadFile();
-    if (!file) {
-      return;
-    }
+  setNewFile(file: Blob | File) {
     this.file = file
     const newUrl = fileToObjectUrl(file);
 
@@ -75,12 +73,30 @@ export class ImageAssetTool extends Component<{}, State> {
 
     this.setState({
       asset: {
-        id: file.name,
+        id: file.name ?? this.state.asset.id,
         originalFileName: file.name,
       },
       saveWarning: undefined,
       fileObjectUrl: newUrl,
     });
+  }
+
+  loadFile = async () => {
+    const file = await uploadFile();
+    if (!file) {
+      this.setState({ uploadWarning: 'failed to upload image file' })
+      return;
+    }
+    this.setNewFile(file)
+  };
+
+  loadUrl = async (url: string) => {
+    const { blob, failure } = await urlToBlob(url, 'image')
+    if (!blob) {
+      this.setState({ uploadWarning: `failed to load image URL: ${failure ?? ''}` })
+      return
+    }
+    this.setNewFile(blob)
   };
 
   clearForm() {
@@ -218,6 +234,7 @@ export class ImageAssetTool extends Component<{}, State> {
               imageAsset={asset}
               changeValue={this.changeValue}
               loadFile={this.loadFile}
+              loadUrl={this.loadUrl}
               isNewAsset={isNewAsset}
               saveAssetChanges={this.saveToService}
               saveWarning={saveWarning}

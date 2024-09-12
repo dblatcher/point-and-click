@@ -3,9 +3,11 @@ import { HotspotZone, Zone } from "@/definitions";
 import { ClickEffect } from "../ClickEffect";
 import { ShapeChangeFunction, ValidShapeType } from "./ShapeControl";
 import { ZoneControl } from "./ZoneControl";
-import { Stack, Alert } from "@mui/material";
+import { Stack, Alert, Box, IconButton } from "@mui/material";
 import { NewZoneButtons } from "./NewZoneButtons";
 import { ZonePicker } from "./ZonePicker";
+import { Delete } from "@mui/icons-material";
+import { ButtonWithConfirm } from "../../ButtonWithConfirm";
 
 type EntryClickFunction = { (folderId: string, data?: { id: string }): void }
 interface Props {
@@ -48,12 +50,25 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
                 </Alert>
             ) : (
                 <Stack>
-                    <ZonePicker
-                        type={type}
-                        zones={zones}
-                        activeZoneIndex={activeZoneIndex}
-                        selectZone={selectZone}
-                    />
+                    <Box display={'flex'} alignItems={'center'}>
+                        <ZonePicker
+                            type={type}
+                            zones={zones}
+                            activeZoneIndex={activeZoneIndex}
+                            selectZone={selectZone}
+                        />
+
+                        <ButtonWithConfirm label={`delete ${type}`}
+                            useIconButton
+                            buttonProps={{ disabled: typeof activeZoneIndex === 'undefined', color: 'warning' }}
+                            icon={<Delete fontSize="large" />}
+                            onClick={() => {
+                                if (typeof activeZoneIndex === 'number') {
+                                    remove(activeZoneIndex, type)
+                                }
+                            }}
+                        />
+                    </Box>
 
                     {activeZone && typeof activeZoneIndex === 'number' && (
                         <ZoneControl
@@ -61,8 +76,7 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
                             index={activeZoneIndex}
                             type={type}
                             setClickEffect={setClickEffect}
-                            change={change}
-                            remove={remove} />
+                            change={change} />
                     )}
                 </Stack>
             )}

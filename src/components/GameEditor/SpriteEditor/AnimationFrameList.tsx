@@ -1,5 +1,5 @@
 import { Direction, SpriteFrame } from "@/definitions";
-import { Alert, Box, Button, Stack } from "@mui/material";
+import { Alert, Button, Stack } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { FramePreview } from "./FramePreview";
 
@@ -19,16 +19,14 @@ export const AnimationFrameList = ({
     selectedFrame,
     direction
 }: Props) => {
-    const addDirection = (direction: Direction) => {
-        return editCycle(animKey, direction, [])
-    }
     const animationInDirection = animation[direction]
+    const noFramesYet = !animationInDirection || animationInDirection.length === 0;
 
-    return (<>
-        {animationInDirection ?
-            (<Stack>
-                {!selectedFrame && <Alert severity='info'>Pick a frame to insert</Alert>}
-                {animationInDirection.length === 0 && <Alert severity='info'>Add the first frame</Alert>}
+    return (
+        <Stack>
+            {!selectedFrame && <Alert severity='info'>Pick a frame to insert</Alert>}
+            {noFramesYet && <Alert severity='info'>Add the first frame</Alert>}
+            {animationInDirection &&
                 <ArrayControl
                     list={animationInDirection}
                     insertText="insert frame"
@@ -43,8 +41,8 @@ export const AnimationFrameList = ({
                             onClick={() => { pickFrame(frame.row, frame.col, frame.imageId) }}
                         >
                             <FramePreview
-                                height={80}
-                                width={80}
+                                height={60}
+                                width={60}
                                 frame={frame} />
                             <p>{frame.imageId}</p>
                             <p>[{frame.col}, {frame.row}]</p>
@@ -52,16 +50,7 @@ export const AnimationFrameList = ({
                     )}
                     createItem={selectedFrame ? () => ({ ...selectedFrame }) : undefined}
                 />
-            </Stack>
-            ) : (
-                <Box>
-                    <Button
-                        variant="contained"
-                        onClick={() => { addDirection(direction) }}
-                    >create frame list for: {direction}
-                    </Button>
-                </Box>
-            )
-        }
-    </>)
+            }
+        </Stack>
+    )
 }

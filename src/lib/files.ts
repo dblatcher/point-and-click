@@ -55,6 +55,32 @@ export const uploadFile = async (): Promise<undefined | File> => {
     return undefined
 }
 
+export const urlToBlob = async (urlString: string, validateAs?: 'image' | 'audio'): Promise<{ blob?: Blob, failure?: undefined } | { blob?: undefined, failure: string }> => {
+    try {
+        const url = new URL(urlString)
+        const response = await fetch(url, { mode: 'cors' })
+        if (!response.ok) {
+            return { failure: response.statusText }
+        }
+        const blob = await response.blob()
+        switch (validateAs) {
+            case 'image':
+                if (!blob.type.startsWith('image')) {
+                    return { failure: 'not image' }
+                }
+                break;
+            case 'audio':
+                if (!blob.type.startsWith('audio')) {
+                    return { failure: 'not audio' }
+                }
+                break;
+        }
+        return { blob }
+    } catch (err) {
+        return { failure: err instanceof Error ? err.message : 'unknown error' }
+    }
+}
+
 const readJsonFile = async (file?: File): Promise<{ data?: unknown; error?: string }> => {
     if (!file) {
         return { error: 'no file!' }

@@ -1,5 +1,5 @@
 import { Consequence } from "@/definitions";
-import { Dialog, DialogContent, DialogTitle, Stack, useTheme } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, useTheme } from "@mui/material";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { getConsequenceIcon } from "./get-icons";
 
@@ -31,6 +31,9 @@ export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence,
                     />
                 )}
             </DialogContent>
+            <DialogActions>
+                <Button onClick={close}>done</Button>
+            </DialogActions>
         </Dialog>
     )
 }

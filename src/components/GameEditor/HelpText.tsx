@@ -2,13 +2,16 @@ import { FunctionComponent } from "react";
 import { MarkDown } from "../MarkDown";
 import itemsHelp from "@/content/editor-help/items.md"
 import actorsHelp from "@/content/editor-help/actors.md"
+import narrativeHelp from "@/content/editor-help/narrative.md"
+import choiceSequences from "@/content/editor-help/conversation-choice-sequences.md"
+
 
 interface Props {
     topic: string;
 }
 
 export const helpTopics = [
-    'items','rooms','verb menu', 'actors'
+    'items', 'rooms', 'verb menu', 'actors'
 ]
 
 export const HelpText: FunctionComponent<Props> = ({
@@ -49,7 +52,11 @@ export const HelpText: FunctionComponent<Props> = ({
                 </article>
             )
         case 'actors':
-            return <MarkDown content={actorsHelp}/>
+            return <MarkDown content={actorsHelp} />
+        case 'narrative':
+            return <MarkDown content={narrativeHelp} />
+        case 'conversation choice sequences':
+            return <MarkDown content={choiceSequences} />
         default:
             return (
                 <article>

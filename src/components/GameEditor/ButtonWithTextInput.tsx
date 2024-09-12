@@ -2,7 +2,8 @@ import { StringInput } from "@/components/SchemaForm/inputs";
 import { defaultTheme } from "@/theme";
 import { Button, ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ThemeProvider } from "@mui/material";
 import { ReactNode, useState } from "react";
-import AddIcon from "@mui/icons-material/Add"
+import { AddIcon } from "@/components/GameEditor/material-icons"
+import { useKeyBoard } from "@/hooks/use-keyboard";
 
 interface Props {
     label: string;
@@ -13,6 +14,7 @@ interface Props {
     buttonProps?: ButtonProps;
     suggestions?: string[];
     modifyInput?: { (input: string): string }
+    keyboardShortcut?: string
 }
 
 export const ButtonWithTextInput = ({
@@ -23,13 +25,20 @@ export const ButtonWithTextInput = ({
     icon = <AddIcon color="primary" />,
     buttonProps = {},
     suggestions,
-    modifyInput
+    modifyInput,
+    keyboardShortcut,
 }: Props) => {
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const [input, setInput] = useState<string>('')
     const handleFirstButton = (): void => { setShowConfirmation(true) }
-
     const handleInput = modifyInput ? (input: string) => setInput(modifyInput(input)) : setInput
+
+    useKeyBoard(keyboardShortcut ? [{
+        key: keyboardShortcut,
+        handler: handleFirstButton,
+    }] : [])
+
+
 
     return (
         <>
@@ -56,9 +65,9 @@ export const ButtonWithTextInput = ({
                         {confirmationText}
                     </DialogTitle>
                     <DialogContent>
-                        <StringInput 
-                            value={input} 
-                            inputHandler={handleInput} 
+                        <StringInput
+                            value={input}
+                            inputHandler={handleInput}
                             suggestions={suggestions} />
                     </DialogContent>
                     <DialogActions>

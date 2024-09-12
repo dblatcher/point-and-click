@@ -1,4 +1,4 @@
-import { SupportedZoneShape } from "@/definitions"
+import { SupportedZoneShape, ZoneType } from "@/definitions"
 
 export type NewObstableEffect = {
     type: 'OBSTACLE';
@@ -35,10 +35,17 @@ export type HotspotWalkToPoint = {
     index: number;
 }
 
+export type ZonePosition = {
+    type: 'ZONE_POSITION'
+    index: number;
+    zoneType: ZoneType;
+}
+
 export type ClickEffect = NewObstableEffect |
     NewObstaclePolygonPointEffect |
     NewHotspotEffect |
     NewHotspotPolygonPointEffect |
     NewWalkableEffect |
     NewWalkablePolygonPointEffect |
-    HotspotWalkToPoint
+    HotspotWalkToPoint |
+    ZonePosition

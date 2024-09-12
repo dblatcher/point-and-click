@@ -2,8 +2,8 @@ import { SelectInput } from "@/components/SchemaForm/inputs";
 import { Conversation } from "@/definitions";
 import { ChoiceRefSet } from "@/definitions/Conversation";
 import { findById, listIds } from "@/lib/util";
-import ClearIcon from '@mui/icons-material/Clear';
 import { IconButton, Stack } from '@mui/material';
+import { ClearIcon } from "../material-icons";
 
 interface Props {
     refSet: ChoiceRefSet;

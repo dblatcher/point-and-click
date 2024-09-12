@@ -5,9 +5,8 @@ import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { EditorBox } from "../EditorBox";
 import { AnimatedSpriteButton } from "./AnimatedSpriteButton";
 import { Sprite } from "@/lib/Sprite";
-import DeleteIcon from "@mui/icons-material/Delete"
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { ButtonWithTextInput } from "../ButtonWithTextInput";
+import { ContentCopyIcon, DeleteIcon } from "../material-icons";
 
 interface Props {
     animationKey: string

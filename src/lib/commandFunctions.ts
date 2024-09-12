@@ -13,9 +13,9 @@ export const describeCommand = (command: Command, useNames = false): string => {
 
     if (useNames) {
         if (item) {
-            return `${verb.label}  ${item.name} ${verb.preposition} ${target.name}`
+            return `${verb.label}  ${item.name ?? item.id} ${verb.preposition ?? 'with'} ${target.name ?? target.id}`
         }
-        return `${verb.label} ${target.name}`
+        return `${verb.label} ${target.name ?? target.id}`
     }
 
     if (item) {
@@ -24,8 +24,8 @@ export const describeCommand = (command: Command, useNames = false): string => {
     return `${verb.id} ${target.id}`
 }
 
-export function findTarget(interaction: Partial<Interaction>, gameContents: GameContents, excludeItems = false): CommandTarget | undefined {
-    const { targetId, roomId } = interaction
+export function findTarget(ids: { targetId?: string, roomId?: string }, gameContents: GameContents, excludeItems = false): CommandTarget | undefined {
+    const { targetId, roomId } = ids
     if (!targetId) { return undefined }
     const { rooms, actors, items } = gameContents
     const room = roomId ? findById(roomId, rooms) : undefined;
