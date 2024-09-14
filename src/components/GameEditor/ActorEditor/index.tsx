@@ -1,13 +1,12 @@
 import { SchemaForm } from "@/components/SchemaForm";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { ActorData, Direction } from "@/definitions";
+import { ActorData } from "@/definitions";
 import { ActorDataSchema, SoundValue } from "@/definitions/ActorData";
-import { directions } from "@/definitions/SpriteSheet";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { Box, Stack, Tab, Tabs } from "@mui/material";
-import { useState } from "react";
+import { useState } from "react";   
 import { EditorHeading } from "../EditorHeading";
 import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
@@ -31,58 +30,6 @@ export const ActorEditor = ({ data }: Props) => {
     const { performUpdate } = useGameDesign()
     const [tabOpen, setTabOpen] = useState(ActorEditorTab.Details)
     const sprites = useSprites()
-
-    const changeValue = (propery: keyof ActorData, newValue: unknown): void => {
-        const modification: Partial<ActorData> = {}
-        switch (propery) {
-            case 'id':
-                if (typeof newValue === 'string') {
-                    modification[propery] = newValue.toUpperCase()
-                }
-                break;
-            case 'name':
-            case 'room':
-            case 'status':
-            case 'filter':
-            case 'dialogueColor':
-                if (typeof newValue === 'string' || typeof newValue === 'undefined') {
-                    modification[propery] = newValue
-                }
-                break;
-            case 'direction':
-                if (typeof newValue === 'string' && directions.includes(newValue as Direction)) {
-                    modification[propery] = newValue as Direction
-                }
-                break;
-            case 'width':
-            case 'height':
-            case 'x':
-            case 'y':
-            case 'speed':
-            case 'baseline':
-                if (typeof newValue === 'number') {
-                    modification[propery] = newValue
-                }
-                break;
-            case 'isPlayer':
-            case 'noInteraction':
-                if (typeof newValue === 'boolean' || typeof newValue === 'undefined') {
-                    modification[propery] = newValue || undefined
-                }
-                break;
-            case 'walkToX':
-            case 'walkToY':
-                if (typeof newValue === 'number' || typeof newValue === 'undefined') {
-                    modification[propery] = newValue
-                }
-                break;
-        }
-        if (propery === 'id') {
-            console.warn('ActorEditor tried to change id', { newValue })
-            return
-        }
-        updateFromPartial(modification)
-    }
 
     const updateFromPartial = (modification: Partial<ActorData>): void => {
         performUpdate('actors', {
@@ -149,8 +96,17 @@ export const ActorEditor = ({ data }: Props) => {
                             noInteraction: 'cannot interact with',
                         }}
                         data={data}
-                        changeValue={(value, fieldDef) => {
-                            changeValue(fieldDef.key as keyof ActorData, value)
+                        changeValue={(newValue, fieldDef) => {
+                            if (fieldDef.key === 'id') {
+                                console.warn('ActorEditor tried to change id', { newValue })
+                                return
+                            }
+                            const modParse = ActorDataSchema.partial().safeParse({ [fieldDef.key]: newValue })
+                            if (!modParse.success) {
+                                console.warn('ActorEditor got invalid modification', modParse.error.issues)
+                                return
+                            }
+                            return updateFromPartial(modParse.data)
                         }}
                     />
                     <InteractionsDialogsButton
