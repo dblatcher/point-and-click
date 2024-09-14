@@ -110,4 +110,16 @@ export const initialActors: ActorData[] = [
             imageId:'tube.png'
         }
     },
+    {
+        id: 'DOLL',
+        type: 'actor',
+        room: 'OUTSIDE',
+        x: 100,
+        y: 10,
+        height: 40,
+        width: 40,
+        defaultFrame: {
+            imageId:'boy.png'
+        }
+    },
 ]

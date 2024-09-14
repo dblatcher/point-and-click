@@ -356,5 +356,39 @@ export const interactions: Interaction[] = [
             { type: 'sequence', sequence: 'CHAIN_1' },
             { type: 'sequence', sequence: 'CHAIN_2' }
         ]
-    }
+    },
+    {
+        verbId: 'PUSH',
+        targetId: 'DOLL',
+        mustReachFirst: true,
+        consequences: [
+            {
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: 'turning',
+                        time: 150,
+                    }
+                ]
+            },
+            { type: 'changeStatus', targetId: 'DOLL', status: 'backwards', targetType: 'actor' }
+        ]
+    },
+    {
+        verbId: 'TALK',
+        targetId: 'DOLL',
+        mustReachFirst: true,
+        consequences: [
+            {
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: 'turning back',
+                        time: 150,
+                    }
+                ]
+            },
+            { type: 'changeStatus', targetId: 'DOLL', status: 'default', targetType: 'actor' }
+        ]
+    },
 ]
