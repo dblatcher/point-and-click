@@ -15,6 +15,7 @@ interface Props {
     pickFrame: { (row: number, col: number, imageId?: string): void };
     fixedSheet?: boolean;
     noOptions?: boolean;
+    forDialog?: boolean;
 }
 
 interface FrameButtonProps {
@@ -33,8 +34,8 @@ const FrameButton = ({ image, row, col, onClick, isSelected, frameSize }: FrameB
             size="small"
             onClick={onClick} variant={isSelected ? 'contained' : 'outlined'}
         >
-            <FramePreview 
-                height={frameSize * widthScale} 
+            <FramePreview
+                height={frameSize * widthScale}
                 width={frameSize * heightScale}
                 frame={{ row, col, imageId }} />
         </Button >
@@ -52,7 +53,7 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
     }
 }
 
-export const FramePicker: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false }) => {
+const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false }) => {
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
     const image = imageId ? imageService.get(imageId) : undefined;
@@ -78,8 +79,7 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, imageId, pickF
     }
 
     return (
-        <EditorBox title="Pick frame">
-
+        <>
             <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
                 {!fixedSheet && (
                     <FileAssetSelector legend="sprite sheet"
@@ -128,6 +128,18 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, imageId, pickF
                     </Box>
                 </Stack>
             )}
+        </>
+    )
+}
+
+export const FramePicker: FunctionComponent<Props> = ({ forDialog, ...props }) => {
+    if (forDialog) {
+        return <FramePickerInner {...props} />
+    }
+
+    return (
+        <EditorBox title="Pick frame">
+            <FramePickerInner {...props} />
         </EditorBox>
     )
 }

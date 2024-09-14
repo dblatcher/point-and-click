@@ -6,15 +6,12 @@ import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import { Stack } from "@mui/material";
 import { ColorInput } from "../ColorInput";
-import { FrameePickDialogButton } from "../FramePickDialogButton";
+import { FramePickDialogButton } from "../FramePickDialogButton";
 import { SpritePreview } from "../SpritePreview";
-
 
 type Props = {
     data: ActorData;
 }
-
-
 
 export const ActorAppearanceControl = ({ data }: Props) => {
     const { performUpdate } = useGameDesign()
@@ -27,9 +24,7 @@ export const ActorAppearanceControl = ({ data }: Props) => {
         })
     }
 
-
     const { sprite: spriteId, width = 1, height = 1, dialogueColor } = data
-
 
 
     return (
@@ -45,11 +40,13 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                     }
                 />
 
-                <FrameePickDialogButton
+                <FramePickDialogButton title={`pick default image for ${data.id}`}
                     disabled={!!spriteId}
                     pickFrame={(row, col, imageId) => {
                         if (imageId) {
                             updateFromPartial({ defaultFrame: { row, col, imageId } })
+                        } else {
+                            updateFromPartial({ defaultFrame: undefined })
                         }
                     }}
                 />
