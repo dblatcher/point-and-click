@@ -163,31 +163,21 @@ export const ActorFigure: FunctionComponent<Props> = ({
         )
     }
 
-    if (data.defaultFrame) {
 
-        const { row = 0, col = 0 } = data.defaultFrame
-        const asset = imageService.get(data.defaultFrame.imageId)
-        if (asset) {
-            return (
-                <FrameShape
-                    frame={{ row, col }}
-                    asset={asset}
-                    // works - the Event definitions don't match, but stopPropagation is the only event method needed
-                    clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
-                    handleHover={processClick ? handleHover : undefined}
-                    hoverData={data}
-                    roomData={roomData}
-                    viewAngle={viewAngle}
-                    x={x} y={y}
-                    height={height * spriteScale} width={width * spriteScale}
-                    filter={filter}
-                    status={data.status}
-                />
-            )
-        }
-    }
+    return (
+        <FrameShape
+            // works - the Event definitions don't match, but stopPropagation is the only event method needed
+            clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
+            handleHover={processClick ? handleHover : undefined}
+            actorData={data}
+            roomData={roomData}
+            viewAngle={viewAngle}
+            x={x} y={y}
+            height={height * spriteScale} width={width * spriteScale}
+            filter={filter}
+            status={data.status}
+        />
+    )
 
-
-    return null
 }
 

@@ -3,11 +3,10 @@ import { placeOnScreen } from "@/lib/roomFunctions";
 import { ImageAsset } from "@/services/assets";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { HandleHoverFunction } from "../game";
+import imageService from "@/services/imageService";
 
 
 interface Props {
-    frame?: { row: number, col: number },
-    asset: ImageAsset;
     roomData: RoomData;
     viewAngle: number;
     x: number;
@@ -17,12 +16,12 @@ interface Props {
     filter?: string;
     clickHandler?: MouseEventHandler<SVGElement>;
     handleHover?: HandleHoverFunction;
-    hoverData?: ActorData;
+    actorData: ActorData;
     status?: string;
 }
 
 
-const getStyle = (frame: { row: number, col: number }, asset: ImageAsset, filter?: string) => {
+const getFrameStyle = (frame: { row: number, col: number }, asset: ImageAsset, filter?: string) => {
     const { href, cols = 1, rows = 1 } = asset
     return {
         backgroundImage: `url(${href})`,
@@ -34,26 +33,66 @@ const getStyle = (frame: { row: number, col: number }, asset: ImageAsset, filter
         filter,
     }
 }
+const getPlaceholderStyle = (filter?: string): CSSProperties => {
+    return {
+        backgroundImage: 'repeating-linear-gradient(45deg, yellow 0px, yellow 5px, transparent 5px, transparent 10px )',
+        width: '100%',
+        height: '100%',
+        filter,
+    }
+}
+
+
+const getAssetAndFrame = (actorData: ActorData) => {
+    if (!actorData?.defaultFrame) {
+        return undefined
+    }
+    const { row = 0, col = 0 } = actorData.defaultFrame
+    const asset = imageService.get(actorData.defaultFrame.imageId)
+    if (!asset) {
+        return undefined
+    }
+    return ({ asset, frame: { row, col } })
+}
+
+
+const FrameContents = (props: { actorData: ActorData, widthAdjustedByScale: number, heightAdjustedByScale: number, filter?: string }) => {
+
+    const { actorData, widthAdjustedByScale, heightAdjustedByScale, filter } = props
+    const assetAndFrame = getAssetAndFrame(actorData)
+    const divStyle = assetAndFrame
+        ? getFrameStyle(assetAndFrame.frame, assetAndFrame.asset, filter)
+        : getPlaceholderStyle(filter)
+
+
+    return <foreignObject x="0" y="0" width={widthAdjustedByScale} height={heightAdjustedByScale}>
+        <div style={divStyle}>
+            {!assetAndFrame &&
+                <span style={{
+                    fontSize: 10
+                }}>{actorData.id}</span>
+            }
+        </div>
+    </foreignObject>
+}
+
 
 export const FrameShape: FunctionComponent<Props> = ({
-    frame = { row: 0, col: 0 }, asset,
     roomData, viewAngle, x, y, height = 50, width = 50, filter,
-    clickHandler, handleHover, hoverData, status,
+    clickHandler, handleHover, actorData, status,
 }: Props) => {
-    const { widthScale = 1, heightScale = 1 } = asset
-    const divStyle = getStyle(frame, asset, filter)
+    const assetAndFrame = getAssetAndFrame(actorData)
+    const { widthScale = 1, heightScale = 1 } = assetAndFrame?.asset ?? {};
+    const widthAdjustedByScale = width * widthScale
+    const heightAdjustedByScale = height * heightScale
 
     const svgStyle: CSSProperties = {
         overflow: 'hidden',
         pointerEvents: clickHandler ? 'auto' : 'none'
     }
-
-    const widthAdjustedByScale = width * widthScale
-    const heightAdjustedByScale = height * heightScale
-
-    const shouldReportHover = !!(handleHover && hoverData);
-    const onMouseEnter = shouldReportHover ? (): void => { handleHover(hoverData, 'enter') } : undefined
-    const onMouseLeave = shouldReportHover ? (): void => { handleHover(hoverData, 'leave') } : undefined
+    const shouldReportHover = !!(handleHover && actorData);
+    const onMouseEnter = shouldReportHover ? (): void => { handleHover(actorData, 'enter') } : undefined
+    const onMouseLeave = shouldReportHover ? (): void => { handleHover(actorData, 'leave') } : undefined
 
     return (
         <svg data-status={status}
@@ -63,9 +102,12 @@ export const FrameShape: FunctionComponent<Props> = ({
             style={svgStyle}
             x={placeOnScreen(x - (widthAdjustedByScale / 2), viewAngle, roomData)}
             y={roomData.height - y - heightAdjustedByScale} >
-            <foreignObject x="0" y="0" width={widthAdjustedByScale} height={heightAdjustedByScale}>
-                <div style={divStyle} />
-            </foreignObject>
+            <FrameContents {...{
+                actorData,
+                filter,
+                widthAdjustedByScale,
+                heightAdjustedByScale
+            }} />
         </svg>
     )
 }
