@@ -5,10 +5,8 @@ import { ActorData } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import { Stack } from "@mui/material";
-import { ColorInput } from "../ColorInput";
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { SpritePreview } from "../SpritePreview";
-
 type Props = {
     data: ActorData;
 }
@@ -24,7 +22,7 @@ export const ActorAppearanceControl = ({ data }: Props) => {
         })
     }
 
-    const { sprite: spriteId, width = 1, height = 1, dialogueColor } = data
+    const { sprite: spriteId, width = 1, height = 1 } = data
 
 
     return (
@@ -65,12 +63,6 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                     label="display baseline" value={data.baseline || 0}
                     min={0} max={data.height}
                     inputHandler={(baseline) => updateFromPartial({ baseline })} />
-                <ColorInput
-                    label="dialogue color"
-                    value={dialogueColor || ''}
-                    setValue={dialogueColor => {
-                        updateFromPartial({ dialogueColor })
-                    }} />
             </Stack>
             <SpritePreview data={data} />
         </Stack>
