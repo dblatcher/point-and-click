@@ -1,23 +1,19 @@
 import { SchemaForm } from "@/components/SchemaForm";
-import { NumberInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { ActorData, Direction, Point } from "@/definitions";
+import { ActorData, Direction } from "@/definitions";
 import { ActorDataSchema, SoundValue } from "@/definitions/ActorData";
 import { directions } from "@/definitions/SpriteSheet";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
-import { listIds } from "@/lib/util";
 import { Box, Stack, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import { ColorInput } from "../ColorInput";
 import { EditorHeading } from "../EditorHeading";
 import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
-import { SpritePreview } from "../SpritePreview";
+import { ActorAppearanceControl } from "./ActorAppearanceControl";
 import { AnimationSounds } from "./AnimationSounds";
 import { PositionPreview } from "./PositionPreview";
-import { FrameePickDialogButton } from "../FramePickDialogButton";
 
 
 type Props = {
@@ -32,7 +28,7 @@ enum ActorEditorTab {
 }
 
 export const ActorEditor = ({ data }: Props) => {
-    const { gameDesign, performUpdate } = useGameDesign()
+    const { performUpdate } = useGameDesign()
     const [tabOpen, setTabOpen] = useState(ActorEditorTab.Details)
     const sprites = useSprites()
 
@@ -164,52 +160,7 @@ export const ActorEditor = ({ data }: Props) => {
                 </Box>
             }
             {tabOpen === ActorEditorTab.Appearance &&
-                <Stack direction={'row'} spacing={3}>
-                    <Stack spacing={2}>
-                        <SelectInput optional
-                            value={spriteId}
-                            options={listIds(sprites)}
-                            label="pick sprite"
-                            inputHandler={
-                                id => updateFromPartial({ sprite: id })
-                            }
-                        />
-
-                        <FrameePickDialogButton
-                            disabled={!!spriteId}
-                            row={data.defaultFrame?.row ?? 0}
-                            col={data.defaultFrame?.col ?? 0}
-                            imageId={data.defaultFrame?.imageId}
-                            pickFrame={(row, col, imageId) => {
-                                if (imageId) {
-                                    updateFromPartial({ defaultFrame: { row, col, imageId } })
-                                }
-                            }}
-                        />
-
-                        <Stack direction={'row'} spacing={2}>
-                            <NumberInput label="width" value={width}
-                                inputHandler={(value) => changeValue('width', value)} />
-                            <NumberInput label="height" value={height}
-                                inputHandler={(value) => changeValue('height', value)} />
-                        </Stack>
-
-                        <StringInput
-                            label="filter" value={data.filter || ''}
-                            inputHandler={(value) => changeValue('filter', value)} />
-                        <NumberInput
-                            label="display baseline" value={data.baseline || 0}
-                            min={0} max={data.height}
-                            inputHandler={value => { changeValue('baseline', value) }} />
-                        <ColorInput
-                            label="dialogue color"
-                            value={dialogueColor || ''}
-                            setValue={value => {
-                                changeValue('dialogueColor', value)
-                            }} />
-                    </Stack>
-                    <SpritePreview data={data} />
-                </Stack>
+                <ActorAppearanceControl data={data} />
             }
             {tabOpen === ActorEditorTab.Sounds &&
                 <AnimationSounds
