@@ -37,7 +37,9 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                     }
                 />
 
-                <FramePickDialogButton title={`pick default image for ${data.id}`}
+                <FramePickDialogButton 
+                    buttonLabel="pick default frame"
+                    title={`pick default image for ${data.id}`}
                     disabled={!!spriteId}
                     pickFrame={(row, col, imageId) => {
                         if (imageId) {
