@@ -93,6 +93,7 @@ export const ActorEditor = ({ data }: Props) => {
                         }}
                         fieldAliases={{
                             speed: 'movement speed',
+                            status: 'initial status',
                             isPlayer: 'is player actor',
                             noInteraction: 'cannot interact with',
                         }}

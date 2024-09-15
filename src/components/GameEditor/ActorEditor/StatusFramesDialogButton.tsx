@@ -53,7 +53,7 @@ export const StatusFramesDialogButton: React.FunctionComponent<Props> = ({
 
                 <Box display={'flex'} alignItems={'center'}>
                     <Typography>default frame</Typography>
-                    <SpritePreview data={actorData} noBaseLine maxHeight={80}/>
+                    <SpritePreview data={actorData} noBaseLine maxHeight={80} animation="default"/>
                 </Box>
 
                 {Object.keys(statusFrames).map((status) => (
