@@ -41,6 +41,9 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>
                 <FramePicker forDialog
+                    imageFilter={(item)=> {
+                        return item.category === 'spriteSheet' || item.category === 'any'
+                    }}
                     pickFrame={(row, col, imageId) => setLocalFrame({ row, col, imageId })}
                     {...localFrame} />
             </DialogContent>

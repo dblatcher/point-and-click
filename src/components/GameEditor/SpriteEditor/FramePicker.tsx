@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from "react";
 import imageService from "@/services/imageService";
-import { ImageAsset } from "@/services/assets";
+import { FileAsset, ImageAsset } from "@/services/assets";
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { Box, Button, Typography, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
@@ -16,6 +16,7 @@ interface Props {
     fixedSheet?: boolean;
     noOptions?: boolean;
     forDialog?: boolean;
+    imageFilter?: { (item: FileAsset): boolean }
 }
 
 interface FrameButtonProps {
@@ -53,7 +54,7 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
     }
 }
 
-const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false }) => {
+const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false, imageFilter }) => {
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
     const image = imageId ? imageService.get(imageId) : undefined;
@@ -86,6 +87,7 @@ const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFra
                         format="select"
                         service={imageService}
                         selectedItemId={imageId}
+                        filterItems={imageFilter}
                         select={(item): void => { pickFrame(0, 0, item.id) }} />
                 )}
                 <Typography variant='h6'>
