@@ -4,9 +4,10 @@ import { useSprites } from "@/context/sprite-context";
 import { ActorData } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import { Stack } from "@mui/material";
+import { Alert, Box, Divider, Stack } from "@mui/material";
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { SpritePreview } from "../SpritePreview";
+
 type Props = {
     data: ActorData;
 }
@@ -24,10 +25,8 @@ export const ActorAppearanceControl = ({ data }: Props) => {
 
     const { sprite: spriteId, width = 1, height = 1 } = data
 
-
     return (
-
-        <Stack direction={'row'} spacing={3}>
+        <Box display={'flex'} gap={5} paddingTop={5}>
             <Stack spacing={2}>
                 <SelectInput optional
                     value={spriteId}
@@ -49,13 +48,6 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                     }}
                 />
 
-                <Stack direction={'row'} spacing={2}>
-                    <NumberInput label="width" value={width}
-                        inputHandler={(width) => updateFromPartial({ width })} />
-                    <NumberInput label="height" value={height}
-                        inputHandler={(height) => updateFromPartial({ height })} />
-                </Stack>
-
                 <StringInput
                     label="filter" value={data.filter || ''}
                     inputHandler={(filter) => updateFromPartial({ filter })} />
@@ -64,8 +56,34 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                     min={0} max={data.height}
                     inputHandler={(baseline) => updateFromPartial({ baseline })} />
             </Stack>
-            <SpritePreview data={data} />
-        </Stack>
 
+            <Divider flexItem orientation="vertical" />
+
+            <Box minWidth={80 + width * 1.5}
+                display={'flex'} flexDirection={'column'}
+            >
+                <Box display={'flex'} >
+                    <Box flexBasis={80} flexShrink={0}></Box>
+                    <Box flex={1} display={'flex'} justifyContent={'center'}>
+                        <NumberInput label="width" value={width} notFullWidth
+                            inputHandler={(width) => updateFromPartial({ width })} />
+                    </Box>
+                </Box>
+                <Box display={'flex'} minHeight={height + 10} flex={1} >
+                    <Box flexBasis={80} flexShrink={0} display={'flex'} flexDirection={'column'} justifyContent={'center'}>
+                        <NumberInput label="height" value={height} notFullWidth
+                            inputHandler={(height) => updateFromPartial({ height })} />
+                    </Box>
+                    <Box flex={1} display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
+                        <SpritePreview data={data} maxHeight={height} />
+                    </Box>
+                </Box>
+                {!data.sprite && !data.defaultFrame && (
+                    <Alert severity="warning">
+                        No Sprite or frame selected
+                    </Alert>
+                )}
+            </Box>
+        </Box>
     )
 }
