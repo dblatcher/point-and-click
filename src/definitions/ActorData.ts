@@ -25,6 +25,7 @@ export const ActorDataSchema = IdentSchema
         walkToX: z.number().optional(),
         walkToY: z.number().optional(),
         defaultFrame: StaticFrameParamsSchema.optional(),
+        statusFrames: z.record(StaticFrameParamsSchema).optional(),
     }))
 
 export type ActorData = z.infer<typeof ActorDataSchema>

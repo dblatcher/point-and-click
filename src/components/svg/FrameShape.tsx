@@ -44,14 +44,18 @@ const getPlaceholderStyle = (filter?: string): CSSProperties => {
 
 
 const getAssetAndFrame = (actorData: ActorData) => {
-    if (!actorData?.defaultFrame) {
+    const { defaultFrame, status, statusFrames } = actorData
+    const frameForStatus = status ? statusFrames?.[status] : undefined
+    const frameToUse = frameForStatus ?? defaultFrame;
+    if (!frameToUse) {
         return undefined
     }
-    const { row = 0, col = 0 } = actorData.defaultFrame
-    const asset = imageService.get(actorData.defaultFrame.imageId)
+
+    const asset = imageService.get(frameToUse.imageId)
     if (!asset) {
         return undefined
     }
+    const { row = 0, col = 0 } = frameToUse
     return ({ asset, frame: { row, col } })
 }
 
