@@ -371,7 +371,7 @@ export const interactions: Interaction[] = [
                     }
                 ]
             },
-            { type: 'changeStatus', targetId: 'DOLL', status: 'backwards', targetType: 'actor' }
+            { type: 'changeStatus', targetId: 'DOLL', status: 'BACKWARDS', targetType: 'actor' }
         ]
     },
     {

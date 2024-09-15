@@ -7,6 +7,7 @@ import { listIds } from "@/lib/util";
 import { Alert, Box, Divider, Stack } from "@mui/material";
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { SpritePreview } from "../SpritePreview";
+import { StatusFramesDialogButton } from "./StatusFramesDialogButton";
 
 type Props = {
     data: ActorData;
@@ -49,6 +50,12 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                                 updateFromPartial({ defaultFrame: undefined })
                             }
                         }}
+                    />
+
+                    <StatusFramesDialogButton
+                        disabled={!!spriteId || !data.defaultFrame}
+                        actorData={data}
+                        changeStatusFrames={(statusFrames) => updateFromPartial({ statusFrames })}
                     />
                 </Stack>
 

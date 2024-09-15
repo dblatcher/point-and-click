@@ -122,7 +122,7 @@ export const initialActors: ActorData[] = [
             imageId:'boy.png'
         },
         statusFrames: {
-            'backwards':  {
+            'BACKWARDS':  {
                 imageId:'boy.png',
                 row: 1,
             },
