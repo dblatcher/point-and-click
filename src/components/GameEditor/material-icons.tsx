@@ -29,6 +29,8 @@ import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
 import InteractionIcon from '@mui/icons-material/Mediation';
 import ClickPointIcon from '@mui/icons-material/Adjust';
 import LinkIcon from '@mui/icons-material/Link';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 
 export {
     AddIcon,
@@ -46,6 +48,8 @@ export {
     DownloadIcon,
     EditIcon,
     ExpandMoreIcon,
+    FlagCircleIcon,
+    FlagOutlinedIcon,
     HelpIcon,
     HideImageOutlinedIcon,
     LinkIcon,
