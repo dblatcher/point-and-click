@@ -9,7 +9,7 @@ import { useGameDesign } from "@/context/game-design-context";
 import { useState } from "react";
 import { Room } from "@/components/svg/Room";
 import HorizontalLine from "@/components/svg/HorizontalLine";
-import { RangeInput } from "./RangeInput";
+import { RangeInput } from "../RangeInput";
 import { locateClickInWorld } from "@/lib/roomFunctions";
 import { ViewAngleSlider } from "./ViewAngleSlider";
 import { EditorBox } from "../EditorBox";
