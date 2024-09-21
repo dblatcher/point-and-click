@@ -26,6 +26,7 @@ type FilterProperty = z.infer<typeof filterProperty>
 
 
 const propertyConfig = {
+    'blur': { min: 0, max: 5, unit: 'px', step: 1, defaultValue: 0 },
     'brightness': { min: 0, max: 5, unit: '', step: .1, defaultValue: 1 },
     'contrast': { min: 0, max: 2, unit: '', step: .1, defaultValue: 1 },
     'grayscale': { min: 0, max: 1, unit: '', step: .1, defaultValue: 0 },
@@ -85,7 +86,6 @@ const tokenPattern = /[\a-z-]+\s?[\(]{1}[^\(]*[\)]{1}/g
 
 const stringToFilterTokens = (value: string) => {
     const matches = [...value.trim().toLowerCase().matchAll(tokenPattern)].map(m => m[0])
-    console.log(matches)
     return matches.flatMap(parseToken)
 }
 
@@ -103,35 +103,47 @@ export const FilterControl: React.FunctionComponent<Props> = ({ value, setValue 
     const PropertyRange = (props: { property: keyof typeof propertyConfig }) => {
         const { property } = props
         const { unit, max, min, step, defaultValue } = propertyConfig[property]
+        const value = tokens.find(t => t.property === property)?.tokenValue.numberValue ?? defaultValue
         return <RangeInput
             max={max}
             min={min}
             step={step}
-            value={tokens.find(t => t.property === property)?.tokenValue.numberValue ?? defaultValue}
+            value={value}
+            formattedValue={`${value}${unit}`}
             label={property}
+            labelProps={{
+                minWidth: 70
+            }}
             onChange={(event) => {
                 const { value } = event.target
                 const tokensCopy = cloneData(tokens)
                 const token = tokensCopy.find(t => t.property === property)
                 if (token) {
                     token.tokenValue.numberValue = Number(value);
+                    const tokensCopyWithoutOtherTokensOfThisProperty = tokensCopy.filter(t => t === token || t.property !== property)
+                    setTokens(tokensCopyWithoutOtherTokensOfThisProperty)
+                    setValue(filterTokensToString(tokensCopyWithoutOtherTokensOfThisProperty))
                 } else {
                     tokensCopy.push({ property: property, tokenValue: { numberValue: Number(value), unit } })
+                    setTokens(tokensCopy)
+                    setValue(filterTokensToString(tokensCopy))
                 }
-                setTokens(tokensCopy)
-                setValue(filterTokensToString(tokensCopy))
             }}
         />
     }
 
 
     return <Box>
-        {Object.keys(propertyConfig).map(property =>
-            <PropertyRange
-                key={property}
-                property={property as keyof typeof propertyConfig}
-            />
-        )}
+        <Box sx={{
+            maxWidth: 380
+        }}>
+            {Object.keys(propertyConfig).map(property =>
+                <PropertyRange
+                    key={property}
+                    property={property as keyof typeof propertyConfig}
+                />
+            )}
+        </Box>
 
         <StringInput
             label="filter" value={value ?? ''}
