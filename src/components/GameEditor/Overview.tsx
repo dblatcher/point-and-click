@@ -4,7 +4,7 @@ import { usePageMeta } from "@/context/page-meta-context";
 import { FixedGameInfoSchema, GameContentsDataSchema } from "@/definitions/Game";
 import { listIds } from "@/lib/util";
 import { DesignServicesIcon } from '@/components/GameEditor/material-icons';
-import { Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
@@ -39,8 +39,7 @@ export const Overview = () => {
   return (
     <Stack>
       <EditorHeading heading={mainTab?.label ?? 'main'} />
-      <Stack direction={'row'} spacing={1} paddingY={1}>
-
+      <Box display={'flex'} flexWrap={'wrap'} gap={2} alignItems={'flex-start'}>
         <EditorBox title="attributes">
           <SchemaForm
             schema={formSchema}
@@ -65,8 +64,8 @@ export const Overview = () => {
             fieldWrapperProps={{ spacing: 2 }}
           />
         </EditorBox>
-
-        <TableContainer component={Paper} sx={{ width: 'unset' }}>
+        <EditorBox title="contents">
+        <TableContainer sx={{ width: 'unset' }}>
           <Table size="small" >
             <TableBody>
               {tabOrder.filter(tab => tab !== mainTab).map(tab => (
@@ -91,9 +90,11 @@ export const Overview = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </Stack>
-      <EditorHeading heading="Flags" />
-      <FlagMapControl />
+        </EditorBox>
+        <EditorBox title="Flags">
+          <FlagMapControl />
+        </EditorBox>
+      </Box>    
     </Stack>
   );
 };

@@ -32,7 +32,7 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
                         margin: 0
                     }}
                     label={`starts: ${flag.value ? 'on' : 'off'}`}
-                    labelPlacement="top"
+                    labelPlacement="start"
                     control={<Switch
                         size="small"
                         checked={flag.value}
