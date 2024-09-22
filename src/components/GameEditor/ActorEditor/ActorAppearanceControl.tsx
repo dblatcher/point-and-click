@@ -8,6 +8,7 @@ import { Alert, Box, Divider, Stack } from "@mui/material";
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { SpritePreview } from "../SpritePreview";
 import { StatusFramesDialogButton } from "./StatusFramesDialogButton";
+import { FilterControl } from "../../Filter/FilterControl";
 
 type Props = {
     data: ActorData;
@@ -98,9 +99,9 @@ export const ActorAppearanceControl = ({ data }: Props) => {
             </Box>
 
             <Box>
-                <StringInput
-                    label="filter" value={data.filter || ''}
-                    inputHandler={(filter) => updateFromPartial({ filter })} />
+                <FilterControl
+                    value={data.filter || ''}
+                    setValue={(filter) => updateFromPartial({ filter })} />
             </Box>
         </>
     )
