@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from "react";
 import imageService from "@/services/imageService";
-import { ImageAsset } from "@/services/assets";
+import { FileAsset, ImageAsset } from "@/services/assets";
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { Box, Button, Typography, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
@@ -11,10 +11,12 @@ import { FramePreview } from "./FramePreview";
 interface Props {
     row: number;
     col: number;
-    sheetId?: string;
-    pickFrame: { (row: number, col: number, sheetId?: string): void };
+    imageId?: string;
+    pickFrame: { (row: number, col: number, imageId?: string): void };
     fixedSheet?: boolean;
     noOptions?: boolean;
+    forDialog?: boolean;
+    imageFilter?: { (item: FileAsset): boolean }
 }
 
 interface FrameButtonProps {
@@ -33,8 +35,8 @@ const FrameButton = ({ image, row, col, onClick, isSelected, frameSize }: FrameB
             size="small"
             onClick={onClick} variant={isSelected ? 'contained' : 'outlined'}
         >
-            <FramePreview 
-                height={frameSize * widthScale} 
+            <FramePreview
+                height={frameSize * widthScale}
                 width={frameSize * heightScale}
                 frame={{ row, col, imageId }} />
         </Button >
@@ -52,10 +54,10 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
     }
 }
 
-export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickFrame, fixedSheet = false, noOptions = false }) => {
+const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false, imageFilter }) => {
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
-    const image = sheetId ? imageService.get(sheetId) : undefined;
+    const image = imageId ? imageService.get(imageId) : undefined;
     const frameSize = frameSizeFromButtonSize(buttonSize)
 
     const buttonPropsGrid: FrameButtonProps[][] = []
@@ -70,7 +72,7 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
                         col: c,
                         image,
                         frameSize,
-                        onClick: () => { pickFrame(r, c, sheetId) }
+                        onClick: () => { pickFrame(r, c, imageId) }
                     }
                 )
             }
@@ -78,18 +80,18 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
     }
 
     return (
-        <EditorBox title="Pick frame">
-
+        <>
             <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
                 {!fixedSheet && (
                     <FileAssetSelector legend="sprite sheet"
                         format="select"
                         service={imageService}
-                        selectedItemId={sheetId}
+                        selectedItemId={imageId}
+                        filterItems={imageFilter}
                         select={(item): void => { pickFrame(0, 0, item.id) }} />
                 )}
                 <Typography variant='h6'>
-                    {sheetId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
+                    {imageId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
                 </Typography>
             </Stack>
 
@@ -128,6 +130,18 @@ export const FramePicker: FunctionComponent<Props> = ({ row, col, sheetId, pickF
                     </Box>
                 </Stack>
             )}
+        </>
+    )
+}
+
+export const FramePicker: FunctionComponent<Props> = ({ forDialog, ...props }) => {
+    if (forDialog) {
+        return <FramePickerInner {...props} />
+    }
+
+    return (
+        <EditorBox title="Pick frame">
+            <FramePickerInner {...props} />
         </EditorBox>
     )
 }

@@ -73,12 +73,21 @@ export const editorTheme = createTheme({
                         marginTop: 0,
                     },
                 },
+                asterisk: {
+                    display: 'none',
+                },
                 shrink: {
                     transform: 'translate(0px ,-140%) scale(.75)',
                 }
             }
         },
-
+        MuiFormLabel: {
+            styleOverrides: {
+                asterisk: {
+                    display: 'none',
+                },
+            }
+        },
         MuiIconButton: {
             defaultProps: {
                 size: 'small',

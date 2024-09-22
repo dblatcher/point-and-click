@@ -16,11 +16,10 @@ export type Ident = z.infer<typeof IdentSchema>
 export const SpriteParamsSchema = z.object({
     height: z.number(),
     width: z.number(),
-    sprite: z.string(),
+    sprite: z.string().optional(),
     direction: z.optional(DirectionEnum),
     filter: z.optional(z.string()),
 })
-
 export type SpriteParams = z.infer<typeof SpriteParamsSchema>
 
 export const PositionSchema = z.object({
@@ -28,8 +27,15 @@ export const PositionSchema = z.object({
     x: z.number(),
     y: z.number(),
 })
-
 export type Position = z.infer<typeof PositionSchema>
+
+// TO DO - re-use in inventory Items schema?
+export const StaticFrameParamsSchema = z.object({
+    imageId: z.string(),
+    col: z.number().optional(),
+    row: z.number().optional(),
+})
+export type StaticFrameParamsS = z.infer<typeof StaticFrameParamsSchema>
 
 export const NarrativeSchema = z.object({ text: z.string().array() });
 export type Narrative = z.infer<typeof NarrativeSchema>;

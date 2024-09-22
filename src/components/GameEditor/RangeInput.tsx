@@ -1,4 +1,4 @@
-import { Stack, StackProps, Typography } from "@mui/material";
+import { Stack, StackProps, Typography, TypographyProps } from "@mui/material";
 import { ChangeEventHandler } from "react";
 
 
@@ -12,18 +12,22 @@ interface Props {
     onChange: ChangeEventHandler<HTMLInputElement>;
     formattedValue?: string
     stackProps?: StackProps
+    labelProps?: Omit<TypographyProps, 'ref'>
 }
 
 
-export const RangeInput = ({ label, value, max, min = 0, step = 10, disabled, onChange, formattedValue = value.toString(), stackProps }: Props) => {
+export const RangeInput = ({
+    label, value, max, min = 0, step = 10, disabled, onChange, formattedValue = value.toString(), 
+    stackProps, labelProps,
+}: Props) => {
     return (
         <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} {...stackProps}>
-            <Typography component={'label'} variant="body2">{label}</Typography>
+            <Typography component={'label'} variant="body2" {...labelProps} >{label}</Typography>
             <input type='range' value={value}
                 max={max} min={min} step={step}
                 disabled={disabled}
                 onChange={onChange} />
-            <Typography component={'span'} variant="body2" sx={{fontFamily:'monospace'}}>{formattedValue}</Typography>
+            <Typography component={'span'} variant="body2" sx={{ fontFamily: 'monospace' }} {...labelProps}>{formattedValue}</Typography>
         </Stack>
     )
 }

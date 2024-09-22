@@ -1,6 +1,5 @@
 import { eventToNumber } from "@/lib/util";
-import { RangeInput } from "./RangeInput";
-
+import { RangeInput } from "../RangeInput";
 
 interface Props {
     viewAngle: number;

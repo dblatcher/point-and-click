@@ -106,6 +106,26 @@ export const initialActors: ActorData[] = [
         y: 10,
         height: 30,
         width: 20,
-        sprite: 'tube'
+        defaultFrame: {
+            imageId:'tube.png'
+        }
+    },
+    {
+        id: 'DOLL',
+        type: 'actor',
+        room: 'OUTSIDE',
+        x: 100,
+        y: 10,
+        height: 40,
+        width: 40,
+        defaultFrame: {
+            imageId:'boy.png'
+        },
+        statusFrames: {
+            'BACKWARDS':  {
+                imageId:'boy.png',
+                row: 1,
+            },
+        }
     },
 ]
