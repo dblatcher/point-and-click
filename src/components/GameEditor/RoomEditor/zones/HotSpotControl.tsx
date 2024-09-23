@@ -7,17 +7,17 @@ import { clamp } from "@/lib/util";
 import { Box, ButtonGroup, Divider, IconButton } from "@mui/material";
 import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
 import { ClickEffect } from "../ClickEffect";
-import { ShapeChangeFunction, ShapeControl } from "./ShapeControl";
+import { ShapeControl } from "./ShapeControl";
 
 interface Props {
     roomId: string;
     hotspot: HotspotZone;
     index: number;
-    change: ShapeChangeFunction;
+    changeHotspot: { (index: number, mod: Partial<HotspotZone>): void }
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export function HotspotControl({ roomId, hotspot, index, change, setClickEffect }: Props) {
+export function HotspotControl({ roomId, hotspot, index, setClickEffect, changeHotspot }: Props) {
     const { parallax, type, walkToX, walkToY, id, status, name } = hotspot
 
     return (
@@ -26,19 +26,19 @@ export function HotspotControl({ roomId, hotspot, index, change, setClickEffect 
                 <Box component={'section'}>
                     <StringInput
                         label="id" value={id}
-                        inputHandler={(value) => change(index, 'id', value, type)} />
+                        inputHandler={(id) => changeHotspot(index, { id })} />
                     <StringInput
                         label="name" value={name || ''}
-                        inputHandler={(value) => change(index, 'name', value, type)} />
+                        inputHandler={(name) => changeHotspot(index, { name })} />
                     <StringInput
                         label="status" value={status || ''}
-                        inputHandler={(value) => change(index, 'status', value, type)} />
+                        inputHandler={(status) => changeHotspot(index, { status })} />
                 </Box>
                 <Divider flexItem orientation="vertical" />
                 <Box component={'section'} minWidth={200}>
                     <div>
                         <NumberInput value={parallax}
-                            inputHandler={(value) => { change(index, 'parallax', clamp(value, 2, 0), type) }}
+                            inputHandler={(value) => changeHotspot(index, { parallax: clamp(value, 2, 0) })}
                             label="parallax"
                             max={2} min={0} step={.05}
                         />
@@ -56,12 +56,12 @@ export function HotspotControl({ roomId, hotspot, index, change, setClickEffect 
                 <Box>
                     <OptionalNumberInput
                         value={walkToX} label="walk-to X: "
-                        inputHandler={value => { change(index, 'walkToX', value, type) }} />
+                        inputHandler={walkToX => changeHotspot(index, { walkToX })} />
                 </Box>
                 <Box>
                     <OptionalNumberInput
                         value={walkToY} label="walk-to Y: "
-                        inputHandler={value => { change(index, 'walkToY', value, type) }} />
+                        inputHandler={walkToY => changeHotspot(index, { walkToY })} />
 
                 </Box>
                 <IconButton aria-label="select walk to point"
@@ -75,7 +75,8 @@ export function HotspotControl({ roomId, hotspot, index, change, setClickEffect 
                 shape={hotspot} index={index}
                 setClickEffect={setClickEffect}
                 type='hotspot'
-                change={change} />
+                changeHotSpotOrZone={(index, mod) => changeHotspot(index, mod as Partial<HotspotZone>)}
+            />
         </Box>
     )
 }

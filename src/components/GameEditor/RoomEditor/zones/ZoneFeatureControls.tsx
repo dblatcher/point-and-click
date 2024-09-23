@@ -6,7 +6,6 @@ import { useState } from "react"
 import { ClickEffect } from "../ClickEffect"
 import { Preview } from "../Preview"
 import { HotspotSetEditor } from "./HotspotSetEditor"
-import { ShapeChangeFunction } from "./ShapeControl"
 import { ZoneSetEditor } from "./ZoneSetEditor"
 import { getChangesFromClick, getNextClickEffect } from "./lib"
 
@@ -46,74 +45,24 @@ export const ZoneFeaturesControl = ({
         performUpdate('rooms', { ...room, obstacleAreas, hotspots, walkableAreas })
     }
 
-    const changeZone: ShapeChangeFunction = (index, propery, newValue, type) => {
-        const getMod = () => {
-            const { obstacleAreas = [], hotspots = [], walkableAreas = [] } = cloneData(room)
-            function handleCommonValues(zoneOrHotspot: Zone | HotspotZone) {
-                switch (propery) {
-                    case 'x':
-                    case 'y':
-                    case 'circle':
-                        if (typeof newValue === 'number') {
-                            zoneOrHotspot[propery] = newValue
-                        }
-                        break;
-                    case 'path':
-                        if (typeof newValue === 'string') {
-                            zoneOrHotspot[propery] = newValue
-                        }
-                        break;
-                    case 'rect':
-                        zoneOrHotspot[propery] = newValue as [number, number]
-                        break;
-                    case 'polygon':
-                        zoneOrHotspot[propery] = newValue as [number, number][]
-                        break;
-                }
-            }
-
-            if (type === 'hotspot') {
-                const hotspot = hotspots[index]
-                handleCommonValues(hotspot)
-                switch (propery) {
-                    case 'parallax':
-                        if (typeof newValue === 'number') {
-                            hotspot[propery] = newValue
-                        }
-                        break;
-                    case 'walkToX':
-                    case 'walkToY':
-                        if (typeof newValue === 'number' || typeof newValue === 'undefined') {
-                            hotspot[propery] = newValue
-                        }
-                        break;
-                    case 'id':
-                    case 'name':
-                    case 'status':
-                        if (typeof newValue === 'string') {
-                            hotspot[propery] = newValue
-                        }
-                        break;
-                }
-            } else {
-                const zone = type == 'obstacle' ? obstacleAreas[index] : walkableAreas[index]
-                handleCommonValues(zone)
-                switch (propery) {
-                    case 'ref':
-                        if (typeof newValue === 'string' || typeof newValue === 'undefined') {
-                            zone[propery] = newValue
-                        }
-                        break;
-                    case 'disabled':
-                        if (typeof newValue === 'boolean' || typeof newValue === 'undefined') {
-                            zone[propery] = newValue
-                        }
-                        break;
-                }
-            }
-            return { obstacleAreas, hotspots, walkableAreas }
+    const changeHotspot = (index: number, mod: Partial<HotspotZone>) => {
+        const { hotspots = [] } = cloneData(room)
+        const hotspot = hotspots[index]
+        if (!hotspot) {
+            return
         }
-        performUpdate('rooms', { ...room, ...getMod() })
+        Object.assign(hotspot, mod)
+        performUpdate('rooms', { ...room, hotspots })
+    }
+    const changeZoneByType = (type: "obstacle" | "walkable") => (index: number, mod: Partial<Zone>) => {
+        const { walkableAreas = [], obstacleAreas = [] } = cloneData(room)
+        const list = type === 'obstacle' ? obstacleAreas : walkableAreas
+        const zone = list[index]
+        if (!zone) {
+            return
+        }
+        Object.assign(zone, mod)
+        performUpdate('rooms', { ...room, walkableAreas, obstacleAreas })
     }
 
     const selectZone = (folderId: string, data?: { id: string }) => {
@@ -187,7 +136,7 @@ export const ZoneFeaturesControl = ({
                                 zones={room.obstacleAreas ?? []}
                                 type='obstacle'
                                 setClickEffect={setClickEffect}
-                                change={changeZone}
+                                changeZone={changeZoneByType('obstacle')}
                                 remove={removeZone}
                                 activeZoneIndex={activeObstacleIndex}
                                 selectZone={selectZone}
@@ -199,7 +148,7 @@ export const ZoneFeaturesControl = ({
                                 zones={room.walkableAreas ?? []}
                                 type='walkable'
                                 setClickEffect={setClickEffect}
-                                change={changeZone}
+                                changeZone={changeZoneByType('walkable')}
                                 remove={removeZone}
                                 activeZoneIndex={activeWalkableIndex}
                                 selectZone={selectZone}
@@ -212,9 +161,9 @@ export const ZoneFeaturesControl = ({
                 {zoneType === 'hotspots' && (
                     <HotspotSetEditor
                         roomId={room.id}
+                        changeHotspot={changeHotspot}
                         hotspots={room.hotspots ?? []}
                         setClickEffect={setClickEffect}
-                        changeZone={changeZone}
                         removeZone={removeZone}
                         openIndex={activeHotspotIndex}
                         selectHotspot={selectHotspot}

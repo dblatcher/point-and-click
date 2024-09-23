@@ -1,40 +1,36 @@
 
-import { FunctionComponent } from "react";
-import { ClickEffect } from "../ClickEffect";
-import { HotspotZone, Shape, Zone, ZoneType } from "@/definitions";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { Stack, Button, Typography, IconButton } from "@mui/material";
+import { HotspotZone, Shape, Zone, ZoneType } from "@/definitions";
+import { Button, IconButton, Stack, Typography } from "@mui/material";
 import { ArrayControl } from "../../ArrayControl";
 import { ClickPointIcon } from "../../material-icons";
-
-export type ValidShapeType = ZoneType;
-export type ShapeChangeFunction = { (index: number, propery: Exclude<keyof HotspotZone | keyof Zone, 'type'>, newValue: unknown, type: ValidShapeType): void }
+import { ClickEffect } from "../ClickEffect";
 
 interface Props {
-    shape: Shape;
+    shape: HotspotZone | Zone;
     index: number;
-    type: ValidShapeType;
-    change: ShapeChangeFunction;
+    type: ZoneType;
+    changeHotSpotOrZone: { (index: number, mod: Partial<Shape>): void }
     setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export const ShapeControl: FunctionComponent<Props> = ({ shape, index, change, setClickEffect, type }: Props) => {
+export const ShapeControl = ({ shape, index, changeHotSpotOrZone, setClickEffect, type }: Props) => {
     const { x, y, circle, rect, polygon } = shape
 
     function changeRect(value: number, coor: 'x' | 'y'): void {
         if (!rect) { return }
-        const newRect = [
+        const newRect: [number, number] = [
             coor === 'x' ? value : rect[0],
             coor === 'y' ? value : rect[1],
         ]
-        change(index, 'rect', newRect, type)
+        changeHotSpotOrZone(index, { rect: newRect })
     }
 
     return (
         <Stack spacing={2}>
             <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
-                <NumberInput label="X" value={x} inputHandler={value => { change(index, 'x', value, type) }} />
-                <NumberInput label="Y" value={y} inputHandler={value => { change(index, 'y', value, type) }} />
+                <NumberInput label="X" value={x} inputHandler={x => changeHotSpotOrZone(index, { x })} />
+                <NumberInput label="Y" value={y} inputHandler={y => changeHotSpotOrZone(index, { y })} />
                 <IconButton aria-label="select position"
                     onClick={() => { setClickEffect({ type: 'ZONE_POSITION', index, zoneType: type }) }}
                 >
@@ -43,7 +39,7 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, index, change, s
             </Stack>
             {circle && (
                 <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
-                    <NumberInput label="Radius" value={circle} inputHandler={value => { change(index, 'circle', value, type) }} />
+                    <NumberInput label="Radius" value={circle} inputHandler={circle => { changeHotSpotOrZone(index, { circle }) }} />
                 </Stack>
             )}
             {rect && (
@@ -58,7 +54,7 @@ export const ShapeControl: FunctionComponent<Props> = ({ shape, index, change, s
                     <ArrayControl horizontalMoveButtons
                         buttonSize="small"
                         list={polygon}
-                        mutateList={polygon => change(index, 'polygon', polygon, type)}
+                        mutateList={polygon => changeHotSpotOrZone(index, {polygon})}
                         describeItem={(point, index) => (
                             <div key={index}>[ {point[0]}, {point[1]} ]</div>
                         )}

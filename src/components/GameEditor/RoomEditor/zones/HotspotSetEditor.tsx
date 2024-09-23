@@ -1,25 +1,24 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { HotspotZone } from "@/definitions";
-import { Alert, Box, Divider, Stack, Typography } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { Alert, Box, Divider, Stack } from "@mui/material";
+import { ButtonWithConfirm } from "../../ButtonWithConfirm";
 import { ClickEffect } from "../ClickEffect";
 import { HotspotControl } from "./HotSpotControl";
 import { NewZoneButtons } from "./NewZoneButtons";
-import { ShapeChangeFunction } from "./ShapeControl";
-import { Delete } from "@mui/icons-material";
-import { ButtonWithConfirm } from "../../ButtonWithConfirm";
 
 interface Props {
     roomId: string,
     hotspots: HotspotZone[],
     openIndex?: number
-    changeZone: ShapeChangeFunction
+    changeHotspot: {(index:number, mod:Partial<HotspotZone>):void}
     selectHotspot: { (id?: string): void }
     removeZone: { (index: number, type: "hotspot" | "obstacle" | "walkable"): void }
     clickEffect?: ClickEffect
     setClickEffect: { (clickEffect: ClickEffect): void }
 }
 
-export const HotspotSetEditor = ({ roomId, hotspots, openIndex, changeZone, selectHotspot, removeZone, setClickEffect, clickEffect }: Props) => {
+export const HotspotSetEditor = ({ roomId, hotspots, openIndex, selectHotspot, removeZone, setClickEffect, clickEffect, changeHotspot }: Props) => {
 
     const activeHotspot = typeof openIndex === 'number'
         ? hotspots[openIndex]
@@ -61,7 +60,8 @@ export const HotspotSetEditor = ({ roomId, hotspots, openIndex, changeZone, sele
                         <HotspotControl hotspot={activeHotspot} index={openIndex}
                             roomId={roomId}
                             setClickEffect={setClickEffect}
-                            change={changeZone} />
+                            changeHotspot={changeHotspot}
+                        />
                     )}
                 </Stack>
             )}

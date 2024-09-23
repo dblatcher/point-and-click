@@ -1,20 +1,19 @@
-import { FunctionComponent } from "react";
-import { HotspotZone, Zone } from "@/definitions";
-import { ClickEffect } from "../ClickEffect";
-import { ShapeChangeFunction, ValidShapeType } from "./ShapeControl";
-import { ZoneControl } from "./ZoneControl";
-import { Stack, Alert, Box, IconButton } from "@mui/material";
-import { NewZoneButtons } from "./NewZoneButtons";
-import { ZonePicker } from "./ZonePicker";
+import { HotspotZone, Zone, ZoneType } from "@/definitions";
 import { Delete } from "@mui/icons-material";
+import { Alert, Box, Stack } from "@mui/material";
+import { FunctionComponent } from "react";
 import { ButtonWithConfirm } from "../../ButtonWithConfirm";
+import { ClickEffect } from "../ClickEffect";
+import { NewZoneButtons } from "./NewZoneButtons";
+import { ZoneControl } from "./ZoneControl";
+import { ZonePicker } from "./ZonePicker";
 
 type EntryClickFunction = { (folderId: string, data?: { id: string }): void }
 interface Props {
     type: 'obstacle' | 'walkable';
     zones: (Zone | HotspotZone)[];
-    change: ShapeChangeFunction;
-    remove: { (index: number, type: ValidShapeType): void };
+    changeZone: { (index: number, mod: Partial<Zone>): void };
+    remove: { (index: number, type: ZoneType): void };
     setClickEffect: { (clickEffect: ClickEffect): void };
     activeZoneIndex?: number;
     selectZone: EntryClickFunction
@@ -25,7 +24,7 @@ interface Props {
 export const ZoneSetEditor: FunctionComponent<Props> = ({
     type,
     zones,
-    change,
+    changeZone,
     remove,
     setClickEffect,
     selectZone,
@@ -76,7 +75,7 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
                             index={activeZoneIndex}
                             type={type}
                             setClickEffect={setClickEffect}
-                            change={change} />
+                            changeZone={changeZone} />
                     )}
                 </Stack>
             )}
