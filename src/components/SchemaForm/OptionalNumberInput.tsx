@@ -41,7 +41,7 @@ export const OptionalNumberInput: FunctionComponent<
     };
 
     const isDefined = typeof props.value !== 'undefined'
-    const labelText = isDefined ? label : `${label}(undefined)`
+    const labelText = isDefined ? label : `${label}[unset]`
 
     return (
         <Stack direction='row' alignItems={'center'} spacing={1} minWidth={150}>
