@@ -5,6 +5,7 @@ import { Stack } from "@mui/material";
 import { EditorBox } from "../../EditorBox";
 import { ClickEffect } from "../ClickEffect";
 import { ShapeControl } from "./ShapeControl";
+import { XYControl } from "./XYControl";
 
 interface Props {
     zone: Zone;
@@ -26,6 +27,11 @@ export function ZoneControl({ zone, index, changeZone, setClickEffect, type }: P
                     label="disabled: "
                     value={!!zone.disabled}
                     inputHandler={disabled => changeZone(index, { disabled })} />
+                <XYControl
+                    shape={zone} index={index}
+                    setClickEffect={setClickEffect}
+                    type={type}
+                    changeHotSpotOrZone={changeZone} />
                 <ShapeControl
                     shape={zone} index={index}
                     setClickEffect={setClickEffect}

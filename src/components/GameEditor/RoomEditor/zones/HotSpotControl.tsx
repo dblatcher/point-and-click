@@ -8,6 +8,7 @@ import { Box, ButtonGroup, Divider, IconButton } from "@mui/material";
 import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
 import { ClickEffect } from "../ClickEffect";
 import { ShapeControl } from "./ShapeControl";
+import { XYControl } from "./XYControl";
 
 interface Props {
     roomId: string;
@@ -18,7 +19,7 @@ interface Props {
 }
 
 export function HotspotControl({ roomId, hotspot, index, setClickEffect, changeHotspot }: Props) {
-    const { parallax, type, walkToX, walkToY, id, status, name } = hotspot
+    const { parallax, walkToX, walkToY, id, status, name } = hotspot
 
     return (
         <Box component={'article'}>
@@ -52,7 +53,18 @@ export function HotspotControl({ roomId, hotspot, index, setClickEffect, changeH
                 </Box>
             </Box>
             <Divider />
+            <XYControl
+                shape={hotspot} index={index}
+                setClickEffect={setClickEffect}
+                type='hotspot'
+                changeHotSpotOrZone={(index, mod) => changeHotspot(index, mod as Partial<HotspotZone>)}
+            />
             <Box component={'section'} display={'flex'} flexWrap={'wrap'} paddingTop={2}>
+                <IconButton aria-label="select walk to point"
+                    onClick={() => { setClickEffect({ type: 'HOTSPOT_WALKTO_POINT', index }) }}
+                >
+                    <ClickPointIcon fontSize="large" />
+                </IconButton>
                 <Box>
                     <OptionalNumberInput
                         value={walkToX} label="walk-to X: "
@@ -62,13 +74,7 @@ export function HotspotControl({ roomId, hotspot, index, setClickEffect, changeH
                     <OptionalNumberInput
                         value={walkToY} label="walk-to Y: "
                         inputHandler={walkToY => changeHotspot(index, { walkToY })} />
-
                 </Box>
-                <IconButton aria-label="select walk to point"
-                    onClick={() => { setClickEffect({ type: 'HOTSPOT_WALKTO_POINT', index }) }}
-                >
-                    <ClickPointIcon fontSize="large" />
-                </IconButton>
             </Box>
 
             <ShapeControl

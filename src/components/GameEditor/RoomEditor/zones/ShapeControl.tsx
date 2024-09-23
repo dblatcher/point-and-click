@@ -1,7 +1,7 @@
 
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { HotspotZone, Shape, Zone, ZoneType } from "@/definitions";
-import { Button, IconButton, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { ArrayControl } from "../../ArrayControl";
 import { ClickPointIcon } from "../../material-icons";
 import { ClickEffect } from "../ClickEffect";
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const ShapeControl = ({ shape, index, changeHotSpotOrZone, setClickEffect, type }: Props) => {
-    const { x, y, circle, rect, polygon } = shape
+    const { circle, rect, polygon } = shape
 
     function changeRect(value: number, coor: 'x' | 'y'): void {
         if (!rect) { return }
@@ -27,16 +27,7 @@ export const ShapeControl = ({ shape, index, changeHotSpotOrZone, setClickEffect
     }
 
     return (
-        <Stack spacing={2}>
-            <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
-                <NumberInput label="X" value={x} inputHandler={x => changeHotSpotOrZone(index, { x })} />
-                <NumberInput label="Y" value={y} inputHandler={y => changeHotSpotOrZone(index, { y })} />
-                <IconButton aria-label="select position"
-                    onClick={() => { setClickEffect({ type: 'ZONE_POSITION', index, zoneType: type }) }}
-                >
-                    <ClickPointIcon fontSize="large" />
-                </IconButton>
-            </Stack>
+        <>
             {circle && (
                 <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
                     <NumberInput label="Radius" value={circle} inputHandler={circle => { changeHotSpotOrZone(index, { circle }) }} />
@@ -69,6 +60,6 @@ export const ShapeControl = ({ shape, index, changeHotSpotOrZone, setClickEffect
                         }}>add points</Button>
                 </div>
             )}
-        </Stack>
+        </>
     )
 }
