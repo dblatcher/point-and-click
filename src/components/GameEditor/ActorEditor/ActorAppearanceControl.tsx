@@ -9,6 +9,7 @@ import { FramePickDialogButton } from "../FramePickDialogButton";
 import { SpritePreview } from "../SpritePreview";
 import { StatusFramesDialogButton } from "./StatusFramesDialogButton";
 import { FilterControl } from "../../Filter/FilterControl";
+import { FilterWidget } from "@/components/Filter/FilterWidget";
 
 type Props = {
     data: ActorData;
@@ -98,10 +99,15 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                 </Box>
             </Box>
 
+            <Divider flexItem  />
             <Box>
-                <FilterControl
+                <FilterWidget
                     value={data.filter || ''}
-                    setValue={(filter) => updateFromPartial({ filter })} />
+                    setValue={(filter) => updateFromPartial({ filter })}
+                    renderPreview={(filter) => (
+                        <SpritePreview data={{ ...data, filter }} maxHeight={height} noBaseLine/>
+                    )} 
+                />
             </Box>
         </>
     )

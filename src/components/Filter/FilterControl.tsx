@@ -1,7 +1,7 @@
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import { cloneData } from "@/lib/clone";
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { RangeInput } from "../GameEditor/RangeInput";
 import { filterTokensToString, stringToFilterTokens } from "./util";
 
@@ -24,9 +24,10 @@ const propertyConfig = {
     'saturate': { min: 0, max: 5, unit: '', step: .1, defaultValue: 1 },
 }
 
+const configKeys = Object.keys(propertyConfig) as (keyof typeof propertyConfig)[]
 
 export const FilterControl: React.FunctionComponent<Props> = ({ value, setValue }) => {
-    const [tokens, setTokens] = useState(stringToFilterTokens(value ?? ''))
+    const tokens = stringToFilterTokens(value ?? '')
 
     const PropertyRange = (props: { property: keyof typeof propertyConfig }) => {
         const { property } = props
@@ -46,14 +47,16 @@ export const FilterControl: React.FunctionComponent<Props> = ({ value, setValue 
                 const { value } = event.target
                 const tokensCopy = cloneData(tokens)
                 const token = tokensCopy.find(t => t.property === property)
-                if (token) {
+                if (Number(value) === defaultValue) {
+                    setValue(filterTokensToString(tokensCopy.filter(t => t.property !== property)))
+                } else if (token) {
                     token.tokenValue.numberValue = Number(value);
                     const tokensCopyWithoutOtherTokensOfThisProperty = tokensCopy.filter(t => t === token || t.property !== property)
-                    setTokens(tokensCopyWithoutOtherTokensOfThisProperty)
+                    // setTokens(tokensCopyWithoutOtherTokensOfThisProperty)
                     setValue(filterTokensToString(tokensCopyWithoutOtherTokensOfThisProperty))
                 } else {
                     tokensCopy.push({ property: property, tokenValue: { numberValue: Number(value), unit } })
-                    setTokens(tokensCopy)
+                    // setTokens(tokensCopy)
                     setValue(filterTokensToString(tokensCopy))
                 }
             }}
@@ -65,10 +68,10 @@ export const FilterControl: React.FunctionComponent<Props> = ({ value, setValue 
         <Box sx={{
             maxWidth: 380
         }}>
-            {Object.keys(propertyConfig).map(property =>
+            {configKeys.map(property =>
                 <PropertyRange
                     key={property}
-                    property={property as keyof typeof propertyConfig}
+                    property={property}
                 />
             )}
         </Box>
@@ -76,7 +79,7 @@ export const FilterControl: React.FunctionComponent<Props> = ({ value, setValue 
         <StringInput
             label="filter" value={value ?? ''}
             inputHandler={(newValue) => {
-                setTokens(stringToFilterTokens(newValue))
+                // setTokens(stringToFilterTokens(newValue))
                 setValue(newValue)
             }} />
     </Box>
