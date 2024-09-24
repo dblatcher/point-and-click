@@ -1,16 +1,14 @@
-import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
+import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { ActorData, Point } from "@/definitions";
 import { Direction, directions } from "@/definitions/BaseTypes";
 import { getTargetPoint, getViewAngleCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { findById, listIds } from "@/lib/util";
-import { Alert, Box, Button, ButtonGroup, Slider, Stack, Typography } from "@mui/material";
+import { Alert, Box, Slider, Stack, Typography } from "@mui/material";
 import { useState } from "react";
-import { ClickPointIcon } from "../material-icons";
+import { WalkToControl, XYControl } from "../RoomEditor/zones/XYControl";
 import { RoomLocationPicker } from "../RoomLocationPicker";
-import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 
 interface Props {
     actorData: ActorData;
@@ -54,49 +52,30 @@ export const PositionPreview = ({ actorData, updateFromPartial }: Props) => {
 
     return (
         <Box display={'flex'} marginTop={2} gap={4}>
-            <Box flexBasis={200} flexShrink={0} component={'section'}>
+            <Box flexBasis={250} flexShrink={0} component={'section'}>
                 <SelectInput label="Starting room"
                     options={listIds(gameDesign.rooms)}
                     value={actorData.room || ''}
                     optional={true}
                     inputHandler={room => updateFromPartial({ room })} />
 
-                <Box display={'flex'} justifyContent={'space-between'} gap={4}>
-                    <NumberInput
-                        label="x" value={actorData.x}
-                        inputHandler={x => updateFromPartial({ x })} />
-                    <NumberInput
-                        label="y" value={actorData.y}
-                        inputHandler={y => updateFromPartial({ y })} />
-                </Box>
-
-
-                <Box display={'flex'} justifyContent={'space-between'}>
-                    <OptionalNumberInput
-                        label="walk to x" value={actorData.walkToX}
-                        inputHandler={walkToX => updateFromPartial({ walkToX })} />
-                    <OptionalNumberInput
-                        label="walk to y" value={actorData.y}
-                        inputHandler={y => updateFromPartial({ y })} />
-                </Box>
+                <XYControl
+                    point={actorData}
+                    changePosition={(index, mod) => updateFromPartial(mod)}
+                    handlePositionSelectButton={() => setRole('position')}
+                    positionSelectIsActive={role === 'position'}
+                />
+                <WalkToControl
+                    point={actorData}
+                    changePosition={(index, mod) => updateFromPartial(mod)}
+                    handlePositionSelectButton={() => setRole('walkTo')}
+                    positionSelectIsActive={role === 'walkTo'}
+                />
 
                 <SelectInput label="direction"
                     value={actorData.direction || 'left'}
                     options={directions}
                     inputHandler={(direction) => updateFromPartial({ direction: (direction ?? 'left') as Direction })} />
-
-                <ButtonGroup>
-                    <Button
-                        variant={role === 'position' ? 'contained' : 'outlined'}
-                        onClick={() => setRole('position')}
-                        startIcon={<ClickPointIcon />}
-                    >postion</Button>
-                    <Button
-                        variant={role === 'walkTo' ? 'contained' : 'outlined'}
-                        onClick={() => setRole('walkTo')}
-                        startIcon={<ClickPointIcon />}
-                    >walk to point</Button>
-                </ButtonGroup>
             </Box>
 
             <Box flex={1} component={'section'} alignItems={'center'} padding={0} marginBottom={4}>

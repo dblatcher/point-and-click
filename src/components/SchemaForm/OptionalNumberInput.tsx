@@ -15,9 +15,10 @@ export const OptionalNumberInput: FunctionComponent<
         max?: number;
         min?: number;
         step?: number;
+        minWidth?: number;
     }
 > = (props) => {
-    const { value, label, min, max } = props;
+    const { value, label, min, max, minWidth = 150 } = props;
     const [storedNumber, setStoredNumber] = useState(value ?? min ?? 0);
 
     const sendNumberValue: FormEventHandler<HTMLInputElement> = (event) => {
@@ -44,7 +45,7 @@ export const OptionalNumberInput: FunctionComponent<
     const labelText = isDefined ? label : `${label}[unset]`
 
     return (
-        <Stack direction='row' alignItems={'center'} spacing={1} minWidth={150}>
+        <Stack direction='row' alignItems={'center'} spacing={1} minWidth={minWidth} maxWidth={minWidth}>
             <TextField
                 label={labelText}
                 size='small'
@@ -58,9 +59,6 @@ export const OptionalNumberInput: FunctionComponent<
                 disabled={!isDefined || props.readOnly}
                 inputProps={{
                     step: props.step
-                }}
-                sx={{
-                    maxWidth: 100
                 }}
             />
             <Checkbox

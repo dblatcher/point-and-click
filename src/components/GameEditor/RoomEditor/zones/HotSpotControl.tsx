@@ -1,10 +1,8 @@
-import { ClickPointIcon } from "@/components/GameEditor/material-icons";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { OptionalNumberInput, } from "@/components/SchemaForm/OptionalNumberInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import { HotspotZone } from "@/definitions";
 import { clamp } from "@/lib/util";
-import { Box, ButtonGroup, Divider, IconButton } from "@mui/material";
+import { Box, ButtonGroup, Divider } from "@mui/material";
 import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
 import { useRoomClickEffect } from "../ClickEffect";
 import { ShapeControl } from "./ShapeControl";

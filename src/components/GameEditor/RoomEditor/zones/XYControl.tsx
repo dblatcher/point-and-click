@@ -5,6 +5,25 @@ import { ClickPointIcon, ClickPointActiveIcon } from "../../material-icons";
 import { ReactNode } from "react";
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 
+interface XY {
+    x: number;
+    y: number;
+}
+
+interface WalkToPoint {
+    walkToX?: number;
+    walkToY?: number;
+}
+
+type Props<T extends {}> = {
+    point: T;
+    index?: number;
+    changePosition: { (index: number, mod: Partial<T>): void }
+    handlePositionSelectButton: { (): void }
+    positionSelectIsActive?: boolean;
+}
+
+
 const Frame = (props: {
     children: ReactNode, handlePositionSelectButton: { (): void }
     positionSelectIsActive?: boolean;
@@ -23,20 +42,7 @@ const Frame = (props: {
     </Box>
 }
 
-interface XY {
-    x: number;
-    y: number;
-}
-
-interface XYProps {
-    point: XY;
-    index: number;
-    changePosition: { (index: number, mod: Partial<XY>): void }
-    handlePositionSelectButton: { (): void }
-    positionSelectIsActive?: boolean;
-}
-
-export const XYControl = ({ point, index, changePosition, handlePositionSelectButton, positionSelectIsActive }: XYProps) => {
+export const XYControl = ({ point, index = -1, changePosition, handlePositionSelectButton, positionSelectIsActive }: Props<XY>) => {
     const { x, y, } = point
     return (
         <Frame {...{ handlePositionSelectButton, positionSelectIsActive }}>
@@ -50,30 +56,19 @@ export const XYControl = ({ point, index, changePosition, handlePositionSelectBu
     )
 }
 
-interface WalkToPoint {
-    walkToX?: number;
-    walkToY?: number;
-}
-
-interface WalkToProps {
-    point: WalkToPoint;
-    index: number;
-    changePosition: { (index: number, mod: Partial<WalkToPoint>): void }
-    handlePositionSelectButton: { (): void }
-    positionSelectIsActive?: boolean;
-}
-
-export const WalkToControl = ({ point, index, changePosition, handlePositionSelectButton, positionSelectIsActive }: WalkToProps) => {
+export const WalkToControl = ({ point, index = -1, changePosition, handlePositionSelectButton, positionSelectIsActive }: Props<WalkToPoint>) => {
     const { walkToX, walkToY } = point
     return (
         <Frame {...{ handlePositionSelectButton, positionSelectIsActive }}>
             <Box>
                 <OptionalNumberInput
+                    minWidth={100}
                     value={walkToX} label="walk-to X: "
                     inputHandler={walkToX => changePosition(index, { walkToX })} />
             </Box>
             <Box>
                 <OptionalNumberInput
+                    minWidth={100}
                     value={walkToY} label="walk-to Y: "
                     inputHandler={walkToY => changePosition(index, { walkToY })} />
             </Box>
