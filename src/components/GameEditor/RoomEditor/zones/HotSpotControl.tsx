@@ -6,7 +6,7 @@ import { HotspotZone } from "@/definitions";
 import { clamp } from "@/lib/util";
 import { Box, ButtonGroup, Divider, IconButton } from "@mui/material";
 import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
-import { ClickEffect } from "../ClickEffect";
+import { useRoomClickEffect } from "../ClickEffect";
 import { ShapeControl } from "./ShapeControl";
 import { XYControl } from "./XYControl";
 
@@ -15,10 +15,10 @@ interface Props {
     hotspot: HotspotZone;
     index: number;
     changeHotspot: { (index: number, mod: Partial<HotspotZone>): void }
-    setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export function HotspotControl({ roomId, hotspot, index, setClickEffect, changeHotspot }: Props) {
+export function HotspotControl({ roomId, hotspot, index, changeHotspot }: Props) {
+    const { setClickEffect } = useRoomClickEffect()
     const { parallax, walkToX, walkToY, id, status, name } = hotspot
 
     return (
@@ -78,7 +78,6 @@ export function HotspotControl({ roomId, hotspot, index, setClickEffect, changeH
 
             <ShapeControl
                 shape={hotspot} index={index}
-                setClickEffect={setClickEffect}
                 type='hotspot'
                 changeHotSpotOrZone={(index, mod) => changeHotspot(index, mod as Partial<HotspotZone>)}
             />

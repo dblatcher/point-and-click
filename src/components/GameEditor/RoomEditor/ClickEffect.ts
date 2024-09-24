@@ -1,4 +1,5 @@
 import { SupportedZoneShape, ZoneType } from "@/definitions"
+import { createContext, useContext } from "react";
 
 export type NewObstableEffect = {
     type: 'OBSTACLE';
@@ -49,3 +50,13 @@ export type ClickEffect = NewObstableEffect |
     NewWalkablePolygonPointEffect |
     HotspotWalkToPoint |
     ZonePosition
+
+export const RoomClickContext = createContext<{ clickEffect?: ClickEffect, setClickEffect: { (clickEffect?: ClickEffect): void } }>({
+    clickEffect: undefined,
+    setClickEffect(clickEffect) {
+        return
+    },
+})
+
+export const useRoomClickEffect = () => useContext(RoomClickContext)
+

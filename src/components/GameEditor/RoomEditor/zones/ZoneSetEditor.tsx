@@ -3,7 +3,6 @@ import { Delete } from "@mui/icons-material";
 import { Alert, Box, Stack } from "@mui/material";
 import { FunctionComponent } from "react";
 import { ButtonWithConfirm } from "../../ButtonWithConfirm";
-import { ClickEffect } from "../ClickEffect";
 import { NewZoneButtons } from "./NewZoneButtons";
 import { ZoneControl } from "./ZoneControl";
 import { ZonePicker } from "./ZonePicker";
@@ -14,10 +13,8 @@ interface Props {
     zones: (Zone | HotspotZone)[];
     changeZone: { (index: number, mod: Partial<Zone>): void };
     remove: { (index: number, type: ZoneType): void };
-    setClickEffect: { (clickEffect?: ClickEffect): void };
     activeZoneIndex?: number;
     selectZone: EntryClickFunction
-    clickEffect?: ClickEffect;
 }
 
 
@@ -26,10 +23,8 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
     zones,
     changeZone,
     remove,
-    setClickEffect,
     selectZone,
     activeZoneIndex,
-    clickEffect,
 }: Props) => {
 
     const activeZone = typeof activeZoneIndex === 'number'
@@ -38,11 +33,7 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
 
     return (
         <>
-            <NewZoneButtons
-                type={type}
-                clickEffect={clickEffect}
-                setClickEffect={setClickEffect}
-            />
+            <NewZoneButtons type={type} />
             {zones.length === 0 ? (
                 <Alert severity="info">
                     No <b>{type}s</b> for this room yet. Select a shape from the buttons above to add one.
@@ -74,7 +65,6 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
                             zone={activeZone}
                             index={activeZoneIndex}
                             type={type}
-                            setClickEffect={setClickEffect}
                             changeZone={changeZone} />
                     )}
                 </Stack>

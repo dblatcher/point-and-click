@@ -3,7 +3,7 @@ import { HotspotZone, RoomData, Zone } from "@/definitions"
 import { cloneData } from "@/lib/clone"
 import { Grid, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
-import { ClickEffect } from "../ClickEffect"
+import { ClickEffect, RoomClickContext } from "../ClickEffect"
 import { Preview } from "../Preview"
 import { HotspotSetEditor } from "./HotspotSetEditor"
 import { ZoneSetEditor } from "./ZoneSetEditor"
@@ -118,70 +118,66 @@ export const ZoneFeaturesControl = ({
     }
 
     return (
-        <Grid container flexWrap={'nowrap'} spacing={1}>
-            <Grid item xs={4}>
-                {!zoneType && (
-                    <>
-                        <Tabs
-                            value={openTab}
-                            onChange={(event, value) => setOpenTab(value)}
-                            textColor="secondary"
-                            indicatorColor="secondary">
-                            <Tab value={ZoneTypeTab.Walkable} label='Walkables' />
-                            <Tab value={ZoneTypeTab.Obstacle} label='Obstables' />
-                        </Tabs>
+        <RoomClickContext.Provider value={{ clickEffect, setClickEffect }}>
+            <Grid container flexWrap={'nowrap'} spacing={1}>
+                <Grid item xs={4}>
+                    {!zoneType && (
+                        <>
+                            <Tabs
+                                value={openTab}
+                                onChange={(event, value) => setOpenTab(value)}
+                                textColor="secondary"
+                                indicatorColor="secondary">
+                                <Tab value={ZoneTypeTab.Walkable} label='Walkables' />
+                                <Tab value={ZoneTypeTab.Obstacle} label='Obstables' />
+                            </Tabs>
 
-                        {openTab === ZoneTypeTab.Obstacle && (
-                            <ZoneSetEditor
-                                zones={room.obstacleAreas ?? []}
-                                type='obstacle'
-                                setClickEffect={setClickEffect}
-                                changeZone={changeZoneByType('obstacle')}
-                                remove={removeZone}
-                                activeZoneIndex={activeObstacleIndex}
-                                selectZone={selectZone}
-                                clickEffect={clickEffect}
-                            />
-                        )}
-                        {openTab === ZoneTypeTab.Walkable && (
-                            <ZoneSetEditor
-                                zones={room.walkableAreas ?? []}
-                                type='walkable'
-                                setClickEffect={setClickEffect}
-                                changeZone={changeZoneByType('walkable')}
-                                remove={removeZone}
-                                activeZoneIndex={activeWalkableIndex}
-                                selectZone={selectZone}
-                                clickEffect={clickEffect}
-                            />
-                        )}
-                    </>
-                )}
+                            {openTab === ZoneTypeTab.Obstacle && (
+                                <ZoneSetEditor
+                                    zones={room.obstacleAreas ?? []}
+                                    type='obstacle'
+                                    changeZone={changeZoneByType('obstacle')}
+                                    remove={removeZone}
+                                    activeZoneIndex={activeObstacleIndex}
+                                    selectZone={selectZone}
+                                />
+                            )}
+                            {openTab === ZoneTypeTab.Walkable && (
+                                <ZoneSetEditor
+                                    zones={room.walkableAreas ?? []}
+                                    type='walkable'
+                                    changeZone={changeZoneByType('walkable')}
+                                    remove={removeZone}
+                                    activeZoneIndex={activeWalkableIndex}
+                                    selectZone={selectZone}
+                                />
+                            )}
+                        </>
+                    )}
 
-                {zoneType === 'hotspots' && (
-                    <HotspotSetEditor
-                        roomId={room.id}
-                        changeHotspot={changeHotspot}
-                        hotspots={room.hotspots ?? []}
-                        setClickEffect={setClickEffect}
-                        removeZone={removeZone}
-                        openIndex={activeHotspotIndex}
-                        selectHotspot={selectHotspot}
-                        clickEffect={clickEffect}
-                    />
-                )}
+                    {zoneType === 'hotspots' && (
+                        <HotspotSetEditor
+                            roomId={room.id}
+                            changeHotspot={changeHotspot}
+                            hotspots={room.hotspots ?? []}
+                            removeZone={removeZone}
+                            openIndex={activeHotspotIndex}
+                            selectHotspot={selectHotspot}
+                        />
+                    )}
 
+                </Grid>
+                <Grid item flex={1}>
+                    <div style={{ position: 'sticky', top: 1 }}>
+                        <Preview
+                            actors={gameDesign.actors}
+                            roomData={room}
+                            clickEffect={clickEffect}
+                            activeHotspotIndex={activeHotspotIndex}
+                            handleRoomClick={handleRoomClick} />
+                    </div>
+                </Grid>
             </Grid>
-            <Grid item flex={1}>
-                <div style={{ position: 'sticky', top: 1 }}>
-                    <Preview
-                        actors={gameDesign.actors}
-                        roomData={room}
-                        clickEffect={clickEffect}
-                        activeHotspotIndex={activeHotspotIndex}
-                        handleRoomClick={handleRoomClick} />
-                </div>
-            </Grid>
-        </Grid>
+        </RoomClickContext.Provider>
     )
 }

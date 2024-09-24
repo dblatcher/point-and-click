@@ -4,18 +4,18 @@ import { HotspotZone, Shape, Zone, ZoneType } from "@/definitions";
 import { Button, Stack, Typography } from "@mui/material";
 import { ArrayControl } from "../../ArrayControl";
 import { ClickPointIcon } from "../../material-icons";
-import { ClickEffect } from "../ClickEffect";
+import { useRoomClickEffect } from "../ClickEffect";
 
 interface Props {
     shape: HotspotZone | Zone;
     index: number;
     type: ZoneType;
     changeHotSpotOrZone: { (index: number, mod: Partial<Shape>): void }
-    setClickEffect: { (clickEffect: ClickEffect): void };
 }
 
-export const ShapeControl = ({ shape, index, changeHotSpotOrZone, setClickEffect, type }: Props) => {
+export const ShapeControl = ({ shape, index, changeHotSpotOrZone, type }: Props) => {
     const { circle, rect, polygon } = shape
+    const { setClickEffect } = useRoomClickEffect()
 
     function changeRect(value: number, coor: 'x' | 'y'): void {
         if (!rect) { return }

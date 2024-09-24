@@ -3,7 +3,7 @@ import { OptionalStringInput } from "@/components/SchemaForm/OptionalStringInput
 import { Zone } from "@/definitions";
 import { Stack } from "@mui/material";
 import { EditorBox } from "../../EditorBox";
-import { ClickEffect } from "../ClickEffect";
+import { useRoomClickEffect } from "../ClickEffect";
 import { ShapeControl } from "./ShapeControl";
 import { XYControl } from "./XYControl";
 
@@ -12,10 +12,10 @@ interface Props {
     index: number;
     type: 'obstacle' | 'walkable';
     changeZone: { (index: number, mod: Partial<Zone>): void };
-    setClickEffect: { (clickEffect?: ClickEffect): void };
 }
 
-export function ZoneControl({ zone, index, changeZone, setClickEffect, type }: Props) {
+export function ZoneControl({ zone, index, changeZone, type }: Props) {
+    const { setClickEffect } = useRoomClickEffect()
     return (
         <Stack component={'article'}>
             <EditorBox>
@@ -34,7 +34,6 @@ export function ZoneControl({ zone, index, changeZone, setClickEffect, type }: P
                 />
                 <ShapeControl
                     shape={zone} index={index}
-                    setClickEffect={setClickEffect}
                     type={type}
                     changeHotSpotOrZone={changeZone} />
             </EditorBox>

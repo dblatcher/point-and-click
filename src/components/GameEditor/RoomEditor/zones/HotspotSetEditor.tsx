@@ -3,7 +3,6 @@ import { HotspotZone } from "@/definitions";
 import { Delete } from "@mui/icons-material";
 import { Alert, Box, Divider, Stack } from "@mui/material";
 import { ButtonWithConfirm } from "../../ButtonWithConfirm";
-import { ClickEffect } from "../ClickEffect";
 import { HotspotControl } from "./HotSpotControl";
 import { NewZoneButtons } from "./NewZoneButtons";
 
@@ -11,14 +10,12 @@ interface Props {
     roomId: string,
     hotspots: HotspotZone[],
     openIndex?: number
-    changeHotspot: {(index:number, mod:Partial<HotspotZone>):void}
+    changeHotspot: { (index: number, mod: Partial<HotspotZone>): void }
     selectHotspot: { (id?: string): void }
     removeZone: { (index: number, type: "hotspot" | "obstacle" | "walkable"): void }
-    clickEffect?: ClickEffect
-    setClickEffect: { (clickEffect: ClickEffect): void }
 }
 
-export const HotspotSetEditor = ({ roomId, hotspots, openIndex, selectHotspot, removeZone, setClickEffect, clickEffect, changeHotspot }: Props) => {
+export const HotspotSetEditor = ({ roomId, hotspots, openIndex, selectHotspot, removeZone, changeHotspot }: Props) => {
 
     const activeHotspot = typeof openIndex === 'number'
         ? hotspots[openIndex]
@@ -26,10 +23,7 @@ export const HotspotSetEditor = ({ roomId, hotspots, openIndex, selectHotspot, r
 
     return (
         <>
-            <NewZoneButtons
-                type="hotspot"
-                clickEffect={clickEffect}
-                setClickEffect={setClickEffect} />
+            <NewZoneButtons type="hotspot" />
             {hotspots.length === 0 ? (
                 <Alert severity="info">
                     No <b>hotspots</b> for this room yet. Select a shape from the buttons above to add one.
@@ -59,7 +53,6 @@ export const HotspotSetEditor = ({ roomId, hotspots, openIndex, selectHotspot, r
                     {activeHotspot && typeof openIndex === 'number' && (
                         <HotspotControl hotspot={activeHotspot} index={openIndex}
                             roomId={roomId}
-                            setClickEffect={setClickEffect}
                             changeHotspot={changeHotspot}
                         />
                     )}
