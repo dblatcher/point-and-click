@@ -27,7 +27,8 @@ import LogOut from '@mui/icons-material/Logout';
 import RepeatOneIcon from '@mui/icons-material/RepeatOne';
 import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
 import InteractionIcon from '@mui/icons-material/Mediation';
-import ClickPointIcon from '@mui/icons-material/Adjust';
+import ClickPointIcon from '@mui/icons-material/LocationSearching';
+import ClickPointActiveIcon from '@mui/icons-material/GpsFixed';
 import LinkIcon from '@mui/icons-material/Link';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
@@ -40,6 +41,7 @@ export {
     AudioFileOutlinedIcon,
     ClearIcon,
     ClearOutlinedIcon,
+    ClickPointActiveIcon,
     ClickPointIcon,
     ContentCopyIcon,
     DeleteIcon,

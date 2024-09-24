@@ -8,7 +8,7 @@ import { Box, ButtonGroup, Divider, IconButton } from "@mui/material";
 import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
 import { useRoomClickEffect } from "../ClickEffect";
 import { ShapeControl } from "./ShapeControl";
-import { XYControl } from "./XYControl";
+import { WalkToControl, XYControl } from "./XYControl";
 
 interface Props {
     roomId: string;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export function HotspotControl({ roomId, hotspot, index, changeHotspot }: Props) {
-    const { setClickEffect } = useRoomClickEffect()
+    const { setClickEffect, clickEffect } = useRoomClickEffect()
     const { parallax, walkToX, walkToY, id, status, name } = hotspot
 
     return (
@@ -53,29 +53,16 @@ export function HotspotControl({ roomId, hotspot, index, changeHotspot }: Props)
                 </Box>
             </Box>
             <Divider />
-            <XYControl
-                shape={hotspot} index={index}
+            <XYControl point={hotspot} index={index}
                 changePosition={(index, mod) => changeHotspot(index, mod)}
                 handlePositionSelectButton={() => setClickEffect({ type: 'ZONE_POSITION', index, zoneType: 'hotspot' })}
+                positionSelectIsActive={clickEffect?.type === 'ZONE_POSITION' && clickEffect.index === index && clickEffect.zoneType === 'hotspot'}
             />
-            <Box component={'section'} display={'flex'} flexWrap={'wrap'} paddingTop={2}>
-                <IconButton aria-label="select walk to point"
-                    onClick={() => { setClickEffect({ type: 'HOTSPOT_WALKTO_POINT', index }) }}
-                >
-                    <ClickPointIcon fontSize="large" />
-                </IconButton>
-                <Box>
-                    <OptionalNumberInput
-                        value={walkToX} label="walk-to X: "
-                        inputHandler={walkToX => changeHotspot(index, { walkToX })} />
-                </Box>
-                <Box>
-                    <OptionalNumberInput
-                        value={walkToY} label="walk-to Y: "
-                        inputHandler={walkToY => changeHotspot(index, { walkToY })} />
-                </Box>
-            </Box>
-
+            <WalkToControl point={hotspot} index={index}
+                changePosition={(index, mod) => changeHotspot(index, mod)}
+                handlePositionSelectButton={() => { setClickEffect({ type: 'HOTSPOT_WALKTO_POINT', index }) }}
+                positionSelectIsActive={clickEffect?.type === 'HOTSPOT_WALKTO_POINT' && clickEffect.index === index}
+            />
             <ShapeControl
                 shape={hotspot} index={index}
                 type='hotspot'

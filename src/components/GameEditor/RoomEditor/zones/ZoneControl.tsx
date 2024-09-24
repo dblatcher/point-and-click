@@ -15,28 +15,27 @@ interface Props {
 }
 
 export function ZoneControl({ zone, index, changeZone, type }: Props) {
-    const { setClickEffect } = useRoomClickEffect()
+    const { setClickEffect, clickEffect } = useRoomClickEffect()
     return (
-        <Stack component={'article'}>
-            <EditorBox>
-                <OptionalStringInput
-                    label="Ref: "
-                    value={zone.ref}
-                    inputHandler={ref => changeZone(index, { ref })} />
-                <BooleanInput
-                    label="disabled: "
-                    value={!!zone.disabled}
-                    inputHandler={disabled => changeZone(index, { disabled })} />
-                <XYControl
-                    shape={zone} index={index}
-                    changePosition={changeZone}
-                    handlePositionSelectButton={() => setClickEffect({ type: 'ZONE_POSITION', index, zoneType: type })}
-                />
-                <ShapeControl
-                    shape={zone} index={index}
-                    type={type}
-                    changeHotSpotOrZone={changeZone} />
-            </EditorBox>
+        <Stack component={'article'} spacing={2}>
+            <OptionalStringInput
+                label="Ref: "
+                value={zone.ref}
+                inputHandler={ref => changeZone(index, { ref })} />
+            <BooleanInput
+                label="disabled: "
+                value={!!zone.disabled}
+                inputHandler={disabled => changeZone(index, { disabled })} />
+            <XYControl
+                point={zone} index={index}
+                changePosition={changeZone}
+                handlePositionSelectButton={() => setClickEffect({ type: 'ZONE_POSITION', index, zoneType: type })}
+                positionSelectIsActive={clickEffect?.type === 'ZONE_POSITION' && clickEffect.index === index && clickEffect.zoneType === type}
+            />
+            <ShapeControl
+                shape={zone} index={index}
+                type={type}
+                changeHotSpotOrZone={changeZone} />
         </Stack >
     )
 }
