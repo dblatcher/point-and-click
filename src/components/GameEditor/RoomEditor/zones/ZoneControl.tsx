@@ -1,7 +1,7 @@
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { OptionalStringInput } from "@/components/SchemaForm/OptionalStringInput";
 import { Zone } from "@/definitions";
-import { Stack } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import { EditorBox } from "../../EditorBox";
 import { useRoomClickEffect } from "../ClickEffect";
 import { ShapeControl } from "./ShapeControl";
@@ -17,15 +17,17 @@ interface Props {
 export function ZoneControl({ zone, index, changeZone, type }: Props) {
     const { setClickEffect, clickEffect } = useRoomClickEffect()
     return (
-        <Stack component={'article'} spacing={2}>
-            <OptionalStringInput
-                label="Ref: "
-                value={zone.ref}
-                inputHandler={ref => changeZone(index, { ref })} />
-            <BooleanInput
-                label="disabled: "
-                value={!!zone.disabled}
-                inputHandler={disabled => changeZone(index, { disabled })} />
+        <Stack component={'article'} spacing={2} divider={<Divider />}>
+            <div>
+                <OptionalStringInput
+                    label="Ref: "
+                    value={zone.ref}
+                    inputHandler={ref => changeZone(index, { ref })} />
+                <BooleanInput
+                    label="disabled: "
+                    value={!!zone.disabled}
+                    inputHandler={disabled => changeZone(index, { disabled })} />
+            </div>
             <XYControl
                 point={zone} index={index}
                 changePosition={changeZone}

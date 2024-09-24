@@ -39,7 +39,10 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
             />
         </EditorHeading>
 
-        <Tabs value={tabOpen} onChange={(event, tabOpen) => setTabOpen(tabOpen)}>
+        <Tabs value={tabOpen}
+            onChange={(event, tabOpen) => setTabOpen(tabOpen)}
+            variant="scrollable"
+            scrollButtons="auto">
             <Tab label="Name and description" value={RoomEditorTab.NameAndDescription} />
             <Tab label="Background and dimensions" value={RoomEditorTab.BackgroundAndDimension} />
             <Tab label="Walkable Zones" value={RoomEditorTab.WalkableAreas} />
@@ -63,7 +66,7 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
         )}
 
         {tabOpen === RoomEditorTab.Hotspots && (
-            <ZoneFeaturesControl room={data} zoneType="hotspots"/>
+            <ZoneFeaturesControl room={data} zoneType="hotspots" />
         )}
 
     </Stack>
