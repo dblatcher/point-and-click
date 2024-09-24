@@ -12,7 +12,7 @@ interface Props {
     index: number;
     type: 'obstacle' | 'walkable';
     changeZone: { (index: number, mod: Partial<Zone>): void };
-    setClickEffect: { (clickEffect: ClickEffect): void };
+    setClickEffect: { (clickEffect?: ClickEffect): void };
 }
 
 export function ZoneControl({ zone, index, changeZone, setClickEffect, type }: Props) {
@@ -29,9 +29,9 @@ export function ZoneControl({ zone, index, changeZone, setClickEffect, type }: P
                     inputHandler={disabled => changeZone(index, { disabled })} />
                 <XYControl
                     shape={zone} index={index}
-                    setClickEffect={setClickEffect}
-                    type={type}
-                    changeHotSpotOrZone={changeZone} />
+                    changePosition={changeZone}
+                    handlePositionSelectButton={() => setClickEffect({ type: 'ZONE_POSITION', index, zoneType: type })}
+                />
                 <ShapeControl
                     shape={zone} index={index}
                     setClickEffect={setClickEffect}

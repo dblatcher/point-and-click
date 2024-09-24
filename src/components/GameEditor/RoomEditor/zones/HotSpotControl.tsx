@@ -55,9 +55,8 @@ export function HotspotControl({ roomId, hotspot, index, setClickEffect, changeH
             <Divider />
             <XYControl
                 shape={hotspot} index={index}
-                setClickEffect={setClickEffect}
-                type='hotspot'
-                changeHotSpotOrZone={(index, mod) => changeHotspot(index, mod as Partial<HotspotZone>)}
+                changePosition={(index, mod) => changeHotspot(index, mod)}
+                handlePositionSelectButton={() => setClickEffect({ type: 'ZONE_POSITION', index, zoneType: 'hotspot' })}
             />
             <Box component={'section'} display={'flex'} flexWrap={'wrap'} paddingTop={2}>
                 <IconButton aria-label="select walk to point"

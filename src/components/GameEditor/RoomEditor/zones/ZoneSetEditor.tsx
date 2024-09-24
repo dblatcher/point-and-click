@@ -14,7 +14,7 @@ interface Props {
     zones: (Zone | HotspotZone)[];
     changeZone: { (index: number, mod: Partial<Zone>): void };
     remove: { (index: number, type: ZoneType): void };
-    setClickEffect: { (clickEffect: ClickEffect): void };
+    setClickEffect: { (clickEffect?: ClickEffect): void };
     activeZoneIndex?: number;
     selectZone: EntryClickFunction
     clickEffect?: ClickEffect;
