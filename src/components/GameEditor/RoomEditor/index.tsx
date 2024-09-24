@@ -21,6 +21,7 @@ enum RoomEditorTab {
     NameAndDescription,
     BackgroundAndDimension,
     WalkableAreas,
+    Obstacles,
     SpriteScaling,
     Hotspots,
 }
@@ -44,10 +45,11 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
             variant="scrollable"
             scrollButtons="auto">
             <Tab label="Name and description" value={RoomEditorTab.NameAndDescription} />
-            <Tab label="Background and dimensions" value={RoomEditorTab.BackgroundAndDimension} />
-            <Tab label="Walkable Zones" value={RoomEditorTab.WalkableAreas} />
+            <Tab label="Background and size" value={RoomEditorTab.BackgroundAndDimension} />
+            <Tab label="Walkable" value={RoomEditorTab.WalkableAreas} />
+            <Tab label="Obstacles" value={RoomEditorTab.Obstacles} />
             <Tab label="Hotspots" value={RoomEditorTab.Hotspots} />
-            <Tab label="Sprite Scaling" value={RoomEditorTab.SpriteScaling} />
+            <Tab label="Scaling" value={RoomEditorTab.SpriteScaling} />
         </Tabs>
         {tabOpen === RoomEditorTab.NameAndDescription && <RoomDescriptionControl room={data} />}
         {tabOpen === RoomEditorTab.BackgroundAndDimension && (
@@ -58,7 +60,11 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
         )}
 
         {tabOpen === RoomEditorTab.WalkableAreas && (
-            <ZoneFeaturesControl room={data} />
+            <ZoneFeaturesControl room={data} zoneType="walkable" />
+        )}
+
+        {tabOpen === RoomEditorTab.Obstacles && (
+            <ZoneFeaturesControl room={data} zoneType='obstacle' />
         )}
 
         {tabOpen === RoomEditorTab.SpriteScaling && (
@@ -66,7 +72,7 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
         )}
 
         {tabOpen === RoomEditorTab.Hotspots && (
-            <ZoneFeaturesControl room={data} zoneType="hotspots" />
+            <ZoneFeaturesControl room={data} zoneType="hotspot" />
         )}
 
     </Stack>

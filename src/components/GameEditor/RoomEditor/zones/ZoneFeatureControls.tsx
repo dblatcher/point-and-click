@@ -1,7 +1,7 @@
 import { useGameDesign } from "@/context/game-design-context"
-import { HotspotZone, RoomData, Zone } from "@/definitions"
+import { HotspotZone, RoomData, Zone, ZoneType } from "@/definitions"
 import { cloneData } from "@/lib/clone"
-import { Grid, Tab, Tabs } from "@mui/material"
+import { Grid } from "@mui/material"
 import { useState } from "react"
 import { ClickEffect, RoomClickContext } from "../ClickEffect"
 import { Preview } from "../Preview"
@@ -11,11 +11,7 @@ import { getChangesFromClick, getNextClickEffect } from "./lib"
 
 interface Props {
     room: RoomData;
-    zoneType?: 'hotspots'
-}
-
-enum ZoneTypeTab {
-    Obstacle, Walkable
+    zoneType: ZoneType
 }
 
 export const ZoneFeaturesControl = ({
@@ -23,7 +19,6 @@ export const ZoneFeaturesControl = ({
 }: Props) => {
 
     const [clickEffect, setClickEffect] = useState<ClickEffect | undefined>(undefined)
-    const [openTab, setOpenTab] = useState(ZoneTypeTab.Walkable)
     const { gameDesign, performUpdate } = useGameDesign()
     const [activeHotspotIndex, setActiveHotspotIndex] = useState<number | undefined>(0);
     const [activeObstacleIndex, setActiveObstacleIndex] = useState<number | undefined>(0);
@@ -117,45 +112,41 @@ export const ZoneFeaturesControl = ({
         setClickEffect(getNextClickEffect(clickEffect, updatedRoom))
     }
 
+    const getActiveZoneIndex = () => {
+        switch (zoneType) {
+            case "obstacle":
+                return activeObstacleIndex
+            case "walkable":
+                return activeWalkableIndex
+        }
+    }
+
+    const getZones = () => {
+        switch (zoneType) {
+            case "obstacle":
+                return room.obstacleAreas ?? []
+            case "walkable":
+                return room.walkableAreas ?? []
+            default:
+                return []
+        }
+    }
+
     return (
         <RoomClickContext.Provider value={{ clickEffect, setClickEffect }}>
             <Grid container flexWrap={'nowrap'} spacing={1}>
                 <Grid item xs={4}>
-                    {!zoneType && (
-                        <>
-                            <Tabs
-                                value={openTab}
-                                onChange={(event, value) => setOpenTab(value)}
-                                textColor="secondary"
-                                indicatorColor="secondary">
-                                <Tab value={ZoneTypeTab.Walkable} label='Walkables' />
-                                <Tab value={ZoneTypeTab.Obstacle} label='Obstables' />
-                            </Tabs>
-
-                            {openTab === ZoneTypeTab.Obstacle && (
-                                <ZoneSetEditor
-                                    zones={room.obstacleAreas ?? []}
-                                    type='obstacle'
-                                    changeZone={changeZoneByType('obstacle')}
-                                    remove={removeZone}
-                                    activeZoneIndex={activeObstacleIndex}
-                                    selectZone={selectZone}
-                                />
-                            )}
-                            {openTab === ZoneTypeTab.Walkable && (
-                                <ZoneSetEditor
-                                    zones={room.walkableAreas ?? []}
-                                    type='walkable'
-                                    changeZone={changeZoneByType('walkable')}
-                                    remove={removeZone}
-                                    activeZoneIndex={activeWalkableIndex}
-                                    selectZone={selectZone}
-                                />
-                            )}
-                        </>
+                    {zoneType !== 'hotspot' && (
+                        <ZoneSetEditor
+                            zones={getZones()}
+                            type={zoneType}
+                            changeZone={changeZoneByType(zoneType)}
+                            remove={removeZone}
+                            activeZoneIndex={getActiveZoneIndex()}
+                            selectZone={selectZone}
+                        />
                     )}
-
-                    {zoneType === 'hotspots' && (
+                    {zoneType === 'hotspot' && (
                         <HotspotSetEditor
                             roomId={room.id}
                             changeHotspot={changeHotspot}
@@ -165,7 +156,6 @@ export const ZoneFeaturesControl = ({
                             selectHotspot={selectHotspot}
                         />
                     )}
-
                 </Grid>
                 <Grid item flex={1}>
                     <div style={{ position: 'sticky', top: 1 }}>

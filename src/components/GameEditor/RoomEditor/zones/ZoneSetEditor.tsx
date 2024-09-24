@@ -37,6 +37,7 @@ export const ZoneSetEditor: FunctionComponent<Props> = ({
             {zones.length === 0 ? (
                 <Alert severity="info">
                     No <b>{type}s</b> for this room yet. Select a shape from the buttons above to add one.
+                    {type === 'walkable' && <span>If there are no walkables, the Actors can move anywhere, except where there are <b>obstables</b>.</span>}
                 </Alert>
             ) : (
                 <Stack>
