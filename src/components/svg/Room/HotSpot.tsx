@@ -1,9 +1,8 @@
-import {  FunctionComponent } from "react";
-import { RoomData } from "@/definitions"
-import { HotspotZone } from "@/definitions"
-import { getShift } from "@/lib/roomFunctions";
-import { HandleHoverFunction } from "../../game";
 import ZoneSvg from "@/components/svg/ZoneSvg";
+import { HotspotZone, RoomData } from "@/definitions";
+import { getShift } from "@/lib/roomFunctions";
+import { FunctionComponent } from "react";
+import { HandleHoverFunction } from "../../game";
 import styles from './styles.module.css';
 
 interface Props {
@@ -22,23 +21,22 @@ const Hotspot: FunctionComponent<Props> = ({
     zone: hotspot, roomData, viewAngle, highlight, markVertices, stopPropogation = true,
     clickHandler, handleHover, flash = false,
 }: Props) => {
-    const { parallax } = hotspot
-
+    const { parallax, x, y, polygon } = hotspot
     const classNames = highlight ? [styles.highlightedHotspot] : [styles.hotspot]
-
-    if (flash) { classNames.push(styles.flash)}
-
+    if (flash) { classNames.push(styles.flash) }
     return (
-        <ZoneSvg
-            className={classNames.join(" ")}
-            x={hotspot.x + getShift(viewAngle, parallax, roomData)}
-            y={roomData.height - hotspot.y}
-            clickHandler={clickHandler}
-            stopPropagation={stopPropogation}
-            zone={hotspot}
-            markVertices={markVertices}
-            handleHover={handleHover}
-        />
+        <>
+            <ZoneSvg
+                className={classNames.join(" ")}
+                x={x + getShift(viewAngle, parallax, roomData)}
+                y={roomData.height - y}
+                clickHandler={clickHandler}
+                stopPropagation={stopPropogation}
+                zone={hotspot}
+                markVertices={markVertices}
+                handleHover={handleHover}
+            />
+        </>
     )
 }
 export default Hotspot

@@ -9,6 +9,7 @@ import { Box, Checkbox, Divider, Grid, Paper, Stack, Typography } from "@mui/mat
 import { ChangeEventHandler, Component } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { ViewAngleSlider } from "./ViewAngleSlider";
+import { PolygonPins } from "@/components/svg/PolygonPins";
 
 type BooleanState = {
     showObstacleAreas: boolean;

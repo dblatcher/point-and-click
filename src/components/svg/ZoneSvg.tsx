@@ -2,6 +2,7 @@ import { FunctionComponent, MouseEventHandler } from "react";
 import { polygonToPathD } from "@/lib/polygonToPathD";
 import { Zone, HotspotZone } from "@/definitions"
 import { HandleHoverFunction } from "../game";
+import { PolygonPins } from "./PolygonPins";
 
 interface Props {
     zone: Zone;
@@ -14,21 +15,6 @@ interface Props {
     handleHover?: HandleHoverFunction;
     markVertices?: boolean;
 }
-
-const plotVertex = (point: [number, number], index: number) => (
-    <g key={index} style={{ stroke: 'red' }}>
-        <line
-            x1={point[0] - 5}
-            x2={point[0] + 5}
-            y1={-point[1] - 5}
-            y2={-point[1] + 5} />
-        <line
-            x1={point[0] + 5}
-            x2={point[0] - 5}
-            y1={-point[1] - 5}
-            y2={-point[1] + 5} />
-    </g>
-)
 
 const ZoneSvg: FunctionComponent<Props> = ({
     zone, x, y, className, stopPropagation = true,
@@ -55,7 +41,7 @@ const ZoneSvg: FunctionComponent<Props> = ({
                 <path className={className}
                     onClick={processClick}
                     d={polygonToPathD(polygon)} />
-                {markVertices && polygon.map(plotVertex)}
+                {markVertices && <PolygonPins polygon={polygon} />}
             </>
             }
             {path &&

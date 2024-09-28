@@ -16,9 +16,8 @@ export function getShift(viewAngle: number, parallax: number, roomData: RoomData
 
 export function calculateScreenX(xPosition: number, viewAngle: number, roomData: RoomData) {
     const { width, frameWidth } = roomData
-    const offCenter = 2 * (xPosition - width / 2) / width
     const shift = getShift(viewAngle, 1, roomData)
-    return (frameWidth / 2) + (offCenter * (width / 2)) + shift
+    return (frameWidth / 2) + (xPosition - width / 2) + shift
 }
 
 export function locateClickInWorld(clickXPosition: number, clickYposition: number, viewAngle: number, roomData: RoomData) {
