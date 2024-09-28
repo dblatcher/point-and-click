@@ -1,7 +1,7 @@
 
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { HotspotZone, Point, Shape, Zone, ZoneType } from "@/definitions";
-import { Avatar, Box, Button, Chip, Icon, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { ArrayControl } from "../../ArrayControl";
 import { ClickPointIcon } from "../../material-icons";
 import { useRoomClickEffect } from "../ClickEffect";
@@ -16,7 +16,7 @@ interface Props {
 
 export const ShapeControl = ({ shape, index, changeHotSpotOrZone, type }: Props) => {
     const { circle, rect, polygon } = shape
-    const { setClickEffect } = useRoomClickEffect()
+    const { setClickEffect, clickEffect } = useRoomClickEffect()
 
     function changeRect(value: number, coor: 'x' | 'y'): void {
         if (!rect) { return }
@@ -63,13 +63,22 @@ export const ShapeControl = ({ shape, index, changeHotSpotOrZone, type }: Props)
                         buttonSize="small"
                         list={polygon}
                         mutateList={polygon => changeHotSpotOrZone(index, { polygon })}
-                        describeItem={([x, y], index) => (
-                            <Box display={'flex'} key={index} alignItems={'center'} gap={2}>
-                                <Avatar sx={{ bgcolor: 'black', width: 20, height: 20, fontSize: 'small' }}>{index + 1}</Avatar>
+                        describeItem={([x, y], pointIndex) => (
+                            <Box display={'flex'} key={pointIndex} alignItems={'center'} gap={2}>
+                                <Avatar sx={{ bgcolor: 'black', width: 20, height: 20, fontSize: 'small' }}>{pointIndex + 1}</Avatar>
                                 <XYControl
                                     point={{ x, y }}
-                                    index={index}
+                                    index={pointIndex}
                                     changePosition={changePolygonPoint}
+                                    handlePositionSelectButton={() => {
+                                        setClickEffect({
+                                            pointIndex,
+                                            type: 'MOVE_POLYGON_POINT',
+                                            index,
+                                            zoneType: type
+                                        })
+                                    }}
+                                    positionSelectIsActive={clickEffect?.type === 'MOVE_POLYGON_POINT' && clickEffect.pointIndex === pointIndex && clickEffect.index === index && clickEffect.zoneType === type}
                                 />
                             </Box>
                         )}

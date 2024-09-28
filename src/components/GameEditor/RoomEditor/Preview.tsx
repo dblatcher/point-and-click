@@ -51,6 +51,8 @@ function getClickCaption(clickEffect?: ClickEffect): string {
             return 'Click to set walk to point'
         case 'ZONE_POSITION':
             return `Click to move ${clickEffect.zoneType}`
+        case 'MOVE_POLYGON_POINT':
+            return `Click to move point ${clickEffect.pointIndex + 1} of ${clickEffect.zoneType}`
         default:
             return 'UNKNOWN!'
     }
@@ -104,7 +106,10 @@ export class Preview extends Component<Props, State> {
 
     get hotspotsToMark(): number[] {
         const { clickEffect } = this.props
-        if (clickEffect?.type === 'POLYGON_POINT_HOTSPOT' || (clickEffect?.type === 'ZONE_POSITION' && clickEffect.zoneType == 'hotspot')) {
+        if (!clickEffect) {
+            return []
+        }
+        if (clickEffect.type === 'POLYGON_POINT_HOTSPOT' || ('zoneType' in clickEffect && clickEffect.zoneType == 'hotspot')) {
             return [clickEffect.index]
         }
         return [];
@@ -112,7 +117,10 @@ export class Preview extends Component<Props, State> {
 
     get obstaclesToMark(): number[] {
         const { clickEffect } = this.props
-        if (clickEffect?.type === 'POLYGON_POINT_OBSTACLE' || (clickEffect?.type === 'ZONE_POSITION' && clickEffect.zoneType == 'obstacle')) {
+        if (!clickEffect) {
+            return []
+        }
+        if (clickEffect.type === 'POLYGON_POINT_OBSTACLE' || ('zoneType' in clickEffect && clickEffect.zoneType == 'obstacle')) {
             return [clickEffect.index]
         }
         return [];
@@ -120,7 +128,10 @@ export class Preview extends Component<Props, State> {
 
     get walkablesToMark(): number[] {
         const { clickEffect } = this.props
-        if (clickEffect?.type === 'POLYGON_POINT_WALKABLE' || (clickEffect?.type === 'ZONE_POSITION' && clickEffect.zoneType == 'walkable')) {
+        if (!clickEffect) {
+            return []
+        }
+        if (clickEffect?.type === 'POLYGON_POINT_WALKABLE' || ('zoneType' in clickEffect && clickEffect.zoneType == 'walkable')) {
             return [clickEffect.index]
         }
         return [];

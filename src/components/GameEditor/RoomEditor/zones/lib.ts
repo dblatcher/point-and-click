@@ -3,6 +3,7 @@ import { Point } from "physics-worlds/dist/src/geometry";
 import { ClickEffect, NewHotspotEffect } from "../ClickEffect";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { cloneData } from "@/lib/clone";
+import { Polygon } from "@/definitions/Zone";
 
 export function makeNewZone(point: Point, shape: SupportedZoneShape): Zone {
     const zone: Zone = { x: point.x, y: point.y }
@@ -60,7 +61,7 @@ const getTargetPoint = (
         y: Math.round(pointClicked.y),
     }
 
-    const isForWalkableOrObstacle = clickEffect.type === 'ZONE_POSITION'
+    const isForWalkableOrObstacle = 'zoneType' in clickEffect
         ? clickEffect.zoneType !== 'hotspot'
         : [
             'OBSTACLE', 'POLYGON_POINT_OBSTACLE', 'WALKABLE', 'POLYGON_POINT_WALKABLE', 'HOTSPOT_WALKTO_POINT'
@@ -74,6 +75,22 @@ const getTargetPoint = (
         x: roundedPoint.x - getShift(viewAngle, 1, room),
         y: room.height - roundedPoint.y
     }
+}
+
+const changePolygonPoint = (polygon: Polygon, pointIndex: number, mod: Partial<Point>) => {
+    const pointToChange = polygon?.[pointIndex]
+    if (!pointToChange) {
+        return
+    }
+    const moddedPoint: [number, number] = [pointToChange[0], pointToChange[1]]
+    if (typeof mod.x === 'number') {
+        moddedPoint[0] = mod.x as number
+    }
+    if (typeof mod.y === 'number') {
+        moddedPoint[1] = mod.y as number
+    }
+    const newPolygon = [...polygon.slice(0, pointIndex), moddedPoint, ...polygon.slice(pointIndex + 1)]
+    return newPolygon
 }
 
 export const getChangesFromClick = (
@@ -112,14 +129,16 @@ export const getChangesFromClick = (
             const obstacle = obstacleAreas[clickEffect.index]
             if (!obstacle?.polygon) { return { activeHotspotIndex, activeObstacleIndex, activeWalkableIndex } }
             obstacle.polygon.push([
-                targetPoint.x - obstacle.x, targetPoint.y - obstacle.y
+                targetPoint.x - obstacle.x,
+                targetPoint.y - obstacle.y
             ])
             break;
         case 'POLYGON_POINT_WALKABLE':
             const walkable = walkableAreas[clickEffect.index]
             if (!walkable?.polygon) { return { activeHotspotIndex, activeObstacleIndex, activeWalkableIndex } }
             walkable.polygon.push([
-                targetPoint.x - walkable.x, targetPoint.y - walkable.y
+                targetPoint.x - walkable.x,
+                targetPoint.y - walkable.y
             ])
             break;
         case 'POLYGON_POINT_HOTSPOT': {
@@ -135,6 +154,47 @@ export const getChangesFromClick = (
             console.log(hotspot, targetPoint)
             hotspot.walkToX = targetPoint.x
             hotspot.walkToY = targetPoint.y
+            break;
+        }
+        case "MOVE_POLYGON_POINT": {
+            const { zoneType, index, pointIndex } = clickEffect
+            console.log("**", targetPoint)
+            switch (zoneType) {
+                case "hotspot": {
+                    const zone = hotspots[index]
+                    const polygon = zone?.polygon
+                    if (polygon) {
+                        zone.polygon = changePolygonPoint(polygon, pointIndex, {
+                            x: targetPoint.x - zone.x,
+                            y: targetPoint.y - zone.y
+                        })
+                    }
+                    break;
+                }
+                case "obstacle": {
+                    const zone = obstacleAreas[clickEffect.index]
+                    const polygon = zone?.polygon
+                    if (polygon) {
+                        zone.polygon = changePolygonPoint(polygon, pointIndex, {
+                            x: targetPoint.x - zone.x,
+                            y: targetPoint.y - zone.y
+                        })
+                    }
+                    break;
+                }
+                case "walkable": {
+                    const zone = walkableAreas[clickEffect.index]
+                    const polygon = zone?.polygon
+                    if (polygon) {
+                        zone.polygon = changePolygonPoint(polygon, pointIndex, {
+                            x: targetPoint.x - zone.x,
+                            y: targetPoint.y - zone.y
+                        })
+                    }
+                    break;
+                }
+            }
+
             break;
         }
         case "ZONE_POSITION": {

@@ -42,6 +42,13 @@ export type ZonePosition = {
     zoneType: ZoneType;
 }
 
+export type MovePolygonPoint = {
+    type: 'MOVE_POLYGON_POINT'
+    index: number
+    zoneType: ZoneType;
+    pointIndex: number;
+}
+
 export type ClickEffect = NewObstableEffect |
     NewObstaclePolygonPointEffect |
     NewHotspotEffect |
@@ -49,7 +56,7 @@ export type ClickEffect = NewObstableEffect |
     NewWalkableEffect |
     NewWalkablePolygonPointEffect |
     HotspotWalkToPoint |
-    ZonePosition
+    ZonePosition | MovePolygonPoint
 
 export const RoomClickContext = createContext<{ clickEffect?: ClickEffect, setClickEffect: { (clickEffect?: ClickEffect): void } }>({
     clickEffect: undefined,
