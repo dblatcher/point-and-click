@@ -19,25 +19,27 @@ type Props<T extends {}> = {
     point: T;
     index?: number;
     changePosition: { (index: number, mod: Partial<T>): void }
-    handlePositionSelectButton: { (): void }
+    handlePositionSelectButton?: { (): void }
     positionSelectIsActive?: boolean;
 }
 
 
 const Frame = (props: {
-    children: ReactNode, handlePositionSelectButton: { (): void }
+    children: ReactNode, handlePositionSelectButton?: { (): void }
     positionSelectIsActive?: boolean;
 }) => {
     const { children, handlePositionSelectButton, positionSelectIsActive } = props
     return <Box component={'section'} display={'flex'} flexWrap={'wrap'} paddingTop={2} gap={4}>
-        <IconButton aria-label="select position"
-            onClick={handlePositionSelectButton}
-        >
-            {positionSelectIsActive
-                ? <ClickPointActiveIcon fontSize="large" color={'primary'} />
-                : <ClickPointIcon fontSize="large" />
-            }
-        </IconButton>
+        {!!handlePositionSelectButton && (
+            <IconButton aria-label="select position"
+                onClick={handlePositionSelectButton}
+            >
+                {positionSelectIsActive
+                    ? <ClickPointActiveIcon fontSize="large" color={'primary'} />
+                    : <ClickPointIcon fontSize="large" />
+                }
+            </IconButton>
+        )}
         {children}
     </Box>
 }
