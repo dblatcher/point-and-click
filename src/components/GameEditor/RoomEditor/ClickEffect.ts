@@ -1,30 +1,31 @@
 import { SupportedZoneShape, ZoneType } from "@/definitions"
 import { createContext, useContext } from "react";
 
-export type NewAreaEffect = {
+type NewAreaEffect = {
     type: 'ADD_NEW'
     shape: SupportedZoneShape;
     zoneType: ZoneType;
 }
 
-export type AddPolygonPointEffect = {
+type AddPolygonPointEffect = {
     type: 'ADD_POLYGON_POINT';
     zoneType: ZoneType;
     index: number;
 }
 
-export type HotspotWalkToPoint = {
+type HotspotWalkToPoint = {
     type: 'HOTSPOT_WALKTO_POINT';
     index: number;
+    zoneType?: 'hotspot',
 }
 
-export type ZonePosition = {
+type ZonePosition = {
     type: 'ZONE_POSITION'
     index: number;
     zoneType: ZoneType;
 }
 
-export type MovePolygonPoint = {
+type MovePolygonPoint = {
     type: 'MOVE_POLYGON_POINT'
     index: number
     zoneType: ZoneType;
