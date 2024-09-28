@@ -87,7 +87,8 @@ export const ShapeControl = ({ shape, index, changeHotSpotOrZone, type }: Props)
                         startIcon={<ClickPointIcon fontSize="large" />}
                         onClick={() => {
                             setClickEffect({
-                                type: type === 'hotspot' ? 'POLYGON_POINT_HOTSPOT' : 'POLYGON_POINT_OBSTACLE',
+                                type: 'ADD_POLYGON_POINT',
+                                zoneType: type,
                                 index
                             })
                         }}>add points</Button>

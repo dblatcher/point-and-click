@@ -34,12 +34,8 @@ type Props = {
 function getClickCaption(clickEffect?: ClickEffect): string {
     if (!clickEffect) return ''
     switch (clickEffect.type) {
-        case 'POLYGON_POINT_OBSTACLE':
-            return `Click to add new point`
-        case 'POLYGON_POINT_WALKABLE':
-            return `Click to add new point`
-        case 'POLYGON_POINT_HOTSPOT':
-            return `Click to add new point`
+        case 'ADD_POLYGON_POINT':
+            return `Click to add point to ${clickEffect.zoneType}`
         case 'HOTSPOT_WALKTO_POINT':
             return 'Click to set walk to point'
         case 'ZONE_POSITION':
@@ -101,10 +97,10 @@ export class Preview extends Component<Props, State> {
 
     get hotspotsToMark(): number[] {
         const { clickEffect } = this.props
-        if (!clickEffect || !('index' in clickEffect)) {
+        if (!clickEffect || !('index' in clickEffect || !('zoneType' in clickEffect))) {
             return []
         }
-        if (clickEffect.type === 'POLYGON_POINT_HOTSPOT' || ('zoneType' in clickEffect && clickEffect.zoneType == 'hotspot')) {
+        if ('zoneType' in clickEffect && clickEffect.zoneType == 'hotspot') {
             return [clickEffect.index]
         }
         return [];
@@ -112,10 +108,10 @@ export class Preview extends Component<Props, State> {
 
     get obstaclesToMark(): number[] {
         const { clickEffect } = this.props
-        if (!clickEffect || !('index' in clickEffect)) {
+        if (!clickEffect || !('index' in clickEffect || !('zoneType' in clickEffect))) {
             return []
         }
-        if (clickEffect.type === 'POLYGON_POINT_OBSTACLE' || ('zoneType' in clickEffect && clickEffect.zoneType == 'obstacle')) {
+        if ('zoneType' in clickEffect && clickEffect.zoneType == 'obstacle') {
             return [clickEffect.index]
         }
         return [];
@@ -123,10 +119,10 @@ export class Preview extends Component<Props, State> {
 
     get walkablesToMark(): number[] {
         const { clickEffect } = this.props
-        if (!clickEffect || !('index' in clickEffect)) {
+        if (!clickEffect || !('index' in clickEffect || !('zoneType' in clickEffect))) {
             return []
         }
-        if (clickEffect?.type === 'POLYGON_POINT_WALKABLE' || ('zoneType' in clickEffect && clickEffect.zoneType == 'walkable')) {
+        if ('zoneType' in clickEffect && clickEffect.zoneType == 'walkable') {
             return [clickEffect.index]
         }
         return [];

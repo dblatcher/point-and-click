@@ -7,18 +7,9 @@ export type NewAreaEffect = {
     zoneType: ZoneType;
 }
 
-export type NewObstaclePolygonPointEffect = {
-    type: 'POLYGON_POINT_OBSTACLE';
-    index: number;
-}
-
-export type NewWalkablePolygonPointEffect = {
-    type: 'POLYGON_POINT_WALKABLE';
-    index: number;
-}
-
-export type NewHotspotPolygonPointEffect = {
-    type: 'POLYGON_POINT_HOTSPOT';
+export type AddPolygonPointEffect = {
+    type: 'ADD_POLYGON_POINT';
+    zoneType: ZoneType;
     index: number;
 }
 
@@ -41,9 +32,7 @@ export type MovePolygonPoint = {
 }
 
 export type ClickEffect =
-    NewObstaclePolygonPointEffect |
-    NewHotspotPolygonPointEffect |
-    NewWalkablePolygonPointEffect |
+    AddPolygonPointEffect |
     HotspotWalkToPoint |
     ZonePosition | MovePolygonPoint | NewAreaEffect
 

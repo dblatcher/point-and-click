@@ -31,20 +31,19 @@ export const makeNewHotspot = (point: Point, shape: SupportedZoneShape, idNumber
 
 export const getNextClickEffect = (clickEffect: ClickEffect, room: RoomData): ClickEffect | undefined => {
     const { obstacleAreas = [], walkableAreas = [], hotspots = [] } = room
-    switch (clickEffect.type) {
-        case 'ADD_NEW':
-            if (clickEffect.shape === 'polygon') {
-                switch (clickEffect.zoneType) {
-                    case "hotspot":
-                        return { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1 }
-                    case "obstacle":
-                        return { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 }
-                    case "walkable":
-                        return { type: 'POLYGON_POINT_WALKABLE', index: walkableAreas.length - 1 }
-                }
-            }
-            return undefined
 
+    switch (clickEffect.type) {
+        case 'ADD_NEW': {
+            if (clickEffect.shape === 'polygon') {
+                const list =
+                    clickEffect.zoneType === 'hotspot' ? hotspots :
+                        clickEffect.zoneType === 'obstacle' ? obstacleAreas :
+                            walkableAreas
+                return { type: 'ADD_POLYGON_POINT', index: list.length - 1, zoneType: clickEffect.zoneType }
+            }
+
+            return undefined
+        }
 
         default:
             return clickEffect
@@ -71,9 +70,7 @@ const getTargetPoint = (
 
     const isForWalkableOrObstacle = 'zoneType' in clickEffect
         ? clickEffect.zoneType !== 'hotspot'
-        : [
-            'POLYGON_POINT_OBSTACLE', 'POLYGON_POINT_WALKABLE', 'HOTSPOT_WALKTO_POINT'
-        ].includes(clickEffect.type)
+        : false
 
     if (isForWalkableOrObstacle) {
         return locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngle, room)
@@ -138,29 +135,36 @@ export const getChangesFromClick = (
             }
             break;
 
-        case 'POLYGON_POINT_OBSTACLE':
-            const obstacle = obstacleAreas[clickEffect.index]
-            if (!obstacle?.polygon) { return { activeHotspotIndex, activeObstacleIndex, activeWalkableIndex } }
-            obstacle.polygon.push([
-                targetPoint.x - obstacle.x,
-                targetPoint.y - obstacle.y
-            ])
-            break;
-        case 'POLYGON_POINT_WALKABLE':
-            const walkable = walkableAreas[clickEffect.index]
-            if (!walkable?.polygon) { return { activeHotspotIndex, activeObstacleIndex, activeWalkableIndex } }
-            walkable.polygon.push([
-                targetPoint.x - walkable.x,
-                targetPoint.y - walkable.y
-            ])
-            break;
-        case 'POLYGON_POINT_HOTSPOT': {
-            const hotspot = hotspots[clickEffect.index]
-            if (!hotspot?.polygon) { return { activeHotspotIndex, activeObstacleIndex, activeWalkableIndex } }
-            hotspot.polygon.push([
-                targetPoint.x - hotspot.x, targetPoint.y - hotspot.y
-            ])
-            break;
+        case "ADD_POLYGON_POINT": {
+            switch (clickEffect.zoneType) {
+                case "hotspot": {
+                    const hotspot = hotspots[clickEffect.index]
+                    if (!hotspot?.polygon) { return { activeHotspotIndex, activeObstacleIndex, activeWalkableIndex } }
+                    hotspot.polygon.push([
+                        targetPoint.x - hotspot.x, targetPoint.y - hotspot.y
+                    ])
+                    break;
+                }
+                case "obstacle": {
+                    const obstacle = obstacleAreas[clickEffect.index]
+                    if (!obstacle?.polygon) { return { activeHotspotIndex, activeObstacleIndex, activeWalkableIndex } }
+                    obstacle.polygon.push([
+                        targetPoint.x - obstacle.x,
+                        targetPoint.y - obstacle.y
+                    ])
+                    break;
+                }
+                case "walkable": {
+                    const walkable = walkableAreas[clickEffect.index]
+                    if (!walkable?.polygon) { return { activeHotspotIndex, activeObstacleIndex, activeWalkableIndex } }
+                    walkable.polygon.push([
+                        targetPoint.x - walkable.x,
+                        targetPoint.y - walkable.y
+                    ])
+                    break;
+                }
+            }
+            break
         }
         case 'HOTSPOT_WALKTO_POINT': {
             const hotspot = hotspots[clickEffect.index]
