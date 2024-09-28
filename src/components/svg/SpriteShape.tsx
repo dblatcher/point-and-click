@@ -1,6 +1,6 @@
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { RoomData, ActorData, Direction } from "@/definitions"
-import { placeOnScreen } from "@/lib/roomFunctions";
+import { calculateScreenX } from "@/lib/roomFunctions";
 import { Sprite } from "@/lib/Sprite";
 import { HandleHoverFunction } from "../game";
 
@@ -49,7 +49,7 @@ export const SpriteShape: FunctionComponent<Props> = ({
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             style={svgStyle}
-            x={placeOnScreen(x - (widthAdjustedByScale / 2), viewAngle, roomData)}
+            x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngle, roomData)}
             y={roomData.height - y - heightAdjustedByScale} >
             <foreignObject x="0" y="0" width={widthAdjustedByScale} height={heightAdjustedByScale}>
                 <div style={divStyle} />

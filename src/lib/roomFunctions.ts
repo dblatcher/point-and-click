@@ -14,12 +14,11 @@ export function getShift(viewAngle: number, parallax: number, roomData: RoomData
     return viewAngle * shiftRange
 }
 
-export function placeOnScreen(xPosition: number, viewAngle: number, roomData: RoomData) {
+export function calculateScreenX(xPosition: number, viewAngle: number, roomData: RoomData) {
     const { width, frameWidth } = roomData
     const offCenter = 2 * (xPosition - width / 2) / width
     const shift = getShift(viewAngle, 1, roomData)
-    const result = (frameWidth / 2) + (offCenter * (width / 2)) + shift
-    return result
+    return (frameWidth / 2) + (offCenter * (width / 2)) + shift
 }
 
 export function locateClickInWorld(clickXPosition: number, clickYposition: number, viewAngle: number, roomData: RoomData) {
@@ -35,7 +34,7 @@ export function locateClickInWorld(clickXPosition: number, clickYposition: numbe
 export function getViewAngleCenteredOn(xPosition: number, roomData: RoomData) {
     const { width } = roomData
     const offCenter = 2 * (xPosition - width / 2) / width
-    return clamp( -offCenter * 2,1,-1)
+    return clamp(-offCenter * 2, 1, -1)
 }
 
 export function getTargetPoint(target: ActorData | HotspotZone, roomData: RoomData): { x: number; y: number } {

@@ -1,7 +1,7 @@
 import {  FunctionComponent } from "react"
 import { Order, RoomData, ActorData } from "@/definitions"
 import { getScale } from "@/lib/getScale"
-import { placeOnScreen } from "@/lib/roomFunctions"
+import { calculateScreenX } from "@/lib/roomFunctions"
 import { clamp } from "@/lib/util"
 
 const bubbleStyle = {
@@ -23,7 +23,7 @@ export const DialogueBubble: FunctionComponent<{
 
     const spriteScale = getScale(actorData.y, roomData.scaling)
     const y = actorData.y + (actorData.height * spriteScale)
-    const x = placeOnScreen(actorData.x, viewAngle, roomData)
+    const x = calculateScreenX(actorData.x, viewAngle, roomData)
 
     if (!orders) { return null }
 

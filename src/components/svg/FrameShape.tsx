@@ -1,5 +1,5 @@
 import { ActorData, RoomData } from "@/definitions";
-import { placeOnScreen } from "@/lib/roomFunctions";
+import { calculateScreenX } from "@/lib/roomFunctions";
 import { ImageAsset } from "@/services/assets";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { HandleHoverFunction } from "../game";
@@ -104,7 +104,7 @@ export const FrameShape: FunctionComponent<Props> = ({
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             style={svgStyle}
-            x={placeOnScreen(x - (widthAdjustedByScale / 2), viewAngle, roomData)}
+            x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngle, roomData)}
             y={roomData.height - y - heightAdjustedByScale} >
             <FrameContents {...{
                 actorData,

@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { RoomData } from "@/definitions"
-import { placeOnScreen } from "@/lib/roomFunctions";
+import { calculateScreenX } from "@/lib/roomFunctions";
 
 interface Props {
     roomData: RoomData;
@@ -20,7 +20,7 @@ export const MarkerShape: FunctionComponent<Props> = ({
 
     const textToDisplay = text || `${x.toFixed(0)},${y.toFixed(0)}`
     const displayY = roomData.height - y
-    const displayX = placeOnScreen(x, viewAngle, roomData)
+    const displayX = calculateScreenX(x, viewAngle, roomData)
 
     return (
         <svg
