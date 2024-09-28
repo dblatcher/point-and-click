@@ -1,6 +1,6 @@
 import { HotspotZone, RoomData, SupportedZoneShape, Zone } from "@/definitions";
 import { Point } from "physics-worlds/dist/src/geometry";
-import { ClickEffect, NewHotspotEffect } from "../ClickEffect";
+import { ClickEffect } from "../ClickEffect";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { cloneData } from "@/lib/clone";
 import { Polygon } from "@/definitions/Zone";
@@ -17,9 +17,9 @@ export function makeNewZone(point: Point, shape: SupportedZoneShape): Zone {
     return zone
 }
 
-export const makeNewHotspot = (point: Point, effect: NewHotspotEffect, idNumber: number): HotspotZone => {
+export const makeNewHotspot = (point: Point, shape: SupportedZoneShape, idNumber: number): HotspotZone => {
     const zone: HotspotZone = { ...point, type: 'hotspot', id: `HOTSPOT_${idNumber}`, parallax: 1 }
-    switch (effect.shape) {
+    switch (shape) {
         case 'circle': zone.circle = 20;
             break;
         case 'rect': zone.rect = [20, 20]
@@ -32,12 +32,20 @@ export const makeNewHotspot = (point: Point, effect: NewHotspotEffect, idNumber:
 export const getNextClickEffect = (clickEffect: ClickEffect, room: RoomData): ClickEffect | undefined => {
     const { obstacleAreas = [], walkableAreas = [], hotspots = [] } = room
     switch (clickEffect.type) {
-        case 'OBSTACLE':
-            return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 } : undefined
-        case 'WALKABLE':
-            return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_WALKABLE', index: walkableAreas.length - 1 } : undefined
-        case 'HOTSPOT':
-            return clickEffect.shape === 'polygon' ? { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1 } : undefined
+        case 'ADD_NEW':
+            if (clickEffect.shape === 'polygon') {
+                switch (clickEffect.zoneType) {
+                    case "hotspot":
+                        return { type: 'POLYGON_POINT_HOTSPOT', index: hotspots.length - 1 }
+                    case "obstacle":
+                        return { type: 'POLYGON_POINT_OBSTACLE', index: obstacleAreas.length - 1 }
+                    case "walkable":
+                        return { type: 'POLYGON_POINT_WALKABLE', index: walkableAreas.length - 1 }
+                }
+            }
+            return undefined
+
+
         default:
             return clickEffect
     }
@@ -64,7 +72,7 @@ const getTargetPoint = (
     const isForWalkableOrObstacle = 'zoneType' in clickEffect
         ? clickEffect.zoneType !== 'hotspot'
         : [
-            'OBSTACLE', 'POLYGON_POINT_OBSTACLE', 'WALKABLE', 'POLYGON_POINT_WALKABLE', 'HOTSPOT_WALKTO_POINT'
+            'POLYGON_POINT_OBSTACLE', 'POLYGON_POINT_WALKABLE', 'HOTSPOT_WALKTO_POINT'
         ].includes(clickEffect.type)
 
     if (isForWalkableOrObstacle) {
@@ -113,18 +121,23 @@ export const getChangesFromClick = (
     const targetPoint = getTargetPoint(pointClicked, clickEffect, viewAngle, room)
 
     switch (clickEffect.type) {
-        case 'OBSTACLE':
-            obstacleAreas.push(makeNewZone(targetPoint, clickEffect.shape))
-            activeObstacleIndex = obstacleAreas.length - 1;
+        case 'ADD_NEW':
+            switch (clickEffect.zoneType) {
+                case "hotspot":
+                    hotspots.push(makeNewHotspot(targetPoint, clickEffect.shape, hotspots.length + 1))
+                    activeHotspotIndex = hotspots.length - 1;
+                    break;
+                case "obstacle":
+                    obstacleAreas.push(makeNewZone(targetPoint, clickEffect.shape))
+                    activeObstacleIndex = obstacleAreas.length - 1;
+                    break;
+                case "walkable":
+                    walkableAreas.push(makeNewZone(targetPoint, clickEffect.shape))
+                    activeWalkableIndex = walkableAreas.length - 1;
+                    break;
+            }
             break;
-        case 'WALKABLE':
-            walkableAreas.push(makeNewZone(targetPoint, clickEffect.shape))
-            activeWalkableIndex = walkableAreas.length - 1;
-            break;
-        case 'HOTSPOT':
-            hotspots.push(makeNewHotspot(targetPoint, clickEffect, hotspots.length + 1))
-            activeHotspotIndex = hotspots.length - 1;
-            break;
+
         case 'POLYGON_POINT_OBSTACLE':
             const obstacle = obstacleAreas[clickEffect.index]
             if (!obstacle?.polygon) { return { activeHotspotIndex, activeObstacleIndex, activeWalkableIndex } }

@@ -1,19 +1,10 @@
 import { SupportedZoneShape, ZoneType } from "@/definitions"
 import { createContext, useContext } from "react";
 
-export type NewObstableEffect = {
-    type: 'OBSTACLE';
+export type NewAreaEffect = {
+    type: 'ADD_NEW'
     shape: SupportedZoneShape;
-}
-
-export type NewWalkableEffect = {
-    type: 'WALKABLE';
-    shape: SupportedZoneShape;
-}
-
-export type NewHotspotEffect = {
-    type: 'HOTSPOT';
-    shape: SupportedZoneShape;
+    zoneType: ZoneType;
 }
 
 export type NewObstaclePolygonPointEffect = {
@@ -49,14 +40,12 @@ export type MovePolygonPoint = {
     pointIndex: number;
 }
 
-export type ClickEffect = NewObstableEffect |
+export type ClickEffect =
     NewObstaclePolygonPointEffect |
-    NewHotspotEffect |
     NewHotspotPolygonPointEffect |
-    NewWalkableEffect |
     NewWalkablePolygonPointEffect |
     HotspotWalkToPoint |
-    ZonePosition | MovePolygonPoint
+    ZonePosition | MovePolygonPoint | NewAreaEffect
 
 export const RoomClickContext = createContext<{ clickEffect?: ClickEffect, setClickEffect: { (clickEffect?: ClickEffect): void } }>({
     clickEffect: undefined,

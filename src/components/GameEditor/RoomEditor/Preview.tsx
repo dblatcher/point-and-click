@@ -5,11 +5,10 @@ import { Room } from "@/components/svg/Room";
 import { ActorData, HotspotZone, RoomData } from "@/definitions";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { eventToBoolean } from "@/lib/util";
-import { Box, Checkbox, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Checkbox, Divider, Grid, Stack, Typography } from "@mui/material";
 import { ChangeEventHandler, Component } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { ViewAngleSlider } from "./ViewAngleSlider";
-import { PolygonPins } from "@/components/svg/PolygonPins";
 
 type BooleanState = {
     showObstacleAreas: boolean;
@@ -35,16 +34,10 @@ type Props = {
 function getClickCaption(clickEffect?: ClickEffect): string {
     if (!clickEffect) return ''
     switch (clickEffect.type) {
-        case 'OBSTACLE':
-            return `Click to add new ${clickEffect.shape} obstable`
         case 'POLYGON_POINT_OBSTACLE':
             return `Click to add new point`
-        case 'WALKABLE':
-            return `Click to add new ${clickEffect.shape} walkable`
         case 'POLYGON_POINT_WALKABLE':
             return `Click to add new point`
-        case 'HOTSPOT':
-            return `Click to add new ${clickEffect.shape} hotspot`
         case 'POLYGON_POINT_HOTSPOT':
             return `Click to add new point`
         case 'HOTSPOT_WALKTO_POINT':
@@ -53,6 +46,8 @@ function getClickCaption(clickEffect?: ClickEffect): string {
             return `Click to move ${clickEffect.zoneType}`
         case 'MOVE_POLYGON_POINT':
             return `Click to move point ${clickEffect.pointIndex + 1} of ${clickEffect.zoneType}`
+        case 'ADD_NEW':
+            return `Click to add new ${clickEffect.shape} shaped ${clickEffect}`
         default:
             return 'UNKNOWN!'
     }
