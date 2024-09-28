@@ -101,7 +101,7 @@ export class Preview extends Component<Props, State> {
 
     get hotspotsToMark(): number[] {
         const { clickEffect } = this.props
-        if (!clickEffect) {
+        if (!clickEffect || !('index' in clickEffect)) {
             return []
         }
         if (clickEffect.type === 'POLYGON_POINT_HOTSPOT' || ('zoneType' in clickEffect && clickEffect.zoneType == 'hotspot')) {
@@ -112,7 +112,7 @@ export class Preview extends Component<Props, State> {
 
     get obstaclesToMark(): number[] {
         const { clickEffect } = this.props
-        if (!clickEffect) {
+        if (!clickEffect || !('index' in clickEffect)) {
             return []
         }
         if (clickEffect.type === 'POLYGON_POINT_OBSTACLE' || ('zoneType' in clickEffect && clickEffect.zoneType == 'obstacle')) {
@@ -123,7 +123,7 @@ export class Preview extends Component<Props, State> {
 
     get walkablesToMark(): number[] {
         const { clickEffect } = this.props
-        if (!clickEffect) {
+        if (!clickEffect || !('index' in clickEffect)) {
             return []
         }
         if (clickEffect?.type === 'POLYGON_POINT_WALKABLE' || ('zoneType' in clickEffect && clickEffect.zoneType == 'walkable')) {
