@@ -3,7 +3,7 @@ import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { HotspotZone, Point, Shape, Zone, ZoneType } from "@/definitions";
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { ArrayControl } from "../../ArrayControl";
-import { ClickPointIcon } from "../../material-icons";
+import { ClickPointIcon, ClickPointActiveIcon } from "../../material-icons";
 import { useRoomClickEffect } from "../ClickEffect";
 import { XYControl } from "./XYControl";
 
@@ -42,6 +42,11 @@ export const ShapeControl = ({ shape, index, changeHotSpotOrZone, type }: Props)
         const newPolygon = [...polygon.slice(0, pointIndex), moddedPoint, ...polygon.slice(pointIndex + 1)]
         changeHotSpotOrZone(index, { polygon: newPolygon })
     }
+
+    const polygonPointButtonIsActive =
+        clickEffect?.type === 'ADD_POLYGON_POINT' &&
+        clickEffect?.zoneType === type &&
+        clickEffect.index === index;
 
     return (
         <>
@@ -83,8 +88,8 @@ export const ShapeControl = ({ shape, index, changeHotSpotOrZone, type }: Props)
                             </Box>
                         )}
                     />
-                    <Button variant="outlined" size="small"
-                        startIcon={<ClickPointIcon fontSize="large" />}
+                    <Button variant={polygonPointButtonIsActive ? 'contained' : "outlined"} size="small"
+                        startIcon={polygonPointButtonIsActive ? <ClickPointActiveIcon /> : <ClickPointIcon />}
                         onClick={() => {
                             setClickEffect({
                                 type: 'ADD_POLYGON_POINT',
