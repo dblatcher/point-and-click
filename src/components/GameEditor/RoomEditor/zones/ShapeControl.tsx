@@ -51,19 +51,31 @@ export const ShapeControl = ({ shape, index, changeHotSpotOrZone, type }: Props)
     return (
         <>
             {circle && (
-                <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
-                    <NumberInput label="Radius" value={circle} inputHandler={circle => { changeHotSpotOrZone(index, { circle }) }} />
+                <Stack flexDirection={'row'} spacing={2} gap={2} alignItems={'flex-end'}>
+                    <Typography variant='overline'>Circle: </Typography>
+                    <Box maxWidth={60}>
+                        <NumberInput label="Radius" value={circle} inputHandler={circle => { changeHotSpotOrZone(index, { circle }) }} />
+                    </Box>
                 </Stack>
             )}
             {rect && (
-                <Stack flexDirection={'row'} spacing={2} alignItems={'flex-end'}>
-                    <NumberInput label="width" value={rect[0]} inputHandler={value => { changeRect(value, 'x') }} />
-                    <NumberInput label="height" value={rect[1]} inputHandler={value => { changeRect(value, 'y') }} />
+                <Stack flexDirection={'row'} spacing={2} gap={2} alignItems={'flex-end'}>
+                    <Typography variant='overline'>Rectangle: </Typography>
+                    <Box maxWidth={60}>
+                        <NumberInput label="width"
+                            value={rect[0]}
+                            inputHandler={value => { changeRect(value, 'x') }} />
+                    </Box>
+                    <Box maxWidth={60}>
+                        <NumberInput label="height"
+                            value={rect[1]}
+                            inputHandler={value => { changeRect(value, 'y') }} />
+                    </Box>
                 </Stack>
             )}
             {polygon && (
                 <Box>
-                    <Typography variant='overline'>points: </Typography>
+                    <Typography variant='overline'>polygon: </Typography>
                     <ArrayControl horizontalMoveButtons
                         buttonSize="small"
                         list={polygon}
