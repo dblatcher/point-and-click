@@ -5,6 +5,7 @@ type NewAreaEffect = {
     type: 'ADD_NEW'
     shape: SupportedZoneShape;
     zoneType: ZoneType;
+    index?: undefined;
 }
 
 type AddPolygonPointEffect = {
@@ -16,7 +17,7 @@ type AddPolygonPointEffect = {
 type HotspotWalkToPoint = {
     type: 'HOTSPOT_WALKTO_POINT';
     index: number;
-    zoneType?: 'hotspot',
+    zoneType?: undefined,
 }
 
 type ZonePosition = {

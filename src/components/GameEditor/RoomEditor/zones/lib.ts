@@ -61,23 +61,19 @@ const getTargetPoint = (
     pointClicked: { x: number; y: number },
     clickEffect: ClickEffect,
     viewAngle: number,
-    room: RoomData
+    room: RoomData,
+    parallax: number,
 ): { x: number; y: number } => {
     const roundedPoint = {
         x: Math.round(pointClicked.x),
         y: Math.round(pointClicked.y),
     }
-
-    const isForWalkableOrObstacle = 'zoneType' in clickEffect
-        ? clickEffect.zoneType !== 'hotspot'
-        : false
-
+    const isForWalkableOrObstacle = clickEffect.type === 'HOTSPOT_WALKTO_POINT' ? true : clickEffect.zoneType !== 'hotspot'
     if (isForWalkableOrObstacle) {
         return locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngle, room)
     }
-
     return {
-        x: roundedPoint.x - getShift(viewAngle, 1, room),
+        x: roundedPoint.x - getShift(viewAngle, parallax, room),
         y: room.height - roundedPoint.y
     }
 }
@@ -121,7 +117,20 @@ export const getChangesFromClick = (
         }
     }
     const listOfZones = getZoneList()
-    const targetPoint = getTargetPoint(pointClicked, clickEffect, viewAngle, room)
+
+    const getParallax = () => {
+        if (clickEffect.zoneType === 'hotspot') {
+            if (typeof clickEffect.index === 'number') {
+                const zone = hotspots[clickEffect.index]
+                if (zone) {
+                    return zone.parallax
+                }
+            }
+        }
+        return 1
+    }
+
+    const targetPoint = getTargetPoint(pointClicked, clickEffect, viewAngle, room, getParallax())
 
     switch (clickEffect.type) {
         case 'ADD_NEW':
