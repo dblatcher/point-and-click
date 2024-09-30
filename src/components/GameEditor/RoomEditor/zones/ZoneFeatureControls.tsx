@@ -163,7 +163,7 @@ export const ZoneFeaturesControl = ({
                             actors={gameDesign.actors}
                             roomData={room}
                             clickEffect={clickEffect}
-                            activeHotspotIndex={activeHotspotIndex}
+                            activeHotspotIndex={zoneType === 'hotspot' ? activeHotspotIndex : undefined}
                             handleRoomClick={handleRoomClick} />
                     </div>
                 </Grid>

@@ -176,13 +176,14 @@ export class Preview extends Component<Props, State> {
                             maxWidth={maxWidth}
                             maxHeight={Math.min(roomData.height * 2, 600)}
                             viewAngle={viewAngle}
-                            highlightHotspots={highlightHotspots}
+                            contents={contents}
                             handleRoomClick={processClick}
+
+                            highlightHotspots={highlightHotspots}
                             markHotspotVertices={this.hotspotsToMark}
                             markObstacleVertices={this.obstaclesToMark}
                             flashHotspot={activeHotspotIndex}
                             markWalkableVertices={this.walkablesToMark}
-                            contents={contents}
                         >
                             {showScaleLines && scaling.map((yAndScale, index) => (
                                 <HorizontalLine key={index}

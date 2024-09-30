@@ -3,6 +3,8 @@ import { polygonToPathD } from "@/lib/polygonToPathD";
 import { Zone, HotspotZone } from "@/definitions"
 import { HandleHoverFunction } from "../game";
 import { PolygonPins } from "./PolygonPins";
+import { CirclePins } from "./CirclePins";
+import { RectanglePins } from "./RectanglePins";
 
 interface Props {
     zone: Zone;
@@ -50,14 +52,20 @@ const ZoneSvg: FunctionComponent<Props> = ({
                     d={path} />
             }
             {circle &&
-                <circle className={className}
-                    onClick={processClick}
-                    cx={0} cy={0} r={circle} />
+                <>
+                    <circle className={className}
+                        onClick={processClick}
+                        cx={0} cy={0} r={circle} />
+                    {markVertices && <CirclePins radius={circle} />}
+                </>
             }
             {rect &&
-                <rect className={className}
-                    onClick={processClick}
-                    x={0} y={0} width={rect[0]} height={rect[1]} />
+                <>
+                    <rect className={className}
+                        onClick={processClick}
+                        x={0} y={0} width={rect[0]} height={rect[1]} />
+                    {markVertices && <RectanglePins width={rect[0]} height={rect[1]} />}
+                </>
             }
         </svg>
     )
