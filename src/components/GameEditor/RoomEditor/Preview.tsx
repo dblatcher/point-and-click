@@ -2,7 +2,7 @@ import { ResizeWatcher } from "@/components/ResizeWatcher";
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
-import { ActorData, HotspotZone, RoomData } from "@/definitions";
+import { ActorData, HotspotZone, RoomData, ZoneType } from "@/definitions";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { eventToBoolean } from "@/lib/util";
 import { Box, Checkbox, Divider, Grid, Stack, Typography } from "@mui/material";
@@ -27,7 +27,8 @@ type Props = {
     actors: ActorData[];
     clickEffect?: ClickEffect;
     handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number, clickEffect: ClickEffect): void };
-    activeHotspotIndex?: number;
+    activeZoneIndex?: number;
+    zoneType: ZoneType
 }
 
 
@@ -79,7 +80,7 @@ export class Preview extends Component<Props, State> {
     }
 
     get hotspotToHaveMarkWalkToPoint(): HotspotZone | undefined {
-        const { activeHotspotIndex, roomData } = this.props
+        const { activeZoneIndex: activeHotspotIndex, roomData } = this.props
         const { highlightHotspots } = this.state
         if (typeof activeHotspotIndex === 'undefined' || !highlightHotspots) { return undefined }
         const activeHotspot = roomData.hotspots ? roomData.hotspots[activeHotspotIndex] : undefined
@@ -96,36 +97,27 @@ export class Preview extends Component<Props, State> {
     }
 
     get hotspotsToMark(): number[] {
-        const { clickEffect } = this.props
-        if (!clickEffect || !('index' in clickEffect || !('zoneType' in clickEffect))) {
-            return []
+        const { activeZoneIndex, zoneType } = this.props
+        if (zoneType === 'hotspot' && typeof activeZoneIndex === 'number') {
+            return [activeZoneIndex]
         }
-        if ('zoneType' in clickEffect && clickEffect.zoneType == 'hotspot') {
-            return [clickEffect.index]
-        }
-        return [];
+        return []
     }
 
     get obstaclesToMark(): number[] {
-        const { clickEffect } = this.props
-        if (!clickEffect || !('index' in clickEffect || !('zoneType' in clickEffect))) {
-            return []
+        const { activeZoneIndex, zoneType } = this.props
+        if (zoneType === 'obstacle' && typeof activeZoneIndex === 'number') {
+            return [activeZoneIndex]
         }
-        if ('zoneType' in clickEffect && clickEffect.zoneType == 'obstacle') {
-            return [clickEffect.index]
-        }
-        return [];
+        return []
     }
 
     get walkablesToMark(): number[] {
-        const { clickEffect } = this.props
-        if (!clickEffect || !('index' in clickEffect || !('zoneType' in clickEffect))) {
-            return []
+        const { activeZoneIndex, zoneType } = this.props
+        if (zoneType === 'walkable' && typeof activeZoneIndex === 'number') {
+            return [activeZoneIndex]
         }
-        if ('zoneType' in clickEffect && clickEffect.zoneType == 'walkable') {
-            return [clickEffect.index]
-        }
-        return [];
+        return []
     }
 
     render() {
@@ -133,7 +125,7 @@ export class Preview extends Component<Props, State> {
             viewAngle, maxWidth, showObstacleAreas, highlightHotspots,
             showRealActors, showScaleLines,
         } = this.state
-        const { roomData, handleRoomClick, clickEffect, actors, activeHotspotIndex } = this.props
+        const { roomData, handleRoomClick, clickEffect, actors, activeZoneIndex } = this.props
         const { scaling = [] } = roomData
 
         const processClick = (x: number, y: number) => {
@@ -182,7 +174,7 @@ export class Preview extends Component<Props, State> {
                             highlightHotspots={highlightHotspots}
                             markHotspotVertices={this.hotspotsToMark}
                             markObstacleVertices={this.obstaclesToMark}
-                            flashHotspot={activeHotspotIndex}
+                            // flashHotspot={activeZoneIndex}
                             markWalkableVertices={this.walkablesToMark}
                         >
                             {showScaleLines && scaling.map((yAndScale, index) => (

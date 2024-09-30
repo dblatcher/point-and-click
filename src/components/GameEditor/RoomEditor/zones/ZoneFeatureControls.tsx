@@ -118,6 +118,8 @@ export const ZoneFeaturesControl = ({
                 return activeObstacleIndex
             case "walkable":
                 return activeWalkableIndex
+            case "hotspot":
+                return activeHotspotIndex
         }
     }
 
@@ -163,8 +165,9 @@ export const ZoneFeaturesControl = ({
                             actors={gameDesign.actors}
                             roomData={room}
                             clickEffect={clickEffect}
-                            activeHotspotIndex={zoneType === 'hotspot' ? activeHotspotIndex : undefined}
-                            handleRoomClick={handleRoomClick} />
+                            activeZoneIndex={getActiveZoneIndex()}
+                            handleRoomClick={handleRoomClick}
+                            zoneType={zoneType} />
                     </div>
                 </Grid>
             </Grid>
