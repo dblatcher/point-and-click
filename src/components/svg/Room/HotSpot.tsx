@@ -3,7 +3,7 @@ import { HotspotZone, RoomData } from "@/definitions";
 import { getShift } from "@/lib/roomFunctions";
 import { FunctionComponent } from "react";
 import { HandleHoverFunction } from "../../game";
-import styles from './styles.module.css';
+import { hotpotClassNames } from "./zoneCssClasses";
 
 interface Props {
     zone: HotspotZone;
@@ -21,13 +21,11 @@ const Hotspot: FunctionComponent<Props> = ({
     zone: hotspot, roomData, viewAngle, highlight, markVertices, stopPropogation = true,
     clickHandler, handleHover, flash = false,
 }: Props) => {
-    const { parallax, x, y, polygon } = hotspot
-    const classNames = highlight ? [styles.highlightedHotspot] : [styles.hotspot]
-    if (flash) { classNames.push(styles.flash) }
+    const { parallax, x, y } = hotspot
     return (
         <>
             <ZoneSvg
-                className={classNames.join(" ")}
+                className={hotpotClassNames({ highlight, flash })}
                 x={x + getShift(viewAngle, parallax, roomData)}
                 y={roomData.height - y}
                 clickHandler={clickHandler}

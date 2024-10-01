@@ -62,7 +62,7 @@ export const ConsequenceFormRoom: React.FunctionComponent<Props> = ({ consequenc
                 previewWidth={300}
                 obstacleRefToFocus={consequence.zoneType === 'obstacle' ? consequence.ref : undefined}
                 walkableRefToFocus={consequence.zoneType === 'walkable' ? consequence.ref : undefined}
-                flashHotspot={consequence.zoneType === 'hotspot' ? roomData.hotspots?.findIndex(h => h.id === consequence.ref) : undefined}
+                hotspotIdToFocus={consequence.zoneType === 'hotspot' ? consequence.ref : undefined}
             />
         default:
             return null
