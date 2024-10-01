@@ -32,8 +32,6 @@ interface Props {
     children?: ReactNode;
     forPreview?: boolean;
     fontFamily?: string;
-    obstacleRefToFocus?: string;
-    walkableRefToFocus?: string;
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -56,8 +54,6 @@ export const Room: FunctionComponent<Props> = ({
     contents = [],
     forPreview = false,
     fontFamily,
-    obstacleRefToFocus,
-    walkableRefToFocus,
     children,
 }: Props) => {
     const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], } = data;
@@ -79,8 +75,6 @@ export const Room: FunctionComponent<Props> = ({
         backgroundColor: data.backgroundColor,
     }
 
-    const obstacleInFocus = obstacleRefToFocus ? obstacleAreas.find(z => z.ref === obstacleRefToFocus) : undefined
-    const walkableInFocus = walkableRefToFocus ? walkableAreas.find(z => z.ref === walkableRefToFocus) : undefined
     const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
     const left = center - data.width / 2
 
@@ -90,7 +84,6 @@ export const Room: FunctionComponent<Props> = ({
             style={figureInlineStyle}
             onClick={processRoomClick}
         >
-
             <svg xmlns="http://www.w3.org/2000/svg"
                 className={styles.roomSvg}
                 viewBox={`0 0 ${frameWidth} ${height}`}>
@@ -128,25 +121,6 @@ export const Room: FunctionComponent<Props> = ({
                         markVertices={markObstacleVertices.includes(index)}
                     />
                 })}
-
-                {obstacleInFocus && (
-                    <ZoneSvg
-                        className={[styles.obstacleArea, styles.blink].join(" ")}
-                        stopPropagation={false}
-                        zone={obstacleInFocus}
-                        x={obstacleInFocus.x + left}
-                        y={data.height - obstacleInFocus.y}
-                    />
-                )}
-                {walkableInFocus && (
-                    <ZoneSvg
-                        className={[styles.walkableArea, styles.blink].join(" ")}
-                        stopPropagation={false}
-                        zone={walkableInFocus}
-                        x={walkableInFocus.x + left}
-                        y={data.height - walkableInFocus.y}
-                    />
-                )}
 
                 {obstacleCells &&
                     <ObstacleCellOverlay roomData={data} viewAngle={viewAngle} cellMatrix={obstacleCells} />

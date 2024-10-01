@@ -2,10 +2,13 @@ import { RoomContentItem } from "@/components/game";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { Point, RoomData } from "@/definitions";
-import { locateClickInWorld } from "@/lib/roomFunctions";
+import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { ViewAngleSlider } from "./RoomEditor/ViewAngleSlider";
+import ZoneSvg from "../svg/ZoneSvg";
+
+import styles from "../svg/Room/styles.module.css"
 
 
 interface Props {
@@ -32,6 +35,12 @@ export const RoomLocationPicker = ({
     const [viewAngleState, setViewAngleState] = useState(0)
     const viewAngle = typeof viewAngleProp === 'number' ? viewAngleProp : viewAngleState;
 
+    const obstacleInFocus = obstacleRefToFocus ? roomData.obstacleAreas?.find(z => z.ref === obstacleRefToFocus) : undefined
+    const walkableInFocus = walkableRefToFocus ? roomData.walkableAreas?.find(z => z.ref === walkableRefToFocus) : undefined
+
+    const center = (roomData.frameWidth / 2) + getShift(viewAngle, 1, roomData)
+    const left = center - roomData.width / 2
+
     return <Box
         sx={{
             cursor: onClick ? 'crosshair' : 'default',
@@ -52,8 +61,6 @@ export const RoomLocationPicker = ({
             maxWidth={previewWidth}
             maxHeight={previewHeight}
             forPreview={true}
-            obstacleRefToFocus={obstacleRefToFocus}
-            walkableRefToFocus={walkableRefToFocus}
             flashHotspot={flashHotspot}
         >
             {targetPoint && (
@@ -64,6 +71,27 @@ export const RoomLocationPicker = ({
                     {...targetPoint}
                 />
             )}
+
+            {obstacleInFocus && (
+                <ZoneSvg
+                    className={[styles.obstacleArea, styles.blink].join(" ")}
+                    stopPropagation={false}
+                    zone={obstacleInFocus}
+                    x={obstacleInFocus.x + left}
+                    y={roomData.height - obstacleInFocus.y}
+                />
+            )}
+            {walkableInFocus && (
+                <ZoneSvg
+                    className={[styles.obstacleArea, styles.blink].join(" ")}
+                    stopPropagation={false}
+                    zone={walkableInFocus}
+                    x={walkableInFocus.x + left}
+                    y={roomData.height - walkableInFocus.y}
+                />
+            )}
+
+
         </Room>
         {typeof viewAngleProp === 'undefined' && (
             <ViewAngleSlider viewAngle={viewAngleState} setViewAngle={setViewAngleState} />
