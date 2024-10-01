@@ -10,6 +10,7 @@ import BackgroundShape from "./BackgroundShape";
 import Hotspot from "./HotSpot";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import styles from './styles.module.css';
+import { obstableClassNames, walkableClassNames } from "./zoneCssClasses";
 
 interface Props {
     data: RoomData;
@@ -70,7 +71,6 @@ export const Room: FunctionComponent<Props> = ({
     const figureInlineStyle: CSSProperties = {
         width: `${frameWidth * scale}px`,
         height: `${height * scale}px`,
-        position: 'relative',
         margin: forPreview ? 0 : undefined,
         backgroundColor: data.backgroundColor,
     }
@@ -99,9 +99,8 @@ export const Room: FunctionComponent<Props> = ({
                     )}
 
                 {showObstacleAreas && walkableAreas.map((zone, index) => {
-                    const classes = zone.disabled ? [styles.walkableArea, styles.disabledZone].join(" ") : styles.walkableArea;
                     return <ZoneSvg key={index}
-                        className={classes}
+                        className={walkableClassNames({ disabled: zone.disabled })}
                         stopPropagation={false}
                         zone={zone}
                         x={zone.x + left}
@@ -111,9 +110,8 @@ export const Room: FunctionComponent<Props> = ({
                 })}
 
                 {showObstacleAreas && obstacleAreas.map((zone, index) => {
-                    const classes = zone.disabled ? [styles.obstacleArea, styles.disabledZone].join(" ") : styles.obstacleArea;
                     return <ZoneSvg key={index}
-                        className={classes}
+                        className={obstableClassNames({ disabled: zone.disabled })}
                         stopPropagation={false}
                         zone={zone}
                         x={zone.x + left}

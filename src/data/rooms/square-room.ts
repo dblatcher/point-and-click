@@ -16,13 +16,14 @@ export const SQUARE_ROOM: RoomData = {
 
   ],
   obstacleAreas: [
-    { x: 285, y: 100, circle: 20, },
-    { x: 315, y: 100, circle: 20, },
+    { x: 285, y: 100, circle: 20, ref: 'ob-1' },
+    { x: 315, y: 100, circle: 20, ref: 'ob-2' },
     { x: 340, y: 100, circle: 20, },
   ],
 
   walkableAreas: [
-    {x: 1,y: 8,
+    {
+      x: 1, y: 8,
       polygon: [
         [0, 0],
         [130, 170],

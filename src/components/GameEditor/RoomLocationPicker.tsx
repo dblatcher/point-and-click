@@ -7,9 +7,8 @@ import { Box } from "@mui/material";
 import { useState } from "react";
 import { ViewAngleSlider } from "./RoomEditor/ViewAngleSlider";
 import ZoneSvg from "../svg/ZoneSvg";
-
-import styles from "../svg/Room/styles.module.css"
 import Hotspot from "../svg/Room/HotSpot";
+import { obstableClassNames, walkableClassNames } from "../svg/Room/zoneCssClasses";
 
 
 interface Props {
@@ -74,7 +73,7 @@ export const RoomLocationPicker = ({
 
             {obstacleInFocus && (
                 <ZoneSvg
-                    className={[styles.obstacleArea, styles.blink].join(" ")}
+                    className={obstableClassNames({ blink: true })}
                     stopPropagation={false}
                     zone={obstacleInFocus}
                     x={obstacleInFocus.x + left}
@@ -83,7 +82,7 @@ export const RoomLocationPicker = ({
             )}
             {walkableInFocus && (
                 <ZoneSvg
-                    className={[styles.obstacleArea, styles.blink].join(" ")}
+                    className={walkableClassNames({ blink: true })}
                     stopPropagation={false}
                     zone={walkableInFocus}
                     x={walkableInFocus.x + left}
