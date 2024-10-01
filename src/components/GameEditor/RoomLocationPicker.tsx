@@ -9,6 +9,7 @@ import { ViewAngleSlider } from "./RoomEditor/ViewAngleSlider";
 import ZoneSvg from "../svg/ZoneSvg";
 
 import styles from "../svg/Room/styles.module.css"
+import Hotspot from "../svg/Room/HotSpot";
 
 
 interface Props {
@@ -22,14 +23,13 @@ interface Props {
     showObstacleAreas?: boolean
     obstacleRefToFocus?: string
     walkableRefToFocus?: string
-    flashHotspot?: number
+    hotspotIdToFocus?: string
 }
 
 export const RoomLocationPicker = ({
     roomData, contents = [], targetPoint,
     viewAngle: viewAngleProp, previewWidth = 600, previewHeight = previewWidth,
-    onClick, showObstacleAreas, obstacleRefToFocus, walkableRefToFocus,
-    flashHotspot
+    onClick, showObstacleAreas, obstacleRefToFocus, walkableRefToFocus, hotspotIdToFocus,
 }: Props) => {
 
     const [viewAngleState, setViewAngleState] = useState(0)
@@ -37,6 +37,7 @@ export const RoomLocationPicker = ({
 
     const obstacleInFocus = obstacleRefToFocus ? roomData.obstacleAreas?.find(z => z.ref === obstacleRefToFocus) : undefined
     const walkableInFocus = walkableRefToFocus ? roomData.walkableAreas?.find(z => z.ref === walkableRefToFocus) : undefined
+    const hotspotInFocus = hotspotIdToFocus ? roomData.hotspots?.find(z => z.id === hotspotIdToFocus) : undefined
 
     const center = (roomData.frameWidth / 2) + getShift(viewAngle, 1, roomData)
     const left = center - roomData.width / 2
@@ -61,7 +62,6 @@ export const RoomLocationPicker = ({
             maxWidth={previewWidth}
             maxHeight={previewHeight}
             forPreview={true}
-            flashHotspot={flashHotspot}
         >
             {targetPoint && (
                 <MarkerShape
@@ -90,8 +90,14 @@ export const RoomLocationPicker = ({
                     y={roomData.height - walkableInFocus.y}
                 />
             )}
-
-
+            {hotspotInFocus && (
+                <Hotspot
+                    zone={hotspotInFocus}
+                    viewAngle={viewAngle}
+                    roomData={roomData}
+                    flash={true}
+                />
+            )}
         </Room>
         {typeof viewAngleProp === 'undefined' && (
             <ViewAngleSlider viewAngle={viewAngleState} setViewAngle={setViewAngleState} />
