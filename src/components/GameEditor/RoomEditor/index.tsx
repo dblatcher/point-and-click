@@ -1,4 +1,4 @@
-import { RoomData } from "@/definitions";
+import { RoomData, ZoneType } from "@/definitions";
 import { Stack, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import { EditorHeading } from "../EditorHeading";
@@ -26,10 +26,26 @@ enum RoomEditorTab {
     Hotspots,
 }
 
+const tabToZoneType = (tab: RoomEditorTab): ZoneType | undefined => {
+    switch (tab) {
+        case RoomEditorTab.NameAndDescription:
+        case RoomEditorTab.BackgroundAndDimension:
+        case RoomEditorTab.SpriteScaling:
+            return undefined
+        case RoomEditorTab.WalkableAreas:
+            return 'walkable'
+        case RoomEditorTab.Obstacles:
+            return 'obstacle'
+        case RoomEditorTab.Hotspots:
+            return 'hotspot'
+    }
+}
+
 export const RoomEditor = ({ data }: RoomEditorProps) => {
 
     const [tabOpen, setTabOpen] = useState(RoomEditorTab.BackgroundAndDimension)
     const { id } = data
+    const zoneType = tabToZoneType(tabOpen)
 
     return <Stack component={'article'} spacing={1} height={'100%'}>
         <EditorHeading heading="Room Editor" helpTopic="rooms" itemId={id} >
@@ -51,6 +67,7 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
             <Tab label="Hotspots" value={RoomEditorTab.Hotspots} />
             <Tab label="Scaling" value={RoomEditorTab.SpriteScaling} />
         </Tabs>
+
         {tabOpen === RoomEditorTab.NameAndDescription && <RoomDescriptionControl room={data} />}
         {tabOpen === RoomEditorTab.BackgroundAndDimension && (
             <>
@@ -58,22 +75,11 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
                 <BackgroundControl room={data} />
             </>
         )}
-
-        {tabOpen === RoomEditorTab.WalkableAreas && (
-            <ZoneFeaturesControl room={data} zoneType="walkable" />
+        {zoneType && (
+            <ZoneFeaturesControl room={data} zoneType={zoneType} />
         )}
-
-        {tabOpen === RoomEditorTab.Obstacles && (
-            <ZoneFeaturesControl room={data} zoneType='obstacle' />
-        )}
-
         {tabOpen === RoomEditorTab.SpriteScaling && (
             <ScalingControl room={data} />
         )}
-
-        {tabOpen === RoomEditorTab.Hotspots && (
-            <ZoneFeaturesControl room={data} zoneType="hotspot" />
-        )}
-
     </Stack>
 }
