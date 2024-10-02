@@ -170,11 +170,9 @@ export class Preview extends Component<Props, State> {
                             viewAngle={viewAngle}
                             contents={contents}
                             handleRoomClick={processClick}
-
                             highlightHotspots={highlightHotspots}
                             markHotspotVertices={this.hotspotsToMark}
                             markObstacleVertices={this.obstaclesToMark}
-                            // flashHotspot={activeZoneIndex}
                             markWalkableVertices={this.walkablesToMark}
                         >
                             {showScaleLines && scaling.map((yAndScale, index) => (
