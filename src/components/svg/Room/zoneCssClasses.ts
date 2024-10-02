@@ -1,24 +1,20 @@
 import styles from './styles.module.css';
 
-
-interface HotSpotOptions {
-    highlight?: boolean,
-    flash?: boolean,
-}
-
-export const hotpotClassNames = (options: HotSpotOptions = {}) => {
-    const { highlight, flash } = options
-    const classNames: string[] = []
-    classNames.push(highlight ? styles.highlightedHotspot : styles.hotspot)
-
-    if (flash) { classNames.push(styles.flash) }
-    return classNames.join(" ")
-}
-
 interface ZoneOptions {
     disabled?: boolean,
     flash?: boolean,
     blink?: boolean,
+}
+
+type HotSpotOptions = ZoneOptions & {
+    highlight?: boolean,
+    markVertices?: boolean
+}
+
+export const hotpotClassNames = (options: HotSpotOptions = {}) => {
+    const { highlight, markVertices } = options
+    const baseClass = markVertices || highlight ? styles.highlightedHotspot : styles.hotspot
+    return zoneClassNames(baseClass, options)
 }
 
 const zoneClassNames = (base: string, options: ZoneOptions = {}) => {
@@ -32,7 +28,6 @@ const zoneClassNames = (base: string, options: ZoneOptions = {}) => {
 
 export const walkableClassNames = (options: ZoneOptions = {}) => {
     return zoneClassNames(styles.walkableArea, options)
-
 }
 
 export const obstableClassNames = (options: ZoneOptions = {}) => {

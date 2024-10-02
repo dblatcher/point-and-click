@@ -46,7 +46,7 @@ export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, max
     const maxWidth = maxHeight ? roomData.width : 100 * scale
     return (
         <Room data={roomData}
-            showObstacleAreas={false}
+            renderAllZones={false}
             forPreview
             maxWidth={maxWidth}
             viewAngle={0}

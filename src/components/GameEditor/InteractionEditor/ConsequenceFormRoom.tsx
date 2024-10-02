@@ -50,7 +50,7 @@ export const ConsequenceFormRoom: React.FunctionComponent<Props> = ({ consequenc
         case "teleportActor":
             return <RoomLocationPicker
                 roomData={roomData}
-                showObstacleAreas={true}
+                renderAllZones={true}
                 previewWidth={300}
                 targetPoint={{ x: consequence.x ?? 0, y: consequence.y ?? 0 }}
                 onClick={point => update({ ...consequence, ...point })}

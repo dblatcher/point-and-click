@@ -20,7 +20,7 @@ interface Props {
     handleRoomClick: { (x: number, y: number): void };
     handleHotspotClick?: { (zone: HotspotZone): void };
     handleHover?: HandleHoverFunction;
-    showObstacleAreas?: boolean;
+    renderAllZones?: boolean;
     highlightHotspots?: boolean;
     obstacleCells?: CellMatrix;
     markHotspotVertices?: number[];
@@ -43,7 +43,7 @@ export const Room: FunctionComponent<Props> = ({
     handleRoomClick,
     handleHotspotClick,
     handleHover,
-    showObstacleAreas,
+    renderAllZones: renderAllZones,
     highlightHotspots,
     obstacleCells,
     markHotspotVertices = [],
@@ -98,28 +98,6 @@ export const Room: FunctionComponent<Props> = ({
                         />
                     )}
 
-                {showObstacleAreas && walkableAreas.map((zone, index) => {
-                    return <ZoneSvg key={index}
-                        className={walkableClassNames({ disabled: zone.disabled })}
-                        stopPropagation={false}
-                        zone={zone}
-                        x={zone.x + left}
-                        y={data.height - zone.y}
-                        markVertices={markWalkableVertices.includes(index)}
-                    />
-                })}
-
-                {showObstacleAreas && obstacleAreas.map((zone, index) => {
-                    return <ZoneSvg key={index}
-                        className={obstableClassNames({ disabled: zone.disabled })}
-                        stopPropagation={false}
-                        zone={zone}
-                        x={zone.x + left}
-                        y={data.height - zone.y}
-                        markVertices={markObstacleVertices.includes(index)}
-                    />
-                })}
-
                 {obstacleCells &&
                     <ObstacleCellOverlay roomData={data} viewAngle={viewAngle} cellMatrix={obstacleCells} />
                 }
@@ -172,6 +150,34 @@ export const Room: FunctionComponent<Props> = ({
                         fontFamily={fontFamily}
                     />
                 ))}
+
+                {walkableAreas.map((zone, index) => {
+                    if (!renderAllZones && !markWalkableVertices.includes(index)) {
+                        return null
+                    }
+                    return <ZoneSvg key={index}
+                        className={walkableClassNames({ disabled: zone.disabled })}
+                        stopPropagation={false}
+                        zone={zone}
+                        x={zone.x + left}
+                        y={data.height - zone.y}
+                        markVertices={markWalkableVertices.includes(index)}
+                    />
+                })}
+
+                {obstacleAreas.map((zone, index) => {
+                    if (!renderAllZones && !markObstacleVertices.includes(index)) {
+                        return null
+                    }
+                    return <ZoneSvg key={index}
+                        className={obstableClassNames({ disabled: zone.disabled })}
+                        stopPropagation={false}
+                        zone={zone}
+                        x={zone.x + left}
+                        y={data.height - zone.y}
+                        markVertices={markObstacleVertices.includes(index)}
+                    />
+                })}
 
                 {children}
             </svg>

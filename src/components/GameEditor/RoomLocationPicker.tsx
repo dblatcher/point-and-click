@@ -19,7 +19,7 @@ interface Props {
     previewWidth?: number,
     previewHeight?: number,
     onClick?: { (point: { x: number; y: number }): void };
-    showObstacleAreas?: boolean
+    renderAllZones?: boolean
     obstacleRefToFocus?: string
     walkableRefToFocus?: string
     hotspotIdToFocus?: string
@@ -28,7 +28,7 @@ interface Props {
 export const RoomLocationPicker = ({
     roomData, contents = [], targetPoint,
     viewAngle: viewAngleProp, previewWidth = 600, previewHeight = previewWidth,
-    onClick, showObstacleAreas, obstacleRefToFocus, walkableRefToFocus, hotspotIdToFocus,
+    onClick, renderAllZones, obstacleRefToFocus, walkableRefToFocus, hotspotIdToFocus,
 }: Props) => {
 
     const [viewAngleState, setViewAngleState] = useState(0)
@@ -51,7 +51,7 @@ export const RoomLocationPicker = ({
             data={roomData}
             contents={contents}
             viewAngle={viewAngle}
-            showObstacleAreas={showObstacleAreas}
+            renderAllZones={renderAllZones}
             handleRoomClick={(x, y) => {
                 if (onClick) {
                     const point = locateClickInWorld(x, y, viewAngle, roomData)

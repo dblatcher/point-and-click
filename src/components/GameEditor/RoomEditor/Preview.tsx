@@ -11,7 +11,7 @@ import { ClickEffect } from "./ClickEffect";
 import { ViewAngleSlider } from "./ViewAngleSlider";
 
 type BooleanState = {
-    showObstacleAreas: boolean;
+    renderAllZones: boolean;
     highlightHotspots: boolean;
     showScaleLines: boolean;
     showRealActors: boolean;
@@ -57,7 +57,7 @@ export class Preview extends Component<Props, State> {
         this.state = {
             viewAngle: 0,
             maxWidth: 500,
-            showObstacleAreas: true,
+            renderAllZones: true,
             highlightHotspots: true,
             showScaleLines: false,
             showRealActors: true,
@@ -122,7 +122,7 @@ export class Preview extends Component<Props, State> {
 
     render() {
         const {
-            viewAngle, maxWidth, showObstacleAreas, highlightHotspots,
+            viewAngle, maxWidth, renderAllZones, highlightHotspots,
             showRealActors, showScaleLines,
         } = this.state
         const { roomData, handleRoomClick, clickEffect, actors, activeZoneIndex } = this.props
@@ -164,7 +164,7 @@ export class Preview extends Component<Props, State> {
                         display: 'inline-block',
                     }}>
                         <Room data={roomData} forPreview
-                            showObstacleAreas={showObstacleAreas}
+                            renderAllZones={renderAllZones}
                             maxWidth={maxWidth}
                             maxHeight={Math.min(roomData.height * 2, 600)}
                             viewAngle={viewAngle}
@@ -201,7 +201,7 @@ export class Preview extends Component<Props, State> {
 
                         <Grid container>
                             <Grid item>
-                                {this.renderCheckBox('Show Obstacles', 'showObstacleAreas')}
+                                {this.renderCheckBox('Show Obstacles', 'renderAllZones')}
                             </Grid>
                             <Grid item>
                                 {this.renderCheckBox('Show hotspots', 'highlightHotspots')}

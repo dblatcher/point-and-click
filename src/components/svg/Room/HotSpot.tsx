@@ -25,7 +25,7 @@ const Hotspot: FunctionComponent<Props> = ({
     return (
         <>
             <ZoneSvg
-                className={hotpotClassNames({ highlight, flash })}
+                className={hotpotClassNames({ markVertices, highlight, flash })}
                 x={x + getShift(viewAngle, parallax, roomData)}
                 y={roomData.height - y}
                 clickHandler={clickHandler}
