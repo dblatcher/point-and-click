@@ -23,7 +23,6 @@ interface Props {
 export const ScalingControl = ({ room }: Props) => {
     const [scale, setScale] = useState(1.5)
     const [viewAngle, setViewAngle] = useState(0)
-    const [hue, setHue] = useState(0)
     const [testSpriteX, setTestSpriteX] = useState(100)
     const [testSpriteY, setTestSpriteY] = useState(100)
     const [testActor, setTestActor] = useState<ActorData | undefined>(undefined)
@@ -126,7 +125,7 @@ export const ScalingControl = ({ room }: Props) => {
             </Grid>
             <Grid item flex={1}>
                 <div style={{ cursor: 'crosshair' }}>
-                    <Room data={room} forPreview
+                    <Room data={room}
                         viewAngle={viewAngle}
                         handleRoomClick={handleClick}
                         maxHeight={room.height * scale}
