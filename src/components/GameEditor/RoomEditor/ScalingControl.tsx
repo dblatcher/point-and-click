@@ -60,11 +60,14 @@ export const ScalingControl = ({ room }: Props) => {
     }
 
 
-    return (<Box>
-        <Grid container marginBottom={2}>
-            <Grid item xs={2}>
+    return <>
+        <Grid container flexWrap={'nowrap'} spacing={1}>
+            <Grid item xs={4}>
                 <Typography>Scale lines</Typography>
                 <ArrayControl
+                    stackProps={{
+                        marginBottom: 4
+                    }}
                     list={scaling}
                     buttonSize='medium'
                     describeItem={(level, index) => {
@@ -89,9 +92,39 @@ export const ScalingControl = ({ room }: Props) => {
                     createItem={addNew}
                     createButton="END"
                 />
-                <Alert>click room to position test sprite</Alert>
+
+                <EditorBox title={`Test Sprite: ${testActor?.id ?? '[none]'}`}>
+                    <RangeInput stackProps={{ justifyContent: 'center' }}
+                        label="x"
+                        value={testSpriteX}
+                        max={room.width} min={0}
+                        onChange={event => {
+                            const x = eventToNumber(event.nativeEvent)
+                            setTestSpriteX(x)
+                            if (testActor) {
+                                setTestActor({ ...testActor, x })
+                            }
+                        }}
+                    />
+                    <RangeInput stackProps={{ justifyContent: 'center' }}
+                        label="y"
+                        value={testSpriteY}
+                        max={room.height} min={0}
+                        onChange={event => {
+                            const y = eventToNumber(event.nativeEvent)
+                            setTestSpriteY(y)
+                            if (testActor) {
+                                setTestActor({ ...testActor, y })
+                            }
+                        }}
+                    />
+                    <Alert>click room to position test sprite</Alert>
+                    <Button variant="contained" color="secondary"
+                        onClick={() => { setActorDialogOpen(true) }}
+                    >Pick Actor for test sprite</Button>
+                </EditorBox>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item flex={1}>
                 <div style={{ cursor: 'crosshair' }}>
                     <Room data={room} forPreview
                         viewAngle={viewAngle}
@@ -108,67 +141,13 @@ export const ScalingControl = ({ room }: Props) => {
                         ))}
                     </Room>
                 </div>
-                <Box maxWidth={room.frameWidth * scale}>
+                <Box>
                     <ViewAngleSlider viewAngle={viewAngle} setViewAngle={setViewAngle} />
                     <NumberInput label="preview scale" value={scale}
                         inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>
             </Grid>
         </Grid>
-
-        <EditorBox
-            title={`Test Sprite: ${testActor?.id ?? '[none]'}`}
-            barContent={
-                <Button variant="contained" color="secondary"
-                    onClick={() => { setActorDialogOpen(true) }}
-                >Pick Actor for test sprite</Button>
-            }
-        >
-            <Grid container>
-                <Grid item xs={6} md={4} marginX={0}>
-                    <RangeInput stackProps={{ justifyContent: 'center' }}
-                        label="x"
-                        value={testSpriteX}
-                        max={room.width} min={0}
-                        onChange={event => {
-                            const x = eventToNumber(event.nativeEvent)
-                            setTestSpriteX(x)
-                            if (testActor) {
-                                setTestActor({ ...testActor, x })
-                            }
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={6} md={4} marginX={0}>
-                    <RangeInput stackProps={{ justifyContent: 'center' }}
-                        label="y"
-                        value={testSpriteY}
-                        max={room.height} min={0}
-                        onChange={event => {
-                            const y = eventToNumber(event.nativeEvent)
-                            setTestSpriteY(y)
-                            if (testActor) {
-                                setTestActor({ ...testActor, y })
-                            }
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={12} md={4} marginX={0}>
-                    <RangeInput stackProps={{ justifyContent: 'center' }}
-                        label="hue-rotate"
-                        value={hue}
-                        max={360} min={0}
-                        onChange={event => {
-                            const value = eventToNumber(event.nativeEvent);
-                            setHue(value)
-                            if (testActor) {
-                                setTestActor({ ...testActor, filter: `hue-rotate(${value}deg)` })
-                            }
-                        }}
-                    />
-                </Grid>
-            </Grid>
-        </EditorBox>
 
         <PickActorDialog
             isOpen={actorDialogOpen}
@@ -179,5 +158,5 @@ export const ScalingControl = ({ room }: Props) => {
                     setTestActor({ ...cloneData(actor), x: testSpriteX, y: testSpriteY })
                 }
             }} />
-    </Box >)
+    </>
 }
