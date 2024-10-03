@@ -11,13 +11,13 @@ interface Props {
     leftContent?: ReactNode;
 }
 
-export const EditorBox = ({ 
-    title, 
-    children, 
-    themePalette = 'primary', 
-    boxProps = {}, 
-    barContent, 
-    contentBoxProps, 
+export const EditorBox = ({
+    title,
+    children,
+    themePalette = 'primary',
+    boxProps = {},
+    barContent,
+    contentBoxProps,
     leftContent,
 }: Props) => {
 
@@ -52,10 +52,12 @@ export const EditorBox = ({
                 </Box>
             )}
             <Box component={'section'}
+                {...contentBoxProps}
                 sx={{
                     padding: 1,
-                    ...contentBoxProps,
-                }}>
+                    ...contentBoxProps?.sx,
+                }}
+            >
                 {children}
             </Box>
         </Box>
