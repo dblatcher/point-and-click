@@ -25,46 +25,24 @@ interface Props {
 }
 
 export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Props) => {
-
-    const { gameDesign } = useGameDesign()
-
-    const [interaction, setInteraction] = useState<Partial<Interaction>>(Object.assign({ consequences: [] }, cloneData(initialState)))
+    const [interaction, setInteraction] = useState<Partial<Interaction>>(cloneData(
+        {
+            ...initialState,
+            consequences: initialState.consequences ?? []
+        }))
     const [activeConsequenceIndex, setActiveConsequenceIndex] = useState<number | undefined>(undefined)
+    const { gameDesign } = useGameDesign()
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
-
     const activeConsequence = typeof activeConsequenceIndex === 'number' ? interaction.consequences?.[activeConsequenceIndex] : undefined
 
-    const setInteractionProperty = (property: keyof Interaction, value: unknown) => {
-        const modification: Partial<Interaction> = {}
-        switch (property) {
-            case 'verbId':
-            case 'targetId':
-            case 'targetStatus':
-            case 'itemId':
-            case 'roomId':
-                {
-                    modification[property] = value as string;
-                    break;
-                }
-            case 'mustReachFirst':
-                {
-                    modification[property] = value as boolean;
-                    break;
-                }
-            case 'flagsThatMustBeFalse':
-            case 'flagsThatMustBeTrue':
-                {
-                    modification[property] = value as string[];
-                    break
-                }
-        }
-        setInteraction(Object.assign({}, interaction, modification))
+    const updateInteraction = (mod: Partial<Interaction>) => {
+        setInteraction({ ...interaction, ...mod })
     }
 
     const updateConsequence = (consequence: Consequence, index: number) => {
         const { consequences = [] } = interaction
         consequences.splice(index, 1, consequence)
-        setInteraction(Object.assign({}, interaction, { consequences }))
+        setInteraction({ ...interaction, consequences })
     }
 
     const handleConfirm = () => {
@@ -75,12 +53,15 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
     }
 
     const handleReset = () => {
-        setInteraction(Object.assign({ consequences: [] }, cloneData(initialState)))
+        setInteraction(cloneData({
+            ...initialState,
+            consequences: initialState.consequences ?? []
+        }))
     }
 
     const dialogTitle = () => {
         if (!interaction) { return '' }
-        const { verbId = '[VERB]', targetId ='[TARGET]', itemId } = interaction
+        const { verbId = '[VERB]', targetId = '[TARGET]', itemId } = interaction
         return `${verbId} ${targetId} ${itemId ? `with ${itemId}` : ''}`
     }
 
@@ -97,7 +78,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
 
     return (
         <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'}>
-            <DialogTitle sx={{alignItems:'center', display:'flex'}}>
+            <DialogTitle sx={{ alignItems: 'center', display: 'flex' }}>
                 <InteractionIcon />
                 Edit Interaction: {dialogTitle()}
             </DialogTitle>
@@ -110,7 +91,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                         <SelectInput
                             label="VERB"
                             optional
-                            inputHandler={(verbId: string | undefined) => { setInteractionProperty('verbId', verbId) }}
+                            inputHandler={(verbId: string | undefined) => { updateInteraction({ verbId }) }}
                             value={interaction.verbId || ''}
                             options={listIds(gameDesign.verbs)} />
 
@@ -118,7 +99,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                             <SelectInput
                                 label="ITEM"
                                 optional
-                                inputHandler={(itemId: string | undefined) => { setInteractionProperty('itemId', itemId) }}
+                                inputHandler={(itemId: string | undefined) => { updateInteraction({ itemId }) }}
                                 value={interaction.itemId || ''}
                                 options={listIds(gameDesign.items)} descriptions={getItemDescriptions(gameDesign)} />
                             <Typography>{verb?.preposition}</Typography>
@@ -127,7 +108,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                         <SelectInput
                             label="TARGET"
                             optional
-                            inputHandler={(targetId: string | undefined) => { setInteractionProperty('targetId', targetId) }}
+                            inputHandler={(targetId: string | undefined) => { updateInteraction({ targetId }) }}
                             value={interaction.targetId || ''}
                             options={targetIds}
                             descriptions={targetDescriptions} />
@@ -142,18 +123,18 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                 <SelectInput
                                     label="Room must be:"
                                     optional
-                                    inputHandler={(roomId: string | undefined) => { setInteractionProperty('roomId', roomId) }}
+                                    inputHandler={(roomId: string | undefined) => { updateInteraction({ roomId }) }}
                                     value={interaction.roomId || ''}
                                     options={listIds(gameDesign.rooms)} />
                                 <StringInput
                                     label="Target status must be"
-                                    inputHandler={(value) => { setInteractionProperty('targetStatus', value) }}
+                                    inputHandler={(targetStatus) => { updateInteraction({ targetStatus }) }}
                                     value={interaction.targetStatus || ''}
                                     suggestions={statusSuggestions}
                                 />
                                 <BooleanInput
                                     label="Must reach target first?"
-                                    inputHandler={(value) => { setInteractionProperty('mustReachFirst', value) }}
+                                    inputHandler={(mustReachFirst) => { updateInteraction({ mustReachFirst }) }}
                                     value={!!interaction.mustReachFirst}
                                 />
                             </Stack>
@@ -168,7 +149,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                         describeItem={(item, index) => (
                                             <Typography key={index}>{item}</Typography>
                                         )}
-                                        mutateList={value => setInteractionProperty('flagsThatMustBeFalse', value)}
+                                        mutateList={flagsThatMustBeFalse => updateInteraction({ flagsThatMustBeFalse })}
                                     />
                                     <SelectAndConfirm
                                         boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
@@ -176,7 +157,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                         inputHandler={flagId => {
                                             if (flagId.length === 0) { return }
                                             const newList = [...interaction.flagsThatMustBeFalse || [], flagId]
-                                            setInteractionProperty('flagsThatMustBeFalse', newList)
+                                            updateInteraction({ flagsThatMustBeFalse: newList })
                                         }}
                                     />
                                 </Box>
@@ -192,7 +173,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                         describeItem={(item, index) => (
                                             <Typography key={index}>{item}</Typography>
                                         )}
-                                        mutateList={value => setInteractionProperty('flagsThatMustBeTrue', value)}
+                                        mutateList={flagsThatMustBeTrue => updateInteraction({ flagsThatMustBeTrue })}
                                     />
                                     <SelectAndConfirm
                                         boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
@@ -200,7 +181,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                         inputHandler={flagId => {
                                             if (flagId.length === 0) { return }
                                             const newList = [...interaction.flagsThatMustBeTrue || [], flagId]
-                                            setInteractionProperty('flagsThatMustBeTrue', newList)
+                                            updateInteraction({ flagsThatMustBeTrue: newList })
                                         }}
                                     />
                                 </Box>
@@ -221,10 +202,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                         />
                                     </Box>
                                 )}
-                                mutateList={newConsequences => {
-                                    interaction.consequences = newConsequences
-                                    setInteraction(Object.assign({}, interaction))
-                                }}
+                                mutateList={consequences => updateInteraction({ consequences })}
                                 createItem={() => makeNewConsequence('order')}
                                 insertText={`ADD NEW CONSEQUENCE`}
                                 deleteText={`REMOVE CONSEQUENCE`}
