@@ -5,17 +5,17 @@ import { GameDataItemType } from "@/definitions/Game";
 import { cloneData } from "@/lib/clone";
 import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
-import { Alert, Box, Button, ButtonGroup, Grid, Stack, Typography } from "@mui/material";
-import { Fragment, useState } from "react";
+import { Alert, Box, Button, ButtonGroup, Divider, Grid, Stack } from "@mui/material";
+import { useState } from "react";
 import { ZodSchema } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { EditorHeading } from "./EditorHeading";
 import { formatIdInput } from "./helpers";
-import { RoomLocationPicker } from "./RoomLocationPicker";
-import { SpritePreview } from "./SpritePreview";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
+import { RoomLocationPicker } from "./RoomLocationPicker";
 import { FramePreview } from "./SpriteEditor/FramePreview";
+import { SpritePreview } from "./SpritePreview";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -99,10 +99,9 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
     return (
         <Stack component={'article'} spacing={2} height={'100%'}>
             <EditorHeading heading={designProperty} />
-            <Typography variant="h3">existing {itemTypeName}</Typography>
-            <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'}>
+            <Stack component={'article'} spacing={2} divider={<Divider />}>
                 {gameDesign[designProperty].map(item => (
-                    <Fragment key={item.id}>
+                    <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'} key={item.id}>
                         <Grid item xs={3}>
                             <Button
                                 startIcon={<EditIcon />}
@@ -138,44 +137,39 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                         <Grid item xs={3} display={'flex'} justifyContent={'flex-end'}>
                             <ItemPreview item={item} designProperty={designProperty} />
                         </Grid>
-                    </Fragment>
-                ))}
-            </Grid>
-
-            <Typography variant="h3">Add new {itemTypeName}</Typography>
-
-            <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'}>
-                <Grid item xs={6}>
-                    <ButtonWithTextInput
-                        label="Start from scratch"
-                        onEntry={handleStartFromScratch}
-                        modifyInput={formatIdInput}
-                        buttonProps={{
-                            startIcon: <AddIcon />,
-                            variant: 'contained',
-                            sx: { width: '100%' },
-                        }}
-                        confirmationText={`Enter ${itemTypeName} id`}
-                        keyboardShortcut="#"
-                    />
-                </Grid>
-                {includeLoadButton && (
-                    <Grid item xs={4}>
-                        <Button
-                            sx={{ width: '100%' }}
-                            variant="outlined"
-                            onClick={handleLoadButton}
-                            startIcon={<UploadIcon />}
-                        >load from data file</Button>
                     </Grid>
-                )}
-            </Grid>
+                ))}
+                <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'}>
+                    <Grid item xs={6}>
+                        <ButtonWithTextInput
+                            label={`Add new ${itemTypeName}`}
+                            onEntry={handleStartFromScratch}
+                            modifyInput={formatIdInput}
+                            buttonProps={{
+                                startIcon: <AddIcon />,
+                                variant: 'contained',
+                                sx: { width: '100%' },
+                            }}
+                            confirmationText={`Enter ${itemTypeName} id`}
+                            keyboardShortcut="#"
+                        />
+                    </Grid>
+                    {includeLoadButton && (
+                        <Grid item xs={4}>
+                            <Button
+                                sx={{ width: '100%' }}
+                                variant="outlined"
+                                onClick={handleLoadButton}
+                                startIcon={<UploadIcon />}
+                            >upload {itemTypeName} data</Button>
+                        </Grid>
+                    )}
+                </Grid>
+            </Stack>
 
-            {
-                warning && (
-                    <Alert severity="warning">{warning}</Alert>
-                )
-            }
+            {warning && (
+                <Alert severity="warning">{warning}</Alert>
+            )}
         </Stack >
     )
 
