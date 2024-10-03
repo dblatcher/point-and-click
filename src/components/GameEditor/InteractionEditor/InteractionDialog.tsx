@@ -11,12 +11,12 @@ import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { ButtonWithConfirm } from '../ButtonWithConfirm';
 import { EditorBox } from "../EditorBox";
-import { SelectAndConfirm } from "../SelectAndConfirm";
 import { ConsequenceCard } from "../SequenceEditor/ConsequenceCard";
 import { ConsequenceDialog } from "../SequenceEditor/ConsequenceDialog";
 import { makeNewConsequence } from "../defaults";
-import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { InteractionIcon } from "../material-icons";
+import { FlagListSelector } from "./FlagListSelector";
+import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -138,54 +138,16 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                     value={!!interaction.mustReachFirst}
                                 />
                             </Stack>
-
-                            <Box paddingBottom={2}>
-                                <Typography variant="caption">
-                                    Flags that must be false[{interaction.flagsThatMustBeFalse?.length || 0}]
-                                </Typography>
-                                <Box paddingLeft={4}>
-                                    <ArrayControl noMoveButtons buttonSize="small"
-                                        list={interaction.flagsThatMustBeFalse || []}
-                                        describeItem={(item, index) => (
-                                            <Typography key={index}>{item}</Typography>
-                                        )}
-                                        mutateList={flagsThatMustBeFalse => updateInteraction({ flagsThatMustBeFalse })}
-                                    />
-                                    <SelectAndConfirm
-                                        boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
-                                        options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeFalse?.includes(id))}
-                                        inputHandler={flagId => {
-                                            if (flagId.length === 0) { return }
-                                            const newList = [...interaction.flagsThatMustBeFalse || [], flagId]
-                                            updateInteraction({ flagsThatMustBeFalse: newList })
-                                        }}
-                                    />
-                                </Box>
-                            </Box>
-
-                            <Box paddingBottom={2}>
-                                <Typography variant="caption">
-                                    Flags that must be true[{interaction.flagsThatMustBeTrue?.length || 0}]
-                                </Typography>
-                                <Box paddingLeft={4}>
-                                    <ArrayControl noMoveButtons buttonSize="small"
-                                        list={interaction.flagsThatMustBeTrue || []}
-                                        describeItem={(item, index) => (
-                                            <Typography key={index}>{item}</Typography>
-                                        )}
-                                        mutateList={flagsThatMustBeTrue => updateInteraction({ flagsThatMustBeTrue })}
-                                    />
-                                    <SelectAndConfirm
-                                        boxProps={{ minWidth: 200, display: 'flex', alignItems: 'flex-end' }}
-                                        options={Object.keys(gameDesign.flagMap).filter(id => !interaction.flagsThatMustBeTrue?.includes(id))}
-                                        inputHandler={flagId => {
-                                            if (flagId.length === 0) { return }
-                                            const newList = [...interaction.flagsThatMustBeTrue || [], flagId]
-                                            updateInteraction({ flagsThatMustBeTrue: newList })
-                                        }}
-                                    />
-                                </Box>
-                            </Box>
+                            <FlagListSelector
+                                caption="Flags that must be true"
+                                flagList={interaction.flagsThatMustBeTrue ?? []}
+                                setFlagList={newList => updateInteraction({ flagsThatMustBeTrue: newList })}
+                            />
+                            <FlagListSelector
+                                caption="Flags that must be false"
+                                flagList={interaction.flagsThatMustBeFalse ?? []}
+                                setFlagList={newList => updateInteraction({ flagsThatMustBeFalse: newList })}
+                            />
                         </EditorBox>
                     </Grid>
                     <Grid item xs={6}>
