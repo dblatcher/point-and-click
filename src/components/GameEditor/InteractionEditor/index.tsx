@@ -5,7 +5,7 @@ import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import {AddIcon} from "@/components/GameEditor/material-icons";
 import { Box, Button, Paper, Table, TableContainer, TableBody, TableHead, TableRow, TableCell, Typography } from "@mui/material";
-import { Component } from "react";
+import { Component, Fragment } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { InteractionDialog } from "./InteractionDialog";
 import { InteractionTableRow } from "./InteractionTableRow";
@@ -165,7 +165,7 @@ export class InteractionEditor extends Component<Props, State> {
                         </TableHead>
                         <TableBody>
                             {interactions.map((interaction, index) => {
-                                if (!filteredInteractions.includes(interaction)) { return <></> }
+                                if (!filteredInteractions.includes(interaction)) { return <Fragment key={index}/> }
                                 return (<InteractionTableRow key={index}
                                     interaction={interaction}
                                     index={index}
