@@ -1,6 +1,6 @@
 import { ConceptCard } from "@/components/GameEditor/ConceptCard";
 import { Order } from "@/definitions";
-import { getOrderIcon } from "./get-icons";
+import { getOrderIcon } from "./get-order-details";
 
 interface Props {
     order: Order;

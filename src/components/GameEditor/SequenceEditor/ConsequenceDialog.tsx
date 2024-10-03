@@ -1,7 +1,7 @@
 import { Consequence } from "@/definitions";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, useTheme } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography, useTheme } from "@mui/material";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
-import { getConsequenceIcon } from "./get-icons";
+import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";
 
 interface Props {
     consequence: Consequence
@@ -17,10 +17,11 @@ export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence,
     return (
         <Dialog open={!!consequence} onClose={close}>
             <DialogTitle sx={{ backgroundColor: palette.secondary.light }}>
-                <Stack direction={'row'} alignItems={'center'}>
+                <Box display="flex" gap={2} alignItems={'center'}>
                     <IconForConsequenceType />
-                    edit consequence
-                </Stack>
+                    <span>edit consequence</span>
+                </Box>
+                <Typography>{getConsequenceDescription(consequence)}</Typography>
             </DialogTitle>
             <DialogContent>
                 {consequence && (

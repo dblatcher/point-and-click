@@ -2,7 +2,7 @@ import { Interaction } from "@/definitions";
 import { IconButton, Tooltip, Typography, TableCell, TableRow, Stack } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon } from "../material-icons";
-import { getConsequenceIcon } from "../SequenceEditor/get-icons";
+import { getConsequenceIcon } from "../SequenceEditor/get-order-details";
 import { ConsequenceIcon } from "../SequenceEditor/ConsequenceCard";
 
 interface Props {

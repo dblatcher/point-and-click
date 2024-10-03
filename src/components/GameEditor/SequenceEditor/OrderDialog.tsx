@@ -4,7 +4,7 @@ import { Order, Sequence } from "@/definitions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, useTheme } from "@mui/material";
 import { OrderForm } from "../OrderForm";
-import { getOrderIcon } from "./get-icons";
+import { getOrderIcon } from "./get-order-details";
 
 
 interface Props {
