@@ -4,7 +4,7 @@ import itemsHelp from "@/content/editor-help/items.md"
 import actorsHelp from "@/content/editor-help/actors.md"
 import narrativeHelp from "@/content/editor-help/narrative.md"
 import choiceSequences from "@/content/editor-help/conversation-choice-sequences.md"
-
+import flagsHelp from "@/content/editor-help/flags.md"
 
 interface Props {
     topic: string;
@@ -57,6 +57,8 @@ export const HelpText: FunctionComponent<Props> = ({
             return <MarkDown content={narrativeHelp} />
         case 'conversation choice sequences':
             return <MarkDown content={choiceSequences} />
+        case 'flags':
+            return <MarkDown content={flagsHelp} />
         default:
             return (
                 <article>

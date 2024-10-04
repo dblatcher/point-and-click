@@ -17,6 +17,7 @@ import { makeNewConsequence } from "../defaults";
 import { InteractionIcon } from "../material-icons";
 import { FlagListSelector } from "./FlagListSelector";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { FlagConditionControl } from "./FlagConditionControl";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -36,6 +37,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
     const activeConsequence = typeof activeConsequenceIndex === 'number' ? interaction.consequences?.[activeConsequenceIndex] : undefined
 
     const updateInteraction = (mod: Partial<Interaction>) => {
+        console.log('update', mod)
         setInteraction({ ...interaction, ...mod })
     }
 
@@ -138,17 +140,8 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                     value={!!interaction.mustReachFirst}
                                 />
                             </Stack>
-                            <FlagListSelector
-                                caption="Flags that must be true"
-                                flagList={interaction.flagsThatMustBeTrue ?? []}
-                                setFlagList={newList => updateInteraction({ flagsThatMustBeTrue: newList })}
-                            />
-                            <FlagListSelector
-                                caption="Flags that must be false"
-                                flagList={interaction.flagsThatMustBeFalse ?? []}
-                                setFlagList={newList => updateInteraction({ flagsThatMustBeFalse: newList })}
-                            />
                         </EditorBox>
+                        <FlagConditionControl interaction={interaction} updateInteraction={updateInteraction} />
                     </Grid>
                     <Grid item xs={6}>
                         <EditorBox title="Consequences">
