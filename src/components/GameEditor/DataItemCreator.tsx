@@ -96,6 +96,13 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
 
     const includeLoadButton = DATA_TYPES_WITH_JSON.includes(designProperty)
 
+    const getInputIdError = (input: string) => {
+        if (gameDesign[designProperty].some(item => item.id === input)) {
+            return `${itemTypeName} "${input}" aleady exists.`
+        }
+        return undefined
+    }
+
     return (
         <Stack component={'article'} spacing={2} height={'100%'}>
             <EditorHeading heading={designProperty} />
@@ -119,9 +126,10 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                                         startIcon: <ContentCopyIcon />,
                                         variant: 'outlined',
                                     }}
+                                    getError={getInputIdError}
                                     modifyInput={formatIdInput}
                                     onEntry={(newId) => handleDuplicate(newId, item)}
-                                    confirmationText={`Enter ${itemTypeName} id`}
+                                    dialogTitle={`Enter ${itemTypeName} id`}
                                 />
                                 <DeleteDataItemButton
                                     buttonProps={{
@@ -150,7 +158,8 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                                 variant: 'contained',
                                 sx: { width: '100%' },
                             }}
-                            confirmationText={`Enter ${itemTypeName} id`}
+                            getError={getInputIdError}
+                            dialogTitle={`Enter ${itemTypeName} id`}
                             keyboardShortcut="#"
                         />
                     </Grid>

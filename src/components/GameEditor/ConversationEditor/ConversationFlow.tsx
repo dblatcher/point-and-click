@@ -209,7 +209,7 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                 <ButtonWithTextInput
                     label="Add Branch"
                     onEntry={(entry) => { addNewBranch(entry) }}
-                    confirmationText="enter branch name"
+                    dialogTitle="enter branch name"
                     modifyInput={formatIdInput}
                     buttonProps={{
                         size: 'large',

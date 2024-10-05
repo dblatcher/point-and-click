@@ -77,7 +77,7 @@ export const ImageAssetForm = ({ imageAsset, changeValue, loadFile, isNewAsset, 
                     }}
                     label="get image from URL" 
                     onEntry={(input) => { loadUrl(input) }} 
-                    confirmationText="enter image url" />
+                    dialogTitle="enter image url" />
             </Box>
 
             <SaveButtonsAndWarning {...{

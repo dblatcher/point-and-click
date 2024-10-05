@@ -48,7 +48,7 @@ export const RecordEditor = <T,>({
             ))}
             <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
                 <ButtonWithTextInput
-                    confirmationText={addEntryLabel || 'add entry'}
+                    dialogTitle={addEntryLabel || 'add entry'}
                     label={addEntryLabel || 'add entry'}
                     onEntry={(input) => {
                         if (!input) { return }

@@ -43,7 +43,7 @@ export const AnimationGrid = ({ animation, animationKey, sprite, defaultDirectio
                     <ButtonWithTextInput
                         useIconButton icon={<ContentCopyIcon />}
                         label={`Copy animation "${animationKey}"`}
-                        confirmationText={`Copy "${animationKey}" as...`}
+                        dialogTitle={`Copy "${animationKey}" as...`}
                         onEntry={newName => { copyAnimation(newName, animationKey) }}
                     />
                     {animationKey !== 'default' &&

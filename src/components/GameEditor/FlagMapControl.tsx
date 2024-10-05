@@ -98,7 +98,13 @@ export const FlagMapControl = () => {
                 variant: 'contained',
                 sx: { width: '100%' },
             }}
-            confirmationText={`Enter flag name`}
+            getError={input => {
+                if (flagList.some(item => item.key === input)) {
+                    return `there is already a flag called ${input}`
+                }
+                return undefined
+            }}
+            dialogTitle={`Enter flag name`}
             keyboardShortcut="#"
         />
     </>

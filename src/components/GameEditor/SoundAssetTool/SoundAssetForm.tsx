@@ -57,7 +57,7 @@ export const SoundAssetForm = ({ soundAsset, changeValue, loadFile, isNewAsset, 
                     }}
                     label="get audio from URL"
                     onEntry={(input) => { loadUrl(input) }}
-                    confirmationText="enter audio url" />
+                    dialogTitle="enter audio url" />
             </Box>
 
             <SaveButtonsAndWarning {...{
