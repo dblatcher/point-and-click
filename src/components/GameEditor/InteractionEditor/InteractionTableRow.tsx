@@ -1,8 +1,7 @@
 import { Interaction } from "@/definitions";
-import { IconButton, Tooltip, Typography, TableCell, TableRow, Stack } from "@mui/material";
+import { IconButton, Stack, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
-import { ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon } from "../material-icons";
-import { getConsequenceIcon } from "../SequenceEditor/get-order-details";
+import { ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon, FlagFilledIcon, FlagOutlinedIcon } from "../material-icons";
 import { ConsequenceIcon } from "../SequenceEditor/ConsequenceCard";
 
 interface Props {
@@ -18,17 +17,6 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
         verbId, targetId, targetStatus, itemId, roomId,
         consequences, flagsThatMustBeFalse = [], flagsThatMustBeTrue = []
     } = interaction
-
-    const trueFlagText = flagsThatMustBeTrue.length ? `x${flagsThatMustBeTrue.length}` : ''
-    const trueFlagTitle = flagsThatMustBeTrue.join(", ")
-
-    const falseFlagText = flagsThatMustBeFalse.length ? `x${flagsThatMustBeFalse.length}` : ''
-    const falseFlagTitle = flagsThatMustBeFalse.join(", ")
-
-    const consequenceText = consequences.length ? `x${consequences.length}` : 'empty'
-    const consequenceTitle = consequences.map(_ => _.type).join(", ")
-
-    const consequenceIcons = consequences.map(consequence => getConsequenceIcon(consequence))
 
     return (
         <TableRow key={index}>
@@ -48,15 +36,17 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
             <TableCell>
                 {consequences.map((consequence, index) => <ConsequenceIcon key={index} consequence={consequence} />)}
             </TableCell>
-            <TableCell align='center' >
-                <Tooltip title={trueFlagTitle}>
-                    <Typography>{trueFlagText}</Typography>
-                </Tooltip>
-            </TableCell>
-            <TableCell align='center'>
-                <Tooltip title={falseFlagTitle}>
-                    <Typography>{falseFlagText}</Typography>
-                </Tooltip>
+            <TableCell>
+                {flagsThatMustBeTrue.map((flagKey, index) => (
+                    <Tooltip title={`${flagKey} must be ON`} key={index}>
+                        <FlagFilledIcon />
+                    </Tooltip>
+                ))}
+                {flagsThatMustBeFalse.map((flagKey, index) => (
+                    <Tooltip title={`${flagKey} must be OFF`} key={index}>
+                        <FlagOutlinedIcon />
+                    </Tooltip>
+                ))}
             </TableCell>
             <TableCell padding="none">
                 <Stack direction={'row'}>
