@@ -1,5 +1,5 @@
 import { defaultTheme } from "@/theme";
-import { Alert, Button, ThemeProvider, Dialog, DialogActions, DialogTitle, IconButton, ButtonProps } from "@mui/material";
+import { Alert, Button, ThemeProvider, Dialog, DialogActions, DialogTitle, IconButton, ButtonProps, DialogContent } from "@mui/material";
 import { MouseEventHandler, ReactNode, useState } from "react";
 
 interface Props {
@@ -10,9 +10,10 @@ interface Props {
     useIconButton?: boolean;
     icon?: ReactNode;
     buttonProps?: ButtonProps;
+    children?: ReactNode
 }
 
-export const ButtonWithConfirm = ({ label, onClick, noConfirmation, confirmationText, useIconButton, icon, buttonProps }: Props) => {
+export const ButtonWithConfirm = ({ label, onClick, noConfirmation, confirmationText, useIconButton, icon, buttonProps, children }: Props) => {
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const handleFirstButton = noConfirmation
         ? onClick
@@ -47,6 +48,7 @@ export const ButtonWithConfirm = ({ label, onClick, noConfirmation, confirmation
                             {warningText}
                         </Alert>
                     </DialogTitle>
+                    {children && <DialogContent>{children}</DialogContent>}
                     <DialogActions>
                         <Button
                             onClick={(): void => { setShowConfirmation(false); }}

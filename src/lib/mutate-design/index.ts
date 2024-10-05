@@ -1,4 +1,4 @@
-import { FlagMap, GameDataItem, GameDesign, Interaction, Verb } from "@/definitions";
+import { FlagMap, GameDataItem, GameDesign, Interaction, Sequence, Verb } from "@/definitions";
 import { findIndexById } from "../util";
 
 function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[] {
@@ -70,4 +70,30 @@ export const changeOrAddIteration = (gameDesign: GameDesign, interaction: Intera
         interactions.splice(index, 1, interaction)
     }
     return gameDesign
+}
+
+
+const sequenceInvolvesFlag = (flagKey: string) => (sequence: Sequence) =>
+    sequence.stages.some(stage =>
+        stage.immediateConsequences?.some(consequence =>
+            consequence.type === 'flag' && consequence.flag === flagKey
+        )
+    )
+
+export const findFlagUsages = (gameDesign: GameDesign, flagKey: string) => {
+    const interactionsWithFlag = gameDesign.interactions.filter(interaction =>
+        interaction.flagsThatMustBeFalse?.includes(flagKey) ||
+        interaction.flagsThatMustBeTrue?.includes(flagKey)
+    )
+    const sequencesWithFlag = gameDesign.sequences.filter(sequenceInvolvesFlag(flagKey))
+
+    const conversationsWithFlag = gameDesign.conversations.filter(conversation =>
+        Object.values(conversation.branches).some(branch =>
+            branch?.choices.some(choice =>
+                choice.choiceSequence && sequenceInvolvesFlag(flagKey)(choice.choiceSequence)
+            )
+        )
+    )
+
+    return { interactionsWithFlag, sequencesWithFlag, conversationsWithFlag }
 }

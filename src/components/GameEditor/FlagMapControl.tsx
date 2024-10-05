@@ -7,6 +7,7 @@ import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { makeNewFlag } from "./defaults";
 import { formatIdInput } from "./helpers";
 import { AddIcon, DeleteIcon, FlagFilledIcon, FlagOutlinedIcon } from "./material-icons";
+import { findFlagUsages } from "@/lib/mutate-design";
 
 const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
     const { gameDesign, applyModification } = useGameDesign()
@@ -34,6 +35,8 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
             }
         })
     }
+
+    const { conversationsWithFlag, sequencesWithFlag, interactionsWithFlag } = findFlagUsages(gameDesign, id)
 
     return (
         <Box>
@@ -63,7 +66,12 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
                     useIconButton
                     icon={<DeleteIcon color="warning" />}
                     onClick={deleteFlag}
-                />
+                >
+                    <Typography>Referenced in:</Typography>
+                    <Typography>{interactionsWithFlag.length} interactions</Typography>
+                    <Typography>{sequencesWithFlag.length} sequences</Typography>
+                    <Typography>{conversationsWithFlag.length} sequences</Typography>
+                </ButtonWithConfirm>
             </Box>
         </Box >
     )
