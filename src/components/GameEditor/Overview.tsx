@@ -1,16 +1,16 @@
+import { DesignServicesIcon } from '@/components/GameEditor/material-icons';
 import { SchemaForm } from "@/components/SchemaForm";
 import { useGameDesign } from "@/context/game-design-context";
 import { usePageMeta } from "@/context/page-meta-context";
 import { FixedGameInfoSchema, GameContentsDataSchema } from "@/definitions/Game";
 import { listIds } from "@/lib/util";
-import { DesignServicesIcon } from '@/components/GameEditor/material-icons';
-import { Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Box, Button, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { useEffect } from "react";
+import { tabOrder } from "../../lib/editor-config";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
 import { HelpButton } from "./HelpButton";
-import { tabOrder } from "../../lib/editor-config";
 
 const formSchema = GameContentsDataSchema.pick({
   id: true,
@@ -65,36 +65,36 @@ export const Overview = () => {
           />
         </EditorBox>
         <EditorBox title="contents">
-        <TableContainer sx={{ width: 'unset' }}>
-          <Table size="small" >
-            <TableBody>
-              {tabOrder.filter(tab => tab !== mainTab).map(tab => (
-                <TableRow key={tab.id}>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      fullWidth
-                      onClick={() => openInEditor(tab.id, undefined)}
-                    >{tab.label}</Button>
-                  </TableCell>
-                  <TableCell>
-                    {tab.itemType && "x" + gameDesign[tab.itemType].length}
-                  </TableCell>
-                  <TableCell>
-                    {tab.helpTopic &&
-                      <HelpButton helpTopic={tab.helpTopic} />
-                    }
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+          <TableContainer sx={{ width: 'unset' }}>
+            <Table size="small" >
+              <TableBody>
+                {tabOrder.filter(tab => tab !== mainTab).map(tab => (
+                  <TableRow key={tab.id}>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        onClick={() => openInEditor(tab.id, undefined)}
+                      >{tab.label}</Button>
+                    </TableCell>
+                    <TableCell>
+                      {tab.itemType && "x" + gameDesign[tab.itemType].length}
+                    </TableCell>
+                    <TableCell>
+                      {tab.helpTopic &&
+                        <HelpButton helpTopic={tab.helpTopic} />
+                      }
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </EditorBox>
-        <EditorBox title="Flags">
+        <EditorBox title="Flags" barContent={<HelpButton helpTopic={'flags'} />}>
           <FlagMapControl />
         </EditorBox>
-      </Box>    
+      </Box>
     </Stack>
   );
 };

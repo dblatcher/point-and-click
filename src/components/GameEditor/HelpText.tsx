@@ -5,6 +5,7 @@ import actorsHelp from "@/content/editor-help/actors.md"
 import narrativeHelp from "@/content/editor-help/narrative.md"
 import choiceSequences from "@/content/editor-help/conversation-choice-sequences.md"
 import flagsHelp from "@/content/editor-help/flags.md"
+import flagsConditionHelp from "@/content/editor-help/flag-conditions-help.md"
 
 interface Props {
     topic: string;
@@ -57,6 +58,11 @@ export const HelpText: FunctionComponent<Props> = ({
             return <MarkDown content={narrativeHelp} />
         case 'conversation choice sequences':
             return <MarkDown content={choiceSequences} />
+        case 'flag-conditions':
+            return <>
+                <MarkDown content={flagsConditionHelp} />
+                <MarkDown content={flagsHelp} />
+            </>
         case 'flags':
             return <MarkDown content={flagsHelp} />
         default:

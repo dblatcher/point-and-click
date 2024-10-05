@@ -31,7 +31,9 @@ import ClickPointIcon from '@mui/icons-material/LocationSearching';
 import ClickPointActiveIcon from '@mui/icons-material/GpsFixed';
 import LinkIcon from '@mui/icons-material/Link';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import FlagFilledIcon from '@mui/icons-material/Flag';
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 export {
     AddIcon,
@@ -39,6 +41,7 @@ export {
     ArrowDownwardIcon,
     ArrowUpwardIcon,
     AudioFileOutlinedIcon,
+    CheckBoxOutlineBlankIcon,
     ClearIcon,
     ClearOutlinedIcon,
     ClickPointActiveIcon,
@@ -52,6 +55,7 @@ export {
     ExpandMoreIcon,
     FlagCircleIcon,
     FlagOutlinedIcon,
+    FlagFilledIcon,
     HelpIcon,
     HideImageOutlinedIcon,
     LinkIcon,

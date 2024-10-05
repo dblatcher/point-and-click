@@ -1,9 +1,11 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { Interaction } from "@/definitions";
-import { Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup, Stack, Switch } from "@mui/material";
+import { Box, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup, Stack, Switch, Tooltip } from "@mui/material";
 import React, { Fragment, useState } from "react";
 import { EditorBox } from "../EditorBox";
 import { HelpButton } from "../HelpButton";
+import { CheckBoxOutlineBlankIcon, FlagFilledIcon, FlagOutlinedIcon, HelpIcon } from "../material-icons";
+
 
 interface Props {
     interaction: Partial<Interaction>
@@ -12,6 +14,17 @@ interface Props {
 
 const valueToString = (value: boolean | undefined) => typeof value === 'undefined' ? 'any' : value.toString()
 const stringToValue = (text: string) => text === 'true' ? true : text === 'false' ? false : undefined
+
+const StateIcon = (props: { value: boolean | undefined }) => {
+    switch (props.value) {
+        case true:
+            return <FlagFilledIcon />
+        case false:
+            return <FlagOutlinedIcon />
+        default:
+            return <CheckBoxOutlineBlankIcon color="disabled" />
+    }
+}
 
 export const FlagConditionControl: React.FunctionComponent<Props> = ({ interaction, updateInteraction }) => {
     const [hideEmpty, setHideEmpty] = useState(false)
@@ -65,11 +78,11 @@ export const FlagConditionControl: React.FunctionComponent<Props> = ({ interacti
         })
     }
 
-    return <EditorBox title="Flags" barContent={(
+    return <EditorBox title="Required Flags" barContent={(
         <div style={{ display: 'flex', alignItems: 'center' }}>
             <FormGroup>
                 <FormControlLabel
-                    label="hide unset flags"
+                    label="hide unused flags"
                     control={
                         <Switch size="small"
                             color="secondary"
@@ -78,7 +91,7 @@ export const FlagConditionControl: React.FunctionComponent<Props> = ({ interacti
                     }
                 />
             </FormGroup>
-            <HelpButton helpTopic="flags" />
+            <HelpButton helpTopic="flag-conditions" />
         </div>
     )}>
         <Stack divider={<Divider />}>
@@ -90,7 +103,16 @@ export const FlagConditionControl: React.FunctionComponent<Props> = ({ interacti
                             alignItems: 'center',
                             paddingY: 0,
                         }}>
-                            <FormLabel sx={{ flex: 1 }}>{flagState.key}</FormLabel>
+
+                            <Box sx={{ flex: 1, display: 'flex', gap: 1, alignItems: 'center', }}>
+                                <StateIcon value={flagState.value} />
+                                <FormLabel  >{flagState.key}</FormLabel>
+                                {flagState.flag.description && (
+                                    <Tooltip title={flagState.flag.description ?? flagState.key}>
+                                        <HelpIcon fontSize="small" />
+                                    </Tooltip>
+                                )}
+                            </Box>
                             <RadioGroup row
                                 aria-label={`${flagState.key}`}
                                 name={`flag-group-${flagState.key}`}
@@ -98,9 +120,9 @@ export const FlagConditionControl: React.FunctionComponent<Props> = ({ interacti
                                 onChange={(_event, value) => {
                                     setValue(flagState.key, stringToValue(value))
                                 }} >
-                                <FormControlLabel labelPlacement="start" value={'any'} control={<Radio />} label="any" />
-                                <FormControlLabel labelPlacement="start" value={'true'} control={<Radio />} label="true" />
-                                <FormControlLabel labelPlacement="start" value={'false'} control={<Radio />} label="false" />
+                                <FormControlLabel labelPlacement="start" value={'any'} control={<Radio />} label="either" />
+                                <FormControlLabel labelPlacement="start" value={'true'} control={<Radio />} label="on" />
+                                <FormControlLabel labelPlacement="start" value={'false'} control={<Radio />} label="off" />
                             </RadioGroup>
                         </FormControl>
                     )}

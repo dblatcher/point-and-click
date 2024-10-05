@@ -1,11 +1,11 @@
 
 import { useGameDesign } from "@/context/game-design-context";
 import { Flag, FlagMap } from "@/definitions/Flag";
-import { Box, FormControlLabel, Paper, Switch, Typography } from "@mui/material";
+import { Box, Divider, FormControlLabel, Switch, Typography } from "@mui/material";
 import { StringInput } from "../SchemaForm/StringInput";
 import { RecordEditor } from "./RecordEditor";
 import { makeNewFlag } from "./defaults";
-import { FlagCircleIcon } from "./material-icons";
+import { FlagFilledIcon, FlagOutlinedIcon } from "./material-icons";
 
 const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
     const { gameDesign, performUpdate } = useGameDesign()
@@ -23,15 +23,17 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
     }
 
     return (
-        <Box component={Paper} padding={2} minWidth={250}>
-            <Box padding={2} display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2}>
-                <FlagCircleIcon color="primary" fontSize="large" />
-                <Typography>{id}</Typography>
+        <Box minWidth={250}>
+            <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2}>
+                <Box display={'flex'} alignItems={'center'} gap={2}>
+                    {flag.value ? <FlagFilledIcon /> : <FlagOutlinedIcon />}
+                    <Typography variant='subtitle1'>{id}</Typography>
+                </Box>
                 <FormControlLabel
                     style={{
                         margin: 0
                     }}
-                    label={`starts: ${flag.value ? 'on' : 'off'}`}
+                    label={`starts ${flag.value ? 'on' : 'off'}`}
                     labelPlacement="start"
                     control={<Switch
                         size="small"
@@ -65,6 +67,8 @@ export const FlagMapControl = () => {
         containerProps={{
             alignItems: 'center',
             marginBottom: 10,
+            spacing: 2,
+            divider: <Divider flexItem />,
         }}
         addEntryLabel="add new flag"
         describeValue={(key, flag) => {

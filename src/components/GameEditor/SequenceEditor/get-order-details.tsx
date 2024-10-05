@@ -2,7 +2,7 @@ import { Consequence, Order } from "@/definitions";
 import AnimationIcon from '@mui/icons-material/Animation';
 import CameraIndoorOutlinedIcon from '@mui/icons-material/CameraIndoorOutlined';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
-import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import PersonOffOutlinedIcon from '@mui/icons-material/PersonOffOutlined';
@@ -16,6 +16,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import FormatListNumberedRtlOutlinedIcon from '@mui/icons-material/FormatListNumberedRtlOutlined';
 import CancelPresentationOutlinedIcon from '@mui/icons-material/CancelPresentationOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import { FlagCircleIcon } from "../material-icons";
 
 export const getOrderIcon = (order?: Order): typeof ChatOutlinedIcon => {
     switch (order?.type) {
@@ -49,7 +50,7 @@ export const getConsequenceIcon = (consequence?: Consequence): typeof ChatOutlin
         case "soundEffect":
             return VolumeUpIcon
         case "flag":
-            return FlagOutlinedIcon
+            return FlagCircleIcon
         case "toggleZone":
             return PictureInPictureAltOutlinedIcon
         case "sequence":
@@ -84,7 +85,7 @@ export const getConsequenceDescription = (c: Consequence): string => {
         case "order":
             return `${c.actorId ?? PLAYER}: ${c.orders.map(order => order.type).join('; ')}`
         case "flag":
-            return `set ${c.flag ?? UNSET} to ${c.on ? 'ON' : 'OFF'}`
+            return `set ${c.flag || UNSET} to ${c.on ? 'ON' : 'OFF'}`
         case "soundEffect":
             return `play sfx: ${c.sound ?? UNSET}`
         case "toggleZone":
