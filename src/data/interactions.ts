@@ -196,8 +196,7 @@ export const interactions: Interaction[] = [
         verbId: 'TAKE',
         targetId: 'TUBE',
         mustReachFirst: true,
-        flagsThatMustBeFalse: ['testFlag', 'flagThatDoesNotExist'],
-        flagsThatMustBeTrue: ['otherFlagThatDoesNotExist'],
+        flagsThatMustBeFalse: ['testFlag'],
         consequences: [
             {
                 type: 'order', orders: [
