@@ -79,6 +79,7 @@ export const Overview = () => {
                     </TableCell>
                     <TableCell>
                       {tab.itemType && "x" + gameDesign[tab.itemType].length}
+                      {tab.id === 'interactions' && `x${gameDesign.interactions.length}`}
                     </TableCell>
                     <TableCell>
                       {tab.helpTopic &&
