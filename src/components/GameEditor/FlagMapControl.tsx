@@ -1,11 +1,13 @@
 
 import { useGameDesign } from "@/context/game-design-context";
 import { Flag, FlagMap } from "@/definitions/Flag";
-import { Box, Divider, FormControlLabel, Switch, Typography } from "@mui/material";
+import { Box, Divider, FormControlLabel, Stack, Switch, Typography } from "@mui/material";
 import { StringInput } from "../SchemaForm/StringInput";
-import { RecordEditor } from "./RecordEditor";
+import { ButtonWithConfirm } from "./ButtonWithConfirm";
+import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { makeNewFlag } from "./defaults";
-import { FlagFilledIcon, FlagOutlinedIcon } from "./material-icons";
+import { formatIdInput } from "./helpers";
+import { AddIcon, DeleteIcon, FlagFilledIcon, FlagOutlinedIcon } from "./material-icons";
 
 const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
     const { gameDesign, performUpdate } = useGameDesign()
@@ -21,9 +23,15 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
             [id]: { ...flag, description }
         })
     }
+    const deleteFlag = () => {
+        performUpdate('flagMap', {
+            ...gameDesign.flagMap,
+            [id]: undefined
+        })
+    }
 
     return (
-        <Box minWidth={250}>
+        <Box>
             <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2}>
                 <Box display={'flex'} alignItems={'center'} gap={2}>
                     {flag.value ? <FlagFilledIcon /> : <FlagOutlinedIcon />}
@@ -42,7 +50,16 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
                         color="primary" />}
                 />
             </Box>
-            <StringInput label="description" value={flag.description ?? ''} inputHandler={setDescription} />
+            <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2}>
+                <StringInput label="description" value={flag.description ?? ''} inputHandler={setDescription} />
+                <ButtonWithConfirm
+                    confirmationText={`Are you sure you want to delete flag "${id}"?`}
+                    label="delete"
+                    useIconButton
+                    icon={<DeleteIcon color="warning"/>}
+                    onClick={deleteFlag}
+                />
+            </Box>
         </Box >
     )
 }
@@ -56,25 +73,28 @@ export const FlagMapControl = () => {
         return performUpdate('flagMap', { ...gameDesign.flagMap, ...mod })
     }
 
-    const setEntry = (key: string, value: Flag | undefined) => {
-        const mod: Partial<FlagMap> = {}
-        mod[key] = value
-        return performUpdate('flagMap', { ...gameDesign.flagMap, ...mod })
-    }
+    const flagList = Object.entries(gameDesign.flagMap).flatMap(([key, flag]) => {
+        return flag ? { key, flag } : []
+    })
 
-    return <RecordEditor
-        record={gameDesign.flagMap}
-        containerProps={{
-            alignItems: 'center',
-            marginBottom: 10,
-            spacing: 2,
-            divider: <Divider flexItem />,
-        }}
-        addEntryLabel="add new flag"
-        describeValue={(key, flag) => {
-            return <FlagCard id={key} flag={flag} />
-        }}
-        addEntry={addEntry}
-        setEntry={setEntry}
-    />
+    return <>
+        <Stack spacing={2} divider={<Divider />} minWidth={250}>
+            {flagList.map(({ key, flag }) => (
+                <FlagCard id={key} flag={flag} key={key} />
+            ))}
+        </Stack>
+
+        <ButtonWithTextInput
+            label={`Add new flag`}
+            onEntry={addEntry}
+            modifyInput={formatIdInput}
+            buttonProps={{
+                startIcon: <AddIcon />,
+                variant: 'contained',
+                sx: { width: '100%' },
+            }}
+            confirmationText={`Enter flag name`}
+            keyboardShortcut="#"
+        />
+    </>
 };
