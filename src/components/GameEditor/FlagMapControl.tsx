@@ -1,4 +1,3 @@
-
 import { useGameDesign } from "@/context/game-design-context";
 import { Flag, FlagMap } from "@/definitions/Flag";
 import { Box, Divider, FormControlLabel, Stack, Switch, Typography } from "@mui/material";
@@ -10,23 +9,29 @@ import { formatIdInput } from "./helpers";
 import { AddIcon, DeleteIcon, FlagFilledIcon, FlagOutlinedIcon } from "./material-icons";
 
 const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
-    const { gameDesign, performUpdate } = useGameDesign()
+    const { gameDesign, applyModification } = useGameDesign()
     const toggleValue = () => {
-        performUpdate('flagMap', {
-            ...gameDesign.flagMap,
-            [id]: { ...flag, value: !flag.value, default: !flag.value }
+        applyModification(`toggle value on flag ${id}`, {
+            flagMap: {
+                ...gameDesign.flagMap,
+                [id]: { ...flag, value: !flag.value, default: !flag.value }
+            }
         })
     }
     const setDescription = (description: string) => {
-        performUpdate('flagMap', {
-            ...gameDesign.flagMap,
-            [id]: { ...flag, description }
+        applyModification(`change description on flag ${id}`, {
+            flagMap: {
+                ...gameDesign.flagMap,
+                [id]: { ...flag, description }
+            }
         })
     }
     const deleteFlag = () => {
-        performUpdate('flagMap', {
-            ...gameDesign.flagMap,
-            [id]: undefined
+        applyModification(`delete flag ${id}`, {
+            flagMap: {
+                ...gameDesign.flagMap,
+                [id]: undefined
+            }
         })
     }
 
@@ -56,7 +61,7 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
                     confirmationText={`Are you sure you want to delete flag "${id}"?`}
                     label="delete"
                     useIconButton
-                    icon={<DeleteIcon color="warning"/>}
+                    icon={<DeleteIcon color="warning" />}
                     onClick={deleteFlag}
                 />
             </Box>
@@ -65,12 +70,12 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
 }
 
 export const FlagMapControl = () => {
-    const { gameDesign, performUpdate } = useGameDesign()
+    const { gameDesign, applyModification } = useGameDesign()
 
     const addEntry = (key: string) => {
         const mod: Partial<FlagMap> = {}
         mod[key] = makeNewFlag()
-        return performUpdate('flagMap', { ...gameDesign.flagMap, ...mod })
+        return applyModification(`Add new flag ${key}`, { flagMap: { ...gameDesign.flagMap, ...mod } })
     }
 
     const flagList = Object.entries(gameDesign.flagMap).flatMap(([key, flag]) => {

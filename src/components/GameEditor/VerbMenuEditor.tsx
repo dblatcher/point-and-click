@@ -8,14 +8,13 @@ import { EditorHeading } from "./EditorHeading";
 
 
 export const VerbMenuEditor = () => {
-    const { gameDesign, performUpdate } = useGameDesign()
-    const updateData = (data: unknown) => { performUpdate('verbs', data) }
+    const { gameDesign, applyModification } = useGameDesign()
     return (<>
         <EditorHeading heading="Verb Menu" helpTopic="verb menu" />
         <Stack direction="row" justifyContent="space-between">
             <ArrayControl noDeleteButtons horizontalMoveButtons
                 list={gameDesign.verbs}
-                mutateList={(list) => { updateData(list) }}
+                mutateList={(verbs) => applyModification('change verb order', { verbs })}
                 describeItem={(verb, index) => (
                     <Typography key={index}>{verb.id} : {verb.label}</Typography>
                 )}

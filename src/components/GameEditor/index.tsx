@@ -1,14 +1,14 @@
 import { GameDesignProvider } from "@/context/game-design-context";
 import { SpritesProvider } from "@/context/sprite-context";
 import { prebuiltGameDesign } from '@/data/fullGame';
-import { GameDataItem, GameDesign, Interaction, Verb } from "@/definitions";
-import { FlagMap } from "@/definitions/Flag";
+import { GameDataItem, GameDesign, Interaction } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { findIndexById } from "@/lib/util";
+import { changeOrAddIteration, mutateProperty } from "@/lib/mutate-design";
 import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
+import soundService from "@/services/soundService";
 import { editorTheme } from "@/theme";
 import { Box, Button, ButtonGroup, Container, IconButton, Stack, ThemeProvider } from "@mui/material";
 import { Component } from "react";
@@ -18,7 +18,6 @@ import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
-import soundService from "@/services/soundService";
 
 
 type State = {
@@ -37,17 +36,6 @@ export type Props = {
 
 
 const defaultRoomId = 'ROOM_1' as const;
-
-function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[] {
-    const newItem = newData as T;
-    const matchIndex = findIndexById(newItem.id, list)
-    if (matchIndex !== -1) {
-        list.splice(matchIndex, 1, newItem)
-    } else {
-        list.push(newItem)
-    }
-    return list
-}
 
 export default class GameEditor extends Component<Props, State> {
 
@@ -69,7 +57,6 @@ export default class GameEditor extends Component<Props, State> {
             flagMap: {},
         };
 
-
         this.state = {
             gameDesign,
             tabOpen: 'main',
@@ -87,6 +74,7 @@ export default class GameEditor extends Component<Props, State> {
         this.loadNewGame = this.loadNewGame.bind(this)
         this.undo = this.undo.bind(this)
         this.openInEditor = this.openInEditor.bind(this)
+        this.applyModification = this.applyModification.bind(this)
     }
 
     respondToServiceUpdate(payload: unknown) {
@@ -109,63 +97,29 @@ export default class GameEditor extends Component<Props, State> {
 
     performUpdate(property: keyof GameDesign, data: unknown) {
         console.log(property, data)
-
         this.setState(state => {
-            const { gameDesign, gameItemIds, history } = state
+            const { gameDesign, history } = state
             history.push({
                 label: `update ${property}`,
                 gameDesign: cloneData(gameDesign)
             })
             if (history.length > 10) { history.shift() }
-            switch (property) {
-                case 'rooms':
-                case 'items':
-                case 'actors':
-                case 'conversations':
-                case 'sprites':
-                case 'sequences':
-                case 'endings':
-                    {
-                        addNewOrUpdate(data, gameDesign[property] as GameDataItem[])
-                        gameItemIds[property] = (data as GameDataItem).id
-                        break
-                    }
-                case 'verbs':
-                    {
-                        if (Array.isArray(data)) {
-                            gameDesign[property] = data as Verb[]
-                        } else {
-                            addNewOrUpdate(data, gameDesign[property])
-                            gameItemIds[property] = (data as GameDataItem).id
-                        }
-                        break
-                    }
-                case 'interactions':
-                    {
-                        if (Array.isArray(data)) {
-                            gameDesign.interactions = data as Interaction[]
-                        }
-                        break
-                    }
-                case 'flagMap': {
-                    gameDesign.flagMap = (data as FlagMap)
-                    break
-                }
-                case 'id':
-                case 'currentRoomId': {
-                    gameDesign[property] = data as string
-                    break
-                }
-                case 'openingSequenceId': {
-                    if (data === '' || typeof data === 'undefined') {
-                        gameDesign[property] = undefined
-                    } else {
-                        gameDesign[property] = data as string
-                    }
-                    break
-                }
-            }
-            return { gameDesign, gameItemIds }
+            mutateProperty(gameDesign, property, data)
+            return { gameDesign, history }
+        })
+    }
+
+    applyModification(description: string, mod: Partial<GameDesign>) {
+        console.log(description)
+        this.setState(state => {
+            const { gameDesign, history } = state
+            history.push({
+                label: description,
+                gameDesign: cloneData(gameDesign)
+            })
+            if (history.length > 10) { history.shift() }
+
+            return { gameDesign: { ...gameDesign, ...mod }, history }
         })
     }
 
@@ -177,25 +131,21 @@ export default class GameEditor extends Component<Props, State> {
                 label: `delete ${property}`,
                 gameDesign: cloneData(gameDesign)
             })
+            if (history.length > 10) { history.shift() }
             if (Array.isArray(gameDesign[property])) {
                 const [deletedItem] = (gameDesign[property] as GameDataItem[]).splice(index, 1)
             }
             return { gameDesign, history }
         })
     }
-    changeInteraction(data: Interaction, index?: number) {
+    changeInteraction(interaction: Interaction, index?: number) {
         this.setState(state => {
             const { gameDesign, history } = state
             history.push({
                 label: `change interaction`,
                 gameDesign: cloneData(gameDesign)
             })
-            const { interactions } = gameDesign
-            if (typeof index === 'undefined') {
-                interactions.push(data)
-            } else {
-                interactions.splice(index, 1, data)
-            }
+            changeOrAddIteration(gameDesign, interaction, index)
             return { gameDesign, history }
         })
     }
@@ -239,7 +189,7 @@ export default class GameEditor extends Component<Props, State> {
         const {
             gameDesign, tabOpen, gameItemIds, history,
         } = this.state
-        const { performUpdate, deleteArrayItem, openInEditor, changeInteraction } = this
+        const { performUpdate, deleteArrayItem, openInEditor, changeInteraction, applyModification } = this
 
         const sprites = [...gameDesign.sprites.map(data => new Sprite(data))]
 
@@ -251,6 +201,7 @@ export default class GameEditor extends Component<Props, State> {
                     deleteArrayItem,
                     openInEditor,
                     changeInteraction,
+                    applyModification,
                 }} >
                     <SpritesProvider value={sprites}>
                         <Container maxWidth='xl'
