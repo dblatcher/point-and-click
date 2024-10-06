@@ -15,6 +15,7 @@ import { ActorsInvolvedList } from "./ActorsInvolvedList";
 import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ConversationFlow } from "./ConversationFlow";
+import { patchMember } from "@/lib/update-design";
 
 type Props = {
     conversation: Conversation;
@@ -28,34 +29,17 @@ export const ConversationEditor = (props: Props) => {
     const [editOrderDialogBranchId, setEditOrderDialogBranchId] = useState<string | undefined>(undefined)
     const [actorsInvolved, setActorsInvolved] = useState<string[]>([])
 
-    const { gameDesign, performUpdate } = useGameDesign()
+    const { gameDesign, performUpdate, applyModification } = useGameDesign()
     const { conversations } = gameDesign
     const { conversation } = props
 
-    const updateFromPartial = (input: Partial<Conversation>) => {
-        const revisedData = {
-            ...cloneData(conversation),
-            ...input,
-        }
+    const updateFromPartial = (input: Partial<Conversation>, description?: string) => {
         if (listIds(conversations).includes(conversation.id)) {
-            performUpdate('conversations', revisedData)
+            applyModification(
+                description ?? `update conversation "${conversation.id}"`,
+                { conversations: patchMember(conversation.id, input, conversations) }
+            )
         }
-    }
-
-    const changeValue = (propery: keyof Conversation, newValue: string | number | boolean) => {
-        const modification: Partial<Conversation> = {}
-        switch (propery) {
-            case 'id':
-                console.warn("id change passed to ConversationEditor.changeValue", { newValue })
-                return;
-            case 'currentBranch':
-            case 'defaultBranch':
-                if (typeof newValue === 'string') {
-                    modification[propery] = newValue
-                }
-                break;
-        }
-        updateFromPartial(modification)
     }
 
     const updateChoiceListItem = (
@@ -107,7 +91,7 @@ export const ConversationEditor = (props: Props) => {
             return
         }
         Object.assign(choice, mod)
-        updateFromPartial({branches})
+        updateFromPartial({ branches })
     }
 
     const addNewBranchAndOpenIt = (branchName: string) => {
@@ -205,11 +189,17 @@ export const ConversationEditor = (props: Props) => {
                                     ...cloneData(conversation).branches,
                                     [branchKey]: undefined
                                 }
-                            }
+                            },
+                            `delete branch "${branchKey}" from ${conversation.id}`
                         )
                     }}
-                    changeDefaultBranch={branchKey => {
-                        if (branchKey) { changeValue('defaultBranch', branchKey) }
+                    changeDefaultBranch={defaultBranch => {
+                        if (defaultBranch) {
+                            updateFromPartial(
+                                { defaultBranch },
+                                `change default branch for "${conversation.id}" to ${defaultBranch}`
+                            )
+                        }
                     }}
                     addNewBranch={addNewBranchAndOpenIt}
                 />
