@@ -1,6 +1,6 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { ItemData } from "@/definitions";
-import { cloneData } from "@/lib/clone";
+import { patchMember } from "@/lib/update-design";
 import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
 import imageService from "@/services/imageService";
@@ -12,16 +12,16 @@ import { ItemMenuInner } from "../game-ui/ItemMenu";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FileAssetSelector } from "./FileAssetSelector";
+import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
 import { FramePicker } from "./SpriteEditor/FramePicker";
-import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 
 type Props = {
     item: ItemData;
 }
 
 export const ItemEditor = ({ item }: Props) => {
-    const { gameDesign, performUpdate } = useGameDesign()
+    const { gameDesign, applyModification } = useGameDesign()
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const { actorId = '', id, name } = item
 
@@ -32,7 +32,7 @@ export const ItemEditor = ({ item }: Props) => {
             console.warn(`tried to change id in ItemEditor`, { input })
             return
         }
-        performUpdate('items', { ...cloneData(item), ...input })
+        applyModification(`edit item ${id}`, { items: patchMember(id, input, gameDesign.items) })
     }
 
     const changeValue = (propery: keyof ItemData, newValue: string | undefined) => {

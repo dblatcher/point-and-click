@@ -10,6 +10,7 @@ import { StringInput } from "../SchemaForm/StringInput";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
+import { patchMember } from "@/lib/update-design";
 
 
 type Props = {
@@ -33,7 +34,7 @@ const testItem: ItemData = {
 }
 
 export const VerbEditor = ({ verb }: Props) => {
-    const { performUpdate } = useGameDesign()
+    const { applyModification, gameDesign } = useGameDesign()
     const [sampleTargetName, setSampleTargetName] = useState('TARGET')
     const [sampleItemName, setSampleItemName] = useState('ITEM')
 
@@ -41,7 +42,10 @@ export const VerbEditor = ({ verb }: Props) => {
         const property = field.key as keyof Verb;
         const mod = getModification(value, field) as Partial<Verb>
         if (property !== 'id') {
-            performUpdate('verbs', { ...verb, ...mod })
+            applyModification(
+                `change ${field.key} on verb ${verb.id}`,
+                { verbs: patchMember(verb.id, mod, gameDesign.verbs) }
+            )
         }
     }
 
@@ -68,7 +72,7 @@ export const VerbEditor = ({ verb }: Props) => {
                 <EditorBox title="Verb config" boxProps={{ flexBasis: 400 }}>
                     <SchemaForm
                         data={verb}
-                        schema={VerbSchema}
+                        schema={VerbSchema.omit({ id: true })}
                         changeValue={(value, field) => { handleUpdate(value, field) }}
                     />
                 </EditorBox>

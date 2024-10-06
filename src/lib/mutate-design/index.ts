@@ -1,8 +1,7 @@
 import { FlagMap, GameDataItem, GameDesign, Interaction, Sequence, Verb } from "@/definitions";
 import { findIndexById } from "../util";
 
-function addNewOrUpdate<T extends GameDataItem>(newData: unknown, list: T[]): T[] {
-    const newItem = newData as T;
+const addNewOrUpdate = <T extends GameDataItem>(newItem: T, list: T[]): T[] => {
     const matchIndex = findIndexById(newItem.id, list)
     if (matchIndex !== -1) {
         list.splice(matchIndex, 1, newItem)
@@ -22,7 +21,7 @@ export const mutateProperty = (gameDesign: GameDesign, property: keyof GameDesig
         case 'sequences':
         case 'endings':
             {
-                addNewOrUpdate(data, gameDesign[property] as GameDataItem[])
+                addNewOrUpdate(data as GameDataItem, gameDesign[property] as GameDataItem[])
                 break
             }
         case 'verbs':
@@ -30,7 +29,7 @@ export const mutateProperty = (gameDesign: GameDesign, property: keyof GameDesig
                 if (Array.isArray(data)) {
                     gameDesign[property] = data as Verb[]
                 } else {
-                    addNewOrUpdate(data, gameDesign[property])
+                    addNewOrUpdate(data as GameDataItem, gameDesign[property])
                 }
                 break
             }

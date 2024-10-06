@@ -20,7 +20,7 @@ const formSchema = GameContentsDataSchema.pick({
 }))
 
 export const Overview = () => {
-  const { gameDesign, performUpdate, openInEditor } = useGameDesign();
+  const { gameDesign, openInEditor, applyModification } = useGameDesign();
   const { setHeaderContent } = usePageMeta();
 
   const mainTab = tabOrder.find(tab => tab.id === 'main')
@@ -49,7 +49,9 @@ export const Overview = () => {
                 case 'id':
                 case 'currentRoomId':
                 case 'openingSequenceId':
-                  performUpdate(field.key, value)
+                  if (typeof value === 'string') {
+                    applyModification(`Change ${field.key} to "${value}"`, { [field.key]: value })
+                  }
               }
             }}
             fieldAliases={{

@@ -8,21 +8,25 @@ import imageService from "@/services/imageService";
 import { Card, Container, Typography } from "@mui/material";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
+import { patchMember } from "@/lib/update-design";
 
 type Props = {
     ending: Ending;
 }
 
 export const EndingEditor = ({ ending }: Props) => {
-    const { performUpdate } = useGameDesign()
+    const { applyModification, gameDesign } = useGameDesign()
 
     const handleUpdate = (value: FieldValue, field: FieldDef): void => {
         if (field.key === 'id') {
             console.warn('EndingEditor tried to change id', { value })
             return
         }
-        const newState = { ...cloneData(ending), ...getModification(value, field) } as Ending
-        performUpdate('endings', newState)
+        const mod = getModification(value, field) as Partial<Ending>
+        applyModification(
+            `change ${field.key} on verb ${ending.id}`,
+            { endings: patchMember(ending.id, mod, gameDesign.endings) }
+        )
     }
 
     return (
