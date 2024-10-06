@@ -1,29 +1,28 @@
-import { NumberInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
+import { FilterWidget } from "@/components/Filter/FilterWidget";
+import { NumberInput, SelectInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
 import { ActorData } from "@/definitions";
-import { cloneData } from "@/lib/clone";
+import { patchMember } from "@/lib/update-design";
 import { listIds } from "@/lib/util";
 import { Alert, Box, Divider, Stack } from "@mui/material";
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { SpritePreview } from "../SpritePreview";
 import { StatusFramesDialogButton } from "./StatusFramesDialogButton";
-import { FilterControl } from "../../Filter/FilterControl";
-import { FilterWidget } from "@/components/Filter/FilterWidget";
 
 type Props = {
     data: ActorData;
 }
 
 export const ActorAppearanceControl = ({ data }: Props) => {
-    const { performUpdate } = useGameDesign()
+    const { applyModification, gameDesign } = useGameDesign()
     const sprites = useSprites()
 
-    const updateFromPartial = (modification: Partial<ActorData>): void => {
-        performUpdate('actors', {
-            ...cloneData(data),
-            ...modification,
-        })
+    const updateFromPartial = (input: Partial<ActorData>, description?: string) => {
+        applyModification(
+            description ?? `update Actor "${data.id}" appearance`,
+            { actors: patchMember(data.id, input, gameDesign.actors) }
+        )
     }
 
     const { sprite: spriteId, width = 1, height = 1 } = data

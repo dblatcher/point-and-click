@@ -14,6 +14,8 @@ import { ActorAppearanceControl } from "./ActorAppearanceControl";
 import { AnimationSounds } from "./AnimationSounds";
 import { PositionPreview } from "./PositionPreview";
 import { ColorInput } from "../ColorInput";
+import { listIds } from "@/lib/util";
+import { patchMember } from "@/lib/update-design";
 
 
 type Props = {
@@ -28,15 +30,15 @@ enum ActorEditorTab {
 }
 
 export const ActorEditor = ({ data }: Props) => {
-    const { performUpdate } = useGameDesign()
+    const { gameDesign, applyModification } = useGameDesign()
     const [tabOpen, setTabOpen] = useState(ActorEditorTab.Details)
     const sprites = useSprites()
 
-    const updateFromPartial = (modification: Partial<ActorData>): void => {
-        performUpdate('actors', {
-            ...cloneData(data),
-            ...modification,
-        })
+    const updateFromPartial = (input: Partial<ActorData>, description?: string) => {
+        applyModification(
+            description ?? `update Actor "${data.id}"`,
+            { actors: patchMember(data.id, input, gameDesign.actors) }
+        )
     }
 
     const changeSoundMap = (key: string, value?: SoundValue[]): void => {
