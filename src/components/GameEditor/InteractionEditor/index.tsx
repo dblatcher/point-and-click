@@ -17,7 +17,7 @@ interface Props {
     gameDesign: GameDesign;
     changeInteraction: { (data: Interaction, index?: number): void };
     deleteInteraction: { (index: number): void };
-    updateData: { (data: Interaction[]): void };
+    updateInteractionList: { (data: Interaction[]): void };
 }
 
 interface State {
@@ -92,7 +92,7 @@ export class InteractionEditor extends Component<Props, State> {
     }
 
     changeOrder(index: number, direction: 'down' | 'up') {
-        const { updateData, gameDesign } = this.props
+        const { updateInteractionList, gameDesign } = this.props
         const { interactions } = gameDesign
         const endPlace = interactions.length - 1;
         const list = [...interactions]
@@ -103,7 +103,7 @@ export class InteractionEditor extends Component<Props, State> {
             : index > 0 ? index - 1 : endPlace
 
         list.splice(newPlace, 0, movedItem)
-        return updateData(list)
+        return updateInteractionList(list)
     }
 
     render() {

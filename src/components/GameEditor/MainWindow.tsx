@@ -33,7 +33,7 @@ type Props = {
 
 export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
     const {
-        gameDesign, performUpdate, deleteArrayItem, changeInteraction,
+        gameDesign, deleteArrayItem, changeInteraction, applyModification,
     } = useGameDesign()
 
     useKeyBoard([
@@ -118,7 +118,7 @@ export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
             return <InteractionEditor
                 changeInteraction={changeInteraction}
                 deleteInteraction={(index: number) => { deleteArrayItem(index, 'interactions') }}
-                updateData={data => { performUpdate('interactions', data) }}
+                updateInteractionList={(interactions) => { applyModification('change interaction order', { interactions }) }}
                 gameDesign={gameDesign} />
         case 'sequences':
             return currentSequence
