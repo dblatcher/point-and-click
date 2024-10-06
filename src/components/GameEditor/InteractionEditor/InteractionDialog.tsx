@@ -15,7 +15,6 @@ import { ConsequenceCard } from "../SequenceEditor/ConsequenceCard";
 import { ConsequenceDialog } from "../SequenceEditor/ConsequenceDialog";
 import { makeNewConsequence } from "../defaults";
 import { InteractionIcon } from "../material-icons";
-import { FlagListSelector } from "./FlagListSelector";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { FlagConditionControl } from "./FlagConditionControl";
 
