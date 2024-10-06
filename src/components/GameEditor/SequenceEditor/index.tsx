@@ -8,6 +8,7 @@ import { Grid } from "@mui/material";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { SequenceFlow } from "./SequenceFlow";
+import { patchMember } from "@/lib/update-design";
 
 
 type Props = {
@@ -18,18 +19,24 @@ type Props = {
 
 
 export const SequenceEditor = (props: Props) => {
-    const { performUpdate } = useGameDesign()
+    const { applyModification, gameDesign } = useGameDesign()
 
-    const updateFromPartial = (input: Partial<Sequence> | { (state: Sequence): Partial<Sequence> }) => {
+    const updateFromPartial = (
+        input: Partial<Sequence> | { (state: Sequence): Partial<Sequence> },
+        description?: string
+    ) => {
         const { data, handleChoiceSequenceChange } = props
-        const modification = (typeof input === 'function')
+        const modification: Partial<Sequence> = (typeof input === 'function')
             ? input(cloneData(data)) : input
 
         if (handleChoiceSequenceChange) {
             return handleChoiceSequenceChange({ ...data, ...modification })
         }
 
-        performUpdate('sequences', { ...data, ...modification })
+        applyModification(
+            description ?? `update sequence ${data.id}`,
+            { sequences: patchMember(data.id, modification, gameDesign.sequences) }
+        )
     }
 
     const changeOrder = (order: Order, stageIndex: number, actorId: string, orderIndex: number) => {
@@ -68,7 +75,7 @@ export const SequenceEditor = (props: Props) => {
             if (!immediateConsequences) { return {} }
             immediateConsequences.splice(consequenceIndex, 1, isImmediateConsequence.data)
             return { stages }
-        })
+        }, `sequence ${props.data.id}: change consequece in stage ${stageIndex + 1}`)
     }
 
     const changeConsequenceList = (newList: ImmediateConsequence[], stageIndex: number) => {
@@ -88,7 +95,7 @@ export const SequenceEditor = (props: Props) => {
             if (!stage) { return {} }
             stage.narrative = newNarrative
             return { stages }
-        })
+        }, `sequence ${props.data.id}: change narrative for stage ${stageIndex + 1}`)
     }
 
     const { data: sequence, heading } = props
