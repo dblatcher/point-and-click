@@ -1,4 +1,4 @@
-import { GameDataItem, GameDesign, Interaction, Sequence, Verb } from "@/definitions";
+import { GameDataItem, GameDesign, Interaction, Sequence } from "@/definitions";
 import { findIndexById } from "../util";
 import { GameDataItemType } from "@/definitions/Game";
 
