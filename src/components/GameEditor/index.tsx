@@ -19,6 +19,7 @@ import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
 import { patchMember } from "@/lib/update-design";
+import { GameState } from "../game";
 
 
 type State = {
@@ -96,15 +97,21 @@ export default class GameEditor extends Component<Props, State> {
         imageService.off('update', this.respondToServiceUpdate)
     }
 
+    historyUpdate (label:string, state:State) {
+        const { gameDesign, history } = state
+        history.push({
+            label,
+            gameDesign: cloneData(gameDesign)
+        })
+        if (history.length > 10) { history.shift() }
+        return history
+    }
+
     performUpdate(property: keyof GameDesign, data: unknown) {
         console.log(property, data)
         this.setState(state => {
-            const { gameDesign, history } = state
-            history.push({
-                label: `update ${property}`,
-                gameDesign: cloneData(gameDesign)
-            })
-            if (history.length > 10) { history.shift() }
+            const { gameDesign } = state
+            const history = this.historyUpdate(`update ${property}`, state)
             mutateProperty(gameDesign, property, data)
             return { gameDesign, history }
         })
@@ -113,26 +120,17 @@ export default class GameEditor extends Component<Props, State> {
     applyModification(description: string, mod: Partial<GameDesign>) {
         console.log(description)
         this.setState(state => {
-            const { gameDesign, history } = state
-            history.push({
-                label: description,
-                gameDesign: cloneData(gameDesign)
-            })
-            if (history.length > 10) { history.shift() }
-
-            return { gameDesign: { ...gameDesign, ...mod }, history }
+            const history = this.historyUpdate(description, state)
+            return { gameDesign: { ...state.gameDesign, ...mod }, history }
         })
     }
 
     deleteArrayItem(index: number, property: keyof GameDesign) {
         // TO DO - check for references to the ID of the deleted item?
+        console.log(`delete ${property}`)
         this.setState(state => {
-            const { gameDesign, history } = state
-            history.push({
-                label: `delete ${property}`,
-                gameDesign: cloneData(gameDesign)
-            })
-            if (history.length > 10) { history.shift() }
+            const { gameDesign } = state
+            const history = this.historyUpdate(`delete ${property}`, state)
             if (Array.isArray(gameDesign[property])) {
                 const [deletedItem] = (gameDesign[property] as GameDataItem[]).splice(index, 1)
             }
@@ -141,11 +139,8 @@ export default class GameEditor extends Component<Props, State> {
     }
     changeInteraction(interaction: Interaction, index?: number) {
         this.setState(state => {
-            const { gameDesign, history } = state
-            history.push({
-                label: `change interaction`,
-                gameDesign: cloneData(gameDesign)
-            })
+            const { gameDesign } = state
+            const history = this.historyUpdate(`change interaction`, state)
             changeOrAddIteration(gameDesign, interaction, index)
             return { gameDesign, history }
         })
