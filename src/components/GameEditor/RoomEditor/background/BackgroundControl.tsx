@@ -14,9 +14,9 @@ interface Props {
 
 
 export const BackgroundControl = ({ room }: Props) => {
-    const { performUpdate } = useGameDesign()
+    const { modifyRoom } = useGameDesign()
     const updateRoom = (mod: Partial<RoomData>) => {
-        performUpdate('rooms', { ...room, ...mod })
+        modifyRoom(`change background, room ${room.id}`, room.id, mod)
     }
 
     const imageAssets = imageService.getAll().filter(image => ['background', 'any'].includes(image.category))

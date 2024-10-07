@@ -19,7 +19,7 @@ export const ZoneFeaturesControl = ({
 }: Props) => {
 
     const [clickEffect, setClickEffect] = useState<ClickEffect | undefined>(undefined)
-    const { gameDesign, performUpdate } = useGameDesign()
+    const { gameDesign, modifyRoom } = useGameDesign()
     const [activeHotspotIndex, setActiveHotspotIndex] = useState<number | undefined>(0);
     const [activeObstacleIndex, setActiveObstacleIndex] = useState<number | undefined>(0);
     const [activeWalkableIndex, setActiveWalkableIndex] = useState<number | undefined>(0);
@@ -37,7 +37,7 @@ export const ZoneFeaturesControl = ({
                 walkableAreas.splice(index, 1)
                 break;
         }
-        performUpdate('rooms', { ...room, obstacleAreas, hotspots, walkableAreas })
+        modifyRoom(`remove ${type} from room ${room.id}`, room.id, { obstacleAreas, hotspots, walkableAreas })
     }
 
     const changeHotspot = (index: number, mod: Partial<HotspotZone>) => {
@@ -47,7 +47,7 @@ export const ZoneFeaturesControl = ({
             return
         }
         Object.assign(hotspot, mod)
-        performUpdate('rooms', { ...room, hotspots })
+        modifyRoom(`change hotspot in room ${room.id}`, room.id, { hotspots })
     }
     const changeZoneByType = (type: "obstacle" | "walkable") => (index: number, mod: Partial<Zone>) => {
         const { walkableAreas = [], obstacleAreas = [] } = cloneData(room)
@@ -57,7 +57,7 @@ export const ZoneFeaturesControl = ({
             return
         }
         Object.assign(zone, mod)
-        performUpdate('rooms', { ...room, walkableAreas, obstacleAreas })
+        modifyRoom(`change ${type} in room ${room.id}`, room.id, { walkableAreas, obstacleAreas })
     }
 
     const selectZone = (folderId: string, data?: { id: string }) => {
@@ -104,7 +104,7 @@ export const ZoneFeaturesControl = ({
             activeWalkableIndex,
         );
         const updatedRoom = { ...room, ...changesFromClick.roomChange }
-        performUpdate('rooms', updatedRoom)
+        modifyRoom(`click: ${clickEffect.type} in room ${room.id}}`, room.id, changesFromClick.roomChange)
         setActiveHotspotIndex(changesFromClick.activeHotspotIndex)
         setActiveObstacleIndex(changesFromClick.activeObstacleIndex)
         setActiveWalkableIndex(changesFromClick.activeWalkableIndex)

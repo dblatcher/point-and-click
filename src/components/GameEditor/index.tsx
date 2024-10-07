@@ -18,6 +18,7 @@ import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
+import { patchMember } from "@/lib/update-design";
 
 
 type State = {
@@ -202,6 +203,9 @@ export default class GameEditor extends Component<Props, State> {
                     openInEditor,
                     changeInteraction,
                     applyModification,
+                    modifyRoom: (description, id, mod) => {
+                        applyModification(description, { rooms: patchMember(id, mod, gameDesign.rooms) })
+                    }
                 }} >
                     <SpritesProvider value={sprites}>
                         <Container maxWidth='xl'

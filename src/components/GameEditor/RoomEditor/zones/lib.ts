@@ -51,7 +51,7 @@ export const getNextClickEffect = (clickEffect: ClickEffect, room: RoomData): Cl
 }
 
 export type ChangesFromClick = {
-    roomChange?: Pick<RoomData, 'obstacleAreas' | 'hotspots' | 'walkableAreas'>;
+    roomChange: Pick<RoomData, 'obstacleAreas' | 'hotspots' | 'walkableAreas'>;
     activeHotspotIndex?: number,
     activeObstacleIndex?: number,
     activeWalkableIndex?: number,

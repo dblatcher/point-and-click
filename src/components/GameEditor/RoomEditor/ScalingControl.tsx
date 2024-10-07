@@ -28,10 +28,10 @@ export const ScalingControl = ({ room }: Props) => {
     const [testActor, setTestActor] = useState<ActorData | undefined>(undefined)
     const [actorDialogOpen, setActorDialogOpen] = useState<boolean>(false)
     const { scaling = [], height } = room
-    const { performUpdate, gameDesign } = useGameDesign()
+    const { gameDesign, modifyRoom } = useGameDesign()
 
     const change = (scaling: ScaleLevel) => {
-        performUpdate('rooms', { ...room, scaling })
+        modifyRoom(`change scaling, room ${room.id}`, room.id, { scaling })
     }
 
     const handleAdjustment = (

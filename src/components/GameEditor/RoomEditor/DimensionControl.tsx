@@ -31,11 +31,11 @@ const LeftGridCell = ({ children }: { children?: ReactNode }) => <Grid
 
 
 export const DimensionControl = ({ room }: Props) => {
-    const { performUpdate } = useGameDesign()
+    const { modifyRoom } = useGameDesign()
     const [scale, setScale] = useState(.75)
     const [viewAngle, setViewAngle] = useState(0)
     const updateRoom = (mod: Record<string, FieldValue>) => {
-        performUpdate('rooms', { ...room, ...mod })
+        modifyRoom(`change dimension on room ${room.id}`, room.id, mod)
     }
     const frameCenter = (room.width * .5) - (room.frameWidth * .5)
     const viewBoxLeft = frameCenter - (viewAngle * frameCenter);

@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { GameDesign, Interaction } from '@/definitions'
+import { GameDesign, Interaction, RoomData } from '@/definitions'
 import { TabId } from '@/lib/editor-config'
 
 const gameDesignContext = createContext<{
@@ -8,7 +8,8 @@ const gameDesignContext = createContext<{
     deleteArrayItem: { (index: number, property: keyof GameDesign): void },
     openInEditor: { (itemType: TabId, itemId: string | undefined): void }
     changeInteraction: { (data: Interaction, index?: number): void },
-    applyModification: { (description: string, mod: Partial<GameDesign>): void }
+    applyModification: { (description: string, mod: Partial<GameDesign>): void },
+    modifyRoom: { (description:string, id: string, mod: Partial<RoomData>): void }
 }>(
     {
         gameDesign: {
@@ -30,6 +31,7 @@ const gameDesignContext = createContext<{
         openInEditor: () => { },
         changeInteraction: () => { },
         applyModification: () => { },
+        modifyRoom: () => { },
     }
 )
 

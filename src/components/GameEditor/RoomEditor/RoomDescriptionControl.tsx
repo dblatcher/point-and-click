@@ -10,22 +10,22 @@ type RoomEditorProps = {
 }
 
 export const RoomDescriptionControl = ({ room }: RoomEditorProps) => {
-    const { performUpdate } = useGameDesign()
+    const { modifyRoom } = useGameDesign()
 
     return <Box paddingY={5} display={'flex'} flexDirection={'column'} gap={10}>
         <StringInput optional
             label="room name"
             value={room.name ?? ''}
-            inputHandler={(value) => {
-                performUpdate('rooms', { ...room, name: value })
+            inputHandler={(name) => {
+                modifyRoom(`change name, room ${room.id}`, room.id, {name})
             }}
         />
         <Box>
             <Typography variant="h3">
                 Narrative Description<HelpButton helpTopic="narrative" />
             </Typography>
-            <NarrativeEditor narrative={room.narrative} noDialog update={(newNarrative) => {
-                performUpdate('rooms', { ...room, narrative: newNarrative })
+            <NarrativeEditor narrative={room.narrative} noDialog update={(narrative) => {
+                modifyRoom(`change narrative, room ${room.id}`, room.id, {narrative})
             }} />
         </Box>
     </Box>
