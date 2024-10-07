@@ -1,11 +1,12 @@
 import { GameDesignProvider } from "@/context/game-design-context";
 import { SpritesProvider } from "@/context/sprite-context";
 import { prebuiltGameDesign } from '@/data/fullGame';
-import { GameDataItem, GameDesign, Interaction } from "@/definitions";
+import { GameDesign, Interaction } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { changeOrAddIteration, mutateProperty } from "@/lib/mutate-design";
+import { changeOrAddInteraction, mutateProperty } from "@/lib/mutate-design";
+import { patchMember } from "@/lib/update-design";
 import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import soundService from "@/services/soundService";
@@ -18,8 +19,6 @@ import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
-import { patchMember } from "@/lib/update-design";
-import { GameState } from "../game";
 
 
 type State = {
@@ -97,7 +96,7 @@ export default class GameEditor extends Component<Props, State> {
         imageService.off('update', this.respondToServiceUpdate)
     }
 
-    historyUpdate (label:string, state:State) {
+    historyUpdate(label: string, state: State) {
         const { gameDesign, history } = state
         history.push({
             label,
@@ -125,15 +124,13 @@ export default class GameEditor extends Component<Props, State> {
         })
     }
 
-    deleteArrayItem(index: number, property: keyof GameDesign) {
+    deleteArrayItem(index: number, property: GameDataItemType | 'interactions') {
         // TO DO - check for references to the ID of the deleted item?
         console.log(`delete ${property}`)
         this.setState(state => {
             const { gameDesign } = state
             const history = this.historyUpdate(`delete ${property}`, state)
-            if (Array.isArray(gameDesign[property])) {
-                const [deletedItem] = (gameDesign[property] as GameDataItem[]).splice(index, 1)
-            }
+            gameDesign[property].splice(index, 1)
             return { gameDesign, history }
         })
     }
@@ -141,7 +138,7 @@ export default class GameEditor extends Component<Props, State> {
         this.setState(state => {
             const { gameDesign } = state
             const history = this.historyUpdate(`change interaction`, state)
-            changeOrAddIteration(gameDesign, interaction, index)
+            changeOrAddInteraction(gameDesign, interaction, index)
             return { gameDesign, history }
         })
     }

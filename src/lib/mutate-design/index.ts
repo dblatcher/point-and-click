@@ -61,7 +61,7 @@ export const mutateProperty = (gameDesign: GameDesign, property: keyof GameDesig
     return gameDesign
 }
 
-export const changeOrAddIteration = (gameDesign: GameDesign, interaction: Interaction, index?: number) => {
+export const changeOrAddInteraction = (gameDesign: GameDesign, interaction: Interaction, index?: number) => {
     const { interactions } = gameDesign
     if (typeof index === 'undefined') {
         interactions.push(interaction)
