@@ -56,7 +56,7 @@ const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designP
 }
 
 export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, schema, designProperty, itemTypeName }: Props<DataType>) => {
-    const { gameDesign, performUpdate, openInEditor } = useGameDesign()
+    const { gameDesign, createGameDataItem, openInEditor } = useGameDesign()
     const [warning, setWarning] = useState<string | undefined>()
 
     const handleStartFromScratch = (proposedId: string) => {
@@ -90,7 +90,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
         if (existingData.some(existingItem => existingItem.id == newDataItem.id)) {
             return setWarning(`${designProperty} already has a member with the id "${newDataItem.id}"`)
         }
-        performUpdate(designProperty, newDataItem)
+        createGameDataItem(designProperty, newDataItem)
         openInEditor(designProperty, newDataItem.id)
     }
 

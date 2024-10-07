@@ -2,10 +2,10 @@ import { GameDesignProvider } from "@/context/game-design-context";
 import { SpritesProvider } from "@/context/sprite-context";
 import { prebuiltGameDesign } from '@/data/fullGame';
 import { GameDesign, Interaction } from "@/definitions";
-import { GameDataItemType } from "@/definitions/Game";
+import { GameDataItem, GameDataItemType } from "@/definitions/Game";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { changeOrAddInteraction, mutateProperty } from "@/lib/mutate-design";
+import { changeOrAddInteraction, addGameDataItem } from "@/lib/mutate-design";
 import { patchMember } from "@/lib/update-design";
 import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
@@ -69,7 +69,7 @@ export default class GameEditor extends Component<Props, State> {
         }
 
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
-        this.performUpdate = this.performUpdate.bind(this)
+        this.createGameDataItem = this.createGameDataItem.bind(this)
         this.changeInteraction = this.changeInteraction.bind(this)
         this.deleteArrayItem = this.deleteArrayItem.bind(this)
         this.loadNewGame = this.loadNewGame.bind(this)
@@ -106,12 +106,12 @@ export default class GameEditor extends Component<Props, State> {
         return history
     }
 
-    performUpdate(property: keyof GameDesign, data: unknown) {
+    createGameDataItem(property: GameDataItemType, data: GameDataItem) {
         console.log(property, data)
         this.setState(state => {
             const { gameDesign } = state
             const history = this.historyUpdate(`update ${property}`, state)
-            mutateProperty(gameDesign, property, data)
+            addGameDataItem(gameDesign, property, data)
             return { gameDesign, history }
         })
     }
@@ -182,7 +182,7 @@ export default class GameEditor extends Component<Props, State> {
         const {
             gameDesign, tabOpen, gameItemIds, history,
         } = this.state
-        const { performUpdate, deleteArrayItem, openInEditor, changeInteraction, applyModification } = this
+        const { createGameDataItem, deleteArrayItem, openInEditor, changeInteraction, applyModification } = this
 
         const sprites = [...gameDesign.sprites.map(data => new Sprite(data))]
 
@@ -190,7 +190,7 @@ export default class GameEditor extends Component<Props, State> {
             <ThemeProvider theme={editorTheme}>
                 <GameDesignProvider value={{
                     gameDesign: this.state.gameDesign,
-                    performUpdate,
+                    createGameDataItem,
                     deleteArrayItem,
                     openInEditor,
                     changeInteraction,

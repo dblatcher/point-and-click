@@ -29,7 +29,7 @@ export const ConversationEditor = (props: Props) => {
     const [editOrderDialogBranchId, setEditOrderDialogBranchId] = useState<string | undefined>(undefined)
     const [actorsInvolved, setActorsInvolved] = useState<string[]>([])
 
-    const { gameDesign, performUpdate, applyModification } = useGameDesign()
+    const { gameDesign, createGameDataItem, applyModification } = useGameDesign()
     const { conversations } = gameDesign
     const { conversation } = props
 
@@ -142,7 +142,7 @@ export const ConversationEditor = (props: Props) => {
             return { branches }
         }
         updateFromPartial(getModifiedBranches())
-        performUpdate('sequences', sequence)
+        createGameDataItem('sequences', sequence)
     }
 
     const getBranchAndChoice = (): { branch?: ConversationBranch; choice?: ConversationChoice, branches: Conversation['branches'] } => {

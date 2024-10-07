@@ -1,5 +1,6 @@
-import { FlagMap, GameDataItem, GameDesign, Interaction, Sequence, Verb } from "@/definitions";
+import { GameDataItem, GameDesign, Interaction, Sequence, Verb } from "@/definitions";
 import { findIndexById } from "../util";
+import { GameDataItemType } from "@/definitions/Game";
 
 const addNewOrUpdate = <T extends GameDataItem>(newItem: T, list: T[]): T[] => {
     const matchIndex = findIndexById(newItem.id, list)
@@ -11,53 +12,8 @@ const addNewOrUpdate = <T extends GameDataItem>(newItem: T, list: T[]): T[] => {
     return list
 }
 
-export const mutateProperty = (gameDesign: GameDesign, property: keyof GameDesign, data: unknown) => {
-    switch (property) {
-        case 'rooms':
-        case 'items':
-        case 'actors':
-        case 'conversations':
-        case 'sprites':
-        case 'sequences':
-        case 'endings':
-            {
-                addNewOrUpdate(data as GameDataItem, gameDesign[property] as GameDataItem[])
-                break
-            }
-        case 'verbs':
-            {
-                if (Array.isArray(data)) {
-                    gameDesign[property] = data as Verb[]
-                } else {
-                    addNewOrUpdate(data as GameDataItem, gameDesign[property])
-                }
-                break
-            }
-        case 'interactions':
-            {
-                if (Array.isArray(data)) {
-                    gameDesign.interactions = data as Interaction[]
-                }
-                break
-            }
-        case 'flagMap': {
-            gameDesign.flagMap = (data as FlagMap)
-            break
-        }
-        case 'id':
-        case 'currentRoomId': {
-            gameDesign[property] = data as string
-            break
-        }
-        case 'openingSequenceId': {
-            if (data === '' || typeof data === 'undefined') {
-                gameDesign[property] = undefined
-            } else {
-                gameDesign[property] = data as string
-            }
-            break
-        }
-    }
+export const addGameDataItem = (gameDesign: GameDesign, property: GameDataItemType, data: GameDataItem) => {
+    addNewOrUpdate(data, gameDesign[property])
     return gameDesign
 }
 
