@@ -29,7 +29,7 @@ export const ConversationEditor = (props: Props) => {
     const [editOrderDialogBranchId, setEditOrderDialogBranchId] = useState<string | undefined>(undefined)
     const [actorsInvolved, setActorsInvolved] = useState<string[]>([])
 
-    const { gameDesign, createGameDataItem, applyModification } = useGameDesign()
+    const { gameDesign, applyModification } = useGameDesign()
     const { conversations } = gameDesign
     const { conversation } = props
 
@@ -131,18 +131,6 @@ export const ConversationEditor = (props: Props) => {
             return { branches }
         }
         updateFromPartial(getModifiedBranches())
-    }
-
-    const addSequence = (sequence: Sequence) => {
-        const getModifiedBranches = () => {
-            const { choice, branches } = getBranchAndChoice()
-            if (choice) {
-                choice.sequence = sequence.id
-            }
-            return { branches }
-        }
-        updateFromPartial(getModifiedBranches())
-        createGameDataItem('sequences', sequence)
     }
 
     const getBranchAndChoice = (): { branch?: ConversationBranch; choice?: ConversationChoice, branches: Conversation['branches'] } => {
@@ -247,10 +235,10 @@ export const ConversationEditor = (props: Props) => {
                             choice={choice}
                             conversation={conversation}
                             openBranchId={openBranchId ?? ''}
-                            {...{
-                                addChoiceListItem, removeChoiceListItem, updateChoiceListItem, addSequence,
-                                handleChoiceUpdate,
-                            }}
+                            addChoiceListItem={addChoiceListItem}
+                            removeChoiceListItem={removeChoiceListItem}
+                            updateChoiceListItem={updateChoiceListItem}
+                            handleChoiceUpdate={handleChoiceUpdate}
                             actorIdsForSequences={actorIdsForSequences}
                         />
                     </>)}
