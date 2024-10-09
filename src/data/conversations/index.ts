@@ -42,7 +42,10 @@ const chat: Conversation = {
                                     PLAYER: [
                                         { type: 'say', text: 'hello there, lets talk about fish', time: 100 },
                                     ]
-                                }
+                                },
+                                immediateConsequences: [
+                                    { type: 'flag', flag: 'TEST_FLAG_3', on: true },
+                                ]
                             },
                             {
                                 actorOrders: {

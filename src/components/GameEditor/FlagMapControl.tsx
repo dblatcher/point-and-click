@@ -7,7 +7,7 @@ import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { makeNewFlag } from "./defaults";
 import { formatIdInput } from "./helpers";
 import { AddIcon, DeleteIcon, FlagFilledIcon, FlagOutlinedIcon } from "./material-icons";
-import { findFlagUsages } from "@/lib/mutate-design";
+import { findFlagUsages, getModificationToRemoveFlagAndReferences } from "@/lib/find-uses";
 
 const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
     const { gameDesign, applyModification } = useGameDesign()
@@ -28,15 +28,12 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
         })
     }
     const deleteFlag = () => {
-        applyModification(`delete flag ${id}`, {
-            flagMap: {
-                ...gameDesign.flagMap,
-                [id]: undefined
-            }
-        })
+        applyModification(`delete flag ${id}`,
+            getModificationToRemoveFlagAndReferences(id, gameDesign)
+        )
     }
 
-    const { conversationsWithFlag, sequencesWithFlag, interactionsWithFlag } = findFlagUsages(gameDesign, id)
+    const { conversationsWithFlag, sequencesWithFlag, interactionsWithFlagConditions, interactionsWithFlagConsequences } = findFlagUsages(gameDesign, id)
 
     return (
         <Box>
@@ -68,9 +65,10 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
                     onClick={deleteFlag}
                 >
                     <Typography>Referenced in:</Typography>
-                    <Typography>{interactionsWithFlag.length} interactions</Typography>
-                    <Typography>{sequencesWithFlag.length} sequences</Typography>
-                    <Typography>{conversationsWithFlag.length} sequences</Typography>
+                    <Typography>{interactionsWithFlagConditions.length} interactions as condition</Typography>
+                    <Typography>{interactionsWithFlagConsequences.length} interactions with flag consequences</Typography>
+                    <Typography>{sequencesWithFlag.length} sequences with flag consequences</Typography>
+                    <Typography>{conversationsWithFlag.length} conversation sequences with flag consequences</Typography>
                 </ButtonWithConfirm>
             </Box>
         </Box >

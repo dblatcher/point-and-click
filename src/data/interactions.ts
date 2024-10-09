@@ -308,6 +308,7 @@ export const interactions: Interaction[] = [
     {
         verbId: 'TALK',
         targetId: 'FIRE',
+        flagsThatMustBeTrue: ['TEST_FLAG_3'],
         consequences: [
             {
                 type: 'order', orders: [
@@ -370,6 +371,7 @@ export const interactions: Interaction[] = [
                     }
                 ]
             },
+            { type: 'flag', flag: 'TEST_FLAG_3', on: true },
             { type: 'changeStatus', targetId: 'DOLL', status: 'BACKWARDS', targetType: 'actor' }
         ]
     },
