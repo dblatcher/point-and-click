@@ -53,7 +53,7 @@ const getFilteredTargets = (
 }
 
 export const InteractionEditor: React.FunctionComponent = () => {
-    const { gameDesign, changeOrAddInteraction, applyModification, deleteArrayItem } = useGameDesign()
+    const { gameDesign, changeOrAddInteraction, applyModification, deleteInteraction } = useGameDesign()
     const { interactions, verbs, items, rooms } = gameDesign
 
     const [verbFilter, setVerbFilter] = useState('')
@@ -146,7 +146,7 @@ export const InteractionEditor: React.FunctionComponent = () => {
                                 interaction={interaction}
                                 index={index}
                                 changeOrder={moveInteractionInList}
-                                deleteInteraction={(index) => deleteArrayItem(index, 'interactions')}
+                                deleteInteraction={deleteInteraction}
                                 openEditor={() => {
                                     setEdittedIndex(index)
                                     setInteractionUnderConstruction(cloneData(interaction))

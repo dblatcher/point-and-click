@@ -72,6 +72,7 @@ export default class GameEditor extends Component<Props, State> {
         this.createGameDataItem = this.createGameDataItem.bind(this)
         this.changeOrAddInteraction = this.changeOrAddInteraction.bind(this)
         this.deleteArrayItem = this.deleteArrayItem.bind(this)
+        this.deleteInteraction = this.deleteInteraction.bind(this)
         this.loadNewGame = this.loadNewGame.bind(this)
         this.undo = this.undo.bind(this)
         this.openInEditor = this.openInEditor.bind(this)
@@ -124,13 +125,30 @@ export default class GameEditor extends Component<Props, State> {
         })
     }
 
-    deleteArrayItem(index: number, property: GameDataItemType | 'interactions') {
+    deleteArrayItem(index: number, property: GameDataItemType) {
         // TO DO - check for references to the ID of the deleted item?
-        console.log(`delete ${property}`)
+        const message = `delete "${this.state.gameDesign[property][index]?.id}" from ${property}`
+        console.log(message)
         this.setState(state => {
             const { gameDesign } = state
-            const history = this.historyUpdate(`delete ${property}`, state)
+            const history = this.historyUpdate(message, state)
             gameDesign[property].splice(index, 1)
+            return { gameDesign, history }
+        })
+    }
+    deleteInteraction(index: number) {
+        const interactionToDelete = this.state.gameDesign.interactions[index]
+        if (!interactionToDelete) {
+            return
+        }
+        const { verbId, targetId, itemId = '[no item]' } = interactionToDelete
+        this.setState(state => {
+            const { gameDesign } = state
+            const history = this.historyUpdate(
+                `delete interaction #${index}: ${verbId} ${targetId} (${itemId})`
+                , state
+            )
+            gameDesign.interactions.splice(index, 1)
             return { gameDesign, history }
         })
     }
@@ -182,7 +200,7 @@ export default class GameEditor extends Component<Props, State> {
         const {
             gameDesign, tabOpen, gameItemIds, history,
         } = this.state
-        const { createGameDataItem, deleteArrayItem, openInEditor, changeOrAddInteraction, applyModification } = this
+        const { createGameDataItem, deleteArrayItem, openInEditor, changeOrAddInteraction, applyModification, deleteInteraction } = this
 
         const sprites = [...gameDesign.sprites.map(data => new Sprite(data))]
 
@@ -193,7 +211,8 @@ export default class GameEditor extends Component<Props, State> {
                     createGameDataItem,
                     deleteArrayItem,
                     openInEditor,
-                    changeOrAddInteraction: changeOrAddInteraction,
+                    changeOrAddInteraction,
+                    deleteInteraction,
                     applyModification,
                     modifyRoom: (description, id, mod) => {
                         applyModification(description, { rooms: patchMember(id, mod, gameDesign.rooms) })
