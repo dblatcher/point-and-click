@@ -1,4 +1,3 @@
-
 import { AddIcon } from "@/components/GameEditor/material-icons";
 import { SelectInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
@@ -13,11 +12,6 @@ import { InteractionDialog } from "./InteractionDialog";
 import { InteractionTableHeaders } from "./InteractionTableHeaders";
 import { InteractionTableRow } from "./InteractionTableRow";
 
-
-interface Props {
-    deleteInteraction: { (index: number): void };
-    updateInteractionList: { (data: Interaction[]): void };
-}
 
 const doesMatchFilters = (
     verbFilter?: string,
@@ -58,10 +52,8 @@ const getFilteredTargets = (
     return { ids, descriptions }
 }
 
-export const InteractionEditor: React.FunctionComponent<Props> = ({
-    updateInteractionList, deleteInteraction
-}) => {
-    const { gameDesign, changeOrAddInteraction } = useGameDesign()
+export const InteractionEditor: React.FunctionComponent = () => {
+    const { gameDesign, changeOrAddInteraction, applyModification, deleteArrayItem } = useGameDesign()
     const { interactions, verbs, items, rooms } = gameDesign
 
     const [verbFilter, setVerbFilter] = useState('')
@@ -92,7 +84,7 @@ export const InteractionEditor: React.FunctionComponent<Props> = ({
             : index > 0 ? index - 1 : endPlace
 
         list.splice(newPlace, 0, movedItem)
-        return updateInteractionList(list)
+        return applyModification('change interaction order', { interactions: list })
     }
 
     return (
@@ -154,7 +146,7 @@ export const InteractionEditor: React.FunctionComponent<Props> = ({
                                 interaction={interaction}
                                 index={index}
                                 changeOrder={moveInteractionInList}
-                                deleteInteraction={deleteInteraction}
+                                deleteInteraction={(index) => deleteArrayItem(index, 'interactions')}
                                 openEditor={() => {
                                     setEdittedIndex(index)
                                     setInteractionUnderConstruction(cloneData(interaction))
