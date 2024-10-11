@@ -5,7 +5,7 @@ import { GameDesign, Interaction } from "@/definitions";
 import { GameDataItem, GameDataItemType } from "@/definitions/Game";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
-import { changeOrAddInteraction, addGameDataItem } from "@/lib/mutate-design";
+import { addGameDataItem, changeOrAddInteraction } from "@/lib/mutate-design";
 import { patchMember } from "@/lib/update-design";
 import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";

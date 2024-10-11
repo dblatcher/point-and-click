@@ -1,17 +1,17 @@
 
+import { AddIcon } from "@/components/GameEditor/material-icons";
 import { SelectInput } from "@/components/SchemaForm/inputs";
-import { GameDesign, Interaction } from "@/definitions";
+import { useGameDesign } from "@/context/game-design-context";
+import { Interaction } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import { AddIcon } from "@/components/GameEditor/material-icons";
-import { Box, Button, Paper, Table, TableContainer, TableBody, TableHead, TableRow, TableCell, Typography } from "@mui/material";
+import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Fragment, useState } from "react";
 import { EditorHeading } from "../EditorHeading";
-import { InteractionDialog } from "./InteractionDialog";
-import { InteractionTableRow } from "./InteractionTableRow";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { InteractionDialog } from "./InteractionDialog";
 import { InteractionTableHeaders } from "./InteractionTableHeaders";
-import { useGameDesign } from "@/context/game-design-context";
+import { InteractionTableRow } from "./InteractionTableRow";
 
 
 interface Props {

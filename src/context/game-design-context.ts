@@ -1,7 +1,7 @@
-import { createContext, useContext } from 'react'
 import { GameDesign, Interaction, RoomData } from '@/definitions'
-import { TabId } from '@/lib/editor-config'
 import { GameDataItem, GameDataItemType } from '@/definitions/Game'
+import { TabId } from '@/lib/editor-config'
+import { createContext, useContext } from 'react'
 
 const gameDesignContext = createContext<{
     gameDesign: GameDesign,
