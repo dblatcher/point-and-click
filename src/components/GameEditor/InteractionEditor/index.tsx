@@ -3,7 +3,7 @@ import { SelectInput } from "@/components/SchemaForm/inputs";
 import { GameDesign, Interaction } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import {AddIcon} from "@/components/GameEditor/material-icons";
+import { AddIcon } from "@/components/GameEditor/material-icons";
 import { Box, Button, Paper, Table, TableContainer, TableBody, TableHead, TableRow, TableCell, Typography } from "@mui/material";
 import { Component, Fragment } from "react";
 import { EditorHeading } from "../EditorHeading";
@@ -30,6 +30,45 @@ interface State {
 }
 
 
+const doesMatchFilters = (
+    verbFilter?: string,
+    itemFilter?: string,
+    targetFilter?: string,
+    roomFilter?: string
+) => (interaction: Interaction): boolean => {
+    if (verbFilter && interaction.verbId !== verbFilter) {
+        return false
+    }
+    if (itemFilter && interaction.itemId !== itemFilter) {
+        return false
+    }
+    if (targetFilter && interaction.targetId !== targetFilter) {
+        return false
+    }
+    if (roomFilter && interaction.roomId !== roomFilter) {
+        return false
+    }
+    return true
+}
+
+const getFilteredTargets = (
+    filteredInteractions: Interaction[],
+    targetLists: { ids: string[]; descriptions: string[]; }
+): {
+    ids: string[]; descriptions: string[];
+} => {
+    const ids: string[] = []
+    const descriptions: string[] = []
+
+    targetLists.ids.forEach((id, index) => {
+        if (filteredInteractions.some(interaction => interaction.targetId === id)) {
+            ids.push(id)
+            descriptions.push(targetLists.descriptions[index])
+        }
+    })
+    return { ids, descriptions }
+}
+
 export class InteractionEditor extends Component<Props, State> {
 
     constructor(props: Props) {
@@ -37,85 +76,46 @@ export class InteractionEditor extends Component<Props, State> {
         this.state = {
             interactionUnderConstruction: undefined,
         }
-        this.saveInteraction = this.saveInteraction.bind(this)
-        this.changeOrder = this.changeOrder.bind(this)
-    }
-
-    get filteredInteractions(): Interaction[] {
-        const { interactions } = this.props.gameDesign
-        const { verbFilter, itemFilter, targetFilter, roomFilter } = this.state
-
-        let list = [...interactions]
-
-        if (verbFilter) {
-            list = list.filter(interaction => interaction.verbId === verbFilter)
-        }
-        if (itemFilter) {
-            list = list.filter(interaction => interaction.itemId === itemFilter)
-        }
-        if (targetFilter) {
-            list = list.filter(target => target.targetId === targetFilter)
-        }
-        if (roomFilter) {
-            list = list.filter(target => target.roomId === roomFilter)
-        }
-        return list
-    }
-
-    get filteredTargets(): {
-        ids: string[]; descriptions: string[];
-    } {
-        const { gameDesign } = this.props
-        const interactions = this.filteredInteractions
-        const targetLists = getTargetLists(gameDesign)
-        const ids: string[] = []
-        const descriptions: string[] = []
-
-        targetLists.ids.forEach((id, index) => {
-            if (interactions.some(interaction => interaction.targetId === id)) {
-                ids.push(id)
-                descriptions.push(targetLists.descriptions[index])
-            }
-        })
-        return { ids, descriptions }
-    }
-
-    saveInteraction(interaction: Interaction) {
-        const { edittedIndex } = this.state
-        const { changeInteraction } = this.props
-
-        changeInteraction(interaction, edittedIndex)
-        this.setState({
-            edittedIndex: undefined,
-            interactionUnderConstruction: undefined,
-        })
-    }
-
-    changeOrder(index: number, direction: 'down' | 'up') {
-        const { updateInteractionList, gameDesign } = this.props
-        const { interactions } = gameDesign
-        const endPlace = interactions.length - 1;
-        const list = [...interactions]
-
-        const [movedItem] = list.splice(index, 1)
-        const newPlace = direction === 'down'
-            ? index < endPlace ? index + 1 : 0
-            : index > 0 ? index - 1 : endPlace
-
-        list.splice(newPlace, 0, movedItem)
-        return updateInteractionList(list)
     }
 
     render() {
-        const { gameDesign } = this.props
+        const { gameDesign, updateInteractionList } = this.props
         const { interactions, verbs, items, rooms } = gameDesign
         const { verbFilter = '', itemFilter = '', targetFilter = '', roomFilter = '', interactionUnderConstruction, edittedIndex } = this.state
-        const { filteredInteractions, filteredTargets } = this
+
+        const filteredInteractions = interactions.filter(doesMatchFilters(verbFilter, itemFilter, targetFilter, roomFilter))
+        const filteredTargets = getFilteredTargets(filteredInteractions, getTargetLists(gameDesign))
+
+        const saveInteraction = (interaction: Interaction) => {
+            const { edittedIndex } = this.state
+            const { changeInteraction } = this.props
+
+            changeInteraction(interaction, edittedIndex)
+            this.setState({
+                edittedIndex: undefined,
+                interactionUnderConstruction: undefined,
+            })
+        }
+
+        const moveInteractionInList = (index: number, direction: 'down' | 'up') => {
+            const { interactions } = gameDesign
+            const endPlace = interactions.length - 1;
+            const list = [...interactions]
+
+            const [movedItem] = list.splice(index, 1)
+            const newPlace = direction === 'down'
+                ? index < endPlace ? index + 1 : 0
+                : index > 0 ? index - 1 : endPlace
+
+            list.splice(newPlace, 0, movedItem)
+            return updateInteractionList(list)
+        }
+
         return (
             <article>
                 <EditorHeading heading="Interactions" />
                 <TableContainer component={Paper}>
-                    <Table size="small" padding="normal" sx={{captionSide:'top'}}>
+                    <Table size="small" padding="normal" sx={{ captionSide: 'top' }}>
                         <caption>
                             <Typography>Showing {filteredInteractions.length}/{interactions.length} interactions</Typography>
                         </caption>
@@ -165,11 +165,11 @@ export class InteractionEditor extends Component<Props, State> {
                         </TableHead>
                         <TableBody>
                             {interactions.map((interaction, index) => {
-                                if (!filteredInteractions.includes(interaction)) { return <Fragment key={index}/> }
+                                if (!filteredInteractions.includes(interaction)) { return <Fragment key={index} /> }
                                 return (<InteractionTableRow key={index}
                                     interaction={interaction}
                                     index={index}
-                                    changeOrder={this.changeOrder}
+                                    changeOrder={moveInteractionInList}
                                     deleteInteraction={this.props.deleteInteraction}
                                     openEditor={() => this.setState({ edittedIndex: index, interactionUnderConstruction: cloneData(interaction) })}
                                 />)
@@ -196,7 +196,7 @@ export class InteractionEditor extends Component<Props, State> {
 
                 {interactionUnderConstruction &&
                     <InteractionDialog key={edittedIndex}
-                        confirm={this.saveInteraction}
+                        confirm={saveInteraction}
                         initialState={interactionUnderConstruction}
                         cancelFunction={() => {
                             this.setState({
