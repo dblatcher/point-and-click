@@ -116,10 +116,9 @@ export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
                 />
         case 'interactions':
             return <InteractionEditor
-                changeInteraction={changeInteraction}
                 deleteInteraction={(index: number) => { deleteArrayItem(index, 'interactions') }}
                 updateInteractionList={(interactions) => { applyModification('change interaction order', { interactions }) }}
-                gameDesign={gameDesign} />
+            />
         case 'sequences':
             return currentSequence
                 ? <SequenceEditor key={gameItemIds.sequences}
