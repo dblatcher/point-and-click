@@ -33,7 +33,7 @@ type Props = {
 
 export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
     const {
-        gameDesign, deleteArrayItem, changeInteraction, applyModification,
+        gameDesign, deleteArrayItem, applyModification,
     } = useGameDesign()
 
     useKeyBoard([

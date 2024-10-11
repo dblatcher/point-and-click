@@ -8,7 +8,7 @@ const gameDesignContext = createContext<{
     createGameDataItem: { (property: GameDataItemType, data: GameDataItem): void },
     deleteArrayItem: { (index: number, property: GameDataItemType | 'interactions'): void },
     openInEditor: { (itemType: TabId, itemId: string | undefined): void }
-    changeInteraction: { (data: Interaction, index?: number): void },
+    changeOrAddInteraction: { (data: Interaction, index?: number): void },
     applyModification: { (description: string, mod: Partial<GameDesign>): void },
     modifyRoom: { (description: string, id: string, mod: Partial<RoomData>): void }
 }>(
@@ -30,7 +30,7 @@ const gameDesignContext = createContext<{
         createGameDataItem: () => { },
         deleteArrayItem: () => { },
         openInEditor: () => { },
-        changeInteraction: () => { },
+        changeOrAddInteraction: () => { },
         applyModification: () => { },
         modifyRoom: () => { },
     }

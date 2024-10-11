@@ -61,7 +61,7 @@ const getFilteredTargets = (
 export const InteractionEditor: React.FunctionComponent<Props> = ({
     updateInteractionList, deleteInteraction
 }) => {
-    const { gameDesign, changeInteraction } = useGameDesign()
+    const { gameDesign, changeOrAddInteraction } = useGameDesign()
     const { interactions, verbs, items, rooms } = gameDesign
 
     const [verbFilter, setVerbFilter] = useState('')
@@ -76,7 +76,7 @@ export const InteractionEditor: React.FunctionComponent<Props> = ({
     const filteredTargets = getFilteredTargets(filteredInteractions, getTargetLists(gameDesign))
 
     const saveInteraction = (interaction: Interaction) => {
-        changeInteraction(interaction, edittedIndex)
+        changeOrAddInteraction(interaction, edittedIndex)
         setEdittedIndex(undefined)
         setInteractionUnderConstruction(undefined)
     }

@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newPartial, criteria, disabled }) => {
-    const { gameDesign, changeInteraction } = useGameDesign()
+    const { gameDesign, changeOrAddInteraction } = useGameDesign()
     const [interactionDialogOpen, setInteractionDialogOpen] = useState(false)
     const [pickInteractionDialogOpen, setPickInteractionDialogOpen] = useState(false)
     const [interactionIndex, setInteractionIndex] = useState<number | undefined>(undefined)
@@ -46,7 +46,7 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newP
                 cancelFunction={() => { setInteractionDialogOpen(false) }}
                 confirm={(interaction) => {
                     setInteractionDialogOpen(false)
-                    changeInteraction(interaction, interactionIndex)
+                    changeOrAddInteraction(interaction, interactionIndex)
                 }}
             />
         }

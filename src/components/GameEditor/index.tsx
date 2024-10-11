@@ -70,7 +70,7 @@ export default class GameEditor extends Component<Props, State> {
 
         this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
         this.createGameDataItem = this.createGameDataItem.bind(this)
-        this.changeInteraction = this.changeInteraction.bind(this)
+        this.changeOrAddInteraction = this.changeOrAddInteraction.bind(this)
         this.deleteArrayItem = this.deleteArrayItem.bind(this)
         this.loadNewGame = this.loadNewGame.bind(this)
         this.undo = this.undo.bind(this)
@@ -134,7 +134,7 @@ export default class GameEditor extends Component<Props, State> {
             return { gameDesign, history }
         })
     }
-    changeInteraction(interaction: Interaction, index?: number) {
+    changeOrAddInteraction(interaction: Interaction, index?: number) {
         this.setState(state => {
             const { gameDesign } = state
             const history = this.historyUpdate(`change interaction`, state)
@@ -182,7 +182,7 @@ export default class GameEditor extends Component<Props, State> {
         const {
             gameDesign, tabOpen, gameItemIds, history,
         } = this.state
-        const { createGameDataItem, deleteArrayItem, openInEditor, changeInteraction, applyModification } = this
+        const { createGameDataItem, deleteArrayItem, openInEditor, changeOrAddInteraction, applyModification } = this
 
         const sprites = [...gameDesign.sprites.map(data => new Sprite(data))]
 
@@ -193,7 +193,7 @@ export default class GameEditor extends Component<Props, State> {
                     createGameDataItem,
                     deleteArrayItem,
                     openInEditor,
-                    changeInteraction,
+                    changeOrAddInteraction: changeOrAddInteraction,
                     applyModification,
                     modifyRoom: (description, id, mod) => {
                         applyModification(description, { rooms: patchMember(id, mod, gameDesign.rooms) })
