@@ -49,7 +49,7 @@ export const BigLayout = ({
                 {children}
             </div>
 
-            <div style={{ margin: '0 auto' }}>
+            <div style={{ margin: '0 auto', minHeight:100 }}>
                 <Box maxWidth={'lg'}
                     sx={{
                         display: 'flex',
