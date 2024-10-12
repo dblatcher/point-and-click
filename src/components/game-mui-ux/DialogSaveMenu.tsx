@@ -1,39 +1,87 @@
-import SettingsIcon from '@mui/icons-material/Settings';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import LoadIcon from '@mui/icons-material/Restore';
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, ButtonGroup, Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import SettingsIcon from '@mui/icons-material/Settings';
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from "@mui/material";
+import { useState } from 'react';
 import { SaveMenuProps } from "../game/uiComponentSet";
+import { StringInput } from '../SchemaForm/StringInput';
 import { SoundToggle } from './SoundToggle';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 
 
-export const DialogSaveMenu = ({ save, reset, load, isPaused, setIsPaused }: SaveMenuProps) => {
+export const DialogSaveMenu = ({ save, reset, load, isPaused, setIsPaused, listSavedGames, deleteSave }: SaveMenuProps) => {
+
+    const [newSaveName, setNewSaveName] = useState('')
+    const [savedGameNames, setSavedGameNames] = useState(listSavedGames?.() ?? [])
+
+    const saveNewGame = () => {
+        if (!save || !newSaveName) {
+            return
+        }
+        save(newSaveName)
+        setNewSaveName('')
+        setSavedGameNames(listSavedGames?.() ?? [])
+    }
+    const deleteGameAndUpdateList = (saveName: string) => {
+        deleteSave?.(saveName)
+        setSavedGameNames(listSavedGames?.() ?? [])
+    }
 
     return <>
 
-        <IconButton onClick={() => { setIsPaused(true) }} aria-label='settings' color='secondary' size='large'>
+        <SoundToggle buttonType='IconButton' />
+        <IconButton onClick={() => { setIsPaused(true) }} aria-label='settings' size='large'>
             <SettingsIcon fontSize='large' />
         </IconButton>
 
-        <Dialog open={isPaused} onClose={() => { setIsPaused(false) }}>
+        <Dialog open={isPaused} onClose={() => { setIsPaused(false) }} >
+            <DialogTitle>Menu</DialogTitle>
             <DialogContent>
-                <DialogTitle>Menu</DialogTitle>
-                <ButtonGroup orientation='vertical' size='large' fullWidth color='secondary'>
-                    <Button variant='contained' startIcon={<PlayIcon />} onClick={() => { setIsPaused(false) }}>
-                        Continue
-                    </Button>
-                    <SoundToggle buttonType='Button' color='secondary' />
-                    <Button startIcon={<RestartAltIcon />} onClick={reset}>
-                        restart
-                    </Button>
-                    <Button startIcon={<LoadIcon />} onClick={load}>
-                        load
-                    </Button>
-                    <Button startIcon={<SaveIcon />} onClick={save}>
-                        save
-                    </Button>
-                </ButtonGroup>
+                <List dense>
+                    <List dense>
+                        <ListItemButton onClick={() => { setIsPaused(false) }}>
+                            <ListItemIcon><PlayIcon /></ListItemIcon>
+                            <ListItemText primary="Continue" />
+                        </ListItemButton>
+                        <ListItemButton onClick={reset}>
+                            <ListItemIcon><RestartAltIcon /></ListItemIcon>
+                            <ListItemText primary="Restart" />
+                        </ListItemButton>
+                    </List>
+
+                    {(!!load && !!save) && (
+                        <List dense
+                            subheader={
+                                <ListSubheader disableGutters component="div">Saved Games</ListSubheader>
+                            }
+                        >
+                            {savedGameNames.map((saveName, index) => (
+                                <ListItem key={index} disablePadding>
+                                    <IconButton onClick={() => load(saveName)}>
+                                        <LoadIcon />
+                                    </IconButton>
+                                    <ListItemText primary={saveName} />
+                                    <IconButton onClick={() => deleteGameAndUpdateList(saveName)}>
+                                        <DeleteIcon color='warning' />
+                                    </IconButton>
+                                    <IconButton onClick={() => save(saveName)}>
+                                        <SaveIcon />
+                                    </IconButton>
+                                </ListItem>
+                            ))}
+                            <ListItem disablePadding>
+                                <Box display={'flex'}>
+                                    <StringInput label='saved game name' value={newSaveName} inputHandler={setNewSaveName} />
+                                    <IconButton onClick={saveNewGame}>
+                                        <SaveIcon />
+                                    </IconButton>
+                                </Box>
+                            </ListItem>
+                        </List>
+                    )}
+                </List>
             </DialogContent>
         </Dialog>
     </>

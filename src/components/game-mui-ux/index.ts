@@ -1,12 +1,11 @@
 import { UiComponentSet } from "../game/uiComponentSet";
 import { BigLayout } from "./BigLayout";
 import { Layout } from "./Layout";
-import { DialSaveMenu } from "./DialSaveMenu";
 import { DialogSaveMenu } from "./DialogSaveMenu";
 
 export const materialUiComponents: UiComponentSet = {
     GameLayoutComponent: Layout,
-    SaveMenuComponent: DialSaveMenu,
+    SaveMenuComponent: DialogSaveMenu,
 }
 
 export const bigLayoutSet: UiComponentSet = {

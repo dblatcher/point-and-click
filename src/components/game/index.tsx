@@ -26,9 +26,11 @@ import { UiComponentSet } from "./uiComponentSet";
 
 
 export type GameProps = Readonly<{
-    save?: { (saveDate: GameData): void };
+    save?: { (saveDate: GameData, fileName?: string): void };
     reset?: { (): void };
-    load?: { (): void };
+    load?: { (fileName?: string): void };
+    deleteSave?: { (fileName: string): void };
+    listSavedGames?: { (): string[] };
     _sprites: Sprite[];
     showDebugLog?: boolean;
     startPaused?: boolean;
@@ -196,9 +198,9 @@ export default class Game extends Component<GameProps, GameState> {
             let pendingInteractionShouldBeDone = false;
             state.actors.forEach(actor => {
                 const triggersPendingInteraction = followOrder(
-                    actor, cellMatrix, 
-                    state.actorOrders[actor.id], 
-                    state, 
+                    actor, cellMatrix,
+                    state.actorOrders[actor.id],
+                    state,
                     findById(actor.sprite, this.props._sprites),
                     this.props.instantMode
                 )
@@ -280,7 +282,7 @@ export default class Game extends Component<GameProps, GameState> {
     }
 
     render() {
-        const { save, reset, load, showDebugLog, uiComponents = {} } = this.props
+        const { deleteSave, save, reset, load, listSavedGames, showDebugLog, uiComponents = {} } = this.props
         const {
             SaveMenuComponent = SaveMenu,
             GameLayoutComponent = Layout,
@@ -307,9 +309,11 @@ export default class Game extends Component<GameProps, GameState> {
                         }}
                         saveMenu={
                             <SaveMenuComponent
-                                load={load ? () => { load() } : undefined}
+                                load={load ? (fileName) => { load(fileName) } : undefined}
                                 reset={reset ? () => { reset() } : undefined}
-                                save={save ? () => { save(this.saveData) } : undefined}
+                                save={save ? (fileName) => { save(this.saveData, fileName) } : undefined}
+                                deleteSave={deleteSave}
+                                listSavedGames={listSavedGames}
                                 isPaused={isPaused}
                                 setIsPaused={(isPaused) => { this.setState({ isPaused }) }}
                             />

@@ -9,7 +9,7 @@ interface Props {
     color?: "secondary" | "inherit" | "primary" | "error" | "info" | "success" | "warning"
 }
 
-export function SoundToggle({ buttonType = 'IconButton', color = 'primary' }: Props) {
+export function SoundToggle({ buttonType = 'IconButton', color = 'inherit' }: Props) {
 
     const [isOn, setIsOn] = useState(soundService.isEnabled)
 

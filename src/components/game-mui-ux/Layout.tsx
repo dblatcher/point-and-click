@@ -1,4 +1,4 @@
-import { Card, Container, Grid, useTheme } from "@mui/material";
+import { Box, Card, Container, Grid, useTheme } from "@mui/material";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { FullScreenWrapper } from "../FullScreenWrapper";
 import { useGameStateDerivations } from "@/context/game-state-context";
@@ -20,6 +20,9 @@ export const Layout = ({
 
     return (
         <Container maxWidth={'md'} sx={{ paddingY: .5, marginY: 2 }}>
+            <Box position={'fixed'} top={0} right={0}>
+                {saveMenu}
+            </Box>
             <FullScreenWrapper iconButtonProps={{
                 sx: {
                     position: 'absolute',
@@ -45,12 +48,11 @@ export const Layout = ({
                             ) : (<>
                                 <CommandLine />
                                 <VerbMenu select={selectVerb} />
-                                <ItemMenu handleHover={handleHover} select={selectItem}/>
+                                <ItemMenu handleHover={handleHover} select={selectItem} />
                             </>)}
                         </Card>
                     </Card>
                     <EndingWrapper />
-                    {saveMenu}
                 </Container>
             </FullScreenWrapper>
         </Container>

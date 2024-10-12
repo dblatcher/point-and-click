@@ -4,13 +4,13 @@ export const SaveMenu = ({ save, reset, load, isPaused, setIsPaused }: SaveMenuP
 
     return <>
         {!!save &&
-            <button onClick={save}>SAVE</button>
+            <button onClick={() => save()}>SAVE</button>
         }
         {!!reset &&
             <button onClick={reset}>RESET</button>
         }
         {!!load &&
-            <button onClick={load}>LOAD</button>
+            <button onClick={() => load()}>LOAD</button>
         }
         <button onClick={() => { setIsPaused(!isPaused) }}>{isPaused ? 'resume' : 'pause'}</button>
     </>

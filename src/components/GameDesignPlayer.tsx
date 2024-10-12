@@ -8,7 +8,10 @@ import React from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
 import { SpritesProvider } from "@/context/sprite-context";
 import { Sprite } from "@/lib/Sprite";
+import { GameDataSchema } from "@/definitions/Game";
 
+const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
+const SAVED_GAME_DELIMITER = "//"
 
 type Props = {
   gameDesign: GameDesign;
@@ -35,45 +38,72 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     this.reset = this.reset.bind(this)
     this.save = this.save.bind(this)
     this.load = this.load.bind(this)
+    this.listSavedGames = this.listSavedGames.bind(this)
+    this.deleteSave = this.deleteSave.bind(this)
 
     this.sprites = []
   }
 
-  get storageKey(): string | undefined {
+  getStorageKey(fileName: string): string | undefined {
     const { gameCondition } = this.state;
-    return gameCondition ? `POINT_AND_CLICK_${gameCondition.id}` : undefined;
+    return gameCondition ? [SAVED_GAME_PREFIX, gameCondition.id, fileName].join(SAVED_GAME_DELIMITER) : undefined;
   }
 
-  save(data: GameData) {
-    if (!this.storageKey) {
+  save(data: GameData, fileName = 'saved-game') {
+    const storageKey = this.getStorageKey(fileName)
+    if (!storageKey) {
       return;
     }
-    localStorage.setItem(this.storageKey, JSON.stringify(data));
+    localStorage.setItem(storageKey, JSON.stringify(data));
   }
 
-  load() {
-    if (!this.storageKey) {
+  listSavedGames(): string[] {
+    const { gameCondition } = this.state;
+    if (!gameCondition) {
+      return []
+    }
+    const prefixAndIdAndTrailingDelimiter = [SAVED_GAME_PREFIX, gameCondition.id, ''].join(SAVED_GAME_DELIMITER)
+    return Object.keys(localStorage)
+      .filter(key => key.startsWith(prefixAndIdAndTrailingDelimiter))
+      .map(key => key.substring(prefixAndIdAndTrailingDelimiter.length))
+  }
+
+  deleteSave(fileName: string) {
+    const storageKey = this.getStorageKey(fileName)
+    console.log('DELETE SAVE', fileName, storageKey)
+    if (storageKey) {
+      localStorage.removeItem(storageKey)
+    }
+  }
+
+  load(fileName = 'saved-game') {
+    const storageKey = this.getStorageKey(fileName)
+    if (!storageKey) {
       return;
     }
-    const jsonString = localStorage.getItem(this.storageKey);
+    const jsonString = localStorage.getItem(storageKey);
     if (!jsonString) {
-      console.error("NO SAVE FILE", this.storageKey);
+      console.error("NO SAVE FILE", storageKey);
       return;
     }
 
     try {
-      // TO DO - PARSE WITH SCHEMA!!
-      // CHECK GAME ID!!
-      const data = JSON.parse(jsonString) as GameData;
-      const loadedConditions = Object.assign(
-        {},
-        this.state.gameCondition,
-        data
-      );
-
+      const data = JSON.parse(jsonString) as unknown;
+      const parse = GameDataSchema.safeParse(data)
+      if (!parse.success) {
+        console.warn(parse.error)
+        throw new Error('parse fail')
+      }
+      if (parse.data.id !== this.props.gameDesign.id) {
+        throw new Error('Not from the right game - ids do not match')
+      }
+      const loadedConditions = {
+        ...this.state.gameCondition,
+        ...parse.data,
+      }
       this.setState({
         timestamp: Date.now(),
-        gameCondition: loadedConditions,
+        gameCondition: loadedConditions as GameCondition,
       });
     } catch (error) {
       console.error(error);
@@ -117,6 +147,8 @@ export class GameDesignPlayer extends React.Component<Props, State> {
             {...gameCondition}
             load={this.load}
             save={this.save}
+            deleteSave={this.deleteSave}
+            listSavedGames={this.listSavedGames}
             reset={this.reset}
             key={timestamp}
             _sprites={this.sprites}
