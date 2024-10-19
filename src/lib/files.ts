@@ -70,7 +70,7 @@ export const urlToBlob = async (urlString: string, validateAs?: 'image' | 'audio
                 }
                 break;
             case 'audio':
-                if (!blob.type.startsWith('audio')) {
+                if (!blob.type.startsWith('audio') && !blob.type.startsWith('application/ogg')) {
                     return { failure: 'not audio' }
                 }
                 break;

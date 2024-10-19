@@ -25,7 +25,7 @@ export const ImageAssetSchema = object({
 })
 export const imageAssetCategories: ImageAssetCategory[] = ['background', 'item', 'spriteSheet', 'any']
 
-export type SoundAssetCategory = 'sfx'
+export type SoundAssetCategory = 'sfx' | 'music'
 export type SoundAsset = {
     id: string;
     href: string;
@@ -35,7 +35,7 @@ export type SoundAsset = {
 export const SoundAssetSchema = object({
     id: string(),
     href: string(),
-    category: Zod.enum(['sfx']),
+    category: Zod.enum(['sfx', 'music']),
     originalFileName: string().optional(),
 })
 export const soundAssetCategories: SoundAssetCategory[] = SoundAssetSchema.shape.category.options.map(_ => _)
