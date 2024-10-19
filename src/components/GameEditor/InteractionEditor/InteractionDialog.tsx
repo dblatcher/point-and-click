@@ -25,7 +25,6 @@ interface Props {
 }
 
 export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Props) => {
-    console.log({initialState})
     const [interaction, setInteraction] = useState<Partial<Interaction>>(cloneData(
         {
             ...initialState,

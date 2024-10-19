@@ -65,13 +65,6 @@ export const FlagConditionControl: React.FunctionComponent<Props> = ({ interacti
                 break
         }
 
-        console.log({
-            oldTrue: flagsThatMustBeTrue,
-            newTrue: trueList,
-            oldFalse: flagsThatMustBeFalse,
-            newFalse: flagStateList
-        })
-
         updateInteraction({
             flagsThatMustBeFalse: falseList,
             flagsThatMustBeTrue: trueList,
