@@ -1,10 +1,10 @@
+import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { AmbiantSound } from "@/definitions/RoomData";
 import soundService from "@/services/soundService";
-import { Alert, Box, Typography } from "@mui/material";
+import { Alert, Box } from "@mui/material";
 import React from "react";
-import { FileAssetSelector } from "../FileAssetSelector";
 import { EditorBox } from "../EditorBox";
-import { NumberInput } from "@/components/SchemaForm/NumberInput";
+import { FileAssetSelector } from "../FileAssetSelector";
 
 interface Props {
     label: string
