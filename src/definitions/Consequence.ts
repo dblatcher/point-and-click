@@ -88,6 +88,14 @@ const SoundEffectConsequenceSchema = z.object({
     narrative: NarrativeSchema.optional(),
 })
 
+const BackgroundMusicConsequenceSchema = z.object({
+    type: z.literal('backgroundMusic'),
+    sound: z.string().optional(),
+    roomId: z.string().optional(),
+    volume: z.number().optional(),
+    narrative: NarrativeSchema.optional(),
+})
+
 const FlagConsequenceSchema = z.object({
     type: z.literal('flag'),
     on: z.boolean(),
@@ -116,14 +124,15 @@ export const ConsequenceSchema = z.union([
     TeleportActorConsequenceSchema,
     ToggleZoneConsequenceSchema,
     SoundEffectConsequenceSchema,
+    BackgroundMusicConsequenceSchema,
     FlagConsequenceSchema,
     ConversationChoiceConsequenceSchema,
 ])
 
 const ConsequenceTypeEnum = z.enum([
-    'conversation', 'sequence', 'changeStatus',
+    'conversation', 'sequence', 'changeStatus', 'backgroundMusic',
     'removeActor', 'inventory', 'changeRoom', 'order', 'ending',
-    'teleportActor', 'toggleZone', 'soundEffect', 'flag', 'conversationChoice'
+    'teleportActor', 'toggleZone', 'soundEffect', 'flag', 'conversationChoice', 
 ])
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
 export const consequenceTypes: ConsequenceType[] = ConsequenceTypeEnum.options
@@ -142,6 +151,7 @@ export const consequenceMap = {
     soundEffect: SoundEffectConsequenceSchema,
     flag: FlagConsequenceSchema,
     conversationChoice: ConversationChoiceConsequenceSchema,
+    backgroundMusic: BackgroundMusicConsequenceSchema,
 } as const
 
 export type Consequence = z.infer<typeof ConsequenceSchema>
@@ -189,6 +199,7 @@ export const ImmediateConsequenceSchema = z.union([
     FlagConsequenceSchema,
     ChangeRoomConsequenceSchema,
     ConversationChoiceConsequenceSchema,
+    BackgroundMusicConsequenceSchema,
 ])
 /**
  * The subset of consequences that are don't take multiple cycles

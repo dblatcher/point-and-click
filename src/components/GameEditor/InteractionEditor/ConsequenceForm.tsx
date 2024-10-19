@@ -1,7 +1,7 @@
 import { SchemaForm, getModification } from "@/components/SchemaForm";
 import { SelectInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
-import { AnyConsequence, Consequence, ConsequenceType, GameDesign, Order, RoomData, Zone } from "@/definitions";
+import { AnyConsequence, Consequence, ConsequenceType, GameDesign, Order } from "@/definitions";
 import { Narrative } from "@/definitions/BaseTypes";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
@@ -13,11 +13,11 @@ import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { OrderForm } from "../OrderForm";
+import { SoundPreview } from "../SoundAssetTool/SoundPreview";
 import { SpritePreview } from "../SpritePreview";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
 import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
-import { SoundPreview } from "../SoundAssetTool/SoundPreview";
 
 interface Props {
     consequence: AnyConsequence;

@@ -235,6 +235,11 @@ export const interactions: Interaction[] = [
                         type: 'say',
                         text: 'I took it.',
                         time: 250,
+                    },
+                    {
+                        type: 'say',
+                        text: 'Birds have stopped singing',
+                        time: 250,
                     }
                 ]
             },
@@ -243,6 +248,11 @@ export const interactions: Interaction[] = [
                 sound: 'beep',
                 volume: 1,
             },
+            {
+                type : 'backgroundMusic',
+                sound: 'sparrows',
+                roomId: 'OUTSIDE'
+            }
         ]
     },
 

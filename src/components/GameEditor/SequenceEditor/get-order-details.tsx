@@ -17,6 +17,7 @@ import FormatListNumberedRtlOutlinedIcon from '@mui/icons-material/FormatListNum
 import CancelPresentationOutlinedIcon from '@mui/icons-material/CancelPresentationOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import { FlagCircleIcon } from "../material-icons";
+import { MusicNote } from "@mui/icons-material";
 
 export const getOrderIcon = (order?: Order): typeof ChatOutlinedIcon => {
     switch (order?.type) {
@@ -59,6 +60,8 @@ export const getConsequenceIcon = (consequence?: Consequence): typeof ChatOutlin
             return CancelPresentationOutlinedIcon
         case "order":
             return AssignmentOutlinedIcon
+        case "backgroundMusic":
+            return MusicNote
         case "changeStatus":
         default:
             return PriorityHighOutlinedIcon
@@ -66,8 +69,10 @@ export const getConsequenceIcon = (consequence?: Consequence): typeof ChatOutlin
 }
 
 const UNSET = '[UNSET]'
+const NONE = '[NONE]'
 const PLAYER = '[PLAYER]'
 const quoted = (text?: string) => text ? `"${text}"` : UNSET;
+const quotedNone = (text?: string) => text ? `"${text}"` : NONE;
 const brackets = (text?: string) => text ? `(${text})` : '';
 
 export const getConsequenceDescription = (c: Consequence): string => {
@@ -98,6 +103,8 @@ export const getConsequenceDescription = (c: Consequence): string => {
             return `${c.targetId ?? UNSET}${brackets(c.targetType)} status =  ${quoted(c.status)}`
         case "ending":
             return `Ending: ${quoted(c.endingId)}`
+        case "backgroundMusic":
+            return `Set BGM in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
         default:
             return "[description]"
     }
