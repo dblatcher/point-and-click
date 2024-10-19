@@ -11,7 +11,7 @@ import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import soundService from "@/services/soundService";
 import { editorTheme } from "@/theme";
-import { Box, Button, ButtonGroup, Container, IconButton, Stack, ThemeProvider } from "@mui/material";
+import { Box, Container, IconButton, List, ListItem, ListItemButton, ListItemText, Stack, ThemeProvider } from "@mui/material";
 import { Component } from "react";
 import { TabId, tabOrder } from "../../lib/editor-config";
 import { MainWindow } from "./MainWindow";
@@ -248,15 +248,20 @@ export default class GameEditor extends Component<Props, State> {
                                         <PlayCircleFilledOutlinedIcon fontSize={'large'} />
                                     </IconButton>
                                 </Stack>
-                                <ButtonGroup orientation="vertical">
+
+                                <List disablePadding>
                                     {tabOrder.map((tab, index) => (
-                                        <Button key={tab.id} size="small"
-                                            variant={tab.id === tabOpen ? 'contained' : 'outlined'}
-                                            onClick={() => { openInEditor(tab.id) }}
-                                            startIcon={<span>{index + 1}</span>}
-                                        >{tab.label}</Button>
+                                        <ListItem key={index} disableGutters disablePadding>
+                                            <ListItemButton 
+                                                onClick={() => { openInEditor(tab.id) }}
+                                                selected={tab.id === tabOpen}
+                                            >
+                                                <ListItemText>{index + 1}</ListItemText>
+                                                <ListItemText>{tab.label}</ListItemText>
+                                            </ListItemButton>
+                                        </ListItem>
                                     ))}
-                                </ButtonGroup>
+                                </List>
                             </Stack>
 
                             <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
