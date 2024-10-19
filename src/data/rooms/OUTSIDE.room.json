@@ -115,5 +115,8 @@
       "You are in a garden with many tree an a bush with that actually leads inside.",
       "The sun is shining behind a hill in the distance."
     ]
+  },
+  "backgroundMusic": {
+    "soundId": "sparrows"
   }
 }

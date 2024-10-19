@@ -21,4 +21,9 @@ export const soundAssets: SoundAsset[] = [
         href: './assets/sounds/sfx100v2_footstep_wood_04.ogg',
         category: 'sfx',
     },
+    {
+        id: 'sparrows',
+        href: './assets/sounds/Arremon_abeillei_-_Black-capped_Sparrow_XC250490.mp3',
+        category: 'music',
+    },
 ]

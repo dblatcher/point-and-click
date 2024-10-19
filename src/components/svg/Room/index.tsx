@@ -11,6 +11,7 @@ import Hotspot from "./HotSpot";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import styles from './styles.module.css';
 import { obstableClassNames, walkableClassNames } from "./zoneCssClasses";
+import { PersistentSound } from "@/components/sound/PersistentSound";
 
 interface Props {
     data: RoomData;
@@ -55,7 +56,7 @@ export const Room: FunctionComponent<Props> = ({
     fontFamily,
     children,
 }: Props) => {
-    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], } = data;
+    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], backgroundMusic } = data;
 
     const scale = Math.min(
         maxWidth / frameWidth,
@@ -181,6 +182,9 @@ export const Room: FunctionComponent<Props> = ({
 
             {showCaption && (
                 <figcaption className={styles.roomCaption}>{id}</figcaption>
+            )}
+            {backgroundMusic && (
+                <PersistentSound isPaused={isPaused} soundValue={backgroundMusic} />
             )}
         </figure>
     )
