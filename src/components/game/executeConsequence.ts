@@ -204,6 +204,16 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 choice.disabled = !on
                 break;
             }
+            case 'backgroundMusic': {
+                const {sound, volume, roomId} = consequence
+                const room = findById(roomId, state.rooms)
+                if (!room) {
+                    console.warn('no such room', roomId)
+                    break;
+                }
+                room.backgroundMusic = sound ? {soundId:sound, volume} : undefined
+                break;
+            }
             default: {
                 console.warn('unsupported conseqeunce!', consequence)
                 break;

@@ -250,7 +250,7 @@ export const interactions: Interaction[] = [
             },
             {
                 type : 'backgroundMusic',
-                sound: 'sparrows',
+                sound: undefined,
                 roomId: 'OUTSIDE'
             }
         ]
