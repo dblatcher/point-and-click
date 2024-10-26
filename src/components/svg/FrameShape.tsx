@@ -3,7 +3,7 @@ import { calculateScreenX } from "@/lib/roomFunctions";
 import { ImageAsset } from "@/services/assets";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { HandleHoverFunction } from "../game";
-import imageService from "@/services/imageService";
+import { useImageAssets } from "@/context/image-asset-context";
 
 
 interface Props {
@@ -42,8 +42,11 @@ const getPlaceholderStyle = (filter?: string): CSSProperties => {
     }
 }
 
-
-const getAssetAndFrame = (actorData: ActorData) => {
+// TO DO - why do I call this twice instead of passing the result to the subcomponent?
+const getAssetAndFrame = (
+    actorData: ActorData,
+    getAsset: { (id: string): ImageAsset | undefined }
+) => {
     const { defaultFrame, status, statusFrames } = actorData
     const frameForStatus = status ? statusFrames?.[status] : undefined
     const frameToUse = frameForStatus ?? defaultFrame;
@@ -51,7 +54,7 @@ const getAssetAndFrame = (actorData: ActorData) => {
         return undefined
     }
 
-    const asset = imageService.get(frameToUse.imageId)
+    const asset = getAsset?.(frameToUse.imageId)
     if (!asset) {
         return undefined
     }
@@ -62,8 +65,9 @@ const getAssetAndFrame = (actorData: ActorData) => {
 
 const FrameContents = (props: { actorData: ActorData, widthAdjustedByScale: number, heightAdjustedByScale: number, filter?: string }) => {
 
+    const { getAsset } = useImageAssets()
     const { actorData, widthAdjustedByScale, heightAdjustedByScale, filter } = props
-    const assetAndFrame = getAssetAndFrame(actorData)
+    const assetAndFrame = getAssetAndFrame(actorData, getAsset)
     const divStyle = assetAndFrame
         ? getFrameStyle(assetAndFrame.frame, assetAndFrame.asset, filter)
         : getPlaceholderStyle(filter)
@@ -85,7 +89,8 @@ export const FrameShape: FunctionComponent<Props> = ({
     roomData, viewAngle, x, y, height = 50, width = 50, filter,
     clickHandler, handleHover, actorData, status,
 }: Props) => {
-    const assetAndFrame = getAssetAndFrame(actorData)
+    const { getAsset } = useImageAssets()
+    const assetAndFrame = getAssetAndFrame(actorData, getAsset)
     const { widthScale = 1, heightScale = 1 } = assetAndFrame?.asset ?? {};
     const widthAdjustedByScale = width * widthScale
     const heightAdjustedByScale = height * heightScale

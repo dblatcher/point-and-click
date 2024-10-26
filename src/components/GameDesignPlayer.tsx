@@ -9,6 +9,8 @@ import { UiComponentSet } from "./game/uiComponentSet";
 import { SpritesProvider } from "@/context/sprite-context";
 import { Sprite } from "@/lib/Sprite";
 import { GameDataSchema } from "@/definitions/Game";
+import { ImageAssetsProvider } from "@/context/image-asset-context";
+import imageService from "@/services/imageService";
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
 const SAVED_GAME_DELIMITER = "//"
@@ -142,20 +144,22 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     const { uiComponents, instantMode } = this.props
     return <>
       {gameCondition && (
-        <SpritesProvider value={this.sprites}>
-          <Game
-            {...gameCondition}
-            load={this.load}
-            save={this.save}
-            deleteSave={this.deleteSave}
-            listSavedGames={this.listSavedGames}
-            reset={this.reset}
-            key={timestamp}
-            _sprites={this.sprites}
-            uiComponents={uiComponents}
-            instantMode={instantMode}
-          />
-        </SpritesProvider>
+        <ImageAssetsProvider imageService={imageService}>
+          <SpritesProvider value={this.sprites}>
+            <Game
+              {...gameCondition}
+              load={this.load}
+              save={this.save}
+              deleteSave={this.deleteSave}
+              listSavedGames={this.listSavedGames}
+              reset={this.reset}
+              key={timestamp}
+              _sprites={this.sprites}
+              uiComponents={uiComponents}
+              instantMode={instantMode}
+            />
+          </SpritesProvider>
+        </ImageAssetsProvider>
       )}
     </>
   }
