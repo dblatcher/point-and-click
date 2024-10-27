@@ -1,11 +1,12 @@
 
-import imageService from "@/services/imageService";
 import { ItemData } from "@/definitions"
 import { CSSProperties, memo } from "react";
 import { Button, Grid, Typography, Avatar } from "@mui/material";
 import { ItemMenuProps, itemMenuPropsAreEqual } from "../game/uiComponentSet";
 import { HandleHoverFunction } from "../game";
 import { useGameStateDerivations } from "@/context/game-state-context";
+import { useImageAssets } from "@/context/image-asset-context";
+import { ImageAsset } from "@/services/assets";
 
 
 export const ItemMenu = (props: {
@@ -16,12 +17,15 @@ export const ItemMenu = (props: {
     return <ItemMenuInner {...props} items={inventory} currentItemId={currentItem?.id} />
 }
 
-const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
+const buildBackground = (
+    itemData: ItemData,
+    getAsset: { (id: string): ImageAsset | undefined }
+): CSSProperties | undefined => {
 
     const { imageId, row = 0, col = 0 } = itemData
 
     if (!imageId) { return undefined }
-    const asset = imageService.get(imageId);
+    const asset = getAsset(imageId);
     if (!asset) { return undefined }
 
     const { href: imageUrl, cols, rows } = asset
@@ -50,10 +54,11 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 
 export const ItemMenuInner = memo(
     function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
+        const { getAsset } = useImageAssets()
         return (
             <Grid container alignItems={'stretch'} mb={1}>
                 {items.map(item => {
-                    const imageBackground = buildBackground(item);
+                    const imageBackground = buildBackground(item, getAsset);
                     const initialLetter = item.name ? item.name.charAt(0) : item.id.charAt(0);
                     return (
                         <Grid item key={item.id} xs={2} sm={1.5} md={1}>

@@ -1,11 +1,12 @@
 
-import imageService from "@/services/imageService";
 import { ItemData } from "@/definitions"
 import uiStyles from '@/components/game-ui/uiStyles.module.css';
 import { CSSProperties, memo } from "react";
 import { ItemMenuProps, itemMenuPropsAreEqual } from '@/components/game/uiComponentSet'
 import { HandleHoverFunction } from "../game";
 import { useGameStateDerivations } from "@/context/game-state-context";
+import { useImageAssets } from "@/context/image-asset-context";
+import { ImageAsset } from "@/services/assets";
 
 
 export const ItemMenu = (props: {
@@ -17,12 +18,10 @@ export const ItemMenu = (props: {
 }
 
 
-const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
-
+const buildBackground = (itemData: ItemData, getAsset:{(id:string):ImageAsset|undefined}): CSSProperties | undefined => {
     const { imageId, row = 0, col = 0 } = itemData
-
     if (!imageId) { return undefined }
-    const asset = imageService.get(imageId);
+    const asset = getAsset(imageId);
     if (!asset) { return undefined }
 
     const { href: imageUrl, cols, rows } = asset
@@ -50,13 +49,14 @@ const buildBackground = (itemData: ItemData): CSSProperties | undefined => {
 
 export const ItemMenuInner = memo(
     function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
+        const { getAsset } = useImageAssets()
         const buttonOffClassNames = [uiStyles.button].join(" ")
         const buttonOnClassNames = [uiStyles.button, uiStyles.current].join(" ")
         return (
             <div className={uiStyles.frame}>
                 <nav className={[uiStyles.contents, uiStyles.menu].join(" ")}>
                     {items.map(item => {
-                        const backgroundStyle = buildBackground(item);
+                        const backgroundStyle = buildBackground(item, getAsset);
                         const classNames = currentItemId === item.id
                             ? buttonOnClassNames
                             : buttonOffClassNames
