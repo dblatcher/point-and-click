@@ -3,12 +3,11 @@ import { EndingScreen } from "@/components/game-ui/EndingScreen";
 import { useGameDesign } from "@/context/game-design-context";
 import { Ending } from "@/definitions";
 import { EndingSchema } from "@/definitions/Ending";
-import { cloneData } from "@/lib/clone";
-import imageService from "@/services/imageService";
 import { Card, Container, Typography } from "@mui/material";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { patchMember } from "@/lib/update-design";
+import { useImageAssets } from "@/context/image-asset-context";
 
 type Props = {
     ending: Ending;
@@ -16,6 +15,7 @@ type Props = {
 
 export const EndingEditor = ({ ending }: Props) => {
     const { applyModification, gameDesign } = useGameDesign()
+    const { listIds } = useImageAssets()
 
     const handleUpdate = (value: FieldValue, field: FieldDef): void => {
         if (field.key === 'id') {
@@ -45,7 +45,7 @@ export const EndingEditor = ({ ending }: Props) => {
                     schema={EndingSchema.omit({ id: true })}
                     changeValue={(value, field) => { handleUpdate(value, field) }}
                     options={{
-                        imageId: imageService.list()
+                        imageId: listIds()
                     }}
                     fieldWrapperProps={{
                         spacing: 2,

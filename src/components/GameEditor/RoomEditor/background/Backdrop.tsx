@@ -1,8 +1,9 @@
+import { useImageAssets } from "@/context/image-asset-context"
 import { BackgroundLayer } from "@/definitions"
-import imageService from "@/services/imageService"
 
 export const BackDrop = ({ layer, filter }: { layer: BackgroundLayer, filter?: string }) => {
-    const href = imageService.get(layer.imageId)?.href
+    const { getAsset } = useImageAssets()
+    const href = getAsset(layer.imageId)?.href
     if (!href) {
         return null
     }

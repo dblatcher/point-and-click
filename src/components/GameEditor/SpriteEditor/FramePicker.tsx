@@ -7,6 +7,7 @@ import { EditorBox } from "../EditorBox";
 import { FileAssetSelector } from "../FileAssetSelector";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { FramePreview } from "./FramePreview";
+import { useImageAssets } from "@/context/image-asset-context";
 
 interface Props {
     row: number;
@@ -55,9 +56,10 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
 }
 
 const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false, imageFilter }) => {
+    const { getAsset } = useImageAssets()
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
-    const image = imageId ? imageService.get(imageId) : undefined;
+    const image = imageId ? getAsset(imageId) : undefined;
     const frameSize = frameSizeFromButtonSize(buttonSize)
 
     const buttonPropsGrid: FrameButtonProps[][] = []

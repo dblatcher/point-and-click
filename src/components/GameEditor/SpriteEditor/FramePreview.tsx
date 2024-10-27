@@ -1,6 +1,6 @@
 import { FunctionComponent, CSSProperties } from "react";
 import { SpriteFrame } from "@/definitions";
-import imageService from "@/services/imageService";
+import { useImageAssets } from "@/context/image-asset-context";
 
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 export const FramePreview: FunctionComponent<Props> = ({
     width, height, backgroundColor, frame, filter
 }: Props) => {
-
+    const { getAsset } = useImageAssets()
     const divStyle: CSSProperties = {
         width, height, backgroundColor
     }
@@ -25,7 +25,7 @@ export const FramePreview: FunctionComponent<Props> = ({
         filter,
     }
 
-    const image = imageService.get(frame.imageId)
+    const image = getAsset(frame.imageId)
     if (image) {
         const { href, cols = 1, rows = 1 } = image
         Object.assign(figureStyle, {

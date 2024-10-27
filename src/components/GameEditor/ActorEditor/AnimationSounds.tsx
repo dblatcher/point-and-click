@@ -4,15 +4,15 @@ import { ActorData, SoundValue, SpriteFrame } from "@/definitions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
-import imageService from "@/services/imageService";
 import soundService from "@/services/soundService";
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Typography } from "@mui/material";
+import { Alert, Box, Button, Divider, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { FileAssetSelector } from "../FileAssetSelector";
 import { AddIcon, AudioFileOutlinedIcon } from "../material-icons";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { SpritePreview } from "../SpritePreview";
 import { SoundBoxes } from "./SoundBoxes";
+import { useImageAssets } from "@/context/image-asset-context";
 
 
 interface Props {
@@ -31,10 +31,15 @@ const toSoundValueArray = (input: SoundValue | SoundValue[] | undefined): SoundV
 
 const ActorFramePreview = (props: { frame: SpriteFrame, actor: ActorData }) => {
     const { frame, actor } = props
-    const image = imageService.get(frame.imageId)
-    const heightScale = image?.heightScale ?? 1
-    const widthScale = image?.widthScale ?? 1
-    return <FramePreview frame={frame} width={actor.width * widthScale} height={actor.height * heightScale} filter={actor.filter} />
+    const { getAsset } = useImageAssets()
+    const imageAsset = getAsset(frame.imageId)
+    const heightScale = imageAsset?.heightScale ?? 1
+    const widthScale = imageAsset?.widthScale ?? 1
+    return <FramePreview
+        frame={frame}
+        width={actor.width * widthScale}
+        height={actor.height * heightScale}
+        filter={actor.filter} />
 }
 
 

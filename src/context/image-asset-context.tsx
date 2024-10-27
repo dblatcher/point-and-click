@@ -4,12 +4,20 @@ import { createContext, ReactNode, useContext } from 'react'
 
 
 type ImageAssetContextProps = {
-    getAsset(id: string): ImageAsset | undefined
+    getAsset(id: string): ImageAsset | undefined;
+    listIds(): string[];
+    getAllAssets(): ImageAsset[];
 }
 const ImageAssetContext = createContext<ImageAssetContextProps>({
     getAsset() {
         return undefined
     },
+    listIds() {
+        return []
+    },
+    getAllAssets() {
+        return []
+    }
 })
 
 type ImageAssetsProviderProps = {
@@ -24,9 +32,14 @@ export const ImageAssetsProvider = ({ children, imageService }: ImageAssetsProvi
             getAsset(id) {
                 return imageService.get(id)
             },
+            listIds() {
+                return imageService.list()
+            },
+            getAllAssets() {
+                return imageService.getAll()
+            },
         }}
     >
-        <h1>test: {(!!imageService).toString()}</h1>
         {children}
     </ImageAssetContext.Provider>
 }
