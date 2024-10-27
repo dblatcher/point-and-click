@@ -5,9 +5,9 @@ import {
   uploadFile,
 } from "@/lib/files";
 import { buildGameZipBlob, readGameFromZipFile } from "@/lib/zipFiles";
-import imageService from "@/services/imageService";
+import { ImageService } from "@/services/imageService";
 import { populateServices } from "@/services/populateServices";
-import soundService from "@/services/soundService";
+import {SoundService} from "@/services/soundService";
 import { Alert, ButtonGroup, IconButton, Tooltip, Badge } from "@mui/material"
 import { DownloadIcon, UploadIcon, UndoIcon } from "@/components/GameEditor/material-icons"
 
@@ -16,6 +16,8 @@ interface Props {
   loadNewGame: { (data: GameDesign): void };
   undo: { (): void };
   history: { gameDesign: GameDesign; label: string }[];
+  imageService: ImageService
+  soundService: SoundService
 }
 
 export const SaveLoadAndUndo: FunctionComponent<Props> = ({
@@ -23,6 +25,8 @@ export const SaveLoadAndUndo: FunctionComponent<Props> = ({
   loadNewGame,
   undo,
   history,
+  imageService,
+  soundService,
 }: Props) => {
 
   const [downloadAllError, setDownloadAllError] = useState<string | undefined>(

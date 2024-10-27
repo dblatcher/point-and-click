@@ -243,6 +243,8 @@ export default class GameEditor extends Component<Props, State> {
                                             loadNewGame={this.loadNewGame}
                                             history={history}
                                             undo={this.undo}
+                                            soundService={soundService}
+                                            imageService={imageService}
                                         />
                                         <IconButton
                                             onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
