@@ -10,7 +10,6 @@ import { IntermitentSound } from "@/components/sound/IntermitentSound";
 import { PersistentSound } from "@/components/sound/PersistentSound";
 import { useSprites } from "@/context/sprite-context";
 import { findById } from "@/lib/util";
-import imageService from "@/services/imageService";
 import { SoundEffectMap, SoundValue } from "../../definitions/ActorData";
 import { HandleClickFunction, HandleHoverFunction } from "../game";
 import { FrameShape } from "./FrameShape";
