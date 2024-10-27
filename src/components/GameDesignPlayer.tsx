@@ -122,7 +122,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
   componentDidMount(): void {
     const { gameDesign, imageAssets, soundAssets } = this.props
-    this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data, imageService)))
+    this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data, imageService.get)))
     populateServices(gameDesign, imageAssets, soundAssets, imageService, soundService)
     this.reset()
   }

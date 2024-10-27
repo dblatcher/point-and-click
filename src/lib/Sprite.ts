@@ -1,5 +1,4 @@
 import { SpriteData, Direction, SpriteFrame, Animation } from "../definitions/SpriteSheet"
-import { ImageService } from "@/services/imageService";
 import { ImageAsset } from "@/services/assets";
 
 
@@ -11,10 +10,10 @@ interface ImageWithFrame {
 
 export class Sprite {
     readonly data: SpriteData
-    imageService: ImageService
-    constructor(data: SpriteData, imageService: ImageService) {
+    getImageAsset: { (id: string): ImageAsset | undefined }
+    constructor(data: SpriteData, getImage: { (id: string): ImageAsset | undefined }) {
         this.data = data
-        this.imageService = imageService
+        this.getImageAsset = getImage
     }
 
     static readonly DEFAULT_ANIMATION = {
@@ -58,7 +57,7 @@ export class Sprite {
         const frame = frames[frameIndex]
 
         if (!frame) { return undefined }
-        const imageAsset = this.imageService.get(frame.imageId)
+        const imageAsset = this.getImageAsset(frame.imageId)
         if (!imageAsset) { return undefined }
         return {
             image: imageAsset,
