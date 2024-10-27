@@ -11,6 +11,7 @@ import { Sprite } from "@/lib/Sprite";
 import { GameDataSchema } from "@/definitions/Game";
 import { ImageAssetsProvider } from "@/context/image-asset-context";
 import imageService from "@/services/imageService";
+import soundService from "@/services/soundService";
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
 const SAVED_GAME_DELIMITER = "//"
@@ -122,7 +123,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
   componentDidMount(): void {
     const { gameDesign, imageAssets, soundAssets } = this.props
     this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data, imageService)))
-    populateServices(gameDesign, imageAssets, soundAssets)
+    populateServices(gameDesign, imageAssets, soundAssets, imageService, soundService)
     this.reset()
   }
 

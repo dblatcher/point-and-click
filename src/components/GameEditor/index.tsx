@@ -89,7 +89,7 @@ export default class GameEditor extends Component<Props, State> {
         imageService.removeAll()
         soundService.removeAll()
         if (this.props.usePrebuiltGame) {
-            populateServicesForPreBuiltGame()
+            populateServicesForPreBuiltGame(imageService, soundService)
         }
         imageService.on('update', this.respondToServiceUpdate)
     }

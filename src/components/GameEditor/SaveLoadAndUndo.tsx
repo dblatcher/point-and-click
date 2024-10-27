@@ -7,7 +7,7 @@ import {
 import { buildGameZipBlob, readGameFromZipFile } from "@/lib/zipFiles";
 import { ImageService } from "@/services/imageService";
 import { populateServices } from "@/services/populateServices";
-import {SoundService} from "@/services/soundService";
+import { SoundService } from "@/services/soundService";
 import { Alert, ButtonGroup, IconButton, Tooltip, Badge } from "@mui/material"
 import { DownloadIcon, UploadIcon, UndoIcon } from "@/components/GameEditor/material-icons"
 
@@ -62,7 +62,10 @@ export const SaveLoadAndUndo: FunctionComponent<Props> = ({
     }
 
     loadNewGame(result.data.gameDesign)
-    populateServices(result.data.gameDesign, result.data.imageAssets, result.data.soundAssets)
+    populateServices(
+      result.data.gameDesign, result.data.imageAssets, result.data.soundAssets, 
+      imageService, soundService
+    )
   };
 
   const undoLabel = history.length > 0 ? `undo ${history[history.length - 1]?.label}` : 'undo'
