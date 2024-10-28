@@ -1,5 +1,4 @@
 import { findById, listIds } from "@/lib/util";
-import { Service } from "@/services/Service";
 import { FileAsset } from "@/services/assets";
 import { DeleteIcon } from "@/components/GameEditor/material-icons";
 import { Box, Grid, IconButton, List, ListItemButton, ListItemText } from "@mui/material";
@@ -11,7 +10,7 @@ import { AssetCard } from "./asset-components/AssetCard";
 import { useAssets } from "@/context/asset-context";
 
 interface Props {
-    assetType: 'image'
+    assetType: 'image' | 'sound'
     legend: string;
     select: { (item: FileAsset): void };
     selectNone?: { (): void };
@@ -22,15 +21,15 @@ interface Props {
 }
 
 export const ContextFileAssetSelector = ({
-    select, selectNone, legend, format = 'buttons', selectedItemId = '', filterItems, currentSelection,
+    assetType, select, selectNone, legend, format = 'buttons', selectedItemId = '', filterItems, currentSelection,
 }: Props) => {
 
     const [searchInput, setSearchInput] = useState('')
 
     const assets = useAssets()
 
-    const all = assets.imageAssets
-    const deleteItem = assets.removeImageAsset
+    const all: FileAsset[] = assetType === 'image' ? assets.imageAssets : assets.soundAssets
+    const deleteItem = assetType === 'image' ? assets.removeImageAsset : assets.removeSoundAsset
 
     const handleSelect = (id: string) => {
         if (id === '' && selectNone) {

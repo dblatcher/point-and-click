@@ -1,18 +1,17 @@
+import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
 import { ActorData, SoundValue, SpriteFrame } from "@/definitions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
-import soundService from "@/services/soundService";
 import { Alert, Box, Button, Divider, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { FileAssetSelector } from "../FileAssetSelector";
+import { ContextFileAssetSelector } from "../ContextFileAssetSelector";
 import { AddIcon, AudioFileOutlinedIcon } from "../material-icons";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { SpritePreview } from "../SpritePreview";
 import { SoundBoxes } from "./SoundBoxes";
-import { useAssets } from "@/context/asset-context";
 
 
 interface Props {
@@ -45,7 +44,8 @@ const ActorFramePreview = (props: { frame: SpriteFrame, actor: ActorData }) => {
 
 export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeSoundMap }) => {
     const [activeAnimationKey, setActiveAnimationKey] = useState<string | undefined>(undefined)
-    const [soundId, setSoundId] = useState(soundService.list()[0])
+    const { soundAssets } = useAssets()
+    const [soundId, setSoundId] = useState(soundAssets[0].id)
     const sprites = useSprites()
     const { gameDesign } = useGameDesign()
     const sprite = findById(actor.sprite, sprites)
@@ -107,9 +107,9 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
         {activeAnimationKey && (<>
             <Divider />
             <Typography>Edit sfx for <strong>{activeAnimationKey}</strong> animation</Typography>
-            <FileAssetSelector
+            <ContextFileAssetSelector
                 selectedItemId={soundId}
-                service={soundService}
+                assetType="sound"
                 format="select"
                 legend="sfx to add"
                 select={(item) => setSoundId(item.id)} />
