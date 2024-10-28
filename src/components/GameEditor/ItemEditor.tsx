@@ -3,7 +3,6 @@ import { ItemData } from "@/definitions";
 import { patchMember } from "@/lib/update-design";
 import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
-import imageService from "@/services/imageService";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
@@ -15,6 +14,7 @@ import { FileAssetSelector } from "./FileAssetSelector";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
 import { FramePicker } from "./SpriteEditor/FramePicker";
+import { useAssets } from "@/context/asset-context";
 
 type Props = {
     item: ItemData;
@@ -22,6 +22,7 @@ type Props = {
 
 export const ItemEditor = ({ item }: Props) => {
     const { gameDesign, applyModification } = useGameDesign()
+    const { imageService } = useAssets()
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const { actorId = '', id, name } = item
 
@@ -115,9 +116,6 @@ export const ItemEditor = ({ item }: Props) => {
                     </EditorBox>
                 </Grid>
             </Grid>
-
-
-
 
             <Dialog
                 open={dialogOpen}

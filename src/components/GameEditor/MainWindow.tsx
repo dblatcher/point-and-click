@@ -24,6 +24,7 @@ import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
 import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb } from "./defaults";
 import { useKeyBoard } from '@/hooks/use-keyboard';
+import { useAssets } from '@/context/asset-context';
 
 type Props = {
     tabOpen?: TabId;
@@ -33,6 +34,7 @@ type Props = {
 
 export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
     const { gameDesign } = useGameDesign()
+    const { imageService } = useAssets()
 
     useKeyBoard([
         {
@@ -148,7 +150,7 @@ export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
                     </Box>
                 </>
         case 'images':
-            return <ImageAssetTool />
+            return <ImageAssetTool imageService={imageService} />
         case 'sounds':
             return <SoundAssetTool />
         default:

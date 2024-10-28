@@ -1,5 +1,4 @@
 import { FunctionComponent, useState } from "react";
-import imageService from "@/services/imageService";
 import { FileAsset, ImageAsset } from "@/services/assets";
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { Box, Button, Typography, Stack } from "@mui/material";
@@ -56,7 +55,7 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
 }
 
 const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false, imageFilter }) => {
-    const { getAsset } = useAssets()
+    const { getAsset, imageService } = useAssets()
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
     const image = imageId ? getAsset(imageId) : undefined;
