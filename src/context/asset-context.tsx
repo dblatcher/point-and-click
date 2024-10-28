@@ -4,13 +4,13 @@ import { createContext, ReactNode, useContext, useEffect, useState } from 'react
 
 
 type AssetContextProps = {
-    getAsset(id: string): ImageAsset | undefined;
+    getImageAsset(id: string): ImageAsset | undefined;
     removeImageAsset(id: string): void;
     imageAssets: ImageAsset[];
     imageService: ImageService;
 }
 const AssetContext = createContext<AssetContextProps>({
-    getAsset() {
+    getImageAsset() {
         return undefined
     },
     removeImageAsset() {
@@ -42,7 +42,7 @@ export const AssetsProvider = ({ children, imageService }: AssetsProviderProps) 
 
     return <AssetContext.Provider
         value={{
-            getAsset(id) {
+            getImageAsset(id) {
                 return imageService.get(id)
             },
             removeImageAsset(id) {

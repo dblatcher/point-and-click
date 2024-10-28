@@ -54,11 +54,11 @@ const buildBackground = (
 
 export const ItemMenuInner = memo(
     function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
-        const { getAsset } = useAssets()
+        const { getImageAsset } = useAssets()
         return (
             <Grid container alignItems={'stretch'} mb={1}>
                 {items.map(item => {
-                    const imageBackground = buildBackground(item, getAsset);
+                    const imageBackground = buildBackground(item, getImageAsset);
                     const initialLetter = item.name ? item.name.charAt(0) : item.id.charAt(0);
                     return (
                         <Grid item key={item.id} xs={2} sm={1.5} md={1}>

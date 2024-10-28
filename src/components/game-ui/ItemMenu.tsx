@@ -49,14 +49,14 @@ const buildBackground = (itemData: ItemData, getAsset:{(id:string):ImageAsset|un
 
 export const ItemMenuInner = memo(
     function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
-        const { getAsset } = useAssets()
+        const { getImageAsset } = useAssets()
         const buttonOffClassNames = [uiStyles.button].join(" ")
         const buttonOnClassNames = [uiStyles.button, uiStyles.current].join(" ")
         return (
             <div className={uiStyles.frame}>
                 <nav className={[uiStyles.contents, uiStyles.menu].join(" ")}>
                     {items.map(item => {
-                        const backgroundStyle = buildBackground(item, getAsset);
+                        const backgroundStyle = buildBackground(item, getImageAsset);
                         const classNames = currentItemId === item.id
                             ? buttonOnClassNames
                             : buttonOffClassNames

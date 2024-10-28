@@ -33,7 +33,7 @@ const baseFrameStyle: CSSProperties = {
 }
 
 export const EndingScreen: FunctionComponent<Props> = ({ ending, inline }) => {
-    const { getAsset } = useAssets()
+    const { getImageAsset } = useAssets()
     const articleStyle: CSSProperties = inline ? {
         ...baseArticleStyle,
         display: 'inline-block',
@@ -45,7 +45,7 @@ export const EndingScreen: FunctionComponent<Props> = ({ ending, inline }) => {
         transform: 'translateX(-50%)',
     }
 
-    const imageAsset = ending.imageId ? getAsset(ending.imageId) : undefined;
+    const imageAsset = ending.imageId ? getImageAsset(ending.imageId) : undefined;
     const imageStyle = {
         width: typeof ending.imageWidth === 'number' ? ending.imageWidth : undefined
     }

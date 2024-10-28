@@ -14,7 +14,7 @@ interface Props {
 export const FramePreview: FunctionComponent<Props> = ({
     width, height, backgroundColor, frame, filter
 }: Props) => {
-    const { getAsset } = useAssets()
+    const { getImageAsset } = useAssets()
     const divStyle: CSSProperties = {
         width, height, backgroundColor
     }
@@ -25,7 +25,7 @@ export const FramePreview: FunctionComponent<Props> = ({
         filter,
     }
 
-    const image = getAsset(frame.imageId)
+    const image = getImageAsset(frame.imageId)
     if (image) {
         const { href, cols = 1, rows = 1 } = image
         Object.assign(figureStyle, {

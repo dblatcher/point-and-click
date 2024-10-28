@@ -25,7 +25,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
 
     const sprites = useSprites()
     const { applyModification, gameDesign } = useGameDesign()
-    const { getAsset } = useAssets()
+    const { getImageAsset } = useAssets()
 
     const [selectedAnimation, setSelectedAnimation] = useState<string | undefined>(undefined);
     const [selectedDirection, setSelectedDirection] = useState<Direction | undefined>(undefined);
@@ -142,7 +142,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
     }
 
     const { defaultDirection, animations, } = props.data
-    const sprite = new Sprite(props.data, getAsset)
+    const sprite = new Sprite(props.data, getImageAsset)
     const animationEntries = Object.entries(animations)
 
     return <Stack component={'article'} spacing={1}>

@@ -55,10 +55,10 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
 }
 
 const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false, imageFilter }) => {
-    const { getAsset } = useAssets()
+    const { getImageAsset } = useAssets()
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
-    const image = imageId ? getAsset(imageId) : undefined;
+    const image = imageId ? getImageAsset(imageId) : undefined;
     const frameSize = frameSizeFromButtonSize(buttonSize)
 
     const buttonPropsGrid: FrameButtonProps[][] = []

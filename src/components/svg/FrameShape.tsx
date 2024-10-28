@@ -65,9 +65,9 @@ const getAssetAndFrame = (
 
 const FrameContents = (props: { actorData: ActorData, widthAdjustedByScale: number, heightAdjustedByScale: number, filter?: string }) => {
 
-    const { getAsset } = useAssets()
+    const { getImageAsset } = useAssets()
     const { actorData, widthAdjustedByScale, heightAdjustedByScale, filter } = props
-    const assetAndFrame = getAssetAndFrame(actorData, getAsset)
+    const assetAndFrame = getAssetAndFrame(actorData, getImageAsset)
     const divStyle = assetAndFrame
         ? getFrameStyle(assetAndFrame.frame, assetAndFrame.asset, filter)
         : getPlaceholderStyle(filter)
@@ -89,8 +89,8 @@ export const FrameShape: FunctionComponent<Props> = ({
     roomData, viewAngle, x, y, height = 50, width = 50, filter,
     clickHandler, handleHover, actorData, status,
 }: Props) => {
-    const { getAsset } = useAssets()
-    const assetAndFrame = getAssetAndFrame(actorData, getAsset)
+    const { getImageAsset } = useAssets()
+    const assetAndFrame = getAssetAndFrame(actorData, getImageAsset)
     const { widthScale = 1, heightScale = 1 } = assetAndFrame?.asset ?? {};
     const widthAdjustedByScale = width * widthScale
     const heightAdjustedByScale = height * heightScale

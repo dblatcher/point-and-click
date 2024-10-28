@@ -12,9 +12,9 @@ export default function BackgroundShape({ layer, roomData, viewAngle }: Props) {
     const { parallax, imageId } = layer
     const { frameWidth, height: roomHeight } = roomData
 
-    const { getAsset } = useAssets()
+    const { getImageAsset } = useAssets()
 
-    const imageUrl = getAsset(imageId)?.href;
+    const imageUrl = getImageAsset(imageId)?.href;
 
     const layerWidth = getLayerWidth(parallax, roomData)
 
