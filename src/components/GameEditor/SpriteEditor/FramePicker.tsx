@@ -1,12 +1,12 @@
-import { FunctionComponent, useState } from "react";
-import { FileAsset, ImageAsset } from "@/services/assets";
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
-import { Box, Button, Typography, Stack } from "@mui/material";
-import { EditorBox } from "../EditorBox";
-import { FileAssetSelector } from "../FileAssetSelector";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
-import { FramePreview } from "./FramePreview";
 import { useAssets } from "@/context/asset-context";
+import { FileAsset, ImageAsset } from "@/services/assets";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { FunctionComponent, useState } from "react";
+import { ContextFileAssetSelector } from "../ContextFileAssetSelector";
+import { EditorBox } from "../EditorBox";
+import { FramePreview } from "./FramePreview";
 
 interface Props {
     row: number;
@@ -55,7 +55,7 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
 }
 
 const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false, imageFilter }) => {
-    const { getAsset, imageService } = useAssets()
+    const { getAsset } = useAssets()
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
     const image = imageId ? getAsset(imageId) : undefined;
@@ -84,9 +84,9 @@ const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFra
         <>
             <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
                 {!fixedSheet && (
-                    <FileAssetSelector legend="sprite sheet"
+                    <ContextFileAssetSelector assetType="image"
+                        legend="sprite sheet"
                         format="select"
-                        service={imageService}
                         selectedItemId={imageId}
                         filterItems={imageFilter}
                         select={(item): void => { pickFrame(0, 0, item.id) }} />

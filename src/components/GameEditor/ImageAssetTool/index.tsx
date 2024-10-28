@@ -16,10 +16,10 @@ import { ImageService } from "@/services/imageService";
 import { Grid } from "@mui/material";
 import { Component, RefObject, createRef } from "react";
 import { EditorHeading } from "../EditorHeading";
-import { FileAssetSelector } from "../FileAssetSelector";
 import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { ImageAssetForm } from "./ImageAssetForm";
 import { ImageAssetPreview } from "./ImageAssetPreview";
+import { ContextFileAssetSelector } from "../ContextFileAssetSelector";
 
 
 type State = {
@@ -246,9 +246,8 @@ export class ImageAssetTool extends Component<Props, State> {
           </Grid>
 
           <Grid item>
-            <FileAssetSelector
+            <ContextFileAssetSelector assetType="image"
               legend="assets"
-              service={this.props.imageService}
               currentSelection={asset.id}
               select={this.openFromService} />
           </Grid>
