@@ -3,7 +3,7 @@ import { calculateScreenX } from "@/lib/roomFunctions";
 import { ImageAsset } from "@/services/assets";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { HandleHoverFunction } from "../game";
-import { useImageAssets } from "@/context/image-asset-context";
+import { useAssets } from "@/context/asset-context";
 
 
 interface Props {
@@ -65,7 +65,7 @@ const getAssetAndFrame = (
 
 const FrameContents = (props: { actorData: ActorData, widthAdjustedByScale: number, heightAdjustedByScale: number, filter?: string }) => {
 
-    const { getAsset } = useImageAssets()
+    const { getAsset } = useAssets()
     const { actorData, widthAdjustedByScale, heightAdjustedByScale, filter } = props
     const assetAndFrame = getAssetAndFrame(actorData, getAsset)
     const divStyle = assetAndFrame
@@ -89,7 +89,7 @@ export const FrameShape: FunctionComponent<Props> = ({
     roomData, viewAngle, x, y, height = 50, width = 50, filter,
     clickHandler, handleHover, actorData, status,
 }: Props) => {
-    const { getAsset } = useImageAssets()
+    const { getAsset } = useAssets()
     const assetAndFrame = getAssetAndFrame(actorData, getAsset)
     const { widthScale = 1, heightScale = 1 } = assetAndFrame?.asset ?? {};
     const widthAdjustedByScale = width * widthScale

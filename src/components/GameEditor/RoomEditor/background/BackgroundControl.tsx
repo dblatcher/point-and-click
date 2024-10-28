@@ -6,7 +6,7 @@ import { BackgroundLayerControl } from "./BackgroundLayerControl";
 import { BackgroundLayerForm } from "./BackgroundLayerForm";
 import { useGameDesign } from "@/context/game-design-context";
 import { cloneData } from "@/lib/clone";
-import { useImageAssets } from "@/context/image-asset-context";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
     room: RoomData
@@ -15,7 +15,7 @@ interface Props {
 
 export const BackgroundControl = ({ room }: Props) => {
     const { modifyRoom } = useGameDesign()
-    const { getAllAssets} = useImageAssets()
+    const { getAllAssets} = useAssets()
     const updateRoom = (mod: Partial<RoomData>) => {
         modifyRoom(`change background, room ${room.id}`, room.id, mod)
     }

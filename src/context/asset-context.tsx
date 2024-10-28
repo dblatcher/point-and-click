@@ -3,12 +3,13 @@ import { ImageService } from '@/services/imageService'
 import { createContext, ReactNode, useContext } from 'react'
 
 
-type ImageAssetContextProps = {
+type AssetContextProps = {
     getAsset(id: string): ImageAsset | undefined;
     listIds(): string[];
     getAllAssets(): ImageAsset[];
+    imageService: ImageService;
 }
-const ImageAssetContext = createContext<ImageAssetContextProps>({
+const AssetContext = createContext<AssetContextProps>({
     getAsset() {
         return undefined
     },
@@ -17,17 +18,18 @@ const ImageAssetContext = createContext<ImageAssetContextProps>({
     },
     getAllAssets() {
         return []
-    }
+    },
+    imageService: new ImageService()
 })
 
-type ImageAssetsProviderProps = {
+type AssetsProviderProps = {
     children: ReactNode,
     imageService: ImageService
 }
 
-export const ImageAssetsProvider = ({ children, imageService }: ImageAssetsProviderProps) => {
+export const AssetsProvider = ({ children, imageService }: AssetsProviderProps) => {
 
-    return <ImageAssetContext.Provider
+    return <AssetContext.Provider
         value={{
             getAsset(id) {
                 return imageService.get(id)
@@ -38,12 +40,13 @@ export const ImageAssetsProvider = ({ children, imageService }: ImageAssetsProvi
             getAllAssets() {
                 return imageService.getAll()
             },
+            imageService,
         }}
     >
         {children}
-    </ImageAssetContext.Provider>
+    </AssetContext.Provider>
 }
 
-export const useImageAssets = () => {
-    return useContext(ImageAssetContext)
+export const useAssets = () => {
+    return useContext(AssetContext)
 }

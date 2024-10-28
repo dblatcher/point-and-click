@@ -9,7 +9,7 @@ import { UiComponentSet } from "./game/uiComponentSet";
 import { SpritesProvider } from "@/context/sprite-context";
 import { Sprite } from "@/lib/Sprite";
 import { GameDataSchema } from "@/definitions/Game";
-import { ImageAssetsProvider } from "@/context/image-asset-context";
+import { AssetsProvider } from "@/context/asset-context";
 import imageService from "@/services/imageService";
 import soundService from "@/services/soundService";
 
@@ -145,7 +145,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     const { uiComponents, instantMode } = this.props
     return <>
       {gameCondition && (
-        <ImageAssetsProvider imageService={imageService}>
+        <AssetsProvider imageService={imageService}>
           <SpritesProvider value={this.sprites}>
             <Game
               {...gameCondition}
@@ -160,7 +160,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
               instantMode={instantMode}
             />
           </SpritesProvider>
-        </ImageAssetsProvider>
+        </AssetsProvider>
       )}
     </>
   }

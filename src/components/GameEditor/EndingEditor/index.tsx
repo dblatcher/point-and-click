@@ -7,7 +7,7 @@ import { Card, Container, Typography } from "@mui/material";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { patchMember } from "@/lib/update-design";
-import { useImageAssets } from "@/context/image-asset-context";
+import { useAssets } from "@/context/asset-context";
 
 type Props = {
     ending: Ending;
@@ -15,7 +15,7 @@ type Props = {
 
 export const EndingEditor = ({ ending }: Props) => {
     const { applyModification, gameDesign } = useGameDesign()
-    const { listIds } = useImageAssets()
+    const { listIds } = useAssets()
 
     const handleUpdate = (value: FieldValue, field: FieldDef): void => {
         if (field.key === 'id') {

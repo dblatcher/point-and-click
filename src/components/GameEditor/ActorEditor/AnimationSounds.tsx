@@ -12,7 +12,7 @@ import { AddIcon, AudioFileOutlinedIcon } from "../material-icons";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { SpritePreview } from "../SpritePreview";
 import { SoundBoxes } from "./SoundBoxes";
-import { useImageAssets } from "@/context/image-asset-context";
+import { useAssets } from "@/context/asset-context";
 
 
 interface Props {
@@ -31,7 +31,7 @@ const toSoundValueArray = (input: SoundValue | SoundValue[] | undefined): SoundV
 
 const ActorFramePreview = (props: { frame: SpriteFrame, actor: ActorData }) => {
     const { frame, actor } = props
-    const { getAsset } = useImageAssets()
+    const { getAsset } = useAssets()
     const imageAsset = getAsset(frame.imageId)
     const heightScale = imageAsset?.heightScale ?? 1
     const widthScale = imageAsset?.widthScale ?? 1

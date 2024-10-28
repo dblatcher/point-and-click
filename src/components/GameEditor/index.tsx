@@ -19,7 +19,7 @@ import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
-import { ImageAssetsProvider } from "@/context/image-asset-context";
+import { AssetsProvider } from "@/context/asset-context";
 
 
 type State = {
@@ -219,7 +219,7 @@ export default class GameEditor extends Component<Props, State> {
                         applyModification(description, { rooms: patchMember(id, mod, gameDesign.rooms) })
                     }
                 }} >
-                    <ImageAssetsProvider imageService={imageService}>
+                    <AssetsProvider imageService={imageService}>
                         <SpritesProvider value={sprites}>
                             <Container maxWidth='xl'
                                 component={'main'}
@@ -284,7 +284,7 @@ export default class GameEditor extends Component<Props, State> {
 
                             </Container>
                         </SpritesProvider>
-                    </ImageAssetsProvider>
+                    </AssetsProvider>
                 </GameDesignProvider>
             </ThemeProvider>
         )

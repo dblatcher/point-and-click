@@ -5,7 +5,7 @@ import { Button, Grid, Typography, Avatar } from "@mui/material";
 import { ItemMenuProps, itemMenuPropsAreEqual } from "../game/uiComponentSet";
 import { HandleHoverFunction } from "../game";
 import { useGameStateDerivations } from "@/context/game-state-context";
-import { useImageAssets } from "@/context/image-asset-context";
+import { useAssets } from "@/context/asset-context";
 import { ImageAsset } from "@/services/assets";
 
 
@@ -54,7 +54,7 @@ const buildBackground = (
 
 export const ItemMenuInner = memo(
     function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
-        const { getAsset } = useImageAssets()
+        const { getAsset } = useAssets()
         return (
             <Grid container alignItems={'stretch'} mb={1}>
                 {items.map(item => {

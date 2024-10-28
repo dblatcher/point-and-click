@@ -2,7 +2,7 @@
 import { CSSProperties, FunctionComponent } from "react";
 import { Ending } from "@/definitions";
 import { useGameInfo } from "@/context/game-info-provider";
-import { useImageAssets } from "@/context/image-asset-context";
+import { useAssets } from "@/context/asset-context";
 
 
 export const EndingWrapper = () => {
@@ -33,7 +33,7 @@ const baseFrameStyle: CSSProperties = {
 }
 
 export const EndingScreen: FunctionComponent<Props> = ({ ending, inline }) => {
-    const { getAsset } = useImageAssets()
+    const { getAsset } = useAssets()
     const articleStyle: CSSProperties = inline ? {
         ...baseArticleStyle,
         display: 'inline-block',
