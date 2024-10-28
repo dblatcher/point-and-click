@@ -1,5 +1,6 @@
-import { ImageAsset } from '@/services/assets'
+import { ImageAsset, SoundAsset } from '@/services/assets'
 import { ImageService } from '@/services/imageService'
+import { SoundService } from '@/services/soundService';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 
 
@@ -8,6 +9,10 @@ type AssetContextProps = {
     removeImageAsset(id: string): void;
     imageAssets: ImageAsset[];
     imageService: ImageService;
+
+    removeSoundAsset(id: string): void;
+    soundService: SoundService;
+    soundAssets: SoundAsset[];
 }
 const AssetContext = createContext<AssetContextProps>({
     getImageAsset() {
@@ -17,18 +22,24 @@ const AssetContext = createContext<AssetContextProps>({
         return undefined
     },
     imageAssets: [],
-    imageService: new ImageService()
+    imageService: new ImageService(),
+    removeSoundAsset() {
+        return undefined
+    },
+    soundAssets: [],
+    soundService: new SoundService(),
 })
 
 type AssetsProviderProps = {
-    children: ReactNode,
-    imageService: ImageService
+    children: ReactNode;
+    imageService: ImageService;
+    soundService: SoundService;
 }
 
-export const AssetsProvider = ({ children, imageService }: AssetsProviderProps) => {
+export const AssetsProvider = ({ children, imageService, soundService }: AssetsProviderProps) => {
 
     const [imageAssets, setImageAssets] = useState(imageService.getAll())
-
+    const [soundAssets, setSoundAssets] = useState(soundService.getAll())
     useEffect(() => {
         const refresh = (length: number) => {
             console.log('images in context', length)
@@ -37,6 +48,16 @@ export const AssetsProvider = ({ children, imageService }: AssetsProviderProps) 
         imageService.on('update', refresh)
         return () => {
             imageService.off('update', refresh)
+        }
+    })
+    useEffect(() => {
+        const refresh = (length: number) => {
+            console.log('sounds in context', length)
+            setSoundAssets(soundService.getAll())
+        }
+        soundService.on('update', refresh)
+        return () => {
+            soundService.off('update', refresh)
         }
     })
 
@@ -50,6 +71,11 @@ export const AssetsProvider = ({ children, imageService }: AssetsProviderProps) 
             },
             imageAssets,
             imageService,
+            removeSoundAsset(id) {
+                return soundService.remove(id)
+            },
+            soundService,
+            soundAssets,
         }}
     >
         {children}

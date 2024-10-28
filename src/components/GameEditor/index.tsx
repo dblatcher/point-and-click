@@ -219,7 +219,7 @@ export default class GameEditor extends Component<Props, State> {
                         applyModification(description, { rooms: patchMember(id, mod, gameDesign.rooms) })
                     }
                 }} >
-                    <AssetsProvider imageService={imageService}>
+                    <AssetsProvider imageService={imageService} soundService={soundService}>
                         <SpritesProvider value={sprites}>
                             <Container maxWidth='xl'
                                 component={'main'}

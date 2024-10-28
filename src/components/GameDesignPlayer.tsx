@@ -145,7 +145,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     const { uiComponents, instantMode } = this.props
     return <>
       {gameCondition && (
-        <AssetsProvider imageService={imageService}>
+        <AssetsProvider imageService={imageService} soundService={soundService}>
           <SpritesProvider value={this.sprites}>
             <Game
               {...gameCondition}
