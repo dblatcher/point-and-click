@@ -15,12 +15,12 @@ interface Props {
 
 export const BackgroundControl = ({ room }: Props) => {
     const { modifyRoom } = useGameDesign()
-    const { getAllAssets} = useAssets()
+    const { imageAssets} = useAssets()
     const updateRoom = (mod: Partial<RoomData>) => {
         modifyRoom(`change background, room ${room.id}`, room.id, mod)
     }
 
-    const imageAssets = getAllAssets().filter(image => ['background', 'any'].includes(image.category))
+    const backgroundImageAssets = imageAssets.filter(image => ['background', 'any'].includes(image.category))
 
     const changeBackground = (index: number, propery: keyof BackgroundLayer, newValue: string | number) => {
         const background = cloneData(room.background)
@@ -61,13 +61,13 @@ export const BackgroundControl = ({ room }: Props) => {
                 mutateList={(background) => { updateRoom({ background }) }}
                 describeItem={(layer, index) => (
                     <BackgroundLayerControl index={index}
-                        imageAssets={imageAssets}
+                        imageAssets={backgroundImageAssets}
                         layer={layer}
                         change={changeBackground} />
                 )}
             />
             <BackgroundLayerForm
-                imageAssets={imageAssets}
+                imageAssets={backgroundImageAssets}
                 addNewLayer={addBackground} />
         </Stack>
     )

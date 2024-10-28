@@ -1,24 +1,22 @@
 import { ImageAsset } from '@/services/assets'
 import { ImageService } from '@/services/imageService'
-import { createContext, ReactNode, useContext } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 
 
 type AssetContextProps = {
     getAsset(id: string): ImageAsset | undefined;
-    listIds(): string[];
-    getAllAssets(): ImageAsset[];
+    removeImageAsset(id: string): void;
+    imageAssets: ImageAsset[];
     imageService: ImageService;
 }
 const AssetContext = createContext<AssetContextProps>({
     getAsset() {
         return undefined
     },
-    listIds() {
-        return []
+    removeImageAsset() {
+        return undefined
     },
-    getAllAssets() {
-        return []
-    },
+    imageAssets: [],
     imageService: new ImageService()
 })
 
@@ -29,17 +27,28 @@ type AssetsProviderProps = {
 
 export const AssetsProvider = ({ children, imageService }: AssetsProviderProps) => {
 
+    const [imageAssets, setImageAssets] = useState(imageService.getAll())
+
+    useEffect(() => {
+        const refresh = (length: number) => {
+            console.log('images in context', length)
+            setImageAssets(imageService.getAll())
+        }
+        imageService.on('update', refresh)
+        return () => {
+            imageService.off('update', refresh)
+        }
+    })
+
     return <AssetContext.Provider
         value={{
             getAsset(id) {
                 return imageService.get(id)
             },
-            listIds() {
-                return imageService.list()
+            removeImageAsset(id) {
+                return imageService.remove(id)
             },
-            getAllAssets() {
-                return imageService.getAll()
-            },
+            imageAssets,
             imageService,
         }}
     >

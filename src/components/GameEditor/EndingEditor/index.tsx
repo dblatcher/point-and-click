@@ -8,6 +8,7 @@ import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { patchMember } from "@/lib/update-design";
 import { useAssets } from "@/context/asset-context";
+import { listIds } from "@/lib/util";
 
 type Props = {
     ending: Ending;
@@ -15,7 +16,7 @@ type Props = {
 
 export const EndingEditor = ({ ending }: Props) => {
     const { applyModification, gameDesign } = useGameDesign()
-    const { listIds } = useAssets()
+    const { imageAssets } = useAssets()
 
     const handleUpdate = (value: FieldValue, field: FieldDef): void => {
         if (field.key === 'id') {
@@ -45,7 +46,7 @@ export const EndingEditor = ({ ending }: Props) => {
                     schema={EndingSchema.omit({ id: true })}
                     changeValue={(value, field) => { handleUpdate(value, field) }}
                     options={{
-                        imageId: listIds()
+                        imageId: listIds(imageAssets)
                     }}
                     fieldWrapperProps={{
                         spacing: 2,

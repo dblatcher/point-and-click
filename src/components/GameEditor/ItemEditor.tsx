@@ -8,13 +8,12 @@ import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { StringInput } from "../SchemaForm/StringInput";
 import { ItemMenuInner } from "../game-ui/ItemMenu";
+import { ContextFileAssetSelector } from "./ContextFileAssetSelector";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
-import { FileAssetSelector } from "./FileAssetSelector";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
 import { FramePicker } from "./SpriteEditor/FramePicker";
-import { useAssets } from "@/context/asset-context";
 
 type Props = {
     item: ItemData;
@@ -22,7 +21,6 @@ type Props = {
 
 export const ItemEditor = ({ item }: Props) => {
     const { gameDesign, applyModification } = useGameDesign()
-    const { imageService } = useAssets()
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const { actorId = '', id, name } = item
 
@@ -125,13 +123,14 @@ export const ItemEditor = ({ item }: Props) => {
                     Pick Icon for {item.id}
                 </DialogTitle>
                 <DialogContent>
-                    <FileAssetSelector legend='image asset'
+                    <ContextFileAssetSelector legend='image asset'
                         format="select"
+                        assetType="image"
                         filterItems={item => (item as ImageAsset).category === 'item' || (item as ImageAsset).category === 'any'}
                         select={item => changeValue('imageId', item.id)}
                         selectNone={() => changeValue('imageId', undefined)}
-                        service={imageService}
-                        selectedItemId={item.imageId} />
+                        selectedItemId={item.imageId}
+                    />
                     <FramePicker fixedSheet noOptions
                         imageId={item.imageId}
                         row={item.row || 0}
