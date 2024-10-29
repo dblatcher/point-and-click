@@ -203,7 +203,7 @@ export default class GameEditor extends Component<Props, State> {
         } = this.state
         const { createGameDataItem, deleteArrayItem, openInEditor, changeOrAddInteraction, applyModification, deleteInteraction } = this
 
-        const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get))]
+        const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
 
         return (
             <ThemeProvider theme={editorTheme}>
