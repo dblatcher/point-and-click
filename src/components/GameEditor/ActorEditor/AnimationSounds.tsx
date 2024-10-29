@@ -7,7 +7,7 @@ import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
 import { Alert, Box, Button, Divider, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { ContextFileAssetSelector } from "../ContextFileAssetSelector";
+import { FileAssetSelector } from "../FileAssetSelector";
 import { AddIcon, AudioFileOutlinedIcon } from "../material-icons";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { SpritePreview } from "../SpritePreview";
@@ -107,7 +107,7 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
         {activeAnimationKey && (<>
             <Divider />
             <Typography>Edit sfx for <strong>{activeAnimationKey}</strong> animation</Typography>
-            <ContextFileAssetSelector
+            <FileAssetSelector
                 selectedItemId={soundId}
                 assetType="sound"
                 format="select"

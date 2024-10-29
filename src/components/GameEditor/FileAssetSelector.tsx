@@ -1,16 +1,16 @@
-import { listIds } from "@/lib/util";
-import { Service } from "@/services/Service";
+import { findById, listIds } from "@/lib/util";
 import { FileAsset } from "@/services/assets";
 import { DeleteIcon } from "@/components/GameEditor/material-icons";
 import { Box, Grid, IconButton, List, ListItemButton, ListItemText } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { StringInput } from "../SchemaForm/StringInput";
 import { EditorBox } from "./EditorBox";
 import { AssetCard } from "./asset-components/AssetCard";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
-    service: Service<FileAsset>;
+    assetType: 'image' | 'sound'
     legend: string;
     select: { (item: FileAsset): void };
     selectNone?: { (): void };
@@ -21,40 +21,29 @@ interface Props {
 }
 
 export const FileAssetSelector = ({
-    service, select, selectNone, legend, format = 'buttons', selectedItemId = '', filterItems, currentSelection
+    assetType, select, selectNone, legend, format = 'buttons', selectedItemId = '', filterItems, currentSelection,
 }: Props) => {
 
     const [searchInput, setSearchInput] = useState('')
-    const [timestamp, setTimestamp] = useState<number>(Date.now())
-    const refresh = () => {
-        setTimestamp(Date.now())
-    }
 
-    useEffect(() => {
-        service.on('update', refresh)
-        return () => {
-            service.off('update', refresh)
-        }
-    })
+    const assets = useAssets()
+
+    const all: FileAsset[] = assetType === 'image' ? assets.imageAssets : assets.soundAssets
+    const deleteItem = assetType === 'image' ? assets.removeImageAsset : assets.removeSoundAsset
 
     const handleSelect = (id: string) => {
         if (id === '' && selectNone) {
             return selectNone();
         }
-        const item = service.get(id)
+        const item = findById(id, all)
         if (item) {
             select(item)
         }
     }
 
-
-    const handleDelete = (id: string) => {
-        service.remove(id)
-    }
-
     const itemsInFilter = filterItems
-        ? service.getAll().filter(filterItems)
-        : service.getAll();
+        ? all.filter(filterItems)
+        : all;
 
     const searchedItemsInFilter = searchInput !== ''
         ? itemsInFilter.filter(({ id }) => id.toLowerCase().includes(searchInput.toLowerCase()))
@@ -100,7 +89,7 @@ export const FileAssetSelector = ({
                                 selected={id === currentSelection}
                                 key={id} onClick={() => { handleSelect(id) }}>
                                 <ListItemText primary={id} />
-                                <IconButton edge="end" aria-label="delete" onClick={() => { handleDelete(id) }}>
+                                <IconButton edge="end" aria-label="delete" onClick={() => { deleteItem(id) }}>
                                     <DeleteIcon />
                                 </IconButton>
                             </ListItemButton>

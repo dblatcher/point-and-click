@@ -15,7 +15,7 @@ import {
 import { SoundService } from "@/services/soundService";
 import { Grid } from "@mui/material";
 import { Component, RefObject, createRef } from "react";
-import { ContextFileAssetSelector } from "../ContextFileAssetSelector";
+import { FileAssetSelector } from "../FileAssetSelector";
 import { EditorHeading } from "../EditorHeading";
 import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { SoundAssetForm } from "./SoundAssetForm";
@@ -233,7 +233,7 @@ export class SoundAssetTool extends Component<Props, State> {
           </Grid>
 
           <Grid item>
-            <ContextFileAssetSelector
+            <FileAssetSelector
               legend="open asset"
               assetType="sound"
               currentSelection={asset.id}

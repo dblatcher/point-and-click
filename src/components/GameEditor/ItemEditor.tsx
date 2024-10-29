@@ -8,7 +8,7 @@ import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { StringInput } from "../SchemaForm/StringInput";
 import { ItemMenuInner } from "../game-ui/ItemMenu";
-import { ContextFileAssetSelector } from "./ContextFileAssetSelector";
+import { FileAssetSelector } from "./FileAssetSelector";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
@@ -123,7 +123,7 @@ export const ItemEditor = ({ item }: Props) => {
                     Pick Icon for {item.id}
                 </DialogTitle>
                 <DialogContent>
-                    <ContextFileAssetSelector legend='image asset'
+                    <FileAssetSelector legend='image asset'
                         format="select"
                         assetType="image"
                         filterItems={item => (item as ImageAsset).category === 'item' || (item as ImageAsset).category === 'any'}

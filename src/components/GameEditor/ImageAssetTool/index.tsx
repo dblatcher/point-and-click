@@ -19,7 +19,7 @@ import { EditorHeading } from "../EditorHeading";
 import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { ImageAssetForm } from "./ImageAssetForm";
 import { ImageAssetPreview } from "./ImageAssetPreview";
-import { ContextFileAssetSelector } from "../ContextFileAssetSelector";
+import { FileAssetSelector } from "../FileAssetSelector";
 
 
 type State = {
@@ -246,7 +246,7 @@ export class ImageAssetTool extends Component<Props, State> {
           </Grid>
 
           <Grid item>
-            <ContextFileAssetSelector assetType="image"
+            <FileAssetSelector assetType="image"
               legend="assets"
               currentSelection={asset.id}
               select={this.openFromService} />

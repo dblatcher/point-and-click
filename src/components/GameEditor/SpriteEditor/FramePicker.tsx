@@ -4,7 +4,7 @@ import { useAssets } from "@/context/asset-context";
 import { FileAsset, ImageAsset } from "@/services/assets";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { FunctionComponent, useState } from "react";
-import { ContextFileAssetSelector } from "../ContextFileAssetSelector";
+import { FileAssetSelector } from "../FileAssetSelector";
 import { EditorBox } from "../EditorBox";
 import { FramePreview } from "./FramePreview";
 
@@ -84,7 +84,7 @@ const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFra
         <>
             <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
                 {!fixedSheet && (
-                    <ContextFileAssetSelector assetType="image"
+                    <FileAssetSelector assetType="image"
                         legend="sprite sheet"
                         format="select"
                         selectedItemId={imageId}
