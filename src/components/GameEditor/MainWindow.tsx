@@ -34,7 +34,7 @@ type Props = {
 
 export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
     const { gameDesign } = useGameDesign()
-    const { imageService } = useAssets()
+    const { imageService, soundService } = useAssets()
 
     useKeyBoard([
         {
@@ -152,7 +152,7 @@ export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
         case 'images':
             return <ImageAssetTool imageService={imageService} />
         case 'sounds':
-            return <SoundAssetTool />
+            return <SoundAssetTool soundService={soundService} />
         default:
         case 'main':
             return <Overview />
