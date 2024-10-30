@@ -7,7 +7,6 @@ import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes 
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findById, listIds } from "@/lib/util";
-import soundService from "@/services/soundService";
 import { Box } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
@@ -18,6 +17,7 @@ import { getDefaultOrder, makeNewConsequence } from "../defaults";
 import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
 import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
 import { SoundPreview } from "../SoundAssetTool/SoundPreview";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
     consequence: AnyConsequence;
@@ -39,6 +39,7 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
 
 export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) => {
     const { gameDesign } = useGameDesign()
+    const { soundAssets, soundService } = useAssets()
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
     const { ids: targetIdsWithoutItems, descriptions: targetDescriptionsWithoutItems } = getTargetLists(gameDesign, true)
 
@@ -55,7 +56,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         endingId: listIds(gameDesign.endings),
         zoneType: zoneTypes,
         ref: getZoneRefsOrIds(gameDesign, consequence.roomId || '', consequence.zoneType),
-        sound: soundService.getAll().map(_ => _.id),
+        sound: soundAssets.map(_ => _.id),
         flag: Object.keys(gameDesign.flagMap),
         branchId: branchIdList,
         choiceRef: choiceRefList,
