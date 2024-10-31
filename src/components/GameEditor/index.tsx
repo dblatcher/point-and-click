@@ -9,7 +9,7 @@ import { addGameDataItem, changeOrAddInteraction } from "@/lib/mutate-design";
 import { patchMember } from "@/lib/update-design";
 import imageService from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
-import soundService from "@/services/soundService";
+import { SoundService } from "@/services/soundService";
 import { editorTheme } from "@/theme";
 import { Box, Container, IconButton, List, ListItem, ListItemButton, ListItemText, Stack, ThemeProvider } from "@mui/material";
 import { Component } from "react";
@@ -41,9 +41,11 @@ const defaultRoomId = 'ROOM_1' as const;
 
 export default class GameEditor extends Component<Props, State> {
 
+    soundService: SoundService
+
     constructor(props: Props) {
         super(props)
-
+        this.soundService = new SoundService()
         const gameDesign = props.usePrebuiltGame ? { ...prebuiltGameDesign } : {
             id: "NEW_GAME",
             rooms: [Object.assign(getBlankRoom(), { id: defaultRoomId, height: 150 })],
@@ -87,9 +89,9 @@ export default class GameEditor extends Component<Props, State> {
 
     componentDidMount() {
         imageService.removeAll()
-        soundService.removeAll()
+        // soundService.removeAll()
         if (this.props.usePrebuiltGame) {
-            populateServicesForPreBuiltGame(imageService, soundService)
+            populateServicesForPreBuiltGame(imageService, this.soundService)
         }
         imageService.on('update', this.respondToServiceUpdate)
     }
@@ -198,6 +200,7 @@ export default class GameEditor extends Component<Props, State> {
     }
 
     render() {
+        const { soundService } = this
         const {
             gameDesign, tabOpen, gameItemIds, history,
         } = this.state

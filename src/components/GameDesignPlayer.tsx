@@ -11,7 +11,7 @@ import { Sprite } from "@/lib/Sprite";
 import { GameDataSchema } from "@/definitions/Game";
 import { AssetsProvider } from "@/context/asset-context";
 import imageService from "@/services/imageService";
-import soundService from "@/services/soundService";
+import { SoundService } from "@/services/soundService";
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
 const SAVED_GAME_DELIMITER = "//"
@@ -32,6 +32,7 @@ type State = {
 export class GameDesignPlayer extends React.Component<Props, State> {
 
   sprites: Sprite[]
+  soundService: SoundService
 
   constructor(props: Props) {
     super(props)
@@ -45,6 +46,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     this.deleteSave = this.deleteSave.bind(this)
 
     this.sprites = []
+    this.soundService = new SoundService()
   }
 
   getStorageKey(fileName: string): string | undefined {
@@ -121,6 +123,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
+    const { soundService } = this
     const { gameDesign, imageAssets, soundAssets } = this.props
     this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data, imageService.get.bind(imageService))))
     populateServices(gameDesign, imageAssets, soundAssets, imageService, soundService)
@@ -141,12 +144,13 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
 
   render() {
+    const { soundService } = this
     const { gameCondition, timestamp } = this.state
     const { uiComponents, instantMode } = this.props
-    return <>
-      {gameCondition && (
-        <AssetsProvider imageService={imageService} soundService={soundService}>
-          <SpritesProvider value={this.sprites}>
+    return (
+      <AssetsProvider imageService={imageService} soundService={soundService}>
+        <SpritesProvider value={this.sprites}>
+          {gameCondition && (
             <Game
               {...gameCondition}
               load={this.load}
@@ -160,10 +164,10 @@ export class GameDesignPlayer extends React.Component<Props, State> {
               instantMode={instantMode}
               soundService={soundService}
             />
-          </SpritesProvider>
-        </AssetsProvider>
-      )}
-    </>
+          )}
+        </SpritesProvider>
+      </AssetsProvider>
+    )
   }
 
 }

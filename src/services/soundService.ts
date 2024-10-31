@@ -84,6 +84,3 @@ export class SoundService extends Service<SoundAsset> {
     }
 }
 
-const soundService = new SoundService()
-
-export default soundService;
