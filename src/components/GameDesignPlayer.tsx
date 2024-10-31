@@ -158,6 +158,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
               _sprites={this.sprites}
               uiComponents={uiComponents}
               instantMode={instantMode}
+              soundService={soundService}
             />
           </SpritesProvider>
         </AssetsProvider>

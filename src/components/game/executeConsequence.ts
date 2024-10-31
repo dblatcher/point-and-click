@@ -3,7 +3,6 @@ import { changeRoom } from "@/lib/changeRoom"
 import { cloneData } from "@/lib/clone"
 import { generateCellMatrix } from "@/lib/pathfinding/cells"
 import { findById } from "@/lib/util"
-import soundService from "@/services/soundService"
 import { cellSize, GameProps, GameState } from "."
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
 import { reportConversationBranch } from "@/lib/game-event-emitter"
@@ -174,7 +173,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
             }
             case 'soundEffect': {
                 const { sound, volume } = consequence
-                conseqeunceSuccess = !!soundService.play(sound, { volume })
+                conseqeunceSuccess = !!props.soundService.play(sound, { volume })
                 break;
             }
             case 'flag': {

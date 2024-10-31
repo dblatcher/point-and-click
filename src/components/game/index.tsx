@@ -23,6 +23,7 @@ import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
 import { UiComponentSet } from "./uiComponentSet";
+import { SoundService } from "@/services/soundService";
 
 
 export type GameProps = Readonly<{
@@ -36,6 +37,7 @@ export type GameProps = Readonly<{
     startPaused?: boolean;
     uiComponents?: UiComponentSet;
     instantMode?: boolean;
+    soundService: SoundService;
 } & GameCondition>
 
 export type GameState = GameData & {
