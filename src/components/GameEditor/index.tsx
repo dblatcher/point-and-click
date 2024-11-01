@@ -8,7 +8,7 @@ import { cloneData } from "@/lib/clone";
 import { addGameDataItem, changeOrAddInteraction } from "@/lib/mutate-design";
 import { patchMember } from "@/lib/update-design";
 import { ImageService } from "@/services/imageService";
-import { populateServicesForPreBuiltGame } from "@/services/populateServices";
+import { populateServices, populateServicesForPreBuiltGame } from "@/services/populateServices";
 import { SoundService } from "@/services/soundService";
 import { editorTheme } from "@/theme";
 import { Box, Container, IconButton, List, ListItem, ListItemButton, ListItemText, Stack, ThemeProvider } from "@mui/material";
@@ -20,6 +20,7 @@ import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
 import { AssetsProvider } from "@/context/asset-context";
+import { ImageAsset, SoundAsset } from "@/services/assets";
 
 
 type State = {
@@ -151,8 +152,19 @@ export default class GameEditor extends Component<Props, State> {
             return { gameDesign, history }
         })
     }
-    loadNewGame(gameDesign: GameDesign) {
-        this.setState({ gameDesign })
+    loadNewGame(data: {
+        gameDesign: GameDesign;
+        imageAssets: ImageAsset[];
+        soundAssets: SoundAsset[];
+    }) {
+        this.soundService.removeAll();
+        this.imageService.removeAll();
+        
+        this.setState({ gameDesign: data.gameDesign })
+        populateServices(
+            data.gameDesign, data.imageAssets, data.soundAssets,
+            this.imageService, this.soundService
+        )
     }
     undo() {
         this.setState(state => {
@@ -230,12 +242,9 @@ export default class GameEditor extends Component<Props, State> {
                                 >
                                     <Stack direction={'row'} marginTop={3} spacing={3} minHeight={35}>
                                         <SaveLoadAndUndo
-                                            gameDesign={gameDesign}
                                             loadNewGame={this.loadNewGame}
                                             history={history}
                                             undo={this.undo}
-                                            soundService={soundService}
-                                            imageService={imageService}
                                         />
                                         <IconButton
                                             onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}

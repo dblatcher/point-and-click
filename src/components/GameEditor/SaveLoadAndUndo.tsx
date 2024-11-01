@@ -5,29 +5,31 @@ import {
   uploadFile,
 } from "@/lib/files";
 import { buildGameZipBlob, readGameFromZipFile } from "@/lib/zipFiles";
-import { ImageService } from "@/services/imageService";
-import { populateServices } from "@/services/populateServices";
-import { SoundService } from "@/services/soundService";
 import { Alert, ButtonGroup, IconButton, Tooltip, Badge } from "@mui/material"
 import { DownloadIcon, UploadIcon, UndoIcon } from "@/components/GameEditor/material-icons"
+import { ImageAsset, SoundAsset } from "@/services/assets";
+import { useGameDesign } from "@/context/game-design-context";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
-  gameDesign: GameDesign;
-  loadNewGame: { (data: GameDesign): void };
+  loadNewGame: {
+    (data: {
+      gameDesign: GameDesign;
+      imageAssets: ImageAsset[];
+      soundAssets: SoundAsset[];
+    }): void
+  };
   undo: { (): void };
   history: { gameDesign: GameDesign; label: string }[];
-  imageService: ImageService
-  soundService: SoundService
 }
 
 export const SaveLoadAndUndo: FunctionComponent<Props> = ({
-  gameDesign,
   loadNewGame,
   undo,
   history,
-  imageService,
-  soundService,
 }: Props) => {
+  const { gameDesign } = useGameDesign()
+  const { imageService, soundService } = useAssets()
 
   const [downloadAllError, setDownloadAllError] = useState<string | undefined>(
     undefined
@@ -49,23 +51,16 @@ export const SaveLoadAndUndo: FunctionComponent<Props> = ({
 
   const uploadAll = async () => {
     setUploadAllError(undefined);
-
     const file = await uploadFile();
     if (!file) {
       return;
     }
-
     const result = await readGameFromZipFile(file);
     if (!result.success) {
       setUploadAllError(result.error);
       return;
     }
-
-    loadNewGame(result.data.gameDesign)
-    populateServices(
-      result.data.gameDesign, result.data.imageAssets, result.data.soundAssets, 
-      imageService, soundService
-    )
+    loadNewGame(result.data)
   };
 
   const undoLabel = history.length > 0 ? `undo ${history[history.length - 1]?.label}` : 'undo'
