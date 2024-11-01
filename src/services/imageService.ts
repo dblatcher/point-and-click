@@ -29,7 +29,3 @@ export class ImageService extends Service<ImageAsset> {
         }
     }
 }
-
-const imageService = new ImageService()
-
-export default imageService;

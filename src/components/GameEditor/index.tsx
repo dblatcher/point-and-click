@@ -7,7 +7,7 @@ import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
 import { addGameDataItem, changeOrAddInteraction } from "@/lib/mutate-design";
 import { patchMember } from "@/lib/update-design";
-import imageService from "@/services/imageService";
+import { ImageService } from "@/services/imageService";
 import { populateServicesForPreBuiltGame } from "@/services/populateServices";
 import { SoundService } from "@/services/soundService";
 import { editorTheme } from "@/theme";
@@ -40,12 +40,13 @@ export type Props = {
 const defaultRoomId = 'ROOM_1' as const;
 
 export default class GameEditor extends Component<Props, State> {
-
+    imageService: ImageService
     soundService: SoundService
 
     constructor(props: Props) {
         super(props)
         this.soundService = new SoundService()
+        this.imageService = new ImageService()
         const gameDesign = props.usePrebuiltGame ? { ...prebuiltGameDesign } : {
             id: "NEW_GAME",
             rooms: [Object.assign(getBlankRoom(), { id: defaultRoomId, height: 150 })],
@@ -71,7 +72,6 @@ export default class GameEditor extends Component<Props, State> {
             gameTestDialogOpen: false,
         }
 
-        this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
         this.createGameDataItem = this.createGameDataItem.bind(this)
         this.changeOrAddInteraction = this.changeOrAddInteraction.bind(this)
         this.deleteArrayItem = this.deleteArrayItem.bind(this)
@@ -82,22 +82,10 @@ export default class GameEditor extends Component<Props, State> {
         this.applyModification = this.applyModification.bind(this)
     }
 
-    respondToServiceUpdate(payload: unknown) {
-        console.log('service update', { payload })
-        this.forceUpdate()
-    }
-
     componentDidMount() {
-        imageService.removeAll()
-        // soundService.removeAll()
         if (this.props.usePrebuiltGame) {
-            populateServicesForPreBuiltGame(imageService, this.soundService)
+            populateServicesForPreBuiltGame(this.imageService, this.soundService)
         }
-        imageService.on('update', this.respondToServiceUpdate)
-    }
-
-    componentWillUnmount() {
-        imageService.off('update', this.respondToServiceUpdate)
     }
 
     historyUpdate(label: string, state: State) {
@@ -200,7 +188,7 @@ export default class GameEditor extends Component<Props, State> {
     }
 
     render() {
-        const { soundService } = this
+        const { soundService, imageService } = this
         const {
             gameDesign, tabOpen, gameItemIds, history,
         } = this.state

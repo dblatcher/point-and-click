@@ -10,7 +10,7 @@ import { SpritesProvider } from "@/context/sprite-context";
 import { Sprite } from "@/lib/Sprite";
 import { GameDataSchema } from "@/definitions/Game";
 import { AssetsProvider } from "@/context/asset-context";
-import imageService from "@/services/imageService";
+import { ImageService } from "@/services/imageService";
 import { SoundService } from "@/services/soundService";
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
@@ -33,6 +33,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
   sprites: Sprite[]
   soundService: SoundService
+  imageService: ImageService
 
   constructor(props: Props) {
     super(props)
@@ -47,6 +48,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
     this.sprites = []
     this.soundService = new SoundService()
+    this.imageService = new ImageService()
   }
 
   getStorageKey(fileName: string): string | undefined {
@@ -123,7 +125,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
-    const { soundService } = this
+    const { soundService, imageService } = this
     const { gameDesign, imageAssets, soundAssets } = this.props
     this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data, imageService.get.bind(imageService))))
     populateServices(gameDesign, imageAssets, soundAssets, imageService, soundService)
@@ -144,7 +146,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
 
   render() {
-    const { soundService } = this
+    const { soundService, imageService } = this
     const { gameCondition, timestamp } = this.state
     const { uiComponents, instantMode } = this.props
     return (
@@ -169,5 +171,4 @@ export class GameDesignPlayer extends React.Component<Props, State> {
       </AssetsProvider>
     )
   }
-
 }
