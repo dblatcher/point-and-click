@@ -1,7 +1,7 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { SoundControl } from "sound-deck";
-import soundService from "@/services/soundService";
 import type { SoundValue } from "@/definitions";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
     soundValue?: SoundValue;
@@ -16,6 +16,7 @@ export const IntermitentSound: FunctionComponent<Props> = ({
 }: Props) => {
     const [lastFrame, setLastFrame] = useState<number>(frameIndex || 0)
     const [soundControl, setSoundControl] = useState<SoundControl | null>(null)
+    const { soundService } = useAssets()
 
     const startSound = (soundValue: SoundValue | undefined): void => {
         if (soundValue) {
@@ -29,7 +30,7 @@ export const IntermitentSound: FunctionComponent<Props> = ({
         }
     }
 
-    const startSoundCallback = useCallback(startSound, [soundControl])
+    const startSoundCallback = useCallback(startSound, [soundControl, soundService])
 
     // play the sound when the animation reaches the frameIndex
     useEffect(() => {

@@ -14,6 +14,7 @@ import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { AnimationDialog } from "./AnimationDialog";
 import { AnimationGrid } from "./AnimationGrid";
 import { NewAnimationForm } from "./NewAnimationForm";
+import { useAssets } from "@/context/asset-context";
 
 
 type SpriteEditorProps = {
@@ -24,6 +25,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
 
     const sprites = useSprites()
     const { applyModification, gameDesign } = useGameDesign()
+    const { getImageAsset } = useAssets()
 
     const [selectedAnimation, setSelectedAnimation] = useState<string | undefined>(undefined);
     const [selectedDirection, setSelectedDirection] = useState<Direction | undefined>(undefined);
@@ -140,7 +142,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
     }
 
     const { defaultDirection, animations, } = props.data
-    const sprite = new Sprite(props.data)
+    const sprite = new Sprite(props.data, getImageAsset)
     const animationEntries = Object.entries(animations)
 
     return <Stack component={'article'} spacing={1}>

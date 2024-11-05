@@ -1,12 +1,11 @@
+import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
 import { ActorData, SoundValue, SpriteFrame } from "@/definitions";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
-import imageService from "@/services/imageService";
-import soundService from "@/services/soundService";
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Typography } from "@mui/material";
+import { Alert, Box, Button, Divider, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { FileAssetSelector } from "../FileAssetSelector";
 import { AddIcon, AudioFileOutlinedIcon } from "../material-icons";
@@ -31,16 +30,22 @@ const toSoundValueArray = (input: SoundValue | SoundValue[] | undefined): SoundV
 
 const ActorFramePreview = (props: { frame: SpriteFrame, actor: ActorData }) => {
     const { frame, actor } = props
-    const image = imageService.get(frame.imageId)
-    const heightScale = image?.heightScale ?? 1
-    const widthScale = image?.widthScale ?? 1
-    return <FramePreview frame={frame} width={actor.width * widthScale} height={actor.height * heightScale} filter={actor.filter} />
+    const { getImageAsset } = useAssets()
+    const imageAsset = getImageAsset(frame.imageId)
+    const heightScale = imageAsset?.heightScale ?? 1
+    const widthScale = imageAsset?.widthScale ?? 1
+    return <FramePreview
+        frame={frame}
+        width={actor.width * widthScale}
+        height={actor.height * heightScale}
+        filter={actor.filter} />
 }
 
 
 export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeSoundMap }) => {
     const [activeAnimationKey, setActiveAnimationKey] = useState<string | undefined>(undefined)
-    const [soundId, setSoundId] = useState(soundService.list()[0])
+    const { soundAssets } = useAssets()
+    const [soundId, setSoundId] = useState(soundAssets[0].id)
     const sprites = useSprites()
     const { gameDesign } = useGameDesign()
     const sprite = findById(actor.sprite, sprites)
@@ -104,7 +109,7 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
             <Typography>Edit sfx for <strong>{activeAnimationKey}</strong> animation</Typography>
             <FileAssetSelector
                 selectedItemId={soundId}
-                service={soundService}
+                assetType="sound"
                 format="select"
                 legend="sfx to add"
                 select={(item) => setSoundId(item.id)} />

@@ -1,6 +1,6 @@
-import imageService from "@/services/imageService";
 import { BackgroundLayer, RoomData } from "@/definitions"
 import { getLayerWidth, getShift } from "@/lib/roomFunctions";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
     layer: BackgroundLayer;
@@ -12,7 +12,9 @@ export default function BackgroundShape({ layer, roomData, viewAngle }: Props) {
     const { parallax, imageId } = layer
     const { frameWidth, height: roomHeight } = roomData
 
-    const imageUrl = imageService.get(imageId)?.href;
+    const { getImageAsset } = useAssets()
+
+    const imageUrl = getImageAsset(imageId)?.href;
 
     const layerWidth = getLayerWidth(parallax, roomData)
 

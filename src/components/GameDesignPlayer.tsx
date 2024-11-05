@@ -9,6 +9,9 @@ import { UiComponentSet } from "./game/uiComponentSet";
 import { SpritesProvider } from "@/context/sprite-context";
 import { Sprite } from "@/lib/Sprite";
 import { GameDataSchema } from "@/definitions/Game";
+import { AssetsProvider } from "@/context/asset-context";
+import { ImageService } from "@/services/imageService";
+import { SoundService } from "@/services/soundService";
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
 const SAVED_GAME_DELIMITER = "//"
@@ -29,6 +32,8 @@ type State = {
 export class GameDesignPlayer extends React.Component<Props, State> {
 
   sprites: Sprite[]
+  soundService: SoundService
+  imageService: ImageService
 
   constructor(props: Props) {
     super(props)
@@ -42,6 +47,8 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     this.deleteSave = this.deleteSave.bind(this)
 
     this.sprites = []
+    this.soundService = new SoundService()
+    this.imageService = new ImageService()
   }
 
   getStorageKey(fileName: string): string | undefined {
@@ -118,9 +125,10 @@ export class GameDesignPlayer extends React.Component<Props, State> {
   }
 
   componentDidMount(): void {
+    const { soundService, imageService } = this
     const { gameDesign, imageAssets, soundAssets } = this.props
-    this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data)))
-    populateServices(gameDesign, imageAssets, soundAssets)
+    this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data, imageService.get.bind(imageService))))
+    populateServices(gameDesign, imageAssets, soundAssets, imageService, soundService)
     this.reset()
   }
 
@@ -138,26 +146,29 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
 
   render() {
+    const { soundService, imageService } = this
     const { gameCondition, timestamp } = this.state
     const { uiComponents, instantMode } = this.props
-    return <>
-      {gameCondition && (
+    return (
+      <AssetsProvider imageService={imageService} soundService={soundService}>
         <SpritesProvider value={this.sprites}>
-          <Game
-            {...gameCondition}
-            load={this.load}
-            save={this.save}
-            deleteSave={this.deleteSave}
-            listSavedGames={this.listSavedGames}
-            reset={this.reset}
-            key={timestamp}
-            _sprites={this.sprites}
-            uiComponents={uiComponents}
-            instantMode={instantMode}
-          />
+          {gameCondition && (
+            <Game
+              {...gameCondition}
+              load={this.load}
+              save={this.save}
+              deleteSave={this.deleteSave}
+              listSavedGames={this.listSavedGames}
+              reset={this.reset}
+              key={timestamp}
+              _sprites={this.sprites}
+              uiComponents={uiComponents}
+              instantMode={instantMode}
+              soundService={soundService}
+            />
+          )}
         </SpritesProvider>
-      )}
-    </>
+      </AssetsProvider>
+    )
   }
-
 }

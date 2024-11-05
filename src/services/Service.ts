@@ -19,7 +19,9 @@ export class Service<T extends ServiceItem> extends TypedEmitter<ServiceEvents> 
     }
 
     reportUpdate(): void {
-        this.emit('update', this.list().length)
+        setTimeout(() => {
+            this.emit('update', this.list().length)
+        },1)
     }
 
     add(items: T | T[]): void {

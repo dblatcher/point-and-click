@@ -1,8 +1,8 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { SoundControl } from "sound-deck";
 import { useInterval } from "@/lib/useInterval"
-import soundService from "@/services/soundService";
 import type { SoundValue } from "@/definitions";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
     soundValue?: SoundValue;
@@ -17,6 +17,7 @@ export const PersistentSound: FunctionComponent<Props> = ({
 }: Props) => {
     const [soundControl, setSoundControl] = useState<SoundControl | null>(null)
     const [stateSoundValue, setStateSoundValue] = useState<SoundValue | undefined>(undefined)
+    const { soundService } = useAssets()
 
     const startSound = (newSoundValue: SoundValue | undefined): void => {
         soundControl?.stop()
@@ -30,7 +31,7 @@ export const PersistentSound: FunctionComponent<Props> = ({
         }
         setStateSoundValue(newSoundValue)
     }
-    const startSoundCallback = useCallback(startSound, [soundControl])
+    const startSoundCallback = useCallback(startSound, [soundControl, soundService])
 
     const reactToSoundBeingEnabled = (isEnabled: boolean): void => {
         if (isEnabled && stateSoundValue && !soundControl) {

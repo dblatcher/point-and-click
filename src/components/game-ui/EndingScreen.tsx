@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { CSSProperties, FunctionComponent } from "react";
 import { Ending } from "@/definitions";
-import imageService from "@/services/imageService";
 import { useGameInfo } from "@/context/game-info-provider";
+import { useAssets } from "@/context/asset-context";
 
 
 export const EndingWrapper = () => {
@@ -19,7 +19,7 @@ interface Props {
     inline?: boolean;
 }
 
-const baseArticleStyle:CSSProperties = {
+const baseArticleStyle: CSSProperties = {
     maxWidth: '100%',
 }
 
@@ -33,7 +33,7 @@ const baseFrameStyle: CSSProperties = {
 }
 
 export const EndingScreen: FunctionComponent<Props> = ({ ending, inline }) => {
-
+    const { getImageAsset } = useAssets()
     const articleStyle: CSSProperties = inline ? {
         ...baseArticleStyle,
         display: 'inline-block',
@@ -45,7 +45,7 @@ export const EndingScreen: FunctionComponent<Props> = ({ ending, inline }) => {
         transform: 'translateX(-50%)',
     }
 
-    const imageAsset = ending.imageId ? imageService.get(ending.imageId) : undefined;
+    const imageAsset = ending.imageId ? getImageAsset(ending.imageId) : undefined;
     const imageStyle = {
         width: typeof ending.imageWidth === 'number' ? ending.imageWidth : undefined
     }

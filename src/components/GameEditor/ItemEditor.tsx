@@ -3,15 +3,14 @@ import { ItemData } from "@/definitions";
 import { patchMember } from "@/lib/update-design";
 import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
-import imageService from "@/services/imageService";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { StringInput } from "../SchemaForm/StringInput";
 import { ItemMenuInner } from "../game-ui/ItemMenu";
+import { FileAssetSelector } from "./FileAssetSelector";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
-import { FileAssetSelector } from "./FileAssetSelector";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
 import { FramePicker } from "./SpriteEditor/FramePicker";
@@ -116,9 +115,6 @@ export const ItemEditor = ({ item }: Props) => {
                 </Grid>
             </Grid>
 
-
-
-
             <Dialog
                 open={dialogOpen}
                 onClose={() => { setDialogOpen(false) }}
@@ -129,11 +125,12 @@ export const ItemEditor = ({ item }: Props) => {
                 <DialogContent>
                     <FileAssetSelector legend='image asset'
                         format="select"
+                        assetType="image"
                         filterItems={item => (item as ImageAsset).category === 'item' || (item as ImageAsset).category === 'any'}
                         select={item => changeValue('imageId', item.id)}
                         selectNone={() => changeValue('imageId', undefined)}
-                        service={imageService}
-                        selectedItemId={item.imageId} />
+                        selectedItemId={item.imageId}
+                    />
                     <FramePicker fixedSheet noOptions
                         imageId={item.imageId}
                         row={item.row || 0}

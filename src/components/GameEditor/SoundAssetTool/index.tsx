@@ -12,11 +12,11 @@ import {
   SoundAssetCategory,
   soundAssetCategories,
 } from "@/services/assets";
-import soundService from "@/services/soundService";
+import { SoundService } from "@/services/soundService";
 import { Grid } from "@mui/material";
 import { Component, RefObject, createRef } from "react";
-import { EditorHeading } from "../EditorHeading";
 import { FileAssetSelector } from "../FileAssetSelector";
+import { EditorHeading } from "../EditorHeading";
 import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { SoundAssetForm } from "./SoundAssetForm";
 import { SoundPreview } from "./SoundPreview";
@@ -28,12 +28,16 @@ type State = {
   fileObjectUrl?: string;
 }
 
+type Props = {
+  soundService: SoundService
+}
 
-export class SoundAssetTool extends Component<{}, State> {
+
+export class SoundAssetTool extends Component<Props, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
   file: File | Blob | null;
 
-  constructor(props: SoundAssetTool["props"]) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       asset: {
@@ -154,12 +158,12 @@ export class SoundAssetTool extends Component<{}, State> {
       href: newHref
     } as SoundAsset
     this.setState({ saveWarning: undefined }, () => {
-      soundService.add(copy);
+      this.props.soundService.add(copy);
     });
   }
 
   zipSounds = async () => {
-    const result = await buildAssetZipBlob('sounds', soundService);
+    const result = await buildAssetZipBlob('sounds', this.props.soundService);
     if (result.success === false) {
       return this.setState({ saveWarning: result.error });
     }
@@ -177,7 +181,7 @@ export class SoundAssetTool extends Component<{}, State> {
     if (result.success === false) {
       return this.setState({ uploadWarning: result.error });
     }
-    soundService.add(result.data);
+    this.props.soundService.add(result.data);
   };
 
   openFromService(asset: ServiceItem) {
@@ -199,7 +203,7 @@ export class SoundAssetTool extends Component<{}, State> {
       asset
     } = this.state;
 
-    const isNewAsset = asset.id ? !soundService.list().includes(asset.id) : true
+    const isNewAsset = asset.id ? !this.props.soundService.list().includes(asset.id) : true
 
     return (
       <article>
@@ -231,7 +235,7 @@ export class SoundAssetTool extends Component<{}, State> {
           <Grid item>
             <FileAssetSelector
               legend="open asset"
-              service={soundService}
+              assetType="sound"
               currentSelection={asset.id}
               select={this.openFromService} />
           </Grid>

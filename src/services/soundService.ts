@@ -24,6 +24,7 @@ export class SoundService extends Service<SoundAsset> {
                 .then(success => {
                     console.log('soundService: load', soundAsset.id, success)
                     this.emit('load', soundAsset.id, success)
+                    this.reportUpdate()
                 })
         )
     }
@@ -83,6 +84,3 @@ export class SoundService extends Service<SoundAsset> {
     }
 }
 
-const soundService = new SoundService()
-
-export default soundService;

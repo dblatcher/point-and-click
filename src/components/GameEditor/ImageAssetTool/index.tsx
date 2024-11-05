@@ -12,14 +12,14 @@ import {
   ImageAssetCategory,
   imageAssetCategories,
 } from "@/services/assets";
-import imageService from "@/services/imageService";
+import { ImageService } from "@/services/imageService";
 import { Grid } from "@mui/material";
 import { Component, RefObject, createRef } from "react";
 import { EditorHeading } from "../EditorHeading";
-import { FileAssetSelector } from "../FileAssetSelector";
 import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { ImageAssetForm } from "./ImageAssetForm";
 import { ImageAssetPreview } from "./ImageAssetPreview";
+import { FileAssetSelector } from "../FileAssetSelector";
 
 
 type State = {
@@ -29,13 +29,14 @@ type State = {
   fileObjectUrl?: string;
 }
 
+type Props = { imageService: ImageService }
 
 
-export class ImageAssetTool extends Component<{}, State> {
+export class ImageAssetTool extends Component<Props, State> {
   canvasRef: RefObject<HTMLCanvasElement>;
   file: File | Blob | null;
 
-  constructor(props: ImageAssetTool["props"]) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       asset: {
@@ -172,12 +173,12 @@ export class ImageAssetTool extends Component<{}, State> {
       href: newHref
     } as ImageAsset
     this.setState({ saveWarning: undefined }, () => {
-      imageService.add(copy);
+      this.props.imageService.add(copy);
     });
   }
 
   zipImages = async () => {
-    const result = await buildAssetZipBlob('images', imageService);
+    const result = await buildAssetZipBlob('images', this.props.imageService);
     if (result.success === false) {
       return this.setState({ saveWarning: result.error });
     }
@@ -195,7 +196,7 @@ export class ImageAssetTool extends Component<{}, State> {
     if (result.success === false) {
       return this.setState({ uploadWarning: result.error });
     }
-    imageService.add(result.data);
+    this.props.imageService.add(result.data);
   };
 
   openFromService(asset: ServiceItem) {
@@ -217,7 +218,7 @@ export class ImageAssetTool extends Component<{}, State> {
       asset
     } = this.state;
 
-    const isNewAsset = asset.id ? !imageService.list().includes(asset.id) : true
+    const isNewAsset = asset.id ? !this.props.imageService.list().includes(asset.id) : true
 
     return (
       <article>
@@ -245,9 +246,8 @@ export class ImageAssetTool extends Component<{}, State> {
           </Grid>
 
           <Grid item>
-            <FileAssetSelector
+            <FileAssetSelector assetType="image"
               legend="assets"
-              service={imageService}
               currentSelection={asset.id}
               select={this.openFromService} />
           </Grid>

@@ -11,6 +11,7 @@ import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
 import { HelpButton } from "./HelpButton";
+import { useAssets } from '@/context/asset-context';
 
 const formSchema = GameContentsDataSchema.pick({
   id: true,
@@ -21,6 +22,7 @@ const formSchema = GameContentsDataSchema.pick({
 
 export const Overview = () => {
   const { gameDesign, openInEditor, applyModification } = useGameDesign();
+  const {soundAssets, imageAssets} = useAssets()
   const { setHeaderContent } = usePageMeta();
 
   const mainTab = tabOrder.find(tab => tab.id === 'main')
@@ -82,6 +84,8 @@ export const Overview = () => {
                     <TableCell>
                       {tab.itemType && "x" + gameDesign[tab.itemType].length}
                       {tab.id === 'interactions' && `x${gameDesign.interactions.length}`}
+                      {tab.id === 'sounds' && `x${soundAssets.length}`}
+                      {tab.id === 'images' && `x${imageAssets.length}`}
                     </TableCell>
                     <TableCell>
                       {tab.helpTopic &&

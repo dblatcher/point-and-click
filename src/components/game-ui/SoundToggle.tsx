@@ -1,8 +1,8 @@
+import { useAssets } from "@/context/asset-context";
 import { useEffect, useState } from "react";
-import soundService from "@/services/soundService";
 
 export function SoundToggle() {
-
+    const { soundService } = useAssets()
     const [isOn, setIsOn] = useState(soundService.isEnabled)
 
     const respondToServiceUpdate = (isReady: boolean) => {
@@ -26,7 +26,7 @@ export function SoundToggle() {
     return (
         <button onClick={toggle}>
             SOUND
-            {isOn ? '🔊' : '🔈'}
+            {isOn ? '🔊' : '🔇'}
         </button>
     )
 }

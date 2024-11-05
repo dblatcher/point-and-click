@@ -4,6 +4,7 @@ import { useSprites } from "@/context/sprite-context";
 import { Dialog, DialogTitle, DialogActions, Button, DialogContent } from "@mui/material";
 import { useState } from "react";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
     isOpen: boolean
@@ -15,6 +16,7 @@ interface Props {
 export const TestGameDialog = ({ isOpen, close, resetTimeStamp, reset }: Props) => {
     const sprites = useSprites()
     const { gameDesign } = useGameDesign()
+    const { soundService } = useAssets()
     const [showDebugLog, setShowDebugLog] = useState(false)
 
     return (
@@ -36,6 +38,7 @@ export const TestGameDialog = ({ isOpen, close, resetTimeStamp, reset }: Props) 
                     gameNotBegun
                     showDebugLog={showDebugLog}
                     _sprites={sprites}
+                    soundService={soundService}
                 />
             </DialogContent>
 

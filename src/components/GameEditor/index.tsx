@@ -7,9 +7,9 @@ import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
 import { addGameDataItem, changeOrAddInteraction } from "@/lib/mutate-design";
 import { patchMember } from "@/lib/update-design";
-import imageService from "@/services/imageService";
-import { populateServicesForPreBuiltGame } from "@/services/populateServices";
-import soundService from "@/services/soundService";
+import { ImageService } from "@/services/imageService";
+import { populateServices, populateServicesForPreBuiltGame } from "@/services/populateServices";
+import { SoundService } from "@/services/soundService";
 import { editorTheme } from "@/theme";
 import { Box, Container, IconButton, List, ListItem, ListItemButton, ListItemText, Stack, ThemeProvider } from "@mui/material";
 import { Component } from "react";
@@ -19,6 +19,8 @@ import { SaveLoadAndUndo } from "./SaveLoadAndUndo";
 import { TestGameDialog } from "./TestGameDialog";
 import { defaultVerbs1, getBlankRoom } from "./defaults";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
+import { AssetsProvider } from "@/context/asset-context";
+import { ImageAsset, SoundAsset } from "@/services/assets";
 
 
 type State = {
@@ -39,10 +41,13 @@ export type Props = {
 const defaultRoomId = 'ROOM_1' as const;
 
 export default class GameEditor extends Component<Props, State> {
+    imageService: ImageService
+    soundService: SoundService
 
     constructor(props: Props) {
         super(props)
-
+        this.soundService = new SoundService()
+        this.imageService = new ImageService()
         const gameDesign = props.usePrebuiltGame ? { ...prebuiltGameDesign } : {
             id: "NEW_GAME",
             rooms: [Object.assign(getBlankRoom(), { id: defaultRoomId, height: 150 })],
@@ -68,7 +73,6 @@ export default class GameEditor extends Component<Props, State> {
             gameTestDialogOpen: false,
         }
 
-        this.respondToServiceUpdate = this.respondToServiceUpdate.bind(this)
         this.createGameDataItem = this.createGameDataItem.bind(this)
         this.changeOrAddInteraction = this.changeOrAddInteraction.bind(this)
         this.deleteArrayItem = this.deleteArrayItem.bind(this)
@@ -79,22 +83,10 @@ export default class GameEditor extends Component<Props, State> {
         this.applyModification = this.applyModification.bind(this)
     }
 
-    respondToServiceUpdate(payload: unknown) {
-        console.log('service update', { payload })
-        this.forceUpdate()
-    }
-
     componentDidMount() {
-        imageService.removeAll()
-        soundService.removeAll()
         if (this.props.usePrebuiltGame) {
-            populateServicesForPreBuiltGame()
+            populateServicesForPreBuiltGame(this.imageService, this.soundService)
         }
-        imageService.on('update', this.respondToServiceUpdate)
-    }
-
-    componentWillUnmount() {
-        imageService.off('update', this.respondToServiceUpdate)
     }
 
     historyUpdate(label: string, state: State) {
@@ -160,8 +152,19 @@ export default class GameEditor extends Component<Props, State> {
             return { gameDesign, history }
         })
     }
-    loadNewGame(gameDesign: GameDesign) {
-        this.setState({ gameDesign })
+    loadNewGame(data: {
+        gameDesign: GameDesign;
+        imageAssets: ImageAsset[];
+        soundAssets: SoundAsset[];
+    }) {
+        this.soundService.removeAll();
+        this.imageService.removeAll();
+        
+        this.setState({ gameDesign: data.gameDesign })
+        populateServices(
+            data.gameDesign, data.imageAssets, data.soundAssets,
+            this.imageService, this.soundService
+        )
     }
     undo() {
         this.setState(state => {
@@ -197,12 +200,13 @@ export default class GameEditor extends Component<Props, State> {
     }
 
     render() {
+        const { soundService, imageService } = this
         const {
             gameDesign, tabOpen, gameItemIds, history,
         } = this.state
         const { createGameDataItem, deleteArrayItem, openInEditor, changeOrAddInteraction, applyModification, deleteInteraction } = this
 
-        const sprites = [...gameDesign.sprites.map(data => new Sprite(data))]
+        const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
 
         return (
             <ThemeProvider theme={editorTheme}>
@@ -218,68 +222,69 @@ export default class GameEditor extends Component<Props, State> {
                         applyModification(description, { rooms: patchMember(id, mod, gameDesign.rooms) })
                     }
                 }} >
-                    <SpritesProvider value={sprites}>
-                        <Container maxWidth='xl'
-                            component={'main'}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                overflow: 'hidden',
-                                flex: 1,
-                                gap: 5,
-                                background: 'white',
-                            }}>
+                    <AssetsProvider imageService={imageService} soundService={soundService}>
+                        <SpritesProvider value={sprites}>
+                            <Container maxWidth='xl'
+                                component={'main'}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    overflow: 'hidden',
+                                    flex: 1,
+                                    gap: 5,
+                                    background: 'white',
+                                }}>
 
-                            <Stack
-                                component={'nav'}
-                                spacing={1}
-                                width={150}
-                            >
-                                <Stack direction={'row'} marginTop={3} spacing={3} minHeight={35}>
-                                    <SaveLoadAndUndo
-                                        gameDesign={gameDesign}
-                                        loadNewGame={this.loadNewGame}
-                                        history={history}
-                                        undo={this.undo}
-                                    />
-                                    <IconButton
-                                        onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
-                                    >
-                                        <PlayCircleFilledOutlinedIcon fontSize={'large'} />
-                                    </IconButton>
+                                <Stack
+                                    component={'nav'}
+                                    spacing={1}
+                                    width={150}
+                                >
+                                    <Stack direction={'row'} marginTop={3} spacing={3} minHeight={35}>
+                                        <SaveLoadAndUndo
+                                            loadNewGame={this.loadNewGame}
+                                            history={history}
+                                            undo={this.undo}
+                                        />
+                                        <IconButton
+                                            onClick={() => { this.setState({ gameTestDialogOpen: true, resetTimeStamp: Date.now() }) }}
+                                        >
+                                            <PlayCircleFilledOutlinedIcon fontSize={'large'} />
+                                        </IconButton>
+                                    </Stack>
+
+                                    <List disablePadding>
+                                        {tabOrder.map((tab, index) => (
+                                            <ListItem key={index} disableGutters disablePadding>
+                                                <ListItemButton
+                                                    onClick={() => { openInEditor(tab.id) }}
+                                                    selected={tab.id === tabOpen}
+                                                >
+                                                    <ListItemText>{index + 1}</ListItemText>
+                                                    <ListItemText>{tab.label}</ListItemText>
+                                                </ListItemButton>
+                                            </ListItem>
+                                        ))}
+                                    </List>
                                 </Stack>
 
-                                <List disablePadding>
-                                    {tabOrder.map((tab, index) => (
-                                        <ListItem key={index} disableGutters disablePadding>
-                                            <ListItemButton 
-                                                onClick={() => { openInEditor(tab.id) }}
-                                                selected={tab.id === tabOpen}
-                                            >
-                                                <ListItemText>{index + 1}</ListItemText>
-                                                <ListItemText>{tab.label}</ListItemText>
-                                            </ListItemButton>
-                                        </ListItem>
-                                    ))}
-                                </List>
-                            </Stack>
+                                <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
+                                    <MainWindow
+                                        gameItemIds={gameItemIds}
+                                        tabOpen={tabOpen}
+                                        openInEditor={openInEditor} />
+                                </Box>
 
-                            <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
-                                <MainWindow
-                                    gameItemIds={gameItemIds}
-                                    tabOpen={tabOpen}
-                                    openInEditor={openInEditor} />
-                            </Box>
+                                <TestGameDialog
+                                    isOpen={this.state.gameTestDialogOpen}
+                                    close={() => { this.setState({ gameTestDialogOpen: false }) }}
+                                    reset={() => { this.setState({ resetTimeStamp: Date.now() }) }}
+                                    resetTimeStamp={this.state.resetTimeStamp}
+                                />
 
-                            <TestGameDialog
-                                isOpen={this.state.gameTestDialogOpen}
-                                close={() => { this.setState({ gameTestDialogOpen: false }) }}
-                                reset={() => { this.setState({ resetTimeStamp: Date.now() }) }}
-                                resetTimeStamp={this.state.resetTimeStamp}
-                            />
-
-                        </Container>
-                    </SpritesProvider>
+                            </Container>
+                        </SpritesProvider>
+                    </AssetsProvider>
                 </GameDesignProvider>
             </ThemeProvider>
         )
