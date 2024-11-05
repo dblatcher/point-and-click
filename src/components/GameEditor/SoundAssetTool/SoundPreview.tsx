@@ -24,7 +24,7 @@ export const SoundPreview: React.FunctionComponent<Props> = ({ asset, temporaryS
             <Typography fontWeight={'bold'}>{label}</Typography>
         </Box>
         <Typography variant="overline" >category: {category ?? 'unset'}</Typography>
-        <audio controls key={audioSource} src={audioSource}></audio>
+        <audio controls key={audioSource} src={audioSource} controlsList="nodownload noplaybackrate"></audio>
     </EditorBox>
 
 }
