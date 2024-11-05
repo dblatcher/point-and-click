@@ -1,10 +1,10 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { AmbiantSound } from "@/definitions/RoomData";
-import soundService from "@/services/soundService";
 import { Alert, Box } from "@mui/material";
 import React from "react";
 import { EditorBox } from "../EditorBox";
 import { FileAssetSelector } from "../FileAssetSelector";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
     label: string
@@ -13,6 +13,7 @@ interface Props {
 }
 
 export const AmbiantSoundControl: React.FunctionComponent<Props> = ({ label, value, setValue }) => {
+    const { soundService } = useAssets()
     const asset = value ? soundService.get(value.soundId) : undefined
 
     const soundIdIsInvalid = !!value && !asset;
@@ -22,8 +23,9 @@ export const AmbiantSoundControl: React.FunctionComponent<Props> = ({ label, val
 
 
             <FileAssetSelector legend="sound Id" format="select"
+                assetType="sound"
                 filterItems={(item) => item.category === 'music'}
-                selectedItemId={value?.soundId} service={soundService}
+                selectedItemId={value?.soundId}
                 selectNone={() => {
                     setValue(undefined)
                 }}
