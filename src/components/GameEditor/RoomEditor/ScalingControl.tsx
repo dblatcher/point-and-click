@@ -125,7 +125,7 @@ export const ScalingControl = ({ room }: Props) => {
             </Grid>
             <Grid item flex={1}>
                 <div style={{ cursor: 'crosshair' }}>
-                    <Room data={room}
+                    <Room data={room} noSound
                         viewAngle={viewAngle}
                         handleRoomClick={handleClick}
                         maxHeight={room.height * scale}

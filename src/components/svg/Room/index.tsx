@@ -30,9 +30,11 @@ interface Props {
     showCaption?: boolean;
     isPaused?: boolean;
     contents?: RoomContentItem[];
-    children?: ReactNode;
-    forPreview?: boolean;
+    noSound?: boolean;
+    noMargin?: boolean;
     fontFamily?: string;
+    children?: ReactNode;
+
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -52,7 +54,8 @@ export const Room: FunctionComponent<Props> = ({
     showCaption = false,
     isPaused = false,
     contents = [],
-    forPreview = false,
+    noSound = false,
+    noMargin = false,
     fontFamily,
     children,
 }: Props) => {
@@ -70,7 +73,7 @@ export const Room: FunctionComponent<Props> = ({
     const figureInlineStyle: CSSProperties = {
         width: `${frameWidth * scale}px`,
         height: `${height * scale}px`,
-        margin: forPreview ? 0 : undefined,
+        margin: noMargin ? 0 : undefined,
         backgroundColor: data.backgroundColor,
     }
 
@@ -117,7 +120,7 @@ export const Room: FunctionComponent<Props> = ({
                 {contents.map(entry => (
                     <ActorFigure key={entry.data.id}
                         isPaused={isPaused}
-                        forPreview={forPreview}
+                        noSound={noSound}
                         data={entry.data}
                         orders={entry.orders || []}
                         clickHandler={entry.clickHandler}
@@ -183,7 +186,7 @@ export const Room: FunctionComponent<Props> = ({
             {showCaption && (
                 <figcaption className={styles.roomCaption}>{id}</figcaption>
             )}
-            {backgroundMusic && (
+            {(!noSound && backgroundMusic) && (
                 <PersistentSound isPaused={isPaused} soundValue={backgroundMusic} />
             )}
         </figure>

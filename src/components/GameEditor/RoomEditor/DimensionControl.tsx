@@ -76,7 +76,7 @@ export const DimensionControl = ({ room }: Props) => {
                         left={viewBoxLeft * scale}
                         position={'absolute'}>
 
-                        <Room data={room}
+                        <Room data={room} noSound
                             viewAngle={viewAngle}
                             handleRoomClick={() => { }}
                             maxHeight={room.height * scale}

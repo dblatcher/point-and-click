@@ -163,7 +163,7 @@ export class Preview extends Component<Props, State> {
                         position: 'relative',
                         display: 'inline-block',
                     }}>
-                        <Room data={roomData} forPreview
+                        <Room data={roomData} noSound noMargin
                             renderAllZones={renderAllZones}
                             maxWidth={maxWidth}
                             maxHeight={Math.min(roomData.height * 2, 600)}

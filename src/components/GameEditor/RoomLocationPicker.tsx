@@ -60,7 +60,8 @@ export const RoomLocationPicker = ({
             }}
             maxWidth={previewWidth}
             maxHeight={previewHeight}
-            forPreview={true}
+            noSound={true}
+            noMargin={true}
         >
             {targetPoint && (
                 <MarkerShape

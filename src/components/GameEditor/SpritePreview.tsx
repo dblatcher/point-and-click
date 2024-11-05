@@ -47,7 +47,8 @@ export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, max
     return (
         <Room data={roomData}
             renderAllZones={false}
-            forPreview
+            noSound
+            noMargin
             maxWidth={maxWidth}
             viewAngle={0}
             highlightHotspots={false}

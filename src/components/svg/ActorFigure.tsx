@@ -26,7 +26,7 @@ interface Props {
     isPaused: boolean;
     roomScale?: number;
     overrideSprite?: Sprite;
-    forPreview?: boolean;
+    noSound?: boolean;
 }
 
 const getUnverifiedAnimationName = (currentOrder: Order | undefined, status: string | undefined): string | undefined => {
@@ -70,7 +70,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
     clickHandler, handleHover,
     orders = [],
     overrideSprite,
-    forPreview
+    noSound,
 }: Props) => {
     const [frameIndex, setFrameIndex] = useState<number>(0)
     const sprites = useSprites()
@@ -143,7 +143,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
                     status={data.status}
                 />
 
-                {!forPreview && <>
+                {!noSound && <>
                     {persistentSoundValues.map((soundValue, index) =>
                         <PersistentSound
                             key={index}
