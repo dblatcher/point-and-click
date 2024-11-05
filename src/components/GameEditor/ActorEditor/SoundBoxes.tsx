@@ -4,6 +4,7 @@ import { Box, BoxProps, IconButton, Typography } from "@mui/material";
 import { Fragment } from "react";
 import { ClearIcon } from "../material-icons";
 import { SoundAssetTestButton } from "../SoundAssetTestButton";
+import { VolumeControl } from "../VolumeControl";
 
 interface Props {
     soundValues: SoundValue[],
@@ -40,15 +41,10 @@ export const SoundBoxes = ({
 
 
     const renderContents = (sv: SoundValue, index: number) => {
-        const volumeControl = <NumberInput label="volume"
-            notFullWidth
-            inputHandler={(volume) => { editSound(index, { volume }) }}
-            value={sv.volume ?? 1}
-            max={1} min={0} step={.1} />
         if (continual) {
             return <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
                 <Typography>CONTINUAL: <strong>{sv.soundId}</strong></Typography>
-                {volumeControl}
+                <VolumeControl value={sv.volume} setValue={(volume) => { editSound(index, { volume }) }} />
                 <SoundAssetTestButton soundAssetId={sv.soundId} volume={sv.volume} fontSize="medium" />
                 <IconButton color="warning" onClick={() => handleDeleteSound(index)}><ClearIcon /></IconButton>
             </Box>
@@ -59,7 +55,7 @@ export const SoundBoxes = ({
                 <SoundAssetTestButton soundAssetId={sv.soundId} volume={sv.volume} fontSize="medium" />
             </Box>
             <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
-                {volumeControl}
+                <VolumeControl value={sv.volume} setValue={(volume) => { editSound(index, { volume }) }} />
                 <IconButton color="warning" onClick={() => handleDeleteSound(index)}><ClearIcon /></IconButton>
             </Box>
         </>
