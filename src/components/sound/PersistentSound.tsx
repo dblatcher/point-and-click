@@ -31,7 +31,7 @@ export const PersistentSound: FunctionComponent<Props> = ({
         }
         setStateSoundValue(newSoundValue)
     }
-    const startSoundCallback = useCallback(startSound, [soundControl])
+    const startSoundCallback = useCallback(startSound, [soundControl, soundService])
 
     const reactToSoundBeingEnabled = (isEnabled: boolean): void => {
         if (isEnabled && stateSoundValue && !soundControl) {

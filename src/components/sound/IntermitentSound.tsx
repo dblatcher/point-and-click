@@ -30,7 +30,7 @@ export const IntermitentSound: FunctionComponent<Props> = ({
         }
     }
 
-    const startSoundCallback = useCallback(startSound, [soundControl])
+    const startSoundCallback = useCallback(startSound, [soundControl, soundService])
 
     // play the sound when the animation reaches the frameIndex
     useEffect(() => {
