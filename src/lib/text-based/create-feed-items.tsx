@@ -128,6 +128,7 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
         case "sequence":
         case "order":
         case "backgroundMusic":
+        case "ambiantNoise":
             return [];
     }
 };

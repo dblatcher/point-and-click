@@ -116,7 +116,11 @@
       "The sun is shining behind a hill in the distance."
     ]
   },
-  "backgroundMusic": {
+  "ambiantNoise": {
     "soundId": "sparrows"
+  },
+  "backgroundMusic": {
+    "soundId": "B4organII",
+    "volume": 0.5
   }
 }

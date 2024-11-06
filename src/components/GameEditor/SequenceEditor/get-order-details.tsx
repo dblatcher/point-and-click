@@ -18,6 +18,7 @@ import CancelPresentationOutlinedIcon from '@mui/icons-material/CancelPresentati
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import { FlagCircleIcon } from "../material-icons";
 import { MusicNote } from "@mui/icons-material";
+import SurroundSoundIcon from '@mui/icons-material/SurroundSound';
 
 export const getOrderIcon = (order?: Order): typeof ChatOutlinedIcon => {
     switch (order?.type) {
@@ -62,6 +63,8 @@ export const getConsequenceIcon = (consequence?: Consequence): typeof ChatOutlin
             return AssignmentOutlinedIcon
         case "backgroundMusic":
             return MusicNote
+        case "ambiantNoise":
+            return SurroundSoundIcon
         case "changeStatus":
         default:
             return PriorityHighOutlinedIcon
@@ -105,6 +108,8 @@ export const getConsequenceDescription = (c: Consequence): string => {
             return `Ending: ${quoted(c.endingId)}`
         case "backgroundMusic":
             return `Set BGM in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
+        case "ambiantNoise":
+            return `Set ambiant noise in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
         default:
             return "[description]"
     }

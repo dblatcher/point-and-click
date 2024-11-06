@@ -59,7 +59,7 @@ export const Room: FunctionComponent<Props> = ({
     fontFamily,
     children,
 }: Props) => {
-    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], backgroundMusic } = data;
+    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], backgroundMusic, ambiantNoise } = data;
 
     const scale = Math.min(
         maxWidth / frameWidth,
@@ -188,6 +188,9 @@ export const Room: FunctionComponent<Props> = ({
             )}
             {(!noSound && backgroundMusic) && (
                 <PersistentSound isPaused={isPaused} soundValue={backgroundMusic} />
+            )}
+            {(!noSound && ambiantNoise) && (
+                <PersistentSound isPaused={isPaused} soundValue={ambiantNoise} />
             )}
         </figure>
     )

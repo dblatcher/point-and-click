@@ -204,13 +204,23 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 break;
             }
             case 'backgroundMusic': {
-                const {sound, volume, roomId} = consequence
+                const { sound, volume, roomId } = consequence
                 const room = findById(roomId, state.rooms)
                 if (!room) {
                     console.warn('no such room', roomId)
                     break;
                 }
-                room.backgroundMusic = sound ? {soundId:sound, volume} : undefined
+                room.backgroundMusic = sound ? { soundId: sound, volume } : undefined
+                break;
+            }
+            case 'ambiantNoise': {
+                const { sound, volume, roomId } = consequence
+                const room = findById(roomId, state.rooms)
+                if (!room) {
+                    console.warn('no such room', roomId)
+                    break;
+                }
+                room.ambiantNoise = sound ? { soundId: sound, volume } : undefined
                 break;
             }
             default: {

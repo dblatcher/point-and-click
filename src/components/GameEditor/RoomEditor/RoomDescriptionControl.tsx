@@ -27,6 +27,12 @@ export const RoomDescriptionControl = ({ room }: RoomEditorProps) => {
                 modifyRoom('Set background music', room.id, { backgroundMusic })
             }}
         />
+        <AmbiantSoundControl label="ambiant Noise"
+            value={room.ambiantNoise}
+            setValue={(ambiantNoise) => {
+                modifyRoom('Set ambiant noise', room.id, { ambiantNoise })
+            }}
+        />
         <Box>
             <Typography variant="h3">
                 Narrative Description<HelpButton helpTopic="narrative" />

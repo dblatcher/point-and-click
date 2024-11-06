@@ -249,7 +249,7 @@ export const interactions: Interaction[] = [
                 volume: 1,
             },
             {
-                type : 'backgroundMusic',
+                type : 'ambiantNoise',
                 sound: undefined,
                 roomId: 'OUTSIDE'
             }

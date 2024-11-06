@@ -31,5 +31,6 @@ export const RoomDataSchema = z.object({
     name: z.string().optional(),
     narrative: NarrativeSchema.optional(),
     backgroundMusic: ambiantSoundSchema.optional(),
+    ambiantNoise: ambiantSoundSchema.optional(),
 })
 export type RoomData = z.infer<typeof RoomDataSchema>
