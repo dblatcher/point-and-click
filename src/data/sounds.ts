@@ -26,4 +26,9 @@ export const soundAssets: SoundAsset[] = [
         href: './assets/sounds/Arremon_abeillei_-_Black-capped_Sparrow_XC250490.mp3',
         category: 'music',
     },
+    {
+        id: 'B4organII',
+        href: './assets/sounds/B4organII.ogg',
+        category: 'music',
+    },
 ]
