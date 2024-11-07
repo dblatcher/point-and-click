@@ -23,7 +23,7 @@ export const RoomDescriptionControl = ({ room }: RoomEditorProps) => {
         />
         <Box component={'section'}>
             <Typography variant="h3">
-                Sounds
+                Sounds <HelpButton helpTopic="room sounds" />
             </Typography>
             <AmbientSoundControl label="background music"
                 value={room.backgroundMusic}
