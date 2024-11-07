@@ -1,6 +1,6 @@
 import { useAssets } from "@/context/asset-context";
 import { AmbientSound } from "@/definitions/RoomData";
-import { Alert, Box } from "@mui/material";
+import { Alert, Box, Typography } from "@mui/material";
 import React from "react";
 import { EditorBox } from "../EditorBox";
 import { FileAssetSelector } from "../FileAssetSelector";
@@ -17,43 +17,43 @@ export const AmbientSoundControl: React.FunctionComponent<Props> = ({ label, val
     const asset = value ? soundService.get(value.soundId) : undefined
     const soundIdIsInvalid = !!value && !asset;
 
-    return <EditorBox title={label} contentBoxProps={{ display: 'flex', gap: 2 }}>
-        <Box>
-            <FileAssetSelector legend="sound Id" format="select"
-                assetType="sound"
-                filterItems={(item) => item.category === 'music'}
-                selectedItemId={value?.soundId}
-                selectNone={() => {
-                    setValue(undefined)
-                }}
-                select={(item) => {
-                    setValue({ ...value, soundId: item.id })
-                }}
-            />
+    return <Box display={'flex'} gap={2} alignItems={'center'} marginBottom={3} flexWrap={'wrap'}>
+        <Typography minWidth={120} fontWeight={'bold'}>{label}</Typography>
 
-            <VolumeControl value={value?.volume}
-                disabled={!value}
-                setValue={(number) => {
-                    if (value) {
-                        setValue({ ...value, volume: number })
+        <FileAssetSelector legend="sound Id" format="select"
+            assetType="sound"
+            filterItems={(item) => item.category === 'music'}
+            selectedItemId={value?.soundId}
+            selectNone={() => {
+                setValue(undefined)
+            }}
+            select={(item) => {
+                setValue({ ...value, soundId: item.id })
+            }}
+        />
+
+        <VolumeControl value={value?.volume}
+            disabled={!value}
+            setValue={(number) => {
+                if (value) {
+                    setValue({ ...value, volume: number })
+                }
+            }} />
+
+        {soundIdIsInvalid && (
+            <Alert severity="error">No sound asset {value.soundId}</Alert>
+        )}
+
+        {asset && (
+            <audio style={{ maxHeight: 40 }}
+                onVolumeChange={({ target }) => {
+                    if (target instanceof HTMLAudioElement && value) {
+                        setValue({ ...value, volume: target.volume ?? 0 })
                     }
-                }} />
-        </Box>
-
-        <Box display={'flex'} alignItems={'center'}>
-            {soundIdIsInvalid && (
-                <Alert severity="error">No sound asset {value.soundId}</Alert>
-            )}
-
-            {asset && (
-                <audio
-                    onVolumeChange={({ target }) => {
-                        if (target instanceof HTMLAudioElement && value) {
-                            setValue({ ...value, volume: target.volume ?? 0 })
-                        }
-                    }}
-                    controls src={asset.href} controlsList="nodownload noplaybackrate"></audio>
-            )}
-        </Box>
-    </EditorBox>
+                }}
+                controls
+                src={asset.href}
+                controlsList="nodownload noplaybackrate"></audio>
+        )}
+    </Box>
 }

@@ -21,19 +21,24 @@ export const RoomDescriptionControl = ({ room }: RoomEditorProps) => {
                 modifyRoom(`change name, room ${room.id}`, room.id, { name })
             }}
         />
-        <AmbientSoundControl label="background music"
-            value={room.backgroundMusic}
-            setValue={(backgroundMusic) => {
-                modifyRoom('Set background music', room.id, { backgroundMusic })
-            }}
-        />
-        <AmbientSoundControl label="ambient Noise"
-            value={room.ambientNoise}
-            setValue={(ambientNoise) => {
-                modifyRoom('Set ambient noise', room.id, { ambientNoise })
-            }}
-        />
-        <Box>
+        <Box component={'section'}>
+            <Typography variant="h3">
+                Sounds
+            </Typography>
+            <AmbientSoundControl label="background music"
+                value={room.backgroundMusic}
+                setValue={(backgroundMusic) => {
+                    modifyRoom('Set background music', room.id, { backgroundMusic })
+                }}
+            />
+            <AmbientSoundControl label="ambient Noise"
+                value={room.ambientNoise}
+                setValue={(ambientNoise) => {
+                    modifyRoom('Set ambient noise', room.id, { ambientNoise })
+                }}
+            />
+        </Box>
+        <Box component={'section'}>
             <Typography variant="h3">
                 Narrative Description<HelpButton helpTopic="narrative" />
             </Typography>
