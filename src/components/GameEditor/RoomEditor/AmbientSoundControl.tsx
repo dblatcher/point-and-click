@@ -1,5 +1,5 @@
 import { useAssets } from "@/context/asset-context";
-import { AmbiantSound } from "@/definitions/RoomData";
+import { AmbientSound } from "@/definitions/RoomData";
 import { Alert, Box } from "@mui/material";
 import React from "react";
 import { EditorBox } from "../EditorBox";
@@ -8,11 +8,11 @@ import { VolumeControl } from "../VolumeControl";
 
 interface Props {
     label: string
-    value?: AmbiantSound
-    setValue: { (value?: AmbiantSound): void }
+    value?: AmbientSound
+    setValue: { (value?: AmbientSound): void }
 }
 
-export const AmbiantSoundControl: React.FunctionComponent<Props> = ({ label, value, setValue }) => {
+export const AmbientSoundControl: React.FunctionComponent<Props> = ({ label, value, setValue }) => {
     const { soundService } = useAssets()
     const asset = value ? soundService.get(value.soundId) : undefined
     const soundIdIsInvalid = !!value && !asset;

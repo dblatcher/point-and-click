@@ -63,7 +63,7 @@ export const getConsequenceIcon = (consequence?: Consequence): typeof ChatOutlin
             return AssignmentOutlinedIcon
         case "backgroundMusic":
             return MusicNote
-        case "ambiantNoise":
+        case "ambientNoise":
             return SurroundSoundIcon
         case "changeStatus":
         default:
@@ -108,8 +108,8 @@ export const getConsequenceDescription = (c: Consequence): string => {
             return `Ending: ${quoted(c.endingId)}`
         case "backgroundMusic":
             return `Set BGM in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
-        case "ambiantNoise":
-            return `Set ambiant noise in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
+        case "ambientNoise":
+            return `Set ambient noise in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
         default:
             return "[description]"
     }

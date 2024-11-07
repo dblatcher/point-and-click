@@ -4,7 +4,7 @@ import { RoomData } from "@/definitions";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { Box, Typography } from "@mui/material";
 import { HelpButton } from "../HelpButton";
-import { AmbiantSoundControl } from "./AmbiantSoundControl";
+import { AmbientSoundControl } from "./AmbientSoundControl";
 
 type RoomEditorProps = {
     room: RoomData;
@@ -21,16 +21,16 @@ export const RoomDescriptionControl = ({ room }: RoomEditorProps) => {
                 modifyRoom(`change name, room ${room.id}`, room.id, { name })
             }}
         />
-        <AmbiantSoundControl label="background music"
+        <AmbientSoundControl label="background music"
             value={room.backgroundMusic}
             setValue={(backgroundMusic) => {
                 modifyRoom('Set background music', room.id, { backgroundMusic })
             }}
         />
-        <AmbiantSoundControl label="ambiant Noise"
-            value={room.ambiantNoise}
-            setValue={(ambiantNoise) => {
-                modifyRoom('Set ambiant noise', room.id, { ambiantNoise })
+        <AmbientSoundControl label="ambient Noise"
+            value={room.ambientNoise}
+            setValue={(ambientNoise) => {
+                modifyRoom('Set ambient noise', room.id, { ambientNoise })
             }}
         />
         <Box>

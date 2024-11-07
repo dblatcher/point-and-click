@@ -11,11 +11,11 @@ export type BackgroundLayer = z.infer<typeof BackgroundLayerSchema>
 const ScaleLevelSchema = z.array(z.tuple([z.number(), z.number()]))
 export type ScaleLevel = z.infer<typeof ScaleLevelSchema>
 
-const ambiantSoundSchema = z.object({
+const ambientSoundSchema = z.object({
     soundId: z.string(),
     volume: z.number().optional(),
 })
-export type AmbiantSound = z.infer<typeof ambiantSoundSchema>
+export type AmbientSound = z.infer<typeof ambientSoundSchema>
 
 export const RoomDataSchema = z.object({
     id: z.string(),
@@ -30,7 +30,7 @@ export const RoomDataSchema = z.object({
     backgroundColor: z.string().optional(),
     name: z.string().optional(),
     narrative: NarrativeSchema.optional(),
-    backgroundMusic: ambiantSoundSchema.optional(),
-    ambiantNoise: ambiantSoundSchema.optional(),
+    backgroundMusic: ambientSoundSchema.optional(),
+    ambientNoise: ambientSoundSchema.optional(),
 })
 export type RoomData = z.infer<typeof RoomDataSchema>

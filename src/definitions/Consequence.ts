@@ -96,8 +96,8 @@ const BackgroundMusicConsequenceSchema = z.object({
     narrative: NarrativeSchema.optional(),
 })
 
-const AmbiantNoiseConsequenceSchema = z.object({
-    type: z.literal('ambiantNoise'),
+const AmbientNoiseConsequenceSchema = z.object({
+    type: z.literal('ambientNoise'),
     sound: z.string().optional(),
     roomId: z.string().optional(),
     volume: z.number().optional(),
@@ -133,13 +133,13 @@ export const ConsequenceSchema = z.union([
     ToggleZoneConsequenceSchema,
     SoundEffectConsequenceSchema,
     BackgroundMusicConsequenceSchema,
-    AmbiantNoiseConsequenceSchema,
+    AmbientNoiseConsequenceSchema,
     FlagConsequenceSchema,
     ConversationChoiceConsequenceSchema,
 ])
 
 const ConsequenceTypeEnum = z.enum([
-    'conversation', 'sequence', 'changeStatus', 'backgroundMusic', 'ambiantNoise',
+    'conversation', 'sequence', 'changeStatus', 'backgroundMusic', 'ambientNoise',
     'removeActor', 'inventory', 'changeRoom', 'order', 'ending',
     'teleportActor', 'toggleZone', 'soundEffect', 'flag', 'conversationChoice', 
 ])
@@ -161,7 +161,7 @@ export const consequenceMap = {
     flag: FlagConsequenceSchema,
     conversationChoice: ConversationChoiceConsequenceSchema,
     backgroundMusic: BackgroundMusicConsequenceSchema,
-    ambiantNoise: AmbiantNoiseConsequenceSchema,
+    ambientNoise: AmbientNoiseConsequenceSchema,
 } as const
 
 export type Consequence = z.infer<typeof ConsequenceSchema>
@@ -210,7 +210,7 @@ export const ImmediateConsequenceSchema = z.union([
     ChangeRoomConsequenceSchema,
     ConversationChoiceConsequenceSchema,
     BackgroundMusicConsequenceSchema,
-    AmbiantNoiseConsequenceSchema,
+    AmbientNoiseConsequenceSchema,
 ])
 /**
  * The subset of consequences that are don't take multiple cycles

@@ -116,8 +116,8 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type: 'toggleZone', roomId: '', ref: '', on: true, zoneType: 'obstacle' }
         case 'soundEffect':
             return { type: 'soundEffect', sound: '', volume: 1 }
-        case 'ambiantNoise':
-            return { type: 'ambiantNoise', sound: undefined, volume: 1, roomId: undefined }
+        case 'ambientNoise':
+            return { type: 'ambientNoise', sound: undefined, volume: 1, roomId: undefined }
         case 'backgroundMusic':
             return { type: 'backgroundMusic', sound: undefined, volume: 1, roomId: undefined }
         case 'flag':
