@@ -186,10 +186,10 @@ export const Room: FunctionComponent<Props> = ({
             {showCaption && (
                 <figcaption className={styles.roomCaption}>{id}</figcaption>
             )}
-            {(!noSound && backgroundMusic) && (
+            {(!noSound) && (
                 <PersistentSound isPaused={isPaused} soundValue={backgroundMusic} />
             )}
-            {(!noSound && ambientNoise) && (
+            {(!noSound) && (
                 <PersistentSound isPaused={isPaused} soundValue={ambientNoise} />
             )}
         </figure>

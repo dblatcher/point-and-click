@@ -1,6 +1,5 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { SoundControl } from "sound-deck";
-import { useInterval } from "@/lib/useInterval"
 import type { SoundValue } from "@/definitions";
 import { useAssets } from "@/context/asset-context";
 
@@ -12,7 +11,6 @@ interface Props {
 
 export const PersistentSound: FunctionComponent<Props> = ({
     soundValue,
-    animationRate = 200,
     isPaused,
 }: Props) => {
     const [soundControl, setSoundControl] = useState<SoundControl | null>(null)
@@ -60,13 +58,11 @@ export const PersistentSound: FunctionComponent<Props> = ({
         }
     }, [isPaused, soundControl, stateSoundValue, startSoundCallback])
 
-    // on every animation tick, play a new sound if the 
-    // prop has changed
-    const updateSound = (): void => {
+    useEffect(()=> {
         if (stateSoundValue !== soundValue) {
             startSoundCallback(soundValue)
         }
-    }
-    useInterval(updateSound, animationRate)
+    }, [stateSoundValue, soundValue, startSoundCallback])
+
     return null
 }
