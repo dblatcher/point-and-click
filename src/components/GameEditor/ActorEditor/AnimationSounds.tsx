@@ -112,6 +112,7 @@ export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeS
                 assetType="sound"
                 format="select"
                 legend="sfx to add"
+                filterItems={(asset) => asset.category === 'sfx' || asset.category === 'any'}
                 select={(item) => setSoundId(item.id)} />
             <Box display={'flex'} flexDirection={'row'} gap={2} flexWrap={'wrap'}>
                 {frames.map((frame, frameIndex) => (

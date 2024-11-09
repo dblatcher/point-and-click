@@ -1,10 +1,10 @@
-import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { SoundValue } from "@/definitions";
-import { Box, BoxProps, IconButton, Typography } from "@mui/material";
+import { Box, BoxProps, IconButton } from "@mui/material";
 import { Fragment } from "react";
 import { ClearIcon } from "../material-icons";
 import { SoundAssetTestButton } from "../SoundAssetTestButton";
 import { VolumeControl } from "../VolumeControl";
+import { FileAssetSelector } from "../FileAssetSelector";
 
 interface Props {
     soundValues: SoundValue[],
@@ -43,7 +43,13 @@ export const SoundBoxes = ({
     const renderContents = (sv: SoundValue, index: number) => {
         if (continual) {
             return <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
-                <Typography>CONTINUAL: <strong>{sv.soundId}</strong></Typography>
+                <FileAssetSelector assetType="sound" format="select"
+                    selectedItemId={sv.soundId}
+                    legend="continual sound"
+                    select={(soundAsset) => editSound(index, { soundId: soundAsset.id })}
+                    filterItems={(asset) => asset.category === 'sfx' || asset.category === 'any'}
+                    selectNone={()=> handleDeleteSound(index)}
+                />
                 <VolumeControl value={sv.volume} setValue={(volume) => { editSound(index, { volume }) }} />
                 <SoundAssetTestButton soundAssetId={sv.soundId} volume={sv.volume} fontSize="medium" />
                 <IconButton color="warning" onClick={() => handleDeleteSound(index)}><ClearIcon /></IconButton>
@@ -51,10 +57,16 @@ export const SoundBoxes = ({
         }
         return <>
             <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
-                <Typography><strong>{sv.soundId}</strong></Typography>
-                <SoundAssetTestButton soundAssetId={sv.soundId} volume={sv.volume} fontSize="medium" />
+                <FileAssetSelector assetType="sound" format="select"
+                    selectedItemId={sv.soundId}
+                    legend="sound"
+                    select={(soundAsset) => editSound(index, { soundId: soundAsset.id })}
+                    filterItems={(asset) => asset.category === 'sfx' || asset.category === 'any'}
+                    selectNone={()=> handleDeleteSound(index)}
+                />
             </Box>
             <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
+                <SoundAssetTestButton soundAssetId={sv.soundId} volume={sv.volume} fontSize="medium" />
                 <VolumeControl value={sv.volume} setValue={(volume) => { editSound(index, { volume }) }} />
                 <IconButton color="warning" onClick={() => handleDeleteSound(index)}><ClearIcon /></IconButton>
             </Box>
