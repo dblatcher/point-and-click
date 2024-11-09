@@ -31,4 +31,9 @@ export const soundAssets: SoundAsset[] = [
         href: './assets/sounds/B4organII.ogg',
         category: 'music',
     },
+    {
+        id: '2step_pattern1',
+        href: './assets/sounds/2step_pattern1.ogg',
+        category: 'music',
+    },
 ]

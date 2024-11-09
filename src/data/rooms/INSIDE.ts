@@ -34,5 +34,9 @@ export const INSIDE: RoomData = {
       y: 100,
       rect: [10, 90],
     },
-  ]
+  ],
+  backgroundMusic: {
+    soundId: '2step_pattern1',
+    volume: .1
+  }
 }
