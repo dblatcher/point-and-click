@@ -17,8 +17,9 @@ import FormatListNumberedRtlOutlinedIcon from '@mui/icons-material/FormatListNum
 import CancelPresentationOutlinedIcon from '@mui/icons-material/CancelPresentationOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import { FlagCircleIcon } from "../material-icons";
-import { MusicNote } from "@mui/icons-material";
+
 import SurroundSoundIcon from '@mui/icons-material/SurroundSound';
+import MusicNote from "@mui/icons-material/MusicNote";
 
 export const getOrderIcon = (order?: Order): typeof ChatOutlinedIcon => {
     switch (order?.type) {

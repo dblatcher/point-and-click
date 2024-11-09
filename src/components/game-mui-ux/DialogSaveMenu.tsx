@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { SaveMenuProps } from "../game/uiComponentSet";
 import { StringInput } from '../SchemaForm/StringInput';
 import { SoundToggle } from './SoundToggle';
-import { Delete as DeleteIcon } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 export const DialogSaveMenu = ({ save, reset, load, isPaused, setIsPaused, listSavedGames, deleteSave }: SaveMenuProps) => {

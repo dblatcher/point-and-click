@@ -1,6 +1,6 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { HotspotZone } from "@/definitions";
-import { Delete } from "@mui/icons-material";
+import Delete from '@mui/icons-material/Delete';
 import { Alert, Box, Divider, Stack } from "@mui/material";
 import { ButtonWithConfirm } from "../../ButtonWithConfirm";
 import { HotspotControl } from "./HotSpotControl";

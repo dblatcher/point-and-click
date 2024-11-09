@@ -1,5 +1,5 @@
 import { HotspotZone, Zone, ZoneType } from "@/definitions";
-import { Delete } from "@mui/icons-material";
+import Delete from '@mui/icons-material/Delete';
 import { Alert, Box, Stack } from "@mui/material";
 import { FunctionComponent } from "react";
 import { ButtonWithConfirm } from "../../ButtonWithConfirm";
