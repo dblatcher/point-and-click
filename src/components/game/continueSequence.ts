@@ -81,6 +81,7 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
 
     return {
         actors,
+        currentConversationId: state.currentConversationId,
         sequenceRunning: sequenceRunning.stages.length === 0 ? undefined : sequenceRunning
     }
 }
