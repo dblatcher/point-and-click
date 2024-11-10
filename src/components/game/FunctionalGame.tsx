@@ -1,10 +1,10 @@
 import { GameInfoProvider } from "@/context/game-info-provider";
 import { GameStateProvider } from "@/context/game-state-context";
-import { CommandTarget, GameData } from "@/definitions";
-import { gameStateReducer, getInitialGameState } from "@/lib/game-state-logic/game-state-reducer";
-import { GameState } from "@/lib/game-state-logic/types";
-import { buildContentsList } from "@/lib/put-contents-in-order";
+import { CommandTarget } from "@/definitions";
 import { useInterval } from "@/hooks/useInterval";
+import { gameStateReducer, getInitialGameState } from "@/lib/game-state-logic/game-state-reducer";
+import { getSaveData } from "@/lib/game-state-logic/state-to-save-data";
+import { buildContentsList } from "@/lib/put-contents-in-order";
 import { findById } from "@/lib/util";
 import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";
@@ -18,23 +18,6 @@ import { GameProps } from "./types";
 // use true for debugging only- slows program!
 const renderCells = false
 const TIMER_SPEED = 10
-
-
-const getSaveData = (gameState: GameState): GameData => {
-    const {
-        id,
-        rooms, actors, interactions, items,
-        currentRoomId, actorOrders, sequenceRunning,
-        conversations, currentConversationId, flagMap, gameNotBegun
-    } = gameState
-
-    return {
-        id,
-        rooms, actors, interactions, items,
-        currentRoomId, actorOrders, sequenceRunning,
-        conversations, currentConversationId, flagMap, gameNotBegun
-    }
-}
 
 
 export const FunctionalGame: React.FunctionComponent<GameProps> = (props) => {
