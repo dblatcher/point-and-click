@@ -4,7 +4,7 @@ import { CommandTarget } from "@/definitions";
 import { useInterval } from "@/hooks/useInterval";
 import { gameStateReducer, getInitialGameState } from "@/lib/game-state-logic/game-state-reducer";
 import { getSaveData } from "@/lib/game-state-logic/state-to-save-data";
-import { buildContentsList } from "@/lib/put-contents-in-order";
+import { buildContentsList } from "@/components/game/put-contents-in-order";
 import { findById } from "@/lib/util";
 import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";
