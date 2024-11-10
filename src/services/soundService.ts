@@ -22,7 +22,6 @@ export class SoundService extends Service<SoundAsset> {
         itemArray.forEach(soundAsset =>
             this.soundDeck?.defineSampleBuffer(soundAsset.id, soundAsset.href)
                 .then(success => {
-                    console.log('soundService: load', soundAsset.id, success)
                     this.emit('load', soundAsset.id, success)
                     this.reportUpdate()
                 })

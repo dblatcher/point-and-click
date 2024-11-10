@@ -41,8 +41,7 @@ export const AssetsProvider = ({ children, imageService, soundService }: AssetsP
     const [imageAssets, setImageAssets] = useState(imageService.getAll())
     const [soundAssets, setSoundAssets] = useState(soundService.getAll())
     useEffect(() => {
-        const refresh = (length: number) => {
-            console.log('images in context', length)
+        const refresh = () => {
             setImageAssets(imageService.getAll())
         }
         imageService.on('update', refresh)
@@ -51,8 +50,7 @@ export const AssetsProvider = ({ children, imageService, soundService }: AssetsP
         }
     })
     useEffect(() => {
-        const refresh = (length: number) => {
-            console.log('sounds in context', length)
+        const refresh = () => {
             setSoundAssets(soundService.getAll())
         }
         soundService.on('update', refresh)
