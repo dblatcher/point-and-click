@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import React from "react";
-import { LayoutOption, layoutOptions } from "./layouts";
+import { LayoutOption, layoutOptions } from "./game/layouts";
 
 
 interface Props {

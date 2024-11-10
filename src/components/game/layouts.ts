@@ -1,7 +1,7 @@
-import { materialUiComponents } from "./game-mui-ux";
-import { Layout as SimpleLayout } from "./game-ui/Layout";
-import { UiComponentSet } from "./game/uiComponentSet";
-import { TextBasedLayout } from "./text-based/TextBasedLayout";
+import { materialUiComponents } from "../game-mui-ux";
+import { Layout as SimpleLayout } from "../game-ui/Layout";
+import { UiComponentSet } from "./uiComponentSet";
+import { TextBasedLayout } from "../text-based/TextBasedLayout";
 
 
 export const layouts = {
