@@ -2,12 +2,15 @@ import { Verb, ConversationChoice, CommandTarget, Command } from "@/definitions"
 import { locateClickInWorld, getViewAngleCenteredOn } from "@/lib/roomFunctions"
 import { findById } from "@/lib/util"
 import { Reducer } from "react"
-import { GameProps, GameState } from "."
+import { cellSize, GameProps, GameState } from "."
 import { continueSequence } from "./continueSequence"
 import { handleCommand, doPendingInteraction } from "./handleCommand"
 import { handleConversationChoice } from "./handleConversationChoice"
 import { issueMoveOrder } from "./issueMoveOrder"
 import { followOrder } from "./orders/followOrder"
+import { cloneData } from "@/lib/clone"
+import { generateCellMatrix } from "@/lib/pathfinding/cells"
+import { GameEventEmitter } from "@/lib/game-event-emitter"
 
 
 type GameStateAction =
@@ -159,5 +162,45 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 viewAngle: viewAngleCenteredOnPlayer ?? gameState.viewAngle
             }
         }
+    }
+}
+
+export const getInitialGameState = (props: GameProps): GameState => {
+    const rooms = props.rooms.map(cloneData);
+    const actors = props.actors.map(cloneData);
+    const items = props.items.map(cloneData);
+    const conversations = props.conversations.map(cloneData);
+    const flagMap = cloneData(props.flagMap);
+    const openingSequenceInProps = findById(props.openingSequenceId, props.sequences)
+    const openingSequenceCopy = (openingSequenceInProps && props.gameNotBegun)
+        ? cloneData(openingSequenceInProps)
+        : undefined
+
+
+    const currentRoom = findById(props.currentRoomId, rooms)
+    const cellMatrix = currentRoom ? generateCellMatrix(currentRoom, cellSize) : undefined
+
+    return {
+        viewAngle: 0,
+        isPaused: props.startPaused || false,
+        id: props.id,
+        currentRoomId: props.currentRoomId,
+        actors,
+        rooms,
+        currentVerbId: props.verbs[0].id,
+        interactions: [...props.interactions],
+        items,
+        sequenceRunning: props.sequenceRunning || openingSequenceCopy,
+        actorOrders: props.actorOrders || {},
+        conversations,
+        currentConversationId: props.currentConversationId,
+        flagMap,
+        gameNotBegun: false,
+
+        roomHeight: 400,
+        roomWidth: 800,
+
+        emitter: new GameEventEmitter(),
+        cellMatrix,
     }
 }

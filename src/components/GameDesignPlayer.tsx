@@ -1,5 +1,6 @@
 import { GameCondition, GameData, GameDesign } from "@/definitions";
-import Game from "@/components/game";
+// import Game from "@/components/game";
+import { FunctionalGame } from "@/components/game/FunctionalGame";
 import { cloneData } from "@/lib/clone";
 import { ImageAsset } from "@/services/assets";
 import { populateServices } from "@/services/populateServices";
@@ -153,7 +154,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
       <AssetsProvider imageService={imageService} soundService={soundService}>
         <SpritesProvider value={this.sprites}>
           {gameCondition && (
-            <Game
+            <FunctionalGame
               {...gameCondition}
               load={this.load}
               save={this.save}

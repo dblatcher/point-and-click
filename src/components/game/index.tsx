@@ -1,6 +1,6 @@
 
 import { ActorData, CommandTarget, Conversation, ConversationChoice, Ending, GameCondition, GameData, ItemData, Order, RoomData, Verb } from "@/definitions";
-import React, { Component, useReducer } from "react";
+import { Component } from "react";
 //lib
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
@@ -8,6 +8,7 @@ import { CellMatrix, generateCellMatrix } from "@/lib/pathfinding/cells";
 import { buildContentsList } from "@/lib/put-contents-in-order";
 import { getViewAngleCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
+import { SoundService } from "@/services/soundService";
 // state logic
 import { continueSequence } from "./continueSequence";
 import { doPendingInteraction, handleCommand } from "./handleCommand";
@@ -23,9 +24,6 @@ import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
 import { UiComponentSet } from "./uiComponentSet";
-import { SoundService } from "@/services/soundService";
-import { useInterval } from "@/lib/useInterval";
-import { gameStateReducer } from "./game-state-reducer";
 
 
 export type GameProps = Readonly<{
@@ -72,146 +70,6 @@ const TIMER_SPEED = 10
 
 type SetGameStateFn = { (state: GameState): GameState }
 
-
-const getInitialGameState = (props: GameProps): GameState => {
-    const rooms = props.rooms.map(cloneData);
-    const actors = props.actors.map(cloneData);
-    const items = props.items.map(cloneData);
-    const conversations = props.conversations.map(cloneData);
-    const flagMap = cloneData(props.flagMap);
-    const openingSequenceInProps = findById(props.openingSequenceId, props.sequences)
-    const openingSequenceCopy = (openingSequenceInProps && props.gameNotBegun)
-        ? cloneData(openingSequenceInProps)
-        : undefined
-
-
-    const currentRoom = findById(props.currentRoomId, rooms)
-    const cellMatrix = currentRoom ? generateCellMatrix(currentRoom, cellSize) : undefined
-
-    return {
-        viewAngle: 0,
-        isPaused: props.startPaused || false,
-        id: props.id,
-        currentRoomId: props.currentRoomId,
-        actors,
-        rooms,
-        currentVerbId: props.verbs[0].id,
-        interactions: [...props.interactions],
-        items,
-        sequenceRunning: props.sequenceRunning || openingSequenceCopy,
-        actorOrders: props.actorOrders || {},
-        conversations,
-        currentConversationId: props.currentConversationId,
-        flagMap,
-        gameNotBegun: false,
-
-        roomHeight: 400,
-        roomWidth: 800,
-
-        emitter: new GameEventEmitter(),
-        cellMatrix,
-    }
-}
-
-const getSaveData = (gameState: GameState): GameData => {
-    const {
-        id,
-        rooms, actors, interactions, items,
-        currentRoomId, actorOrders, sequenceRunning,
-        conversations, currentConversationId, flagMap, gameNotBegun
-    } = gameState
-
-    return {
-        id,
-        rooms, actors, interactions, items,
-        currentRoomId, actorOrders, sequenceRunning,
-        conversations, currentConversationId, flagMap, gameNotBegun
-    }
-}
-
-
-export const FunctionalGame: React.FunctionComponent<GameProps> = (props) => {
-
-    const [gameState, dispatch] = useReducer(gameStateReducer, getInitialGameState(props))
-
-    const tick = () => {
-        dispatch({ type: 'TICK-UPDATE', props })
-    }
-
-    useInterval(tick, TIMER_SPEED)
-
-
-    const { deleteSave, save, reset, load, listSavedGames, showDebugLog, uiComponents = {} } = props
-    const {
-        SaveMenuComponent = SaveMenu,
-        GameLayoutComponent = Layout,
-    } = uiComponents
-    const { viewAngle, isPaused, roomHeight, roomWidth } = gameState
-
-
-    const ending = findById(gameState.endingId, props.endings)
-    const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
-    const currentVerb = findById(gameState.currentVerbId, props.verbs);
-
-
-    const handleTargetClick = (target: CommandTarget) => {
-        console.log('click', target.id)
-        dispatch({ type: 'TARGET-CLICK', props, target })
-    }
-
-    const handleHover = (target: CommandTarget, event: 'enter' | 'leave') => {
-        dispatch({ type: 'HANDLE-HOVER', event, target })
-    }
-
-    const contentList = buildContentsList(
-        gameState,
-        handleTargetClick
-    )
-
-
-    return <GameStateProvider value={gameState}>
-        <GameInfoProvider value={{ ...props, verb: currentVerb, ending }}>
-            {showDebugLog && (<DebugLog />)}
-            <GameLayoutComponent
-                selectVerb={(verb) => { dispatch({ type: 'VERB-SELECT', verb }) }}
-                selectConversation={(choice) => { dispatch({ type: 'CONVERSATION-CHOICE', choice, props }) }}
-                selectItem={handleTargetClick}
-                handleHover={handleHover}
-                setScreenSize={(width, height) => { dispatch({ type: 'SET-SCREEN-SIZE', width, height }) }}
-                sendCommand={(command) => {
-                    dispatch({ type: 'SEND-COMMAND', command, props })
-                }}
-                saveMenu={
-                    <SaveMenuComponent
-                        load={load ? (fileName) => { load(fileName) } : undefined}
-                        reset={reset ? () => { reset() } : undefined}
-                        save={save ? (fileName) => { save(getSaveData(gameState), fileName) } : undefined}
-                        deleteSave={deleteSave}
-                        listSavedGames={listSavedGames}
-                        isPaused={isPaused}
-                        setIsPaused={(isPaused) => { dispatch({ type: 'SET-PAUSED', isPaused }) }}
-                    />
-                }
-            >
-                {currentRoom && (
-                    <Room
-                        data={currentRoom}
-                        maxWidth={roomWidth}
-                        maxHeight={roomHeight}
-                        isPaused={isPaused}
-                        viewAngle={viewAngle}
-                        handleRoomClick={(x, y) => { dispatch({ type: 'ROOM-CLICK', x, y }) }}
-                        handleHotspotClick={handleTargetClick}
-                        handleHover={handleHover}
-                        contents={contentList}
-                        obstacleCells={renderCells ? gameState.cellMatrix : undefined}
-                    />
-                )
-                }
-            </GameLayoutComponent>
-        </GameInfoProvider>
-    </GameStateProvider>
-}
 
 export default class Game extends Component<GameProps, GameState> {
 
