@@ -1,4 +1,4 @@
-import { cellSize } from "../../../components/game/types";
+import { CELL_SIZE } from "@/lib/pathfinding/constants";
 import { GameState } from "@/lib/game-state-logic/types";
 import { ActorData, MoveOrder, Order } from "@/definitions";
 import { CellMatrix } from "@/lib/pathfinding/cells";
@@ -16,7 +16,7 @@ function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order:
     let pointReached: Point = { x: subject.x, y: subject.y }
 
     const newSteps = oldSteps.flatMap(step => {
-        const substeps = findPath(pointReached, step, cellMatrix, cellSize) as (Point & { animation?: string; speed?: number })[]
+        const substeps = findPath(pointReached, step, cellMatrix, CELL_SIZE) as (Point & { animation?: string; speed?: number })[]
         substeps.forEach(subStep => {
             subStep.animation = step.animation
             subStep.speed = step.speed

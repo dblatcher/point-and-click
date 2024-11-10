@@ -1,4 +1,4 @@
-import { cellSize } from "../../components/game/types";
+import { CELL_SIZE } from "@/lib/pathfinding/constants";
 import { GameState } from "./types";
 import { generateCellMatrix } from "../pathfinding/cells";
 import { Point } from "../pathfinding/geometry";
@@ -17,7 +17,7 @@ export function changeRoom(
         if (!room) { return undefined }
 
         const player = actors.find(_ => _.isPlayer)
-        const cellMatrix = generateCellMatrix(room, cellSize)
+        const cellMatrix = generateCellMatrix(room, CELL_SIZE)
 
         if (takePlayer && player) {
             player.room = room.id

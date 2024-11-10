@@ -1,5 +1,4 @@
 import { GameCondition, GameData, GameDesign } from "@/definitions";
-// import Game from "@/components/game";
 import { FunctionalGame } from "@/components/game/FunctionalGame";
 import { cloneData } from "@/lib/clone";
 import { ImageAsset } from "@/services/assets";

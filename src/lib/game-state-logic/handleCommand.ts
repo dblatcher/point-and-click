@@ -1,5 +1,6 @@
 import { GameState } from "@/lib/game-state-logic/types";
-import { GameProps, cellSize } from "../../components/game/types";
+import { GameProps } from "../../components/game/types";
+import { CELL_SIZE } from "@/lib/pathfinding/constants";
 import { Command, Interaction, ActorData, OrderConsequence } from "@/definitions";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "@/lib/inGameDebugging";
@@ -86,7 +87,7 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
             const targetPoint = getTargetPoint(command.target, currentRoom)
 
             if (player) {
-                const isReachable = findPath(player, targetPoint, cellMatrix, cellSize).length > 0;
+                const isReachable = findPath(player, targetPoint, cellMatrix, CELL_SIZE).length > 0;
                 if (isReachable) {
                     state.pendingInteraction = interaction
                     const execute = makeConsequenceExecutor(state, props)

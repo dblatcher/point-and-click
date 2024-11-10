@@ -26,5 +26,3 @@ export type RoomContentItem = {
     clickHandler?: HandleClickFunction<ActorData>;
     overrideSprite?: Sprite;
 }
-
-export const cellSize = 5

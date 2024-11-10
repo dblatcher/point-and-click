@@ -1,5 +1,5 @@
 import { GameState } from "@/lib/game-state-logic/types";
-import { cellSize } from "../../components/game/types";
+import { CELL_SIZE } from "@/lib/pathfinding/constants";
 import { MoveOrder } from "@/definitions";
 import { Point } from "@/lib/pathfinding/geometry";
 import { findPath } from "@/lib/pathfinding/pathfind";
@@ -19,7 +19,7 @@ export function issueMoveOrder(
         const actor = actors.find(_ => _.id === actorId)
         if (!actor || !cellMatrix) { return {} }
 
-        const steps = ignoreObstacles ? [destination] : findPath({ x: actor.x, y: actor.y }, destination, cellMatrix, cellSize)
+        const steps = ignoreObstacles ? [destination] : findPath({ x: actor.x, y: actor.y }, destination, cellMatrix, CELL_SIZE)
         const newOrder: MoveOrder = { type: 'move', steps, pathIsSet: true }
         state.emitter.emit('debugLog', makeDebugEntry(`move: [${actor.x}, ${actor.y}] -> [${destination.x},${destination.y}], steps:${steps.length}`, 'order'))
         issueOrdersOutsideSequence(state, actor.id, [newOrder], !appendToExisting)

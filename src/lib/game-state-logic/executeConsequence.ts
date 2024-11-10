@@ -4,7 +4,8 @@ import { cloneData } from "@/lib/clone"
 import { generateCellMatrix } from "@/lib/pathfinding/cells"
 import { findById } from "@/lib/util"
 import { GameState } from "@/lib/game-state-logic/types";
-import { cellSize, GameProps } from "../../components/game/types"
+import { CELL_SIZE } from "@/lib/pathfinding/constants";
+import { GameProps } from "../../components/game/types"
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
 import { reportConversationBranch } from "@/lib/game-event-emitter"
 
@@ -167,7 +168,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
 
                 zone.disabled = !on
                 if (currentRoom?.id === room.id) {
-                    state.cellMatrix = generateCellMatrix(room, cellSize)
+                    state.cellMatrix = generateCellMatrix(room, CELL_SIZE)
                 }
                 conseqeunceSuccess = true
                 break
