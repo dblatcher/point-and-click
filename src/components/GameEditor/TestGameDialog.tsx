@@ -1,4 +1,4 @@
-import { FunctionalGame } from "@/components/game/FunctionalGame";
+import { Game } from "@/components/game/Game";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
 import { Dialog, DialogTitle, DialogActions, Button, DialogContent } from "@mui/material";
@@ -32,7 +32,7 @@ export const TestGameDialog = ({ isOpen, close, resetTimeStamp, reset }: Props) 
             </DialogActions>
             <DialogTitle>Test: {gameDesign.id}</DialogTitle>
             <DialogContent>
-                <FunctionalGame
+                <Game
                     key={resetTimeStamp}
                     {...gameDesign} actorOrders={{}}
                     gameNotBegun

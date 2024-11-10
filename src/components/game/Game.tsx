@@ -13,21 +13,15 @@ import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
 import { GameProps } from "./types";
 
-
-
 // use true for debugging only- slows program!
 const renderCells = false
 const TIMER_SPEED = 10
 
-
-export const FunctionalGame: React.FunctionComponent<GameProps> = (props) => {
-
+export const Game: React.FunctionComponent<GameProps> = (props) => {
     const [gameState, dispatch] = useReducer(gameStateReducer, getInitialGameState(props))
-
     const tick = () => {
         dispatch({ type: 'TICK-UPDATE', props })
     }
-
     useInterval(tick, TIMER_SPEED)
 
     const { deleteSave, save, reset, load, listSavedGames, showDebugLog, uiComponents = {} } = props
@@ -37,11 +31,9 @@ export const FunctionalGame: React.FunctionComponent<GameProps> = (props) => {
     } = uiComponents
     const { viewAngle, isPaused, roomHeight, roomWidth } = gameState
 
-
     const ending = findById(gameState.endingId, props.endings)
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentVerb = findById(gameState.currentVerbId, props.verbs);
-
 
     const handleTargetClick = (target: CommandTarget) => {
         dispatch({ type: 'TARGET-CLICK', props, target })
@@ -55,7 +47,6 @@ export const FunctionalGame: React.FunctionComponent<GameProps> = (props) => {
         gameState,
         handleTargetClick
     )
-
 
     return <GameStateProvider value={gameState}>
         <GameInfoProvider value={{ ...props, verb: currentVerb, ending }}>
@@ -94,8 +85,7 @@ export const FunctionalGame: React.FunctionComponent<GameProps> = (props) => {
                         contents={contentList}
                         obstacleCells={renderCells ? gameState.cellMatrix : undefined}
                     />
-                )
-                }
+                )}
             </GameLayoutComponent>
         </GameInfoProvider>
     </GameStateProvider>
