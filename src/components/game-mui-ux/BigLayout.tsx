@@ -1,6 +1,6 @@
 import { useGameStateDerivations } from "@/context/game-state-context";
 import { Box, Grid } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ResizeWatcher } from "../ResizeWatcher";
 import { EndingWrapper } from "../game-ui/EndingScreen";
 import { GameLayoutProps } from "../game/uiComponentSet";
@@ -16,13 +16,15 @@ export const BigLayout = ({
     saveMenu,
 }: GameLayoutProps) => {
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
+    const [initialResize, setInitialResize] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (containerRef.current) {
+        if (containerRef.current && !initialResize) {
+            setInitialResize(true)
             setScreenSize(containerRef.current.clientWidth - 20, containerRef.current.clientHeight - 60)
         }
-    }, [setScreenSize])
+    }, [setScreenSize, initialResize, setInitialResize])
 
     // TO DO - the resize handler could use the size of the container div instead of the whole document body
     return (
