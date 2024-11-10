@@ -1,10 +1,7 @@
 import { GameDataItemType, GameDataItemTypeEnum } from "@/definitions/Game";
-import { helpTopics } from "../components/GameEditor/HelpText";
 
 export type NonItemEditorType = 'main' | 'images' | 'sounds' | 'interactions';
-
 export type TabId = NonItemEditorType | GameDataItemType
-
 export type EditorTab = { id: TabId, label: string, itemType?: GameDataItemType, helpTopic?: string }
 
 const validateItemType = (id: TabId): GameDataItemType | undefined => {
@@ -16,7 +13,9 @@ const buildTab = (id: TabId, label?: string): EditorTab => ({
     id,
     label: label ?? id,
     itemType: validateItemType(id),
-    helpTopic: helpTopics.includes(id) ? id : undefined
+    helpTopic: [
+        'items', 'rooms', 'verb menu', 'actors'
+    ].includes(id) ? id : undefined
 })
 
 export const tabOrder: EditorTab[] = [

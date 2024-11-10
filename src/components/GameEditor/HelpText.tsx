@@ -12,10 +12,6 @@ interface Props {
     topic: string;
 }
 
-export const helpTopics = [
-    'items', 'rooms', 'verb menu', 'actors'
-]
-
 export const HelpText: FunctionComponent<Props> = ({
     topic
 }: Props) => {
