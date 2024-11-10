@@ -5,7 +5,7 @@ import { HotspotZone, RoomData } from "@/definitions";
 import { CellMatrix } from "@/lib/pathfinding/cells";
 import { getShift } from "@/lib/roomFunctions";
 import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode } from "react";
-import { HandleHoverFunction, RoomContentItem } from "../../game";
+import { HandleHoverFunction, RoomContentItem } from "../../game/types";
 import BackgroundShape from "./BackgroundShape";
 import Hotspot from "./HotSpot";
 import ObstacleCellOverlay from "./ObstableCellOverlay";

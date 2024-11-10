@@ -1,6 +1,6 @@
 import { Verb, ItemData, ConversationChoice, Command } from "@/definitions";
 import { FunctionComponent, ReactNode } from "react";
-import { HandleHoverFunction } from ".";
+import { HandleHoverFunction } from "./types";
 
 
 export type VerbMenuProps = {

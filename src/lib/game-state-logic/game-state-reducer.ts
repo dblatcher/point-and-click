@@ -3,7 +3,7 @@ import { locateClickInWorld, getViewAngleCenteredOn } from "@/lib/roomFunctions"
 import { findById } from "@/lib/util"
 import { Reducer } from "react"
 import { GameState } from "@/lib/game-state-logic/types";
-import { cellSize, GameProps } from "../../components/game"
+import { cellSize, GameProps } from "../../components/game/types"
 import { continueSequence } from "./continueSequence"
 import { handleCommand, doPendingInteraction } from "./handleCommand"
 import { handleConversationChoice } from "./handleConversationChoice"

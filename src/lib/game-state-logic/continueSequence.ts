@@ -1,4 +1,4 @@
-import { GameProps } from "../../components/game";
+import { GameProps } from "../../components/game/types";
 import { GameState } from "@/lib/game-state-logic/types";
 import { Order, ActorData } from "@/definitions";
 import { makeConsequenceExecutor } from "./executeConsequence";

@@ -1,5 +1,5 @@
 import { GameState } from "@/lib/game-state-logic/types";
-import { cellSize } from "../../components/game";
+import { cellSize } from "../../components/game/types";
 import { MoveOrder } from "@/definitions";
 import { Point } from "@/lib/pathfinding/geometry";
 import { findPath } from "@/lib/pathfinding/pathfind";

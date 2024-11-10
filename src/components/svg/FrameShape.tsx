@@ -2,7 +2,7 @@ import { ActorData, RoomData } from "@/definitions";
 import { calculateScreenX } from "@/lib/roomFunctions";
 import { ImageAsset } from "@/services/assets";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
-import { HandleHoverFunction } from "../game";
+import { HandleHoverFunction } from "../game/types";
 import { useAssets } from "@/context/asset-context";
 
 

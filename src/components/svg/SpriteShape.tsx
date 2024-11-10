@@ -2,7 +2,7 @@ import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { RoomData, ActorData, Direction } from "@/definitions"
 import { calculateScreenX } from "@/lib/roomFunctions";
 import { Sprite } from "@/lib/Sprite";
-import { HandleHoverFunction } from "../game";
+import { HandleHoverFunction } from "../game/types";
 
 
 interface Props {

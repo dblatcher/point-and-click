@@ -3,7 +3,7 @@ import { ItemData } from "@/definitions"
 import { CSSProperties, memo } from "react";
 import { Button, Grid, Typography, Avatar } from "@mui/material";
 import { ItemMenuProps, itemMenuPropsAreEqual } from "../game/uiComponentSet";
-import { HandleHoverFunction } from "../game";
+import { HandleHoverFunction } from "../game/types";
 import { useGameStateDerivations } from "@/context/game-state-context";
 import { useAssets } from "@/context/asset-context";
 import { ImageAsset } from "@/services/assets";

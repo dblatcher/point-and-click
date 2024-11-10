@@ -1,5 +1,5 @@
 
-import { ActorData, CommandTarget, Conversation, ConversationChoice, Ending, GameCondition, GameData, ItemData, Order, RoomData, Verb } from "@/definitions";
+import { ActorData, CommandTarget, Conversation, ConversationChoice, Ending, GameData, ItemData, Order, RoomData, Verb } from "@/definitions";
 import { Component } from "react";
 //lib
 import { Sprite } from "@/lib/Sprite";
@@ -8,7 +8,6 @@ import { CellMatrix, generateCellMatrix } from "@/lib/pathfinding/cells";
 import { buildContentsList } from "@/lib/put-contents-in-order";
 import { getViewAngleCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
-import { SoundService } from "@/services/soundService";
 // state logic
 import { continueSequence } from "../../lib/game-state-logic/continueSequence";
 import { doPendingInteraction, handleCommand } from "../../lib/game-state-logic/handleCommand";
@@ -23,47 +22,11 @@ import { DebugLog } from "../DebugLog";
 import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
-import { UiComponentSet } from "./uiComponentSet";
+import { cellSize, GameProps } from "./types";
+import { GameState } from "@/lib/game-state-logic/types";
 
 
-export type GameProps = Readonly<{
-    save?: { (saveDate: GameData, fileName?: string): void };
-    reset?: { (): void };
-    load?: { (fileName?: string): void };
-    deleteSave?: { (fileName: string): void };
-    listSavedGames?: { (): string[] };
-    _sprites: Sprite[];
-    showDebugLog?: boolean;
-    startPaused?: boolean;
-    uiComponents?: UiComponentSet;
-    instantMode?: boolean;
-    soundService: SoundService;
-} & GameCondition>
 
-type GameState = GameData & {
-    viewAngle: number;
-    isPaused: boolean;
-    timer?: number;
-    cellMatrix?: CellMatrix;
-    currentVerbId: string;
-    currentItemId?: string;
-    hoverTarget?: CommandTarget;
-
-    roomWidth: number;
-    roomHeight: number;
-    emitter: GameEventEmitter
-}
-
-export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
-export type HandleClickFunction<T extends CommandTarget> = { (target: T): void };
-export type RoomContentItem = {
-    data: ActorData;
-    orders?: Order[];
-    clickHandler?: HandleClickFunction<ActorData>;
-    overrideSprite?: Sprite;
-}
-
-export const cellSize = 5
 // use true for debugging only- slows program!
 const renderCells = false
 const TIMER_SPEED = 10

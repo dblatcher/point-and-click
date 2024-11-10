@@ -1,4 +1,4 @@
-import { RoomContentItem } from "@/components/game";
+import { RoomContentItem } from "@/components/game/types";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { Point, RoomData } from "@/definitions";

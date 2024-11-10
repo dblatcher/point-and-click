@@ -1,38 +1,20 @@
 import { GameInfoProvider } from "@/context/game-info-provider";
 import { GameStateProvider } from "@/context/game-state-context";
-import { CommandTarget, GameCondition, GameData } from "@/definitions";
-import { Sprite } from "@/lib/Sprite";
+import { CommandTarget, GameData } from "@/definitions";
 import { gameStateReducer, getInitialGameState } from "@/lib/game-state-logic/game-state-reducer";
 import { GameState } from "@/lib/game-state-logic/types";
 import { buildContentsList } from "@/lib/put-contents-in-order";
 import { useInterval } from "@/lib/useInterval";
 import { findById } from "@/lib/util";
-import { SoundService } from "@/services/soundService";
 import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";
 import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
-import { UiComponentSet } from "./uiComponentSet";
-
-
-export type GameProps = Readonly<{
-    save?: { (saveDate: GameData, fileName?: string): void };
-    reset?: { (): void };
-    load?: { (fileName?: string): void };
-    deleteSave?: { (fileName: string): void };
-    listSavedGames?: { (): string[] };
-    _sprites: Sprite[];
-    showDebugLog?: boolean;
-    startPaused?: boolean;
-    uiComponents?: UiComponentSet;
-    instantMode?: boolean;
-    soundService: SoundService;
-} & GameCondition>
+import { GameProps } from "./types";
 
 
 
-export const cellSize = 5
 // use true for debugging only- slows program!
 const renderCells = false
 const TIMER_SPEED = 10

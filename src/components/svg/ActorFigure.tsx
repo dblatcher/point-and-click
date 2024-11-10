@@ -11,7 +11,7 @@ import { PersistentSound } from "@/components/sound/PersistentSound";
 import { useSprites } from "@/context/sprite-context";
 import { findById } from "@/lib/util";
 import { SoundEffectMap, SoundValue } from "../../definitions/ActorData";
-import { HandleClickFunction, HandleHoverFunction } from "../game";
+import { HandleClickFunction, HandleHoverFunction } from "../game/types";
 import { FrameShape } from "./FrameShape";
 import { SpriteShape } from "./SpriteShape";
 
