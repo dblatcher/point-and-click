@@ -1,5 +1,5 @@
 import { findById } from "@/lib/util"
-import { GameState } from "."
+import { GameState } from "@/lib/game-state-logic/types";
 
 export function removeHoverTargetIfGone(state: GameState): GameState {
     const { hoverTarget, rooms, currentRoomId, actors } = state

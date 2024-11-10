@@ -1,4 +1,5 @@
-import { GameProps, GameState, cellSize } from ".";
+import { GameState } from "@/lib/game-state-logic/types";
+import { GameProps, cellSize } from "../../components/game";
 import { Command, Interaction, ActorData, OrderConsequence } from "@/definitions";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "@/lib/inGameDebugging";

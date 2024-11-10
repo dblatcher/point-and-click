@@ -1,4 +1,5 @@
-import { cellSize, GameState } from "..";
+import { cellSize } from "../../../components/game";
+import { GameState } from "@/lib/game-state-logic/types";
 import { ActorData, MoveOrder, Order } from "@/definitions";
 import { CellMatrix } from "@/lib/pathfinding/cells";
 import { Point } from "@/lib/pathfinding/geometry";

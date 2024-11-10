@@ -1,7 +1,7 @@
 import { LogEntry } from "@/lib/inGameDebugging";
 import { ActorData, Command, Consequence, ConversationBranch, Order, Stage } from "@/definitions";
 import { TypedEmitter } from "tiny-typed-emitter";
-import { GameState } from "@/components/game";
+import { GameState } from "@/lib/game-state-logic/types";
 import { findById } from "./util";
 import { FeedItem} from "./text-based/types";
 

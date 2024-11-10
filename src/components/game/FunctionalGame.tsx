@@ -1,20 +1,18 @@
-
-import { CommandTarget, GameCondition, GameData } from "@/definitions";
-import React, { useReducer } from "react";
-import { Sprite } from "@/lib/Sprite";
-import { CellMatrix } from "@/lib/pathfinding/cells";
-import { buildContentsList } from "@/lib/put-contents-in-order";
-import { findById } from "@/lib/util";
 import { GameInfoProvider } from "@/context/game-info-provider";
 import { GameStateProvider } from "@/context/game-state-context";
-import { GameEventEmitter } from "@/lib/game-event-emitter";
+import { CommandTarget, GameCondition, GameData } from "@/definitions";
+import { Sprite } from "@/lib/Sprite";
+import { gameStateReducer, getInitialGameState } from "@/lib/game-state-logic/game-state-reducer";
+import { GameState } from "@/lib/game-state-logic/types";
+import { buildContentsList } from "@/lib/put-contents-in-order";
 import { useInterval } from "@/lib/useInterval";
+import { findById } from "@/lib/util";
 import { SoundService } from "@/services/soundService";
+import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";
 import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
-import { gameStateReducer, getInitialGameState } from "./game-state-reducer";
 import { UiComponentSet } from "./uiComponentSet";
 
 
@@ -32,19 +30,7 @@ export type GameProps = Readonly<{
     soundService: SoundService;
 } & GameCondition>
 
-export type GameState = GameData & {
-    viewAngle: number;
-    isPaused: boolean;
-    timer?: number;
-    cellMatrix?: CellMatrix;
-    currentVerbId: string;
-    currentItemId?: string;
-    hoverTarget?: CommandTarget;
 
-    roomWidth: number;
-    roomHeight: number;
-    emitter: GameEventEmitter
-}
 
 export const cellSize = 5
 // use true for debugging only- slows program!

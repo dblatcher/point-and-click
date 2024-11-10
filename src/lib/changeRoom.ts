@@ -1,4 +1,5 @@
-import { cellSize, GameState } from "../components/game";
+import { cellSize } from "../components/game";
+import { GameState } from "./game-state-logic/types";
 import { generateCellMatrix } from "./pathfinding/cells";
 import { Point } from "./pathfinding/geometry";
 

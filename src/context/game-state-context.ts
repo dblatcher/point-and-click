@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { GameState } from '@/components/game'
+import { GameState } from '@/lib/game-state-logic/types'
 import { findById } from '@/lib/util'
 import { GameEventEmitter } from '../lib/game-event-emitter'
 

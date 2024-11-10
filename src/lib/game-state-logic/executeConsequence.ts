@@ -3,7 +3,8 @@ import { changeRoom } from "@/lib/changeRoom"
 import { cloneData } from "@/lib/clone"
 import { generateCellMatrix } from "@/lib/pathfinding/cells"
 import { findById } from "@/lib/util"
-import { cellSize, GameProps, GameState } from "."
+import { GameState } from "@/lib/game-state-logic/types";
+import { cellSize, GameProps } from "../../components/game"
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
 import { reportConversationBranch } from "@/lib/game-event-emitter"
 

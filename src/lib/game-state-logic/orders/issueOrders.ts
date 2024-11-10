@@ -1,5 +1,5 @@
 import { Order } from "@/definitions";
-import { GameState } from "..";
+import { GameState } from "@/lib/game-state-logic/types";
 import { cloneData } from "@/lib/clone";
 
 /** 

@@ -1,5 +1,6 @@
 import { putActorsInDisplayOrder } from "@/lib/roomFunctions";
-import { GameState, HandleClickFunction, RoomContentItem } from "../components/game";
+import { GameState } from "@/lib/game-state-logic/types";
+import { HandleClickFunction, RoomContentItem } from "../components/game";
 import { CommandTarget } from "@/definitions";
 
 export const buildContentsList = (state: GameState, clickHandler: HandleClickFunction<CommandTarget>): RoomContentItem[] => {

@@ -1,4 +1,4 @@
-import { GameState } from "@/components/game";
+import { GameState } from "@/lib/game-state-logic/types";
 import { ActorData, Ending } from "@/definitions";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
 import { CommandReport, ConsequenceReport, ConversationBranchReport, InGameEvent, OrderReport, SequenceStageReport } from "@/lib/game-event-emitter";

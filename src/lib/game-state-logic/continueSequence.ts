@@ -1,4 +1,5 @@
-import { GameProps, GameState } from ".";
+import { GameProps } from "../../components/game";
+import { GameState } from "@/lib/game-state-logic/types";
 import { Order, ActorData } from "@/definitions";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
@@ -39,7 +40,7 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     const [currentStage] = sequenceRunning.stages
     if (!currentStage) { return {} }
 
-    if(!currentStage._started) {
+    if (!currentStage._started) {
         currentStage._started = true
         console.log('starting stage', currentStage)
         state.emitter.emit('in-game-event', { type: 'sequence-stage', stage: currentStage })
@@ -49,10 +50,10 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     validateOrderIdsAndClearEmpties(stageActorOrders, actors)
 
     actors.forEach(actor => followOrder(
-        actor, 
-        cellMatrix, 
-        stageActorOrders[actor.id], 
-        state, 
+        actor,
+        cellMatrix,
+        stageActorOrders[actor.id],
+        state,
         findById(actor.sprite, props._sprites),
         props.instantMode,
     ))

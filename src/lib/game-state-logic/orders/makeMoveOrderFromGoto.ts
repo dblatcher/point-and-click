@@ -1,7 +1,7 @@
-import { ActorData, GotoOrder, MoveOrder } from "@/definitions";
+import { GotoOrder, MoveOrder } from "@/definitions";
 import { findTarget } from "@/lib/commandFunctions";
+import { GameState } from "@/lib/game-state-logic/types";
 import { getTargetPoint } from "@/lib/roomFunctions";
-import { GameState } from "..";
 import { findById } from "@/lib/util";
 
 

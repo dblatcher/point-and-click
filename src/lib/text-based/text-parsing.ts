@@ -1,4 +1,4 @@
-import { GameState } from "@/components/game";
+import { GameState } from "@/lib/game-state-logic/types";
 import { Verb, ItemData, Command, ActorData, HotspotZone } from "@/definitions";
 import { PromptFeedbackReport } from "../game-event-emitter";
 import { makeRoomDescription } from "./create-feed-items";

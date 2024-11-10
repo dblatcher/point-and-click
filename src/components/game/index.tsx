@@ -10,11 +10,11 @@ import { getViewAngleCenteredOn, locateClickInWorld } from "@/lib/roomFunctions"
 import { findById } from "@/lib/util";
 import { SoundService } from "@/services/soundService";
 // state logic
-import { continueSequence } from "./continueSequence";
-import { doPendingInteraction, handleCommand } from "./handleCommand";
-import { handleConversationChoice } from "./handleConversationChoice";
-import { issueMoveOrder } from "./issueMoveOrder";
-import { followOrder } from "./orders/followOrder";
+import { continueSequence } from "../../lib/game-state-logic/continueSequence";
+import { doPendingInteraction, handleCommand } from "../../lib/game-state-logic/handleCommand";
+import { handleConversationChoice } from "../../lib/game-state-logic/handleConversationChoice";
+import { issueMoveOrder } from "../../lib/game-state-logic/issueMoveOrder";
+import { followOrder } from "../../lib/game-state-logic/orders/followOrder";
 // components
 import { GameInfoProvider } from "@/context/game-info-provider";
 import { GameStateProvider } from "@/context/game-state-context";
@@ -40,7 +40,7 @@ export type GameProps = Readonly<{
     soundService: SoundService;
 } & GameCondition>
 
-export type GameState = GameData & {
+type GameState = GameData & {
     viewAngle: number;
     isPaused: boolean;
     timer?: number;
