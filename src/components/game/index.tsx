@@ -150,7 +150,7 @@ export const FunctionalGame: React.FunctionComponent<GameProps> = (props) => {
 
 
     const ending = findById(gameState.endingId, props.endings)
-    const currentRoom = findById(gameState.currentRoomId, props.rooms)
+    const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentVerb = findById(gameState.currentVerbId, props.verbs);
 
 
