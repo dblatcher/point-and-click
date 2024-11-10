@@ -44,7 +44,6 @@ export const FunctionalGame: React.FunctionComponent<GameProps> = (props) => {
 
 
     const handleTargetClick = (target: CommandTarget) => {
-        console.log('click', target.id)
         dispatch({ type: 'TARGET-CLICK', props, target })
     }
 
