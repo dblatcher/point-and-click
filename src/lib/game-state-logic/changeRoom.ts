@@ -1,7 +1,7 @@
-import { cellSize } from "../components/game";
-import { GameState } from "./game-state-logic/types";
-import { generateCellMatrix } from "./pathfinding/cells";
-import { Point } from "./pathfinding/geometry";
+import { cellSize } from "../../components/game/types";
+import { GameState } from "./types";
+import { generateCellMatrix } from "../pathfinding/cells";
+import { Point } from "../pathfinding/geometry";
 
 
 export function changeRoom(

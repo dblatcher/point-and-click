@@ -1,5 +1,5 @@
 import { ActorData, CommandTarget, Consequence } from "@/definitions"
-import { changeRoom } from "@/lib/changeRoom"
+import { changeRoom } from "@/lib/game-state-logic/changeRoom"
 import { cloneData } from "@/lib/clone"
 import { generateCellMatrix } from "@/lib/pathfinding/cells"
 import { findById } from "@/lib/util"

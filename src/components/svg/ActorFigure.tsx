@@ -3,7 +3,7 @@ import { FunctionComponent, useLayoutEffect, useState } from "react";
 import { ActorData, Order, RoomData } from "@/definitions";
 import { getScale } from "@/lib/getScale";
 import { Sprite } from "@/lib/Sprite";
-import { useInterval } from "@/lib/useInterval";
+import { useInterval } from "@/hooks/useInterval";
 import { MouseEventHandler } from "react";
 
 import { IntermitentSound } from "@/components/sound/IntermitentSound";
