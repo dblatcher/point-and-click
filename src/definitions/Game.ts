@@ -10,10 +10,12 @@ import { Conversation, ConversationSchema } from "./Conversation"
 import { SpriteData, SpriteDataSchema } from "./SpriteSheet"
 import { Ending, EndingSchema } from "./Ending"
 import { FlagMapSchema } from "./Flag"
+import { StoryBoardSchema } from "./StoryBoard"
 
 
 const GameHappeningsSchema = z.object({
     sequenceRunning: SequenceSchema.optional(),
+    currentStoryBoardId: z.string().optional(),
     actorOrders: z.record(z.string(), orderSchema.array()),
     currentConversationId: z.string().optional(),
     endingId: z.string().optional(),
@@ -27,6 +29,7 @@ export const GameContentsDataSchema = z.object({
     actors: ActorDataSchema.array(),
     interactions: InteractionSchema.array(),
     conversations: ConversationSchema.array(),
+    storyBoards: StoryBoardSchema.array().optional(),
     flagMap: FlagMapSchema,
     currentRoomId: z.string(),
     id: z.string(),

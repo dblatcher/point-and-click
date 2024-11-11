@@ -12,6 +12,7 @@ import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
 import { GameProps } from "./types";
+import { StoryBoardPlayer } from "../StoryBoardPlayer";
 
 // use true for debugging only- slows program!
 const renderCells = false
@@ -29,11 +30,12 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         SaveMenuComponent = SaveMenu,
         GameLayoutComponent = Layout,
     } = uiComponents
-    const { viewAngle, isPaused, roomHeight, roomWidth } = gameState
+    const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
 
     const ending = findById(gameState.endingId, props.endings)
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentVerb = findById(gameState.currentVerbId, props.verbs);
+    const currentStoryBoard = findById(currentStoryBoardId, gameState.storyBoards ?? [])
 
     const handleTargetClick = (target: CommandTarget) => {
         dispatch({ type: 'TARGET-CLICK', props, target })
@@ -72,7 +74,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
                     />
                 }
             >
-                {currentRoom && (
+                {(currentRoom && !currentStoryBoard) && (
                     <Room
                         data={currentRoom}
                         maxWidth={roomWidth}
@@ -84,6 +86,13 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
                         handleHover={handleHover}
                         contents={contentList}
                         obstacleCells={renderCells ? gameState.cellMatrix : undefined}
+                    />
+                )}
+
+                {currentStoryBoard && (
+                    <StoryBoardPlayer
+                        storyBoard={currentStoryBoard}
+                        confirmDone={() => dispatch({ type: 'CLEAR-STORYBOARD' })}
                     />
                 )}
             </GameLayoutComponent>

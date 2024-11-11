@@ -25,6 +25,7 @@ type GameStateAction =
     | { type: 'SEND-COMMAND', command: Command, props: GameProps }
     | { type: 'SET-SCREEN-SIZE', height?: number, width?: number }
     | { type: 'TICK-UPDATE', props: GameProps }
+    | { type: 'CLEAR-STORYBOARD' }
 
 
 export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState, action) => {
@@ -124,8 +125,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
         }
 
         case "TICK-UPDATE": {
-            const { isPaused } = gameState
-            if (isPaused) { return gameState }
+            if (gameState.isPaused || gameState.currentStoryBoardId) { return gameState }
 
             const viewAngleCenteredOnPlayer = (player && currentRoom) ? getViewAngleCenteredOn(player.x, currentRoom) : undefined
 
@@ -162,6 +162,13 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 ...gameState,
                 ...makeActorsDoOrders(gameState),
                 viewAngle: viewAngleCenteredOnPlayer ?? gameState.viewAngle
+            }
+        }
+
+        case "CLEAR-STORYBOARD": {
+            return {
+                ...gameState,
+                currentStoryBoardId: undefined
             }
         }
     }
@@ -204,5 +211,18 @@ export const getInitialGameState = (props: GameProps): GameState => {
 
         emitter: new GameEventEmitter(),
         cellMatrix,
+
+        currentStoryBoardId: 'test-board',
+        storyBoards: [{
+            id: 'test-board',
+            pages: [
+                {
+                    title: "this is the first page"
+                },
+                {
+                    title: "this is the second and last page"
+                },
+            ]
+        }]
     }
 }
