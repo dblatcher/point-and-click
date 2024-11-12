@@ -51,10 +51,16 @@ export const Overview = () => {
               switch (field.key) {
                 case 'id':
                 case 'currentRoomId':
+                  if (typeof value === 'string') {
+                    applyModification(`Change ${field.key} to "${value}"`, { [field.key]: value })
+                  }
+                  break
                 case 'openingSequenceId':
                 case 'openingStoryboardId':
                   if (typeof value === 'string') {
                     applyModification(`Change ${field.key} to "${value}"`, { [field.key]: value })
+                  } else {
+                    applyModification(`Change ${field.key} to "NONE"`, { [field.key]: undefined })
                   }
               }
             }}
