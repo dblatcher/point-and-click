@@ -20,10 +20,6 @@ const TIMER_SPEED = 10
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
     const [gameState, dispatch] = useReducer(gameStateReducer, getInitialGameState(props))
-    const tick = () => {
-        dispatch({ type: 'TICK-UPDATE', props })
-    }
-    useInterval(tick, TIMER_SPEED)
 
     const { deleteSave, save, reset, load, listSavedGames, showDebugLog, uiComponents = {} } = props
     const {
@@ -35,7 +31,13 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     const ending = findById(gameState.endingId, props.endings)
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentVerb = findById(gameState.currentVerbId, props.verbs);
-    const currentStoryBoard = findById(currentStoryBoardId, gameState.storyBoards ?? [])
+    const currentStoryBoard = findById(currentStoryBoardId, props.storyBoards ?? [])
+
+    const tick = () => {
+        if (gameState.isPaused || currentStoryBoard) { return }
+        dispatch({ type: 'TICK-UPDATE', props })
+    }
+    useInterval(tick, TIMER_SPEED)
 
     const handleTargetClick = (target: CommandTarget) => {
         dispatch({ type: 'TARGET-CLICK', props, target })

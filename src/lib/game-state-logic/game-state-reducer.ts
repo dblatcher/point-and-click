@@ -29,7 +29,6 @@ type GameStateAction =
 
 
 export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState, action) => {
-    // const gameState = cloneData(_gameState)
     const isActive: boolean = !gameState.endingId && !gameState.isPaused && !gameState.sequenceRunning
     const player = gameState.actors.find(actor => actor.isPlayer)
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
@@ -125,10 +124,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
         }
 
         case "TICK-UPDATE": {
-            if (gameState.isPaused || gameState.currentStoryBoardId) { return gameState }
-
             const viewAngleCenteredOnPlayer = (player && currentRoom) ? getViewAngleCenteredOn(player.x, currentRoom) : undefined
-
             if (gameState.sequenceRunning) {
                 return {
                     ...gameState,
@@ -213,16 +209,5 @@ export const getInitialGameState = (props: GameProps): GameState => {
         cellMatrix,
 
         currentStoryBoardId: 'test-board',
-        storyBoards: [{
-            id: 'test-board',
-            pages: [
-                {
-                    title: "this is the first page"
-                },
-                {
-                    title: "this is the second and last page"
-                },
-            ]
-        }]
     }
 }
