@@ -22,7 +22,7 @@ import { SoundAssetTool } from "./SoundAssetTool";
 import { SpriteEditor } from "./SpriteEditor";
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb } from "./defaults";
+import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb, makeEmptyStoryBoard } from "./defaults";
 import { useKeyBoard } from '@/hooks/use-keyboard';
 import { useAssets } from '@/context/asset-context';
 import { StoryBoardEditor } from './StoryBoardEditor';
@@ -156,7 +156,7 @@ export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
             return <SoundAssetTool soundService={soundService} />
         case 'storyBoards':
             return currentStoryBoard ? <StoryBoardEditor storyBoard={currentStoryBoard} /> : <DataItemCreator
-                createBlank={makeBlankEnding}
+                createBlank={makeEmptyStoryBoard}
                 designProperty='storyBoards'
                 itemTypeName="story board" />
         default:
