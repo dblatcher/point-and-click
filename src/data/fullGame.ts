@@ -27,6 +27,7 @@ export const prebuiltGameDesign: GameDesign = {
     sprites: spriteDataList,
     flagMap,
     openingSequenceId: 'intro',
+    openingStoryboardId: 'test-board',
     storyBoards: [{
         id: 'test-board',
         pages: [

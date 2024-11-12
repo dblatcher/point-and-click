@@ -181,7 +181,7 @@ export const getInitialGameState = (props: GameProps): GameState => {
         ? cloneData(openingSequenceInProps)
         : undefined
 
-
+    const currentStoryBoardId = props.gameNotBegun ? props.openingStoryboardId : props.currentStoryBoardId
     const currentRoom = findById(props.currentRoomId, rooms)
     const cellMatrix = currentRoom ? generateCellMatrix(currentRoom, CELL_SIZE) : undefined
 
@@ -201,13 +201,10 @@ export const getInitialGameState = (props: GameProps): GameState => {
         currentConversationId: props.currentConversationId,
         flagMap,
         gameNotBegun: false,
-
+        currentStoryBoardId,
         roomHeight: 400,
         roomWidth: 800,
-
         emitter: new GameEventEmitter(),
         cellMatrix,
-
-        currentStoryBoardId: 'test-board',
     }
 }

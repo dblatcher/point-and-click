@@ -17,12 +17,13 @@ const formSchema = GameContentsDataSchema.pick({
   id: true,
   currentRoomId: true,
 }).merge(FixedGameInfoSchema.pick({
-  openingSequenceId: true
+  openingSequenceId: true,
+  openingStoryboardId: true,
 }))
 
 export const Overview = () => {
   const { gameDesign, openInEditor, applyModification } = useGameDesign();
-  const {soundAssets, imageAssets} = useAssets()
+  const { soundAssets, imageAssets } = useAssets()
   const { setHeaderContent } = usePageMeta();
 
   const mainTab = tabOrder.find(tab => tab.id === 'main')
@@ -51,6 +52,7 @@ export const Overview = () => {
                 case 'id':
                 case 'currentRoomId':
                 case 'openingSequenceId':
+                case 'openingStoryboardId':
                   if (typeof value === 'string') {
                     applyModification(`Change ${field.key} to "${value}"`, { [field.key]: value })
                   }
@@ -60,10 +62,12 @@ export const Overview = () => {
               id: 'Game ID',
               currentRoomId: 'Starting Room',
               openingSequenceId: 'Opening Sequence',
+              openingStoryboardId: 'Title Board',
             }}
             options={{
               currentRoomId: listIds(gameDesign.rooms),
-              openingSequenceId: listIds(gameDesign.sequences)
+              openingSequenceId: listIds(gameDesign.sequences),
+              openingStoryboardId: listIds(gameDesign.storyBoards ?? [])
             }}
             fieldWrapperProps={{ spacing: 2 }}
           />

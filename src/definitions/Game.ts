@@ -41,6 +41,7 @@ export const FixedGameInfoSchema = z.object({
     sprites: SpriteDataSchema.array(),
     endings: EndingSchema.array(),
     openingSequenceId: z.string().optional(),
+    openingStoryboardId: z.string().optional(),
     storyBoards: StoryBoardSchema.array().optional(),
 })
 export const GameDataSchema = GameContentsDataSchema.and(GameHappeningsSchema)
