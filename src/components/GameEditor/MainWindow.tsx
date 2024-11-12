@@ -25,6 +25,7 @@ import { VerbMenuEditor } from "./VerbMenuEditor";
 import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb } from "./defaults";
 import { useKeyBoard } from '@/hooks/use-keyboard';
 import { useAssets } from '@/context/asset-context';
+import { StoryBoardEditor } from './StoryBoardEditor';
 
 type Props = {
     tabOpen?: TabId;
@@ -65,7 +66,7 @@ export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
     const currentItem = findById(gameItemIds.items, gameDesign.items)
     const currentActor = findById(gameItemIds.actors, gameDesign.actors)
     const currentConversation = findById(gameItemIds.conversations, gameDesign.conversations)
-
+    const currentStoryBoard = findById(gameItemIds.storyBoards, gameDesign.storyBoards ?? [])
 
     switch (tabOpen) {
         case 'rooms':
@@ -153,6 +154,11 @@ export const MainWindow = ({ tabOpen, gameItemIds, openInEditor }: Props) => {
             return <ImageAssetTool imageService={imageService} />
         case 'sounds':
             return <SoundAssetTool soundService={soundService} />
+        case 'storyBoards':
+            return currentStoryBoard ? <StoryBoardEditor storyBoard={currentStoryBoard} /> : <DataItemCreator
+                createBlank={makeBlankEnding}
+                designProperty='storyBoards'
+                itemTypeName="story board" />
         default:
         case 'main':
             return <Overview />

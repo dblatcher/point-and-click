@@ -119,12 +119,16 @@ export default class GameEditor extends Component<Props, State> {
 
     deleteArrayItem(index: number, property: GameDataItemType) {
         // TO DO - check for references to the ID of the deleted item?
-        const message = `delete "${this.state.gameDesign[property][index]?.id}" from ${property}`
+        const dataItemArray = this.state.gameDesign[property];
+        if (!dataItemArray) {
+            return
+        }
+        const message = `delete "${dataItemArray[index]?.id}" from ${property}`
         console.log(message)
         this.setState(state => {
             const { gameDesign } = state
-            const history = this.historyUpdate(message, state)
-            gameDesign[property].splice(index, 1)
+            const history = this.historyUpdate(message, state);
+            (gameDesign[property] ?? []).splice(index, 1)
             return { gameDesign, history }
         })
     }
@@ -159,7 +163,7 @@ export default class GameEditor extends Component<Props, State> {
     }) {
         this.soundService.removeAll();
         this.imageService.removeAll();
-        
+
         this.setState({ gameDesign: data.gameDesign })
         populateServices(
             data.gameDesign, data.imageAssets, data.soundAssets,
@@ -192,6 +196,7 @@ export default class GameEditor extends Component<Props, State> {
                 case 'sequences':
                 case 'endings':
                 case 'verbs':
+                case 'storyBoards':
                     gameItemIds[tabType] = itemId
                     break;
             }

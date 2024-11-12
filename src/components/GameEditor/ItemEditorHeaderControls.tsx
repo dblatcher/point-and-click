@@ -16,7 +16,7 @@ interface Props<DataType extends GameDataItem> {
 
 export const ItemEditorHeaderControls = <DataType extends GameDataItem>({ dataItem, itemType, itemTypeName }: Props<DataType>) => {
     const { gameDesign, openInEditor } = useGameDesign()
-    const list = gameDesign[itemType] as DataType[]
+    const list = (gameDesign[itemType] ?? []) as DataType[]
 
     return <Box display={'flex'} gap={5}>
         <ButtonGroup>

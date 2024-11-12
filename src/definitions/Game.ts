@@ -10,7 +10,7 @@ import { Conversation, ConversationSchema } from "./Conversation"
 import { SpriteData, SpriteDataSchema } from "./SpriteSheet"
 import { Ending, EndingSchema } from "./Ending"
 import { FlagMapSchema } from "./Flag"
-import { StoryBoardSchema } from "./StoryBoard"
+import { StoryBoard, StoryBoardSchema } from "./StoryBoard"
 
 
 const GameHappeningsSchema = z.object({
@@ -59,10 +59,10 @@ export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>
 export type GameDesign = z.infer<typeof GameDesignSchema>
 
-export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Ending | Verb
+export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Ending | Verb| StoryBoard
 
 export const GameDataItemTypeEnum = z.enum([
-    'rooms', 'items', 'actors', 'conversations', 'sprites', 'sequences', 'endings', 'verbs'
+    'rooms', 'items', 'actors', 'conversations', 'sprites', 'sequences', 'endings', 'verbs', 'storyBoards'
 ])
 
 export type GameDataItemType =
@@ -74,3 +74,4 @@ export type GameDataItemType =
     | 'sequences'
     | 'endings'
     | 'verbs'
+    | 'storyBoards'
