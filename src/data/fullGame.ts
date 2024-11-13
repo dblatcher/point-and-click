@@ -28,7 +28,8 @@ export const prebuiltGameDesign: GameDesign = {
     flagMap,
     openingSequenceId: 'intro',
     openingStoryboardId: 'test-board',
-    storyBoards: [{
+    storyBoards: [
+        {
         id: 'test-board',
         pages: [
             {
@@ -38,5 +39,13 @@ export const prebuiltGameDesign: GameDesign = {
                 title: "this is the second and last page"
             },
         ]
-    }]
+    },{
+        id:'part-two',
+        pages:[
+            {
+                title:'Welcome to part two'
+            }
+        ]
+    }
+]
 }
