@@ -4,7 +4,7 @@ export const StoryBoardPageSchema = z.object({
     title: z.string()
 })
 
-export type StoryPageBoard = z.infer<typeof StoryBoardPageSchema>;
+export type StoryBoardPage = z.infer<typeof StoryBoardPageSchema>;
 
 export const StoryBoardSchema = z.object({
     id: z.string(),

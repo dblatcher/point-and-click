@@ -1,4 +1,4 @@
-import { StoryBoard, StoryPageBoard } from "@/definitions/StoryBoard";
+import { StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 import { cloneData } from "@/lib/clone";
 import { Box } from "@mui/material";
 import React from "react";
@@ -7,7 +7,7 @@ import { EditorBox } from "./EditorBox";
 
 interface Props {
     storyBoard: StoryBoard
-    page: StoryPageBoard
+    page: StoryBoardPage
     index: number
     isOpen: { (index: number): boolean }
     update: { (message: string, mod: Partial<StoryBoard>): void }
