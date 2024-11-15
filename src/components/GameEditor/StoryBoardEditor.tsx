@@ -1,14 +1,13 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { StoryBoard } from "@/definitions/StoryBoard";
-import { cloneData } from "@/lib/clone";
 import { patchMember } from "@/lib/update-design";
-import { Box, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { StringInput } from "../SchemaForm/StringInput";
 import { ArrayControl } from "./ArrayControl";
 import { EditorHeading } from "./EditorHeading";
 import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
 import { StoryBoardPageControl } from "./StoryBoardPageControl";
+import { makeEmptyStoryBoardPage } from "./defaults";
 
 interface Props {
     storyBoard: StoryBoard
@@ -51,7 +50,7 @@ export const StoryBoardEditor: React.FunctionComponent<Props> = ({ storyBoard })
 
         <ArrayControl
             list={storyBoard.pages}
-            createItem={() => ({ title: '' })}
+            createItem={makeEmptyStoryBoardPage}
             describeItem={(page, index) => (
                 <StoryBoardPageControl
                     isOpen={isOpen}

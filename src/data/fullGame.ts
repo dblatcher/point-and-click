@@ -33,17 +33,45 @@ export const prebuiltGameDesign: GameDesign = {
         id: 'test-board',
         pages: [
             {
-                title: "this is the first page"
+                title: "this is the first page",
+                parts: [
+                    {
+                        type:'text',
+                        x:'left',
+                        y:'bottom',
+                        text:'A dark and story night',
+                    },
+                    {
+                        type: 'text',
+                        x: 'center',
+                        y: 'center',
+                        text: 'hello'
+                    },
+                    {
+                        type: 'image',
+                        x: 'center',
+                        y: 'top',
+                        imageAssetId: 'bucket.png'
+                    },
+                    {
+                        type: 'image',
+                        x: 'center',
+                        y: 'bottom',
+                        imageAssetId: 'hello'
+                    },
+                ]
             },
             {
-                title: "this is the second and last page"
+                title: "this is the second and last page",
+                parts: []
             },
         ]
     },{
         id:'part-two',
         pages:[
             {
-                title:'Welcome to part two'
+                title: 'Welcome to part two',
+                parts: []
             }
         ]
     }

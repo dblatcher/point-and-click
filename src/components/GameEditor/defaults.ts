@@ -3,7 +3,7 @@ import {
     Stage, ConversationChoice, Ending, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData
 } from "@/definitions";
 import { ActStep, MoveStep } from "@/definitions/Order";
-import { StoryBoard } from "@/definitions/StoryBoard";
+import { StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 
 const DEFAULT_TALK_TIME = 250;
 
@@ -136,6 +136,7 @@ export const makeNewStep = {
 export const makeBlankEnding = (id = "NEW_ENDING", message = "game over"): Ending => ({ id, message, })
 
 export const makeEmptyStoryBoard = (id = "NEW_STORYBOARD"): StoryBoard => ({ id, pages: [] })
+export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({ title: '', parts: [] })
 
 export const makeBlankItem: { (): ItemData } = () => (
     {
