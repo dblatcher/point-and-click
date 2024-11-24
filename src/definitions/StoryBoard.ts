@@ -1,20 +1,24 @@
 import { z } from "zod";
+import { StaticFrameParamsSchema } from "./BaseTypes";
 
 const xPlacement = z.enum(['center', 'left', 'right'])
 const yPlacement = z.enum(['center', 'top', 'bottom'])
 
-const TextPagePartSchema = z.object({
+const sizing = z.object({
+    x: xPlacement,
+    y: yPlacement,
+    width: z.number().optional(),
+    height: z.number().optional(),
+})
+
+const TextPagePartSchema = sizing.merge(z.object({
     type: z.literal('text'),
-    text: z.string(),
-    x: xPlacement,
-    y: yPlacement,
-});
-const ImagePagePartSchema = z.object({
+    text: z.string().array(),
+}));
+const ImagePagePartSchema = sizing.merge(z.object({
     type: z.literal('image'),
-    imageAssetId: z.string(),
-    x: xPlacement,
-    y: yPlacement,
-});
+    image: StaticFrameParamsSchema,
+}));
 
 const PagePartSchema = z.union([TextPagePartSchema, ImagePagePartSchema])
 export type PagePart = z.infer<typeof PagePartSchema>
