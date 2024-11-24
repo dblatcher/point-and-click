@@ -14,10 +14,7 @@ interface Props {
     storyBoard: StoryBoard
     page: StoryBoardPage
     index: number
-    isOpen: { (index: number): boolean }
     update: { (message: string, mod: Partial<StoryBoard>): void }
-    openPage: { (index: number): void }
-    closePage: { (index: number): void }
 }
 
 const PagePartControl = ({
@@ -60,7 +57,7 @@ const PagePartControl = ({
 }
 
 export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
-    storyBoard, page, index, isOpen, update, openPage, closePage
+    storyBoard, page, index, update,
 }) => {
 
     const pageDescription = `storyboard ${storyBoard.id} page #${index + 1}`;
@@ -79,58 +76,47 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     return (
 
         <EditorBox title={page.title}>
-            <Box>
-                {isOpen(index) ? (
-                    <button onClick={() => { closePage(index) }}>close</button>
 
-                ) : (
-                    <button onClick={() => { openPage(index) }}>open</button>
-                )}
-            </Box>
-            {isOpen(index) && (
-                <>
-                    <StringInput label="title" value={page.title} inputHandler={newTitle => {
-                        const newPages = cloneData(storyBoard.pages)
-                        const pageToEdit = newPages[index]
-                        if (pageToEdit) {
-                            pageToEdit.title = newTitle
-                        }
+            <StringInput label="title" value={page.title} inputHandler={newTitle => {
+                const newPages = cloneData(storyBoard.pages)
+                const pageToEdit = newPages[index]
+                if (pageToEdit) {
+                    pageToEdit.title = newTitle
+                }
+                update(
+                    `change storyboard ${storyBoard.id} page #${index + 1} to "${newTitle}"`,
+                    { pages: newPages }
+                )
+            }}
+            />
+
+
+            <Box display={'flex'}>
+
+                <ArrayControl horizontalMoveButtons buttonSize={'small'}
+                    list={page.parts}
+                    mutateList={(newParts) => {
+                        const message = newParts.length === page.parts.length ? `change part order in ${pageDescription}` : `delete part from ${pageDescription}`
                         update(
-                            `change storyboard ${storyBoard.id} page #${index + 1} to "${newTitle}"`,
-                            { pages: newPages }
+                            message,
+                            {
+                                pages: cloneArrayWithPatch(storyBoard.pages, { ...page, parts: newParts }, index)
+                            }
                         )
                     }}
-                    />
+                    describeItem={(part, partIndex) => (
+                        <PagePartControl key={partIndex} part={part} partIndex={partIndex} updatePart={updatePart} />
+                    )}
+                />
 
-
-                    <Box display={'flex'}>
-
-                        <ArrayControl horizontalMoveButtons buttonSize={'small'}
-                            list={page.parts}
-                            mutateList={(newParts) => {
-                                const message = newParts.length === page.parts.length ? `change part order in ${pageDescription}` : `delete part from ${pageDescription}`
-                                update(
-                                    message,
-                                    {
-                                        pages: cloneArrayWithPatch(storyBoard.pages, { ...page, parts: newParts }, index)
-                                    }
-                                )
-                            }}
-                            describeItem={(part, partIndex) => (
-                                <PagePartControl key={partIndex} part={part} partIndex={partIndex} updatePart={updatePart} />
-                            )}
-                        />
-
-                        <Box height={200} width={200}
-                            display={'flex'}
-                            flexDirection={'column'}
-                            border={'1px dotted black'}
-                        >
-                            <StoryPageDisplay page={page} />
-                        </Box>
-                    </Box>
-                </>
-            )}
+                <Box height={200} width={200}
+                    display={'flex'}
+                    flexDirection={'column'}
+                    border={'1px dotted black'}
+                >
+                    <StoryPageDisplay page={page} />
+                </Box>
+            </Box>
         </EditorBox>
     )
 
