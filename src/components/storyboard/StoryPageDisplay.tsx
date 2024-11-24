@@ -1,11 +1,10 @@
 import { useAssets } from "@/context/asset-context";
 import { StaticFrameParamsS } from "@/definitions/BaseTypes";
-import { StoryBoard, PagePart } from "@/definitions/StoryBoard";
-import React, { CSSProperties, useEffect, useState } from "react";
+import { PagePart, StoryBoardPage } from "@/definitions/StoryBoard";
+import React, { CSSProperties } from "react";
 
-interface Props {
-    storyBoard: StoryBoard
-    confirmDone: { (): void }
+type Props = {
+    page: StoryBoardPage
 }
 
 // TO DO - refactor to helper, use in ItemMenu etc
@@ -64,7 +63,7 @@ const getStyle = (part: PagePart): CSSProperties => {
 }
 
 // TO DO - control asset ratio
-const ImageBlock: React.FunctionComponent<{ frame: StaticFrameParamsS, }> = ({ frame,  }) => {
+const ImageBlock: React.FunctionComponent<{ frame: StaticFrameParamsS, }> = ({ frame, }) => {
     const { getImageAsset } = useAssets()
     const asset = getImageAsset(frame.imageId)
     if (!asset) {
@@ -87,46 +86,17 @@ const PagePartBlock: React.FunctionComponent<{ part: PagePart }> = ({ part }) =>
             ))}
         </>)}
         {part.image && (
-            <ImageBlock frame={part.image}/>
+            <ImageBlock frame={part.image} />
         )}
     </section>
 }
 
-export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard, confirmDone }) => {
+export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {
 
-    const [pageNumber, setPageNumber] = useState(0)
-    useEffect(() => {
-        setPageNumber(0)
-    }, [setPageNumber, storyBoard])
-
-    const currentPage = storyBoard.pages[pageNumber]
-    const onLastPage = pageNumber === storyBoard.pages.length - 1
-
-    const goToNextPage = () => {
-        setPageNumber(pageNumber + 1)
-    }
-
-    return <article style={{ 
-        border: '1px solid blue', 
-        width: '100%', 
-        height: '100%', 
-        position: 'relative', 
-        display: 'flex', 
-        flexDirection: 'column',
-        minHeight: '40vh', // TO DO - address sizing in layouts
-     }}>
-        <p>{currentPage.title}</p>
-        <div style={{ flex: 1, position: 'relative' }}>
-            {currentPage.parts.map((element, index) => (
-                <PagePartBlock key={index} part={element} />
-            ))}
-        </div>
-        <p>{pageNumber + 1} / {storyBoard.pages.length}</p>
-        {onLastPage ? (
-            <button onClick={confirmDone}>done</button>
-        ) : (
-            <button onClick={goToNextPage}>next</button>
-        )}
-    </article>
+    return <div style={{ flex: 1, position: 'relative' }}>
+        {page.parts.map((element, index) => (
+            <PagePartBlock key={index} part={element} />
+        ))}
+    </div>
 
 }

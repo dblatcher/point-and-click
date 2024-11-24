@@ -25,7 +25,7 @@ import { VerbMenuEditor } from "./VerbMenuEditor";
 import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb, makeEmptyStoryBoard } from "./defaults";
 import { useKeyBoard } from '@/hooks/use-keyboard';
 import { useAssets } from '@/context/asset-context';
-import { StoryBoardEditor } from './StoryBoardEditor';
+import { StoryBoardEditor } from './StoryBoardEditor/StoryBoardEditor';
 
 type Props = {
     tabOpen?: TabId;

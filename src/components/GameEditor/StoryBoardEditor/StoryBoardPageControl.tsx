@@ -2,12 +2,13 @@ import { PagePart, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 import { cloneArrayWithPatch, cloneData } from "@/lib/clone";
 import { Box } from "@mui/material";
 import React from "react";
-import { StringInput } from "../SchemaForm/StringInput";
-import { ArrayControl } from "./ArrayControl";
-import { EditorBox } from "./EditorBox";
-import { FramePickDialogButton } from "./FramePickDialogButton";
-import { NarrativeEditor } from "./NarrativeEditor";
-import { FramePreview } from "./SpriteEditor/FramePreview";
+import { StringInput } from "../../SchemaForm/StringInput";
+import { ArrayControl } from "../ArrayControl";
+import { EditorBox } from "../EditorBox";
+import { FramePickDialogButton } from "../FramePickDialogButton";
+import { NarrativeEditor } from "../NarrativeEditor";
+import { FramePreview } from "../SpriteEditor/FramePreview";
+import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
 
 interface Props {
     storyBoard: StoryBoard
@@ -55,7 +56,6 @@ const PagePartControl = ({
             <FramePreview frame={{ imageId, row, col }} width={50} height={50} />
         )}
         <FramePickDialogButton pickFrame={pickFrame} buttonLabel={imageId ? 'change image' : 'add image'} />
-
     </Box>
 }
 
@@ -102,22 +102,33 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                     }}
                     />
 
-                    <ArrayControl horizontalMoveButtons buttonSize={'small'}
-                        list={page.parts}
-                        mutateList={(newParts) => {
-                            const message = newParts.length === page.parts.length ? `change part order in ${pageDescription}` : `delete part from ${pageDescription}`
-                            update(
-                                message,
-                                {
-                                    pages: cloneArrayWithPatch(storyBoard.pages, { ...page, parts: newParts }, index)
-                                }
-                            )
-                        }}
-                        describeItem={(part, partIndex) => (
-                            <PagePartControl key={partIndex} part={part} partIndex={partIndex} updatePart={updatePart} />
-                        )}
-                    />
 
+                    <Box display={'flex'}>
+
+                        <ArrayControl horizontalMoveButtons buttonSize={'small'}
+                            list={page.parts}
+                            mutateList={(newParts) => {
+                                const message = newParts.length === page.parts.length ? `change part order in ${pageDescription}` : `delete part from ${pageDescription}`
+                                update(
+                                    message,
+                                    {
+                                        pages: cloneArrayWithPatch(storyBoard.pages, { ...page, parts: newParts }, index)
+                                    }
+                                )
+                            }}
+                            describeItem={(part, partIndex) => (
+                                <PagePartControl key={partIndex} part={part} partIndex={partIndex} updatePart={updatePart} />
+                            )}
+                        />
+
+                        <Box height={200} width={200}
+                            display={'flex'}
+                            flexDirection={'column'}
+                            border={'1px dotted black'}
+                        >
+                            <StoryPageDisplay page={page} />
+                        </Box>
+                    </Box>
                 </>
             )}
         </EditorBox>

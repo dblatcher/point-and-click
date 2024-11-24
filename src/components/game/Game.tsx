@@ -12,7 +12,7 @@ import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
 import { Room } from "../svg/Room";
 import { GameProps } from "./types";
-import { StoryBoardPlayer } from "../StoryBoardPlayer";
+import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 
 // use true for debugging only- slows program!
 const renderCells = false

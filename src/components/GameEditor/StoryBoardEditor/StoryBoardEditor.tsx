@@ -3,11 +3,11 @@ import { StoryBoard } from "@/definitions/StoryBoard";
 import { patchMember } from "@/lib/update-design";
 import { Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { ArrayControl } from "./ArrayControl";
-import { EditorHeading } from "./EditorHeading";
-import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
+import { ArrayControl } from "../ArrayControl";
+import { EditorHeading } from "../EditorHeading";
+import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { StoryBoardPageControl } from "./StoryBoardPageControl";
-import { makeEmptyStoryBoardPage } from "./defaults";
+import { makeEmptyStoryBoardPage } from "../defaults";
 
 interface Props {
     storyBoard: StoryBoard
