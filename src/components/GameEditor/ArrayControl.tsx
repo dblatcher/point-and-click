@@ -23,8 +23,20 @@ interface Props<T> {
     horizontalMoveButtons?: boolean
     stackProps?: StackProps;
     deleteIcon?: 'delete' | 'clear';
+    format?: 'stack' | 'cards';
 }
 
+type FormatProps<T> = Props<T> & {
+    handleInsert: {
+        (index: number): void;
+    };
+    handleMove: {
+        (index: number, role: "UP" | "DOWN"): void;
+    };
+    handleDelete: {
+        (index: number): void;
+    };
+}
 
 const MoveButton = ({ role, index, handleMove, color }: {
     role: 'UP' | 'DOWN'
@@ -89,40 +101,79 @@ const Frame = (props: { children: ReactNode, index: number, framing: Framing }) 
     </Paper>
 }
 
-export const ArrayControl = <T,>({
+const CardsFormat = <T,>({
     list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
-    mutateList,
+    color = 'primary',
+    buttonSize = 'large',
+    horizontalMoveButtons = true,
+    deleteIcon = 'delete',
+    handleInsert,
+    handleMove,
+    handleDelete,
+}: FormatProps<T>) => {
+
+    return <Box display={'flex'} gap={2} flexWrap={'wrap'}>
+        {list.map((item, index) => (
+            <Fragment key={index}>
+
+                {(!!createItem && createButton !== 'END') && (
+
+                    <IconButton size={buttonSize}
+                        title="insert"
+                        color={color}
+                        onClick={() => { handleInsert(index) }}
+                    >
+                        <AddIcon />
+                    </IconButton>
+                )}
+
+                <Box component={Paper} padding={2} display={'flex'} flexDirection={'column'}>
+
+                    <Stack direction={'row'}>
+
+                        {!noMoveButtons && (
+                            <ButtonGroup orientation={horizontalMoveButtons ? 'horizontal' : 'vertical'} component={'aside'}>
+                                <MoveButton handleMove={handleMove} index={index} role="UP" color={color} />
+                                <MoveButton handleMove={handleMove} index={index} role="DOWN" color={color} />
+                            </ButtonGroup>
+                        )}
+                        {!noDeleteButtons &&
+                            <DeleteButton handleDelete={handleDelete} index={index} deleteIcon={deleteIcon} color={color} />
+                        }
+                    </Stack>
+                    <Box>
+                        {describeItem(item, index)}
+                    </Box>
+                </Box>
+            </Fragment>
+        ))}
+
+        {
+            !!createItem && (
+                <IconButton size={buttonSize}
+                    title="insert"
+                    color={color}
+                    onClick={() => { handleInsert(list.length) }}
+                >
+                    <AddIcon />
+                </IconButton>
+            )
+        }
+    </Box>
+}
+
+const StackFormat = <T,>({
+    list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
     color = 'primary',
     frame = 'NONE',
     buttonSize = 'large',
     horizontalMoveButtons = false,
     stackProps,
-    deleteIcon = 'delete'
-}: Props<T>) => {
-
-    const handleDelete = (index: number) => {
-        const listCopy = [...list]
-        listCopy.splice(index, 1)
-        mutateList(listCopy)
-    }
-
-    const handleInsert = (index: number) => {
-        if (!createItem) { return }
-        const listCopy = [...list]
-        const newItem = createItem()
-        if (typeof newItem === 'undefined') { return }
-        listCopy.splice(index, 0, newItem)
-        mutateList(listCopy)
-    }
-
-    const handleMove = (index: number, direction: 'UP' | 'DOWN') => {
-        const reinsertIndex = direction === 'UP' ? index - 1 : index + 1
-        if (reinsertIndex < 0 || reinsertIndex >= list.length) { return }
-        const listCopy = [...list]
-        const [itemToMove] = listCopy.splice(index, 1)
-        listCopy.splice(reinsertIndex, 0, itemToMove)
-        mutateList(listCopy)
-    }
+    deleteIcon = 'delete',
+    handleInsert,
+    handleMove,
+    handleDelete,
+}: FormatProps<T>) => {
 
     return (
         <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }} {...stackProps}>
@@ -170,5 +221,63 @@ export const ArrayControl = <T,>({
             }
         </Stack >
     )
+}
+
+export const ArrayControl = <T,>({
+    list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
+    mutateList,
+    color = 'primary',
+    frame = 'NONE',
+    buttonSize = 'large',
+    horizontalMoveButtons,
+    stackProps,
+    deleteIcon = 'delete',
+    format = 'stack',
+}: Props<T>) => {
+
+    const handleDelete = (index: number) => {
+        const listCopy = [...list]
+        listCopy.splice(index, 1)
+        mutateList(listCopy)
+    }
+
+    const handleInsert = (index: number) => {
+        if (!createItem) { return }
+        const listCopy = [...list]
+        const newItem = createItem()
+        if (typeof newItem === 'undefined') { return }
+        listCopy.splice(index, 0, newItem)
+        mutateList(listCopy)
+    }
+
+    const handleMove = (index: number, direction: 'UP' | 'DOWN') => {
+        const reinsertIndex = direction === 'UP' ? index - 1 : index + 1
+        if (reinsertIndex < 0 || reinsertIndex >= list.length) { return }
+        const listCopy = [...list]
+        const [itemToMove] = listCopy.splice(index, 1)
+        listCopy.splice(reinsertIndex, 0, itemToMove)
+        mutateList(listCopy)
+    }
+
+    const formatProps = {
+        list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
+        mutateList,
+        color,
+        frame,
+        buttonSize,
+        horizontalMoveButtons,
+        stackProps,
+        deleteIcon,
+        format,
+        handleDelete,
+        handleMove,
+        handleInsert,
+    }
+
+    if (format === 'cards') {
+        return <CardsFormat {...formatProps} />
+    }
+
+    return <StackFormat {...formatProps} />
 
 }

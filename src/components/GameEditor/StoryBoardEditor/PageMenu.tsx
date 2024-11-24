@@ -1,5 +1,5 @@
 import { StoryBoard } from "@/definitions/StoryBoard"
-import { Box, Button } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { StoryBoardPageControl } from "./StoryBoardPageControl"
 import { ArrayControl } from "../ArrayControl"
@@ -36,14 +36,15 @@ export const PageMenu = ({
                 )}
             </Box>
 
-            <ArrayControl
+            <ArrayControl format='cards'
                 list={storyBoard.pages}
                 createItem={makeEmptyStoryBoardPage}
                 describeItem={(page, index) => (
                     <Box key={index}>
                         <Button
                             variant={currentPageNumber === index ? 'contained' : 'outlined'}
-                            onClick={() => { setCurrentPageNumber(index) }}>{page.title}</Button>
+                            onClick={() => { setCurrentPageNumber(index) }}>page #{index + 1}</Button>
+                        <Typography>{page.title}</Typography>
                     </Box>
                 )}
                 mutateList={(pages) => {

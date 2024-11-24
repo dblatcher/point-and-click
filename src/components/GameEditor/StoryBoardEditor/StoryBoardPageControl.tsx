@@ -9,6 +9,7 @@ import { FramePickDialogButton } from "../FramePickDialogButton";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
+import { makeEmptyStoryBoardPagePart } from "../defaults";
 
 interface Props {
     storyBoard: StoryBoard
@@ -76,7 +77,6 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     return (
 
         <EditorBox title={page.title}>
-
             <StringInput label="title" value={page.title} inputHandler={newTitle => {
                 const newPages = cloneData(storyBoard.pages)
                 const pageToEdit = newPages[index]
@@ -90,9 +90,7 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
             }}
             />
 
-
             <Box display={'flex'}>
-
                 <ArrayControl horizontalMoveButtons buttonSize={'small'}
                     list={page.parts}
                     mutateList={(newParts) => {
@@ -107,6 +105,7 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                     describeItem={(part, partIndex) => (
                         <PagePartControl key={partIndex} part={part} partIndex={partIndex} updatePart={updatePart} />
                     )}
+                    createItem={makeEmptyStoryBoardPagePart}
                 />
 
                 <Box height={200} width={200}
