@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { StaticFrameParamsSchema } from "./BaseTypes";
+import { NarrativeSchema, StaticFrameParamsSchema } from "./BaseTypes";
 
 const xPlacement = z.enum(['center', 'left', 'right'])
 const yPlacement = z.enum(['center', 'top', 'bottom'])
@@ -11,16 +11,10 @@ const sizing = z.object({
     height: z.number().optional(),
 })
 
-const TextPagePartSchema = sizing.merge(z.object({
-    type: z.literal('text'),
-    text: z.string().array(),
-}));
-const ImagePagePartSchema = sizing.merge(z.object({
-    type: z.literal('image'),
-    image: StaticFrameParamsSchema,
-}));
-
-const PagePartSchema = z.union([TextPagePartSchema, ImagePagePartSchema])
+const PagePartSchema = sizing.merge(z.object({
+    narrative: NarrativeSchema.optional(),
+    image: StaticFrameParamsSchema.optional(),
+}))
 export type PagePart = z.infer<typeof PagePartSchema>
 
 export const StoryBoardPageSchema = z.object({

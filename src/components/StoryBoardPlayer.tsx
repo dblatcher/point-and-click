@@ -81,14 +81,13 @@ const ImageBlock: React.FunctionComponent<{ frame: StaticFrameParamsS, }> = ({ f
 
 const PagePartBlock: React.FunctionComponent<{ part: PagePart }> = ({ part }) => {
     return <section style={getStyle(part)}>
-        {part.type === 'text' && (<>
-            {part.text.map((line, index) => (
+        {part.narrative && (<>
+            {part.narrative.text.map((line, index) => (
                 <p key={index} style={{ textAlign: 'center' }} >{line}</p>
             ))}
         </>)}
-        {part.type === 'image' && (
+        {part.image && (
             <ImageBlock frame={part.image}/>
-
         )}
     </section>
 }
