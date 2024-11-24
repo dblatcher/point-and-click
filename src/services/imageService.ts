@@ -28,4 +28,25 @@ export class ImageService extends Service<ImageAsset> {
             return undefined
         }
     }
+
+    async getNaturalDims(id: string): Promise<{ naturalHeight?: number, naturalWidth?: number }> {
+        const asset = this.get(id)
+        if (!asset) {
+            return {}
+        }
+        const img = document.createElement('img')
+
+        return new Promise<HTMLImageElement>((resolve, reject) => {
+            img.addEventListener('load', () => {
+                resolve(img)
+            })
+            img.addEventListener('error', (e) => {
+                reject(e)
+            })
+        }).then(img => ({ naturalHeight: img.naturalHeight, naturalWidth: img.naturalWidth }))
+            .catch(err => {
+                console.warn('failed to get natural dims', err)
+                return {}
+            })
+    }
 }
