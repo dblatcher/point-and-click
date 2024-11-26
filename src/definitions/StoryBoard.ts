@@ -11,15 +11,15 @@ const sizing = z.object({
     height: z.number().optional(),
 })
 
-const PagePartSchema = sizing.merge(z.object({
-    narrative: NarrativeSchema.optional(),
+const PagePictureSchema = sizing.merge(z.object({
     image: StaticFrameParamsSchema.optional(),
 }))
-export type PagePart = z.infer<typeof PagePartSchema>
+export type PagePicture = z.infer<typeof PagePictureSchema>
 
 export const StoryBoardPageSchema = z.object({
     title: z.string(),
-    parts: PagePartSchema.array()
+    narrative: NarrativeSchema,
+    pictures: PagePictureSchema.array()
 })
 
 export type StoryBoardPage = z.infer<typeof StoryBoardPageSchema>;

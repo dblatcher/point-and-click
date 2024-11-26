@@ -3,7 +3,7 @@ import {
     Stage, ConversationChoice, Ending, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData
 } from "@/definitions";
 import { ActStep, MoveStep } from "@/definitions/Order";
-import { PagePart, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
+import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 
 const DEFAULT_TALK_TIME = 250;
 
@@ -136,8 +136,8 @@ export const makeNewStep = {
 export const makeBlankEnding = (id = "NEW_ENDING", message = "game over"): Ending => ({ id, message, })
 
 export const makeEmptyStoryBoard = (id = "NEW_STORYBOARD"): StoryBoard => ({ id, pages: [] })
-export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({ title: '', parts: [] })
-export const makeEmptyStoryBoardPagePart = (): PagePart => ({
+export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({ title: '', pictures: [], narrative: { text: [] } })
+export const makeEmptyStoryBoardPagePicture = (): PagePicture => ({
     x: "center",
     y: "center"
 })

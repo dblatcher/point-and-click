@@ -1,6 +1,6 @@
 import { useAssets } from "@/context/asset-context";
 import { StaticFrameParamsS } from "@/definitions/BaseTypes";
-import { PagePart, StoryBoardPage } from "@/definitions/StoryBoard";
+import { PagePicture, StoryBoardPage } from "@/definitions/StoryBoard";
 import React, { CSSProperties } from "react";
 
 type Props = {
@@ -31,8 +31,8 @@ const getBackgroundStyle = (imageUrl: string, col = 0, row = 0, cols?: number | 
 }
 
 
-const getStyle = (part: PagePart): CSSProperties => {
-    const { x, y, width: pWdith, height: pHeight } = part
+const getPictureStyle = (picture: PagePicture): CSSProperties => {
+    const { x, y, width: pWdith, height: pHeight } = picture
     const translateX = x === 'center' ? 'translateX(-50%)' : '';
     const translateY = y === 'center' ? 'translateY(-50%)' : '';
     const left = x === 'left' ? 0 : x === 'right' ? undefined : '50%'
@@ -78,15 +78,10 @@ const ImageBlock: React.FunctionComponent<{ frame: StaticFrameParamsS, }> = ({ f
 
 }
 
-const PagePartBlock: React.FunctionComponent<{ part: PagePart }> = ({ part }) => {
-    return <section style={getStyle(part)}>
-        {part.narrative && (<>
-            {part.narrative.text.map((line, index) => (
-                <p key={index} style={{ textAlign: 'center' }} >{line}</p>
-            ))}
-        </>)}
-        {part.image && (
-            <ImageBlock frame={part.image} />
+const PagePictureBlock: React.FunctionComponent<{ picture: PagePicture }> = ({ picture }) => {
+    return <section style={getPictureStyle(picture)}>
+        {picture.image && (
+            <ImageBlock frame={picture.image} />
         )}
     </section>
 }
@@ -94,9 +89,14 @@ const PagePartBlock: React.FunctionComponent<{ part: PagePart }> = ({ part }) =>
 export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {
 
     return <div style={{ flex: 1, position: 'relative' }}>
-        {page.parts.map((element, index) => (
-            <PagePartBlock key={index} part={element} />
+        {page.pictures.map((element, index) => (
+            <PagePictureBlock key={index} picture={element} />
         ))}
+        <div style={{ position: 'absolute', inset: 0 }}>
+            {page.narrative.text.map((line, index) => (
+                <p key={index} style={{ textAlign: 'left' }} >{line}</p>
+            ))}
+        </div>
     </div>
 
 }

@@ -34,18 +34,13 @@ export const prebuiltGameDesign: GameDesign = {
             pages: [
                 {
                     title: "this is the first page",
-                    parts: [
+                    narrative: { text: ['A dark and story night', 'in mid October...'] },
+                    pictures: [
                         {
                             x: 'left',
                             y: 'bottom',
                             width: 50,
                             height: 50,
-                            narrative: { text: ['A dark and story night', 'in mid October...'] },
-                        },
-                        {
-                            x: 'center',
-                            y: 'center',
-                            narrative: { text: ['hello'] },
                         },
                         {
                             x: 'center',
@@ -70,7 +65,10 @@ export const prebuiltGameDesign: GameDesign = {
                 },
                 {
                     title: "this is the second and last page",
-                    parts: []
+                    narrative: {
+                        text: ['let us begin']
+                    },
+                    pictures: []
                 },
             ]
         }, {
@@ -78,7 +76,10 @@ export const prebuiltGameDesign: GameDesign = {
             pages: [
                 {
                     title: 'Welcome to part two',
-                    parts: []
+                    narrative: {
+                        text: ['let us begin']
+                    },
+                    pictures: []
                 }
             ]
         }

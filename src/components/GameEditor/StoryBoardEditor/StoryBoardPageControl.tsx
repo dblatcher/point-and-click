@@ -1,5 +1,5 @@
-import { PagePart, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
-import { cloneArrayWithPatch, cloneData } from "@/lib/clone";
+import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
+import { cloneArrayWithPatch } from "@/lib/clone";
 import { Box } from "@mui/material";
 import React from "react";
 import { StringInput } from "../../SchemaForm/StringInput";
@@ -9,7 +9,7 @@ import { FramePickDialogButton } from "../FramePickDialogButton";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
-import { makeEmptyStoryBoardPagePart } from "../defaults";
+import { makeEmptyStoryBoardPagePicture } from "../defaults";
 
 interface Props {
     storyBoard: StoryBoard
@@ -18,38 +18,32 @@ interface Props {
     update: { (message: string, mod: Partial<StoryBoard>): void }
 }
 
-const PagePartControl = ({
-    part,
-    partIndex,
-    updatePart,
+const PagePictureControl = ({
+    picture,
+    pictureIndex,
+    updatePicture,
 }: {
-    part: PagePart
-    partIndex: number,
-    updatePart: { (mod: Partial<PagePart>, partIndex: number): void }
+    picture: PagePicture
+    pictureIndex: number,
+    updatePicture: { (mod: Partial<PagePicture>, pictureIndex: number): void }
 
 }) => {
-    const { imageId, row = 0, col = 0 } = part.image ?? {};
+    const { imageId, row = 0, col = 0 } = picture.image ?? {};
 
     const pickFrame = (row: number, col: number, imageId?: string) => {
         if (!imageId) {
-            updatePart({
+            updatePicture({
                 image: undefined
-            }, partIndex)
+            }, pictureIndex)
             return
         }
-        updatePart({
+        updatePicture({
             image: { row, col, imageId }
-        }, partIndex)
+        }, pictureIndex)
     }
 
 
     return <Box padding={2} display={'flex'}>
-        <NarrativeEditor
-            narrative={part.narrative}
-            update={(narrative) => {
-                updatePart({ narrative }, partIndex)
-            }} />
-
         {!!imageId && (
             <FramePreview frame={{ imageId, row, col }} width={50} height={50} />
         )}
@@ -63,13 +57,13 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
 
     const pageDescription = `storyboard ${storyBoard.id} page #${index + 1}`;
 
-    const updatePart = (mod: Partial<PagePart>, partIndex: number) => {
-        const newPage = {
+    const updatePicture = (mod: Partial<PagePicture>, pictureIndex: number) => {
+        const newPage: StoryBoardPage = {
             ...page,
-            parts: cloneArrayWithPatch(page.parts, mod, partIndex)
+            pictures: cloneArrayWithPatch(page.pictures, mod, pictureIndex)
         }
         update(
-            `change ${pageDescription} part #${partIndex}`,
+            `change ${pageDescription} picture #${pictureIndex}`,
             { pages: cloneArrayWithPatch(storyBoard.pages, newPage, index) }
         )
     }
@@ -78,34 +72,38 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
 
         <EditorBox title={page.title}>
             <StringInput label="title" value={page.title} inputHandler={newTitle => {
-                const newPages = cloneData(storyBoard.pages)
-                const pageToEdit = newPages[index]
-                if (pageToEdit) {
-                    pageToEdit.title = newTitle
-                }
                 update(
                     `change storyboard ${storyBoard.id} page #${index + 1} to "${newTitle}"`,
-                    { pages: newPages }
+                    { pages: cloneArrayWithPatch(storyBoard.pages, { title: newTitle }, index) }
                 )
             }}
             />
 
+            <NarrativeEditor
+                narrative={page.narrative}
+                update={(narrative) => {
+                    update(
+                        `change storyboard ${storyBoard.id} page #${index + 1} narrative`,
+                        { pages: cloneArrayWithPatch(storyBoard.pages, { narrative }, index) }
+                    )
+                }} />
+
             <Box display={'flex'}>
                 <ArrayControl horizontalMoveButtons buttonSize={'small'}
-                    list={page.parts}
-                    mutateList={(newParts) => {
-                        const message = newParts.length === page.parts.length ? `change part order in ${pageDescription}` : `delete part from ${pageDescription}`
+                    list={page.pictures}
+                    mutateList={(newPictures) => {
+                        const message = newPictures.length === page.pictures.length ? `change picture order in ${pageDescription}` : `delete picture from ${pageDescription}`
                         update(
                             message,
                             {
-                                pages: cloneArrayWithPatch(storyBoard.pages, { ...page, parts: newParts }, index)
+                                pages: cloneArrayWithPatch(storyBoard.pages, { ...page, pictures: newPictures }, index)
                             }
                         )
                     }}
-                    describeItem={(part, partIndex) => (
-                        <PagePartControl key={partIndex} part={part} partIndex={partIndex} updatePart={updatePart} />
+                    describeItem={(picture, pictureIndex) => (
+                        <PagePictureControl key={pictureIndex} picture={picture} pictureIndex={pictureIndex} updatePicture={updatePicture} />
                     )}
-                    createItem={makeEmptyStoryBoardPagePart}
+                    createItem={makeEmptyStoryBoardPagePicture}
                 />
 
                 <Box height={200} width={200}
