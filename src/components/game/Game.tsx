@@ -6,7 +6,7 @@ import { gameStateReducer, getInitialGameState } from "@/lib/game-state-logic/ga
 import { getSaveData } from "@/lib/game-state-logic/state-to-save-data";
 import { buildContentsList } from "@/components/game/put-contents-in-order";
 import { findById } from "@/lib/util";
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { DebugLog } from "../DebugLog";
 import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
@@ -26,12 +26,19 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         SaveMenuComponent = SaveMenu,
         GameLayoutComponent = Layout,
     } = uiComponents
-    const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
+    const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId, emitter } = gameState
 
     const ending = findById(gameState.endingId, props.endings)
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentVerb = findById(gameState.currentVerbId, props.verbs);
     const currentStoryBoard = findById(currentStoryBoardId, props.storyBoards ?? [])
+
+    // TO DO ? this works for the opening storyboard - suitable for mid game boards to?
+    useEffect(() => {
+        if (currentStoryBoard) {
+            emitter.emit('in-game-event', { type: 'story-board', storyBoard: currentStoryBoard })
+        }
+    }, [currentStoryBoard, emitter])
 
     const tick = () => {
         if (gameState.isPaused || currentStoryBoard) { return }
@@ -47,11 +54,14 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         dispatch({ type: 'HANDLE-HOVER', event, target })
     }
 
+    const clearStoryBoard = () => {
+        dispatch({ type: 'CLEAR-STORYBOARD' })
+    }
+
     const contentList = buildContentsList(
         gameState,
         handleTargetClick
     )
-
     return <GameStateProvider value={gameState}>
         <GameInfoProvider value={{ ...props, verb: currentVerb, ending }}>
             {showDebugLog && (<DebugLog />)}
@@ -60,6 +70,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
                 selectConversation={(choice) => { dispatch({ type: 'CONVERSATION-CHOICE', choice, props }) }}
                 selectItem={handleTargetClick}
                 handleHover={handleHover}
+                clearStoryBoard={clearStoryBoard}
                 setScreenSize={(width, height) => { dispatch({ type: 'SET-SCREEN-SIZE', width, height }) }}
                 sendCommand={(command) => {
                     dispatch({ type: 'SEND-COMMAND', command, props })
@@ -94,7 +105,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
                 {currentStoryBoard && (
                     <StoryBoardPlayer
                         storyBoard={currentStoryBoard}
-                        confirmDone={() => dispatch({ type: 'CLEAR-STORYBOARD' })}
+                        confirmDone={clearStoryBoard}
                     />
                 )}
             </GameLayoutComponent>

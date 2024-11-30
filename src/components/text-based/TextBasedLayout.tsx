@@ -16,6 +16,7 @@ import { TextPrompt } from "./TextPrompt";
 export const TextBasedLayout = ({
     children,
     selectVerb, selectConversation, selectItem, handleHover,
+    clearStoryBoard,
     setScreenSize,
     saveMenu,
     sendCommand,
@@ -39,7 +40,7 @@ export const TextBasedLayout = ({
             </Box>
             <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} flex={2}>
                 <NarrativeFeed />
-                <TextPrompt sendCommand={sendCommand} selectConversationChoice={selectConversation} />
+                <TextPrompt sendCommand={sendCommand} selectConversationChoice={selectConversation} clearStoryBoard={clearStoryBoard} />
             </Box>
         </Box>
 

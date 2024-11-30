@@ -1,7 +1,7 @@
 import { GameState } from "@/lib/game-state-logic/types";
 import { ActorData, Ending } from "@/definitions";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
-import { CommandReport, ConsequenceReport, ConversationBranchReport, InGameEvent, OrderReport, SequenceStageReport } from "@/lib/game-event-emitter";
+import { CommandReport, ConsequenceReport, ConversationBranchReport, InGameEvent, OrderReport, SequenceStageReport, StoryBoardReport } from "@/lib/game-event-emitter";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
 import { standard } from "./standard-text";
@@ -139,6 +139,17 @@ const sequenceStageReportToFeedLines = (sequenceStageReport: SequenceStageReport
     }
     return []
 };
+const storyBoardReportToFeedLines = (storyBoardStageReport: StoryBoardReport, state: GameState): FeedItem[] => {
+    const { storyBoard } = storyBoardStageReport;
+    return [
+        { message: `Storyboard: ${storyBoard.id}`, type: 'system' },
+        ...storyBoard.pages.map(page => ({
+            message: page.title,
+            list: page.narrative.text
+        })),
+        { message: '[press enter to continue]', type: 'system' },
+    ]
+};
 
 export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameState, endings: Ending[]): FeedItem[] => {
     switch (inGameEvent.type) {
@@ -152,6 +163,8 @@ export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameStat
             return conversationBranchReportToFeedLines(inGameEvent)
         case "sequence-stage":
             return sequenceStageReportToFeedLines(inGameEvent, state)
+        case "story-board":
+            return storyBoardReportToFeedLines(inGameEvent, state)
     }
 }
 
@@ -171,8 +184,8 @@ export const makeRoomDescription = (state: GameState, player?: ActorData): FeedI
         }
     }
 
-    const message = room.narrative 
-        ? room.narrative.text.join(" ") 
+    const message = room.narrative
+        ? room.narrative.text.join(" ")
         : `You ${player ? `(${player.name})` : ''} are in ${room.name ?? room.id}`
 
     const hotspotMessages = hotspots.map(hotspot =>

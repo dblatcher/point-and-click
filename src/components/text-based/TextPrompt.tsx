@@ -11,6 +11,7 @@ import { reportConversationBranch } from "@/lib/game-event-emitter"
 interface Props {
     sendCommand: { (command: Command): void }
     selectConversationChoice: { (choice: ConversationChoice): void };
+    clearStoryBoard: { (): void }
 }
 
 const maxHistoryLength = 20
@@ -19,6 +20,7 @@ const maxHistoryLength = 20
 export const TextPrompt = ({
     sendCommand,
     selectConversationChoice,
+    clearStoryBoard,
 }: Props) => {
     const { verbs } = useGameInfo()
     const { inventory, isGameEnded, player, currentConversation: conversation, isSequenceRunning } = useGameStateDerivations()
@@ -43,6 +45,10 @@ export const TextPrompt = ({
     }
 
     const handleSubmit = () => {
+        if (gameState.currentStoryBoardId) {
+            clearStoryBoard()
+            return
+        }
         if (isSequenceRunning) {
             return
         }

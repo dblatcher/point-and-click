@@ -42,6 +42,7 @@ export type GameLayoutProps = {
     handleHover?: HandleHoverFunction;
     setScreenSize: { (roomWidth?: number, roomHeight?: number): void }
     sendCommand: { (command: Command): void };
+    clearStoryBoard: { (): void };
 }
 
 export type UiComponentSet = {
