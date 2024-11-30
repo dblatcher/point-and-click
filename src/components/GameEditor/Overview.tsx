@@ -92,7 +92,7 @@ export const Overview = () => {
                       >{tab.label}</Button>
                     </TableCell>
                     <TableCell>
-                      {tab.itemType && "x" + gameDesign[tab.itemType].length}
+                      {tab.itemType && "x" + (gameDesign[tab.itemType] ?? []).length}
                       {tab.id === 'interactions' && `x${gameDesign.interactions.length}`}
                       {tab.id === 'sounds' && `x${soundAssets.length}`}
                       {tab.id === 'images' && `x${imageAssets.length}`}

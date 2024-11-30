@@ -58,6 +58,7 @@ const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designP
 export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, schema, designProperty, itemTypeName }: Props<DataType>) => {
     const { gameDesign, createGameDataItem, openInEditor } = useGameDesign()
     const [warning, setWarning] = useState<string | undefined>()
+    const dataTypeArray = gameDesign[designProperty] ?? [];
 
     const handleStartFromScratch = (proposedId: string) => {
         attemptCreate({ ...createBlank(), id: proposedId })
@@ -86,8 +87,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
         if (!newDataItem.id) {
             return setWarning('no id specified')
         }
-        const existingData = gameDesign[designProperty]
-        if (existingData.some(existingItem => existingItem.id == newDataItem.id)) {
+        if (dataTypeArray.some(existingItem => existingItem.id == newDataItem.id)) {
             return setWarning(`${designProperty} already has a member with the id "${newDataItem.id}"`)
         }
         createGameDataItem(designProperty, newDataItem)
@@ -97,7 +97,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
     const includeLoadButton = DATA_TYPES_WITH_JSON.includes(designProperty)
 
     const getInputIdError = (input: string) => {
-        if (gameDesign[designProperty].some(item => item.id === input)) {
+        if (dataTypeArray.some(item => item.id === input)) {
             return `${itemTypeName} "${input}" aleady exists.`
         }
         return undefined
@@ -107,7 +107,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
         <Stack component={'article'} spacing={2} height={'100%'}>
             <EditorHeading heading={designProperty} />
             <Stack component={'article'} spacing={2} divider={<Divider />}>
-                {gameDesign[designProperty].map(item => (
+                {dataTypeArray.map(item => (
                     <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'} key={item.id}>
                         <Grid item xs={3}>
                             <Button
