@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { NarrativeSchema, StaticFrameParamsSchema } from "./BaseTypes";
 
-const xPlacement = z.enum(['center', 'left', 'right'])
-const yPlacement = z.enum(['center', 'top', 'bottom'])
+export const xPlacement = z.enum(['center', 'left', 'right'])
+export const yPlacement = z.enum(['center', 'top', 'bottom'])
 
 const sizing = z.object({
     x: xPlacement,

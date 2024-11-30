@@ -1,54 +1,20 @@
+import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
 import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 import { cloneArrayWithPatch } from "@/lib/clone";
 import { Box } from "@mui/material";
 import React from "react";
 import { StringInput } from "../../SchemaForm/StringInput";
 import { ArrayControl } from "../ArrayControl";
-import { EditorBox } from "../EditorBox";
-import { FramePickDialogButton } from "../FramePickDialogButton";
-import { NarrativeEditor } from "../NarrativeEditor";
-import { FramePreview } from "../SpriteEditor/FramePreview";
-import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
 import { makeEmptyStoryBoardPagePicture } from "../defaults";
+import { EditorBox } from "../EditorBox";
+import { NarrativeEditor } from "../NarrativeEditor";
+import { PagePictureControl } from "./PagePictureControl";
 
 interface Props {
     storyBoard: StoryBoard
     page: StoryBoardPage
     index: number
     update: { (message: string, mod: Partial<StoryBoard>): void }
-}
-
-const PagePictureControl = ({
-    picture,
-    pictureIndex,
-    updatePicture,
-}: {
-    picture: PagePicture
-    pictureIndex: number,
-    updatePicture: { (mod: Partial<PagePicture>, pictureIndex: number): void }
-
-}) => {
-    const { imageId, row = 0, col = 0 } = picture.image ?? {};
-
-    const pickFrame = (row: number, col: number, imageId?: string) => {
-        if (!imageId) {
-            updatePicture({
-                image: undefined
-            }, pictureIndex)
-            return
-        }
-        updatePicture({
-            image: { row, col, imageId }
-        }, pictureIndex)
-    }
-
-
-    return <Box padding={2} display={'flex'}>
-        <FramePickDialogButton pickFrame={pickFrame} buttonLabel={imageId ? 'change image' : 'add image'} />
-        {!!imageId && (
-            <FramePreview frame={{ imageId, row, col }} width={50} height={50} />
-        )}
-    </Box>
 }
 
 export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
