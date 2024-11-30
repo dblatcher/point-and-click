@@ -44,17 +44,16 @@ const PagePictureControl = ({
 
 
     return <Box padding={2} display={'flex'}>
+        <FramePickDialogButton pickFrame={pickFrame} buttonLabel={imageId ? 'change image' : 'add image'} />
         {!!imageId && (
             <FramePreview frame={{ imageId, row, col }} width={50} height={50} />
         )}
-        <FramePickDialogButton pickFrame={pickFrame} buttonLabel={imageId ? 'change image' : 'add image'} />
     </Box>
 }
 
 export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     storyBoard, page, index, update,
 }) => {
-
     const pageDescription = `storyboard ${storyBoard.id} page #${index + 1}`;
 
     const updatePicture = (mod: Partial<PagePicture>, pictureIndex: number) => {
@@ -69,10 +68,7 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     }
 
     return (
-
-        <EditorBox title={page.title}>
-
-
+        <EditorBox title={pageDescription}>
             <Box display={'flex'} gap={4}>
                 <Box>
                     <StringInput label="title" value={page.title} inputHandler={newTitle => {
@@ -80,10 +76,9 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                             `change storyboard ${storyBoard.id} page #${index + 1} to "${newTitle}"`,
                             { pages: cloneArrayWithPatch(storyBoard.pages, { title: newTitle }, index) }
                         )
-                    }}
-                    />
+                    }} />
 
-                    <NarrativeEditor
+                    <NarrativeEditor isRequired
                         narrative={page.narrative}
                         update={(narrative) => {
                             update(
@@ -95,9 +90,8 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                     <ArrayControl horizontalMoveButtons buttonSize={'small'}
                         list={page.pictures}
                         mutateList={(newPictures) => {
-                            const message = newPictures.length === page.pictures.length ? `change picture order in ${pageDescription}` : `delete picture from ${pageDescription}`
                             update(
-                                message,
+                                newPictures.length === page.pictures.length ? `change picture order in ${pageDescription}` : `delete picture from ${pageDescription}`,
                                 {
                                     pages: cloneArrayWithPatch(storyBoard.pages, { ...page, pictures: newPictures }, index)
                                 }

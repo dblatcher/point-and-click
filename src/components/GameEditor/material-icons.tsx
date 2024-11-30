@@ -1,6 +1,8 @@
 import AddIcon from "@mui/icons-material/Add";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import ClearIcon from '@mui/icons-material/Clear';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -40,6 +42,8 @@ export {
     AnimationIcon,
     ArrowDownwardIcon,
     ArrowUpwardIcon,
+    ArrowLeftIcon,
+    ArrowRightIcon,
     AudioFileOutlinedIcon,
     CheckBoxOutlineBlankIcon,
     ClearIcon,

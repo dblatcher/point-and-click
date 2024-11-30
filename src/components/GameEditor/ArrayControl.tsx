@@ -1,6 +1,6 @@
 import { Box, ButtonGroup, IconButton, Paper, Stack, StackProps } from "@mui/material";
 import { Fragment, ReactNode } from "react";
-import { AddIcon, ArrowUpwardIcon, ArrowDownwardIcon, DeleteIcon, ClearIcon } from "./material-icons";
+import { AddIcon, ArrowUpwardIcon, ArrowLeftIcon, ArrowRightIcon, ArrowDownwardIcon, DeleteIcon, ClearIcon } from "./material-icons";
 
 
 type Color = "success" | "primary" | "secondary" | "error" | "info" | "warning"
@@ -38,18 +38,24 @@ type FormatProps<T> = Props<T> & {
     };
 }
 
-const MoveButton = ({ role, index, handleMove, color }: {
+const MoveButton = ({ role, index, handleMove, color, horizontal }: {
     role: 'UP' | 'DOWN'
     index: number;
     handleMove: { (index: number, role: 'UP' | 'DOWN'): void }
     color?: Color
-}) => (
-    <IconButton size='small'
-        title={role}
-        color={color}
-        onClick={() => { handleMove(index, role) }}
-    >{role === 'UP' ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}</IconButton>
-)
+    horizontal?: boolean
+}) => {
+    const ArrowIcon = horizontal
+        ? (role === 'UP' ? ArrowLeftIcon : ArrowRightIcon)
+        : (role === 'UP' ? ArrowUpwardIcon : ArrowDownwardIcon);
+    return (
+        <IconButton size='small'
+            title={role}
+            color={color}
+            onClick={() => { handleMove(index, role) }}
+        ><ArrowIcon /></IconButton>
+    )
+}
 const InsertButton = ({ index, handleInsert, color, buttonSize }: {
     index: number;
     handleInsert: { (index: number): void }
@@ -126,11 +132,11 @@ const CardsFormat = <T,>({
                 )}
 
                 <Box display={'flex'} flexDirection={'column'}>
-                    <Stack direction={'row'}>
+                    <Stack direction={'row'} justifyContent={'space-between'}>
                         {!noMoveButtons && (
                             <ButtonGroup orientation={horizontalMoveButtons ? 'horizontal' : 'vertical'} component={'aside'}>
-                                <MoveButton handleMove={handleMove} index={index} role="UP" color={color} />
-                                <MoveButton handleMove={handleMove} index={index} role="DOWN" color={color} />
+                                <MoveButton horizontal handleMove={handleMove} index={index} role="UP" color={color} />
+                                <MoveButton horizontal handleMove={handleMove} index={index} role="DOWN" color={color} />
                             </ButtonGroup>
                         )}
                         {!noDeleteButtons &&

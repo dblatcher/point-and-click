@@ -11,6 +11,7 @@ interface Props {
     narrative?: Narrative
     update: { (newNarrative: Narrative | undefined): void }
     noDialog?: boolean
+    isRequired?: boolean
 }
 
 const makeEmptyNarrative = () => ({ text: [""] })
@@ -41,7 +42,7 @@ const TextControl = ({ narrative, updateText, updateLine }: {
     )
 }
 
-export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, update, noDialog }) => {
+export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, update, noDialog, isRequired }) => {
     const { palette } = useTheme()
     const [dialogOpen, setDialogOpen] = useState(false)
     const buttonLabel = !!narrative ? 'edit narrative' : 'add narrative'
@@ -67,7 +68,7 @@ export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, upd
         return <Box>
             <TextControl {...{ narrative, updateLine, updateText }} />
             {narrative
-                ? <Button onClick={() => update(undefined)}>clear</Button>
+                ? !isRequired && <Button onClick={() => update(undefined)}>clear</Button>
                 : <Button onClick={createNew}>start narrative</Button>
             }
         </Box>
@@ -95,7 +96,7 @@ export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, upd
             </DialogContent>
             <DialogActions>
                 {narrative
-                    ? <Button onClick={() => update(undefined)}>clear</Button>
+                    ? !isRequired && <Button onClick={() => update(undefined)}>clear</Button>
                     : <Button onClick={createNew}>start narrative</Button>
                 }
                 <Button onClick={() => { setDialogOpen(false) }}>close</Button>
