@@ -115,9 +115,7 @@ const CardsFormat = <T,>({
     return <Box display={'flex'} gap={2} flexWrap={'wrap'}>
         {list.map((item, index) => (
             <Fragment key={index}>
-
                 {(!!createItem && createButton !== 'END') && (
-
                     <IconButton size={buttonSize}
                         title="insert"
                         color={color}
@@ -127,10 +125,8 @@ const CardsFormat = <T,>({
                     </IconButton>
                 )}
 
-                <Box component={Paper} padding={2} display={'flex'} flexDirection={'column'}>
-
+                <Box display={'flex'} flexDirection={'column'}>
                     <Stack direction={'row'}>
-
                         {!noMoveButtons && (
                             <ButtonGroup orientation={horizontalMoveButtons ? 'horizontal' : 'vertical'} component={'aside'}>
                                 <MoveButton handleMove={handleMove} index={index} role="UP" color={color} />

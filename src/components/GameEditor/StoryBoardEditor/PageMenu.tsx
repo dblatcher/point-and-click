@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { StoryBoardPageControl } from "./StoryBoardPageControl"
 import { ArrayControl } from "../ArrayControl"
 import { makeEmptyStoryBoardPage } from "../defaults"
+import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay"
 
 type Props = {
     storyBoard: StoryBoard
@@ -24,7 +25,39 @@ export const PageMenu = ({
     const currentPage = storyBoard.pages[currentPageNumber];
 
     return (
-        <Box display={'flex'} flexDirection={'column'}>
+        <Box display={'flex'} flexDirection={'column'} gap={3}>
+            <ArrayControl format='cards'
+                list={storyBoard.pages}
+                createItem={makeEmptyStoryBoardPage}
+                describeItem={(page, index) => (
+                    <Button key={index}
+                        variant={currentPageNumber === index ? 'contained' : 'outlined'}
+                        onClick={() => { setCurrentPageNumber(index) }}
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 1,
+                            alignItems: 'center',
+                            width: 100,
+                        }}
+                    >
+                        <Box height={75} width={75}
+                            display={'flex'}
+                            flexDirection={'column'}
+                            border={'1px dotted black'}
+                            fontSize={3}
+                            sx={{ backgroundColor: 'white', color: 'black' }}
+                        >
+                            <StoryPageDisplay page={page} />
+                        </Box>
+                        <Typography fontSize='75%' textTransform={'none'}>{page.title || '[no title]'}</Typography>
+                    </Button>
+                )}
+                mutateList={(pages) => {
+                    update(`change storyboard ${storyBoard.id}`, { pages })
+                }}
+            />
+
             <Box>
                 {currentPage && (
                     <StoryBoardPageControl
@@ -36,21 +69,7 @@ export const PageMenu = ({
                 )}
             </Box>
 
-            <ArrayControl format='cards'
-                list={storyBoard.pages}
-                createItem={makeEmptyStoryBoardPage}
-                describeItem={(page, index) => (
-                    <Box key={index}>
-                        <Button
-                            variant={currentPageNumber === index ? 'contained' : 'outlined'}
-                            onClick={() => { setCurrentPageNumber(index) }}>page #{index + 1}</Button>
-                        <Typography>{page.title}</Typography>
-                    </Box>
-                )}
-                mutateList={(pages) => {
-                    update(`change storyboard ${storyBoard.id}`, { pages })
-                }}
-            />
+
         </Box>
     )
 }

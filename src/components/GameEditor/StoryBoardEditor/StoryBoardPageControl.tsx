@@ -71,45 +71,49 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     return (
 
         <EditorBox title={page.title}>
-            <StringInput label="title" value={page.title} inputHandler={newTitle => {
-                update(
-                    `change storyboard ${storyBoard.id} page #${index + 1} to "${newTitle}"`,
-                    { pages: cloneArrayWithPatch(storyBoard.pages, { title: newTitle }, index) }
-                )
-            }}
-            />
 
-            <NarrativeEditor
-                narrative={page.narrative}
-                update={(narrative) => {
-                    update(
-                        `change storyboard ${storyBoard.id} page #${index + 1} narrative`,
-                        { pages: cloneArrayWithPatch(storyBoard.pages, { narrative }, index) }
-                    )
-                }} />
 
-            <Box display={'flex'}>
-                <ArrayControl horizontalMoveButtons buttonSize={'small'}
-                    list={page.pictures}
-                    mutateList={(newPictures) => {
-                        const message = newPictures.length === page.pictures.length ? `change picture order in ${pageDescription}` : `delete picture from ${pageDescription}`
+            <Box display={'flex'} gap={4}>
+                <Box>
+                    <StringInput label="title" value={page.title} inputHandler={newTitle => {
                         update(
-                            message,
-                            {
-                                pages: cloneArrayWithPatch(storyBoard.pages, { ...page, pictures: newPictures }, index)
-                            }
+                            `change storyboard ${storyBoard.id} page #${index + 1} to "${newTitle}"`,
+                            { pages: cloneArrayWithPatch(storyBoard.pages, { title: newTitle }, index) }
                         )
                     }}
-                    describeItem={(picture, pictureIndex) => (
-                        <PagePictureControl key={pictureIndex} picture={picture} pictureIndex={pictureIndex} updatePicture={updatePicture} />
-                    )}
-                    createItem={makeEmptyStoryBoardPagePicture}
-                />
+                    />
 
+                    <NarrativeEditor
+                        narrative={page.narrative}
+                        update={(narrative) => {
+                            update(
+                                `change storyboard ${storyBoard.id} page #${index + 1} narrative`,
+                                { pages: cloneArrayWithPatch(storyBoard.pages, { narrative }, index) }
+                            )
+                        }} />
+
+                    <ArrayControl horizontalMoveButtons buttonSize={'small'}
+                        list={page.pictures}
+                        mutateList={(newPictures) => {
+                            const message = newPictures.length === page.pictures.length ? `change picture order in ${pageDescription}` : `delete picture from ${pageDescription}`
+                            update(
+                                message,
+                                {
+                                    pages: cloneArrayWithPatch(storyBoard.pages, { ...page, pictures: newPictures }, index)
+                                }
+                            )
+                        }}
+                        describeItem={(picture, pictureIndex) => (
+                            <PagePictureControl key={pictureIndex} picture={picture} pictureIndex={pictureIndex} updatePicture={updatePicture} />
+                        )}
+                        createItem={makeEmptyStoryBoardPagePicture}
+                    />
+                </Box>
                 <Box height={200} width={200}
                     display={'flex'}
                     flexDirection={'column'}
                     border={'1px dotted black'}
+                    fontSize={8}
                 >
                     <StoryPageDisplay page={page} />
                 </Box>

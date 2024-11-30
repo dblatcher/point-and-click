@@ -22,22 +22,23 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard, c
         setPageNumber(pageNumber + 1)
     }
 
+    const pagination = <span>{pageNumber + 1} / {storyBoard.pages.length}</span>
+
     return <article style={{
-        border: '1px solid blue',
+        backgroundColor: 'darkgray',
         width: '100%',
         height: '100%',
-        position: 'relative',
+        position: 'fixed',
+        inset: 0,
+        zIndex: 10,
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '40vh', // TO DO - address sizing in layouts
     }}>
-        <p>{currentPage.title}</p>
         <StoryPageDisplay page={currentPage} />
-        <p>{pageNumber + 1} / {storyBoard.pages.length}</p>
         {onLastPage ? (
-            <button onClick={confirmDone}>done</button>
+            <button onClick={confirmDone}>{pagination} done</button>
         ) : (
-            <button onClick={goToNextPage}>next</button>
+            <button onClick={goToNextPage}>{pagination} next</button>
         )}
     </article>
 

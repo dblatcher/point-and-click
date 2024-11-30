@@ -52,8 +52,8 @@ const getPictureStyle = (picture: PagePicture): CSSProperties => {
         top,
         bottom,
         transform: `${translateX} ${translateY}`,
-        backgroundColor: 'pink',
-        border: '1px dotted black',
+        // backgroundColor: 'pink',
+        // border: '1px dotted black',
 
         display: 'flex',
         flexDirection: 'column',
@@ -92,10 +92,23 @@ export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {
         {page.pictures.map((element, index) => (
             <PagePictureBlock key={index} picture={element} />
         ))}
-        <div style={{ position: 'absolute', inset: 0 }}>
-            {page.narrative.text.map((line, index) => (
-                <p key={index} style={{ textAlign: 'left' }} >{line}</p>
-            ))}
+        <div style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
+            textAlign: 'center'
+        }}>
+            <div style={{
+                backgroundColor: 'rgba(255,255,255,.5)',
+            }}>
+
+                <p style={{ fontSize: '1.5em' }}>
+                    <b>{page.title}</b>
+                </p>
+                {page.narrative.text.map((line, index) => (
+                    <p key={index}>{line}</p>
+                ))}
+            </div>
         </div>
     </div>
 
