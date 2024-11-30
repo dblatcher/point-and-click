@@ -1,8 +1,8 @@
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
 import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 import { cloneArrayWithPatch } from "@/lib/clone";
-import { Box } from "@mui/material";
-import React from "react";
+import { Box, Button, Dialog, DialogContent } from "@mui/material";
+import React, { useState } from "react";
 import { StringInput } from "../../SchemaForm/StringInput";
 import { ArrayControl } from "../ArrayControl";
 import { makeEmptyStoryBoardPagePicture } from "../defaults";
@@ -20,8 +20,10 @@ interface Props {
 export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     storyBoard, page, index, update,
 }) => {
-    const pageDescription = `storyboard ${storyBoard.id} page #${index + 1}`;
 
+    const [pictureDialogIsOpen, setPictureDialogIsOpen] = useState(false)
+
+    const pageDescription = `storyboard ${storyBoard.id} page #${index + 1}`;
     const updatePicture = (mod: Partial<PagePicture>, pictureIndex: number) => {
         const newPage: StoryBoardPage = {
             ...page,
@@ -34,25 +36,43 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     }
 
     return (
-        <EditorBox title={pageDescription}>
-            <Box display={'flex'} gap={4}>
-                <Box>
-                    <StringInput label="title" value={page.title} inputHandler={newTitle => {
-                        update(
-                            `change storyboard ${storyBoard.id} page #${index + 1} to "${newTitle}"`,
-                            { pages: cloneArrayWithPatch(storyBoard.pages, { title: newTitle }, index) }
-                        )
-                    }} />
-
-                    <NarrativeEditor isRequired
-                        narrative={page.narrative}
-                        update={(narrative) => {
+        <>
+            <EditorBox title={pageDescription}>
+                <Box display={'flex'} gap={4}>
+                    <Box>
+                        <StringInput label="title" value={page.title} inputHandler={newTitle => {
                             update(
-                                `change storyboard ${storyBoard.id} page #${index + 1} narrative`,
-                                { pages: cloneArrayWithPatch(storyBoard.pages, { narrative }, index) }
+                                `change storyboard ${storyBoard.id} page #${index + 1} to "${newTitle}"`,
+                                { pages: cloneArrayWithPatch(storyBoard.pages, { title: newTitle }, index) }
                             )
                         }} />
 
+                        <NarrativeEditor isRequired
+                            narrative={page.narrative}
+                            update={(narrative) => {
+                                update(
+                                    `change storyboard ${storyBoard.id} page #${index + 1} narrative`,
+                                    { pages: cloneArrayWithPatch(storyBoard.pages, { narrative }, index) }
+                                )
+                            }} />
+
+                        <Button variant='contained'
+                            onClick={() => setPictureDialogIsOpen(true)}>
+                            pictures
+                        </Button>
+                    </Box>
+                    <Box height={200} width={200}
+                        display={'flex'}
+                        flexDirection={'column'}
+                        border={'1px dotted black'}
+                        fontSize={8}
+                    >
+                        <StoryPageDisplay page={page} />
+                    </Box>
+                </Box>
+            </EditorBox>
+            <Dialog open={pictureDialogIsOpen} onClose={() => setPictureDialogIsOpen(false)}>
+                <DialogContent>
                     <ArrayControl horizontalMoveButtons buttonSize={'small'}
                         list={page.pictures}
                         mutateList={(newPictures) => {
@@ -68,17 +88,9 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                         )}
                         createItem={makeEmptyStoryBoardPagePicture}
                     />
-                </Box>
-                <Box height={200} width={200}
-                    display={'flex'}
-                    flexDirection={'column'}
-                    border={'1px dotted black'}
-                    fontSize={8}
-                >
-                    <StoryPageDisplay page={page} />
-                </Box>
-            </Box>
-        </EditorBox>
+                </DialogContent>
+            </Dialog>
+        </>
     )
 
 }

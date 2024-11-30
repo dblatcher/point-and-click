@@ -53,6 +53,8 @@ export const PagePictureControl = ({
                     }
                 }}
             />
+        </Stack>
+        <Stack>
             <NumberInput label="width" value={picture.width ?? 0} inputHandler={(width) => updatePicture({ width }, pictureIndex)} />
             <NumberInput label="height" value={picture.height ?? 0} inputHandler={(height) => updatePicture({ height }, pictureIndex)} />
         </Stack>
