@@ -1,6 +1,7 @@
 import { useAssets } from "@/context/asset-context";
-import { StaticFrameParamsS } from "@/definitions/BaseTypes";
+import { AspectRatio, StaticFrameParamsS } from "@/definitions/BaseTypes";
 import { PagePicture, StoryBoardPage } from "@/definitions/StoryBoard";
+import { ImageAsset } from "@/services/assets";
 import React, { CSSProperties } from "react";
 
 type Props = {
@@ -8,10 +9,12 @@ type Props = {
 }
 
 // TO DO - refactor to helper, use in ItemMenu etc
-const getBackgroundStyle = (imageUrl: string, col = 0, row = 0, cols?: number | undefined, rows?: number | undefined) => {
+const getBackgroundStyle = (imageAsset: ImageAsset, col = 0, row = 0) => {
+    const { href, rows, cols } = imageAsset
+
     if (typeof cols === 'undefined' && typeof rows === 'undefined') {
         return {
-            backgroundImage: `url(${imageUrl})`,
+            backgroundImage: `url(${href})`,
             width: '100%',
             height: '100%',
             backgroundPosition: 'center',
@@ -21,7 +24,7 @@ const getBackgroundStyle = (imageUrl: string, col = 0, row = 0, cols?: number | 
     }
 
     return {
-        backgroundImage: `url(${imageUrl})`,
+        backgroundImage: `url(${href})`,
         backgroundPositionX: `${-100 * col}%`,
         backgroundPositionY: `${-100 * row}%`,
         backgroundSize: `${100 * (cols || 1)}% ${100 * (rows || 1)}%`,
@@ -52,36 +55,52 @@ const getPictureStyle = (picture: PagePicture): CSSProperties => {
         top,
         bottom,
         transform: `${translateX} ${translateY}`,
-        // backgroundColor: 'pink',
         // border: '1px dotted black',
 
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-
+        alignItems: 'center',
     }
 }
 
-// TO DO - control asset ratio
-const ImageBlock: React.FunctionComponent<{ frame: StaticFrameParamsS, }> = ({ frame, }) => {
+const getAspectRatioStyle = (aspectRatio?: AspectRatio) => {
+    return !aspectRatio ? {
+        height: '100%',
+        width: '100%',
+    } : aspectRatio.x < aspectRatio.y ? {
+        height: '100%',
+        width: 'auto',
+        aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`
+    } : {
+        height: 'auto',
+        width: '100%',
+        aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`
+    }
+}
+
+const ImageBlock: React.FunctionComponent<{ frame: StaticFrameParamsS, aspectRatio?: AspectRatio }> = ({ frame, aspectRatio }) => {
     const { getImageAsset } = useAssets()
     const asset = getImageAsset(frame.imageId)
     if (!asset) {
         return null
     }
-    return <div role="img" style={{
-        ...getBackgroundStyle(asset.href, frame.col, frame.row, asset.cols, asset.rows),
-        // width: '50%',
-        // left: '25%',
-        // position: 'relative',
-    }}></div>
+
+    // TO DO? aspect ratio not set on 'single frame' assets, which display in natural dims
+    // because size == 'contain' - is that what's best? 
+    return <div style={getAspectRatioStyle(aspectRatio)}>
+        <div role="img" style={{
+            ...getBackgroundStyle(asset, frame.col, frame.row),
+        }}>
+        </div>
+    </div>
 
 }
 
 const PagePictureBlock: React.FunctionComponent<{ picture: PagePicture }> = ({ picture }) => {
     return <section style={getPictureStyle(picture)}>
         {picture.image && (
-            <ImageBlock frame={picture.image} />
+            <ImageBlock frame={picture.image} aspectRatio={picture.aspectRatio} />
         )}
     </section>
 }
