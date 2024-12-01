@@ -32,14 +32,17 @@ const getAspectRatioStyle = (aspectRatio?: AspectRatio) => {
     return !aspectRatio ? {
         height: '100%',
         width: '100%',
+        margin: 0,
     } : aspectRatio.x < aspectRatio.y ? {
         height: '100%',
         width: 'auto',
-        aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`
+        aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`,
+        margin: 0,
     } : {
         height: 'auto',
         width: '100%',
-        aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`
+        aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`,
+        margin: 0,
     }
 }
 
@@ -52,11 +55,11 @@ export const ImageBlock: React.FunctionComponent<{ frame: StaticFrameParamsS, as
 
     // TO DO? aspect ratio not set on 'single frame' assets, which display in natural dims
     // because size == 'contain' - is that what's best? 
-    return <div role="img" style={getAspectRatioStyle(aspectRatio)}>
+    return <figure role="img" style={getAspectRatioStyle(aspectRatio)}>
         <div style={{
             ...getBackgroundStyle(asset, frame.col, frame.row),
         }}>
         </div>
-    </div>
+    </figure>
 
 }
