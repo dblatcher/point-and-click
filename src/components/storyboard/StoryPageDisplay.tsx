@@ -49,7 +49,7 @@ const PagePictureBlock: React.FunctionComponent<{ picture: PagePicture }> = ({ p
 
 export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {
 
-    return <div style={{ flex: 1, position: 'relative' }}>
+    return <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         {page.pictures.map((element, index) => (
             <PagePictureBlock key={index} picture={element} />
         ))}

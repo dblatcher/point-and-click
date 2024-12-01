@@ -5,17 +5,16 @@ import { ActorData } from "@/definitions";
 import { ActorDataSchema, SoundValue } from "@/definitions/ActorData";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
+import { patchMember } from "@/lib/update-design";
 import { Box, Stack, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
+import { ColorInput } from "../ColorInput";
 import { EditorHeading } from "../EditorHeading";
 import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { ActorAppearanceControl } from "./ActorAppearanceControl";
 import { AnimationSounds } from "./AnimationSounds";
 import { PositionPreview } from "./PositionPreview";
-import { ColorInput } from "../ColorInput";
-import { listIds } from "@/lib/util";
-import { patchMember } from "@/lib/update-design";
 
 
 type Props = {

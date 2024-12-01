@@ -7,6 +7,7 @@ interface Props {
     frame: StaticFrameParamsS,
     aspectRatio?: AspectRatio,
     filter?: string,
+    fitHeight?: boolean,
 }
 
 // TO DO - refactor to helper, use in ItemMenu etc
@@ -36,12 +37,12 @@ const getBackgroundStyle = (imageAsset: ImageAsset, col = 0, row = 0, filter?: s
     }
 }
 
-const getAspectRatioStyle = (aspectRatio?: AspectRatio) => {
+const getAspectRatioStyle = (aspectRatio?: AspectRatio, fitHeight = false) => {
     return !aspectRatio ? {
         height: '100%',
         width: '100%',
         margin: 0,
-    } : aspectRatio.x < aspectRatio.y ? {
+    } : fitHeight ? {
         height: '100%',
         width: 'auto',
         aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`,
@@ -54,7 +55,7 @@ const getAspectRatioStyle = (aspectRatio?: AspectRatio) => {
     }
 }
 
-export const ImageBlock: React.FunctionComponent<Props> = ({ frame, aspectRatio, filter }) => {
+export const ImageBlock: React.FunctionComponent<Props> = ({ frame, aspectRatio, filter, fitHeight }) => {
     const { getImageAsset } = useAssets()
     const asset = getImageAsset(frame.imageId)
     if (!asset) {
@@ -63,7 +64,7 @@ export const ImageBlock: React.FunctionComponent<Props> = ({ frame, aspectRatio,
 
     // TO DO? aspect ratio not set on 'single frame' assets, which display in natural dims
     // because size == 'contain' - is that what's best? 
-    return <figure role="img" style={getAspectRatioStyle(aspectRatio)}>
+    return <figure role="img" style={getAspectRatioStyle(aspectRatio, fitHeight)}>
         <div style={{
             ...getBackgroundStyle(asset, frame.col, frame.row, filter),
         }}>
