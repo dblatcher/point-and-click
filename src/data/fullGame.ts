@@ -55,6 +55,7 @@ export const prebuiltGameDesign: GameDesign = {
                             image: { imageId: 'mario.png' },
                             width: 20,
                             height: 80,
+                            aspectRatio: { x: 1, y: 2 }
                         },
                         {
                             x: 'center',

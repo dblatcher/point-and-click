@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { NarrativeSchema, StaticFrameParamsSchema } from "./BaseTypes";
+import { AspectRatioSchema, NarrativeSchema, StaticFrameParamsSchema } from "./BaseTypes";
 
 export const xPlacement = z.enum(['center', 'left', 'right'])
 export const yPlacement = z.enum(['center', 'top', 'bottom'])
@@ -9,6 +9,7 @@ const sizing = z.object({
     y: yPlacement,
     width: z.number().optional(),
     height: z.number().optional(),
+    aspectRatio: AspectRatioSchema.optional(),
 })
 
 const PagePictureSchema = sizing.merge(z.object({

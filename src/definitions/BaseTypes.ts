@@ -39,3 +39,6 @@ export type StaticFrameParamsS = z.infer<typeof StaticFrameParamsSchema>
 
 export const NarrativeSchema = z.object({ text: z.string().array() });
 export type Narrative = z.infer<typeof NarrativeSchema>;
+
+export const AspectRatioSchema = z.object({ x: z.number(), y: z.number() })
+export type AspectRatio = z.infer<typeof AspectRatioSchema>;
