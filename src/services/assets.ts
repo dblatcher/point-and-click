@@ -1,3 +1,4 @@
+import { AspectRatio } from "@/definitions/BaseTypes";
 import Zod, { object, string, number } from "zod";
 
 export type ImageAssetCategory = 'background' | 'item' | 'spriteSheet' | 'any'
@@ -11,6 +12,7 @@ export type ImageAsset = {
     cols?: number;
     widthScale?: number;
     heightScale?: number;
+    img?: HTMLImageElement;
 }
 export const ImageAssetSchema = object({
     id: string(),
@@ -59,3 +61,13 @@ export function getMimeType(asset: FileAsset): string | undefined {
     return fileExtension ? `image/${fileExtension}` : undefined
 }
 
+export const getFrameDims =(asset: ImageAsset): AspectRatio | undefined => {
+    if (!asset.img) {
+        return undefined
+    }
+    const frameDims = {
+        x: (asset.img.naturalWidth / (asset.cols ?? 1)),
+        y: (asset.img.naturalHeight / (asset.rows ?? 1)),
+    }
+    return frameDims
+}

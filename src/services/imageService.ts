@@ -29,24 +29,29 @@ export class ImageService extends Service<ImageAsset> {
         }
     }
 
-    async getNaturalDims(id: string): Promise<{ naturalHeight?: number, naturalWidth?: number }> {
-        const asset = this.get(id)
-        if (!asset) {
-            return {}
-        }
+    add(items: ImageAsset | ImageAsset[]): void {
+        Service.prototype.add.apply(this, [items])
+
+        const itemArray = Array.isArray(items) ? items : [items];
+        itemArray.forEach(imageAsset =>
+            this.loadImg(imageAsset)
+                // .then(() => console.log('loaded image', imageAsset))
+                .catch(err => console.error('load image failed', err, imageAsset))
+        )
+    }
+
+    async loadImg(asset: ImageAsset) {
         const img = document.createElement('img')
+        img.src = asset.href
 
         return new Promise<HTMLImageElement>((resolve, reject) => {
             img.addEventListener('load', () => {
+                asset.img = img
                 resolve(img)
             })
             img.addEventListener('error', (e) => {
                 reject(e)
             })
-        }).then(img => ({ naturalHeight: img.naturalHeight, naturalWidth: img.naturalWidth }))
-            .catch(err => {
-                console.warn('failed to get natural dims', err)
-                return {}
-            })
+        })
     }
 }
