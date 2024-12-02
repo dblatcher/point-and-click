@@ -47,12 +47,7 @@ export const PagePictureControl = ({
     const { imageId, row = 0, col = 0 } = picture.image ?? {};
 
     const pickFrame = (row: number, col: number, imageId?: string) => {
-        if (!imageId) {
-            updatePicture({
-                image: undefined
-            }, pictureIndex)
-            return
-        }
+        if (!imageId) { return }
         updatePicture({
             image: { row, col, imageId }
         }, pictureIndex)
@@ -60,6 +55,8 @@ export const PagePictureControl = ({
 
 
     return <Box padding={2} display={'flex'}>
+        <FramePreview frame={{ imageId, row, col }} width={50} height={50} />
+        <FramePickDialogButton pickFrame={pickFrame} buttonLabel={'change image'} />
         <Stack>
             <SelectInput label="x"
                 value={picture.x}
@@ -87,9 +84,5 @@ export const PagePictureControl = ({
             <NumberInput label="height" value={picture.height ?? 0} inputHandler={(height) => updatePicture({ height }, pictureIndex)} />
         </Stack>
         <AspectRatioControl value={picture.aspectRatio} setValue={(aspectRatio) => { updatePicture({ aspectRatio }, pictureIndex) }} />
-        <FramePickDialogButton pickFrame={pickFrame} buttonLabel={imageId ? 'change image' : 'add image'} />
-        {!!imageId && (
-            <FramePreview frame={{ imageId, row, col }} width={50} height={50} />
-        )}
     </Box>
 }

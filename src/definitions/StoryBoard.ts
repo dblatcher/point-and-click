@@ -13,7 +13,7 @@ const sizing = z.object({
 })
 
 const PagePictureSchema = sizing.merge(z.object({
-    image: StaticFrameParamsSchema.optional(),
+    image: StaticFrameParamsSchema,
 }))
 export type PagePicture = z.infer<typeof PagePictureSchema>
 

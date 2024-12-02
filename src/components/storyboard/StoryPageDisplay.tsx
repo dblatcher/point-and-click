@@ -42,8 +42,9 @@ const PagePictureBlock: React.FunctionComponent<{ picture: PagePicture }> = ({ p
     if (!picture.image) {
         return null
     }
+
     return <section style={getPictureStyle(picture)}>
-        <ImageBlock frame={picture.image} aspectRatio={picture.aspectRatio} />
+        <ImageBlock frame={picture.image} aspectRatio={picture.aspectRatio} fitHeight={picture.x === 'center'} />
     </section>
 }
 
@@ -62,7 +63,6 @@ export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {
             <div style={{
                 backgroundColor: 'rgba(255,255,255,.5)',
             }}>
-
                 <p style={{ fontSize: '1.5em' }}>
                     <b>{page.title}</b>
                 </p>

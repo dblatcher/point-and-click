@@ -137,9 +137,12 @@ export const makeBlankEnding = (id = "NEW_ENDING", message = "game over"): Endin
 
 export const makeEmptyStoryBoard = (id = "NEW_STORYBOARD"): StoryBoard => ({ id, pages: [] })
 export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({ title: '', pictures: [], narrative: { text: [] } })
-export const makeEmptyStoryBoardPagePicture = (): PagePicture => ({
+export const makeEmptyStoryBoardPagePicture = (imageId = ''): PagePicture => ({
     x: "center",
-    y: "center"
+    y: "center",
+    image: {
+        imageId
+    }
 })
 
 export const makeBlankItem: { (): ItemData } = () => (

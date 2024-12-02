@@ -1,7 +1,7 @@
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
 import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 import { cloneArrayWithPatch } from "@/lib/clone";
-import { Box, Button, Dialog, DialogContent } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import React, { useState } from "react";
 import { StringInput } from "../../SchemaForm/StringInput";
 import { ArrayControl } from "../ArrayControl";
@@ -61,17 +61,18 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                             pictures
                         </Button>
                     </Box>
-                    <Box height={200} width={200}
+                    <Box height={250} width={300}
                         display={'flex'}
                         flexDirection={'column'}
                         border={'1px dotted black'}
-                        fontSize={8}
+                        fontSize={10}
                     >
                         <StoryPageDisplay page={page} />
                     </Box>
                 </Box>
             </EditorBox>
             <Dialog open={pictureDialogIsOpen} onClose={() => setPictureDialogIsOpen(false)}>
+                <DialogTitle>Pictures</DialogTitle>
                 <DialogContent>
                     <ArrayControl horizontalMoveButtons buttonSize={'small'}
                         list={page.pictures}

@@ -37,12 +37,6 @@ export const prebuiltGameDesign: GameDesign = {
                     narrative: { text: ['A dark and story night', 'in mid October...'] },
                     pictures: [
                         {
-                            x: 'left',
-                            y: 'bottom',
-                            width: 50,
-                            height: 50,
-                        },
-                        {
                             x: 'center',
                             y: 'top',
                             image: { imageId: 'bucket.png' },
