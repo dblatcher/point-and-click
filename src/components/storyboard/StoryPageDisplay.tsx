@@ -49,8 +49,12 @@ const PagePictureBlock: React.FunctionComponent<{ picture: PagePicture }> = ({ p
 }
 
 export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {
-
-    return <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+    const { color, backgroundColor } = page
+    return <div style={{
+        flex: 1, position: 'relative', overflow: 'hidden',
+        color,
+        backgroundColor,
+    }}>
         {page.pictures.map((element, index) => (
             <PagePictureBlock key={index} picture={element} />
         ))}
@@ -58,11 +62,9 @@ export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {
             position: 'absolute',
             inset: 0,
             display: 'flex', justifyContent: 'center', alignItems: 'center',
-            textAlign: 'center'
+            textAlign: 'center',
         }}>
-            <div style={{
-                backgroundColor: 'rgba(255,255,255,.5)',
-            }}>
+            <div>
                 <p style={{ fontSize: '1.5em' }}>
                     <b>{page.title}</b>
                 </p>
@@ -72,5 +74,4 @@ export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {
             </div>
         </div>
     </div>
-
 }

@@ -20,7 +20,9 @@ export type PagePicture = z.infer<typeof PagePictureSchema>
 export const StoryBoardPageSchema = z.object({
     title: z.string(),
     narrative: NarrativeSchema,
-    pictures: PagePictureSchema.array()
+    pictures: PagePictureSchema.array(),
+    backgroundColor: z.string(),
+    color: z.string(),
 })
 
 export type StoryBoardPage = z.infer<typeof StoryBoardPageSchema>;

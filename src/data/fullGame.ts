@@ -35,6 +35,8 @@ export const prebuiltGameDesign: GameDesign = {
                 {
                     title: "this is the first page",
                     narrative: { text: ['A dark and story night', 'in mid October...'] },
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
                     pictures: [
                         {
                             x: 'center',
@@ -63,6 +65,8 @@ export const prebuiltGameDesign: GameDesign = {
                     narrative: {
                         text: ['let us begin']
                     },
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
                     pictures: []
                 },
             ]
@@ -74,6 +78,8 @@ export const prebuiltGameDesign: GameDesign = {
                     narrative: {
                         text: ['let us begin']
                     },
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
                     pictures: []
                 }
             ]

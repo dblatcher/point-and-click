@@ -1,7 +1,7 @@
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
 import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 import { cloneArrayWithPatch } from "@/lib/clone";
-import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle, Stack } from "@mui/material";
 import React, { useState } from "react";
 import { StringInput } from "../../SchemaForm/StringInput";
 import { ArrayControl } from "../ArrayControl";
@@ -9,6 +9,7 @@ import { makeEmptyStoryBoardPagePicture } from "../defaults";
 import { EditorBox } from "../EditorBox";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { PagePictureControl } from "./PagePictureControl";
+import { ColorInput } from "../ColorInput";
 
 interface Props {
     storyBoard: StoryBoard
@@ -20,10 +21,9 @@ interface Props {
 export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     storyBoard, page, index, update,
 }) => {
-
     const [pictureDialogIsOpen, setPictureDialogIsOpen] = useState(false)
-
     const pageDescription = `storyboard ${storyBoard.id} page #${index + 1}`;
+
     const updatePicture = (mod: Partial<PagePicture>, pictureIndex: number) => {
         const newPage: StoryBoardPage = {
             ...page,
@@ -35,31 +35,48 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
         )
     }
 
+    const updatePage = (message: string, mod: Partial<StoryBoardPage>) => {
+        update(
+            `change ${pageDescription} ${message}`,
+            { pages: cloneArrayWithPatch(storyBoard.pages, mod, index) }
+        )
+    }
+
     return (
         <>
             <EditorBox title={pageDescription}>
                 <Box display={'flex'} gap={4}>
                     <Box>
-                        <StringInput label="title" value={page.title} inputHandler={newTitle => {
-                            update(
-                                `change storyboard ${storyBoard.id} page #${index + 1} to "${newTitle}"`,
-                                { pages: cloneArrayWithPatch(storyBoard.pages, { title: newTitle }, index) }
-                            )
-                        }} />
+                        <StringInput label="title" value={page.title} inputHandler={newTitle =>
+                            updatePage(`title to "${newTitle}"`, { title: newTitle })
+                        } />
 
-                        <NarrativeEditor isRequired
-                            narrative={page.narrative}
-                            update={(narrative) => {
-                                update(
-                                    `change storyboard ${storyBoard.id} page #${index + 1} narrative`,
-                                    { pages: cloneArrayWithPatch(storyBoard.pages, { narrative }, index) }
-                                )
-                            }} />
+                        <Stack gap={1}>
+                            <ColorInput
+                                value={page.color}
+                                label="text color"
+                                setValue={(color) => updatePage(`text color to ${color}`, { color })}
+                            />
+                            <ColorInput
+                                value={page.backgroundColor}
+                                label="background color"
+                                setValue={(backgroundColor) => updatePage(`background color to ${backgroundColor}`, { backgroundColor })}
+                            />
 
-                        <Button variant='contained'
-                            onClick={() => setPictureDialogIsOpen(true)}>
-                            pictures
-                        </Button>
+                            <NarrativeEditor isRequired
+                                narrative={page.narrative}
+                                update={(narrative) => {
+                                    update(
+                                        `change storyboard ${storyBoard.id} page #${index + 1} narrative`,
+                                        { pages: cloneArrayWithPatch(storyBoard.pages, { narrative }, index) }
+                                    )
+                                }} />
+
+                            <Button variant='contained'
+                                onClick={() => setPictureDialogIsOpen(true)}>
+                                pictures
+                            </Button>
+                        </Stack>
                     </Box>
                     <Box height={250} width={300}
                         display={'flex'}

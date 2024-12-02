@@ -136,7 +136,13 @@ export const makeNewStep = {
 export const makeBlankEnding = (id = "NEW_ENDING", message = "game over"): Ending => ({ id, message, })
 
 export const makeEmptyStoryBoard = (id = "NEW_STORYBOARD"): StoryBoard => ({ id, pages: [] })
-export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({ title: '', pictures: [], narrative: { text: [] } })
+export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({
+    title: '',
+    pictures: [],
+    narrative: { text: [] },
+    backgroundColor: '#000000',
+    color:'#FFFFFF'
+})
 export const makeEmptyStoryBoardPagePicture = (imageId = ''): PagePicture => ({
     x: "center",
     y: "center",
