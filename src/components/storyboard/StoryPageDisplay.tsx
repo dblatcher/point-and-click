@@ -16,8 +16,8 @@ const getPictureStyle = (picture: PagePicture): CSSProperties => {
     const top = y === 'top' ? 0 : y === 'bottom' ? undefined : '50%'
     const bottom = y === 'bottom' ? 0 : undefined
 
-    const width = pWdith ? `${pWdith}%` : undefined
-    const height = pHeight ? `${pHeight}%` : undefined
+    const width = pWdith ? `${pWdith}em` : undefined
+    const height = pHeight ? `${pHeight}em` : undefined
 
     return {
         position: 'absolute',

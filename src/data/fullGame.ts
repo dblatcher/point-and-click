@@ -42,15 +42,15 @@ export const prebuiltGameDesign: GameDesign = {
                             x: 'center',
                             y: 'top',
                             image: { imageId: 'bucket.png' },
-                            width: 30,
-                            height: 30,
+                            width: 6,
+                            height: 6,
                         },
                         {
                             x: 'right',
                             y: 'top',
                             image: { imageId: 'mario.png' },
-                            width: 20,
-                            height: 80,
+                            width: 6,
+                            height: 14,
                             aspectRatio: { x: 2, y: 3 }
                         },
                         {
