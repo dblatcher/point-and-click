@@ -1,15 +1,15 @@
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
 import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 import { cloneArrayWithPatch } from "@/lib/clone";
-import { Box, Button, Dialog, DialogContent, DialogTitle, Stack } from "@mui/material";
-import React, { useState } from "react";
+import { Box, Stack } from "@mui/material";
+import React from "react";
 import { StringInput } from "../../SchemaForm/StringInput";
 import { ArrayControl } from "../ArrayControl";
+import { ColorInput } from "../ColorInput";
 import { makeEmptyStoryBoardPagePicture } from "../defaults";
 import { EditorBox } from "../EditorBox";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { PagePictureControl } from "./PagePictureControl";
-import { ColorInput } from "../ColorInput";
 
 interface Props {
     storyBoard: StoryBoard
@@ -21,7 +21,6 @@ interface Props {
 export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     storyBoard, page, index, update,
 }) => {
-    const [pictureDialogIsOpen, setPictureDialogIsOpen] = useState(false)
     const pageDescription = `storyboard ${storyBoard.id} page #${index + 1}`;
 
     const updatePicture = (mod: Partial<PagePicture>, pictureIndex: number) => {
@@ -43,54 +42,35 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     }
 
     return (
-        <>
-            <EditorBox title={pageDescription}>
-                <Box display={'flex'} gap={4}>
-                    <Box>
+        <EditorBox title={pageDescription}>
+            <Box display={'flex'} gap={4} justifyContent={'space-between'}>
+                <Box>
+                    <Box gap={1} display={'flex'} alignItems={'center'}>
                         <StringInput label="title" value={page.title} inputHandler={newTitle =>
                             updatePage(`title to "${newTitle}"`, { title: newTitle })
                         } />
-
-                        <Stack gap={1}>
-                            <ColorInput
-                                value={page.color}
-                                label="text color"
-                                setValue={(color) => updatePage(`text color to ${color}`, { color })}
-                            />
-                            <ColorInput
-                                value={page.backgroundColor}
-                                label="background color"
-                                setValue={(backgroundColor) => updatePage(`background color to ${backgroundColor}`, { backgroundColor })}
-                            />
-
-                            <NarrativeEditor isRequired
-                                narrative={page.narrative}
-                                update={(narrative) => {
-                                    update(
-                                        `change storyboard ${storyBoard.id} page #${index + 1} narrative`,
-                                        { pages: cloneArrayWithPatch(storyBoard.pages, { narrative }, index) }
-                                    )
-                                }} />
-
-                            <Button variant='contained'
-                                onClick={() => setPictureDialogIsOpen(true)}>
-                                pictures
-                            </Button>
-                        </Stack>
+                        <NarrativeEditor isRequired
+                            narrative={page.narrative}
+                            update={(narrative) => {
+                                update(
+                                    `change storyboard ${storyBoard.id} page #${index + 1} narrative`,
+                                    { pages: cloneArrayWithPatch(storyBoard.pages, { narrative }, index) }
+                                )
+                            }} />
                     </Box>
-                    <Box height={250} width={300}
-                        display={'flex'}
-                        flexDirection={'column'}
-                        border={'1px dotted black'}
-                        fontSize={10}
-                    >
-                        <StoryPageDisplay page={page} />
-                    </Box>
-                </Box>
-            </EditorBox>
-            <Dialog open={pictureDialogIsOpen} onClose={() => setPictureDialogIsOpen(false)}>
-                <DialogTitle>Pictures</DialogTitle>
-                <DialogContent>
+                    <Stack gap={1} direction={'row'}>
+                        <ColorInput
+                            value={page.color}
+                            label="text color"
+                            setValue={(color) => updatePage(`text color to ${color}`, { color })}
+                        />
+                        <ColorInput
+                            value={page.backgroundColor}
+                            label="background color"
+                            setValue={(backgroundColor) => updatePage(`background color to ${backgroundColor}`, { backgroundColor })}
+                        />
+                    </Stack>
+
                     <ArrayControl horizontalMoveButtons buttonSize={'small'}
                         list={page.pictures}
                         mutateList={(newPictures) => {
@@ -106,9 +86,16 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                         )}
                         createItem={makeEmptyStoryBoardPagePicture}
                     />
-                </DialogContent>
-            </Dialog>
-        </>
+                </Box>
+                <Box height={300} width={300}
+                    display={'flex'}
+                    flexDirection={'column'}
+                    fontSize={10}
+                >
+                    <StoryPageDisplay page={page} />
+                </Box>
+            </Box>
+        </EditorBox>
     )
 
 }
