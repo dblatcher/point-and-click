@@ -107,20 +107,31 @@ export const PagePictureControl = ({
                     </Box>
                 </Grid>
                 <Grid item xs={8} display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                    <Box
-                        width={(picture.width ?? 5) * 4}
-                        height={(picture.height ?? 5) * 4}
-                        border={1}
-                    >
-                        <ImageBlock aspectRatio={picture.aspectRatio} frame={{ imageId, row, col }} fitHeight={fitHeight} />
-                    </Box>
+                    <FramePickDialogButton
+                        pickFrame={pickFrame}
+                        buttonLabel={'change image'}
+                        buttonProps={{
+                            variant: 'text',
+                            sx: {
+                                padding: 0,
+                            }
+                        }}
+                        buttonContent={
+                            <Box
+                                width={(picture.width ?? 5) * 4}
+                                height={(picture.height ?? 5) * 4}
+                                border={1}
+                            >
+                                <ImageBlock aspectRatio={picture.aspectRatio} frame={{ imageId, row, col }} fitHeight={fitHeight} />
+                            </Box>
+                        }
+                    />
                 </Grid>
             </Grid>
         </Box>
+        <PlacementControl x={picture.x} y={picture.y} updatePicture={updatePicture} pictureIndex={pictureIndex} />
         <Box>
-            <FramePickDialogButton pickFrame={pickFrame} buttonLabel={'change image'} />
             <AspectRatioControl value={picture.aspectRatio} setValue={(aspectRatio) => { updatePicture({ aspectRatio }, pictureIndex) }} />
         </Box>
-        <PlacementControl x={picture.x} y={picture.y} updatePicture={updatePicture} pictureIndex={pictureIndex} />
     </Box>
 }
