@@ -43,8 +43,11 @@ const PagePictureBlock: React.FunctionComponent<{ picture: PagePicture }> = ({ p
         return null
     }
 
+    const { height = 0, width = 0 } = picture
+    const { x: aspX, y: aspY } = picture.aspectRatio ?? { x: 1, y: 1 }
+    const fitHeight = height/aspY < width/aspX
     return <section style={getPictureStyle(picture)}>
-        <ImageBlock frame={picture.image} aspectRatio={picture.aspectRatio} fitHeight={picture.x === 'center'} />
+        <ImageBlock frame={picture.image} aspectRatio={picture.aspectRatio} fitHeight={fitHeight} />
     </section>
 }
 
