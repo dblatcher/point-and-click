@@ -1,25 +1,22 @@
-import { PagePicture, xPlacement, yPlacement } from "@/definitions/StoryBoard";
-import { Box, Button, Stack } from "@mui/material";
-import { FramePickDialogButton } from "../FramePickDialogButton";
-import { FramePreview } from "../SpriteEditor/FramePreview";
-import { SelectInput } from "@/components/SchemaForm/SelectInput";
+import { ImageBlock } from "@/components/ImageBlock";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { AspectRatio } from "@/definitions/BaseTypes";
+import { PagePicture } from "@/definitions/StoryBoard";
+import { Box, Button, ButtonProps, Grid, Stack } from "@mui/material";
+import { FramePickDialogButton } from "../FramePickDialogButton";
 
 const AspectRatioControl = ({ value, setValue }: {
     value: AspectRatio | undefined,
     setValue: { (value: AspectRatio | undefined,): void }
 }) => {
-
     const standard: AspectRatio = { x: 1, y: 1 };
-
     return <Box display='flex' gap={1}>
-        {!value ? (
-            <Button variant="outlined" onClick={() => { setValue(standard) }}>set aspect</Button>
-        ) : (
-            <>
-                <Button variant="outlined" onClick={() => { setValue(undefined) }}>unset aspect</Button>
-                <Stack>
+        <Stack>
+            {!value ? (
+                <Button variant="outlined" onClick={() => { setValue(standard) }}>set aspect</Button>
+            ) : (
+                <>
+                    <Button variant="outlined" onClick={() => { setValue(undefined) }}>unset aspect</Button>
                     <NumberInput label="x" value={value.x} step={1} min={1} notFullWidth
                         inputHandler={
                             (x) => { setValue({ ...value, x }) }
@@ -28,10 +25,45 @@ const AspectRatioControl = ({ value, setValue }: {
                         inputHandler={
                             (y) => { setValue({ ...value, y }) }
                         } />
-                </Stack>
-            </>
-        )}
+                </>
+            )}
+        </Stack>
     </Box>
+}
+
+const PlacementControl = ({ x, y, updatePicture, pictureIndex }: Pick<PagePicture, 'x' | 'y'> & { updatePicture: { (mod: Partial<PagePicture>, pictureIndex: number): void }, pictureIndex: number }) => {
+
+    const isCurrentPlace = (cellX: PagePicture['x'], cellY: PagePicture['y']) => cellX == x && cellY === y
+
+    const buttonStyle: ButtonProps['sx'] = {
+        borderRadius: 0,
+        maxWidth: 30,
+        minWidth: 30,
+        minHeight: 30,
+        maxHeight: 30,
+    }
+
+    const contents = (cellX: PagePicture['x'], cellY: PagePicture['y']) => isCurrentPlace(cellX, cellY)
+        ? <Button sx={buttonStyle} size="small" variant="contained">*</Button>
+        : <Button sx={buttonStyle} size="small" variant="outlined" onClick={() => updatePicture({ x: cellX, y: cellY }, pictureIndex)}></Button>
+
+    return <Stack>
+        <Stack direction={'row'}>
+            {contents('left', 'top')}
+            {contents('center', 'top')}
+            {contents('right', 'top')}
+        </Stack>
+        <Stack direction={'row'}>
+            {contents('left', 'center')}
+            {contents('center', 'center')}
+            {contents('right', 'center')}
+        </Stack>
+        <Stack direction={'row'}>
+            {contents('left', 'bottom')}
+            {contents('center', 'bottom')}
+            {contents('right', 'bottom')}
+        </Stack>
+    </Stack>
 }
 
 export const PagePictureControl = ({
@@ -42,7 +74,6 @@ export const PagePictureControl = ({
     picture: PagePicture
     pictureIndex: number,
     updatePicture: { (mod: Partial<PagePicture>, pictureIndex: number): void }
-
 }) => {
     const { imageId, row = 0, col = 0 } = picture.image ?? {};
 
@@ -53,36 +84,43 @@ export const PagePictureControl = ({
         }, pictureIndex)
     }
 
+    const { height = 0, width = 0 } = picture
+    const { x: aspX, y: aspY } = picture.aspectRatio ?? { x: 1, y: 1 }
+    const fitHeight = height / aspY < width / aspX
 
     return <Box padding={2} display={'flex'}>
-        <FramePreview frame={{ imageId, row, col }} width={50} height={50} />
-        <FramePickDialogButton pickFrame={pickFrame} buttonLabel={'change image'} />
-        <Stack>
-            <SelectInput label="x"
-                value={picture.x}
-                options={xPlacement.options}
-                inputHandler={(option) => {
-                    const parsedOption = xPlacement.safeParse(option)
-                    if (parsedOption.success) {
-                        updatePicture({ x: parsedOption.data }, pictureIndex)
-                    }
-                }}
-            />
-            <SelectInput label="y"
-                value={picture.y}
-                options={yPlacement.options}
-                inputHandler={(option) => {
-                    const parsedOption = yPlacement.safeParse(option)
-                    if (parsedOption.success) {
-                        updatePicture({ y: parsedOption.data }, pictureIndex)
-                    }
-                }}
-            />
-        </Stack>
-        <Stack>
-            <NumberInput label="width" value={picture.width ?? 0} inputHandler={(width) => updatePicture({ width }, pictureIndex)} />
-            <NumberInput label="height" value={picture.height ?? 0} inputHandler={(height) => updatePicture({ height }, pictureIndex)} />
-        </Stack>
-        <AspectRatioControl value={picture.aspectRatio} setValue={(aspectRatio) => { updatePicture({ aspectRatio }, pictureIndex) }} />
+
+        <Box minWidth={60 * (4 / 12)}>
+            <Grid container>
+                <Grid item xs={4} display={'flex'} alignItems={'center'} >
+                </Grid>
+                <Grid item xs={8} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                    <Box width={60}>
+                        <NumberInput notFullWidth label="height" value={picture.height ?? 0} inputHandler={(height) => updatePicture({ height }, pictureIndex)} />
+                    </Box>
+                </Grid>
+            </Grid>
+            <Grid container>
+                <Grid item xs={4} display={'flex'} alignItems={'center'} >
+                    <Box width={60}>
+                        <NumberInput notFullWidth label="width" value={picture.width ?? 0} inputHandler={(width) => updatePicture({ width }, pictureIndex)} />
+                    </Box>
+                </Grid>
+                <Grid item xs={8} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                    <Box
+                        width={(picture.width ?? 5) * 4}
+                        height={(picture.height ?? 5) * 4}
+                        border={1}
+                    >
+                        <ImageBlock aspectRatio={picture.aspectRatio} frame={{ imageId, row, col }} fitHeight={fitHeight} />
+                    </Box>
+                </Grid>
+            </Grid>
+        </Box>
+        <Box>
+            <FramePickDialogButton pickFrame={pickFrame} buttonLabel={'change image'} />
+            <AspectRatioControl value={picture.aspectRatio} setValue={(aspectRatio) => { updatePicture({ aspectRatio }, pictureIndex) }} />
+        </Box>
+        <PlacementControl x={picture.x} y={picture.y} updatePicture={updatePicture} pictureIndex={pictureIndex} />
     </Box>
 }
