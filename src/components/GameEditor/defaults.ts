@@ -125,6 +125,8 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type: 'flag', on: true, flag: '' }
         case 'conversationChoice':
             return { type: 'conversationChoice', conversationId: '', branchId: '', choiceRef: '', on: true }
+        case 'storyBoardConsequence':
+            return { type: 'storyBoardConsequence', storyBoardId:''}
     }
 }
 

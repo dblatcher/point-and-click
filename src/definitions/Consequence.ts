@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { Order, orderSchema } from "./Order"
-import { NarrativeSchema } from "./BaseTypes"
+import { Narrative, NarrativeSchema } from "./BaseTypes"
 
 const OrderConsequenceSchema = z.object({
     type: z.literal('order'),
@@ -120,6 +120,12 @@ const ConversationChoiceConsequenceSchema = z.object({
     narrative: NarrativeSchema.optional(),
 })
 
+const StoryBoardConsequenceSchema = z.object({
+    type: z.literal('storyBoardConsequence'),
+    storyBoardId: z.string(),
+    narrative: NarrativeSchema.optional(),
+})
+
 export const ConsequenceSchema = z.union([
     OrderConsequenceSchema,
     ChangeRoomConsequenceSchema,
@@ -136,12 +142,13 @@ export const ConsequenceSchema = z.union([
     AmbientNoiseConsequenceSchema,
     FlagConsequenceSchema,
     ConversationChoiceConsequenceSchema,
+    StoryBoardConsequenceSchema,
 ])
 
 const ConsequenceTypeEnum = z.enum([
     'conversation', 'sequence', 'changeStatus', 'backgroundMusic', 'ambientNoise',
     'removeActor', 'inventory', 'changeRoom', 'order', 'ending',
-    'teleportActor', 'toggleZone', 'soundEffect', 'flag', 'conversationChoice', 
+    'teleportActor', 'toggleZone', 'soundEffect', 'flag', 'conversationChoice', 'storyBoardConsequence'
 ])
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
 export const consequenceTypes: ConsequenceType[] = ConsequenceTypeEnum.options
@@ -162,6 +169,7 @@ export const consequenceMap = {
     conversationChoice: ConversationChoiceConsequenceSchema,
     backgroundMusic: BackgroundMusicConsequenceSchema,
     ambientNoise: AmbientNoiseConsequenceSchema,
+    storyBoardConsequence: StoryBoardConsequenceSchema,
 } as const
 
 export type Consequence = z.infer<typeof ConsequenceSchema>
@@ -195,6 +203,8 @@ export type AnyConsequence = Consequence & {
     flag?: string;
     branchId?: string;
     choiceRef?: string;
+    storyBoardId?: string;
+    narrative?: Narrative;
 }
 
 export const ImmediateConsequenceSchema = z.union([
@@ -211,6 +221,7 @@ export const ImmediateConsequenceSchema = z.union([
     ConversationChoiceConsequenceSchema,
     BackgroundMusicConsequenceSchema,
     AmbientNoiseConsequenceSchema,
+    StoryBoardConsequenceSchema,
 ])
 /**
  * The subset of consequences that are don't take multiple cycles

@@ -60,6 +60,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         flag: Object.keys(gameDesign.flagMap),
         branchId: branchIdList,
         choiceRef: choiceRefList,
+        storyBoardId: listIds(gameDesign.storyBoards ?? [])
     }
     const optionListDescriptions: { [index: string]: string[] | undefined } = {
         targetId: targetDescriptions,

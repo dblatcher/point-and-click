@@ -111,6 +111,8 @@ export const getConsequenceDescription = (c: Consequence): string => {
             return `Set BGM in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
         case "ambientNoise":
             return `Set ambient noise in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
+        case "storyBoardConsequence":
+            return `Run story board "${c.storyBoardId}"`
         default:
             return "[description]"
     }

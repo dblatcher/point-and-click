@@ -225,6 +225,11 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 room.ambientNoise = sound ? { soundId: sound, volume } : undefined
                 break;
             }
+            case 'storyBoardConsequence': {
+                const {storyBoardId} = consequence
+                state.currentStoryBoardId = storyBoardId
+                break
+            }
             default: {
                 console.warn('unsupported conseqeunce!', consequence)
                 break;
