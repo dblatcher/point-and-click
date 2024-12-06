@@ -1,7 +1,7 @@
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
 import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 import { cloneArrayWithPatch } from "@/lib/clone";
-import { Box, Divider, Stack } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 import { StringInput } from "../../SchemaForm/StringInput";
 import { ArrayControl } from "../ArrayControl";
@@ -71,6 +71,7 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                         />
                     </Stack>
 
+                    <Typography variant="h3">Pictures</Typography>
                     <ArrayControl horizontalMoveButtons buttonSize={'small'} createButton="END"
                         stackProps={{ divider: <Divider /> }}
                         list={page.pictures}

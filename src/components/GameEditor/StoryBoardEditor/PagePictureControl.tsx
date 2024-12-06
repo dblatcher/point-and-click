@@ -1,36 +1,10 @@
-import { ImageBlock } from "@/components/ImageBlock";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { AspectRatio } from "@/definitions/BaseTypes";
 import { PagePicture } from "@/definitions/StoryBoard";
-import { Box, Button, ButtonProps, Grid, Stack } from "@mui/material";
+import { Box, Button, ButtonProps, Grid, Stack, Typography } from "@mui/material";
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { FramePreview } from "../SpriteEditor/FramePreview";
+import { AspectRatioControl } from "../AspectRatioControl";
 
-const AspectRatioControl = ({ value, setValue }: {
-    value: AspectRatio | undefined,
-    setValue: { (value: AspectRatio | undefined,): void }
-}) => {
-    const standard: AspectRatio = { x: 1, y: 1 };
-    return <Box display='flex' gap={1}>
-        <Stack>
-            {!value ? (
-                <Button variant="outlined" onClick={() => { setValue(standard) }}>set aspect</Button>
-            ) : (
-                <>
-                    <Button variant="outlined" onClick={() => { setValue(undefined) }}>unset aspect</Button>
-                    <NumberInput label="x" value={value.x} step={1} min={1} notFullWidth
-                        inputHandler={
-                            (x) => { setValue({ ...value, x }) }
-                        } />
-                    <NumberInput label="y" value={value.y} step={1} min={1} notFullWidth
-                        inputHandler={
-                            (y) => { setValue({ ...value, y }) }
-                        } />
-                </>
-            )}
-        </Stack>
-    </Box>
-}
 
 const PlacementControl = ({ x, y, updatePicture, pictureIndex }: Pick<PagePicture, 'x' | 'y'> & { updatePicture: { (mod: Partial<PagePicture>, pictureIndex: number): void }, pictureIndex: number }) => {
 
@@ -85,8 +59,7 @@ export const PagePictureControl = ({
         }, pictureIndex)
     }
 
-    return <Box padding={2} display={'flex'}>
-
+    return <Box padding={2} display={'flex'} gap={2} alignItems={'center'}>
         <Box minWidth={60 * (4 / 12)}>
             <Grid container>
                 <Grid item xs={4} display={'flex'} alignItems={'center'} >
@@ -129,8 +102,6 @@ export const PagePictureControl = ({
             </Grid>
         </Box>
         <PlacementControl x={picture.x} y={picture.y} updatePicture={updatePicture} pictureIndex={pictureIndex} />
-        <Box>
-            <AspectRatioControl value={picture.aspectRatio} setValue={(aspectRatio) => { updatePicture({ aspectRatio }, pictureIndex) }} />
-        </Box>
+        <AspectRatioControl value={picture.aspectRatio} setValue={(aspectRatio) => { updatePicture({ aspectRatio }, pictureIndex) }} />
     </Box>
 }

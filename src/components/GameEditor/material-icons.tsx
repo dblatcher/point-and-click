@@ -36,6 +36,8 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import FlagFilledIcon from '@mui/icons-material/Flag';
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 
 export {
     AddIcon,
@@ -44,7 +46,9 @@ export {
     ArrowUpwardIcon,
     ArrowLeftIcon,
     ArrowRightIcon,
+    AspectRatioIcon,
     AudioFileOutlinedIcon,
+    CheckBoxIcon,
     CheckBoxOutlineBlankIcon,
     ClearIcon,
     ClearOutlinedIcon,

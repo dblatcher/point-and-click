@@ -141,11 +141,13 @@ export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({
     pictures: [],
     narrative: { text: [] },
     backgroundColor: '#000000',
-    color:'#FFFFFF'
+    color: '#FFFFFF'
 })
 export const makeEmptyStoryBoardPagePicture = (imageId = ''): PagePicture => ({
     x: "center",
     y: "center",
+    width: 5,
+    height: 5,
     image: {
         imageId
     }
