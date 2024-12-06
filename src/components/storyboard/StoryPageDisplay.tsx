@@ -1,6 +1,7 @@
 import { PagePicture, StoryBoardPage } from "@/definitions/StoryBoard";
 import React, { CSSProperties } from "react";
 import { ImageBlock } from "../ImageBlock";
+import { FramePreview } from "../GameEditor/SpriteEditor/FramePreview";
 
 type Props = {
     page: StoryBoardPage
@@ -43,12 +44,11 @@ const PagePictureBlock: React.FunctionComponent<{ picture: PagePicture }> = ({ p
         return null
     }
 
-    const { height = 0, width = 0 } = picture
-    const { x: aspX, y: aspY } = picture.aspectRatio ?? { x: 1, y: 1 }
-    const fitHeight = height/aspY < width/aspX
-    return <section style={getPictureStyle(picture)}>
-        <ImageBlock frame={picture.image} aspectRatio={picture.aspectRatio} fitHeight={fitHeight} />
-    </section>
+    return <FramePreview
+        style={getPictureStyle(picture)}
+        frame={{ col: 0, row: 0, ...picture.image }}
+        aspectRatio={picture.aspectRatio}
+        width={1} height={1} />
 }
 
 export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {

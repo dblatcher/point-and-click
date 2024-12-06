@@ -4,6 +4,7 @@ import { AspectRatio } from "@/definitions/BaseTypes";
 import { PagePicture } from "@/definitions/StoryBoard";
 import { Box, Button, ButtonProps, Grid, Stack } from "@mui/material";
 import { FramePickDialogButton } from "../FramePickDialogButton";
+import { FramePreview } from "../SpriteEditor/FramePreview";
 
 const AspectRatioControl = ({ value, setValue }: {
     value: AspectRatio | undefined,
@@ -84,10 +85,6 @@ export const PagePictureControl = ({
         }, pictureIndex)
     }
 
-    const { height = 0, width = 0 } = picture
-    const { x: aspX, y: aspY } = picture.aspectRatio ?? { x: 1, y: 1 }
-    const fitHeight = height / aspY < width / aspX
-
     return <Box padding={2} display={'flex'}>
 
         <Box minWidth={60 * (4 / 12)}>
@@ -117,13 +114,15 @@ export const PagePictureControl = ({
                             }
                         }}
                         buttonContent={
-                            <Box
+                            <FramePreview
+                                style={{
+                                    border: '1px solid black',
+                                    alignSelf: 'center',
+                                }}
+                                aspectRatio={picture.aspectRatio}
+                                frame={{ imageId, row, col }}
                                 width={(picture.width ?? 5) * 4}
-                                height={(picture.height ?? 5) * 4}
-                                border={1}
-                            >
-                                <ImageBlock aspectRatio={picture.aspectRatio} frame={{ imageId, row, col }} fitHeight={fitHeight} />
-                            </Box>
+                                height={(picture.height ?? 5) * 4} />
                         }
                     />
                 </Grid>
