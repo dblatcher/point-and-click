@@ -33,7 +33,7 @@ const fullScreenStyle: CSSProperties = {
     backgroundColor: 'darkgray',
     width: '100%',
     height: '100%',
-    position: 'fixed',
+    position: 'absolute',
     inset: 0,
     zIndex: 10,
     display: 'flex',

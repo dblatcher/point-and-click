@@ -18,10 +18,10 @@ const standardInnerBoxProps: BoxProps = {
 }
 
 const noPageScrollOuterBoxProps: BoxProps = {
-    display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden',
+    display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', position:'relative',
 }
 const noPageScrollInnerBoxProps: BoxProps = {
-    sx: { width: '100%', flexBasis: '100%', flexGrow: 0, overflow: 'hidden' }, display: 'flex', flexDirection: 'column',
+    sx: { width: '100%', flexBasis: '100%', flexGrow: 0, overflow: 'hidden' }, display: 'flex', flexDirection: 'column', position:'relative',
 }
 
 

@@ -94,13 +94,13 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
                     />
                 )}
 
+            </GameLayoutComponent>
                 {(!props.instantMode && currentStoryBoard) && (
                     <StoryBoardPlayer
                         storyBoard={currentStoryBoard}
                         confirmDone={clearStoryBoard}
                     />
                 )}
-            </GameLayoutComponent>
         </GameInfoProvider>
     </GameStateProvider>
 }
