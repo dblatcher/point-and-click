@@ -5,6 +5,9 @@ import { StoryBoardPageControl } from "./StoryBoardPageControl"
 import { ArrayControl } from "../ArrayControl"
 import { makeEmptyStoryBoardPage } from "../defaults"
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay"
+import { EditorBox } from "../EditorBox"
+import { AmbientSoundControl } from "../RoomEditor/AmbientSoundControl"
+import { SelectInput } from "@/components/SchemaForm/SelectInput"
 
 type Props = {
     storyBoard: StoryBoard
@@ -26,6 +29,27 @@ export const PageMenu = ({
 
     return (
         <Box display={'flex'} flexDirection={'column'} gap={3}>
+            <EditorBox title="Properties">
+                <AmbientSoundControl
+                    label="sound"
+                    value={storyBoard.sound}
+                    setValue={(sound) => update(`set sound on storyboard ${storyBoard.id} `, { sound })} />
+
+                <SelectInput
+                    label="progression"
+                    value={storyBoard.progression}
+                    optional
+                    options={['buttons', 'sound']}
+                    inputHandler={(progression) => {
+                        switch (progression) {
+                            case 'buttons':
+                            case 'sound':
+                            case undefined:
+                                update(`set sound on storyboard ${storyBoard.id} `, { progression })
+                        }
+                    }}
+                />
+            </EditorBox>
             <ArrayControl format='cards'
                 list={storyBoard.pages}
                 createItem={makeEmptyStoryBoardPage}
@@ -50,7 +74,6 @@ export const PageMenu = ({
                         >
                             <StoryPageDisplay page={page} />
                         </Box>
-                        <Typography fontSize='75%' textTransform={'none'}>{page.title || '[no title]'}</Typography>
                     </Button>
                 )}
                 mutateList={(pages) => {
