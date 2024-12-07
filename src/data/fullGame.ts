@@ -72,6 +72,10 @@ export const prebuiltGameDesign: GameDesign = {
             ]
         }, {
             id: 'part-two',
+            sound: {
+                soundId: 'B4organII'
+            },
+            progression: 'sound',
             pages: [
                 {
                     title: 'Welcome to part two',
@@ -81,7 +85,34 @@ export const prebuiltGameDesign: GameDesign = {
                     backgroundColor: '#000000',
                     color: '#ffffff',
                     pictures: []
-                }
+                },
+                {
+                    title: 'Welcome to part two',
+                    narrative: {
+                        text: ['let us begin now']
+                    },
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    pictures: []
+                },
+                {
+                    title: 'Welcome to part two',
+                    narrative: {
+                        text: ['let us begin now now']
+                    },
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    pictures: []
+                },
+                {
+                    title: 'Welcome to part two',
+                    narrative: {
+                        text: ['let us begin now now now']
+                    },
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    pictures: []
+                },
             ]
         }
     ]

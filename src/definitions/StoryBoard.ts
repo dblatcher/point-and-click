@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AspectRatioSchema, NarrativeSchema, StaticFrameParamsSchema } from "./BaseTypes";
+import { AspectRatioSchema, NarrativeSchema, soundInstanceSchema, StaticFrameParamsSchema } from "./BaseTypes";
 
 export const xPlacement = z.enum(['center', 'left', 'right'])
 export const yPlacement = z.enum(['center', 'top', 'bottom'])
@@ -30,6 +30,9 @@ export type StoryBoardPage = z.infer<typeof StoryBoardPageSchema>;
 export const StoryBoardSchema = z.object({
     id: z.string(),
     pages: StoryBoardPageSchema.array(),
+    sound: soundInstanceSchema.optional(),
+    progression: z.enum(['sound', 'buttons']).optional()
+    
 })
 
 export type StoryBoard = z.infer<typeof StoryBoardSchema>;

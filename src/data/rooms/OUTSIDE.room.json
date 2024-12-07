@@ -118,9 +118,5 @@
   },
   "ambientNoise": {
     "soundId": "sparrows"
-  },
-  "backgroundMusic": {
-    "soundId": "B4organII",
-    "volume": 0.5
   }
 }
