@@ -1,15 +1,14 @@
 import { useAssets } from "@/context/asset-context";
-import { AmbientSound } from "@/definitions/RoomData";
+import { SoundInstance } from "@/definitions/BaseTypes";
 import { Alert, Box, Typography } from "@mui/material";
 import React from "react";
-import { EditorBox } from "../EditorBox";
 import { FileAssetSelector } from "../FileAssetSelector";
 import { VolumeControl } from "../VolumeControl";
 
 interface Props {
     label: string
-    value?: AmbientSound
-    setValue: { (value?: AmbientSound): void }
+    value?: SoundInstance
+    setValue: { (value?: SoundInstance): void }
 }
 
 export const AmbientSoundControl: React.FunctionComponent<Props> = ({ label, value, setValue }) => {

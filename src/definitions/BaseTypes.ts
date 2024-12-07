@@ -42,3 +42,9 @@ export type Narrative = z.infer<typeof NarrativeSchema>;
 
 export const AspectRatioSchema = z.object({ x: z.number(), y: z.number() })
 export type AspectRatio = z.infer<typeof AspectRatioSchema>;
+
+export const soundInstanceSchema = z.object({
+    soundId: z.string(),
+    volume: z.number().optional(),
+})
+export type SoundInstance = z.infer<typeof soundInstanceSchema>

@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { HotspotZoneSchema, ZoneSchema } from "./Zone"
-import { NarrativeSchema } from "./BaseTypes"
+import { soundInstanceSchema, NarrativeSchema } from "./BaseTypes"
 
 const BackgroundLayerSchema = z.object({
     parallax: z.number(),
@@ -11,11 +11,6 @@ export type BackgroundLayer = z.infer<typeof BackgroundLayerSchema>
 const ScaleLevelSchema = z.array(z.tuple([z.number(), z.number()]))
 export type ScaleLevel = z.infer<typeof ScaleLevelSchema>
 
-const ambientSoundSchema = z.object({
-    soundId: z.string(),
-    volume: z.number().optional(),
-})
-export type AmbientSound = z.infer<typeof ambientSoundSchema>
 
 export const RoomDataSchema = z.object({
     id: z.string(),
@@ -30,7 +25,7 @@ export const RoomDataSchema = z.object({
     backgroundColor: z.string().optional(),
     name: z.string().optional(),
     narrative: NarrativeSchema.optional(),
-    backgroundMusic: ambientSoundSchema.optional(),
-    ambientNoise: ambientSoundSchema.optional(),
+    backgroundMusic: soundInstanceSchema.optional(),
+    ambientNoise: soundInstanceSchema.optional(),
 })
 export type RoomData = z.infer<typeof RoomDataSchema>

@@ -1,18 +1,18 @@
+import { buildContentsList } from "@/components/game/put-contents-in-order";
 import { GameInfoProvider } from "@/context/game-info-provider";
 import { GameStateProvider } from "@/context/game-state-context";
 import { CommandTarget } from "@/definitions";
 import { useInterval } from "@/hooks/useInterval";
 import { gameStateReducer, getInitialGameState } from "@/lib/game-state-logic/game-state-reducer";
 import { getSaveData } from "@/lib/game-state-logic/state-to-save-data";
-import { buildContentsList } from "@/components/game/put-contents-in-order";
 import { findById } from "@/lib/util";
-import React, { useEffect, useReducer } from "react";
+import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";
 import { Layout } from "../game-ui/Layout";
 import { SaveMenu } from "../game-ui/SaveMenu";
+import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 import { Room } from "../svg/Room";
 import { GameProps } from "./types";
-import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 
 // use true for debugging only- slows program!
 const renderCells = false
