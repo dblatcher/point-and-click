@@ -185,7 +185,6 @@ export const getInitialGameState = (props: GameProps): GameState => {
     const currentRoom = findById(props.currentRoomId, rooms)
     const cellMatrix = currentRoom ? generateCellMatrix(currentRoom, CELL_SIZE) : undefined
 
-    console.log('initial state')
     return {
         viewAngle: 0,
         isPaused: props.startPaused || false,

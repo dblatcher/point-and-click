@@ -46,6 +46,14 @@ export const LIGHT_FIRE: Sequence = {
             immediateConsequences: [
                 { type: 'changeStatus', targetId: 'FIRE', status: 'burning', targetType: 'actor' }
             ]
+        },
+        {
+            immediateConsequences:[
+                {
+                    type:'storyBoardConsequence',
+                    storyBoardId: 'part-two'
+                }
+            ]
         }
     ]
 }

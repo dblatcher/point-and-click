@@ -100,6 +100,10 @@ export const interactions: Interaction[] = [
                         time: 100,
                     }
                 ]
+            },
+            {
+                type: 'storyBoardConsequence',
+                storyBoardId: 'part-two'
             }
         ]
     },

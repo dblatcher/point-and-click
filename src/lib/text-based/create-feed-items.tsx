@@ -120,6 +120,14 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
                 { message: `GAME OVER`, type: 'system' }
             ] : [{ message: `GAME OVER`, type: 'system' }]
         }
+        case "storyBoardConsequence": {
+
+            return [
+                { message: 'storyBoardConsequence', type: 'system' },
+                { message: consequence.storyBoardId, type: 'system' },
+                { message: "PLZ PRESS ENTER", type: 'system' },
+            ]
+        }
         case "toggleZone":
         // TO DO - how to describe a zone toggle?
         case "soundEffect":
