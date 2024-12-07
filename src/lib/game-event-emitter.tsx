@@ -4,17 +4,15 @@ import { TypedEmitter } from "tiny-typed-emitter";
 import { GameState } from "@/lib/game-state-logic/types";
 import { findById } from "./util";
 import { FeedItem } from "./text-based/types";
-import { StoryBoard } from "@/definitions/StoryBoard";
 
 export interface OrderReport { type: 'order', order: Order, actor: ActorData }
 export interface CommandReport { type: 'command', command: Command }
 export interface ConsequenceReport { type: 'consequence', consequence: Consequence, success: boolean, offscreen: boolean }
 export interface ConversationBranchReport { type: 'conversation-branch', branch: ConversationBranch }
 export interface SequenceStageReport { type: 'sequence-stage', stage: Stage }
-export interface StoryBoardReport { type: 'story-board', storyBoard: StoryBoard }
 export type PromptFeedbackReport = FeedItem;
 
-export type InGameEvent = OrderReport | CommandReport | ConsequenceReport | ConversationBranchReport | SequenceStageReport | StoryBoardReport
+export type InGameEvent = OrderReport | CommandReport | ConsequenceReport | ConversationBranchReport | SequenceStageReport
 
 export interface GameEvents {
     'debugLog': { (logentry: LogEntry): void }

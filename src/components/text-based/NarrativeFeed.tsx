@@ -1,32 +1,54 @@
+import { useGameDesign } from "@/context/game-design-context";
+import { useGameInfo } from "@/context/game-info-provider";
 import { useGameState } from "@/context/game-state-context";
+import { useInterval } from "@/hooks/useInterval";
 import { InGameEvent, PromptFeedbackReport } from "@/lib/game-event-emitter";
-import { inGameEventToFeedLines } from "@/lib/text-based/create-feed-items";
+import { inGameEventToFeedLines, storyBoardReportToFeedLines } from "@/lib/text-based/create-feed-items";
 import { FeedItem } from "@/lib/text-based/types";
+import { findById } from "@/lib/util";
 import { useEffect, useRef, useState } from "react";
 import { ScrollingFeed } from "../ScrollingFeed";
 import { FeedLine } from "./FeedLine";
-import { useGameInfo } from "@/context/game-info-provider";
 
 export const NarrativeFeed = () => {
     const state = useGameState();
+    const { gameDesign } = useGameDesign()
     const { endings } = useGameInfo()
-    const { emitter } = state
+    const { emitter, currentStoryBoardId } = state
     const [feed, setFeed] = useState<FeedItem[]>([])
-    const feedRef = useRef<FeedItem[]>([])
+    const feedQueue = useRef<FeedItem[]>([])
+
+    useInterval(() => {
+        if (feedQueue.current.length > 0) {
+            setFeed([...feed, ...feedQueue.current])
+            feedQueue.current.splice(0, feedQueue.current.length)
+        }
+    }, 100)
+
+    useEffect(() => {
+        if (currentStoryBoardId) {
+            const board = findById(currentStoryBoardId, gameDesign.storyBoards ?? [])
+            const boardMessages: FeedItem[] =
+                board
+                    ? storyBoardReportToFeedLines(board)
+                    :
+                    [{ message: `Missing storyboard: ${currentStoryBoardId}`, type: 'system' }];
+            feedQueue.current.push(...boardMessages, { message: '[press enter to continue]', type: 'system' },)
+        }
+
+    }, [currentStoryBoardId, gameDesign, feedQueue])
 
     useEffect(() => {
         const handleInGameEvent = (inGameEvent: InGameEvent) => {
-            feedRef.current.push(...inGameEventToFeedLines(inGameEvent, state, endings))
-            setFeed(feedRef.current)
+            feedQueue.current.push(...inGameEventToFeedLines(inGameEvent, state, endings))
         }
 
         const handlePromptFeedback = (feedback: PromptFeedbackReport) => {
-            feedRef.current.push({
+            feedQueue.current.push({
                 message: feedback.message,
                 type: feedback.type,
                 list: feedback.list,
             })
-            setFeed(feedRef.current)
         }
 
         emitter.on('in-game-event', handleInGameEvent)

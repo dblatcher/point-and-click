@@ -20,25 +20,17 @@ const TIMER_SPEED = 10
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
     const [gameState, dispatch] = useReducer(gameStateReducer, getInitialGameState(props))
-
     const { deleteSave, save, reset, load, listSavedGames, showDebugLog, uiComponents = {} } = props
     const {
         SaveMenuComponent = SaveMenu,
         GameLayoutComponent = Layout,
     } = uiComponents
-    const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId, emitter } = gameState
+    const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
 
     const ending = findById(gameState.endingId, props.endings)
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentVerb = findById(gameState.currentVerbId, props.verbs);
     const currentStoryBoard = findById(currentStoryBoardId, props.storyBoards ?? [])
-
-    // TO DO ? this works for the opening storyboard - suitable for mid game boards to?
-    useEffect(() => {
-        if (currentStoryBoard) {
-            emitter.emit('in-game-event', { type: 'story-board', storyBoard: currentStoryBoard })
-        }
-    }, [currentStoryBoard, emitter])
 
     const tick = () => {
         if (gameState.isPaused || currentStoryBoard) { return }
@@ -102,7 +94,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
                     />
                 )}
 
-                {currentStoryBoard && (
+                {(!props.instantMode && currentStoryBoard) && (
                     <StoryBoardPlayer
                         storyBoard={currentStoryBoard}
                         confirmDone={clearStoryBoard}

@@ -1,10 +1,11 @@
 import { GameState } from "@/lib/game-state-logic/types";
 import { ActorData, Ending } from "@/definitions";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
-import { CommandReport, ConsequenceReport, ConversationBranchReport, InGameEvent, OrderReport, SequenceStageReport, StoryBoardReport } from "@/lib/game-event-emitter";
+import { CommandReport, ConsequenceReport, ConversationBranchReport, InGameEvent, OrderReport, SequenceStageReport } from "@/lib/game-event-emitter";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
 import { standard } from "./standard-text";
+import { StoryBoard } from "@/definitions/StoryBoard";
 
 const stringToFeedItem = (message: string) => ({
     message
@@ -120,16 +121,9 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
                 { message: `GAME OVER`, type: 'system' }
             ] : [{ message: `GAME OVER`, type: 'system' }]
         }
-        case "storyBoardConsequence": {
-
-            return [
-                { message: 'storyBoardConsequence', type: 'system' },
-                { message: consequence.storyBoardId, type: 'system' },
-                { message: "PLZ PRESS ENTER", type: 'system' },
-            ]
-        }
         case "toggleZone":
         // TO DO - how to describe a zone toggle?
+        case "storyBoardConsequence":
         case "soundEffect":
         case "flag":
         case "conversationChoice":
@@ -147,16 +141,12 @@ const sequenceStageReportToFeedLines = (sequenceStageReport: SequenceStageReport
     }
     return []
 };
-const storyBoardReportToFeedLines = (storyBoardStageReport: StoryBoardReport, state: GameState): FeedItem[] => {
-    const { storyBoard } = storyBoardStageReport;
-    return [
-        { message: `Storyboard: ${storyBoard.id}`, type: 'system' },
-        ...storyBoard.pages.map(page => ({
-            message: page.title,
-            list: page.narrative.text
-        })),
-        { message: '[press enter to continue]', type: 'system' },
-    ]
+
+export const storyBoardReportToFeedLines = (storyBoard: StoryBoard): FeedItem[] => {
+    return storyBoard.pages.map(page => ({
+        message: page.title,
+        list: page.narrative.text
+    }))
 };
 
 export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameState, endings: Ending[]): FeedItem[] => {
@@ -171,8 +161,6 @@ export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameStat
             return conversationBranchReportToFeedLines(inGameEvent)
         case "sequence-stage":
             return sequenceStageReportToFeedLines(inGameEvent, state)
-        case "story-board":
-            return storyBoardReportToFeedLines(inGameEvent, state)
     }
 }
 
