@@ -24,14 +24,16 @@ export const StoryBoardPageSchema = z.object({
     backgroundColor: z.string(),
     color: z.string(),
 })
-
 export type StoryBoardPage = z.infer<typeof StoryBoardPageSchema>;
+
+export const BoardProgressionSchema =z.enum(['sound', 'buttons'])
+export type BoardProgression = z.infer<typeof BoardProgressionSchema>
 
 export const StoryBoardSchema = z.object({
     id: z.string(),
     pages: StoryBoardPageSchema.array(),
     sound: soundInstanceSchema.optional(),
-    progression: z.enum(['sound', 'buttons']).optional()
+    progression: BoardProgressionSchema.optional()
     
 })
 

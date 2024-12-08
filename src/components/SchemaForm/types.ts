@@ -20,4 +20,5 @@ export type FieldProps = {
     optional?: boolean;
     readOnly?: boolean;
     notFullWidth?: boolean;
+    minWidth?: number;
 };
