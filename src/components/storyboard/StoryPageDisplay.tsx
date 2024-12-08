@@ -1,10 +1,10 @@
-import { PagePicture, StoryBoardPage } from "@/definitions/StoryBoard";
+import { BoardFont, PagePicture, StoryBoardPage } from "@/definitions/StoryBoard";
 import React, { CSSProperties } from "react";
-import { ImageBlock } from "../ImageBlock";
 import { FramePreview } from "../GameEditor/SpriteEditor/FramePreview";
 
 type Props = {
     page: StoryBoardPage
+    font?: BoardFont
 }
 
 
@@ -51,12 +51,13 @@ const PagePictureBlock: React.FunctionComponent<{ picture: PagePicture }> = ({ p
         width={1} height={1} />
 }
 
-export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {
+export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page, font }) => {
     const { color, backgroundColor } = page
-    return <div style={{
+    return <section style={{
         flex: 1, position: 'relative', overflow: 'hidden',
         color,
         backgroundColor,
+        fontFamily: font,
     }}>
         {page.pictures.map((element, index) => (
             <PagePictureBlock key={index} picture={element} />
@@ -76,5 +77,5 @@ export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page }) => {
                 ))}
             </div>
         </div>
-    </div>
+    </section>
 }

@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { BoardProgression, BoardProgressionSchema, StoryBoard } from "@/definitions/StoryBoard";
+import { BoardFontSchema, BoardProgression, BoardProgressionSchema, StoryBoard } from "@/definitions/StoryBoard";
 import { patchMember } from "@/lib/update-design";
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
@@ -49,7 +49,6 @@ export const StoryBoardEditor: React.FunctionComponent<Props> = ({ storyBoard })
                 value={storyBoard.sound}
                 setValue={(sound) => update(`set sound on storyboard ${storyBoard.id} `, { sound })} />
             <Box display={'flex'} alignItems={'center'} gap={2}>
-
                 <EnumSelectInput
                     label="Progression mode"
                     notFullWidth
@@ -64,6 +63,23 @@ export const StoryBoardEditor: React.FunctionComponent<Props> = ({ storyBoard })
                     } />
 
                 <Typography> {getProgressionDescription(storyBoard.progression)}</Typography>
+            </Box>
+            <Box display={'flex'} alignItems={'center'} gap={2}>
+                <EnumSelectInput
+                    label="Font"
+                    notFullWidth
+                    minWidth={120}
+                    enumSchema={BoardFontSchema}
+                    value={storyBoard.font}
+                    inputHandler={font =>
+                        update(`set font on storyboard ${storyBoard.id} to ${font}`, { font })
+                    }
+                    inputUndefinedHandler={() =>
+                        update(`unset font on storyboard ${storyBoard.id}`, { font: undefined })
+                    } />
+                <Box border={1} padding={2} fontSize={'small'}>
+                    <span style={{fontFamily:storyBoard.font}}>abcdefghijklmnopqrstuvwxyz</span>
+                </Box>
             </Box>
         </EditorBox>
 

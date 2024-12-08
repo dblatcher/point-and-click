@@ -48,7 +48,7 @@ export const PageMenu = ({
                             fontSize={3}
                             sx={{ backgroundColor: 'white', color: 'black' }}
                         >
-                            <StoryPageDisplay page={page} />
+                            <StoryPageDisplay page={page} font={storyBoard.font}/>
                         </Box>
                     </Button>
                 )}

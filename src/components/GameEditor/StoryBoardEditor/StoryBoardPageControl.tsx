@@ -94,7 +94,7 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                     flexDirection={'column'}
                     fontSize={10}
                 >
-                    <StoryPageDisplay page={page} />
+                    <StoryPageDisplay page={page} font={storyBoard.font} />
                 </Box>
             </Box>
         </EditorBox>

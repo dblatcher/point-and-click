@@ -26,15 +26,27 @@ export const StoryBoardPageSchema = z.object({
 })
 export type StoryBoardPage = z.infer<typeof StoryBoardPageSchema>;
 
-export const BoardProgressionSchema =z.enum(['sound', 'buttons'])
+export const BoardProgressionSchema = z.enum(['sound', 'buttons'])
 export type BoardProgression = z.infer<typeof BoardProgressionSchema>
+
+export const BoardFontSchema = z.enum([
+    'serif',
+    'sans-serif',
+    'monospace',
+    'cursive',
+    'fantasy',
+    'math',
+    'fangsong',
+])
+export type BoardFont = z.infer<typeof BoardFontSchema>
 
 export const StoryBoardSchema = z.object({
     id: z.string(),
     pages: StoryBoardPageSchema.array(),
+    font: BoardFontSchema.optional(),
     sound: soundInstanceSchema.optional(),
     progression: BoardProgressionSchema.optional()
-    
+
 })
 
 export type StoryBoard = z.infer<typeof StoryBoardSchema>;

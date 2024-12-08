@@ -106,7 +106,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard, c
         style={{ ...fullScreenStyle, cursor: 'pointer' }}
         onClick={proceed}
     >
-        <StoryPageDisplay page={currentPage} />
+        <StoryPageDisplay page={currentPage} font={storyBoard.font} />
     </article>
 
 }
