@@ -1,10 +1,10 @@
 import { Game } from "@/components/game/Game";
+import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { Dialog, DialogTitle, DialogActions, Button, DialogContent } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import { useState } from "react";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
-import { useAssets } from "@/context/asset-context";
 
 interface Props {
     isOpen: boolean
@@ -26,11 +26,11 @@ export const TestGameDialog = ({ isOpen, close, resetTimeStamp, reset }: Props) 
             onClose={close}
         >
             <DialogActions>
+                <DialogContentText sx={{ marginRight: 'auto' }}>Test: {gameDesign.id}</DialogContentText>
                 <BooleanInput value={showDebugLog} inputHandler={setShowDebugLog} label="debug log" />
                 <Button onClick={reset} >reset game test</Button>
                 <Button onClick={close} >close game test</Button>
             </DialogActions>
-            <DialogTitle>Test: {gameDesign.id}</DialogTitle>
             <DialogContent>
                 <Game
                     key={resetTimeStamp}
