@@ -30,7 +30,6 @@ const schedulePageTurns = (setPageNumber: { (pageNumber: number): void }, durati
 }
 
 const fullScreenStyle: CSSProperties = {
-    backgroundColor: 'darkgray',
     width: '100%',
     height: '100%',
     position: 'absolute',
@@ -40,6 +39,13 @@ const fullScreenStyle: CSSProperties = {
     flexDirection: 'column',
 }
 
+const buttonsStyle: CSSProperties = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+    padding: 5,
+}
 
 export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard, confirmDone }) => {
     const [pageNumber, setPageNumber] = useState(0)
@@ -74,7 +80,8 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard, c
     }, [setPageNumber, storyBoard, soundService, setSound, confirmDone])
 
     const currentPage = storyBoard.pages[pageNumber]
-    const onLastPage = pageNumber === storyBoard.pages.length - 1
+    const onLastPage = pageNumber === storyBoard.pages.length - 1;
+    const onFirstPage = pageNumber === 0;
 
     const close = () => {
         sound?.stop()
@@ -89,13 +96,22 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard, c
         }
     }
 
+    const goBack = () => {
+        setPageNumber(Math.max(0, pageNumber - 1))
+    }
+
     if (storyBoard.progression === 'buttons') {
         return <article style={fullScreenStyle}>
             <StoryPageDisplay page={currentPage} />
-            <button onClick={proceed}>
+            <div style={buttonsStyle}>
+                <button disabled={onFirstPage} onClick={goBack}>
+                    <span>back</span>
+                </button>
                 <span>{pageNumber + 1} / {storyBoard.pages.length}</span>
-                <span>{onLastPage ? 'done' : 'next'}</span>
-            </button>
+                <button onClick={proceed}>
+                    <span>{onLastPage ? 'done' : 'next'}</span>
+                </button>
+            </div>
         </article>
     }
 
