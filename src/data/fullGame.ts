@@ -31,10 +31,17 @@ export const prebuiltGameDesign: GameDesign = {
     storyBoards: [
         {
             id: 'test-board',
+            sound: {
+                soundId: 'B4organII'
+            },
+            progression: 'sound',
             pages: [
                 {
-                    title: "this is the first page",
-                    narrative: { text: ['A dark and story night', 'in mid October...'] },
+                    title: "Welcome to the test game",
+                    narrative: { text: [
+                        'This is not a real game, but just an example to show how the various features work.', 
+                        'You can download it and open it in the editor instead of starting from a blank state.'
+                    ] },
                     backgroundColor: '#000000',
                     color: '#ffffff',
                     pictures: [
@@ -61,7 +68,7 @@ export const prebuiltGameDesign: GameDesign = {
                     ]
                 },
                 {
-                    title: "this is the second and last page",
+                    title: "The content is not meant to make sense!",
                     narrative: {
                         text: ['let us begin']
                     },
@@ -72,10 +79,6 @@ export const prebuiltGameDesign: GameDesign = {
             ]
         }, {
             id: 'part-two',
-            sound: {
-                soundId: 'B4organII'
-            },
-            progression: 'sound',
             pages: [
                 {
                     title: 'Welcome to part two',

@@ -20,7 +20,7 @@ const getProgressionDescription = (progression: BoardProgression | undefined): s
         case 'buttons':
             return "There will be buttons on the screen allowing the user to go back and forwards at their own pace."
         case 'sound':
-            return "The pages will be changed over the duration of the sound played, so the board is finished as the sound ends."
+            return "The pages will be changed over the duration of the sound played, so the board is finished as the sound ends. Be sure to pick a sound file of a suitable length."
         case undefined:
             return "The board will stay up until the player clicks on the screen to go to the next page."
     }
