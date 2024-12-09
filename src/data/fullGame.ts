@@ -60,11 +60,6 @@ export const prebuiltGameDesign: GameDesign = {
                             height: 14,
                             aspectRatio: { x: 2, y: 3 }
                         },
-                        {
-                            x: 'center',
-                            y: 'bottom',
-                            image: { imageId: 'no such.png' },
-                        },
                     ]
                 },
                 {

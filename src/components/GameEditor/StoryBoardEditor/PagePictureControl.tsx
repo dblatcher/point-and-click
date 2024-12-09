@@ -4,6 +4,7 @@ import { Box, Button, ButtonProps, Grid, Stack, Typography } from "@mui/material
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { FramePreview } from "../SpriteEditor/FramePreview";
 import { AspectRatioControl } from "../AspectRatioControl";
+import { HideImageOutlinedIcon } from "../material-icons";
 
 
 const PlacementControl = ({ x, y, updatePicture, pictureIndex }: Pick<PagePicture, 'x' | 'y'> & { updatePicture: { (mod: Partial<PagePicture>, pictureIndex: number): void }, pictureIndex: number }) => {
@@ -66,14 +67,14 @@ export const PagePictureControl = ({
                 </Grid>
                 <Grid item xs={8} display={'flex'} alignItems={'center'} justifyContent={'center'}>
                     <Box width={60}>
-                        <NumberInput notFullWidth label="height" value={picture.height ?? 0} inputHandler={(height) => updatePicture({ height }, pictureIndex)} />
+                        <NumberInput notFullWidth label="width" value={picture.width ?? 0} inputHandler={(width) => updatePicture({ width }, pictureIndex)} />
                     </Box>
                 </Grid>
             </Grid>
             <Grid container>
                 <Grid item xs={4} display={'flex'} alignItems={'center'} >
                     <Box width={60}>
-                        <NumberInput notFullWidth label="width" value={picture.width ?? 0} inputHandler={(width) => updatePicture({ width }, pictureIndex)} />
+                        <NumberInput notFullWidth label="height" value={picture.height ?? 0} inputHandler={(height) => updatePicture({ height }, pictureIndex)} />
                     </Box>
                 </Grid>
                 <Grid item xs={8} display={'flex'} alignItems={'center'} justifyContent={'center'}>
@@ -86,7 +87,7 @@ export const PagePictureControl = ({
                                 padding: 0,
                             }
                         }}
-                        buttonContent={
+                        buttonContent={imageId ?
                             <FramePreview
                                 style={{
                                     border: '1px solid black',
@@ -96,6 +97,11 @@ export const PagePictureControl = ({
                                 frame={{ imageId, row, col }}
                                 width={(picture.width ?? 5) * 4}
                                 height={(picture.height ?? 5) * 4} />
+                            :
+                            <HideImageOutlinedIcon sx={{
+                                width: (picture.width ?? 5) * 4,
+                                height: (picture.height ?? 5) * 4,
+                            }} />
                         }
                     />
                 </Grid>

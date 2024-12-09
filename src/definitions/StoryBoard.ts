@@ -36,7 +36,6 @@ export const BoardFontSchema = z.enum([
     'cursive',
     'fantasy',
     'math',
-    'fangsong',
 ])
 export type BoardFont = z.infer<typeof BoardFontSchema>
 

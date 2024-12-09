@@ -45,11 +45,12 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
         <EditorBox title={pageDescription}>
             <Box display={'flex'} gap={4} justifyContent={'space-between'}>
                 <Box>
-                    <Box gap={1} display={'flex'} alignItems={'center'}>
+                    <Typography variant="h3">Text</Typography>
+                    <Box gap={2} display={'flex'} flexDirection={'column'}>
                         <StringInput label="title" value={page.title} inputHandler={newTitle =>
                             updatePage(`title to "${newTitle}"`, { title: newTitle })
                         } />
-                        <NarrativeEditor isRequired
+                        <NarrativeEditor isRequired noDialog
                             narrative={page.narrative}
                             update={(narrative) => {
                                 update(
