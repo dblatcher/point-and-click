@@ -5,9 +5,9 @@ import { useGameInfo } from "@/context/game-info-provider";
 
 
 export function CommandLine() {
-    const state = useGameState()
+    const { gameState } = useGameState()
     const { verb } = useGameInfo()
-    const { items, currentItemId, hoverTarget } = state
+    const { items, currentItemId, hoverTarget } = gameState
     const item = findById(currentItemId, items)
 
 

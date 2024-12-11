@@ -47,9 +47,9 @@ const CommandLineInner = memo(function CommandLine({ verb, item, hoverTarget, bo
 }, innerCommandLinePropsAreEqual)
 
 export const CommandLine = ({ boxProps }: { boxProps?: BoxProps; }) => {
-    const state = useGameState()
+    const { gameState } = useGameState()
     const { verb } = useGameInfo()
-    const { items, currentItemId, hoverTarget } = state
+    const { items, currentItemId, hoverTarget } = gameState
 
     return (
         <CommandLineInner

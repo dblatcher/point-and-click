@@ -36,7 +36,6 @@ export type SaveMenuProps = {
 export type GameLayoutProps = {
     children: ReactNode;
     saveMenu: ReactNode;
-    selectVerb: { (verb: Verb): void };
     selectConversation: { (choice: ConversationChoice): void };
     selectItem: { (item: ItemData): void };
     handleHover?: HandleHoverFunction;

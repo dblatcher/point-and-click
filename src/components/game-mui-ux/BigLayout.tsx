@@ -12,7 +12,7 @@ import { VerbMenu } from "./VerbMenu";
 
 export const BigLayout = ({
     children,
-    selectVerb, selectConversation, selectItem, handleHover, setScreenSize,
+    selectConversation, selectItem, handleHover, setScreenSize,
     saveMenu,
 }: GameLayoutProps) => {
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
@@ -70,7 +70,7 @@ export const BigLayout = ({
                             }} />
                             <Grid container maxWidth={'lg'}>
                                 <Grid item xs={5}>
-                                    <VerbMenu select={selectVerb} />
+                                    <VerbMenu />
                                 </Grid>
                                 <Grid item xs={7}>
                                     <ItemMenu handleHover={handleHover} select={selectItem} />

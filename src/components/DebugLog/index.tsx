@@ -7,8 +7,8 @@ import { LogEntry } from "@/lib/inGameDebugging";
 
 
 export const DebugLog = () => {
-    const state = useGameState();
-    const { emitter } = state
+    const { gameState } = useGameState();
+    const { emitter } = gameState
     const [log, setLog] = useState<LogEntry[]>([])
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export const DebugLog = () => {
         listElement.scrollTo({ left: 0, top: listElement.scrollHeight })
     }, [log.length])
 
-    const actorsInRoom = state.actors.filter(_ => _.room === state.currentRoomId)
+    const actorsInRoom = gameState.actors.filter(_ => _.room === gameState.currentRoomId)
 
     const describeOrder = (order?: Order): [string, string] => {
         if (!order) { return ["", ""] }
@@ -40,7 +40,7 @@ export const DebugLog = () => {
         return [order.type, currentStep?.animation || ""]
     }
     const getOrderDescrition = (actorId: string): [string, string] => {
-        const { sequenceRunning, actorOrders } = state
+        const { sequenceRunning, actorOrders } = gameState
         if (sequenceRunning && sequenceRunning.stages.length > 0) {
             const [currentStage] = sequenceRunning.stages;
 
@@ -62,9 +62,9 @@ export const DebugLog = () => {
         <aside>
             <div className={styles.layout}>
                 <section className={styles.statusSection}>
-                    <p>room:{state.currentRoomId}</p>
-                    <p>sequence:{state.sequenceRunning?.id}</p>
-                    <p>conversation:{state.currentConversationId}</p>
+                    <p>room:{gameState.currentRoomId}</p>
+                    <p>sequence:{gameState.sequenceRunning?.id}</p>
+                    <p>conversation:{gameState.currentConversationId}</p>
                 </section>
             </div>
             <div className={styles.layout}>
@@ -100,7 +100,7 @@ export const DebugLog = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {Object.entries(state.flagMap).map(entry => {
+                            {Object.entries(gameState.flagMap).map(entry => {
                                 if (!entry || !entry[1]) { return null }
                                 const [flagKey, flag] = entry;
                                 return <tr key={flagKey}>

@@ -11,10 +11,10 @@ import { ScrollingFeed } from "../ScrollingFeed";
 import { FeedLine } from "./FeedLine";
 
 export const NarrativeFeed = () => {
-    const state = useGameState();
+    const { gameState } = useGameState();
     const { gameDesign } = useGameDesign()
     const { endings } = useGameInfo()
-    const { emitter, currentStoryBoardId } = state
+    const { emitter, currentStoryBoardId } = gameState
     const [feed, setFeed] = useState<FeedItem[]>([])
     const feedQueue = useRef<FeedItem[]>([])
 
@@ -40,7 +40,7 @@ export const NarrativeFeed = () => {
 
     useEffect(() => {
         const handleInGameEvent = (inGameEvent: InGameEvent) => {
-            feedQueue.current.push(...inGameEventToFeedLines(inGameEvent, state, endings))
+            feedQueue.current.push(...inGameEventToFeedLines(inGameEvent, gameState, endings))
         }
 
         const handlePromptFeedback = (feedback: PromptFeedbackReport) => {

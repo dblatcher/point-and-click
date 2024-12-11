@@ -54,11 +54,10 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         gameState,
         handleTargetClick
     )
-    return <GameStateProvider value={gameState}>
+    return <GameStateProvider value={{ gameState, dispatchGameStateAction: dispatch }}>
         <GameInfoProvider value={{ ...props, verb: currentVerb, ending }}>
             {showDebugLog && (<DebugLog />)}
             <GameLayoutComponent
-                selectVerb={(verb) => { dispatch({ type: 'VERB-SELECT', verb }) }}
                 selectConversation={(choice) => { dispatch({ type: 'CONVERSATION-CHOICE', choice, props }) }}
                 selectItem={handleTargetClick}
                 handleHover={handleHover}
@@ -95,12 +94,12 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
                 )}
 
             </GameLayoutComponent>
-                {(!props.instantMode && currentStoryBoard) && (
-                    <StoryBoardPlayer
-                        storyBoard={currentStoryBoard}
-                        confirmDone={clearStoryBoard}
-                    />
-                )}
+            {(!props.instantMode && currentStoryBoard) && (
+                <StoryBoardPlayer
+                    storyBoard={currentStoryBoard}
+                    confirmDone={clearStoryBoard}
+                />
+            )}
         </GameInfoProvider>
     </GameStateProvider>
 }

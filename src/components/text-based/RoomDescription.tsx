@@ -5,8 +5,8 @@ import { makeRoomDescription } from "@/lib/text-based/create-feed-items"
 
 
 export const RoomDescription = () => {
-    const state = useGameState()
-    const { currentRoomId, rooms } = state
+    const { gameState } = useGameState()
+    const { currentRoomId, rooms } = gameState
     const { player } = useGameStateDerivations()
     const room = rooms.find(room => room.id === currentRoomId)
 
@@ -19,7 +19,7 @@ export const RoomDescription = () => {
         >
             {room && <>
                 <Typography fontWeight={'bold'} textTransform={'uppercase'}>{room.name ?? room.id}</Typography>
-                <FeedLine feedItem={makeRoomDescription(state, player)} />
+                <FeedLine feedItem={makeRoomDescription(gameState, player)} />
             </>}
         </Box>
     )

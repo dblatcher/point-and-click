@@ -10,12 +10,12 @@ import { VerbMenu } from "./VerbMenu";
 
 export const Layout = ({
     children,
-    selectVerb, selectConversation, selectItem, handleHover,
+    selectConversation, selectItem, handleHover,
     setScreenSize,
     saveMenu,
 }: GameLayoutProps) => {
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
-    const { roomWidth, roomHeight } = useGameState()
+    const { roomWidth, roomHeight } = useGameState().gameState
 
     return (<main>
         {saveMenu}
@@ -31,7 +31,7 @@ export const Layout = ({
         ) : (
             <>
                 <CommandLine />
-                <VerbMenu select={selectVerb} />
+                <VerbMenu />
                 <ItemMenu handleHover={handleHover} select={selectItem} />
             </>
         )}

@@ -15,7 +15,7 @@ import { generateCellMatrix } from "@/lib/pathfinding/cells"
 import { GameEventEmitter } from "@/lib/game-event-emitter"
 
 
-type GameStateAction =
+export type GameStateAction =
     | { type: 'SET-PAUSED', isPaused: boolean }
     | { type: 'VERB-SELECT', verb: Verb }
     | { type: 'CONVERSATION-CHOICE', choice: ConversationChoice, props: GameProps }
