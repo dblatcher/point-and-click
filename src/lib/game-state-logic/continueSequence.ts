@@ -84,6 +84,8 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
         actors,
         currentConversationId: state.currentConversationId,
         currentStoryBoardId: state.currentStoryBoardId,
+        currentRoomId: state.currentRoomId,
+        cellMatrix: state.cellMatrix,
         sequenceRunning: sequenceRunning.stages.length === 0 ? undefined : sequenceRunning
     }
 }
