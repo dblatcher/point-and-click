@@ -28,6 +28,8 @@ export type GameStateAction =
     | { type: 'CLEAR-STORYBOARD' }
 
 
+export const screenSizeAction = (width?: number, height?: number): GameStateAction => ({ type: 'SET-SCREEN-SIZE', height, width })
+
 export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState, action) => {
     const isActive: boolean = !gameState.endingId && !gameState.isPaused && !gameState.sequenceRunning
     const player = gameState.actors.find(actor => actor.isPlayer)

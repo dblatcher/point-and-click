@@ -62,7 +62,6 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
                 selectItem={handleTargetClick}
                 handleHover={handleHover}
                 clearStoryBoard={clearStoryBoard}
-                setScreenSize={(width, height) => { dispatch({ type: 'SET-SCREEN-SIZE', width, height }) }}
                 sendCommand={(command) => {
                     dispatch({ type: 'SEND-COMMAND', command, props })
                 }}

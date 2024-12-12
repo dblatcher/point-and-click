@@ -4,7 +4,10 @@ import { findById } from '@/lib/util'
 import { GameEventEmitter } from '../lib/game-event-emitter'
 import { GameStateAction } from '@/lib/game-state-logic/game-state-reducer'
 
-const gameStateContext = createContext<{ gameState: GameState, dispatchGameStateAction: React.Dispatch<GameStateAction> }>(
+const gameStateContext = createContext<{ 
+    gameState: GameState, 
+    dispatchGameStateAction: React.Dispatch<GameStateAction>,
+}>(
     {
         gameState: {
             viewAngle: 0,

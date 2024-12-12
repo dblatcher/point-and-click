@@ -1,4 +1,4 @@
-import { useGameStateDerivations } from "@/context/game-state-context";
+import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { Box, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { ResizeWatcher } from "../ResizeWatcher";
@@ -8,13 +8,15 @@ import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
 import { ItemMenu } from "./ItemMenu";
 import { VerbMenu } from "./VerbMenu";
+import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 
 
 export const BigLayout = ({
     children,
-    selectConversation, selectItem, handleHover, setScreenSize,
+    selectConversation, selectItem, handleHover,
     saveMenu,
 }: GameLayoutProps) => {
+    const { dispatchGameStateAction } = useGameState()
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
     const [initialResize, setInitialResize] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -22,15 +24,15 @@ export const BigLayout = ({
     useEffect(() => {
         if (containerRef.current && !initialResize) {
             setInitialResize(true)
-            setScreenSize(containerRef.current.clientWidth - 20, containerRef.current.clientHeight - 60)
+            dispatchGameStateAction(screenSizeAction(containerRef.current.clientWidth - 20, containerRef.current.clientHeight - 60))
         }
-    }, [setScreenSize, initialResize, setInitialResize])
+    }, [dispatchGameStateAction, initialResize, setInitialResize])
 
     // TO DO - the resize handler could use the size of the container div instead of the whole document body
     return (
         <ResizeWatcher resizeHandler={() => {
             if (containerRef.current) {
-                setScreenSize(containerRef.current.clientWidth - 20, containerRef.current.clientHeight - 60)
+                dispatchGameStateAction(screenSizeAction(containerRef.current.clientWidth - 20, containerRef.current.clientHeight - 60))
             } else {
                 console.log('no ref')
             }
@@ -51,7 +53,7 @@ export const BigLayout = ({
                 {children}
             </div>
 
-            <div style={{ margin: '0 auto', minHeight:100 }}>
+            <div style={{ margin: '0 auto', minHeight: 100 }}>
                 <Box maxWidth={'lg'}
                     sx={{
                         display: 'flex',

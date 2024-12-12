@@ -4,31 +4,32 @@ import { EndingWrapper } from "@/components/game-ui/EndingScreen";
 import { ItemMenu } from "@/components/game-ui/ItemMenu";
 import { SoundToggle } from "@/components/game-ui/SoundToggle";
 import { VerbMenu } from "@/components/game-ui/VerbMenu";
-import { useGameStateDerivations } from "@/context/game-state-context";
+import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { GameLayoutProps } from "../game/uiComponentSet";
 import { NarrativeFeed } from "./NarrativeFeed";
 import { RoomDescription } from "./RoomDescription";
 import { TextPrompt } from "./TextPrompt";
+import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 
 
 export const TextBasedLayout = ({
     children,
-    selectVerb, selectConversation, selectItem, handleHover,
+    selectConversation, selectItem, handleHover,
     clearStoryBoard,
-    setScreenSize,
     saveMenu,
     sendCommand,
 }: GameLayoutProps) => {
+    const { dispatchGameStateAction } = useGameState()
     const [initialResizeDone, setInitialResizeDone] = useState(false)
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
 
     useEffect(() => {
         if (initialResizeDone) { return }
-        setScreenSize(300, 200);
+        dispatchGameStateAction(screenSizeAction(300, 200));
         setInitialResizeDone(true)
-    }, [initialResizeDone, setInitialResizeDone, setScreenSize])
+    }, [initialResizeDone, setInitialResizeDone, dispatchGameStateAction])
 
     return (<main>
         {saveMenu}
@@ -57,7 +58,7 @@ export const TextBasedLayout = ({
             ) : (
                 <div>
                     <CommandLine />
-                    <VerbMenu select={selectVerb} />
+                    <VerbMenu />
                     <ItemMenu handleHover={handleHover} select={selectItem} />
                 </div>
             )}
