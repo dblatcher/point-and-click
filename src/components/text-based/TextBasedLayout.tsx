@@ -19,7 +19,6 @@ export const TextBasedLayout = ({
     selectConversation, selectItem, handleHover,
     clearStoryBoard,
     saveMenu,
-    sendCommand,
 }: GameLayoutProps) => {
     const { dispatchGameStateAction } = useGameState()
     const [initialResizeDone, setInitialResizeDone] = useState(false)
@@ -41,7 +40,7 @@ export const TextBasedLayout = ({
             </Box>
             <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} flex={2}>
                 <NarrativeFeed />
-                <TextPrompt sendCommand={sendCommand} selectConversationChoice={selectConversation} clearStoryBoard={clearStoryBoard} />
+                <TextPrompt selectConversationChoice={selectConversation} clearStoryBoard={clearStoryBoard} />
             </Box>
         </Box>
 

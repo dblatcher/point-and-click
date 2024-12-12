@@ -8,7 +8,6 @@ import { Box, TextField } from "@mui/material"
 import { useRef, useState } from "react"
 
 interface Props {
-    sendCommand: { (command: Command): void }
     selectConversationChoice: { (choice: ConversationChoice): void };
     clearStoryBoard: { (): void }
 }
@@ -17,17 +16,18 @@ const maxHistoryLength = 20
 
 // TO DO - needs to be disabled when UI should be disabled
 export const TextPrompt = ({
-    sendCommand,
     selectConversationChoice,
     clearStoryBoard,
 }: Props) => {
-    const { gameState, gameProps } = useGameState()
+    const { gameState, gameProps, dispatchGameStateAction } = useGameState()
     const { inventory, isGameEnded, player, currentConversation: conversation, isSequenceRunning } = useGameStateDerivations()
     const { verbs } = gameProps
     const [promptText, setPromptText] = useState('')
     const [historyIndex, setHistoryIndex] = useState<number | undefined>(undefined)
     const promptHistoryRef = useRef<string[]>([])
     const { current: history } = promptHistoryRef
+
+    const sendCommand = (command: Command) => dispatchGameStateAction({ type: 'SEND-COMMAND', command, props: gameProps })
 
     const addToHistory = (promptText: string) => {
         if (promptText !== history[history.length - 1] && promptText.length > 0) {

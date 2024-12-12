@@ -39,7 +39,6 @@ export type GameLayoutProps = {
     selectConversation: { (choice: ConversationChoice): void };
     selectItem: { (item: ItemData): void };
     handleHover?: HandleHoverFunction;
-    sendCommand: { (command: Command): void };
     clearStoryBoard: { (): void };
 }
 

@@ -62,9 +62,6 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
             selectItem={handleTargetClick}
             handleHover={handleHover}
             clearStoryBoard={clearStoryBoard}
-            sendCommand={(command) => {
-                dispatch({ type: 'SEND-COMMAND', command, props })
-            }}
             saveMenu={
                 <SaveMenuComponent
                     load={load ? (fileName) => { load(fileName) } : undefined}
