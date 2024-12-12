@@ -3,10 +3,14 @@ import { GameState } from '@/lib/game-state-logic/types'
 import { findById } from '@/lib/util'
 import { GameEventEmitter } from '../lib/game-event-emitter'
 import { GameStateAction } from '@/lib/game-state-logic/game-state-reducer'
+import { GameProps } from '@/components/game/types'
+import { SoundService } from '@/services/soundService'
+import { Verb, Ending } from '@/definitions'
 
 const gameStateContext = createContext<{ 
     gameState: GameState, 
     dispatchGameStateAction: React.Dispatch<GameStateAction>,
+    gameProps: Readonly<GameProps>,
 }>(
     {
         gameState: {
@@ -29,7 +33,25 @@ const gameStateContext = createContext<{
             roomWidth: 800,
             emitter: new GameEventEmitter(),
         },
-        dispatchGameStateAction: () => { }
+        dispatchGameStateAction: () => { },
+        gameProps: {
+            _sprites: [],
+            soundService: new SoundService,
+            id: '',
+            rooms: [],
+            items: [],
+            actors: [],
+            interactions: [],
+            conversations: [],
+            flagMap: {},
+            currentRoomId: '',
+            actorOrders: {},
+            gameNotBegun: false,
+            verbs: [],
+            sequences: [],
+            sprites: [],
+            endings: []
+        }
     }
 )
 
@@ -40,12 +62,14 @@ export const useGameState = () => {
 }
 
 export const useGameStateDerivations = () => {
-    const { gameState } = useContext(gameStateContext)
+    const { gameState, gameProps } = useContext(gameStateContext)
     const { currentConversationId, conversations, endingId, sequenceRunning, items, currentItemId, actors } = gameState
 
     const player = actors.find(actor => actor.isPlayer)
     const inventory = items.filter(item => item.actorId === player?.id)
     const currentConversation = findById(currentConversationId, conversations)
+    const verb = findById(gameState.currentVerbId, gameProps.verbs);
+    const ending = findById(gameState.endingId, gameProps.endings)
 
     return {
         currentConversation,
@@ -55,5 +79,7 @@ export const useGameStateDerivations = () => {
         currentItem: findById(currentItemId, items),
         player,
         inventory,
+        verb, 
+        ending,
     }
 }

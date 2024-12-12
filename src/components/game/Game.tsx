@@ -1,5 +1,4 @@
 import { buildContentsList } from "@/components/game/put-contents-in-order";
-import { GameInfoProvider } from "@/context/game-info-provider";
 import { GameStateProvider } from "@/context/game-state-context";
 import { CommandTarget } from "@/definitions";
 import { useInterval } from "@/hooks/useInterval";
@@ -27,9 +26,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     } = uiComponents
     const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
 
-    const ending = findById(gameState.endingId, props.endings)
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
-    const currentVerb = findById(gameState.currentVerbId, props.verbs);
     const currentStoryBoard = findById(currentStoryBoardId, props.storyBoards ?? [])
 
     const tick = () => {
@@ -54,51 +51,53 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         gameState,
         handleTargetClick
     )
-    return <GameStateProvider value={{ gameState, dispatchGameStateAction: dispatch }}>
-        <GameInfoProvider value={{ ...props, verb: currentVerb, ending }}>
-            {showDebugLog && (<DebugLog />)}
-            <GameLayoutComponent
-                selectConversation={(choice) => { dispatch({ type: 'CONVERSATION-CHOICE', choice, props }) }}
-                selectItem={handleTargetClick}
-                handleHover={handleHover}
-                clearStoryBoard={clearStoryBoard}
-                sendCommand={(command) => {
-                    dispatch({ type: 'SEND-COMMAND', command, props })
-                }}
-                saveMenu={
-                    <SaveMenuComponent
-                        load={load ? (fileName) => { load(fileName) } : undefined}
-                        reset={reset ? () => { reset() } : undefined}
-                        save={save ? (fileName) => { save(getSaveData(gameState), fileName) } : undefined}
-                        deleteSave={deleteSave}
-                        listSavedGames={listSavedGames}
-                        isPaused={isPaused}
-                        setIsPaused={(isPaused) => { dispatch({ type: 'SET-PAUSED', isPaused }) }}
-                    />
-                }
-            >
-                {(currentRoom && !currentStoryBoard) && (
-                    <Room
-                        data={currentRoom}
-                        maxWidth={roomWidth}
-                        maxHeight={roomHeight}
-                        isPaused={isPaused}
-                        viewAngle={viewAngle}
-                        handleRoomClick={(x, y) => { dispatch({ type: 'ROOM-CLICK', x, y }) }}
-                        handleHotspotClick={handleTargetClick}
-                        handleHover={handleHover}
-                        contents={contentList}
-                        obstacleCells={renderCells ? gameState.cellMatrix : undefined}
-                    />
-                )}
-
-            </GameLayoutComponent>
-            {(!props.instantMode && currentStoryBoard) && (
-                <StoryBoardPlayer
-                    storyBoard={currentStoryBoard}
-                    confirmDone={clearStoryBoard}
+    return <GameStateProvider value={{
+        gameState,
+        dispatchGameStateAction: dispatch,
+        gameProps: props
+    }}>
+        {showDebugLog && (<DebugLog />)}
+        <GameLayoutComponent
+            selectConversation={(choice) => { dispatch({ type: 'CONVERSATION-CHOICE', choice, props }) }}
+            selectItem={handleTargetClick}
+            handleHover={handleHover}
+            clearStoryBoard={clearStoryBoard}
+            sendCommand={(command) => {
+                dispatch({ type: 'SEND-COMMAND', command, props })
+            }}
+            saveMenu={
+                <SaveMenuComponent
+                    load={load ? (fileName) => { load(fileName) } : undefined}
+                    reset={reset ? () => { reset() } : undefined}
+                    save={save ? (fileName) => { save(getSaveData(gameState), fileName) } : undefined}
+                    deleteSave={deleteSave}
+                    listSavedGames={listSavedGames}
+                    isPaused={isPaused}
+                    setIsPaused={(isPaused) => { dispatch({ type: 'SET-PAUSED', isPaused }) }}
+                />
+            }
+        >
+            {(currentRoom && !currentStoryBoard) && (
+                <Room
+                    data={currentRoom}
+                    maxWidth={roomWidth}
+                    maxHeight={roomHeight}
+                    isPaused={isPaused}
+                    viewAngle={viewAngle}
+                    handleRoomClick={(x, y) => { dispatch({ type: 'ROOM-CLICK', x, y }) }}
+                    handleHotspotClick={handleTargetClick}
+                    handleHover={handleHover}
+                    contents={contentList}
+                    obstacleCells={renderCells ? gameState.cellMatrix : undefined}
                 />
             )}
-        </GameInfoProvider>
+
+        </GameLayoutComponent>
+        {(!props.instantMode && currentStoryBoard) && (
+            <StoryBoardPlayer
+                storyBoard={currentStoryBoard}
+                confirmDone={clearStoryBoard}
+            />
+        )}
     </GameStateProvider>
 }

@@ -1,4 +1,3 @@
-import { useGameInfo } from '@/context/game-info-provider';
 import { Button } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { memo } from 'react';
@@ -7,9 +6,9 @@ import { VerbMenuProps, verbMenuPropsAreEqual } from "../game/uiComponentSet";
 
 
 export const VerbMenu = () => {
-    const { gameState, dispatchGameStateAction } = useGameState()
+    const { gameState, dispatchGameStateAction, gameProps } = useGameState()
     const { currentVerbId } = gameState
-    const { verbs } = useGameInfo()
+    const { verbs } = gameProps
     return <VerbMenuInner
         select={(verb) => { dispatchGameStateAction({ type: 'VERB-SELECT', verb }) }}
         verbs={verbs}

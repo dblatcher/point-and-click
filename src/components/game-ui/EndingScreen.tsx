@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import { CSSProperties, FunctionComponent } from "react";
-import { Ending } from "@/definitions";
-import { useGameInfo } from "@/context/game-info-provider";
 import { useAssets } from "@/context/asset-context";
+import { useGameStateDerivations } from "@/context/game-state-context";
+import { Ending } from "@/definitions";
+import { CSSProperties, FunctionComponent } from "react";
 
 
 export const EndingWrapper = () => {
-    const { ending } = useGameInfo()
+    const { ending } = useGameStateDerivations()
     if (!ending) {
         return null
     }

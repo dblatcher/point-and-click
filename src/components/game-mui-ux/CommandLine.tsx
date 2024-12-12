@@ -1,10 +1,9 @@
 import { CommandTarget, ItemData, Verb } from '@/definitions';
 import { findById } from '@/lib/util';
-import { Box, useTheme, BoxProps } from "@mui/material";
+import { Box, BoxProps, useTheme } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { memo } from 'react';
-import { useGameState } from '../../context/game-state-context';
-import { useGameInfo } from '@/context/game-info-provider';
+import { useGameState, useGameStateDerivations } from '../../context/game-state-context';
 
 type InnerCommandLineProps = {
     verb?: Verb;
@@ -48,7 +47,7 @@ const CommandLineInner = memo(function CommandLine({ verb, item, hoverTarget, bo
 
 export const CommandLine = ({ boxProps }: { boxProps?: BoxProps; }) => {
     const { gameState } = useGameState()
-    const { verb } = useGameInfo()
+    const { verb } = useGameStateDerivations()
     const { items, currentItemId, hoverTarget } = gameState
 
     return (

@@ -1,12 +1,11 @@
+import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { findById } from "@/lib/util";
-import { useGameState } from "@/context/game-state-context";
 import uiStyles from './uiStyles.module.css';
-import { useGameInfo } from "@/context/game-info-provider";
 
 
 export function CommandLine() {
     const { gameState } = useGameState()
-    const { verb } = useGameInfo()
+    const { verb } = useGameStateDerivations()
     const { items, currentItemId, hoverTarget } = gameState
     const item = findById(currentItemId, items)
 

@@ -1,5 +1,3 @@
-import { useGameDesign } from "@/context/game-design-context";
-import { useGameInfo } from "@/context/game-info-provider";
 import { useGameState } from "@/context/game-state-context";
 import { useInterval } from "@/hooks/useInterval";
 import { InGameEvent, PromptFeedbackReport } from "@/lib/game-event-emitter";
@@ -11,9 +9,8 @@ import { ScrollingFeed } from "../ScrollingFeed";
 import { FeedLine } from "./FeedLine";
 
 export const NarrativeFeed = () => {
-    const { gameState } = useGameState();
-    const { gameDesign } = useGameDesign()
-    const { endings } = useGameInfo()
+    const { gameState, gameProps } = useGameState();
+    const { endings } = gameProps
     const { emitter, currentStoryBoardId } = gameState
     const [feed, setFeed] = useState<FeedItem[]>([])
     const feedQueue = useRef<FeedItem[]>([])
@@ -27,7 +24,7 @@ export const NarrativeFeed = () => {
 
     useEffect(() => {
         if (currentStoryBoardId) {
-            const board = findById(currentStoryBoardId, gameDesign.storyBoards ?? [])
+            const board = findById(currentStoryBoardId, gameProps.storyBoards ?? [])
             const boardMessages: FeedItem[] =
                 board
                     ? storyBoardReportToFeedLines(board)
@@ -36,7 +33,7 @@ export const NarrativeFeed = () => {
             feedQueue.current.push(...boardMessages, { message: '[press enter to continue]', type: 'system' },)
         }
 
-    }, [currentStoryBoardId, gameDesign, feedQueue])
+    }, [currentStoryBoardId, gameProps, feedQueue])
 
     useEffect(() => {
         const handleInGameEvent = (inGameEvent: InGameEvent) => {

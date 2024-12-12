@@ -1,12 +1,11 @@
-import { useGameInfo } from "@/context/game-info-provider"
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context"
 import { Command, Conversation, ConversationChoice } from "@/definitions"
+import { reportConversationBranch } from "@/lib/game-event-emitter"
+import { standard } from "@/lib/text-based/standard-text"
+import { promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
+import { clamp } from "@/lib/util"
 import { Box, TextField } from "@mui/material"
 import { useRef, useState } from "react"
-import { clamp } from "@/lib/util"
-import { promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
-import { standard } from "@/lib/text-based/standard-text"
-import { reportConversationBranch } from "@/lib/game-event-emitter"
 
 interface Props {
     sendCommand: { (command: Command): void }
@@ -22,9 +21,9 @@ export const TextPrompt = ({
     selectConversationChoice,
     clearStoryBoard,
 }: Props) => {
-    const { verbs } = useGameInfo()
+    const { gameState, gameProps } = useGameState()
     const { inventory, isGameEnded, player, currentConversation: conversation, isSequenceRunning } = useGameStateDerivations()
-    const { gameState } = useGameState()
+    const { verbs } = gameProps
     const [promptText, setPromptText] = useState('')
     const [historyIndex, setHistoryIndex] = useState<number | undefined>(undefined)
     const promptHistoryRef = useRef<string[]>([])
