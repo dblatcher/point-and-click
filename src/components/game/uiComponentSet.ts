@@ -1,4 +1,4 @@
-import { Verb, ItemData, ConversationChoice, Command } from "@/definitions";
+import { ItemData, Verb } from "@/definitions";
 import { FunctionComponent, ReactNode } from "react";
 import { HandleHoverFunction } from "./types";
 
@@ -36,7 +36,6 @@ export type SaveMenuProps = {
 export type GameLayoutProps = {
     children: ReactNode;
     saveMenu: ReactNode;
-    selectItem: { (item: ItemData): void };
     handleHover?: HandleHoverFunction;
 }
 

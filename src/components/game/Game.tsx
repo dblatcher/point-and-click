@@ -54,7 +54,6 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     }}>
         {showDebugLog && (<DebugLog />)}
         <GameLayoutComponent
-            selectItem={handleTargetClick}
             handleHover={handleHover}
             saveMenu={
                 <SaveMenuComponent

@@ -4,17 +4,22 @@ import { CSSProperties, memo } from "react";
 import { Button, Grid, Typography, Avatar } from "@mui/material";
 import { ItemMenuProps, itemMenuPropsAreEqual } from "../game/uiComponentSet";
 import { HandleHoverFunction } from "../game/types";
-import { useGameStateDerivations } from "@/context/game-state-context";
+import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { useAssets } from "@/context/asset-context";
 import { ImageAsset } from "@/services/assets";
 
 
 export const ItemMenu = (props: {
-    select: { (item: ItemData): void };
     handleHover?: HandleHoverFunction;
 }) => {
+    const { updateGameState } = useGameState()
     const { inventory, currentItem } = useGameStateDerivations()
-    return <ItemMenuInner {...props} items={inventory} currentItemId={currentItem?.id} />
+    return <ItemMenuInner
+        {...props}
+        items={inventory}
+        currentItemId={currentItem?.id}
+        select={(item) => updateGameState({ type: 'TARGET-CLICK', target: item })}
+    />
 }
 
 const buildBackground = (

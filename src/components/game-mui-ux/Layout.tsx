@@ -12,7 +12,7 @@ import { EndingWrapper } from "../game-ui/EndingScreen";
 
 export const Layout = ({
     children,
-    selectItem, handleHover,
+    handleHover,
     saveMenu,
 }: GameLayoutProps) => {
     const theme = useTheme()
@@ -48,7 +48,7 @@ export const Layout = ({
                             ) : (<>
                                 <CommandLine />
                                 <VerbMenu />
-                                <ItemMenu handleHover={handleHover} select={selectItem} />
+                                <ItemMenu handleHover={handleHover} />
                             </>)}
                         </Card>
                     </Card>

@@ -11,7 +11,7 @@ import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 
 export const Layout = ({
     children,
-    selectItem, handleHover,
+    handleHover,
     saveMenu,
 }: GameLayoutProps) => {
     const { updateGameState } = useGameState()
@@ -33,7 +33,7 @@ export const Layout = ({
             <>
                 <CommandLine />
                 <VerbMenu />
-                <ItemMenu handleHover={handleHover} select={selectItem} />
+                <ItemMenu handleHover={handleHover} />
             </>
         )}
     </main>)
