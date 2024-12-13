@@ -53,9 +53,8 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     )
     return <GameStateProvider value={{
         gameState,
-        dispatchGameStateAction: dispatch,
         gameProps: props,
-        dispatchWithProps: makeDispatcherWithProps(dispatch, props),
+        updateGameState: makeDispatcherWithProps(dispatch, props),
     }}>
         {showDebugLog && (<DebugLog />)}
         <GameLayoutComponent

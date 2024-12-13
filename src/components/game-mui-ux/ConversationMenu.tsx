@@ -5,8 +5,8 @@ import { useGameState, useGameStateDerivations } from "@/context/game-state-cont
 
 export const ConversationMenu = () => {
     const { currentConversation } = useGameStateDerivations()
-    const { dispatchWithProps } = useGameState()
-    const select = (choice: ConversationChoice) => dispatchWithProps({ type: 'CONVERSATION-CHOICE', choice })
+    const { updateGameState } = useGameState()
+    const select = (choice: ConversationChoice) => updateGameState({ type: 'CONVERSATION-CHOICE', choice })
     return <>{currentConversation && (
         <ConversationMenuInner select={select} conversation={currentConversation} />
     )}</>

@@ -14,14 +14,14 @@ export const Layout = ({
     selectItem, handleHover,
     saveMenu,
 }: GameLayoutProps) => {
-    const { dispatchGameStateAction } = useGameState()
+    const { updateGameState } = useGameState()
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
     const { roomWidth, roomHeight } = useGameState().gameState
 
     return (<main>
         {saveMenu}
-        <button onClick={() => dispatchGameStateAction(screenSizeAction(roomWidth + 10, roomHeight + 10))}>+</button>
-        <button onClick={() => dispatchGameStateAction(screenSizeAction(roomWidth - 10, roomHeight - 10))}>-</button>
+        <button onClick={() => updateGameState(screenSizeAction(roomWidth + 10, roomHeight + 10))}>+</button>
+        <button onClick={() => updateGameState(screenSizeAction(roomWidth - 10, roomHeight - 10))}>-</button>
         <SoundToggle />
         {children}
         <EndingWrapper />

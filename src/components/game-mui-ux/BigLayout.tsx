@@ -16,7 +16,7 @@ export const BigLayout = ({
     selectItem, handleHover,
     saveMenu,
 }: GameLayoutProps) => {
-    const { dispatchGameStateAction } = useGameState()
+    const { updateGameState } = useGameState()
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
     const [initialResize, setInitialResize] = useState(false)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -24,15 +24,15 @@ export const BigLayout = ({
     useEffect(() => {
         if (containerRef.current && !initialResize) {
             setInitialResize(true)
-            dispatchGameStateAction(screenSizeAction(containerRef.current.clientWidth - 20, containerRef.current.clientHeight - 60))
+            updateGameState(screenSizeAction(containerRef.current.clientWidth - 20, containerRef.current.clientHeight - 60))
         }
-    }, [dispatchGameStateAction, initialResize, setInitialResize])
+    }, [updateGameState, initialResize, setInitialResize])
 
     // TO DO - the resize handler could use the size of the container div instead of the whole document body
     return (
         <ResizeWatcher resizeHandler={() => {
             if (containerRef.current) {
-                dispatchGameStateAction(screenSizeAction(containerRef.current.clientWidth - 20, containerRef.current.clientHeight - 60))
+                updateGameState(screenSizeAction(containerRef.current.clientWidth - 20, containerRef.current.clientHeight - 60))
             } else {
                 console.log('no ref')
             }

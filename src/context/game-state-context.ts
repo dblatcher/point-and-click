@@ -9,8 +9,7 @@ import { SoundService } from '@/services/soundService'
 const gameStateContext = createContext<{
     gameState: GameState,
     // TO DO - only need the enhanced dispatcher
-    dispatchGameStateAction: React.Dispatch<GameStateAction>,
-    dispatchWithProps: { (action: GameStateAction | ActionWithoutProp): void },
+    updateGameState: { (action: GameStateAction | ActionWithoutProp): void },
     gameProps: Readonly<GameProps>,
 }>(
     {
@@ -34,8 +33,7 @@ const gameStateContext = createContext<{
             roomWidth: 800,
             emitter: new GameEventEmitter(),
         },
-        dispatchGameStateAction: () => { },
-        dispatchWithProps: () => { },
+        updateGameState: () => { },
         gameProps: {
             _sprites: [],
             soundService: new SoundService,

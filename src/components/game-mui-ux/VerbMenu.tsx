@@ -6,11 +6,11 @@ import { VerbMenuProps, verbMenuPropsAreEqual } from "../game/uiComponentSet";
 
 
 export const VerbMenu = () => {
-    const { gameState, dispatchGameStateAction, gameProps } = useGameState()
+    const { gameState, updateGameState, gameProps } = useGameState()
     const { currentVerbId } = gameState
     const { verbs } = gameProps
     return <VerbMenuInner
-        select={(verb) => { dispatchGameStateAction({ type: 'VERB-SELECT', verb }) }}
+        select={(verb) => { updateGameState({ type: 'VERB-SELECT', verb }) }}
         verbs={verbs}
         currentVerbId={currentVerbId}
     />

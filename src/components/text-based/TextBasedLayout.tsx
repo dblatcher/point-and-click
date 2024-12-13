@@ -20,15 +20,15 @@ export const TextBasedLayout = ({
     clearStoryBoard,
     saveMenu,
 }: GameLayoutProps) => {
-    const { dispatchWithProps } = useGameState()
+    const { updateGameState } = useGameState()
     const [initialResizeDone, setInitialResizeDone] = useState(false)
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
 
     useEffect(() => {
         if (initialResizeDone) { return }
-        dispatchWithProps(screenSizeAction(300, 200));
+        updateGameState(screenSizeAction(300, 200));
         setInitialResizeDone(true)
-    }, [initialResizeDone, setInitialResizeDone, dispatchWithProps])
+    }, [initialResizeDone, setInitialResizeDone, updateGameState])
 
     return (<main>
         {saveMenu}

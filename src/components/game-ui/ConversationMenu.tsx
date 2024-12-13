@@ -5,7 +5,7 @@ import { useGameState, useGameStateDerivations } from "@/context/game-state-cont
 
 export function ConversationMenu() {
     const { currentConversation: conversation } = useGameStateDerivations()
-    const { dispatchWithProps } = useGameState()
+    const { updateGameState } = useGameState()
 
     if (!conversation) { return null }
     const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
@@ -17,7 +17,7 @@ export function ConversationMenu() {
                     <button
                         className={[uiStyles.button, uiStyles.conversation].join(" ")}
                         key={index}
-                        onClick={() => { dispatchWithProps({ type: 'CONVERSATION-CHOICE', choice }) }}
+                        onClick={() => { updateGameState({ type: 'CONVERSATION-CHOICE', choice }) }}
                     >
                         {choice.text}
                     </button>

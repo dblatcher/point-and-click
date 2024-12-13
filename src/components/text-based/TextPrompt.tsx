@@ -17,7 +17,7 @@ const maxHistoryLength = 20
 export const TextPrompt = ({
     clearStoryBoard,
 }: Props) => {
-    const { gameState, gameProps, dispatchWithProps } = useGameState()
+    const { gameState, gameProps, updateGameState } = useGameState()
     const { inventory, isGameEnded, player, currentConversation: conversation, isSequenceRunning } = useGameStateDerivations()
     const { verbs } = gameProps
     const [promptText, setPromptText] = useState('')
@@ -25,8 +25,8 @@ export const TextPrompt = ({
     const promptHistoryRef = useRef<string[]>([])
     const { current: history } = promptHistoryRef
 
-    const sendCommand = (command: Command) => dispatchWithProps({ type: 'SEND-COMMAND', command, props: gameProps })
-    const selectConversationChoice = (choice: ConversationChoice) => dispatchWithProps({ type: 'CONVERSATION-CHOICE', choice })
+    const sendCommand = (command: Command) => updateGameState({ type: 'SEND-COMMAND', command, props: gameProps })
+    const selectConversationChoice = (choice: ConversationChoice) => updateGameState({ type: 'CONVERSATION-CHOICE', choice })
 
     const addToHistory = (promptText: string) => {
         if (promptText !== history[history.length - 1] && promptText.length > 0) {
