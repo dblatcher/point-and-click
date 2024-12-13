@@ -17,7 +17,6 @@ import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 export const TextBasedLayout = ({
     children,
     selectItem, handleHover,
-    clearStoryBoard,
     saveMenu,
 }: GameLayoutProps) => {
     const { updateGameState } = useGameState()
@@ -40,7 +39,7 @@ export const TextBasedLayout = ({
             </Box>
             <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} flex={2}>
                 <NarrativeFeed />
-                <TextPrompt clearStoryBoard={clearStoryBoard} />
+                <TextPrompt />
             </Box>
         </Box>
 

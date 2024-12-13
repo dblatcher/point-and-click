@@ -3,10 +3,10 @@ import React, { CSSProperties, useEffect, useState } from "react";
 import { StoryPageDisplay } from "./StoryPageDisplay";
 import { useAssets } from "@/context/asset-context";
 import { SoundControl } from "sound-deck";
+import { useGameState } from "@/context/game-state-context";
 
 interface Props {
     storyBoard: StoryBoard
-    confirmDone: { (): void }
 }
 
 const getDuration = (sourceNode: SoundControl['sourceNode']) => {
@@ -47,7 +47,8 @@ const buttonsStyle: CSSProperties = {
     padding: 5,
 }
 
-export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard, confirmDone }) => {
+export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard }) => {
+    const { updateGameState } = useGameState()
     const [pageNumber, setPageNumber] = useState(0)
     const [sound, setSound] = useState<SoundControl | undefined>(undefined)
     const { soundService } = useAssets()
@@ -71,13 +72,13 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard, c
                         schedulePageTurns(setPageNumber, duration, storyBoard.pages.length)
                     }
                     soundControl.whenEnded.then(() => {
-                        confirmDone()
+                        updateGameState({ type: 'CLEAR-STORYBOARD' })
                     })
                 }
                 setSound(soundControl)
             }
         }
-    }, [setPageNumber, storyBoard, soundService, setSound, confirmDone])
+    }, [setPageNumber, storyBoard, soundService, setSound, updateGameState])
 
     const currentPage = storyBoard.pages[pageNumber]
     const onLastPage = pageNumber === storyBoard.pages.length - 1;
@@ -85,7 +86,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard, c
 
     const close = () => {
         sound?.stop()
-        confirmDone()
+        updateGameState({ type: 'CLEAR-STORYBOARD' })
     }
 
     const proceed = () => {

@@ -7,17 +7,12 @@ import { clamp } from "@/lib/util"
 import { Box, TextField } from "@mui/material"
 import { useRef, useState } from "react"
 
-interface Props {
-    clearStoryBoard: { (): void }
-}
 
 const maxHistoryLength = 20
 
 // TO DO - needs to be disabled when UI should be disabled
-export const TextPrompt = ({
-    clearStoryBoard,
-}: Props) => {
-    const { gameState, gameProps, updateGameState } = useGameState()
+export const TextPrompt = () => {
+    const { gameState, gameProps, updateGameState } = useGameState();
     const { inventory, isGameEnded, player, currentConversation: conversation, isSequenceRunning } = useGameStateDerivations()
     const { verbs } = gameProps
     const [promptText, setPromptText] = useState('')
@@ -44,7 +39,7 @@ export const TextPrompt = ({
 
     const handleSubmit = () => {
         if (gameState.currentStoryBoardId) {
-            clearStoryBoard()
+            updateGameState({ type: 'CLEAR-STORYBOARD' })
             return
         }
         if (isSequenceRunning) {

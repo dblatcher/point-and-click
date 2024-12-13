@@ -38,7 +38,6 @@ export type GameLayoutProps = {
     saveMenu: ReactNode;
     selectItem: { (item: ItemData): void };
     handleHover?: HandleHoverFunction;
-    clearStoryBoard: { (): void };
 }
 
 export type UiComponentSet = {

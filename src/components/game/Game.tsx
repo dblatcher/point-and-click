@@ -43,10 +43,6 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         dispatch({ type: 'HANDLE-HOVER', event, target })
     }
 
-    const clearStoryBoard = () => {
-        dispatch({ type: 'CLEAR-STORYBOARD' })
-    }
-
     const contentList = buildContentsList(
         gameState,
         handleTargetClick
@@ -60,7 +56,6 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         <GameLayoutComponent
             selectItem={handleTargetClick}
             handleHover={handleHover}
-            clearStoryBoard={clearStoryBoard}
             saveMenu={
                 <SaveMenuComponent
                     load={load ? (fileName) => { load(fileName) } : undefined}
@@ -90,10 +85,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
 
         </GameLayoutComponent>
         {(!props.instantMode && currentStoryBoard) && (
-            <StoryBoardPlayer
-                storyBoard={currentStoryBoard}
-                confirmDone={clearStoryBoard}
-            />
+            <StoryBoardPlayer storyBoard={currentStoryBoard} />
         )}
     </GameStateProvider>
 }
