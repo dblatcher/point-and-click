@@ -16,7 +16,6 @@ import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 
 export const TextBasedLayout = ({
     children,
-    handleHover,
     saveMenu,
 }: GameLayoutProps) => {
     const { updateGameState } = useGameState()
@@ -57,7 +56,7 @@ export const TextBasedLayout = ({
                 <div>
                     <CommandLine />
                     <VerbMenu />
-                    <ItemMenu handleHover={handleHover} />
+                    <ItemMenu />
                 </div>
             )}
         </Box>

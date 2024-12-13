@@ -13,7 +13,6 @@ import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 
 export const BigLayout = ({
     children,
-    handleHover,
     saveMenu,
 }: GameLayoutProps) => {
     const { updateGameState } = useGameState()
@@ -75,7 +74,7 @@ export const BigLayout = ({
                                     <VerbMenu />
                                 </Grid>
                                 <Grid item xs={7}>
-                                    <ItemMenu handleHover={handleHover} />
+                                    <ItemMenu />
                                 </Grid>
                             </Grid>
                         </>}

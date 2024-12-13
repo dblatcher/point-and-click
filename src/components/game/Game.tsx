@@ -39,10 +39,6 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         dispatch({ type: 'TARGET-CLICK', props, target })
     }
 
-    const handleHover = (target: CommandTarget, event: 'enter' | 'leave') => {
-        dispatch({ type: 'HANDLE-HOVER', event, target })
-    }
-
     const contentList = buildContentsList(
         gameState,
         handleTargetClick
@@ -54,7 +50,6 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     }}>
         {showDebugLog && (<DebugLog />)}
         <GameLayoutComponent
-            handleHover={handleHover}
             saveMenu={
                 <SaveMenuComponent
                     load={load ? (fileName) => { load(fileName) } : undefined}
@@ -76,7 +71,9 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
                     viewAngle={viewAngle}
                     handleRoomClick={(x, y) => { dispatch({ type: 'ROOM-CLICK', x, y }) }}
                     handleHotspotClick={handleTargetClick}
-                    handleHover={handleHover}
+                    handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
+                        dispatch({ type: 'HANDLE-HOVER', event, target })
+                    }}
                     contents={contentList}
                     obstacleCells={renderCells ? gameState.cellMatrix : undefined}
                 />

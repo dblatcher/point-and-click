@@ -3,17 +3,14 @@ import uiStyles from '@/components/game-ui/uiStyles.module.css';
 import { ItemMenuProps, itemMenuPropsAreEqual } from '@/components/game/uiComponentSet';
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { memo } from "react";
-import { HandleHoverFunction } from "../game/types";
 import { ImageBlock } from "../ImageBlock";
 
 
-export const ItemMenu = (props: {
-    handleHover?: HandleHoverFunction;
-}) => {
+export const ItemMenu = () => {
     const { updateGameState } = useGameState()
     const { inventory, currentItem } = useGameStateDerivations()
     return <ItemMenuInner 
-        {...props} 
+        handleHover={(target, event) => updateGameState({ type: 'HANDLE-HOVER', target, event })}
         items={inventory} 
         currentItemId={currentItem?.id} 
         select={(item) => updateGameState({ type: 'TARGET-CLICK', target: item })} 

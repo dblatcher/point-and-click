@@ -1,24 +1,21 @@
 
-import { ItemData } from "@/definitions"
-import { CSSProperties, memo } from "react";
-import { Button, Grid, Typography, Avatar } from "@mui/material";
-import { ItemMenuProps, itemMenuPropsAreEqual } from "../game/uiComponentSet";
-import { HandleHoverFunction } from "../game/types";
-import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { useAssets } from "@/context/asset-context";
+import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
+import { ItemData } from "@/definitions";
 import { ImageAsset } from "@/services/assets";
+import { Avatar, Button, Grid, Typography } from "@mui/material";
+import { CSSProperties, memo } from "react";
+import { ItemMenuProps, itemMenuPropsAreEqual } from "../game/uiComponentSet";
 
 
-export const ItemMenu = (props: {
-    handleHover?: HandleHoverFunction;
-}) => {
+export const ItemMenu = () => {
     const { updateGameState } = useGameState()
     const { inventory, currentItem } = useGameStateDerivations()
     return <ItemMenuInner
-        {...props}
+        handleHover={(target, event: "enter" | "leave") => updateGameState({ type: 'HANDLE-HOVER', target, event })}
         items={inventory}
         currentItemId={currentItem?.id}
-        select={(item) => updateGameState({ type: 'TARGET-CLICK', target: item })}
+        select={(target) => updateGameState({ type: 'TARGET-CLICK', target })}
     />
 }
 

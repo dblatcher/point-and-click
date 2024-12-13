@@ -36,7 +36,6 @@ export type SaveMenuProps = {
 export type GameLayoutProps = {
     children: ReactNode;
     saveMenu: ReactNode;
-    handleHover?: HandleHoverFunction;
 }
 
 export type UiComponentSet = {
