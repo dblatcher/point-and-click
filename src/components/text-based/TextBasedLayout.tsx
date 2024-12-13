@@ -16,19 +16,19 @@ import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 
 export const TextBasedLayout = ({
     children,
-    selectConversation, selectItem, handleHover,
+    selectItem, handleHover,
     clearStoryBoard,
     saveMenu,
 }: GameLayoutProps) => {
-    const { dispatchGameStateAction } = useGameState()
+    const { dispatchWithProps } = useGameState()
     const [initialResizeDone, setInitialResizeDone] = useState(false)
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
 
     useEffect(() => {
         if (initialResizeDone) { return }
-        dispatchGameStateAction(screenSizeAction(300, 200));
+        dispatchWithProps(screenSizeAction(300, 200));
         setInitialResizeDone(true)
-    }, [initialResizeDone, setInitialResizeDone, dispatchGameStateAction])
+    }, [initialResizeDone, setInitialResizeDone, dispatchWithProps])
 
     return (<main>
         {saveMenu}
@@ -40,7 +40,7 @@ export const TextBasedLayout = ({
             </Box>
             <Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} flex={2}>
                 <NarrativeFeed />
-                <TextPrompt selectConversationChoice={selectConversation} clearStoryBoard={clearStoryBoard} />
+                <TextPrompt clearStoryBoard={clearStoryBoard} />
             </Box>
         </Box>
 
@@ -52,7 +52,7 @@ export const TextBasedLayout = ({
             </figure>
             {isConversationRunning ? (
                 <div>
-                    {!isSequenceRunning && <ConversationMenu select={selectConversation} />}
+                    {!isSequenceRunning && <ConversationMenu />}
                 </div>
             ) : (
                 <div>

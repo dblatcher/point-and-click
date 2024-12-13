@@ -2,14 +2,15 @@ import { createContext, useContext } from 'react'
 import { GameState } from '@/lib/game-state-logic/types'
 import { findById } from '@/lib/util'
 import { GameEventEmitter } from '../lib/game-event-emitter'
-import { GameStateAction } from '@/lib/game-state-logic/game-state-reducer'
+import { ActionWithoutProp, GameStateAction } from '@/lib/game-state-logic/game-state-reducer'
 import { GameProps } from '@/components/game/types'
 import { SoundService } from '@/services/soundService'
-import { Verb, Ending } from '@/definitions'
 
-const gameStateContext = createContext<{ 
-    gameState: GameState, 
+const gameStateContext = createContext<{
+    gameState: GameState,
+    // TO DO - only need the enhanced dispatcher
     dispatchGameStateAction: React.Dispatch<GameStateAction>,
+    dispatchWithProps: { (action: GameStateAction | ActionWithoutProp): void },
     gameProps: Readonly<GameProps>,
 }>(
     {
@@ -34,6 +35,7 @@ const gameStateContext = createContext<{
             emitter: new GameEventEmitter(),
         },
         dispatchGameStateAction: () => { },
+        dispatchWithProps: () => { },
         gameProps: {
             _sprites: [],
             soundService: new SoundService,
@@ -79,7 +81,7 @@ export const useGameStateDerivations = () => {
         currentItem: findById(currentItemId, items),
         player,
         inventory,
-        verb, 
+        verb,
         ending,
     }
 }

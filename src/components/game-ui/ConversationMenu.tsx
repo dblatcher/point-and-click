@@ -1,14 +1,11 @@
 
-import { ConversationChoice } from "@/definitions"
 import uiStyles from './uiStyles.module.css';
-import { useGameStateDerivations } from "@/context/game-state-context";
+import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 
-interface Props {
-    select: { (choice: ConversationChoice): void };
-}
 
-export function ConversationMenu({ select, }: Props) {
+export function ConversationMenu() {
     const { currentConversation: conversation } = useGameStateDerivations()
+    const { dispatchWithProps } = useGameState()
 
     if (!conversation) { return null }
     const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
@@ -20,7 +17,7 @@ export function ConversationMenu({ select, }: Props) {
                     <button
                         className={[uiStyles.button, uiStyles.conversation].join(" ")}
                         key={index}
-                        onClick={() => { select(choice) }}
+                        onClick={() => { dispatchWithProps({ type: 'CONVERSATION-CHOICE', choice }) }}
                     >
                         {choice.text}
                     </button>

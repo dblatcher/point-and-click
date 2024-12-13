@@ -1,12 +1,14 @@
 import { Conversation, ConversationChoice } from "@/definitions";
 import { Box, Button } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { useGameStateDerivations } from "@/context/game-state-context";
+import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 
-export const ConversationMenu = (props: { select: { (choice: ConversationChoice): void } }) => {
+export const ConversationMenu = () => {
     const { currentConversation } = useGameStateDerivations()
+    const { dispatchWithProps } = useGameState()
+    const select = (choice: ConversationChoice) => dispatchWithProps({ type: 'CONVERSATION-CHOICE', choice })
     return <>{currentConversation && (
-        <ConversationMenuInner {...props} conversation={currentConversation} />
+        <ConversationMenuInner select={select} conversation={currentConversation} />
     )}</>
 }
 

@@ -13,7 +13,7 @@ import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 
 export const BigLayout = ({
     children,
-    selectConversation, selectItem, handleHover,
+    selectItem, handleHover,
     saveMenu,
 }: GameLayoutProps) => {
     const { dispatchGameStateAction } = useGameState()
@@ -64,7 +64,7 @@ export const BigLayout = ({
                     }}>
                     {!isSequenceRunning && (<>
                         {isConversationRunning ? (
-                            <ConversationMenu select={selectConversation} />
+                            <ConversationMenu />
                         ) : <>
                             <CommandLine boxProps={{
                                 paddingX: 4,

@@ -12,7 +12,7 @@ import { EndingWrapper } from "../game-ui/EndingScreen";
 
 export const Layout = ({
     children,
-    selectConversation, selectItem, handleHover,
+    selectItem, handleHover,
     saveMenu,
 }: GameLayoutProps) => {
     const theme = useTheme()
@@ -43,7 +43,7 @@ export const Layout = ({
                         <Card sx={{ marginY: 1, padding: 1, background: theme.palette.grey[50] }}>
                             {isConversationRunning ? (
                                 <>
-                                    {!isSequenceRunning && <ConversationMenu select={selectConversation} />}
+                                    {!isSequenceRunning && <ConversationMenu />}
                                 </>
                             ) : (<>
                                 <CommandLine />

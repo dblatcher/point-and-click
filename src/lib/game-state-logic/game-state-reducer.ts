@@ -27,6 +27,31 @@ export type GameStateAction =
     | { type: 'TICK-UPDATE', props: GameProps }
     | { type: 'CLEAR-STORYBOARD' }
 
+export type ActionWithoutProp =
+    | { type: 'SEND-COMMAND', command: Command }
+    | { type: 'TARGET-CLICK', target: CommandTarget }
+    | { type: 'CONVERSATION-CHOICE', choice: ConversationChoice }
+    | { type: 'TICK-UPDATE' }
+
+export const makeDispatcherWithProps =
+    (dispatch: React.Dispatch<GameStateAction>, props: GameProps) =>
+        (action: GameStateAction | ActionWithoutProp) => {
+            switch (action.type) {
+                case "SEND-COMMAND":
+                case "TARGET-CLICK":
+                case "CONVERSATION-CHOICE":
+                case "TICK-UPDATE":
+                    return dispatch({ ...action, props })
+                case "SET-PAUSED":
+                case "VERB-SELECT":
+                case "HANDLE-HOVER":
+                case "ROOM-CLICK":
+                case "SET-SCREEN-SIZE":
+                case "CLEAR-STORYBOARD":
+                    return dispatch(action)
+            }
+        }
+
 
 export const screenSizeAction = (width?: number, height?: number): GameStateAction => ({ type: 'SET-SCREEN-SIZE', height, width })
 

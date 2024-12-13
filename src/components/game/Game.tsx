@@ -2,7 +2,7 @@ import { buildContentsList } from "@/components/game/put-contents-in-order";
 import { GameStateProvider } from "@/context/game-state-context";
 import { CommandTarget } from "@/definitions";
 import { useInterval } from "@/hooks/useInterval";
-import { gameStateReducer, getInitialGameState } from "@/lib/game-state-logic/game-state-reducer";
+import { gameStateReducer, getInitialGameState, makeDispatcherWithProps } from "@/lib/game-state-logic/game-state-reducer";
 import { getSaveData } from "@/lib/game-state-logic/state-to-save-data";
 import { findById } from "@/lib/util";
 import React, { useReducer } from "react";
@@ -54,11 +54,11 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     return <GameStateProvider value={{
         gameState,
         dispatchGameStateAction: dispatch,
-        gameProps: props
+        gameProps: props,
+        dispatchWithProps: makeDispatcherWithProps(dispatch, props),
     }}>
         {showDebugLog && (<DebugLog />)}
         <GameLayoutComponent
-            selectConversation={(choice) => { dispatch({ type: 'CONVERSATION-CHOICE', choice, props }) }}
             selectItem={handleTargetClick}
             handleHover={handleHover}
             clearStoryBoard={clearStoryBoard}

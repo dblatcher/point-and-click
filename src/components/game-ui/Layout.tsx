@@ -11,7 +11,7 @@ import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 
 export const Layout = ({
     children,
-    selectConversation, selectItem, handleHover,
+    selectItem, handleHover,
     saveMenu,
 }: GameLayoutProps) => {
     const { dispatchGameStateAction } = useGameState()
@@ -27,7 +27,7 @@ export const Layout = ({
         <EndingWrapper />
         {isConversationRunning ? (
             <>
-                {!isSequenceRunning && <ConversationMenu select={selectConversation} />}
+                {!isSequenceRunning && <ConversationMenu />}
             </>
         ) : (
             <>
