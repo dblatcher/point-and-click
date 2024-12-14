@@ -1,5 +1,4 @@
 import { Box, Card, Container, Grid, useTheme } from "@mui/material";
-import { GameLayoutProps } from "../game/uiComponentSet";
 import { FullScreenWrapper } from "../FullScreenWrapper";
 import { useGameStateDerivations } from "@/context/game-state-context";
 import { SoundToggle } from "./SoundToggle";
@@ -10,18 +9,17 @@ import { ItemMenu } from "./ItemMenu";
 import { EndingWrapper } from "../game-ui/EndingScreen";
 import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { DialogSaveMenu } from "./DialogSaveMenu";
+import { RoomWrapper } from "../game/RoomWrapper";
 
 
-export const Layout = ({
-    children,
-}: GameLayoutProps) => {
+export const Layout = () => {
     const theme = useTheme()
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
 
     return (
         <Container maxWidth={'md'} sx={{ paddingY: .5, marginY: 2 }}>
             <Box position={'fixed'} top={0} right={0}>
-                <SaveMenuWrapper SaveMenuComponent={DialogSaveMenu}/>
+                <SaveMenuWrapper SaveMenuComponent={DialogSaveMenu} />
             </Box>
             <FullScreenWrapper iconButtonProps={{
                 sx: {
@@ -37,7 +35,7 @@ export const Layout = ({
                     <Card sx={{ padding: 1, background: theme.palette.secondary.light }}>
                         <Grid container>
                             <Grid item xs={1}><SoundToggle /></Grid>
-                            <Grid item xs={10}>{children}</Grid>
+                            <Grid item xs={10}><RoomWrapper /></Grid>
                             <Grid item xs={1} />
                         </Grid>
                         <Card sx={{ marginY: 1, padding: 1, background: theme.palette.grey[50] }}>

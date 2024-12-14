@@ -6,7 +6,6 @@ import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";
 import { Layout } from "../game-ui/Layout";
 import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
-import { RoomWrapper } from "./RoomWrapper";
 import { GameProps } from "./types";
 
 const TIMER_SPEED = 10
@@ -33,9 +32,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         updateGameState: makeDispatcherWithProps(dispatch, props),
     }}>
         {showDebugLog && (<DebugLog />)}
-        <GameLayoutComponent>
-            <RoomWrapper />
-        </GameLayoutComponent>
+        <GameLayoutComponent />
         {(!props.instantMode && currentStoryBoard) && (
             <StoryBoardPlayer storyBoard={currentStoryBoard} />
         )}

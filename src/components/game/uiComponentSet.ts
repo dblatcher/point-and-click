@@ -33,10 +33,7 @@ export type SaveMenuProps = {
     setIsPaused: { (isPaused: boolean): void };
 }
 
-export type GameLayoutProps = {
-    children: ReactNode;
-}
 
 export type UiComponentSet = {
-    GameLayoutComponent?: FunctionComponent<GameLayoutProps>;
+    GameLayoutComponent?: FunctionComponent;
 }
