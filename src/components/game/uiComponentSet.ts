@@ -35,10 +35,8 @@ export type SaveMenuProps = {
 
 export type GameLayoutProps = {
     children: ReactNode;
-    saveMenu: ReactNode;
 }
 
 export type UiComponentSet = {
-    SaveMenuComponent?: FunctionComponent<SaveMenuProps>;
     GameLayoutComponent?: FunctionComponent<GameLayoutProps>;
 }

@@ -3,12 +3,10 @@ import { GameStateProvider } from "@/context/game-state-context";
 import { CommandTarget } from "@/definitions";
 import { useInterval } from "@/hooks/useInterval";
 import { gameStateReducer, getInitialGameState, makeDispatcherWithProps } from "@/lib/game-state-logic/game-state-reducer";
-import { getSaveData } from "@/lib/game-state-logic/state-to-save-data";
 import { findById } from "@/lib/util";
 import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";
 import { Layout } from "../game-ui/Layout";
-import { SaveMenu } from "../game-ui/SaveMenu";
 import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 import { Room } from "../svg/Room";
 import { GameProps } from "./types";
@@ -19,9 +17,8 @@ const TIMER_SPEED = 10
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
     const [gameState, dispatch] = useReducer(gameStateReducer, getInitialGameState(props))
-    const { deleteSave, save, reset, load, listSavedGames, showDebugLog, uiComponents = {} } = props
+    const { showDebugLog, uiComponents = {} } = props
     const {
-        SaveMenuComponent = SaveMenu,
         GameLayoutComponent = Layout,
     } = uiComponents
     const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
@@ -49,19 +46,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         updateGameState: makeDispatcherWithProps(dispatch, props),
     }}>
         {showDebugLog && (<DebugLog />)}
-        <GameLayoutComponent
-            saveMenu={
-                <SaveMenuComponent
-                    load={load ? (fileName) => { load(fileName) } : undefined}
-                    reset={reset ? () => { reset() } : undefined}
-                    save={save ? (fileName) => { save(getSaveData(gameState), fileName) } : undefined}
-                    deleteSave={deleteSave}
-                    listSavedGames={listSavedGames}
-                    isPaused={isPaused}
-                    setIsPaused={(isPaused) => { dispatch({ type: 'SET-PAUSED', isPaused }) }}
-                />
-            }
-        >
+        <GameLayoutComponent>
             {(currentRoom && !currentStoryBoard) && (
                 <Room
                     data={currentRoom}

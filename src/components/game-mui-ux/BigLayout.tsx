@@ -9,11 +9,12 @@ import { ConversationMenu } from "./ConversationMenu";
 import { ItemMenu } from "./ItemMenu";
 import { VerbMenu } from "./VerbMenu";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
+import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
+import { DialogSaveMenu } from "./DialogSaveMenu";
 
 
 export const BigLayout = ({
     children,
-    saveMenu,
 }: GameLayoutProps) => {
     const { updateGameState } = useGameState()
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
@@ -37,7 +38,7 @@ export const BigLayout = ({
             }
         }}>
             <Box position={'fixed'} top={0} right={0}>
-                {saveMenu}
+                <SaveMenuWrapper SaveMenuComponent={DialogSaveMenu}/>
             </Box>
 
             <div

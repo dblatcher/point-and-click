@@ -8,11 +8,12 @@ import { VerbMenu } from "./VerbMenu";
 import { ConversationMenu } from "./ConversationMenu";
 import { ItemMenu } from "./ItemMenu";
 import { EndingWrapper } from "../game-ui/EndingScreen";
+import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
+import { DialogSaveMenu } from "./DialogSaveMenu";
 
 
 export const Layout = ({
     children,
-    saveMenu,
 }: GameLayoutProps) => {
     const theme = useTheme()
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
@@ -20,7 +21,7 @@ export const Layout = ({
     return (
         <Container maxWidth={'md'} sx={{ paddingY: .5, marginY: 2 }}>
             <Box position={'fixed'} top={0} right={0}>
-                {saveMenu}
+                <SaveMenuWrapper SaveMenuComponent={DialogSaveMenu}/>
             </Box>
             <FullScreenWrapper iconButtonProps={{
                 sx: {
