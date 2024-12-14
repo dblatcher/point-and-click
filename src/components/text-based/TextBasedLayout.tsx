@@ -12,11 +12,14 @@ import { NarrativeFeed } from "./NarrativeFeed";
 import { RoomDescription } from "./RoomDescription";
 import { TextPrompt } from "./TextPrompt";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
+import React from "react";
+import { RoomWrapper } from "../game/RoomWrapper";
+import { SaveMenu } from "../game-ui/SaveMenu";
+import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 
 
 export const TextBasedLayout = ({
     children,
-    saveMenu,
 }: GameLayoutProps) => {
     const { updateGameState } = useGameState()
     const [initialResizeDone, setInitialResizeDone] = useState(false)
@@ -29,7 +32,7 @@ export const TextBasedLayout = ({
     }, [initialResizeDone, setInitialResizeDone, updateGameState])
 
     return (<main>
-        {saveMenu}
+        <SaveMenuWrapper SaveMenuComponent={SaveMenu}/>
         <SoundToggle />
 
         <Box display={'flex'} minHeight={300} padding={1}>
