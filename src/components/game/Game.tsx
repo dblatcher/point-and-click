@@ -1,6 +1,4 @@
-import { buildContentsList } from "@/components/game/put-contents-in-order";
 import { GameStateProvider } from "@/context/game-state-context";
-import { CommandTarget } from "@/definitions";
 import { useInterval } from "@/hooks/useInterval";
 import { gameStateReducer, getInitialGameState, makeDispatcherWithProps } from "@/lib/game-state-logic/game-state-reducer";
 import { findById } from "@/lib/util";
@@ -8,11 +6,9 @@ import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";
 import { Layout } from "../game-ui/Layout";
 import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
-import { Room } from "../svg/Room";
+import { RoomWrapper } from "./RoomWrapper";
 import { GameProps } from "./types";
 
-// use true for debugging only- slows program!
-const renderCells = false
 const TIMER_SPEED = 10
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
@@ -21,9 +17,8 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     const {
         GameLayoutComponent = Layout,
     } = uiComponents
-    const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
+    const { currentStoryBoardId } = gameState
 
-    const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentStoryBoard = findById(currentStoryBoardId, props.storyBoards ?? [])
 
     const tick = () => {
@@ -32,14 +27,6 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     }
     useInterval(tick, TIMER_SPEED)
 
-    const handleTargetClick = (target: CommandTarget) => {
-        dispatch({ type: 'TARGET-CLICK', props, target })
-    }
-
-    const contentList = buildContentsList(
-        gameState,
-        handleTargetClick
-    )
     return <GameStateProvider value={{
         gameState,
         gameProps: props,
@@ -47,23 +34,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     }}>
         {showDebugLog && (<DebugLog />)}
         <GameLayoutComponent>
-            {(currentRoom && !currentStoryBoard) && (
-                <Room
-                    data={currentRoom}
-                    maxWidth={roomWidth}
-                    maxHeight={roomHeight}
-                    isPaused={isPaused}
-                    viewAngle={viewAngle}
-                    handleRoomClick={(x, y) => { dispatch({ type: 'ROOM-CLICK', x, y }) }}
-                    handleHotspotClick={handleTargetClick}
-                    handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
-                        dispatch({ type: 'HANDLE-HOVER', event, target })
-                    }}
-                    contents={contentList}
-                    obstacleCells={renderCells ? gameState.cellMatrix : undefined}
-                />
-            )}
-
+            <RoomWrapper />
         </GameLayoutComponent>
         {(!props.instantMode && currentStoryBoard) && (
             <StoryBoardPlayer storyBoard={currentStoryBoard} />
