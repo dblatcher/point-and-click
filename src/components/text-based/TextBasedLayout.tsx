@@ -5,22 +5,18 @@ import { ItemMenu } from "@/components/game-ui/ItemMenu";
 import { SoundToggle } from "@/components/game-ui/SoundToggle";
 import { VerbMenu } from "@/components/game-ui/VerbMenu";
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
+import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import { GameLayoutProps } from "../game/uiComponentSet";
+import { SaveMenu } from "../game-ui/SaveMenu";
+import { RoomWrapper } from "../game/RoomWrapper";
+import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { NarrativeFeed } from "./NarrativeFeed";
 import { RoomDescription } from "./RoomDescription";
 import { TextPrompt } from "./TextPrompt";
-import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
-import React from "react";
-import { RoomWrapper } from "../game/RoomWrapper";
-import { SaveMenu } from "../game-ui/SaveMenu";
-import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 
 
-export const TextBasedLayout = ({
-    children,
-}: GameLayoutProps) => {
+export const TextBasedLayout = () => {
     const { updateGameState } = useGameState()
     const [initialResizeDone, setInitialResizeDone] = useState(false)
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
@@ -49,7 +45,7 @@ export const TextBasedLayout = ({
 
         <Box display={'flex'}>
             <figure role='img'>
-                {children}
+                <RoomWrapper />
             </figure>
             {isConversationRunning ? (
                 <div>

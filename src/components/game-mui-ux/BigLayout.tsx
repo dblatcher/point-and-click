@@ -3,7 +3,6 @@ import { Box, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { ResizeWatcher } from "../ResizeWatcher";
 import { EndingWrapper } from "../game-ui/EndingScreen";
-import { GameLayoutProps } from "../game/uiComponentSet";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
 import { ItemMenu } from "./ItemMenu";
@@ -11,11 +10,10 @@ import { VerbMenu } from "./VerbMenu";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { DialogSaveMenu } from "./DialogSaveMenu";
+import { RoomWrapper } from "../game/RoomWrapper";
 
 
-export const BigLayout = ({
-    children,
-}: GameLayoutProps) => {
+export const BigLayout = () => {
     const { updateGameState } = useGameState()
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
     const [initialResize, setInitialResize] = useState(false)
@@ -38,7 +36,7 @@ export const BigLayout = ({
             }
         }}>
             <Box position={'fixed'} top={0} right={0}>
-                <SaveMenuWrapper SaveMenuComponent={DialogSaveMenu}/>
+                <SaveMenuWrapper SaveMenuComponent={DialogSaveMenu} />
             </Box>
 
             <div
@@ -50,7 +48,7 @@ export const BigLayout = ({
                     alignItems: 'flex-start',
                     paddingTop: 10,
                 }}>
-                {children}
+                <RoomWrapper />
             </div>
 
             <div style={{ margin: '0 auto', minHeight: 100 }}>
