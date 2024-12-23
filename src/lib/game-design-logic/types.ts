@@ -7,9 +7,13 @@ export type GameEditorProps = {
     usePrebuiltGame?: boolean;
 }
 
-export type GameDesignAction = {
-    type: string
+type OpenInEditorAction = {
+    type: 'open-in-editor';
+    tabId: TabId;
+    itemId?: string;
 }
+
+export type GameDesignAction = OpenInEditorAction
 
 export type GameEditorState = {
     gameDesign: GameDesign;
