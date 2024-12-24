@@ -7,6 +7,7 @@ import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
 import { Sprite } from '@/lib/Sprite';
+import { patchMember } from "@/lib/update-design";
 import { ImageAsset, SoundAsset } from '@/services/assets';
 import { ImageService } from '@/services/imageService';
 import { populateServices, populateServicesForPreBuiltGame } from '@/services/populateServices';
@@ -77,7 +78,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                     deleteArrayItem: (index, property) => dispatchDesignUpdate({ type: 'delete-data-item', index, property }),
                     changeOrAddInteraction: () => { },
                     deleteInteraction: () => { },
-                    modifyRoom: () => { },
+                    modifyRoom: (description, id, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod: { rooms: patchMember(id, mod, gameDesign.rooms) } }),
                 }
             }>
 
