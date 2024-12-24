@@ -1,11 +1,13 @@
 import { AssetsProvider } from '@/context/asset-context';
 import { GameDesignProvider } from '@/context/game-design-context';
 import { SpritesProvider } from '@/context/sprite-context';
-import { Sprite } from '@/lib/Sprite';
+import { GameDesign } from '@/definitions';
 import { TabId, tabOrder } from '@/lib/editor-config';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
+import { Sprite } from '@/lib/Sprite';
+import { ImageAsset, SoundAsset } from '@/services/assets';
 import { ImageService } from '@/services/imageService';
 import { populateServices, populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
@@ -14,10 +16,8 @@ import { Box, Container, IconButton, List, ListItem, ListItemButton, ListItemTex
 import React, { useEffect, useReducer, useState } from 'react';
 import { MainWindow } from './MainWindow';
 import { PlayCircleFilledOutlinedIcon } from './material-icons';
-import { TestGameDialog } from './TestGameDialog';
 import { SaveLoadAndUndo } from './SaveLoadAndUndo';
-import { GameDesign } from '@/definitions';
-import { ImageAsset, SoundAsset } from '@/services/assets';
+import { TestGameDialog } from './TestGameDialog';
 
 export type { GameEditorProps };
 
@@ -47,8 +47,6 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
     const { gameDesign, gameItemIds, tabOpen, history } = gameEditorState
 
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
-    const openInEditor = (tabId: TabId, itemId?: string) =>
-        dispatchDesignUpdate({ type: 'open-in-editor', itemId, tabId });
 
     const loadNewGame = (data: {
         gameDesign: GameDesign;
@@ -65,6 +63,9 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
         )
     }
 
+    const openInEditor = (tabId: TabId, itemId?: string) =>
+        dispatchDesignUpdate({ type: 'open-in-editor', itemId, tabId });
+
     return (
         <ThemeProvider theme={editorTheme}>
             <GameDesignProvider value={
@@ -72,7 +73,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                     gameDesign: gameEditorState.gameDesign,
                     openInEditor,
                     applyModification: (description, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod }),
-                    createGameDataItem: () => { },
+                    createGameDataItem: (property, data) => dispatchDesignUpdate({type:'create-data-item', property, data}),
                     deleteArrayItem: () => { },
                     changeOrAddInteraction: () => { },
                     deleteInteraction: () => { },

@@ -1,5 +1,5 @@
 import { GameDesign } from "@/definitions";
-import { GameDataItemType } from "@/definitions/Game";
+import { GameDataItem, GameDataItemType } from "@/definitions/Game";
 import { TabId } from "../editor-config";
 
 
@@ -28,7 +28,13 @@ type LoadNewAction = {
     gameDesign: GameDesign,
 }
 
-export type GameDesignAction = OpenInEditorAction | ModifyDesignAction | UndoAction | LoadNewAction
+type CreateDataItemAction = {
+    type: 'create-data-item',
+    property: GameDataItemType, 
+    data: GameDataItem,
+}
+
+export type GameDesignAction = OpenInEditorAction | ModifyDesignAction | UndoAction | LoadNewAction | CreateDataItemAction
 
 export type GameEditorState = {
     gameDesign: GameDesign;
