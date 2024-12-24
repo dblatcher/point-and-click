@@ -13,7 +13,17 @@ type OpenInEditorAction = {
     itemId?: string;
 }
 
-export type GameDesignAction = OpenInEditorAction
+type ModifyDesignAction = {
+    type: 'modify-design';
+    description: string;
+    mod: Partial<GameDesign>;
+}
+
+type UndoAction = {
+    type: 'undo'
+}
+
+export type GameDesignAction = OpenInEditorAction | ModifyDesignAction | UndoAction
 
 export type GameEditorState = {
     gameDesign: GameDesign;

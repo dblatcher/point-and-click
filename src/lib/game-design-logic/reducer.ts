@@ -3,9 +3,9 @@ import { GameEditorState, GameDesignAction } from "./types"
 
 export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (gameEditorState, action) => {
     switch (action.type) {
-        case 'open-in-editor' : {
-            const {tabId, itemId} = action
-            const {gameItemIds} = gameEditorState
+        case 'open-in-editor': {
+            const { tabId, itemId } = action
+            const { gameItemIds } = gameEditorState
 
             if (itemId) {
                 switch (tabId) {
@@ -27,6 +27,29 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
                 ...gameEditorState,
                 tabOpen: tabId,
                 gameItemIds,
+            }
+        }
+
+        case "modify-design": {
+            const { description, mod } = action
+            console.log(description)
+            return {
+                ...gameEditorState,
+                gameDesign: { ...gameEditorState.gameDesign, ...mod },
+                history: [...gameEditorState.history, { gameDesign: gameEditorState.gameDesign, label: description }]
+            }
+        }
+
+        case "undo": {
+            const { history } = gameEditorState
+            const last = history.pop();
+            if (!last) {
+                return gameEditorState
+            }
+            return {
+                ...gameEditorState,
+                history,
+                gameDesign: last.gameDesign,
             }
         }
     }

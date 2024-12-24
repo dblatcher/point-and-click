@@ -7,7 +7,7 @@ import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
 import { ImageService } from '@/services/imageService';
-import { populateServicesForPreBuiltGame } from '@/services/populateServices';
+import { populateServices, populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
 import { editorTheme } from '@/theme';
 import { Box, Container, IconButton, List, ListItem, ListItemButton, ListItemText, Stack, ThemeProvider } from '@mui/material';
@@ -15,10 +15,9 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { MainWindow } from './MainWindow';
 import { PlayCircleFilledOutlinedIcon } from './material-icons';
 import { TestGameDialog } from './TestGameDialog';
-import { date } from 'zod';
-// import { SaveLoadAndUndo } from './SaveLoadAndUndo';
-// import { TestGameDialog } from './TestGameDialog';
-// import { PlayCircleFilledOutlinedIcon } from './material-icons';
+import { SaveLoadAndUndo } from './SaveLoadAndUndo';
+import { GameDesign } from '@/definitions';
+import { ImageAsset, SoundAsset } from '@/services/assets';
 
 export type { GameEditorProps };
 
@@ -43,13 +42,29 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
         if (usePrebuiltGame) {
             populateServicesForPreBuiltGame(imageService, soundService)
         }
-    },[])
+    }, [])
 
     const { gameDesign, gameItemIds, tabOpen, history } = gameEditorState
 
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
     const openInEditor = (tabId: TabId, itemId?: string) =>
         dispatchDesignUpdate({ type: 'open-in-editor', itemId, tabId });
+
+    const loadNewGame = (data: {
+        gameDesign: GameDesign;
+        imageAssets: ImageAsset[];
+        soundAssets: SoundAsset[];
+    }) => {
+        soundService.removeAll();
+        imageService.removeAll();
+
+        // TO DO - dispatch a new design action
+        // this.setState({ gameDesign: data.gameDesign })
+        populateServices(
+            data.gameDesign, data.imageAssets, data.soundAssets,
+            imageService, soundService
+        )
+    }
 
     return (
         <ThemeProvider theme={editorTheme}>
@@ -61,7 +76,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                     openInEditor,
                     changeOrAddInteraction: () => { },
                     deleteInteraction: () => { },
-                    applyModification: () => { },
+                    applyModification: (description, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod }),
                     modifyRoom: () => { },
                 }
             }>
@@ -85,20 +100,20 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                                 width={150}
                             >
                                 <Stack direction={'row'} marginTop={3} spacing={3} minHeight={35}>
-                                    {/* <SaveLoadAndUndo
-                                        loadNewGame={this.loadNewGame}
+                                    <SaveLoadAndUndo
+                                        loadNewGame={loadNewGame}
                                         history={history}
-                                        undo={this.undo}
+                                        undo={() => dispatchDesignUpdate({ type: 'undo' })}
                                     />
-                                    */}
+
                                     <IconButton
-                                        onClick={() => { 
+                                        onClick={() => {
                                             setGameTestDialogOpen(true)
                                             setResetTimeStamp(Date.now())
                                         }}
                                     >
                                         <PlayCircleFilledOutlinedIcon fontSize={'large'} />
-                                    </IconButton> 
+                                    </IconButton>
                                 </Stack>
 
                                 <List disablePadding>
@@ -126,7 +141,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                             <TestGameDialog
                                 isOpen={gameTestDialogOpen}
                                 close={() => setGameTestDialogOpen(false)}
-                                reset={() => setResetTimeStamp(Date.now()) }
+                                reset={() => setResetTimeStamp(Date.now())}
                                 resetTimeStamp={resetTimeStamp}
                             />
                         </Container>
