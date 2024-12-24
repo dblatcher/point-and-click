@@ -1,4 +1,4 @@
-import { GameDesign } from "@/definitions";
+import { GameDesign, Interaction } from "@/definitions";
 import { GameDataItem, GameDataItemType } from "@/definitions/Game";
 import { TabId } from "../editor-config";
 
@@ -40,13 +40,26 @@ type DeleteDataItemAction = {
     index: number,
 }
 
+type ChangeOrAddInteractionAction = {
+    type: 'change-or-add-interaction',
+    data: Interaction,
+    index?: number
+}
+
+type DeleteInteractionAction = {
+    type: 'delete-interaction',
+    index: number
+}
+
 export type GameDesignAction =
     OpenInEditorAction |
     ModifyDesignAction |
     UndoAction |
     LoadNewAction |
     CreateDataItemAction |
-    DeleteDataItemAction
+    DeleteDataItemAction |
+    ChangeOrAddInteractionAction |
+    DeleteInteractionAction;
 
 export type GameEditorState = {
     gameDesign: GameDesign;

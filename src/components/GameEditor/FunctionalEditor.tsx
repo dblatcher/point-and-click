@@ -76,8 +76,8 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                     applyModification: (description, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod }),
                     createGameDataItem: (property, data) => dispatchDesignUpdate({ type: 'create-data-item', property, data }),
                     deleteArrayItem: (index, property) => dispatchDesignUpdate({ type: 'delete-data-item', index, property }),
-                    changeOrAddInteraction: () => { },
-                    deleteInteraction: () => { },
+                    changeOrAddInteraction: (data, index) => dispatchDesignUpdate({ type: 'change-or-add-interaction', index, data }),
+                    deleteInteraction: (index) => dispatchDesignUpdate({ type: 'delete-interaction', index }),
                     modifyRoom: (description, id, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod: { rooms: patchMember(id, mod, gameDesign.rooms) } }),
                 }
             }>
