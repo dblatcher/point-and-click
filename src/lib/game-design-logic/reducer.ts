@@ -52,6 +52,13 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
                 gameDesign: last.gameDesign,
             }
         }
+
+        case "load-new": {
+            return {
+                ...gameEditorState,
+                gameDesign: action.gameDesign,
+                history: [],
+            }
+        }
     }
-    return gameEditorState
 }

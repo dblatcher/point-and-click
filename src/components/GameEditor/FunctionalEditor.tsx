@@ -58,8 +58,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
         soundService.removeAll();
         imageService.removeAll();
 
-        // TO DO - dispatch a new design action
-        // this.setState({ gameDesign: data.gameDesign })
+        dispatchDesignUpdate({ type: 'load-new', gameDesign: data.gameDesign })
         populateServices(
             data.gameDesign, data.imageAssets, data.soundAssets,
             imageService, soundService
@@ -71,12 +70,12 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
             <GameDesignProvider value={
                 {
                     gameDesign: gameEditorState.gameDesign,
+                    openInEditor,
+                    applyModification: (description, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod }),
                     createGameDataItem: () => { },
                     deleteArrayItem: () => { },
-                    openInEditor,
                     changeOrAddInteraction: () => { },
                     deleteInteraction: () => { },
-                    applyModification: (description, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod }),
                     modifyRoom: () => { },
                 }
             }>

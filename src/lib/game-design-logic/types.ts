@@ -23,7 +23,12 @@ type UndoAction = {
     type: 'undo'
 }
 
-export type GameDesignAction = OpenInEditorAction | ModifyDesignAction | UndoAction
+type LoadNewAction = {
+    type: 'load-new',
+    gameDesign: GameDesign,
+}
+
+export type GameDesignAction = OpenInEditorAction | ModifyDesignAction | UndoAction | LoadNewAction
 
 export type GameEditorState = {
     gameDesign: GameDesign;
