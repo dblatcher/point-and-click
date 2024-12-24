@@ -87,5 +87,26 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
                 history: addHistory(`add new ${property}: ${data.id}`, oldData)
             }
         }
+
+        case "delete-data-item": {
+            const { property, index } = action
+            const {gameDesign} = gameEditorState
+            const oldData = cloneData(gameDesign);
+            // TO DO - check for references to the ID of the deleted item?
+            const dataItemArray = gameDesign[property];
+            if (!dataItemArray) {
+                return gameEditorState;
+            }
+            const message = `delete "${dataItemArray[index]?.id}" from ${property}`;
+            console.log(message);
+            dataItemArray.splice(index, 1);
+
+            return {
+                ...gameEditorState,
+                history: addHistory(message, oldData),
+                gameDesign,
+
+            }
+        }
     }
 }

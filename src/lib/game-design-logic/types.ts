@@ -30,11 +30,23 @@ type LoadNewAction = {
 
 type CreateDataItemAction = {
     type: 'create-data-item',
-    property: GameDataItemType, 
+    property: GameDataItemType,
     data: GameDataItem,
 }
 
-export type GameDesignAction = OpenInEditorAction | ModifyDesignAction | UndoAction | LoadNewAction | CreateDataItemAction
+type DeleteDataItemAction = {
+    type: 'delete-data-item',
+    property: GameDataItemType,
+    index: number,
+}
+
+export type GameDesignAction =
+    OpenInEditorAction |
+    ModifyDesignAction |
+    UndoAction |
+    LoadNewAction |
+    CreateDataItemAction |
+    DeleteDataItemAction
 
 export type GameEditorState = {
     gameDesign: GameDesign;
