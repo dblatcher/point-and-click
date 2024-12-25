@@ -38,7 +38,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         if (usePrebuiltGame) {
             populateServicesForPreBuiltGame(imageService, soundService)
         }
-    }, [])
+    }, [usePrebuiltGame, imageService, soundService])
     const { gameDesign, history } = gameEditorState
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
 
