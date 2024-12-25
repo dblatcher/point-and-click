@@ -1,32 +1,25 @@
 import { DownloadIcon, UploadIcon } from "@/components/GameEditor/material-icons";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
-import { GameDesign } from "@/definitions/Game";
 import {
   makeDownloadFile,
   uploadFile,
 } from "@/lib/files";
+import { higherLevelLoadNewGame } from "@/lib/game-design-logic/load-new-design";
+import { GameDesignAction } from "@/lib/game-design-logic/types";
 import { buildGameZipBlob, readGameFromZipFile } from "@/lib/zipFiles";
-import { ImageAsset, SoundAsset } from "@/services/assets";
 import { Alert, IconButton, Snackbar, Tooltip } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 
 interface Props {
-  loadNewGame: {
-    (data: {
-      gameDesign: GameDesign;
-      imageAssets: ImageAsset[];
-      soundAssets: SoundAsset[];
-    }): void
-  };
+  dispatchDesignUpdate: React.Dispatch<GameDesignAction>
 }
 
 export const SaveAndLoadButtons: FunctionComponent<Props> = ({
-  loadNewGame,
+  dispatchDesignUpdate,
 }: Props) => {
   const { gameDesign } = useGameDesign()
   const { imageService, soundService } = useAssets()
-
   const [downloadAllError, setDownloadAllError] = useState<string | undefined>(
     undefined
   );
@@ -34,6 +27,7 @@ export const SaveAndLoadButtons: FunctionComponent<Props> = ({
     undefined
   );
 
+  const loadNewGame = higherLevelLoadNewGame(dispatchDesignUpdate, soundService, imageService);
 
   const downloadAll = async () => {
     setDownloadAllError(undefined);

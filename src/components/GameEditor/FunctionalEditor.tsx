@@ -1,16 +1,14 @@
 import { AssetsProvider } from '@/context/asset-context';
 import { GameDesignProvider } from '@/context/game-design-context';
 import { SpritesProvider } from '@/context/sprite-context';
-import { GameDesign } from '@/definitions';
 import { TabId } from '@/lib/editor-config';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
 import { Sprite } from '@/lib/Sprite';
 import { patchMember } from "@/lib/update-design";
-import { ImageAsset, SoundAsset } from '@/services/assets';
 import { ImageService } from '@/services/imageService';
-import { populateServices, populateServicesForPreBuiltGame } from '@/services/populateServices';
+import { populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
 import { editorTheme } from '@/theme';
 import { Box, ButtonGroup, Container, Stack, ThemeProvider } from '@mui/material';
@@ -25,10 +23,8 @@ export type { GameEditorProps };
 
 
 const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame }) => {
-
     const [soundService] = useState(new SoundService())
     const [imageService] = useState(new ImageService())
-
     const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer,
         {
             gameDesign: getInitalDesign(usePrebuiltGame),
@@ -43,25 +39,8 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
             populateServicesForPreBuiltGame(imageService, soundService)
         }
     }, [])
-
     const { gameDesign, history } = gameEditorState
-
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
-
-    const loadNewGame = (data: {
-        gameDesign: GameDesign;
-        imageAssets: ImageAsset[];
-        soundAssets: SoundAsset[];
-    }) => {
-        soundService.removeAll();
-        imageService.removeAll();
-
-        dispatchDesignUpdate({ type: 'load-new', gameDesign: data.gameDesign })
-        populateServices(
-            data.gameDesign, data.imageAssets, data.soundAssets,
-            imageService, soundService
-        )
-    }
 
     return (
         <ThemeProvider theme={editorTheme}>
@@ -79,7 +58,6 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                     modifyRoom: (description, id, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod: { rooms: patchMember(id, mod, gameDesign.rooms) } }),
                 }
             }>
-
                 <AssetsProvider soundService={soundService} imageService={imageService}>
                     <SpritesProvider value={sprites}>
                         <Container component={'main'}
@@ -101,7 +79,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                                     <UndoButton history={history}
                                         undo={() => dispatchDesignUpdate({ type: 'undo' })} />
                                     <SaveAndLoadButtons
-                                        loadNewGame={loadNewGame} />
+                                        dispatchDesignUpdate={dispatchDesignUpdate} />
                                     <TestGameDialog />
                                 </ButtonGroup>
 
