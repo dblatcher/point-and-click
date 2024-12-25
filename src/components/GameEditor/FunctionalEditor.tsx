@@ -2,7 +2,7 @@ import { AssetsProvider } from '@/context/asset-context';
 import { GameDesignProvider } from '@/context/game-design-context';
 import { SpritesProvider } from '@/context/sprite-context';
 import { GameDesign } from '@/definitions';
-import { TabId, tabOrder } from '@/lib/editor-config';
+import { TabId } from '@/lib/editor-config';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
@@ -13,11 +13,12 @@ import { ImageService } from '@/services/imageService';
 import { populateServices, populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
 import { editorTheme } from '@/theme';
-import { Box, Container, IconButton, List, ListItem, ListItemButton, ListItemText, Stack, ThemeProvider } from '@mui/material';
+import { Box, Container, IconButton, Stack, ThemeProvider } from '@mui/material';
 import React, { useEffect, useReducer, useState } from 'react';
 import { MainWindow } from './MainWindow';
 import { PlayCircleFilledOutlinedIcon } from './material-icons';
 import { SaveLoadAndUndo } from './SaveLoadAndUndo';
+import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
 
 export type { GameEditorProps };
@@ -45,7 +46,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
         }
     }, [])
 
-    const { gameDesign, gameItemIds, tabOpen, history } = gameEditorState
+    const { gameDesign, gameItemIds, history } = gameEditorState
 
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
 
@@ -64,15 +65,13 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
         )
     }
 
-    const openInEditor = (tabId: TabId, itemId?: string) =>
-        dispatchDesignUpdate({ type: 'open-in-editor', itemId, tabId });
-
     return (
         <ThemeProvider theme={editorTheme}>
             <GameDesignProvider value={
                 {
                     gameDesign: gameEditorState.gameDesign,
-                    openInEditor,
+                    tabOpen: gameEditorState.tabOpen,
+                    openInEditor: (tabId: TabId, itemId?: string) => dispatchDesignUpdate({ type: 'open-in-editor', itemId, tabId }),
                     applyModification: (description, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod }),
                     createGameDataItem: (property, data) => dispatchDesignUpdate({ type: 'create-data-item', property, data }),
                     deleteArrayItem: (index, property) => dispatchDesignUpdate({ type: 'delete-data-item', index, property }),
@@ -117,26 +116,11 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                                     </IconButton>
                                 </Stack>
 
-                                <List disablePadding>
-                                    {tabOrder.map((tab, index) => (
-                                        <ListItem key={index} disableGutters disablePadding>
-                                            <ListItemButton
-                                                onClick={() => { openInEditor(tab.id) }}
-                                                selected={tab.id === gameEditorState.tabOpen}
-                                            >
-                                                <ListItemText>{index + 1}</ListItemText>
-                                                <ListItemText>{tab.label}</ListItemText>
-                                            </ListItemButton>
-                                        </ListItem>
-                                    ))}
-                                </List>
+                                <TabButtonList />
                             </Stack>
 
                             <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
-                                <MainWindow
-                                    gameItemIds={gameItemIds}
-                                    tabOpen={tabOpen}
-                                    openInEditor={openInEditor} />
+                                <MainWindow gameItemIds={gameItemIds} />
                             </Box>
 
                             <TestGameDialog
