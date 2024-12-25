@@ -13,13 +13,14 @@ import { ImageService } from '@/services/imageService';
 import { populateServices, populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
 import { editorTheme } from '@/theme';
-import { Box, Container, IconButton, Stack, ThemeProvider } from '@mui/material';
+import { Box, ButtonGroup, Container, IconButton, Stack, ThemeProvider } from '@mui/material';
 import React, { useEffect, useReducer, useState } from 'react';
 import { MainWindow } from './MainWindow';
 import { PlayCircleFilledOutlinedIcon } from './material-icons';
-import { SaveLoadAndUndo } from './SaveLoadAndUndo';
+import { SaveAndLoadButtons } from './SaveAndLoadButtons';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
+import { UndoButton } from './UndoButton';
 
 export type { GameEditorProps };
 
@@ -46,7 +47,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
         }
     }, [])
 
-    const { gameDesign, gameItemIds, history } = gameEditorState
+    const { gameDesign, history } = gameEditorState
 
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
 
@@ -100,13 +101,11 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                                 spacing={1}
                                 width={150}
                             >
-                                <Stack direction={'row'} marginTop={3} spacing={3} minHeight={35}>
-                                    <SaveLoadAndUndo
-                                        loadNewGame={loadNewGame}
-                                        history={history}
-                                        undo={() => dispatchDesignUpdate({ type: 'undo' })}
-                                    />
-
+                                <ButtonGroup sx={{ marginTop: 3 }} orientation="horizontal" >
+                                    <UndoButton history={history}
+                                        undo={() => dispatchDesignUpdate({ type: 'undo' })} />
+                                    <SaveAndLoadButtons
+                                        loadNewGame={loadNewGame} />
                                     <IconButton
                                         onClick={() => {
                                             setGameTestDialogOpen(true)
@@ -115,7 +114,13 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                                     >
                                         <PlayCircleFilledOutlinedIcon fontSize={'large'} />
                                     </IconButton>
-                                </Stack>
+                                    <TestGameDialog
+                                        isOpen={gameTestDialogOpen}
+                                        close={() => setGameTestDialogOpen(false)}
+                                        reset={() => setResetTimeStamp(Date.now())}
+                                        resetTimeStamp={resetTimeStamp}
+                                    />
+                                </ButtonGroup>
 
                                 <TabButtonList />
                             </Stack>
@@ -123,13 +128,6 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                             <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
                                 <MainWindow />
                             </Box>
-
-                            <TestGameDialog
-                                isOpen={gameTestDialogOpen}
-                                close={() => setGameTestDialogOpen(false)}
-                                reset={() => setResetTimeStamp(Date.now())}
-                                resetTimeStamp={resetTimeStamp}
-                            />
                         </Container>
                     </SpritesProvider>
                 </AssetsProvider>
