@@ -1,12 +1,10 @@
 import { AssetsProvider } from '@/context/asset-context';
 import { GameDesignProvider } from '@/context/game-design-context';
 import { SpritesProvider } from '@/context/sprite-context';
-import { TabId } from '@/lib/editor-config';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
 import { Sprite } from '@/lib/Sprite';
-import { patchMember } from "@/lib/update-design";
 import { ImageService } from '@/services/imageService';
 import { populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
@@ -44,18 +42,12 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
 
     return (
         <ThemeProvider theme={editorTheme}>
-            <GameDesignProvider value={
+            <GameDesignProvider input={
                 {
                     gameDesign: gameEditorState.gameDesign,
                     tabOpen: gameEditorState.tabOpen,
                     gameItemIds: gameEditorState.gameItemIds,
-                    openInEditor: (tabId: TabId, itemId?: string) => dispatchDesignUpdate({ type: 'open-in-editor', itemId, tabId }),
-                    applyModification: (description, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod }),
-                    createGameDataItem: (property, data) => dispatchDesignUpdate({ type: 'create-data-item', property, data }),
-                    deleteArrayItem: (index, property) => dispatchDesignUpdate({ type: 'delete-data-item', index, property }),
-                    changeOrAddInteraction: (data, index) => dispatchDesignUpdate({ type: 'change-or-add-interaction', index, data }),
-                    deleteInteraction: (index) => dispatchDesignUpdate({ type: 'delete-interaction', index }),
-                    modifyRoom: (description, id, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod: { rooms: patchMember(id, mod, gameDesign.rooms) } }),
+                    dispatchDesignUpdate,
                 }
             }>
                 <AssetsProvider soundService={soundService} imageService={imageService}>
@@ -76,10 +68,8 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                 width={150}
                             >
                                 <ButtonGroup sx={{ marginTop: 3 }} orientation="horizontal" >
-                                    <UndoButton history={history}
-                                        undo={() => dispatchDesignUpdate({ type: 'undo' })} />
-                                    <SaveAndLoadButtons
-                                        dispatchDesignUpdate={dispatchDesignUpdate} />
+                                    <UndoButton history={history} />
+                                    <SaveAndLoadButtons />
                                     <TestGameDialog />
                                 </ButtonGroup>
 

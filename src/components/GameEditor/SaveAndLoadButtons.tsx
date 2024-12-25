@@ -6,19 +6,13 @@ import {
   uploadFile,
 } from "@/lib/files";
 import { higherLevelLoadNewGame } from "@/lib/game-design-logic/load-new-design";
-import { GameDesignAction } from "@/lib/game-design-logic/types";
 import { buildGameZipBlob, readGameFromZipFile } from "@/lib/zipFiles";
 import { Alert, IconButton, Snackbar, Tooltip } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 
-interface Props {
-  dispatchDesignUpdate: React.Dispatch<GameDesignAction>
-}
 
-export const SaveAndLoadButtons: FunctionComponent<Props> = ({
-  dispatchDesignUpdate,
-}: Props) => {
-  const { gameDesign } = useGameDesign()
+export const SaveAndLoadButtons: FunctionComponent = () => {
+  const { gameDesign, dispatchDesignUpdate } = useGameDesign()
   const { imageService, soundService } = useAssets()
   const [downloadAllError, setDownloadAllError] = useState<string | undefined>(
     undefined
