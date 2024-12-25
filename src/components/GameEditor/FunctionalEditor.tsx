@@ -13,10 +13,9 @@ import { ImageService } from '@/services/imageService';
 import { populateServices, populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
 import { editorTheme } from '@/theme';
-import { Box, ButtonGroup, Container, IconButton, Stack, ThemeProvider } from '@mui/material';
+import { Box, ButtonGroup, Container, Stack, ThemeProvider } from '@mui/material';
 import React, { useEffect, useReducer, useState } from 'react';
 import { MainWindow } from './MainWindow';
-import { PlayCircleFilledOutlinedIcon } from './material-icons';
 import { SaveAndLoadButtons } from './SaveAndLoadButtons';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
@@ -29,8 +28,6 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
 
     const [soundService] = useState(new SoundService())
     const [imageService] = useState(new ImageService())
-    const [gameTestDialogOpen, setGameTestDialogOpen] = useState(false);
-    const [resetTimeStamp, setResetTimeStamp] = useState(0);
 
     const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer,
         {
@@ -85,8 +82,8 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
 
                 <AssetsProvider soundService={soundService} imageService={imageService}>
                     <SpritesProvider value={sprites}>
-                        <Container maxWidth='xl'
-                            component={'main'}
+                        <Container component={'main'}
+                            maxWidth='xl'
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'row',
@@ -96,8 +93,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                                 background: 'white',
                             }}>
 
-                            <Stack
-                                component={'nav'}
+                            <Stack component={'nav'}
                                 spacing={1}
                                 width={150}
                             >
@@ -106,26 +102,17 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                                         undo={() => dispatchDesignUpdate({ type: 'undo' })} />
                                     <SaveAndLoadButtons
                                         loadNewGame={loadNewGame} />
-                                    <IconButton
-                                        onClick={() => {
-                                            setGameTestDialogOpen(true)
-                                            setResetTimeStamp(Date.now())
-                                        }}
-                                    >
-                                        <PlayCircleFilledOutlinedIcon fontSize={'large'} />
-                                    </IconButton>
-                                    <TestGameDialog
-                                        isOpen={gameTestDialogOpen}
-                                        close={() => setGameTestDialogOpen(false)}
-                                        reset={() => setResetTimeStamp(Date.now())}
-                                        resetTimeStamp={resetTimeStamp}
-                                    />
+                                    <TestGameDialog />
                                 </ButtonGroup>
 
                                 <TabButtonList />
                             </Stack>
 
-                            <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
+                            <Box component={'section'}
+                                flex={1}
+                                padding={1}
+                                sx={{ overflowY: 'auto' }}
+                            >
                                 <MainWindow />
                             </Box>
                         </Container>
