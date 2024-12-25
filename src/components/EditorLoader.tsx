@@ -1,8 +1,8 @@
-import type { GameEditorProps } from "@/components/GameEditor/FunctionalEditor"
+import type { GameEditorProps } from "@/components/GameEditor"
 import { Container, Divider, Skeleton, Stack } from '@mui/material'
 import dynamic from 'next/dynamic'
 
-const DynamicComponent = dynamic<GameEditorProps>(() => import('@/components/GameEditor/FunctionalEditor', {}), {
+const DynamicComponent = dynamic<GameEditorProps>(() => import('@/components/GameEditor', {}), {
   loading: () => (<>
 
     <Container maxWidth='xl'>

@@ -22,7 +22,7 @@ import { UndoButton } from './UndoButton';
 export type { GameEditorProps };
 
 
-const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame }) => {
+const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame }) => {
     const [soundService] = useState(new SoundService())
     const [imageService] = useState(new ImageService())
     const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer,
@@ -101,4 +101,4 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
     )
 }
 
-export default FunctionalEditor
+export default GameEditor
