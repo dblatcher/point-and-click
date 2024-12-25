@@ -12,7 +12,8 @@ const gameDesignContext = createContext<{
     changeOrAddInteraction: { (data: Interaction, index?: number): void },
     deleteInteraction: { (index: number): void }
     modifyRoom: { (description: string, id: string, mod: Partial<RoomData>): void }
-    tabOpen: TabId
+    tabOpen: TabId,
+    gameItemIds: Partial<Record<GameDataItemType, string>>,
 }>(
     {
         gameDesign: {
@@ -37,6 +38,7 @@ const gameDesignContext = createContext<{
         applyModification: () => { },
         modifyRoom: () => { },
         tabOpen: 'main',
+        gameItemIds: {},
     }
 )
 

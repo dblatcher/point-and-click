@@ -27,12 +27,8 @@ import { useKeyBoard } from '@/hooks/use-keyboard';
 import { useAssets } from '@/context/asset-context';
 import { StoryBoardEditor } from './StoryBoardEditor/StoryBoardEditor';
 
-type Props = {
-    gameItemIds: Partial<Record<GameDataItemType, string>>
-}
-
-export const MainWindow = ({ gameItemIds }: Props) => {
-    const { gameDesign, tabOpen, openInEditor } = useGameDesign()
+export const MainWindow = () => {
+    const { gameDesign, tabOpen, openInEditor, gameItemIds } = useGameDesign()
     const { imageService, soundService } = useAssets()
 
     useKeyBoard([

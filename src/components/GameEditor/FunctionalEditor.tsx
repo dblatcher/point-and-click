@@ -71,6 +71,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                 {
                     gameDesign: gameEditorState.gameDesign,
                     tabOpen: gameEditorState.tabOpen,
+                    gameItemIds: gameEditorState.gameItemIds,
                     openInEditor: (tabId: TabId, itemId?: string) => dispatchDesignUpdate({ type: 'open-in-editor', itemId, tabId }),
                     applyModification: (description, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod }),
                     createGameDataItem: (property, data) => dispatchDesignUpdate({ type: 'create-data-item', property, data }),
@@ -120,7 +121,7 @@ const FunctionalEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuil
                             </Stack>
 
                             <Box component={'section'} flex={1} padding={1} sx={{ overflowY: 'auto' }}>
-                                <MainWindow gameItemIds={gameItemIds} />
+                                <MainWindow />
                             </Box>
 
                             <TestGameDialog
