@@ -1,7 +1,7 @@
 import { Reducer } from "react"
 import { GameEditorState, GameDesignAction } from "./types"
 import { cloneData } from "../clone"
-import { addGameDataItem, changeOrAddInteraction } from "../mutate-design"
+import { addGameDataItem, putInteraction } from "./mutate-design"
 import { GameDesign } from "@/definitions"
 
 
@@ -111,7 +111,7 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             return {
                 ...gameEditorState,
                 history: addHistory(`change interaction`),
-                gameDesign: changeOrAddInteraction(gameDesign, data, index)
+                gameDesign: putInteraction(gameDesign, data, index)
             }
         }
 

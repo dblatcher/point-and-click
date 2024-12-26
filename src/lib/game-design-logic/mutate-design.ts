@@ -17,7 +17,7 @@ export const addGameDataItem = (gameDesign: GameDesign, property: GameDataItemTy
     return gameDesign
 }
 
-export const changeOrAddInteraction = (gameDesign: GameDesign, interaction: Interaction, index?: number) => {
+export const putInteraction = (gameDesign: GameDesign, interaction: Interaction, index?: number) => {
     const { interactions } = gameDesign
     if (typeof index === 'undefined') {
         interactions.push(interaction)
@@ -26,4 +26,3 @@ export const changeOrAddInteraction = (gameDesign: GameDesign, interaction: Inte
     }
     return gameDesign
 }
-
