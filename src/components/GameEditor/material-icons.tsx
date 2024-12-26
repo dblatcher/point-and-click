@@ -38,6 +38,7 @@ import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
+import RedoIcon from "@mui/icons-material/Redo";
 
 export {
     AddIcon,
@@ -80,5 +81,6 @@ export {
     StarIcon,
     UploadIcon,
     UndoIcon,
+    RedoIcon,
 };
 

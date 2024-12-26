@@ -22,6 +22,9 @@ type ModifyDesignAction = {
 type UndoAction = {
     type: 'undo'
 }
+type RedoAction = {
+    type: 'redo'
+}
 
 type LoadNewAction = {
     type: 'load-new',
@@ -55,6 +58,7 @@ export type GameDesignAction =
     OpenInEditorAction |
     ModifyDesignAction |
     UndoAction |
+    RedoAction |
     LoadNewAction |
     CreateDataItemAction |
     DeleteDataItemAction |
@@ -64,6 +68,7 @@ export type GameDesignAction =
 export type GameEditorState = {
     gameDesign: GameDesign;
     history: { gameDesign: GameDesign; label: string }[];
+    undoneHistory: { gameDesign: GameDesign; label: string }[];
     tabOpen: TabId;
     gameItemIds: Partial<Record<GameDataItemType, string>>;
 }

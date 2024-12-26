@@ -15,7 +15,7 @@ import { MainWindow } from './MainWindow';
 import { SaveAndLoadButtons } from './SaveAndLoadButtons';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
-import { UndoButton } from './UndoButton';
+import { UndoAndRedoButtons } from './UndoButton';
 
 export type { GameEditorProps };
 
@@ -27,6 +27,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         {
             gameDesign: getInitalDesign(usePrebuiltGame),
             history: [],
+            undoneHistory: [],
             tabOpen: 'main',
             gameItemIds: {},
         }
@@ -37,7 +38,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             populateServicesForPreBuiltGame(imageService, soundService)
         }
     }, [usePrebuiltGame, imageService, soundService])
-    const { gameDesign, history } = gameEditorState
+    const { gameDesign, history, undoneHistory } = gameEditorState
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
 
     return (
@@ -68,7 +69,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                 width={150}
                             >
                                 <ButtonGroup sx={{ marginTop: 3 }} orientation="horizontal" >
-                                    <UndoButton history={history} />
+                                    <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />
                                     <SaveAndLoadButtons />
                                     <TestGameDialog />
                                 </ButtonGroup>

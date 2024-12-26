@@ -7,13 +7,13 @@ import { GameDesign } from "@/definitions"
 
 const higherLevelAddHistoryItem =
     (history: GameEditorState['history'], gameDesign: GameDesign, maxLength = 10) =>
-        (label: string) => {
+        (label: string): Pick<GameEditorState, 'history' | 'undoneHistory'> => {
             history.push({
                 label,
                 gameDesign
             })
             if (history.length > maxLength) { history.shift() }
-            return history
+            return { history, undoneHistory: [] }
         }
 
 export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (gameEditorState, action) => {
@@ -45,16 +45,15 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
 
         case "modify-design": {
             const { description, mod } = action
-            console.log(description)
             return {
                 ...gameEditorState,
-                history: addHistory(description),
+                ...addHistory(description),
                 gameDesign: { ...gameEditorState.gameDesign, ...mod },
             }
         }
 
         case "undo": {
-            const { history } = gameEditorState
+            const { history, undoneHistory, gameDesign } = gameEditorState
             const last = history.pop();
             if (!last) {
                 return gameEditorState
@@ -62,7 +61,22 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             return {
                 ...gameEditorState,
                 history,
-                gameDesign: last.gameDesign,
+                undoneHistory: [...undoneHistory, { label: last.label, gameDesign }],
+                gameDesign: cloneData(last.gameDesign),
+            }
+        }
+
+        case "redo": {
+            const { history, undoneHistory, gameDesign } = gameEditorState
+            const last = undoneHistory.pop();
+            if (!last) {
+                return gameEditorState
+            }
+            return {
+                ...gameEditorState,
+                history: [...history,  { label: last.label, gameDesign }],
+                undoneHistory,
+                gameDesign: cloneData(last.gameDesign),
             }
         }
 
@@ -76,14 +90,13 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
 
         case "create-data-item": {
             const { property, data } = action
-            console.log(property, data)
             const { gameDesign } = gameEditorState;
             addGameDataItem(gameDesign, property, data)
 
             return {
                 ...gameEditorState,
                 gameDesign,
-                history: addHistory(`add new ${property}: ${data.id}`)
+                ...addHistory(`add new ${property}: ${data.id}`)
             }
         }
 
@@ -100,7 +113,7 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
 
             return {
                 ...gameEditorState,
-                history: addHistory(message),
+                ...addHistory(message),
                 gameDesign,
             }
         }
@@ -110,7 +123,7 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             const { gameDesign } = gameEditorState
             return {
                 ...gameEditorState,
-                history: addHistory(`change interaction`),
+                ...addHistory(`change interaction`),
                 gameDesign: putInteraction(gameDesign, data, index)
             }
         }
@@ -126,7 +139,7 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             gameDesign.interactions.splice(index, 1);
             return {
                 ...gameEditorState,
-                history: addHistory(`delete interaction #${index}: ${verbId} ${targetId} (${itemId})`),
+                ...addHistory(`delete interaction #${index}: ${verbId} ${targetId} (${itemId})`),
                 gameDesign,
             }
         }
