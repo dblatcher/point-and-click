@@ -33,7 +33,6 @@ type Props = { imageService: ImageService }
 
 
 export class ImageAssetTool extends Component<Props, State> {
-  canvasRef: RefObject<HTMLCanvasElement>;
   file: File | Blob | null;
 
   constructor(props: Props) {
@@ -51,7 +50,6 @@ export class ImageAssetTool extends Component<Props, State> {
     this.changeValue = this.changeValue.bind(this);
     this.clearForm = this.clearForm.bind(this)
 
-    this.canvasRef = createRef();
     this.file = null;
   }
 
@@ -226,6 +224,7 @@ export class ImageAssetTool extends Component<Props, State> {
         <ZipFileControl
           clearForm={this.clearForm}
           uploadWarning={uploadWarning}
+          clearWarning={() => this.setState({ uploadWarning: undefined })}
           zipAssets={this.zipImages}
           loadFromZipFile={this.loadFromZipFile} />
 

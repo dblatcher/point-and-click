@@ -210,6 +210,7 @@ export class SoundAssetTool extends Component<Props, State> {
         <EditorHeading heading="Sound asset tool" />
         <ZipFileControl
           clearForm={this.clearForm}
+          clearWarning={() => this.setState({ uploadWarning: undefined })}
           uploadWarning={uploadWarning}
           zipAssets={this.zipSounds}
           loadFromZipFile={this.loadFromZipFile} />
