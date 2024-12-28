@@ -1,14 +1,14 @@
-import { StringInput } from "@/components/SchemaForm/StringInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { Consequence, ImmediateConsequence, Order, Sequence } from "@/definitions";
 import { Narrative } from "@/definitions/BaseTypes";
 import { ImmediateConsequenceSchema } from "@/definitions/Consequence";
 import { cloneData } from "@/lib/clone";
+import { patchMember } from "@/lib/update-design";
 import { Grid } from "@mui/material";
+import { DelayedStringInput } from "../DelayedStringInput";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
 import { SequenceFlow } from "./SequenceFlow";
-import { patchMember } from "@/lib/update-design";
 
 
 type Props = {
@@ -99,6 +99,13 @@ export const SequenceEditor = (props: Props) => {
     }
 
     const { data: sequence, heading } = props
+
+    const descriptionField = <DelayedStringInput label="description" value={sequence.description || ''}
+        inputHandler={(description) => {
+            updateFromPartial({ description })
+        }}
+    />
+
     return (
         <article>
 
@@ -112,11 +119,7 @@ export const SequenceEditor = (props: Props) => {
 
                 <Grid container spacing={4}>
                     <Grid item xs={8}>
-                        <StringInput label="description" value={sequence.description || ''}
-                            inputHandler={(description) => {
-                                updateFromPartial({ description })
-                            }}
-                        />
+                        {descriptionField}
                     </Grid>
                 </Grid>
             </>)}
@@ -125,11 +128,7 @@ export const SequenceEditor = (props: Props) => {
                 (<>
                     <h3>Edit external sequence: </h3>
                     <div>ID: <b>{sequence?.id}</b></div>
-                    <StringInput label="description" value={sequence.description || ''}
-                        inputHandler={(description) => {
-                            updateFromPartial({ description })
-                        }}
-                    />
+                    {descriptionField}
                 </>)
             }
 

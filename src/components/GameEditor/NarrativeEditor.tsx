@@ -3,8 +3,8 @@ import { Narrative } from "@/definitions/BaseTypes";
 import { cloneData } from "@/lib/clone";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography, useTheme } from "@mui/material";
 import React, { useState } from "react";
-import { StringInput } from "../SchemaForm/StringInput";
 import { ArrayControl } from "./ArrayControl";
+import { DelayedStringInput } from './DelayedStringInput';
 import { HelpButton } from "./HelpButton";
 
 interface Props {
@@ -32,7 +32,9 @@ const TextControl = ({ narrative, updateText, updateLine }: {
                     mutateList={updateText}
                     describeItem={(line, index) => (
                         <Box key={index}>
-                            <StringInput value={line} inputHandler={(newLine) => { updateLine(newLine, index) }} />
+                            <DelayedStringInput delayAfterEdits={5000} type='textArea'
+                                value={line} 
+                                inputHandler={(newLine) => { updateLine(newLine, index) }} />
                         </Box>
                     )}
                     createItem={() => ""}

@@ -1,9 +1,9 @@
-import { StringInput } from "@/components/SchemaForm/StringInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { RoomData } from "@/definitions";
-import { NarrativeEditor } from "../NarrativeEditor";
 import { Box, Typography } from "@mui/material";
+import { DelayedStringInput } from "../DelayedStringInput";
 import { HelpButton } from "../HelpButton";
+import { NarrativeEditor } from "../NarrativeEditor";
 import { AmbientSoundControl } from "./AmbientSoundControl";
 
 type RoomEditorProps = {
@@ -14,7 +14,7 @@ export const RoomDescriptionControl = ({ room }: RoomEditorProps) => {
     const { modifyRoom } = useGameDesign()
 
     return <Box paddingY={5} display={'flex'} flexDirection={'column'} gap={10}>
-        <StringInput optional
+        <DelayedStringInput optional delayAfterEdits={5000}
             label="room name"
             value={room.name ?? ''}
             inputHandler={(name) => {

@@ -3,10 +3,10 @@ import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoar
 import { cloneArrayWithPatch } from "@/lib/clone";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
-import { StringInput } from "../../SchemaForm/StringInput";
 import { ArrayControl } from "../ArrayControl";
 import { ColorInput } from "../ColorInput";
 import { makeEmptyStoryBoardPagePicture } from "../defaults";
+import { DelayedStringInput } from "../DelayedStringInput";
 import { EditorBox } from "../EditorBox";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { PagePictureControl } from "./PagePictureControl";
@@ -47,8 +47,10 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                 <Box>
                     <Typography variant="h3">Text</Typography>
                     <Box gap={2} display={'flex'} flexDirection={'column'}>
-                        <StringInput label="title" value={page.title} inputHandler={newTitle =>
-                            updatePage(`title to "${newTitle}"`, { title: newTitle })
+                        <DelayedStringInput delayAfterEdits={5000}
+                            label="title" 
+                            value={page.title} 
+                            inputHandler={title => updatePage(`title to "${title}"`, { title })
                         } />
                         <NarrativeEditor isRequired noDialog
                             narrative={page.narrative}
