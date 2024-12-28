@@ -4,8 +4,10 @@ import { useInterval } from "@/hooks/useInterval";
 
 
 export const DelayedStringInput: React.FunctionComponent<
-    StringInputProps
-> = ({ inputHandler, value, ...props }) => {
+    StringInputProps & {
+        delayAfterEdits?: number
+    }
+> = ({ inputHandler, value, delayAfterEdits = 2000, ...props }) => {
 
     const inputRef = useRef<HTMLInputElement>()
     const [localvalue, setLocalValue] = useState(value)
@@ -34,8 +36,8 @@ export const DelayedStringInput: React.FunctionComponent<
     }
 
     useInterval(() => {
-        const timeSinceLastChange = Date.now() - timeOfLastEdit
-        if (timeSinceLastChange < 2000) {
+        const timeSinceLastEdit = Date.now() - timeOfLastEdit
+        if (timeSinceLastEdit < delayAfterEdits) {
             return
         }
         updatePropValue()

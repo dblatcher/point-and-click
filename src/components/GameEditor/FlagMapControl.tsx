@@ -57,7 +57,10 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
                 />
             </Box>
             <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2}>
-                <DelayedStringInput label="description" value={flag.description ?? ''} inputHandler={setDescription} />
+                <DelayedStringInput 
+                    label="description" 
+                    value={flag.description ?? ''} 
+                    inputHandler={setDescription} />
                 <ButtonWithConfirm
                     confirmationText={`Are you sure you want to delete flag "${id}"?`}
                     label="delete"
