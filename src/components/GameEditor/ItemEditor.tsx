@@ -6,7 +6,6 @@ import { ImageAsset } from "@/services/assets";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
-import { StringInput } from "../SchemaForm/StringInput";
 import { ItemMenuInner } from "../game-ui/ItemMenu";
 import { FileAssetSelector } from "./FileAssetSelector";
 import { EditorBox } from "./EditorBox";
@@ -14,6 +13,7 @@ import { EditorHeading } from "./EditorHeading";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
 import { FramePicker } from "./SpriteEditor/FramePicker";
+import { DelayedStringInput } from "./DelayedStringInput";
 
 type Props = {
     item: ItemData;
@@ -23,37 +23,16 @@ export const ItemEditor = ({ item }: Props) => {
     const { gameDesign, applyModification } = useGameDesign()
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const { actorId = '', id, name } = item
-
     const imageKey = `${item.imageId}-${item.row}-${item.col}`
 
-    const updateFromPartial = (input: Partial<ItemData>) => {
+    const updateFromPartial = (input: Partial<ItemData>, messageDetail = '') => {
         if (input.id && input.id !== item.id) {
             console.warn(`tried to change id in ItemEditor`, { input })
             return
         }
-        applyModification(`edit item ${id}`, { items: patchMember(id, input, gameDesign.items) })
+        applyModification(`edit item ${id} ${messageDetail}`, { items: patchMember(id, input, gameDesign.items) })
     }
 
-    const changeValue = (propery: keyof ItemData, newValue: string | undefined) => {
-        const modification: Partial<ItemData> = {}
-        switch (propery) {
-            case 'id':
-                console.warn(`tried to change id in ItemEditor`, { newValue })
-                return
-            case 'name':
-            case 'actorId':
-            case 'imageId':
-                if (typeof newValue === 'string' || typeof newValue === 'undefined') {
-                    modification[propery] = newValue
-                }
-                break;
-        }
-        if (propery === 'imageId') {
-            modification.row = undefined
-            modification.col = undefined
-        }
-        updateFromPartial(modification)
-    }
 
     return (
         <Stack component='article' spacing={3}>
@@ -68,15 +47,15 @@ export const ItemEditor = ({ item }: Props) => {
             <Grid container spacing={2} justifyContent={'space-between'} width={'100%'}>
                 <Grid item>
                     <Stack spacing={2} maxWidth={'md'}>
-                        <StringInput
+                        <DelayedStringInput
                             label="name" value={name || ''}
-                            inputHandler={(value) => changeValue('name', value)} />
+                            inputHandler={(name) => updateFromPartial({ name }, `rename to "${name}"`)} />
                         <SelectInput
-                            label="actorId"
+                            label="actor starting with item"
                             optional
                             options={listIds(gameDesign.actors)}
                             value={actorId}
-                            inputHandler={id => { changeValue('actorId', id) }} />
+                            inputHandler={actorId => updateFromPartial({ actorId }, 'starting actor')} />
                         <Button
                             onClick={() => { setDialogOpen(true) }}
                             variant="outlined"
@@ -127,8 +106,8 @@ export const ItemEditor = ({ item }: Props) => {
                         format="select"
                         assetType="image"
                         filterItems={item => (item as ImageAsset).category === 'item' || (item as ImageAsset).category === 'any'}
-                        select={item => changeValue('imageId', item.id)}
-                        selectNone={() => changeValue('imageId', undefined)}
+                        select={item => updateFromPartial({ imageId: item.id }, `image is ${item.id}`)}
+                        selectNone={() => updateFromPartial({ imageId: undefined }, `no image`)}
                         selectedItemId={item.imageId}
                     />
                     <FramePicker fixedSheet noOptions
@@ -136,7 +115,7 @@ export const ItemEditor = ({ item }: Props) => {
                         row={item.row || 0}
                         col={item.col || 0}
                         pickFrame={(row: number, col: number) => {
-                            updateFromPartial({ col, row })
+                            updateFromPartial({ col, row }, `use frame [${col}, ${row}] of ${item.imageId}`)
                         }}
                     />
                 </DialogContent>
