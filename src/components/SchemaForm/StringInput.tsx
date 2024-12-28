@@ -1,18 +1,18 @@
 import { Autocomplete, Box, TextField, TextFieldProps, Typography } from '@mui/material';
-import type { FormEventHandler, FunctionComponent } from 'react';
+import type { FormEventHandler, FunctionComponent, Ref } from 'react';
 import { eventToString } from './util';
 import { FieldProps } from './types';
 
+export type StringInputProps = FieldProps & {
+    value: string;
+    inputHandler: { (value: string): void };
+    type?: HTMLInputElement['type'];
+    suggestions?: string[];
+    inputRef?: Ref<any>;
+}
 
-export const StringInput: FunctionComponent<
-    FieldProps & {
-        value: string;
-        inputHandler: { (value: string): void };
-        type?: HTMLInputElement['type'];
-        suggestions?: string[];
-    }
-> = (props) => {
-    const { type = 'text', suggestions, label, error, optional, readOnly } = props;
+export const StringInput: FunctionComponent<StringInputProps> = (props) => {
+    const { type = 'text', suggestions, label, error, optional, readOnly, inputRef } = props;
 
     const sendValue: FormEventHandler<HTMLInputElement> = (event) => {
         props.inputHandler(eventToString(event));
@@ -33,7 +33,7 @@ export const StringInput: FunctionComponent<
     if (type === 'color') {
         return (
             <Box display='flex' alignItems='flex-end'>
-                <TextField
+                <TextField inputRef={inputRef}
                     value={props.value}
                     onInput={sendValue}
                     {...commonProps}
@@ -45,7 +45,7 @@ export const StringInput: FunctionComponent<
     }
 
     if (suggestions) {
-        return <Autocomplete
+        return <Autocomplete ref={inputRef}
             fullWidth={!props.notFullWidth}
             disableClearable
             options={Array.from(new Set(suggestions))}
@@ -66,7 +66,7 @@ export const StringInput: FunctionComponent<
     }
 
     return (
-        <TextField
+        <TextField inputRef={inputRef}
             multiline={type == 'textArea'}
             InputLabelProps={type == 'textArea' ? {
                 shrink: true,

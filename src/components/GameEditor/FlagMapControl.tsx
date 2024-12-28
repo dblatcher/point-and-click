@@ -8,6 +8,7 @@ import { makeNewFlag } from "./defaults";
 import { formatIdInput } from "./helpers";
 import { AddIcon, DeleteIcon, FlagFilledIcon, FlagOutlinedIcon } from "./material-icons";
 import { findFlagUsages, getModificationToRemoveFlagAndReferences } from "@/lib/find-uses";
+import { DelayedStringInput } from "./DelayedStringInput";
 
 const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
     const { gameDesign, applyModification } = useGameDesign()
@@ -56,7 +57,7 @@ const FlagCard = ({ id, flag }: { id: string, flag: Flag }) => {
                 />
             </Box>
             <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} gap={2}>
-                <StringInput label="description" value={flag.description ?? ''} inputHandler={setDescription} />
+                <DelayedStringInput label="description" value={flag.description ?? ''} inputHandler={setDescription} />
                 <ButtonWithConfirm
                     confirmationText={`Are you sure you want to delete flag "${id}"?`}
                     label="delete"
