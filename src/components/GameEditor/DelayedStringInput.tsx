@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { StringInput, StringInputProps } from "../SchemaForm/StringInput";
-import { useInterval } from "@/hooks/useInterval";
-
 
 export const DelayedStringInput: React.FunctionComponent<
     StringInputProps & {
@@ -11,7 +9,7 @@ export const DelayedStringInput: React.FunctionComponent<
 
     const inputRef = useRef<HTMLInputElement>()
     const [localvalue, setLocalValue] = useState(value)
-    const [timeOfLastEdit, setTimeOfLastEdit] = useState(Date.now())
+    const [timerId, setTimerId] = useState<NodeJS.Timeout | undefined>(undefined)
 
     useEffect(() => {
         setLocalValue(value)
@@ -32,16 +30,11 @@ export const DelayedStringInput: React.FunctionComponent<
 
     const localInputHandler = (newLocalValue: string) => {
         setLocalValue(newLocalValue)
-        setTimeOfLastEdit(Date.now())
-    }
-
-    useInterval(() => {
-        const timeSinceLastEdit = Date.now() - timeOfLastEdit
-        if (timeSinceLastEdit < delayAfterEdits) {
-            return
+        if (timerId) {
+            clearTimeout(timerId)
         }
-        updatePropValue()
-    }, 500)
+        setTimerId(setTimeout(() => inputHandler(newLocalValue), delayAfterEdits))
+    }
 
     return <StringInput
         inputRef={inputRef}
