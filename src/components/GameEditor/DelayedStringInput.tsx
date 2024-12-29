@@ -3,9 +3,11 @@ import { StringInput, StringInputProps } from "../SchemaForm/StringInput";
 
 export const DelayedStringInput: React.FunctionComponent<
     StringInputProps & {
-        delayAfterEdits?: number
+        delayAfterEdits?: number;
+        /** callback to inform the immidiate parent of the local value */
+        reportLocalChange?: { (localValue: string): void }
     }
-> = ({ inputHandler, value, delayAfterEdits = 2000, ...props }) => {
+> = ({ inputHandler, reportLocalChange, value, delayAfterEdits = 2000, ...props }) => {
 
     const inputRef = useRef<HTMLInputElement>()
     const [localvalue, setLocalValue] = useState(value)
@@ -13,7 +15,8 @@ export const DelayedStringInput: React.FunctionComponent<
 
     useEffect(() => {
         setLocalValue(value)
-    }, [value, setLocalValue])
+        reportLocalChange?.(value)
+    }, [value, setLocalValue, reportLocalChange])
 
     const updatePropValue = useCallback(() => {
         if (localvalue !== value) {
@@ -29,7 +32,8 @@ export const DelayedStringInput: React.FunctionComponent<
     }, [inputRef.current, updatePropValue])
 
     const localInputHandler = (newLocalValue: string) => {
-        setLocalValue(newLocalValue)
+        setLocalValue(newLocalValue);
+        reportLocalChange?.(newLocalValue);
         if (timerId) {
             clearTimeout(timerId)
         }
