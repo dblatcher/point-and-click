@@ -25,11 +25,12 @@ export const DelayedStringInput: React.FunctionComponent<
     }, [localvalue, value, inputHandler])
 
     useEffect(() => {
-        inputRef.current?.addEventListener('blur', updatePropValue)
+        const inputElement = inputRef.current
+        inputElement?.addEventListener('blur', updatePropValue)
         return () => {
-            inputRef.current?.removeEventListener('blur', updatePropValue)
+            inputElement?.removeEventListener('blur', updatePropValue)
         }
-    }, [inputRef.current, updatePropValue])
+    }, [inputRef, updatePropValue])
 
     const localInputHandler = (newLocalValue: string) => {
         setLocalValue(newLocalValue);
