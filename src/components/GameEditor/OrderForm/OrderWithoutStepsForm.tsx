@@ -35,6 +35,7 @@ export class OrderWithoutStepsForm extends Component<Props> {
             <>
                 {type === 'say' && (
                     <SchemaForm
+                        textInputDelay={5000}
                         schema={SayOrderSchema.omit({ _started: true })}
                         data={this.props.data}
                         changeValue={this.handleSchemaFormChange}
@@ -43,6 +44,7 @@ export class OrderWithoutStepsForm extends Component<Props> {
                 )}
                 {type === 'goTo' && (
                     <SchemaForm
+                        textInputDelay={1000}
                         schema={GotoOrderSchema.omit({ _started: true })}
                         data={this.props.data}
                         changeValue={this.handleSchemaFormChange}

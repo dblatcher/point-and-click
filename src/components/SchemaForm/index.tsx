@@ -19,6 +19,7 @@ interface Props<T extends z.ZodRawShape> {
     containerProps?: Partial<StackProps>
     legendProps?: Omit<Partial<TypographyProps>, 'component' | 'children' | 'ref'>
     fieldWrapperProps?: Omit<Partial<StackProps>, 'component' | 'children' | 'ref'>
+    textInputDelay?: number
 }
 
 
@@ -30,7 +31,8 @@ export function SchemaForm<T extends z.ZodRawShape>({
     formLegend, schema, data,
     changeValue,
     options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {}, fieldAliases = {},
-    containerProps: containerProps = {}, legendProps = {}, fieldWrapperProps = {}
+    containerProps: containerProps = {}, legendProps = {}, fieldWrapperProps = {},
+    textInputDelay,
 }: Props<T>) {
 
     const fields: FieldDef[] = []
@@ -69,6 +71,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
                     change={changeValue}
                     field={field}
                     stringInputType={field.key === 'text' ? 'textArea' : undefined}
+                    textInputDelay={textInputDelay}
                 />
             )}
         </Stack>

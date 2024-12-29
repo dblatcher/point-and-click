@@ -82,6 +82,7 @@ export const ActorEditor = ({ data }: Props) => {
             {tabOpen === ActorEditorTab.Details &&
                 <Box maxWidth={'sm'}>
                     <SchemaForm
+                        textInputDelay={2000}
                         schema={ActorDataSchema.pick({
                             name: true,
                             status: true,

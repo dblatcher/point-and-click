@@ -59,6 +59,7 @@ export const VerbEditor = ({ verb }: Props) => {
         target: { ...testTarget, name: sampleTargetName },
     }
 
+    // TO DO - move the default responses out of the schema form
     return (
         <Stack spacing={2}>
             <EditorHeading heading="Verb Editor" itemId={verb.id} >
@@ -71,9 +72,15 @@ export const VerbEditor = ({ verb }: Props) => {
             <Stack direction={'row'} spacing={2}>
                 <EditorBox title="Verb config" boxProps={{ flexBasis: 400 }}>
                     <SchemaForm
+                        textInputDelay={2000}
                         data={verb}
                         schema={VerbSchema.omit({ id: true })}
                         changeValue={(value, field) => { handleUpdate(value, field) }}
+                        fieldAliases={{
+                            defaultResponseCannotReach: 'template for default "cannot reach" response',
+                            defaultResponseNoItem: 'template for default "doesn\'t work" response',
+                            defaultResponseWithItem: 'template for default "doesn\'t work with item" response',        
+                        }}
                     />
                 </EditorBox>
                 <Stack spacing={2} justifyContent={'flex-end'}>

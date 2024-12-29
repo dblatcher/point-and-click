@@ -60,6 +60,7 @@ export const ChoiceEditor = ({
 
     return (<Stack spacing={2} width={500}>
         <SchemaForm
+            textInputDelay={2000}
             schema={ConversationChoiceSchema.omit({
                 'sequence': true
             })}

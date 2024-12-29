@@ -141,6 +141,7 @@ export class OrderWithStepsForm extends Component<Props> {
                         deleteIcon="clear"
                         describeItem={(step, index) => (
                             <SchemaForm key={index}
+                                textInputDelay={1000}
                                 changeValue={(value, field) => { changeStep(value, field, index) }}
                                 data={step}
                                 suggestions={{ animation: animationSuggestions }}

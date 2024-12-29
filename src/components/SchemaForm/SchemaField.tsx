@@ -6,6 +6,7 @@ import { BooleanInput } from "./BooleanInput";
 import { SelectInput } from "./SelectInput";
 import { NumberInput } from "./NumberInput";
 import { OptionalNumberInput } from "./OptionalNumberInput";
+import { DelayedStringInput } from "../GameEditor/DelayedStringInput";
 
 // noTriState is set by default in SchemaForm, so no implementation of the
 // TriStateInput is currently needed
@@ -20,6 +21,7 @@ interface SchemaFieldProps<T> {
     stringInputType?: string;
     showUnsupported?: boolean;
     numberInputSettings?: NumberInputSettings;
+    textInputDelay?: number;
 }
 
 export function SchemaField<T extends z.ZodRawShape>({
@@ -27,7 +29,8 @@ export function SchemaField<T extends z.ZodRawShape>({
     options, optionDescriptions,
     suggestions, stringInputType,
     showUnsupported = false,
-    numberInputSettings = {}
+    numberInputSettings = {},
+    textInputDelay,
 }: SchemaFieldProps<T>) {
     const { key, optional, type, value, alias } = field;
     const isSupported = ['ZodString', 'ZodBoolean', 'ZodNumber', 'ZodEnum'].includes(type)
@@ -52,12 +55,20 @@ export function SchemaField<T extends z.ZodRawShape>({
             />
         }
 
-        return <StringInput label={alias ?? key}
-            value={value || ''}
-            type={stringInputType}
-            suggestions={suggestions}
-            inputHandler={(value) => { change(value, field) }}
-        />
+        return textInputDelay
+            ? <DelayedStringInput label={alias ?? key}
+                value={value || ''}
+                type={stringInputType}
+                suggestions={suggestions}
+                inputHandler={(value) => { change(value, field) }}
+                delayAfterEdits={textInputDelay}
+            />
+            : <StringInput label={alias ?? key}
+                value={value || ''}
+                type={stringInputType}
+                suggestions={suggestions}
+                inputHandler={(value) => { change(value, field) }}
+            />
     }
 
     if (type === 'ZodBoolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {

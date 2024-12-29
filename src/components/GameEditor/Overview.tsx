@@ -45,6 +45,7 @@ export const Overview = () => {
       <Box display={'flex'} flexWrap={'wrap'} gap={2} alignItems={'flex-start'}>
         <EditorBox title="attributes">
           <SchemaForm
+            textInputDelay={2000}
             schema={formSchema}
             data={gameDesign}
             changeValue={(value, field) => {

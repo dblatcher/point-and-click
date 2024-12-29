@@ -115,7 +115,9 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                     />
                 </Box>
 
+                {/* doesn't use andy free text fields, but include delay incase schema changes */}
                 <SchemaForm
+                    textInputDelay={2000}
                     schema={consequenceMap[consequence.type] as any}
                     numberConfig={{
                         time: { min: 0 },

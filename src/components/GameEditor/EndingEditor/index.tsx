@@ -41,7 +41,8 @@ export const EndingEditor = ({ ending }: Props) => {
 
             <Typography variant="h3">Ending Config</Typography>
             <Card sx={{ maxWidth: 'sm' }}>
-                <SchemaForm
+                <SchemaForm 
+                    textInputDelay={2000}
                     data={ending}
                     schema={EndingSchema.omit({ id: true })}
                     changeValue={(value, field) => { handleUpdate(value, field) }}
