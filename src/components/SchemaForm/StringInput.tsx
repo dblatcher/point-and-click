@@ -9,10 +9,12 @@ export type StringInputProps = FieldProps & {
     type?: HTMLInputElement['type'];
     suggestions?: string[];
     inputRef?: Ref<any>;
+    /**callback used to report that that user selected an option */
+    handleSuggestion?: { (value: string): void };
 }
 
 export const StringInput: FunctionComponent<StringInputProps> = (props) => {
-    const { type = 'text', suggestions, label, error, optional, readOnly, inputRef } = props;
+    const { type = 'text', suggestions, label, error, optional, readOnly, inputRef, handleSuggestion } = props;
 
     const sendValue: FormEventHandler<HTMLInputElement> = (event) => {
         props.inputHandler(eventToString(event));
@@ -51,10 +53,13 @@ export const StringInput: FunctionComponent<StringInputProps> = (props) => {
             options={Array.from(new Set(suggestions))}
             freeSolo
             onInput={sendValue}
-            onChange={(e) => {
-                const value = e.currentTarget.textContent
+
+            onChange={(_event, value, reason) => {
                 if (value) {
                     props.inputHandler(value);
+                }
+                if (reason === 'selectOption') {
+                   handleSuggestion?.(value) 
                 }
             }}
             value={props.value}

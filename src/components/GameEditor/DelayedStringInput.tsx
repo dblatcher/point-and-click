@@ -39,5 +39,6 @@ export const DelayedStringInput: React.FunctionComponent<
     return <StringInput
         inputRef={inputRef}
         inputHandler={localInputHandler}
+        handleSuggestion={inputHandler}
         value={localvalue} {...props} />
 }
