@@ -7,6 +7,7 @@ import choiceSequences from "@/content/editor-help/conversation-choice-sequences
 import flagsHelp from "@/content/editor-help/flags.md"
 import flagsConditionHelp from "@/content/editor-help/flag-conditions-help.md"
 import roomSoundsHelp from "@/content/editor-help/room-sounds-help.md"
+import defaultResponses from "@/content/editor-help/default-responses.md"
 
 interface Props {
     topic: string;
@@ -64,6 +65,8 @@ export const HelpText: FunctionComponent<Props> = ({
             return <MarkDown content={flagsHelp} />
         case 'room sounds':
             return <MarkDown content={roomSoundsHelp} />
+        case 'default responses':
+            return <MarkDown content={defaultResponses} />
         default:
             return (
                 <article>

@@ -12,6 +12,7 @@ import { DelayedStringInput } from "./DelayedStringInput";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
 import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
+import { HelpButton } from "./HelpButton";
 
 
 type Props = {
@@ -99,7 +100,10 @@ export const VerbEditor = ({ verb }: Props) => {
             </EditorBox>
 
 
-            <EditorBox title="Default Responses Templates">
+            <EditorBox
+                title="Default Responses Templates"
+                barContent={<HelpButton helpTopic="default responses" />}
+            >
                 <DelayedStringInput delayAfterEdits={5000}
                     label='"does not work" response'
                     value={verb.defaultResponseNoItem ?? ''}
