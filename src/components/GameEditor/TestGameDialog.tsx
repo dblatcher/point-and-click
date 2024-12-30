@@ -6,6 +6,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, IconBu
 import { useState } from "react";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
+import { FullScreenLayout } from "../full-screen-ui/FullScreenLayout";
 
 
 export const TestGameDialog = () => {
@@ -48,6 +49,9 @@ export const TestGameDialog = () => {
                         showDebugLog={showDebugLog}
                         _sprites={sprites}
                         soundService={soundService}
+                        uiComponents={{
+                            GameLayoutComponent:FullScreenLayout
+                        }}
                     />
                 </DialogContent>
             </Dialog>

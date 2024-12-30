@@ -19,7 +19,7 @@ interface Props {
     maxHeight?: number;
     viewAngle: number;
     handleRoomClick: { (x: number, y: number): void };
-    handleHotspotClick?: { (zone: HotspotZone): void };
+    handleHotspotClick?: { (zone: HotspotZone, event: PointerEvent): void };
     handleHover?: HandleHoverFunction;
     renderAllZones?: boolean;
     highlightHotspots?: boolean;

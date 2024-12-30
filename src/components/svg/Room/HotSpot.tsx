@@ -2,14 +2,14 @@ import ZoneSvg from "@/components/svg/ZoneSvg";
 import { HotspotZone, RoomData } from "@/definitions";
 import { getShift } from "@/lib/roomFunctions";
 import { FunctionComponent } from "react";
-import { HandleHoverFunction } from "../../game/types";
+import { HandleClickFunction, HandleHoverFunction } from "../../game/types";
 import { hotpotClassNames } from "./zoneCssClasses";
 
 interface Props {
     zone: HotspotZone;
     roomData: RoomData;
     viewAngle: number;
-    clickHandler?: { (hotspot: HotspotZone): void };
+    clickHandler?: HandleClickFunction<HotspotZone>;
     handleHover?: HandleHoverFunction;
     highlight?: boolean;
     markVertices?: boolean;

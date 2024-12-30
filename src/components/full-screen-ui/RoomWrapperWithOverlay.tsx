@@ -1,14 +1,14 @@
 import { useGameState } from "@/context/game-state-context";
-import { findById } from "@/lib/util";
-import React, { useEffect, useState } from "react";
-import { Room } from "../svg/Room";
 import { ActorData, CommandTarget, HotspotZone } from "@/definitions";
-import { buildContentsList } from "../game/put-contents-in-order";
-import { ParallaxPlace, ParallaxPlaceProps } from "../svg/ParallaxPlace";
 import { GameState } from "@/lib/game-state-logic/types";
 import { calculateScreenX } from "@/lib/roomFunctions";
-import { TargetLabel } from "./TargetLabel";
+import { findById } from "@/lib/util";
+import React, { useEffect, useRef, useState } from "react";
+import { buildContentsList } from "../game/put-contents-in-order";
+import { ParallaxPlace, ParallaxPlaceProps } from "../svg/ParallaxPlace";
+import { Room } from "../svg/Room";
 import { InteractionCoin } from "./InteractionCoin";
+import { TargetLabel } from "./TargetLabel";
 
 
 const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {
@@ -49,23 +49,26 @@ const getTargetPlace = (hoverTargetInRoom: ActorData | HotspotZone | undefined, 
 const renderCells = false
 
 export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
+    const [clickedTarget, setClickedTarget] = useState<ActorData | HotspotZone | undefined>(undefined)
+    const [clickEvent, setClickEvent] = useState<PointerEvent>();
     const { gameProps, gameState, updateGameState } = useGameState()
     const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards ?? [])
 
-    const [clickedTarget, setClickedTarget] = useState<ActorData | HotspotZone | undefined>(undefined)
 
     useEffect(() => {
         setClickedTarget(undefined)
     }, [gameState.currentRoomId, setClickedTarget])
 
-    const handleTargetClick = (target: CommandTarget) => {
+    const handleTargetClick = (target: CommandTarget, event: PointerEvent) => {
         if (target.type !== 'item') {
             setClickedTarget(target)
+            setClickEvent(event)
         }
     }
 
+    const containerRef = useRef<HTMLDivElement>(null)
     const contentList = buildContentsList(
         gameState,
         handleTargetClick
@@ -74,37 +77,47 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const hoverTargetInRoom = getHoverTarget(gameState)
     const hoverPlaceProps = getTargetPlace(hoverTargetInRoom, gameState)
 
-    const clickedTargetPlaceProps = getTargetPlace(clickedTarget, gameState)
-
     return <>
         {(currentRoom && !currentStoryBoard) && (
-            <Room
-                data={currentRoom}
-                maxWidth={roomWidth}
-                maxHeight={roomHeight}
-                isPaused={isPaused}
-                viewAngle={viewAngle}
-                handleRoomClick={(x, y) => { updateGameState({ type: 'ROOM-CLICK', x, y }) }}
-                handleHotspotClick={handleTargetClick}
-                handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
-                    updateGameState({ type: 'HANDLE-HOVER', event, target })
-                }}
-                contents={contentList}
-                obstacleCells={renderCells ? gameState.cellMatrix : undefined}
+            <div
+                style={{ position: 'relative' }}
+                ref={containerRef}
             >
-                {(hoverPlaceProps && hoverTargetInRoom) && (
-                    <ParallaxPlace {...hoverPlaceProps}>
-                        <TargetLabel target={hoverTargetInRoom} />
-                    </ParallaxPlace>
-                )}
+                <Room
+                    data={currentRoom}
+                    maxWidth={roomWidth}
+                    maxHeight={roomHeight}
+                    isPaused={isPaused}
+                    viewAngle={viewAngle}
+                    handleRoomClick={(x, y) => {
+                        updateGameState({ type: 'ROOM-CLICK', x, y })
+                        setClickedTarget(undefined)
+                    }}
+                    handleHotspotClick={handleTargetClick}
+                    handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
+                        updateGameState({ type: 'HANDLE-HOVER', event, target })
+                    }}
+                    contents={contentList}
+                    obstacleCells={renderCells ? gameState.cellMatrix : undefined}
+                >
+                    {(hoverPlaceProps && hoverTargetInRoom) && (
+                        <ParallaxPlace {...hoverPlaceProps}>
+                            <TargetLabel target={hoverTargetInRoom} />
+                        </ParallaxPlace>
+                    )}
+                </Room>
 
-                {(clickedTarget && clickedTargetPlaceProps) && (
-                    <ParallaxPlace {...clickedTargetPlaceProps}>
+                {clickedTarget && (
+                    <div style={{
+                        position: 'absolute',
+                        top: (clickEvent?.pageY ?? 0) - (containerRef.current?.offsetTop ?? 0),
+                        left: (clickEvent?.pageX ?? 0) - (containerRef.current?.offsetLeft ?? 0),
+                        transform: "translateX(-50%) translateY(-50%)"
+                    }}>
                         <InteractionCoin target={clickedTarget} remove={() => setClickedTarget(undefined)} />
-                    </ParallaxPlace>
+                    </div>
                 )}
-
-            </Room>
+            </div>
         )}
     </>
 

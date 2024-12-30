@@ -108,10 +108,10 @@ export const ActorFigure: FunctionComponent<Props> = ({
         }
     }
 
-    const processClick = clickHandler
-        ? (event: Event): void => {
+    const processClick: MouseEventHandler<SVGElement> |undefined = clickHandler
+        ? (event): void => {
             event.stopPropagation()
-            clickHandler(data)
+            clickHandler(data, event.nativeEvent as PointerEvent)
         }
         : undefined
 
@@ -132,7 +132,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
                     direction={direction}
                     frameIndex={frameIndex}
                     // works - the Event definitions don't match, but stopPropagation is the only event method needed
-                    clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
+                    clickHandler={processClick}
                     handleHover={processClick ? handleHover : undefined}
                     hoverData={data}
                     roomData={roomData}

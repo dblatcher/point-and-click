@@ -1,7 +1,7 @@
 import { FunctionComponent, MouseEventHandler } from "react";
 import { polygonToPathD } from "@/lib/polygonToPathD";
 import { Zone, HotspotZone } from "@/definitions"
-import { HandleHoverFunction } from "../game/types";
+import { HandleClickFunction, HandleHoverFunction } from "../game/types";
 import { PolygonPins } from "./PolygonPins";
 import { CirclePins } from "./CirclePins";
 import { RectanglePins } from "./RectanglePins";
@@ -13,7 +13,7 @@ interface Props {
     className?: string;
     stopPropagation?: boolean;
     // HotspotZone is a subtype of Zone but not assignable to Zone or (Zone|HotspotZone)
-    clickHandler?: { (zone: any): void };
+    clickHandler?: HandleClickFunction<any>;
     handleHover?: HandleHoverFunction;
     markVertices?: boolean;
 }
@@ -27,7 +27,7 @@ const ZoneSvg: FunctionComponent<Props> = ({
 
     const processClick: MouseEventHandler<SVGElement> = (event) => {
         if (stopPropagation) { event.stopPropagation() }
-        if (clickHandler) { clickHandler(zone) }
+        if (clickHandler) { clickHandler(zone, event.nativeEvent as PointerEvent) }
     }
 
     const shouldReportHover = handleHover && zone.type === 'hotspot';

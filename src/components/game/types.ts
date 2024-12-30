@@ -19,7 +19,7 @@ export type GameProps = Readonly<{
 } & GameCondition>
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
-export type HandleClickFunction<T extends CommandTarget> = { (target: T): void };
+export type HandleClickFunction<T extends CommandTarget> = { (target: T, event: PointerEvent): void };
 export type RoomContentItem = {
     data: ActorData;
     orders?: Order[];
