@@ -2,24 +2,23 @@ import { RoomData } from "@/definitions";
 import { getShift } from "@/lib/roomFunctions";
 import { FunctionComponent, ReactNode } from "react";
 
-interface Props {
+export interface ParallaxPlaceProps {
     x: number,
     y: number,
     parallax: number,
     roomData: RoomData;
     viewAngle: number;
-    children?: ReactNode;
 }
 
-export const ParallaxPlace: FunctionComponent<Props> = ({
+export const ParallaxPlace: FunctionComponent<ParallaxPlaceProps & { children?: ReactNode }> = ({
     x, y, parallax, roomData, viewAngle, children
-}: Props) => {
+}) => {
 
     const displayX = x + getShift(viewAngle, parallax, roomData)
     const displayY = roomData.height - y
 
     return (
-        <svg x={displayX} y={displayY} style={{ overflow: 'visible' }}>
+        <svg x={displayX} y={displayY} style={{ overflow: 'visible', pointerEvents: 'none' }}>
             <g>
                 {children}
             </g>
