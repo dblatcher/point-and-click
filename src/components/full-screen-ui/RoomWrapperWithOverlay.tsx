@@ -2,7 +2,7 @@ import { useGameState } from "@/context/game-state-context";
 import { ActorData, CommandTarget, HotspotZone } from "@/definitions";
 import { GameState } from "@/lib/game-state-logic/types";
 import { calculateScreenX } from "@/lib/roomFunctions";
-import { findById } from "@/lib/util";
+import { clamp, findById } from "@/lib/util";
 import React, { useEffect, useRef, useState } from "react";
 import { buildContentsList } from "../game/put-contents-in-order";
 import { ParallaxPlace, ParallaxPlaceProps } from "../svg/ParallaxPlace";
@@ -23,10 +23,12 @@ const getTargetPlace = (hoverTargetInRoom: ActorData | HotspotZone | undefined, 
         return undefined
     }
 
+    const adjustedY = clamp(hoverTargetInRoom.y, currentRoom.height - 15, 15)
+
     if (hoverTargetInRoom.type === 'hotspot') {
         const labelProps: ParallaxPlaceProps = {
             x: hoverTargetInRoom.x,
-            y: hoverTargetInRoom.y,
+            y: adjustedY,
             parallax: hoverTargetInRoom.parallax,
             roomData: currentRoom,
             viewAngle: gameState.viewAngle,
@@ -36,7 +38,7 @@ const getTargetPlace = (hoverTargetInRoom: ActorData | HotspotZone | undefined, 
 
     const labelProps: ParallaxPlaceProps = {
         x: calculateScreenX(hoverTargetInRoom.x - (hoverTargetInRoom.width / 2), gameState.viewAngle, currentRoom),
-        y: hoverTargetInRoom.y,
+        y: adjustedY,
         parallax: 0,
         roomData: currentRoom,
         viewAngle: gameState.viewAngle,
