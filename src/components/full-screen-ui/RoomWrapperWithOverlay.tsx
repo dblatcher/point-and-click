@@ -9,6 +9,8 @@ import { ParallaxPlace, ParallaxPlaceProps } from "../svg/ParallaxPlace";
 import { Room } from "../svg/Room";
 import { InteractionCoin } from "./InteractionCoin";
 import { TargetLabel } from "./TargetLabel";
+import { ResizeWatcher } from "../ResizeWatcher";
+import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 
 
 const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {
@@ -79,48 +81,55 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const hoverTargetInRoom = getHoverTarget(gameState)
     const hoverPlaceProps = getTargetPlace(hoverTargetInRoom, gameState)
 
-    return <>
-        {(currentRoom && !currentStoryBoard) && (
-            <div
-                style={{ position: 'relative' }}
-                ref={containerRef}
-            >
-                <Room
-                    data={currentRoom}
-                    maxWidth={roomWidth}
-                    maxHeight={roomHeight}
-                    isPaused={isPaused}
-                    viewAngle={viewAngle}
-                    handleRoomClick={(x, y) => {
-                        updateGameState({ type: 'ROOM-CLICK', x, y })
-                        setClickedTarget(undefined)
-                    }}
-                    handleHotspotClick={handleTargetClick}
-                    handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
-                        updateGameState({ type: 'HANDLE-HOVER', event, target })
-                    }}
-                    contents={contentList}
-                    obstacleCells={renderCells ? gameState.cellMatrix : undefined}
+    return (
+        <ResizeWatcher resizeHandler={() => {
+            const innnerLayout = document.querySelector('.LAYOUT_INNER');
+            if (innnerLayout) {
+                updateGameState(screenSizeAction(innnerLayout.clientWidth - 20, innnerLayout.clientHeight - 40))
+            }
+        }}>
+            {(currentRoom && !currentStoryBoard) && (
+                <div
+                    style={{ position: 'relative' }}
+                    ref={containerRef}
                 >
-                    {(hoverPlaceProps && hoverTargetInRoom) && (
-                        <ParallaxPlace {...hoverPlaceProps}>
-                            <TargetLabel target={hoverTargetInRoom} />
-                        </ParallaxPlace>
-                    )}
-                </Room>
+                    <Room
+                        data={currentRoom}
+                        maxWidth={roomWidth}
+                        maxHeight={roomHeight}
+                        isPaused={isPaused}
+                        viewAngle={viewAngle}
+                        handleRoomClick={(x, y) => {
+                            updateGameState({ type: 'ROOM-CLICK', x, y })
+                            setClickedTarget(undefined)
+                        }}
+                        handleHotspotClick={handleTargetClick}
+                        handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
+                            updateGameState({ type: 'HANDLE-HOVER', event, target })
+                        }}
+                        contents={contentList}
+                        obstacleCells={renderCells ? gameState.cellMatrix : undefined}
+                    >
+                        {(hoverPlaceProps && hoverTargetInRoom) && (
+                            <ParallaxPlace {...hoverPlaceProps}>
+                                <TargetLabel target={hoverTargetInRoom} />
+                            </ParallaxPlace>
+                        )}
+                    </Room>
 
-                {clickedTarget && (
-                    <div style={{
-                        position: 'absolute',
-                        top: (clickEvent?.pageY ?? 0) - (containerRef.current?.offsetTop ?? 0),
-                        left: (clickEvent?.pageX ?? 0) - (containerRef.current?.offsetLeft ?? 0),
-                        transform: "translateX(-50%) translateY(-50%)"
-                    }}>
-                        <InteractionCoin target={clickedTarget} remove={() => setClickedTarget(undefined)} />
-                    </div>
-                )}
-            </div>
-        )}
-    </>
+                    {clickedTarget && (
+                        <div style={{
+                            position: 'absolute',
+                            top: (clickEvent?.pageY ?? 0) - (containerRef.current?.offsetTop ?? 0),
+                            left: (clickEvent?.pageX ?? 0) - (containerRef.current?.offsetLeft ?? 0),
+                            transform: "translateX(-50%) translateY(-50%)"
+                        }}>
+                            <InteractionCoin target={clickedTarget} remove={() => setClickedTarget(undefined)} />
+                        </div>
+                    )}
+                </div>
+            )}
+        </ResizeWatcher>
+    )
 
 }

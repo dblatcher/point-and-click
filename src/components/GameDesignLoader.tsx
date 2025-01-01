@@ -87,7 +87,7 @@ export class GameDesignLoader extends React.Component<{}, State> {
     render() {
         const { design, imageAssets = [], soundAssets = [], loadingSuccessMessage, loadingErrorMessage } = this.state
 
-        return <div>
+        return <>
             <PlayerHeaderContent design={design} eject={() => {
                 return this.setState({
                     design: undefined,
@@ -142,7 +142,7 @@ export class GameDesignLoader extends React.Component<{}, State> {
                     {loadingErrorMessage}
                 </Alert>
             </Snackbar>
-        </div>
+        </>
     }
 
 }

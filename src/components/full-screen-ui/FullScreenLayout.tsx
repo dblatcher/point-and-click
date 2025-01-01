@@ -1,23 +1,26 @@
-import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
+import { useGameStateDerivations } from "@/context/game-state-context";
+import { DialogSaveMenu } from "../game-mui-ux/DialogSaveMenu";
 import { ConversationMenu } from "../game-ui/ConversationMenu";
 import { EndingWrapper } from "../game-ui/EndingScreen";
-import { SaveMenu } from "../game-ui/SaveMenu";
-import { SoundToggle } from "../game-ui/SoundToggle";
 import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { RoomWrapperWithOverlay } from "./RoomWrapperWithOverlay";
 
-
 export const FullScreenLayout = () => {
-    const { updateGameState } = useGameState()
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
-    const { roomWidth, roomHeight } = useGameState().gameState
 
-    return (<main>
-        <SaveMenuWrapper SaveMenuComponent={SaveMenu} />
-        <button onClick={() => updateGameState(screenSizeAction(roomWidth + 10, roomHeight + 10))}>+</button>
-        <button onClick={() => updateGameState(screenSizeAction(roomWidth - 10, roomHeight - 10))}>-</button>
-        <SoundToggle />
+    return (<main style={{
+        flex: 1,
+        display:'flex',
+        flexDirection: 'column',
+        justifyContent:'center'
+    }}>
+        <div style={{
+            position: 'fixed',
+            top: 0,
+            right: 0
+        }}>
+            <SaveMenuWrapper SaveMenuComponent={DialogSaveMenu} />
+        </div>
         <RoomWrapperWithOverlay />
         <EndingWrapper />
         {isConversationRunning && (
