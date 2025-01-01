@@ -24,5 +24,6 @@ export type RoomContentItem = {
     data: ActorData;
     orders?: Order[];
     clickHandler?: HandleClickFunction<ActorData>;
+    contextClickHandler?: HandleClickFunction<ActorData>;
     overrideSprite?: Sprite;
 }

@@ -10,6 +10,7 @@ interface Props {
     roomData: RoomData;
     viewAngle: number;
     clickHandler?: HandleClickFunction<HotspotZone>;
+    contextClickHandler?: HandleClickFunction<HotspotZone>;
     handleHover?: HandleHoverFunction;
     highlight?: boolean;
     markVertices?: boolean;
@@ -19,7 +20,7 @@ interface Props {
 
 const Hotspot: FunctionComponent<Props> = ({
     zone: hotspot, roomData, viewAngle, highlight, markVertices, stopPropogation = true,
-    clickHandler, handleHover, flash = false,
+    clickHandler, handleHover, contextClickHandler, flash = false,
 }: Props) => {
     const { parallax, x, y } = hotspot
     return (
@@ -29,6 +30,7 @@ const Hotspot: FunctionComponent<Props> = ({
                 x={x + getShift(viewAngle, parallax, roomData)}
                 y={roomData.height - y}
                 clickHandler={clickHandler}
+                contextClickHandler={contextClickHandler}
                 stopPropagation={stopPropogation}
                 zone={hotspot}
                 markVertices={markVertices}

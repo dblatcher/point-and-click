@@ -20,6 +20,7 @@ interface Props {
     viewAngle: number;
     handleRoomClick: { (x: number, y: number): void };
     handleHotspotClick?: { (zone: HotspotZone, event: PointerEvent): void };
+    handleHotspotContextClick?: { (zone: HotspotZone, event: PointerEvent): void };
     handleHover?: HandleHoverFunction;
     renderAllZones?: boolean;
     highlightHotspots?: boolean;
@@ -44,6 +45,7 @@ export const Room: FunctionComponent<Props> = ({
     viewAngle,
     handleRoomClick,
     handleHotspotClick,
+    handleHotspotContextClick,
     handleHover,
     renderAllZones: renderAllZones,
     highlightHotspots,
@@ -111,6 +113,7 @@ export const Room: FunctionComponent<Props> = ({
                         roomData={data}
                         highlight={highlightHotspots}
                         clickHandler={handleHotspotClick}
+                        contextClickHandler={handleHotspotContextClick}
                         stopPropogation={!!handleHotspotClick}
                         handleHover={handleHover}
                         markVertices={markHotspotVertices.includes(index)}
@@ -124,6 +127,7 @@ export const Room: FunctionComponent<Props> = ({
                         data={entry.data}
                         orders={entry.orders || []}
                         clickHandler={entry.clickHandler}
+                        contextClickHandler={entry.contextClickHandler}
                         roomData={data}
                         viewAngle={viewAngle}
                         roomScale={scale}

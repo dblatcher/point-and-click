@@ -21,6 +21,7 @@ interface Props {
     data: ActorData;
     animationRate?: number;
     clickHandler?: HandleClickFunction<ActorData>;
+    contextClickHandler?: HandleClickFunction<ActorData>;
     handleHover?: HandleHoverFunction;
     orders?: Order[];
     isPaused: boolean;
@@ -67,7 +68,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
     viewAngle,
     animationRate = 200,
     isPaused,
-    clickHandler, handleHover,
+    clickHandler, handleHover, contextClickHandler,
     orders = [],
     overrideSprite,
     noSound,
@@ -108,10 +109,20 @@ export const ActorFigure: FunctionComponent<Props> = ({
         }
     }
 
-    const processClick: MouseEventHandler<SVGElement> |undefined = clickHandler
+    const processClick: MouseEventHandler<SVGElement> | undefined = clickHandler
         ? (event): void => {
             event.stopPropagation()
             clickHandler(data, event.nativeEvent as PointerEvent)
+        }
+        : undefined
+
+    const processContextClick: MouseEventHandler<SVGElement> | undefined = clickHandler
+        ? (event): void => {
+            event.stopPropagation()
+            if (contextClickHandler) {
+                event.preventDefault()
+                contextClickHandler(data, event.nativeEvent as PointerEvent)
+            }
         }
         : undefined
 
@@ -133,6 +144,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
                     frameIndex={frameIndex}
                     // works - the Event definitions don't match, but stopPropagation is the only event method needed
                     clickHandler={processClick}
+                    contextClickHandler={processContextClick}
                     handleHover={processClick ? handleHover : undefined}
                     hoverData={data}
                     roomData={roomData}

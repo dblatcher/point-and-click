@@ -18,6 +18,7 @@ interface Props {
     width?: number;
     filter?: string;
     clickHandler?: MouseEventHandler<SVGElement>;
+    contextClickHandler?: MouseEventHandler<SVGElement>;
     handleHover?: HandleHoverFunction;
     hoverData?: ActorData;
     status?: string;
@@ -26,7 +27,7 @@ interface Props {
 
 export const SpriteShape: FunctionComponent<Props> = ({
     roomData, viewAngle, x, y, height = 50, width = 50, animationName, frameIndex, spriteObject, direction, filter,
-    clickHandler, handleHover, hoverData, status,
+    clickHandler, contextClickHandler, handleHover, hoverData, status,
 }: Props) => {
     const [widthScale, heightScale] = spriteObject.getFrameScale(animationName, frameIndex, direction);
     const divStyle = Object.assign(spriteObject.getStyle(animationName, frameIndex, direction), { filter });
@@ -46,6 +47,7 @@ export const SpriteShape: FunctionComponent<Props> = ({
     return (
         <svg data-status={status}
             onClick={clickHandler}
+            onContextMenu={contextClickHandler}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             style={svgStyle}

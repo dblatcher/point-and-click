@@ -1,5 +1,5 @@
 import { useGameState } from "@/context/game-state-context";
-import { ActorData, CommandTarget, HotspotZone } from "@/definitions";
+import { ActorData, CommandTarget, HotspotZone, Verb } from "@/definitions";
 import { GameState } from "@/lib/game-state-logic/types";
 import { calculateScreenX } from "@/lib/roomFunctions";
 import { clamp, findById } from "@/lib/util";
@@ -72,10 +72,23 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
         }
     }
 
+    const performDefaultInteraction = (target: CommandTarget) => {
+        const lookVerb = gameProps.verbs.find(verb => verb.isLookVerb)
+        if (lookVerb) {
+            updateGameState({
+                type: 'SEND-COMMAND', command: {
+                    target,
+                    verb: lookVerb
+                }
+            })
+        }
+    }
+
     const containerRef = useRef<HTMLDivElement>(null)
     const contentList = buildContentsList(
         gameState,
-        handleTargetClick
+        handleTargetClick,
+        performDefaultInteraction,
     )
 
     const hoverTargetInRoom = getHoverTarget(gameState)
@@ -104,6 +117,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                             setClickedTarget(undefined)
                         }}
                         handleHotspotClick={handleTargetClick}
+                        handleHotspotContextClick={performDefaultInteraction}
                         handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
                             updateGameState({ type: 'HANDLE-HOVER', event, target })
                         }}
