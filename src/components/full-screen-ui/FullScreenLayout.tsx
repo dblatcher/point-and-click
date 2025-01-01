@@ -4,15 +4,16 @@ import { ConversationMenu } from "../game-ui/ConversationMenu";
 import { EndingWrapper } from "../game-ui/EndingScreen";
 import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { RoomWrapperWithOverlay } from "./RoomWrapperWithOverlay";
+import { InventoryDrawer } from "./InventoryDrawer";
 
 export const FullScreenLayout = () => {
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
 
     return (<main style={{
         flex: 1,
-        display:'flex',
+        display: 'flex',
         flexDirection: 'column',
-        justifyContent:'center'
+        justifyContent: 'center'
     }}>
         <div style={{
             position: 'fixed',
@@ -23,12 +24,12 @@ export const FullScreenLayout = () => {
         </div>
         <RoomWrapperWithOverlay />
         <EndingWrapper />
-        {isConversationRunning && (
+        {!isSequenceRunning && (
             <div style={{
                 position: 'absolute',
                 bottom: 0,
             }}>
-                {!isSequenceRunning && <ConversationMenu />}
+                {isConversationRunning ? <ConversationMenu /> : <InventoryDrawer />}
             </div>
         )}
     </main>)

@@ -1,9 +1,9 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { ActorData, CommandTarget, HotspotZone, ItemData, Verb } from "@/definitions";
+import { CommandTarget, ItemData, Verb } from "@/definitions";
 import React, { useState } from "react";
 
 interface Props {
-    target: ActorData | HotspotZone,
+    target: CommandTarget,
     remove: { (): void }
 }
 
@@ -21,8 +21,9 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
     const { gameProps, updateGameState } = useGameState()
     const { inventory, isConversationRunning } = useGameStateDerivations()
     const { verbs } = gameProps
-
     const [verbNeedingItem, setVerbNeedingItem] = useState<Verb | undefined>(undefined)
+
+    const relevantVerbs = target.type === 'item' ? verbs.filter(verb => !verb.isMoveVerb) : verbs;
 
     const handleVerbClick = (verb: Verb, target: CommandTarget) => {
         if (verb.preposition) {
@@ -64,10 +65,10 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
         position: 'relative',
         pointerEvents: 'all',
         fontSize: 8,
-        maxWidth: BUTTON_SIZE * verbs.length
+        maxWidth: BUTTON_SIZE * relevantVerbs.length
     }}>
         <div style={{ display: 'flex' }}>
-            {verbs.map(verb => (
+            {relevantVerbs.map(verb => (
                 <button key={verb.id}
                     style={{
                         ...buttonStyle,
@@ -78,12 +79,12 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
                         event.preventDefault()
                         handleVerbClick(verb, target)
                     }}>
-                    {verb.label.substring(0, 3)}
+                    {verb.label.substring(0, 4)}
                 </button>
             ))}
         </div>
 
-        <div style={{ display: 'flex', flexWrap:'wrap' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
             <button
                 disabled={!verbNeedingItem}
                 style={buttonStyle}
@@ -103,7 +104,7 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
                         event.preventDefault()
                         handleItemClick(item)
                     }}>
-                    {item.id.substring(0, 3)}
+                    {item.id.substring(0, 4)}
                 </button>
             ))}
         </div>

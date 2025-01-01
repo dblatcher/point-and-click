@@ -122,7 +122,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                             position: 'absolute',
                             top: (clickEvent?.pageY ?? 0) - (containerRef.current?.offsetTop ?? 0),
                             left: (clickEvent?.pageX ?? 0) - (containerRef.current?.offsetLeft ?? 0),
-                            transform: "translateX(-50%) translateY(-50%)"
+                            transform: "translateX(-50%) translateY(-100%)"
                         }}>
                             <InteractionCoin target={clickedTarget} remove={() => setClickedTarget(undefined)} />
                         </div>
