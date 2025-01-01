@@ -94,8 +94,11 @@ export const VerbEditor = ({ verb }: Props) => {
                         defaultResponseNoItem: true,
                         defaultResponseWithItem: true,
                     })}
+                    fieldAliases={{
+                        isNotForItems: 'cannot use on inventory',
+                        isMoveVerb: 'is "move" verb'
+                    }}
                     changeValue={(value, field) => { handleUpdate(value, field) }}
-
                 />
             </EditorBox>
 

@@ -23,7 +23,7 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
     const { verbs } = gameProps
     const [verbNeedingItem, setVerbNeedingItem] = useState<Verb | undefined>(undefined)
 
-    const relevantVerbs = target.type === 'item' ? verbs.filter(verb => !verb.isMoveVerb) : verbs;
+    const relevantVerbs = target.type === 'item' ? verbs.filter(verb => !verb.isMoveVerb && !verb.isNotForItems) : verbs;
 
     const handleVerbClick = (verb: Verb, target: CommandTarget) => {
         if (verb.preposition) {
@@ -65,7 +65,7 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
         position: 'relative',
         pointerEvents: 'all',
         fontSize: 8,
-        maxWidth: BUTTON_SIZE * relevantVerbs.length
+        maxWidth: BUTTON_SIZE * (Math.max(relevantVerbs.length, 5))
     }}>
         <div style={{ display: 'flex' }}>
             {relevantVerbs.map(verb => (
