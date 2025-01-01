@@ -1,4 +1,4 @@
-import { useGameState } from "@/context/game-state-context";
+import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { ActorData, CommandTarget, HotspotZone, Verb } from "@/definitions";
 import { GameState } from "@/lib/game-state-logic/types";
 import { calculateScreenX } from "@/lib/roomFunctions";
@@ -11,6 +11,7 @@ import { InteractionCoin } from "./InteractionCoin";
 import { TargetLabel } from "./TargetLabel";
 import { ResizeWatcher } from "../ResizeWatcher";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
+import { InventoryDrawer } from "./InventoryDrawer";
 
 
 const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {
@@ -56,6 +57,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const [clickedTarget, setClickedTarget] = useState<ActorData | HotspotZone | undefined>(undefined)
     const [clickEvent, setClickEvent] = useState<PointerEvent>();
     const { gameProps, gameState, updateGameState } = useGameState()
+    const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
     const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards ?? [])
@@ -141,6 +143,17 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                             <InteractionCoin target={clickedTarget} remove={() => setClickedTarget(undefined)} />
                         </div>
                     )}
+
+
+                    {(!isSequenceRunning && !isConversationRunning) && (
+                        <div style={{
+                            position: 'absolute',
+                            bottom: 0,
+                        }}>
+                            <InventoryDrawer />
+                        </div>
+                    )}
+
                 </div>
             )}
         </ResizeWatcher>

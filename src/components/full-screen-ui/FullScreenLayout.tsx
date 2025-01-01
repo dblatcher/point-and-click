@@ -29,7 +29,7 @@ export const FullScreenLayout = () => {
                 position: 'absolute',
                 bottom: 0,
             }}>
-                {isConversationRunning ? <ConversationMenu /> : <InventoryDrawer />}
+                {isConversationRunning ? <ConversationMenu /> : <></>}
             </div>
         )}
     </main>)

@@ -1,20 +1,14 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { CommandTarget, ItemData, Verb } from "@/definitions";
 import React, { useState } from "react";
+import { VERB_BUTTON_SIZE, verbButtonStyle } from "./styles";
+import { VerbButton } from "./VerbButton";
 
 interface Props {
     target: CommandTarget,
     remove: { (): void }
 }
 
-const BUTTON_SIZE = 20
-
-const buttonStyle = {
-    width: BUTTON_SIZE,
-    height: BUTTON_SIZE,
-    padding: 1,
-    fontSize: 'inherit',
-}
 
 export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove }) => {
 
@@ -61,33 +55,25 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
     }
 
     return <div style={{
-        backgroundColor: 'tomato',
+        backgroundColor: 'black',
         position: 'relative',
         pointerEvents: 'all',
         fontSize: 8,
-        maxWidth: BUTTON_SIZE * (Math.max(relevantVerbs.length, 5))
+        maxWidth: VERB_BUTTON_SIZE * (Math.max(relevantVerbs.length, 5))
     }}>
         <div style={{ display: 'flex' }}>
             {relevantVerbs.map(verb => (
-                <button key={verb.id}
-                    style={{
-                        ...buttonStyle,
-                        backgroundColor: verbNeedingItem?.id === verb.id ? 'red' : undefined
-                    }}
-                    onClick={(event) => {
-                        event.stopPropagation()
-                        event.preventDefault()
-                        handleVerbClick(verb, target)
-                    }}>
-                    {verb.label.substring(0, 4)}
-                </button>
+                <VerbButton key={verb.id}
+                    verb={verb}
+                    isActive={verbNeedingItem?.id === verb.id}
+                    handleClick={(verb) => handleVerbClick(verb, target)} />
             ))}
         </div>
 
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
             <button
                 disabled={!verbNeedingItem}
-                style={buttonStyle}
+                style={verbButtonStyle}
                 onClick={(event) => {
                     event.stopPropagation()
                     event.preventDefault()
@@ -98,7 +84,7 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
             {inventory.map(item => (
                 <button key={item.id}
                     disabled={!verbNeedingItem}
-                    style={buttonStyle}
+                    style={verbButtonStyle}
                     onClick={(event) => {
                         event.stopPropagation()
                         event.preventDefault()
