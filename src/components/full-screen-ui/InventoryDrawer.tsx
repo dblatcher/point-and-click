@@ -1,27 +1,31 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import React, { CSSProperties, useState } from "react";
-import { ImageBlock } from "../ImageBlock";
-import { VerbList } from "./VerbList";
 import { ItemData, Verb } from "@/definitions";
 import { findById } from "@/lib/util";
-import { VERB_BUTTON_SIZE } from "./styles";
+import { Box, Button, Dialog, DialogContent } from "@mui/material";
+import React, { useState } from "react";
+import { ImageBlock } from "../ImageBlock";
+import { VerbList } from "./VerbList";
 
-const buttonStyle = (isActive?: boolean): CSSProperties => ({
-    position: 'relative',
-    height: '4rem',
-    minWidth: '4rem',
-    backgroundColor: isActive ? 'red' : undefined,
-})
+interface Props {
+    closeDialog: { (): void }
+}
 
-export const InventoryDrawer: React.FunctionComponent = () => {
+
+export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog }) => {
     const { updateGameState, gameProps } = useGameState()
     const { inventory } = useGameStateDerivations()
-    const [isOpen, setIsOpen] = useState(false)
 
     const [activeItemId, setActiveItemId] = useState<string | undefined>(undefined)
     const [activeVerbId, setActiveVerbId] = useState<string | undefined>(undefined)
 
     const selectItem = (item: ItemData) => {
+
+        if (item.id === activeItemId) {
+            setActiveItemId(undefined)
+            setActiveVerbId(undefined)
+            return
+        }
+
         if (!activeItemId || !activeVerbId) {
             setActiveItemId(item.id)
             return
@@ -34,61 +38,45 @@ export const InventoryDrawer: React.FunctionComponent = () => {
             return
         }
 
+        closeDialog()
         updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item, item: firstItem } })
     }
 
     const selectVerb = (verb: Verb) => {
-        setActiveVerbId(undefined)
         if (!verb.preposition) {
             const item = findById(activeItemId, inventory)
             if (item) {
+                closeDialog()
                 updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item } })
             }
+            setActiveVerbId(undefined)
             return
         }
         setActiveVerbId(verb.id)
     }
 
-    return <div style={{
-        display: 'flex'
-    }}>
-        <button
-            disabled={inventory.length === 0 && !isOpen}
-            style={buttonStyle(isOpen)}
-            onClick={() => {
-                setIsOpen(!isOpen)
-                setActiveItemId(undefined)
-                setActiveVerbId(undefined)
-            }}>INV</button>
-
-        {isOpen &&
-            <>
-                {inventory.map(item => (
-                    <div key={item.id} style={{
-                        overflow: 'visible'
-                    }}>
-                        <button
-                            style={buttonStyle(activeItemId === item.id)}
+    return (
+        <Dialog open onClose={closeDialog}>
+            <DialogContent >
+                <Box display='flex'>
+                    {inventory.map(item => (
+                        <Button size="small" key={item.id}
+                            variant={(activeItemId === item.id) ? 'contained' : 'outlined'}
                             onClick={() => selectItem(item)}
+                            sx={{
+                                height: '4rem'
+                            }}
                         >
-                            {item.imageId ?
-                                <ImageBlock frame={{ imageId: item.imageId, row: item.row, col: item.col }} />
-                                :
-                                <span>{item.name || item.id}</span>
+                            {item.imageId
+                                ? <ImageBlock frame={{ imageId: item.imageId, row: item.row, col: item.col }} />
+                                : <span>{item.name || item.id}</span>
                             }
-                        </button>
-                        {activeItemId === item.id && (
-                            <div style={{
-                                position: 'absolute',
-                                top: -VERB_BUTTON_SIZE,
-                                zIndex: 10,
-                            }}>
-                                <VerbList activeVerbId={activeVerbId} selectVerb={selectVerb} />
-                            </div>
-                        )}
-                    </div>
-                ))}
-            </>
-        }
-    </div>
+                        </Button>
+                    ))}
+                </Box>
+                {activeItemId && (
+                    <VerbList activeVerbId={activeVerbId} selectVerb={selectVerb} />
+                )}
+            </DialogContent>
+        </Dialog>)
 }

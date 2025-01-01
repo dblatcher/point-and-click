@@ -56,8 +56,9 @@ const renderCells = false
 export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const [clickedTarget, setClickedTarget] = useState<ActorData | HotspotZone | undefined>(undefined)
     const [clickEvent, setClickEvent] = useState<PointerEvent>();
+    const [inventoryOpen, setInventoryOpen] = useState(false);
     const { gameProps, gameState, updateGameState } = useGameState()
-    const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
+    const { isConversationRunning, isSequenceRunning, inventory } = useGameStateDerivations()
     const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards ?? [])
@@ -150,9 +151,16 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                             position: 'absolute',
                             bottom: 0,
                         }}>
-                            <InventoryDrawer />
+                            <button
+                                disabled={inventory.length === 0}
+
+                                onClick={() => {
+                                    setInventoryOpen(true)
+                                }}>INV</button>
                         </div>
                     )}
+
+                    {(inventoryOpen && !isSequenceRunning && !isConversationRunning) && <InventoryDrawer closeDialog={() => setInventoryOpen(false)} />}
 
                 </div>
             )}
