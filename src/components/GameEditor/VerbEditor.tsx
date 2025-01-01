@@ -96,7 +96,8 @@ export const VerbEditor = ({ verb }: Props) => {
                     })}
                     fieldAliases={{
                         isNotForItems: 'cannot use on inventory',
-                        isMoveVerb: 'is "move" verb'
+                        isMoveVerb: 'is "move" verb',
+                        isLookVerb: 'is "look" verb',
                     }}
                     changeValue={(value, field) => { handleUpdate(value, field) }}
                 />

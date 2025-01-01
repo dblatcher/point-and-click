@@ -8,8 +8,8 @@ import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoar
 const DEFAULT_TALK_TIME = 250;
 
 export const defaultVerbs1: { (): Verb[] } = () => [
-    { id: 'LOOK', label: 'look at' },
-    { id: 'TAKE', label: 'pick up' },
+    { id: 'LOOK', label: 'look at', isLookVerb: true },
+    { id: 'TAKE', label: 'pick up', isNotForItems: true },
     { id: 'USE', label: 'use', preposition: 'with' },
     { id: 'GIVE', label: 'give', preposition: 'to' },
     { id: 'TALK', label: 'talk to' },
@@ -126,7 +126,7 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
         case 'conversationChoice':
             return { type: 'conversationChoice', conversationId: '', branchId: '', choiceRef: '', on: true }
         case 'storyBoardConsequence':
-            return { type: 'storyBoardConsequence', storyBoardId:''}
+            return { type: 'storyBoardConsequence', storyBoardId: '' }
     }
 }
 
