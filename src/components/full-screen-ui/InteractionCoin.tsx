@@ -1,7 +1,7 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { CommandTarget, ItemData, Verb } from "@/definitions";
+import { Box, Button, ButtonGroup, Card, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { VERB_BUTTON_SIZE, verbButtonStyle } from "./styles";
 import { VerbButton } from "./VerbButton";
 
 interface Props {
@@ -11,19 +11,18 @@ interface Props {
 
 
 export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove }) => {
-
     const { gameProps, updateGameState } = useGameState()
     const { inventory, isConversationRunning } = useGameStateDerivations()
     const { verbs } = gameProps
-    const [verbNeedingItem, setVerbNeedingItem] = useState<Verb | undefined>(undefined)
+    const [activeItemVerb, setActiveItemVerb] = useState<Verb | undefined>(undefined)
+    const directVerbs = verbs.filter(verb => !verb.requiresItem);
+    const itemVerbs = verbs.filter(verb => verb.preposition && !verb.isMoveVerb)
+    const handleItemVerbClick = (verb: Verb) => {
+        setActiveItemVerb(verb)
+        return
+    }
 
-    const relevantVerbs = target.type === 'item' ? verbs.filter(verb => !verb.isMoveVerb && !verb.isNotForItems) : verbs;
-
-    const handleVerbClick = (verb: Verb, target: CommandTarget) => {
-        if (verb.preposition) {
-            setVerbNeedingItem(verb)
-            return
-        }
+    const handleDirectVerbClick = (verb: Verb) => {
         remove()
         updateGameState({
             type: 'SEND-COMMAND',
@@ -34,65 +33,69 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
         })
     }
 
-    const handleItemClick = (item?: ItemData) => {
-        if (!verbNeedingItem) {
+    const handleItemClick = (item: ItemData) => {
+        if (!activeItemVerb) {
             return
         }
+        setActiveItemVerb(undefined)
         remove()
         updateGameState({
             type: 'SEND-COMMAND',
             command: {
                 target,
-                verb: verbNeedingItem,
+                verb: activeItemVerb,
                 item,
             }
         })
-        setVerbNeedingItem(undefined)
     }
 
     if (isConversationRunning) {
         return null
     }
 
-    return <div style={{
-        backgroundColor: 'black',
-        position: 'relative',
-        pointerEvents: 'all',
-        fontSize: 8,
-        maxWidth: VERB_BUTTON_SIZE * (Math.max(relevantVerbs.length, 5))
-    }}>
-        <div style={{ display: 'flex' }}>
-            {relevantVerbs.map(verb => (
-                <VerbButton key={verb.id}
-                    verb={verb}
-                    isActive={verbNeedingItem?.id === verb.id}
-                    handleClick={(verb) => handleVerbClick(verb, target)} />
-            ))}
-        </div>
+    return <Box
+        display={'flex'}
+        flexDirection={'column'}
+        component={Card}
+        padding={1}
+    >
+        <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+            <Typography>
+                {target.name ?? target.id}
+                {activeItemVerb && `: ${activeItemVerb.label} item`}
+            </Typography>
+            <IconButton onClick={remove} size="small">x</IconButton>
+        </Box>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            <button
-                disabled={!verbNeedingItem}
-                style={verbButtonStyle}
-                onClick={(event) => {
-                    event.stopPropagation()
-                    event.preventDefault()
-                    handleItemClick(undefined)
-                }}>
-                0
-            </button>
-            {inventory.map(item => (
-                <button key={item.id}
-                    disabled={!verbNeedingItem}
-                    style={verbButtonStyle}
-                    onClick={(event) => {
-                        event.stopPropagation()
-                        event.preventDefault()
-                        handleItemClick(item)
-                    }}>
-                    {item.id.substring(0, 4)}
-                </button>
-            ))}
-        </div>
-    </div>
+        {!activeItemVerb ? (<>
+            <ButtonGroup>
+                {directVerbs.map(verb => (
+                    <VerbButton key={verb.id} tiny
+                        verb={verb}
+                        handleClick={(verb) => handleDirectVerbClick(verb)} />
+                ))}
+            </ButtonGroup >
+            <ButtonGroup>
+                {itemVerbs.map(verb => (
+                    <VerbButton key={verb.id} tiny prepositionLabel
+                        verb={verb}
+                        handleClick={(verb) => handleItemVerbClick(verb)} />
+                ))}
+            </ButtonGroup>
+        </>) : (
+            <ButtonGroup>
+                {inventory.map(item => (
+                    <Button key={item.id}
+                        disabled={!activeItemVerb}
+                        onClick={(event) => {
+                            event.stopPropagation()
+                            event.preventDefault()
+                            handleItemClick(item)
+                        }}>
+                        {item.id}
+                    </Button>
+                ))}
+            </ButtonGroup>
+        )}
+    </Box>
 }

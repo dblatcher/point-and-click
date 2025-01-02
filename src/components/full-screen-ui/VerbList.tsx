@@ -1,45 +1,31 @@
-import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import React from "react";
-import { VERB_BUTTON_SIZE } from "./styles";
-import { VerbButton } from "./VerbButton";
+import { useGameState } from "@/context/game-state-context";
 import { Verb } from "@/definitions";
+import { ButtonGroup } from "@mui/material";
+import React from "react";
+import { VerbButton } from "./VerbButton";
 
 interface Props {
     activeVerbId?: string,
     selectVerb: { (verb: Verb): void },
+    disabled?: boolean
 }
 
-const FOR_ITEMS = true
 
-export const VerbList: React.FunctionComponent<Props> = ({ activeVerbId, selectVerb }) => {
+export const VerbList: React.FunctionComponent<Props> = ({ activeVerbId, selectVerb, disabled }) => {
 
     const { gameProps, } = useGameState()
-    const { isConversationRunning } = useGameStateDerivations()
     const { verbs } = gameProps
-    const relevantVerbs = FOR_ITEMS ? verbs.filter(verb => !verb.isMoveVerb && !verb.isNotForItems) : verbs;
+    const relevantVerbs = verbs.filter(verb => !verb.isMoveVerb && !verb.isNotForItems);
 
-
-
-    if (isConversationRunning) {
-        return null
-    }
-
-    return <div style={{
-        backgroundColor: 'black',
-        position: 'relative',
-        pointerEvents: 'all',
-        fontSize: 8,
-        maxWidth: VERB_BUTTON_SIZE * (Math.max(relevantVerbs.length, 5))
-    }}>
-        <div style={{ display: 'flex' }}>
+    return (
+        <ButtonGroup>
             {relevantVerbs.map(verb => (
                 <VerbButton key={verb.id}
+                    disabled={disabled}
                     verb={verb}
                     isActive={verb.id === activeVerbId}
                     handleClick={selectVerb} />
             ))}
-        </div>
-
-
-    </div>
+        </ButtonGroup>
+    )
 }

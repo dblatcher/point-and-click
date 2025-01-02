@@ -12,6 +12,7 @@ import { TargetLabel } from "./TargetLabel";
 import { ResizeWatcher } from "../ResizeWatcher";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 import { InventoryDrawer } from "./InventoryDrawer";
+import { Box, Button } from "@mui/material";
 
 
 const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {
@@ -147,21 +148,22 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
 
 
                     {(!isSequenceRunning && !isConversationRunning) && (
-                        <div style={{
+                        <Box paddingX={2} sx={{
                             position: 'absolute',
                             bottom: 0,
                         }}>
-                            <button
+                            <Button variant="contained"
                                 disabled={inventory.length === 0}
-
                                 onClick={() => {
+                                    setClickedTarget(undefined)
                                     setInventoryOpen(true)
-                                }}>INV</button>
-                        </div>
+                                }}>INV</Button>
+                        </Box>
                     )}
 
-                    {(inventoryOpen && !isSequenceRunning && !isConversationRunning) && <InventoryDrawer closeDialog={() => setInventoryOpen(false)} />}
-
+                    {(inventoryOpen && !isSequenceRunning && !isConversationRunning) &&
+                        <InventoryDrawer closeDialog={() => setInventoryOpen(false)} />
+                    }
                 </div>
             )}
         </ResizeWatcher>

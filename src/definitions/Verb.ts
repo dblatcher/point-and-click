@@ -7,6 +7,7 @@ export const VerbSchema = z.object({
     isMoveVerb: boolean().optional(),
     isNotForItems: boolean().optional(),
     isLookVerb: boolean().optional(),
+    requiresItem: boolean().optional(),
     defaultResponseNoItem: string().optional(),
     defaultResponseWithItem: string().optional(),
     defaultResponseCannotReach: string().optional(),

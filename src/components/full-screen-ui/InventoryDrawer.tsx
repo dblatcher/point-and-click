@@ -1,7 +1,7 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { ItemData, Verb } from "@/definitions";
 import { findById } from "@/lib/util";
-import { Box, Button, Dialog, DialogContent } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import React, { useState } from "react";
 import { ImageBlock } from "../ImageBlock";
 import { VerbList } from "./VerbList";
@@ -42,6 +42,14 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog })
         updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item, item: firstItem } })
     }
 
+    const examineItem = (item: ItemData) => {
+        const lookVerb = gameProps.verbs.find(verb => verb.isLookVerb)
+        if (lookVerb) {
+            closeDialog()
+            updateGameState({ type: 'SEND-COMMAND', command: { verb: lookVerb, target: item } })
+        }
+    }
+
     const selectVerb = (verb: Verb) => {
         if (!verb.preposition) {
             const item = findById(activeItemId, inventory)
@@ -57,12 +65,17 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog })
 
     return (
         <Dialog open onClose={closeDialog}>
+            <DialogTitle>Inventory</DialogTitle>
             <DialogContent >
-                <Box display='flex'>
+                <Box display='flex' flexWrap={'wrap'}>
                     {inventory.map(item => (
                         <Button size="small" key={item.id}
                             variant={(activeItemId === item.id) ? 'contained' : 'outlined'}
                             onClick={() => selectItem(item)}
+                            onContextMenu={(event) => {
+                                event.preventDefault()
+                                examineItem(item)
+                            }}
                             sx={{
                                 height: '4rem'
                             }}
@@ -74,9 +87,7 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog })
                         </Button>
                     ))}
                 </Box>
-                {activeItemId && (
-                    <VerbList activeVerbId={activeVerbId} selectVerb={selectVerb} />
-                )}
+                <VerbList activeVerbId={activeVerbId} selectVerb={selectVerb} disabled={!activeItemId} />
             </DialogContent>
         </Dialog>)
 }
