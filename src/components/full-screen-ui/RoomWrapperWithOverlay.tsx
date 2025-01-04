@@ -143,34 +143,32 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                         )}
                     </Room>
 
-                    {clickedTarget && (
-                        <div style={{
-                            position: 'absolute',
-                            top: (clickEvent?.pageY ?? 0) - (containerRef.current?.offsetTop ?? 0),
-                            left: (clickEvent?.pageX ?? 0) - (containerRef.current?.offsetLeft ?? 0),
-                            transform: "translateX(-50%) translateY(-100%)"
-                        }}>
-                            <InteractionCoin target={clickedTarget} remove={() => setClickedTarget(undefined)} />
-                        </div>
-                    )}
-
-
                     {(!isSequenceRunning && !isConversationRunning) && (
-                        <Box paddingX={2} sx={{
-                            position: 'absolute',
-                            bottom: 0,
-                        }}>
-                            <Button variant="contained"
-                                disabled={inventory.length === 0}
-                                onClick={() => {
-                                    setClickedTarget(undefined)
-                                    setInventoryOpen(true)
-                                }}>INV</Button>
-                        </Box>
+                        <>
+                            <InteractionCoin
+                                isShowing={!!clickedTarget}
+                                target={clickedTarget}
+                                remove={() => setClickedTarget(undefined)}
+                                x={(clickEvent?.pageY ?? 0) - (containerRef.current?.offsetTop ?? 0)}
+                                y={(clickEvent?.pageX ?? 0) - (containerRef.current?.offsetLeft ?? 0)}
+                            />
+
+                            <Box paddingX={2} sx={{
+                                position: 'absolute',
+                                bottom: 0,
+                            }}>
+                                <Button variant="contained"
+                                    disabled={inventory.length === 0}
+                                    onClick={() => {
+                                        setClickedTarget(undefined)
+                                        setInventoryOpen(true)
+                                    }}>INV</Button>
+                            </Box>
+                        </>
                     )}
 
-                    <InventoryDrawer 
-                        isShowing={showInventory} 
+                    <InventoryDrawer
+                        isShowing={showInventory}
                         remove={() => setInventoryOpen(false)} />
                 </div>
             )}
