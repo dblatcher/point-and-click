@@ -19,6 +19,7 @@ interface Props {
     maxHeight?: number;
     viewAngle: number;
     handleRoomClick: { (x: number, y: number): void };
+    handleRoomContextClick?: { (x: number, y: number): void };
     handleHotspotClick?: { (zone: HotspotZone, event: PointerEvent): void };
     handleHotspotContextClick?: { (zone: HotspotZone, event: PointerEvent): void };
     handleHover?: HandleHoverFunction;
@@ -44,6 +45,7 @@ export const Room: FunctionComponent<Props> = ({
     maxHeight = 200,
     viewAngle,
     handleRoomClick,
+    handleRoomContextClick,
     handleHotspotClick,
     handleHotspotContextClick,
     handleHover,
@@ -71,6 +73,13 @@ export const Room: FunctionComponent<Props> = ({
     const processRoomClick: MouseEventHandler<HTMLElement> = (event) => {
         return handleRoomClick(event.nativeEvent.offsetX / scale, event.nativeEvent.offsetY / scale)
     }
+    const processRoomContextClick: MouseEventHandler<HTMLElement> = (event) => {
+        if (!handleHotspotContextClick) {
+            return
+        }
+        event.preventDefault();
+        return handleRoomContextClick?.(event.nativeEvent.offsetX / scale, event.nativeEvent.offsetY / scale);
+    }
 
     const figureInlineStyle: CSSProperties = {
         width: `${frameWidth * scale}px`,
@@ -87,6 +96,7 @@ export const Room: FunctionComponent<Props> = ({
             className={styles.roomFigure}
             style={figureInlineStyle}
             onClick={processRoomClick}
+            onContextMenu={processRoomContextClick}
         >
             <svg xmlns="http://www.w3.org/2000/svg"
                 className={styles.roomSvg}

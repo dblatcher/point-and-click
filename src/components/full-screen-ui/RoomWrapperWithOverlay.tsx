@@ -119,6 +119,13 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                             updateGameState({ type: 'ROOM-CLICK', x, y })
                             setClickedTarget(undefined)
                         }}
+                        handleRoomContextClick={() => {
+                            if (inventory.length === 0) {
+                                return
+                            }
+                            setClickedTarget(undefined)
+                            setInventoryOpen(true)
+                        }}
                         handleHotspotClick={handleTargetClick}
                         handleHotspotContextClick={performDefaultInteraction}
                         handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {

@@ -67,13 +67,13 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog })
 
     const command = item && verb
         ? `${verb.label} ${item.name ?? item.id} ${verb.preposition ?? ''}...`
-        : item ? `... ${item.name ?? item.id}` : undefined
+        : item ? `... ${item.name ?? item.id}` : "...";
 
     return (
         <Dialog open onClose={closeDialog}>
             <DialogTitle>
                 <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-                    <Typography>inventory</Typography>
+                    <Typography>Inventory</Typography>
                     <IconButton onClick={closeDialog} size="small">x</IconButton>
                 </Box>
             </DialogTitle>
