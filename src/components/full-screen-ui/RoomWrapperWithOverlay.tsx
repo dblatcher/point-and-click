@@ -97,6 +97,8 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const hoverTargetInRoom = getHoverTarget(gameState)
     const hoverPlaceProps = getTargetPlace(hoverTargetInRoom, gameState)
 
+    const showInventory = inventoryOpen && !isSequenceRunning && !isConversationRunning;
+
     return (
         <ResizeWatcher resizeHandler={() => {
             const innnerLayout = document.querySelector('.LAYOUT_INNER');
@@ -167,9 +169,9 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                         </Box>
                     )}
 
-                    {(inventoryOpen && !isSequenceRunning && !isConversationRunning) &&
-                        <InventoryDrawer closeDialog={() => setInventoryOpen(false)} />
-                    }
+                    <InventoryDrawer 
+                        isShowing={showInventory} 
+                        remove={() => setInventoryOpen(false)} />
                 </div>
             )}
         </ResizeWatcher>

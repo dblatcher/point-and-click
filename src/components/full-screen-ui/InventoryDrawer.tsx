@@ -1,17 +1,18 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { ItemData, Verb } from "@/definitions";
 import { findById } from "@/lib/util";
-import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Box, Card, Fade, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { ItemButton } from "./ItemButton";
 import { VerbList } from "./VerbList";
 
 interface Props {
-    closeDialog: { (): void }
+    remove: { (): void }
+    isShowing: boolean
 }
 
 
-export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog }) => {
+export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove: remove, isShowing }) => {
     const { updateGameState, gameProps } = useGameState()
     const { inventory, lookVerb } = useGameStateDerivations()
 
@@ -38,13 +39,13 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog })
             return
         }
 
-        closeDialog()
+        remove()
         updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item, item: firstItem } })
     }
 
     const examineItem = (item: ItemData) => {
         if (lookVerb) {
-            closeDialog()
+            remove()
             updateGameState({ type: 'SEND-COMMAND', command: { verb: lookVerb, target: item } })
         }
     }
@@ -53,7 +54,7 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog })
         if (!verb.preposition) {
             const item = findById(activeItemId, inventory)
             if (item) {
-                closeDialog()
+                remove()
                 updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item } })
             }
             setActiveVerbId(undefined)
@@ -70,25 +71,32 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog })
         : item ? `... ${item.name ?? item.id}` : "...";
 
     return (
-        <Dialog open onClose={closeDialog}>
-            <DialogTitle>
-                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-                    <Typography>Inventory</Typography>
-                    <IconButton onClick={closeDialog} size="small">x</IconButton>
+        <Fade in={isShowing}>
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                display:'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }} onClick={remove}>
+                <Box component={Card} padding={2}>
+                    <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+                        <Typography>Inventory</Typography>
+                        <IconButton onClick={remove} size="small">x</IconButton>
+                    </Box>
+                    <Box display='flex' flexWrap={'wrap'}>
+                        {inventory.map(item => (
+                            <ItemButton key={item.id}
+                                item={item}
+                                isActive={activeItemId === item.id}
+                                handleClick={selectItem}
+                                handleContextClick={examineItem} />
+                        ))}
+                    </Box>
+                    <VerbList activeVerbId={activeVerbId} selectVerb={selectVerb} disabled={!activeItemId} />
+                    <Typography>{command}</Typography>
                 </Box>
-            </DialogTitle>
-            <DialogContent >
-                <Box display='flex' flexWrap={'wrap'}>
-                    {inventory.map(item => (
-                        <ItemButton key={item.id}
-                            item={item}
-                            isActive={activeItemId === item.id}
-                            handleClick={selectItem}
-                            handleContextClick={examineItem} />
-                    ))}
-                </Box>
-                <VerbList activeVerbId={activeVerbId} selectVerb={selectVerb} disabled={!activeItemId} />
-                <Typography>{command}</Typography>
-            </DialogContent>
-        </Dialog>)
+            </div>
+        </Fade>
+    )
 }
