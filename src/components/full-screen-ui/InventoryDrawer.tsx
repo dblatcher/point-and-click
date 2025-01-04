@@ -1,9 +1,9 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { ItemData, Verb } from "@/definitions";
 import { findById } from "@/lib/util";
-import { Box, Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { ImageBlock } from "../ImageBlock";
+import { ItemButton } from "./ItemButton";
 import { VerbList } from "./VerbList";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 
 export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog }) => {
     const { updateGameState, gameProps } = useGameState()
-    const { inventory } = useGameStateDerivations()
+    const { inventory, lookVerb } = useGameStateDerivations()
 
     const [activeItemId, setActiveItemId] = useState<string | undefined>(undefined)
     const [activeVerbId, setActiveVerbId] = useState<string | undefined>(undefined)
@@ -43,7 +43,6 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog })
     }
 
     const examineItem = (item: ItemData) => {
-        const lookVerb = gameProps.verbs.find(verb => verb.isLookVerb)
         if (lookVerb) {
             closeDialog()
             updateGameState({ type: 'SEND-COMMAND', command: { verb: lookVerb, target: item } })
@@ -63,31 +62,33 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ closeDialog })
         setActiveVerbId(verb.id)
     }
 
+    const item = findById(activeItemId, inventory)
+    const verb = findById(activeVerbId, gameProps.verbs)
+
+    const command = item && verb
+        ? `${verb.label} ${item.name ?? item.id} ${verb.preposition ?? ''}...`
+        : item ? `... ${item.name ?? item.id}` : undefined
+
     return (
         <Dialog open onClose={closeDialog}>
-            <DialogTitle>Inventory</DialogTitle>
+            <DialogTitle>
+                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+                    <Typography>inventory</Typography>
+                    <IconButton onClick={closeDialog} size="small">x</IconButton>
+                </Box>
+            </DialogTitle>
             <DialogContent >
                 <Box display='flex' flexWrap={'wrap'}>
                     {inventory.map(item => (
-                        <Button size="small" key={item.id}
-                            variant={(activeItemId === item.id) ? 'contained' : 'outlined'}
-                            onClick={() => selectItem(item)}
-                            onContextMenu={(event) => {
-                                event.preventDefault()
-                                examineItem(item)
-                            }}
-                            sx={{
-                                height: '4rem'
-                            }}
-                        >
-                            {item.imageId
-                                ? <ImageBlock frame={{ imageId: item.imageId, row: item.row, col: item.col }} />
-                                : <span>{item.name || item.id}</span>
-                            }
-                        </Button>
+                        <ItemButton key={item.id}
+                            item={item}
+                            isActive={activeItemId === item.id}
+                            handleClick={selectItem}
+                            handleContextClick={examineItem} />
                     ))}
                 </Box>
                 <VerbList activeVerbId={activeVerbId} selectVerb={selectVerb} disabled={!activeItemId} />
+                <Typography>{command}</Typography>
             </DialogContent>
         </Dialog>)
 }

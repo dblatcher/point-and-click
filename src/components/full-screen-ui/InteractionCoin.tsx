@@ -1,7 +1,8 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { CommandTarget, ItemData, Verb } from "@/definitions";
-import { Box, Button, ButtonGroup, Card, IconButton, Typography } from "@mui/material";
+import { Box, ButtonGroup, Card, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { ItemButton } from "./ItemButton";
 import { VerbButton } from "./VerbButton";
 
 interface Props {
@@ -53,6 +54,10 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
         return null
     }
 
+    const command = activeItemVerb
+        ? `${activeItemVerb.label} ... ${activeItemVerb.preposition ?? 'with'} ${target.name ?? target.id}`
+        : target.name ?? target.id
+
     return <Box
         display={'flex'}
         flexDirection={'column'}
@@ -60,10 +65,7 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
         padding={1}
     >
         <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-            <Typography>
-                {target.name ?? target.id}
-                {activeItemVerb && `: ${activeItemVerb.label} item`}
-            </Typography>
+            <Typography>{command}</Typography>
             <IconButton onClick={remove} size="small">x</IconButton>
         </Box>
 
@@ -79,23 +81,20 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
                 {itemVerbs.map(verb => (
                     <VerbButton key={verb.id} tiny prepositionLabel
                         verb={verb}
+                        disabled={inventory.length === 0}
                         handleClick={(verb) => handleItemVerbClick(verb)} />
                 ))}
             </ButtonGroup>
         </>) : (
-            <ButtonGroup>
+            <Box display={'flex'} flexWrap={'wrap'}>
                 {inventory.map(item => (
-                    <Button key={item.id}
+                    <ItemButton key={item.id}
+                        item={item}
                         disabled={!activeItemVerb}
-                        onClick={(event) => {
-                            event.stopPropagation()
-                            event.preventDefault()
-                            handleItemClick(item)
-                        }}>
-                        {item.id}
-                    </Button>
+                        handleClick={handleItemClick}
+                    />
                 ))}
-            </ButtonGroup>
+            </Box>
         )}
     </Box>
 }

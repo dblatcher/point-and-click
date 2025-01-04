@@ -70,6 +70,7 @@ export const useGameStateDerivations = () => {
     const currentConversation = findById(currentConversationId, conversations)
     const verb = findById(gameState.currentVerbId, gameProps.verbs);
     const ending = findById(gameState.endingId, gameProps.endings)
+    const lookVerb = gameProps.verbs.find(verb => verb.isLookVerb) ?? gameProps.verbs.find(verb => verb.id === 'LOOK');
 
     return {
         currentConversation,
@@ -81,5 +82,6 @@ export const useGameStateDerivations = () => {
         inventory,
         verb,
         ending,
+        lookVerb,
     }
 }

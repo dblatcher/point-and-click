@@ -59,7 +59,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const [clickEvent, setClickEvent] = useState<PointerEvent>();
     const [inventoryOpen, setInventoryOpen] = useState(false);
     const { gameProps, gameState, updateGameState } = useGameState()
-    const { isConversationRunning, isSequenceRunning, inventory } = useGameStateDerivations()
+    const { isConversationRunning, isSequenceRunning, inventory, lookVerb } = useGameStateDerivations()
     const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards ?? [])
@@ -77,7 +77,6 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     }
 
     const performDefaultInteraction = (target: CommandTarget) => {
-        const lookVerb = gameProps.verbs.find(verb => verb.isLookVerb)
         if (lookVerb) {
             updateGameState({
                 type: 'SEND-COMMAND', command: {
