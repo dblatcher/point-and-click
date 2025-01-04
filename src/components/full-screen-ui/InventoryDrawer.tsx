@@ -12,12 +12,18 @@ interface Props {
 }
 
 
-export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove: remove, isShowing }) => {
+export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove, isShowing }) => {
     const { updateGameState, gameProps } = useGameState()
     const { inventory, lookVerb } = useGameStateDerivations()
 
     const [activeItemId, setActiveItemId] = useState<string | undefined>(undefined)
     const [activeVerbId, setActiveVerbId] = useState<string | undefined>(undefined)
+
+    const closeAndReset = () => {
+        setActiveItemId(undefined)
+        setActiveVerbId(undefined)
+        remove()
+    }
 
     const selectItem = (item: ItemData) => {
 
@@ -39,13 +45,13 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove: remove
             return
         }
 
-        remove()
+        closeAndReset()
         updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item, item: firstItem } })
     }
 
     const examineItem = (item: ItemData) => {
         if (lookVerb) {
-            remove()
+            closeAndReset()
             updateGameState({ type: 'SEND-COMMAND', command: { verb: lookVerb, target: item } })
         }
     }
@@ -54,7 +60,7 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove: remove
         if (!verb.preposition) {
             const item = findById(activeItemId, inventory)
             if (item) {
-                remove()
+                closeAndReset()
                 updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item } })
             }
             setActiveVerbId(undefined)
@@ -78,11 +84,11 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove: remove
                 display:'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-            }} onClick={remove}>
-                <Box component={Card} padding={2}>
+            }} onClick={closeAndReset}>
+                <Box component={Card} padding={2} maxWidth={500}>
                     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                         <Typography>Inventory</Typography>
-                        <IconButton onClick={remove} size="small">x</IconButton>
+                        <IconButton onClick={closeAndReset} size="small">x</IconButton>
                     </Box>
                     <Box display='flex' flexWrap={'wrap'}>
                         {inventory.map(item => (

@@ -1,18 +1,18 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { ActorData, CommandTarget, HotspotZone, Verb } from "@/definitions";
+import { ActorData, CommandTarget, HotspotZone } from "@/definitions";
+import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 import { GameState } from "@/lib/game-state-logic/types";
 import { calculateScreenX } from "@/lib/roomFunctions";
 import { clamp, findById } from "@/lib/util";
+import { Box, Button } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { buildContentsList } from "../game/put-contents-in-order";
+import { ResizeWatcher } from "../ResizeWatcher";
 import { ParallaxPlace, ParallaxPlaceProps } from "../svg/ParallaxPlace";
 import { Room } from "../svg/Room";
 import { InteractionCoin } from "./InteractionCoin";
-import { TargetLabel } from "./TargetLabel";
-import { ResizeWatcher } from "../ResizeWatcher";
-import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 import { InventoryDrawer } from "./InventoryDrawer";
-import { Box, Button } from "@mui/material";
+import { TargetLabel } from "./TargetLabel";
 
 
 const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {

@@ -20,8 +20,10 @@ export const VerbButton: React.FunctionComponent<Props> = ({ verb, isActive, han
         size="small"
         sx={{
             textTransform: 'none',
-            padding: tiny ? '1px 3px' : undefined,
-            minWidth: tiny ? 32 : undefined,
+            lineHeight: 1,
+            padding:  '1px 3px',
+            minWidth: tiny ? 40 : 64,
+            minHeight: tiny? 32 : 32,
         }}
         disabled={disabled}
         variant={isActive ? 'contained' : 'outlined'}

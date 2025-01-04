@@ -1,6 +1,6 @@
 import { useGameState } from "@/context/game-state-context";
 import { Verb } from "@/definitions";
-import { ButtonGroup } from "@mui/material";
+import { Box, ButtonGroup } from "@mui/material";
 import React from "react";
 import { VerbButton } from "./VerbButton";
 
@@ -18,7 +18,7 @@ export const VerbList: React.FunctionComponent<Props> = ({ activeVerbId, selectV
     const relevantVerbs = verbs.filter(verb => !verb.isMoveVerb && !verb.isNotForItems);
 
     return (
-        <ButtonGroup>
+        <Box display={'flex'}>
             {relevantVerbs.map(verb => (
                 <VerbButton key={verb.id}
                     disabled={disabled}
@@ -26,6 +26,6 @@ export const VerbList: React.FunctionComponent<Props> = ({ activeVerbId, selectV
                     isActive={verb.id === activeVerbId}
                     handleClick={selectVerb} />
             ))}
-        </ButtonGroup>
+        </Box>
     )
 }
