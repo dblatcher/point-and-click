@@ -3,8 +3,7 @@ import { prebuiltGameDesign } from '@/data/fullGame'
 import { imageAssets } from '@/data/images'
 import { soundAssets } from '@/data/sounds'
 import { PageLayout } from '@/components/PageLayout'
-// import { bigLayoutSet } from '@/components/game-mui-ux'
-import { FullScreenLayout } from '@/components/full-screen-ui/FullScreenLayout'
+import { bigLayoutSet } from '@/components/game-mui-ux'
 
 
 export default function GameLoaderPage() {
@@ -14,7 +13,7 @@ export default function GameLoaderPage() {
         gameDesign={prebuiltGameDesign}
         imageAssets={imageAssets}
         soundAssets={soundAssets}
-        uiComponents={{ GameLayoutComponent: FullScreenLayout }}
+        uiComponents={bigLayoutSet}
       />
     </PageLayout>
   )
