@@ -16,11 +16,17 @@ import { SaveAndLoadButtons } from './SaveAndLoadButtons';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
+import { MyDB, openDataBaseConnection } from '@/lib/indexed-db';
+import { IDBPDatabase } from 'idb';
+
 
 export type { GameEditorProps };
 
 
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame }) => {
+
+    const [db, setDb] = useState<IDBPDatabase<MyDB> | undefined>(undefined)
+
     const [soundService] = useState(new SoundService())
     const [imageService] = useState(new ImageService())
     const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer,
@@ -32,6 +38,14 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             gameItemIds: {},
         }
     )
+
+    useEffect(() => {
+        openDataBaseConnection().then(setDb).catch(err => {
+            console.error('OPEN DB FAILED!!', err)
+        }).finally(()=> {
+            console.log('DB stuff done')
+        })
+    }, [setDb])
 
     useEffect(() => {
         if (usePrebuiltGame) {
