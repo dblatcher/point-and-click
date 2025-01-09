@@ -8,6 +8,7 @@ import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoar
 const DEFAULT_TALK_TIME = 250;
 
 export const defaultVerbs1: { (): Verb[] } = () => [
+    { id: 'WALK', label: 'walk to', isMoveVerb: true },
     { id: 'LOOK', label: 'look at', isLookVerb: true },
     { id: 'TAKE', label: 'pick up', isNotForItems: true },
     { id: 'USE', label: 'use', preposition: 'with' },

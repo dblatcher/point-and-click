@@ -13,6 +13,7 @@ import { Room } from "../svg/Room";
 import { InteractionCoin } from "./InteractionCoin";
 import { InventoryDrawer } from "./InventoryDrawer";
 import { TargetLabel } from "./TargetLabel";
+import { matchInteraction } from "@/lib/commandFunctions";
 
 
 const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {
@@ -59,7 +60,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const [clickEvent, setClickEvent] = useState<PointerEvent>();
     const [inventoryOpen, setInventoryOpen] = useState(false);
     const { gameProps, gameState, updateGameState } = useGameState()
-    const { isConversationRunning, isSequenceRunning, inventory, lookVerb } = useGameStateDerivations()
+    const { isConversationRunning, isSequenceRunning, inventory, lookVerb, moveVerb } = useGameStateDerivations()
     const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards ?? [])
@@ -77,6 +78,16 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     }
 
     const performDefaultInteraction = (target: CommandTarget) => {
+        if (moveVerb) {
+            const moveCommand = { verb: moveVerb, target };
+            const moveInteraction = matchInteraction(moveCommand, currentRoom, gameProps.interactions, gameState.flagMap)
+            if (moveInteraction) {
+                return updateGameState({
+                    type: 'SEND-COMMAND', command: moveCommand
+                })
+            }
+        }
+
         if (lookVerb) {
             updateGameState({
                 type: 'SEND-COMMAND', command: {
