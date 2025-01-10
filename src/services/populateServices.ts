@@ -11,8 +11,8 @@ export function populateServicesForPreBuiltGame(
   soundService: SoundService
 ): void {
   console.log("populating services");
-  imageService.add(imageAssets);
-  soundService.add(soundAssets);
+  imageService.populate(imageAssets);
+  soundService.populate(soundAssets);
 }
 
 export function populateServices(
@@ -23,6 +23,6 @@ export function populateServices(
   soundService: SoundService,
 ): void {
   console.log("populating services for:", gameDesign.id);
-  imageService.add(imageAssets);
-  soundService.add(soundAssets);
+  imageService.populate(imageAssets);
+  soundService.populate(soundAssets);
 }

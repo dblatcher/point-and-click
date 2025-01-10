@@ -16,8 +16,6 @@ export const higherLevelLoadNewGame = (
         soundAssets: SoundAsset[];
     }
 ) => {
-        soundService.removeAll();
-        imageService.removeAll();
         dispatchDesignUpdate({ type: 'load-new', gameDesign: data.gameDesign })
         populateServices(
             data.gameDesign, data.imageAssets, data.soundAssets,

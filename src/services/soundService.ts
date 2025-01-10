@@ -22,7 +22,7 @@ export class SoundService extends FileAssetService<SoundAsset> {
             this.soundDeck?.defineSampleBuffer(soundAsset.id, soundAsset.href)
                 .then(success => {
                     this.emit('load', soundAsset.id, success)
-                    this.reportUpdate()
+                    this.reportUpdate('add', itemArray.map(item => item.id))
                 })
         )
     }

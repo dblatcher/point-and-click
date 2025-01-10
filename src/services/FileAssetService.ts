@@ -2,8 +2,16 @@ import { TypedEmitter } from "tiny-typed-emitter";
 import { getMimeType } from "./assets";
 import { FileAsset } from "@/services/assets";
 
+type UpdateAction = 'add' | 'remove' | 'populate'
+
+export type AssetServiceUpdate = {
+    count: number,
+    action: UpdateAction,
+    ids: string[],
+};
+
 interface ServiceEvents {
-    'update': (length: number) => void;
+    'update': (update: AssetServiceUpdate) => void;
     'ready': (isReady: boolean) => void;
     'load': (id: string, success: boolean) => void;
 }
@@ -16,10 +24,13 @@ export class FileAssetService<T extends FileAsset> extends TypedEmitter<ServiceE
         this.data = {}
     }
 
-    reportUpdate(): void {
-        console.log(this.data)
+    reportUpdate(action: UpdateAction, ids: string[]): void {
         setTimeout(() => {
-            this.emit('update', this.list().length)
+            this.emit('update', {
+                count: this.list().length,
+                action,
+                ids,
+            })
         }, 1)
     }
 
@@ -28,7 +39,7 @@ export class FileAssetService<T extends FileAsset> extends TypedEmitter<ServiceE
             items = [items]
         }
         items.forEach(item => this.data[item.id] = item)
-        this.reportUpdate()
+        this.reportUpdate('add', items.map(item => item.id))
     }
 
     remove(ids: string | string[]): void {
@@ -40,7 +51,7 @@ export class FileAssetService<T extends FileAsset> extends TypedEmitter<ServiceE
                 delete this.data[id]
             }
         })
-        this.reportUpdate()
+        this.reportUpdate('remove', ids)
     }
 
     get(id: string): T | undefined {
@@ -55,9 +66,10 @@ export class FileAssetService<T extends FileAsset> extends TypedEmitter<ServiceE
         return Object.values(this.data).filter(item => !!item) as T[]
     }
 
-    removeAll() {
+    populate(items: T[]) {
         this.data = {}
-        this.reportUpdate()
+        items.forEach(item => this.data[item.id] = item)
+        this.reportUpdate('populate', items.map(item => item.id))
     }
 
     getFile = async (id: string): Promise<File | undefined> => {

@@ -17,6 +17,7 @@ import { SaveAndLoadButtons } from './SaveAndLoadButtons';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
+import { AssetServiceUpdate } from '@/services/FileAssetService';
 
 
 export type { GameEditorProps };
@@ -42,12 +43,6 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         }
         dispatchDesignUpdate({ type: 'set-db-instance', db });
         console.log(`DB opened, version ${db.version}`);
-        getKeyStoreValue(db)('update-timestamp').then(timestamp => {
-            const date = timestamp && new Date(timestamp);
-            if (date) {
-                console.log(`update last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
-            }
-        });
 
         // TO DO - need to also store and retrieve the file assets
         // and populate the services.
@@ -75,7 +70,27 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         if (usePrebuiltGame) {
             populateServicesForPreBuiltGame(imageService, soundService)
         }
+
+        // TO DO - if updates are add or remove, save the changes to
+        // the db asset collection for quit save
+        const handleImageServiceUpdate = (update: AssetServiceUpdate) => {
+            console.log('an image update', update)
+        }
+        const handleSoundServiceUpdate = (update: AssetServiceUpdate) => {
+            console.log('an sound update', update)
+        }
+
+        imageService.on('update', handleImageServiceUpdate)
+        soundService.on('update', handleSoundServiceUpdate)
+
+        return () => { 
+            imageService.off('update', handleImageServiceUpdate) 
+            soundService.off('update', handleSoundServiceUpdate) 
+        }
+
     }, [usePrebuiltGame, imageService, soundService])
+
+
     const { gameDesign, history, undoneHistory } = gameEditorState
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
 
