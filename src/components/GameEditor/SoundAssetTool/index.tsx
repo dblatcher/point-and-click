@@ -6,7 +6,7 @@ import {
   urlToBlob,
 } from "@/lib/files";
 import { buildAssetZipBlob, readSoundAssetFromZipFile } from "@/lib/zipFiles";
-import { ServiceItem } from "@/services/Service";
+import { FileAsset } from "@/services/assets";
 import {
   SoundAsset,
   SoundAssetCategory,
@@ -184,7 +184,7 @@ export class SoundAssetTool extends Component<Props, State> {
     this.props.soundService.add(result.data);
   };
 
-  openFromService(asset: ServiceItem) {
+  openFromService(asset: FileAsset) {
     const assetCopy = cloneData(asset as SoundAsset);
     this.file = null
     if (this.state.fileObjectUrl && typeof window !== undefined) {

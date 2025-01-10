@@ -1,13 +1,17 @@
 import { AspectRatio } from "@/definitions/BaseTypes";
 import Zod, { object, string, number } from "zod";
 
-export type ImageAssetCategory = 'background' | 'item' | 'spriteSheet' | 'any'
-export type ImageAsset = {
+export type FileAsset = {
     id: string;
     href: string;
-    category: ImageAssetCategory;
     originalFileName?: string;
+    category?: string;
+}
 
+
+export type ImageAssetCategory = 'background' | 'item' | 'spriteSheet' | 'any'
+export type ImageAsset = FileAsset & {
+    category: ImageAssetCategory;
     rows?: number;
     cols?: number;
     widthScale?: number;
@@ -28,11 +32,8 @@ export const ImageAssetSchema = object({
 export const imageAssetCategories: ImageAssetCategory[] = ['background', 'item', 'spriteSheet', 'any']
 
 export type SoundAssetCategory = 'sfx' | 'music'
-export type SoundAsset = {
-    id: string;
-    href: string;
+export type SoundAsset = FileAsset & {
     category: SoundAssetCategory;
-    originalFileName?: string;
 }
 export const SoundAssetSchema = object({
     id: string(),
@@ -42,8 +43,8 @@ export const SoundAssetSchema = object({
 })
 export const soundAssetCategories: SoundAssetCategory[] = SoundAssetSchema.shape.category.options.map(_ => _)
 
-export type FileAsset = SoundAsset | ImageAsset
-export const isSoundAsset = (asset: FileAsset): asset is SoundAsset => (soundAssetCategories as string[]).includes(asset.category)
+
+export const isSoundAsset = (asset: FileAsset): asset is SoundAsset => (soundAssetCategories as (string | undefined)[]).includes(asset.category)
 
 
 function getFileExtension(asset: FileAsset): string | undefined {
@@ -61,7 +62,7 @@ export function getMimeType(asset: FileAsset): string | undefined {
     return fileExtension ? `image/${fileExtension}` : undefined
 }
 
-export const getFrameDims =(asset: ImageAsset): AspectRatio | undefined => {
+export const getFrameDims = (asset: ImageAsset): AspectRatio | undefined => {
     if (!asset.img) {
         return undefined
     }

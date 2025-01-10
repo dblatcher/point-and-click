@@ -1,4 +1,6 @@
 import { TypedEmitter } from "tiny-typed-emitter";
+import { getMimeType } from "./assets";
+import { FileAsset } from "@/services/assets";
 
 interface ServiceEvents {
     'update': (length: number) => void;
@@ -6,11 +8,7 @@ interface ServiceEvents {
     'load': (id: string, success: boolean) => void;
 }
 
-export interface ServiceItem {
-    id: string;
-}
-
-export class Service<T extends ServiceItem> extends TypedEmitter<ServiceEvents> {
+export class FileAssetService<T extends FileAsset> extends TypedEmitter<ServiceEvents> {
     protected data: Record<string, T | undefined>
 
     constructor() {
@@ -19,9 +17,10 @@ export class Service<T extends ServiceItem> extends TypedEmitter<ServiceEvents> 
     }
 
     reportUpdate(): void {
+        console.log(this.data)
         setTimeout(() => {
             this.emit('update', this.list().length)
-        },1)
+        }, 1)
     }
 
     add(items: T | T[]): void {
@@ -59,5 +58,24 @@ export class Service<T extends ServiceItem> extends TypedEmitter<ServiceEvents> 
     removeAll() {
         this.data = {}
         this.reportUpdate()
+    }
+
+    getFile = async (id: string): Promise<File | undefined> => {
+        const asset = this.get(id)
+        if (!asset) { return undefined }
+        try {
+            const response = await fetch(asset.href)
+            const blob = await response.blob()
+            return new File([blob], asset.id, { type: getMimeType(asset) })
+        } catch (err) {
+            console.warn(err)
+            return undefined
+        }
+    }
+
+    listHref(): string[] {
+        return Object.values(this.data)
+            .filter(asset => typeof asset !== 'undefined')
+            .map(asset => asset.href)
     }
 }

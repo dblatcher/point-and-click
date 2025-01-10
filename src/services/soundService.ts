@@ -1,10 +1,9 @@
 import { SoundControl, SoundDeck } from "sound-deck";
-import { Service } from "./Service";
-import { SoundAsset, getMimeType } from "./assets";
+import { FileAssetService } from "./FileAssetService";
+import { SoundAsset } from "./assets";
 
 
-
-export class SoundService extends Service<SoundAsset> {
+export class SoundService extends FileAssetService<SoundAsset> {
     private soundDeck?: SoundDeck
 
     constructor() {
@@ -16,7 +15,7 @@ export class SoundService extends Service<SoundAsset> {
     }
 
     add(items: SoundAsset | SoundAsset[]): void {
-        Service.prototype.add.apply(this, [items])
+        FileAssetService.prototype.add.apply(this, [items])
 
         const itemArray = Array.isArray(items) ? items : [items];
         itemArray.forEach(soundAsset =>
@@ -57,29 +56,10 @@ export class SoundService extends Service<SoundAsset> {
         return this.soundDeck?.isEnabled || false
     }
 
-    listHref(): string[] {
-        return Object.values(this.data)
-            .filter(asset => typeof asset !== 'undefined')
-            .map(asset => (asset as SoundAsset).href)
-    }
-
     getAll(): Readonly<SoundAsset>[] {
         return Object.values(this.data)
             .filter(asset => typeof asset !== 'undefined')
             .map(asset => (asset as Readonly<SoundAsset>))
-    }
-
-    getFile = async (id: string): Promise<File | undefined> => {
-        const asset = this.get(id)
-        if (!asset) { return undefined }
-        try {
-            const response = await fetch(asset.href)
-            const blob = await response.blob()
-            return new File([blob], asset.id, { type: getMimeType(asset) })
-        } catch (err) {
-            console.warn(err)
-            return undefined
-        }
     }
 }
 

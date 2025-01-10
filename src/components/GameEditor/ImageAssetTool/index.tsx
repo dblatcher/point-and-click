@@ -6,7 +6,7 @@ import {
   urlToBlob,
 } from "@/lib/files";
 import { buildAssetZipBlob, readImageAssetFromZipFile } from "@/lib/zipFiles";
-import { ServiceItem } from "@/services/Service";
+import { FileAsset } from "@/services/assets";
 import {
   ImageAsset,
   ImageAssetCategory,
@@ -14,7 +14,7 @@ import {
 } from "@/services/assets";
 import { ImageService } from "@/services/imageService";
 import { Grid } from "@mui/material";
-import { Component, RefObject, createRef } from "react";
+import { Component } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { ImageAssetForm } from "./ImageAssetForm";
@@ -197,7 +197,7 @@ export class ImageAssetTool extends Component<Props, State> {
     this.props.imageService.add(result.data);
   };
 
-  openFromService(asset: ServiceItem) {
+  openFromService(asset: FileAsset) {
     const assetCopy = cloneData(asset as ImageAsset);
     this.file = null
     if (this.state.fileObjectUrl && typeof window !== undefined) {
