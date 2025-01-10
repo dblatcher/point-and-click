@@ -3,27 +3,31 @@ import { GameEditorState, GameDesignAction } from "./types"
 import { cloneData } from "../clone"
 import { addGameDataItem, putInteraction } from "./mutate-design"
 import { GameDesign } from "@/definitions"
-import { keyStoreUpdate } from "../indexed-db"
+import { setQuitSave } from "../indexed-db"
 
 
 const higherLevelAddHistoryItem =
-    (history: GameEditorState['history'], db: GameEditorState['db'], gameDesign: GameDesign, maxLength = 10) =>
+    (history: GameEditorState['history'], gameDesign: GameDesign, maxLength = 10) =>
         (label: string): Pick<GameEditorState, 'history' | 'undoneHistory'> => {
             history.push({
                 label,
                 gameDesign
             })
             if (history.length > maxLength) { history.shift() }
-
-            if (db) {
-                keyStoreUpdate(db)('update-timestamp', Date.now())
-            }
-
             return { history, undoneHistory: [] }
         }
 
 export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (gameEditorState, action) => {
-    const addHistory = higherLevelAddHistoryItem(gameEditorState.history, gameEditorState.db, cloneData(gameEditorState.gameDesign));
+    const addHistory = higherLevelAddHistoryItem(gameEditorState.history, cloneData(gameEditorState.gameDesign));
+
+    const saveToQuitSave = (gameEditorState: GameEditorState) => {
+        const { db, gameDesign } = gameEditorState
+        if (db) {
+            setQuitSave(db)(gameDesign)
+        }
+        return gameEditorState
+    }
+
     switch (action.type) {
         case "set-db-instance":
             const { db } = action
@@ -59,11 +63,11 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
         case "modify-design": {
             const { description, mod } = action
 
-            return {
+            return saveToQuitSave({
                 ...gameEditorState,
                 ...addHistory(description),
                 gameDesign: { ...gameEditorState.gameDesign, ...mod },
-            }
+            })
         }
 
         case "undo": {
@@ -72,12 +76,12 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             if (!last) {
                 return gameEditorState
             }
-            return {
+            return saveToQuitSave({
                 ...gameEditorState,
                 history,
                 undoneHistory: [...undoneHistory, { label: last.label, gameDesign }],
                 gameDesign: cloneData(last.gameDesign),
-            }
+            })
         }
 
         case "redo": {
@@ -86,12 +90,12 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             if (!last) {
                 return gameEditorState
             }
-            return {
+            return saveToQuitSave({
                 ...gameEditorState,
                 history: [...history, { label: last.label, gameDesign }],
                 undoneHistory,
                 gameDesign: cloneData(last.gameDesign),
-            }
+            })
         }
 
         case "load-new": {
@@ -107,11 +111,11 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             const { gameDesign } = gameEditorState;
             addGameDataItem(gameDesign, property, data)
 
-            return {
+            return saveToQuitSave({
                 ...gameEditorState,
                 gameDesign,
                 ...addHistory(`add new ${property}: ${data.id}`)
-            }
+            })
         }
 
         case "delete-data-item": {
@@ -125,21 +129,21 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             const message = `delete "${dataItemArray[index]?.id}" from ${property}`;
             dataItemArray.splice(index, 1);
 
-            return {
+            return saveToQuitSave({
                 ...gameEditorState,
                 ...addHistory(message),
                 gameDesign,
-            }
+            })
         }
 
         case "change-or-add-interaction": {
             const { index, data } = action
             const { gameDesign } = gameEditorState
-            return {
+            return saveToQuitSave({
                 ...gameEditorState,
                 ...addHistory(`change interaction`),
                 gameDesign: putInteraction(gameDesign, data, index)
-            }
+            })
         }
 
         case "delete-interaction": {
@@ -151,11 +155,11 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             }
             const { verbId, targetId, itemId = '[no item]' } = interactionToDelete;
             gameDesign.interactions.splice(index, 1);
-            return {
+            return saveToQuitSave({
                 ...gameEditorState,
                 ...addHistory(`delete interaction #${index}: ${verbId} ${targetId} (${itemId})`),
                 gameDesign,
-            }
+            })
         }
     }
 }

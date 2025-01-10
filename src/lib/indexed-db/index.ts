@@ -1,16 +1,25 @@
+import { GameDesign } from "@/definitions";
 import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
 
 export const DB_NAME = 'Point-and-click-db'
-export const DB_VERSION = 2
+export const DB_VERSION = 3
 
 
 type KeyStoreKey = 'update-timestamp'
+type DesignStoreKey = 'quit-save'
 
 export interface MyDB extends DBSchema {
     'key-store': {
         key: KeyStoreKey;
         value: number;
     };
+    'designs': {
+        key: DesignStoreKey;
+        value: {
+            design: GameDesign,
+            timestamp: number,
+        };
+    }
     products: {
         value: {
             name: string;
@@ -46,12 +55,16 @@ export const openDataBaseConnection = async () => {
             // event
         ) {
             console.log('running upgrade', { oldVersion })
-            db.createObjectStore('key-store');
+            if (oldVersion < 1) {
+                db.createObjectStore('key-store');
+                const productStore = db.createObjectStore('products', {
+                    keyPath: 'productCode',
+                });
+                productStore.createIndex('by-price', 'price');
+            }
 
-            const productStore = db.createObjectStore('products', {
-                keyPath: 'productCode',
-            });
-            productStore.createIndex('by-price', 'price');
+            db.createObjectStore('designs');
+
         },
         blocked(currentVersion, blockedVersion, event) {
             console.warn('open db blocked', { currentVersion, blockedVersion, event })
@@ -88,3 +101,17 @@ export const keyStoreUpdate = (db: GameEditorDatabase) => (key: KeyStoreKey, val
 export const getKeyStoreValue = (db: GameEditorDatabase) => (key: KeyStoreKey) => {
     return db.get('key-store', key)
 }
+
+export const setQuitSave = (db: GameEditorDatabase) => (design: GameDesign) => {
+    return db.put('designs', { design, timestamp: Date.now() }, 'quit-save')
+}
+
+export const retrieveQuitSave = (db: GameEditorDatabase) => (): Promise<{
+    design?: GameDesign;
+    timestamp?: number;
+}> => {
+    return db.get('designs', 'quit-save').then(result => {
+        return result ?? {}
+    })
+}
+

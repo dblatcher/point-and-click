@@ -4,7 +4,7 @@ import { SpritesProvider } from '@/context/sprite-context';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
-import { GameEditorDatabase, getKeyStoreValue, openDataBaseConnection, keyStoreUpdate } from '@/lib/indexed-db';
+import { GameEditorDatabase, getKeyStoreValue, openDataBaseConnection, keyStoreUpdate, retrieveQuitSave } from '@/lib/indexed-db';
 import { Sprite } from '@/lib/Sprite';
 import { ImageService } from '@/services/imageService';
 import { populateServicesForPreBuiltGame } from '@/services/populateServices';
@@ -37,6 +37,9 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
     )
 
     const handleDBOpen = useCallback((db: GameEditorDatabase) => {
+        if (usePrebuiltGame) {
+            return
+        }
         dispatchDesignUpdate({ type: 'set-db-instance', db });
         console.log(`DB opened, version ${db.version}`);
         getKeyStoreValue(db)('update-timestamp').then(timestamp => {
@@ -44,8 +47,23 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             if (date) {
                 console.log(`update last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
             }
+        });
+
+        // TO DO - need to also store and retrieve the file assets
+        // and populate the services.
+        // Could subscribe to the update events from the services
+        // and store assets then.
+        // need a good structure to avoid unnecessary transactions
+        // - only save the modified assets (change the update events!)
+        retrieveQuitSave(db)().then(({ design, timestamp = 0 }) => {
+            if (design) {
+                const date = new Date(timestamp);
+                console.log(`restoring design last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
+                dispatchDesignUpdate({ type: 'load-new', gameDesign: design })
+            }
+
         })
-    }, [dispatchDesignUpdate])
+    }, [dispatchDesignUpdate, usePrebuiltGame])
 
     useEffect(() => {
         openDataBaseConnection().then(handleDBOpen).catch(err => {
@@ -80,25 +98,22 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                 {gameEditorState.db ? gameEditorState.db.version : 'no db'}
                             </div>
                             <div>
-                                update timestamep
+                                update test timestamp value
                                 <button onClick={() => {
                                     if (gameEditorState.db) {
                                         getKeyStoreValue(gameEditorState.db)('update-timestamp').then(result => console.log({ result }))
                                     }
-
                                 }}>get</button>
                                 <button onClick={() => {
                                     if (gameEditorState.db) {
                                         keyStoreUpdate(gameEditorState.db)('update-timestamp', 42).then(result => console.log({ result }))
                                     }
-
                                 }}>set to 42</button>
                                 <button onClick={() => {
                                     if (gameEditorState.db) {
-                                        keyStoreUpdate(gameEditorState.db)('update-timestamp', 7).then(result => console.log({ result }))
+                                        keyStoreUpdate(gameEditorState.db)('update-timestamp', Date.now()).then(result => console.log({ result }))
                                     }
-
-                                }}>set to 7</button>
+                                }}>set to now</button>
                             </div>
                         </div>
                         <Container component={'main'}
