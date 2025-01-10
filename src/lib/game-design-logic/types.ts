@@ -1,6 +1,7 @@
 import { GameDesign, Interaction } from "@/definitions";
 import { GameDataItem, GameDataItemType } from "@/definitions/Game";
 import { TabId } from "../editor-config";
+import { GameEditorDatabase } from "../indexed-db";
 
 
 export type GameEditorProps = {
@@ -54,6 +55,11 @@ type DeleteInteractionAction = {
     index: number
 }
 
+type SetDBInstance = {
+    type: 'set-db-instance',
+    db: GameEditorDatabase,
+}
+
 export type GameDesignAction =
     OpenInEditorAction |
     ModifyDesignAction |
@@ -63,7 +69,8 @@ export type GameDesignAction =
     CreateDataItemAction |
     DeleteDataItemAction |
     ChangeOrAddInteractionAction |
-    DeleteInteractionAction;
+    DeleteInteractionAction|
+    SetDBInstance;
 
 export type GameEditorState = {
     gameDesign: GameDesign;
@@ -71,4 +78,5 @@ export type GameEditorState = {
     undoneHistory: { gameDesign: GameDesign; label: string }[];
     tabOpen: TabId;
     gameItemIds: Partial<Record<GameDataItemType, string>>;
+    db?: GameEditorDatabase;
 }

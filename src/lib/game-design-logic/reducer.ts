@@ -3,22 +3,35 @@ import { GameEditorState, GameDesignAction } from "./types"
 import { cloneData } from "../clone"
 import { addGameDataItem, putInteraction } from "./mutate-design"
 import { GameDesign } from "@/definitions"
+import { keyStoreUpdate } from "../indexed-db"
 
 
 const higherLevelAddHistoryItem =
-    (history: GameEditorState['history'], gameDesign: GameDesign, maxLength = 10) =>
+    (history: GameEditorState['history'], db: GameEditorState['db'], gameDesign: GameDesign, maxLength = 10) =>
         (label: string): Pick<GameEditorState, 'history' | 'undoneHistory'> => {
             history.push({
                 label,
                 gameDesign
             })
             if (history.length > maxLength) { history.shift() }
+
+            if (db) {
+                keyStoreUpdate(db)('update-timestamp', Date.now())
+            }
+
             return { history, undoneHistory: [] }
         }
 
 export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (gameEditorState, action) => {
-    const addHistory = higherLevelAddHistoryItem(gameEditorState.history, cloneData(gameEditorState.gameDesign));
+    const addHistory = higherLevelAddHistoryItem(gameEditorState.history, gameEditorState.db, cloneData(gameEditorState.gameDesign));
     switch (action.type) {
+        case "set-db-instance":
+            const { db } = action
+            return {
+                ...gameEditorState,
+                db
+            }
+
         case 'open-in-editor': {
             const { tabId, itemId } = action
             const { gameItemIds } = gameEditorState
@@ -45,6 +58,7 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
 
         case "modify-design": {
             const { description, mod } = action
+
             return {
                 ...gameEditorState,
                 ...addHistory(description),
@@ -74,7 +88,7 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             }
             return {
                 ...gameEditorState,
-                history: [...history,  { label: last.label, gameDesign }],
+                history: [...history, { label: last.label, gameDesign }],
                 undoneHistory,
                 gameDesign: cloneData(last.gameDesign),
             }

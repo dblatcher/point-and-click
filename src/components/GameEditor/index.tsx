@@ -4,28 +4,25 @@ import { SpritesProvider } from '@/context/sprite-context';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
+import { GameEditorDatabase, getKeyStoreValue, openDataBaseConnection, keyStoreUpdate } from '@/lib/indexed-db';
 import { Sprite } from '@/lib/Sprite';
 import { ImageService } from '@/services/imageService';
 import { populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
 import { editorTheme } from '@/theme';
 import { Box, ButtonGroup, Container, Stack, ThemeProvider } from '@mui/material';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { MainWindow } from './MainWindow';
 import { SaveAndLoadButtons } from './SaveAndLoadButtons';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
-import { MyDB, openDataBaseConnection } from '@/lib/indexed-db';
-import { IDBPDatabase } from 'idb';
 
 
 export type { GameEditorProps };
 
 
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame }) => {
-
-    const [db, setDb] = useState<IDBPDatabase<MyDB> | undefined>(undefined)
 
     const [soundService] = useState(new SoundService())
     const [imageService] = useState(new ImageService())
@@ -39,13 +36,22 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         }
     )
 
-    useEffect(() => {
-        openDataBaseConnection().then(setDb).catch(err => {
-            console.error('OPEN DB FAILED!!', err)
-        }).finally(()=> {
-            console.log('DB stuff done')
+    const handleDBOpen = useCallback((db: GameEditorDatabase) => {
+        dispatchDesignUpdate({ type: 'set-db-instance', db });
+        console.log(`DB opened, version ${db.version}`);
+        getKeyStoreValue(db)('update-timestamp').then(timestamp => {
+            const date = timestamp && new Date(timestamp);
+            if (date) {
+                console.log(`update last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
+            }
         })
-    }, [setDb])
+    }, [dispatchDesignUpdate])
+
+    useEffect(() => {
+        openDataBaseConnection().then(handleDBOpen).catch(err => {
+            console.error('OPEN DB FAILED!!', err)
+        })
+    }, [handleDBOpen])
 
     useEffect(() => {
         if (usePrebuiltGame) {
@@ -67,6 +73,34 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             }>
                 <AssetsProvider soundService={soundService} imageService={imageService}>
                     <SpritesProvider value={sprites}>
+                        <div>
+                            <h2>db test stuff</h2>
+                            <div>
+                                version:
+                                {gameEditorState.db ? gameEditorState.db.version : 'no db'}
+                            </div>
+                            <div>
+                                update timestamep
+                                <button onClick={() => {
+                                    if (gameEditorState.db) {
+                                        getKeyStoreValue(gameEditorState.db)('update-timestamp').then(result => console.log({ result }))
+                                    }
+
+                                }}>get</button>
+                                <button onClick={() => {
+                                    if (gameEditorState.db) {
+                                        keyStoreUpdate(gameEditorState.db)('update-timestamp', 42).then(result => console.log({ result }))
+                                    }
+
+                                }}>set to 42</button>
+                                <button onClick={() => {
+                                    if (gameEditorState.db) {
+                                        keyStoreUpdate(gameEditorState.db)('update-timestamp', 7).then(result => console.log({ result }))
+                                    }
+
+                                }}>set to 7</button>
+                            </div>
+                        </div>
                         <Container component={'main'}
                             maxWidth='xl'
                             sx={{
