@@ -1,42 +1,9 @@
-import { GameDesign } from "@/definitions";
-import { ImageAsset, SoundAsset } from "@/services/assets";
-import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
+import { deleteDB, openDB } from "idb";
+import { GameEditorDatabase, GameEditorDBSchema } from "./types";
+
 
 export const DB_NAME = 'Point-and-click-db'
 export const DB_VERSION = 2
-
-
-type SavedDesignKey = 'quit-save'
-
-export interface MyDB extends DBSchema {
-    'designs': {
-        key: SavedDesignKey;
-        value: {
-            design: GameDesign,
-            timestamp: number,
-        };
-    };
-    'image-assets': {
-        key: string;
-        value: {
-            savedDesign: SavedDesignKey;
-            asset: ImageAsset;
-            file: File;
-        }
-        indexes: { 'by-design-key': SavedDesignKey }
-    };
-    'sound-assets': {
-        key: string;
-        value: {
-            savedDesign: SavedDesignKey;
-            asset: SoundAsset;
-            file: File;
-        }
-        indexes: { 'by-design-key': SavedDesignKey }
-    };
-}
-
-export type GameEditorDatabase = IDBPDatabase<MyDB>;
 
 type WindowPlus = Window & {
     MY_DATABASE?: GameEditorDatabase,
@@ -51,7 +18,7 @@ const putStuffOnWindow = (db: GameEditorDatabase) => {
 
 
 export const openDataBaseConnection = async () => {
-    const db = await openDB<MyDB>(DB_NAME, DB_VERSION, {
+    const db = await openDB<GameEditorDBSchema>(DB_NAME, DB_VERSION, {
         upgrade(
             db,
             oldVersion,
@@ -60,14 +27,11 @@ export const openDataBaseConnection = async () => {
             // event
         ) {
             console.log('running upgrade', { oldVersion })
-            if (oldVersion < 1) {
-                db.createObjectStore('designs');
-                const imageAssetStore = db.createObjectStore('image-assets');
-                imageAssetStore.createIndex('by-design-key', 'savedDesign')
-            }
+            db.createObjectStore('designs');
+            const imageAssetStore = db.createObjectStore('image-assets');
+            imageAssetStore.createIndex('by-design-key', 'savedDesign')
             const soundAssetStore = db.createObjectStore('sound-assets');
             soundAssetStore.createIndex('by-design-key', 'savedDesign')
-
         },
         blocked(currentVersion, blockedVersion, event) {
             console.warn('open db blocked', { currentVersion, blockedVersion, event })
@@ -97,80 +61,5 @@ export const deleteDatabase = (db: GameEditorDatabase) => () => {
     })
 }
 
-
-export const setQuitSave = (db: GameEditorDatabase) => (design: GameDesign) => {
-    return db.put('designs', { design, timestamp: Date.now() }, 'quit-save')
-}
-
-export const retrieveQuitSave = (db: GameEditorDatabase) => (): Promise<{
-    design?: GameDesign;
-    timestamp?: number;
-}> => {
-    return db.get('designs', 'quit-save').then(result => {
-        return result ?? {}
-    })
-}
-
-const makeAssetRecordKey = (savedDesignKey: SavedDesignKey, assetId: string) => `${savedDesignKey}__${assetId}`
-
-export const storeImageAsset = (db: GameEditorDatabase) => async (asset: ImageAsset, file: File) => {
-    const savedDesign: SavedDesignKey = 'quit-save'
-    const copyOfAsset = { ...asset };
-    delete copyOfAsset.img;
-
-    return db.put('image-assets', {
-        savedDesign,
-        asset: copyOfAsset,
-        file: file,
-    }, makeAssetRecordKey(savedDesign, asset.id))
-}
-
-export const deleteImageAsset = (db: GameEditorDatabase) => (assetId: string) => {
-    return db.delete('image-assets', makeAssetRecordKey('quit-save', assetId))
-}
-
-export const deleteAllImageAssets = (db: GameEditorDatabase) => async () => {
-    const allKeys = await db.getAllKeysFromIndex('image-assets', 'by-design-key', 'quit-save')
-    const tx = db.transaction('image-assets', 'readwrite',{})
-
-    return await Promise.all([
-        ...allKeys.map(key => {
-            tx.store.delete(key)
-        }),
-        tx.done
-    ])
-}
-
-export const retrieveImageAssets = (db: GameEditorDatabase) => () => {
-    return db.getAllFromIndex('image-assets', 'by-design-key', 'quit-save')
-}
-
-export const storeSoundAsset = (db: GameEditorDatabase) => async (asset: SoundAsset, file: File) => {
-    const savedDesign: SavedDesignKey = 'quit-save'
-    const copyOfAsset = { ...asset };
-    return db.put('sound-assets', {
-        savedDesign,
-        asset: copyOfAsset,
-        file: file,
-    }, makeAssetRecordKey(savedDesign, asset.id))
-}
-
-export const deleteSoundAsset = (db: GameEditorDatabase) => (assetId: string) => {
-    return db.delete('sound-assets', makeAssetRecordKey('quit-save', assetId))
-}
-
-export const deleteAllSoundAssets = (db: GameEditorDatabase) => async () => {
-    const allKeys = await db.getAllKeysFromIndex('sound-assets', 'by-design-key', 'quit-save')
-    const tx = db.transaction('sound-assets', 'readwrite',{})
-
-    return await Promise.all([
-        ...allKeys.map(key => {
-            tx.store.delete(key)
-        }),
-        tx.done
-    ])
-}
-
-export const retrieveSoundAssets = (db: GameEditorDatabase) => () => {
-    return db.getAllFromIndex('sound-assets', 'by-design-key', 'quit-save')
-}
+export * from './transactions';
+export type { GameEditorDatabase };
