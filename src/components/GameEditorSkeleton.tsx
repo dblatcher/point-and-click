@@ -21,7 +21,15 @@ const Repeat = ({ children, count }: { children: ReactNode, count: number }) => 
 
 export const GameEditorSkeleton: React.FunctionComponent = () => (
     <ThemeProvider theme={editorTheme}>
-        <Container maxWidth='xl'>
+        <Container maxWidth='xl'
+            sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                overflow: 'hidden',
+                flex: 1,
+                gap: 5,
+            }}
+        >
             <Stack
                 direction={'row'}
                 spacing={1}
@@ -39,6 +47,9 @@ export const GameEditorSkeleton: React.FunctionComponent = () => (
                     <Repeat count={13}>
                         <Skeleton variant='rectangular' width={'100%'} height={22} />
                     </Repeat>
+                    <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}>
+                        <Skeleton variant='circular' width={100} height={100} />
+                    </div>
                 </Stack>
 
                 <Box component={'section'}

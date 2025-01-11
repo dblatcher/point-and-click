@@ -215,10 +215,12 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                 <ButtonGroup sx={{ marginTop: 3 }} orientation="horizontal" >
                                     <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />
                                     <SaveAndLoadButtons />
-                                    <TestGameDialog />
                                 </ButtonGroup>
 
                                 <TabButtonList />
+                                <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}>
+                                    <TestGameDialog />
+                                </div>
                             </Stack>
 
                             <Box component={'section'}

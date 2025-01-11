@@ -27,7 +27,7 @@ export const TestGameDialog = () => {
                     setResetTimeStamp(Date.now())
                 }}
             >
-                <PlayCircleFilledOutlinedIcon fontSize={'large'} />
+                <PlayCircleFilledOutlinedIcon sx={{ fontSize: 100 }} />
             </IconButton>
             <Dialog
                 fullScreen
