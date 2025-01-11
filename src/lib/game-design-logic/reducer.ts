@@ -99,11 +99,11 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
         }
 
         case "load-new": {
-            return {
+            return saveToQuitSave({
                 ...gameEditorState,
                 gameDesign: action.gameDesign,
                 history: [],
-            }
+            })
         }
 
         case "create-data-item": {

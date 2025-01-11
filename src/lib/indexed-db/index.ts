@@ -129,6 +129,18 @@ export const deleteImageAsset = (db: GameEditorDatabase) => (assetId: string) =>
     return db.delete('image-assets', makeAssetRecordKey('quit-save', assetId))
 }
 
+export const deleteAllImageAssets = (db: GameEditorDatabase) => async () => {
+    const allKeys = await db.getAllKeysFromIndex('image-assets', 'by-design-key', 'quit-save')
+    const tx = db.transaction('image-assets', 'readwrite',{})
+
+    return await Promise.all([
+        ...allKeys.map(key => {
+            tx.store.delete(key)
+        }),
+        tx.done
+    ])
+}
+
 export const retrieveImageAssets = (db: GameEditorDatabase) => () => {
     return db.getAllFromIndex('image-assets', 'by-design-key', 'quit-save')
 }
@@ -145,6 +157,18 @@ export const storeSoundAsset = (db: GameEditorDatabase) => async (asset: SoundAs
 
 export const deleteSoundAsset = (db: GameEditorDatabase) => (assetId: string) => {
     return db.delete('sound-assets', makeAssetRecordKey('quit-save', assetId))
+}
+
+export const deleteAllSoundAssets = (db: GameEditorDatabase) => async () => {
+    const allKeys = await db.getAllKeysFromIndex('sound-assets', 'by-design-key', 'quit-save')
+    const tx = db.transaction('sound-assets', 'readwrite',{})
+
+    return await Promise.all([
+        ...allKeys.map(key => {
+            tx.store.delete(key)
+        }),
+        tx.done
+    ])
 }
 
 export const retrieveSoundAssets = (db: GameEditorDatabase) => () => {
