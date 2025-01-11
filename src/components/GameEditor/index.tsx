@@ -4,7 +4,7 @@ import { SpritesProvider } from '@/context/sprite-context';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
-import { GameEditorDatabase, getKeyStoreValue, openDataBaseConnection, keyStoreUpdate, retrieveQuitSave, storeImageAsset, retrieveImageAssets } from '@/lib/indexed-db';
+import { GameEditorDatabase, getKeyStoreValue, openDataBaseConnection, keyStoreUpdate, retrieveQuitSave, storeImageAsset, retrieveImageAssets, deleteImageAsset } from '@/lib/indexed-db';
 import { Sprite } from '@/lib/Sprite';
 import { ImageService } from '@/services/imageService';
 import { populateServicesForPreBuiltGame } from '@/services/populateServices';
@@ -96,7 +96,9 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             }
 
             if (update.action === 'remove') {
-                // TO DO - need to remove images from the DB
+                update.ids.forEach(id => {
+                    deleteImageAsset(db)(id)
+                })
             }
         }
         const handleSoundServiceUpdate = (update: AssetServiceUpdate) => {
@@ -156,7 +158,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                             <div>
                                 <button onClick={() => {
                                     if (gameEditorState.db) {
-                                        retrieveImageAssets(gameEditorState.db)()
+                                        retrieveImageAssets(gameEditorState.db)().then(console.log)
                                     }
                                 }
                                 }>get assets</button>

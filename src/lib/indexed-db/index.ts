@@ -131,6 +131,8 @@ export const retrieveQuitSave = (db: GameEditorDatabase) => (): Promise<{
     })
 }
 
+const makeAssetRecordKey = (savedDesignKey:SavedDesignKey, assetId:string) => `${savedDesignKey}__${assetId}`
+
 // TO DO - refactor so this function doesn't have to deal with the file services
 export const storeImageAsset = (db: GameEditorDatabase) => async (fileId: string, fileService: ImageService) => {
 
@@ -147,24 +149,20 @@ export const storeImageAsset = (db: GameEditorDatabase) => async (fileId: string
 
     const savedDesign: SavedDesignKey = 'quit-save'
 
-    const copyOfAsset = {...asset};
+    const copyOfAsset = { ...asset };
     delete copyOfAsset.img;
 
-    db.put('image-assets', {
+    return db.put('image-assets', {
         savedDesign,
         asset: copyOfAsset,
         file: file,
-    }, `${savedDesign}__${asset.id}`)
-        .then(r => {
-            console.log('stored', fileId, { r })
-        })
-        .catch(err => {
-            console.error("failed to store", fileId, err)
-        })
-
+    }, makeAssetRecordKey(savedDesign, asset.id))
 }
 
-export const retrieveImageAssets = (db: GameEditorDatabase) => async () => {
-    const r = await db.getAllFromIndex('image-assets', 'by-design-key', 'quit-save')
-    return r
+export const deleteImageAsset = (db: GameEditorDatabase) => (assetId: string) => {
+    return db.delete('image-assets', makeAssetRecordKey('quit-save', assetId))
+}
+
+export const retrieveImageAssets = (db: GameEditorDatabase) => () => {
+    return db.getAllFromIndex('image-assets', 'by-design-key', 'quit-save')
 }
