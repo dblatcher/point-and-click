@@ -1,6 +1,7 @@
 import { TypedEmitter } from "tiny-typed-emitter";
 import { getMimeType } from "./assets";
 import { FileAsset } from "@/services/assets";
+import { fileToObjectUrl } from "@/lib/files";
 
 type UpdateAction = 'add' | 'remove' | 'populate'
 
@@ -16,8 +17,8 @@ interface ServiceEvents {
     'load': (id: string, success: boolean) => void;
 }
 
-export class FileAssetService<T extends FileAsset> extends TypedEmitter<ServiceEvents> {
-    protected data: Record<string, T | undefined>
+export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmitter<ServiceEvents> {
+    protected data: Record<string, FileAssetType | undefined>
 
     constructor() {
         super()
@@ -34,7 +35,7 @@ export class FileAssetService<T extends FileAsset> extends TypedEmitter<ServiceE
         }, 1)
     }
 
-    add(items: T | T[]): void {
+    add(items: FileAssetType | FileAssetType[]): void {
         if (!Array.isArray(items)) {
             items = [items]
         }
@@ -42,10 +43,34 @@ export class FileAssetService<T extends FileAsset> extends TypedEmitter<ServiceE
         this.reportUpdate('add', items.map(item => item.id))
     }
 
+    addFromFile(assetsAndFiles: {
+        asset: FileAssetType;
+        file: File;
+    }[]) {
+
+        const newAssets = assetsAndFiles.map(({ asset, file }) => {
+            console.log({ asset }, file)
+            const objectUrl = fileToObjectUrl(file)
+            if (!objectUrl) {
+                console.error('failed to get object URL', asset, file)
+                return asset
+            }
+            const newAsset: FileAssetType = { ...asset, href: objectUrl }
+            return newAsset;
+        })
+
+
+        // TO DO - the reportUpdate is triggering putting the file in the DB again
+        // even if they just came from the DB
+        // need to add a flag to the event to say already in DB?
+        this.add(newAssets)
+    }
+
     remove(ids: string | string[]): void {
         if (!Array.isArray(ids)) {
             ids = [ids]
         }
+        // TO DO - need to revoke object URL before deleting the assets
         ids.forEach(id => {
             if (id in this.data) {
                 delete this.data[id]
@@ -54,7 +79,7 @@ export class FileAssetService<T extends FileAsset> extends TypedEmitter<ServiceE
         this.reportUpdate('remove', ids)
     }
 
-    get(id: string): T | undefined {
+    get(id: string): FileAssetType | undefined {
         return this.data[id]
     }
 
@@ -62,16 +87,18 @@ export class FileAssetService<T extends FileAsset> extends TypedEmitter<ServiceE
         return Object.keys(this.data)
     }
 
-    getAll(): T[] {
-        return Object.values(this.data).filter(item => !!item) as T[]
+    getAll(): FileAssetType[] {
+        return Object.values(this.data).filter(item => !!item) as FileAssetType[]
     }
 
-    populate(items: T[]) {
+    populate(items: FileAssetType[]) {
         this.data = {}
         items.forEach(item => this.data[item.id] = item)
         this.reportUpdate('populate', items.map(item => item.id))
     }
 
+    // TO DO store the files when loaded rather than 
+    // creating every time
     getFile = async (id: string): Promise<File | undefined> => {
         const asset = this.get(id)
         if (!asset) { return undefined }

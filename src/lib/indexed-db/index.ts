@@ -1,12 +1,14 @@
 import { GameDesign } from "@/definitions";
+import { ImageAsset } from "@/services/assets";
+import { ImageService } from "@/services/imageService";
 import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
 
 export const DB_NAME = 'Point-and-click-db'
-export const DB_VERSION = 3
+export const DB_VERSION = 4
 
 
 type KeyStoreKey = 'update-timestamp'
-type DesignStoreKey = 'quit-save'
+type SavedDesignKey = 'quit-save'
 
 export interface MyDB extends DBSchema {
     'key-store': {
@@ -14,12 +16,21 @@ export interface MyDB extends DBSchema {
         value: number;
     };
     'designs': {
-        key: DesignStoreKey;
+        key: SavedDesignKey;
         value: {
             design: GameDesign,
             timestamp: number,
         };
-    }
+    };
+    'image-assets': {
+        key: string;
+        value: {
+            savedDesign: SavedDesignKey;
+            asset: ImageAsset;
+            file: File;
+        }
+        indexes: { 'by-design-key': SavedDesignKey }
+    };
     products: {
         value: {
             name: string;
@@ -63,7 +74,12 @@ export const openDataBaseConnection = async () => {
                 productStore.createIndex('by-price', 'price');
             }
 
-            db.createObjectStore('designs');
+            if (oldVersion < 3) {
+                db.createObjectStore('designs');
+            }
+
+            const imageAssetStore = db.createObjectStore('image-assets');
+            imageAssetStore.createIndex('by-design-key', 'savedDesign')
 
         },
         blocked(currentVersion, blockedVersion, event) {
@@ -115,3 +131,40 @@ export const retrieveQuitSave = (db: GameEditorDatabase) => (): Promise<{
     })
 }
 
+// TO DO - refactor so this function doesn't have to deal with the file services
+export const storeImageAsset = (db: GameEditorDatabase) => async (fileId: string, fileService: ImageService) => {
+
+    const asset = fileService.get(fileId);
+    if (!asset) {
+        console.warn(`could not find asset ${fileId} in service`)
+        return null
+    }
+    const file = await fileService.getFile(fileId)
+    if (!file) {
+        console.warn(`failed to load file ${fileId}`)
+        return null
+    }
+
+    const savedDesign: SavedDesignKey = 'quit-save'
+
+    const copyOfAsset = {...asset};
+    delete copyOfAsset.img;
+
+    db.put('image-assets', {
+        savedDesign,
+        asset: copyOfAsset,
+        file: file,
+    }, `${savedDesign}__${asset.id}`)
+        .then(r => {
+            console.log('stored', fileId, { r })
+        })
+        .catch(err => {
+            console.error("failed to store", fileId, err)
+        })
+
+}
+
+export const retrieveImageAssets = (db: GameEditorDatabase) => async () => {
+    const r = await db.getAllFromIndex('image-assets', 'by-design-key', 'quit-save')
+    return r
+}

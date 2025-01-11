@@ -4,7 +4,7 @@ import { SpritesProvider } from '@/context/sprite-context';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
-import { GameEditorDatabase, getKeyStoreValue, openDataBaseConnection, keyStoreUpdate, retrieveQuitSave } from '@/lib/indexed-db';
+import { GameEditorDatabase, getKeyStoreValue, openDataBaseConnection, keyStoreUpdate, retrieveQuitSave, storeImageAsset, retrieveImageAssets } from '@/lib/indexed-db';
 import { Sprite } from '@/lib/Sprite';
 import { ImageService } from '@/services/imageService';
 import { populateServicesForPreBuiltGame } from '@/services/populateServices';
@@ -37,7 +37,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         }
     )
 
-    const handleDBOpen = useCallback((db: GameEditorDatabase) => {
+    const handleDBOpen = useCallback(async (db: GameEditorDatabase) => {
         if (usePrebuiltGame) {
             return
         }
@@ -50,15 +50,25 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         // and store assets then.
         // need a good structure to avoid unnecessary transactions
         // - only save the modified assets (change the update events!)
-        retrieveQuitSave(db)().then(({ design, timestamp = 0 }) => {
-            if (design) {
-                const date = new Date(timestamp);
-                console.log(`restoring design last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
-                dispatchDesignUpdate({ type: 'load-new', gameDesign: design })
-            }
 
-        })
-    }, [dispatchDesignUpdate, usePrebuiltGame])
+        const { design, timestamp = 0 } = await retrieveQuitSave(db)();
+        if (!design) {
+            return
+        }
+
+        const assetResults = await retrieveImageAssets(db)();
+
+        if (assetResults) {
+            imageService.addFromFile(assetResults)
+        }
+
+        const date = new Date(timestamp);
+        console.log(`restoring design last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
+        dispatchDesignUpdate({ type: 'load-new', gameDesign: design })
+
+
+
+    }, [dispatchDesignUpdate, usePrebuiltGame, imageService])
 
     useEffect(() => {
         openDataBaseConnection().then(handleDBOpen).catch(err => {
@@ -75,6 +85,19 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         // the db asset collection for quit save
         const handleImageServiceUpdate = (update: AssetServiceUpdate) => {
             console.log('an image update', update)
+            const db = gameEditorState.db;
+            if (!db) {
+                return
+            }
+            if (update.action === 'add') {
+                update.ids.forEach(id => {
+                    storeImageAsset(db)(id, imageService)
+                })
+            }
+
+            if (update.action === 'remove') {
+                // TO DO - need to remove images from the DB
+            }
         }
         const handleSoundServiceUpdate = (update: AssetServiceUpdate) => {
             console.log('an sound update', update)
@@ -83,12 +106,12 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         imageService.on('update', handleImageServiceUpdate)
         soundService.on('update', handleSoundServiceUpdate)
 
-        return () => { 
-            imageService.off('update', handleImageServiceUpdate) 
-            soundService.off('update', handleSoundServiceUpdate) 
+        return () => {
+            imageService.off('update', handleImageServiceUpdate)
+            soundService.off('update', handleSoundServiceUpdate)
         }
 
-    }, [usePrebuiltGame, imageService, soundService])
+    }, [usePrebuiltGame, imageService, soundService, gameEditorState.db])
 
 
     const { gameDesign, history, undoneHistory } = gameEditorState
@@ -129,6 +152,14 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                         keyStoreUpdate(gameEditorState.db)('update-timestamp', Date.now()).then(result => console.log({ result }))
                                     }
                                 }}>set to now</button>
+                            </div>
+                            <div>
+                                <button onClick={() => {
+                                    if (gameEditorState.db) {
+                                        retrieveImageAssets(gameEditorState.db)()
+                                    }
+                                }
+                                }>get assets</button>
                             </div>
                         </div>
                         <Container component={'main'}
