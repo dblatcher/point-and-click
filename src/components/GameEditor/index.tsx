@@ -86,12 +86,15 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         const handleImageServiceUpdate = (update: AssetServiceUpdate) => {
             console.log('an image update', update)
             const db = gameEditorState.db;
-            if (!db) {
-                return
-            }
+            if (!db) { return }
+
             if (update.action === 'add') {
                 update.ids.forEach(id => {
-                    storeImageAsset(db)(id, imageService)
+                    imageService.getWithFile(id).then(({ asset, file }) => {
+                        if (asset && file) {
+                            storeImageAsset(db)(asset, file)
+                        }
+                    })
                 })
             }
 

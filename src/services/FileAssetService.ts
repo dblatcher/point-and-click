@@ -47,7 +47,6 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         asset: FileAssetType;
         file: File;
     }[]) {
-
         const newAssets = assetsAndFiles.map(({ asset, file }) => {
             console.log({ asset }, file)
             const objectUrl = fileToObjectUrl(file)
@@ -59,11 +58,22 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
             return newAsset;
         })
 
-
         // TO DO - the reportUpdate is triggering putting the file in the DB again
         // even if they just came from the DB
         // need to add a flag to the event to say already in DB?
         this.add(newAssets)
+    }
+
+    async getWithFile(id:string) {
+        const asset = this.get(id);
+        if (!asset) {
+            return {}
+        }
+        const file = await this.getFile(id)
+        if (!file) {
+            return {}
+        }
+        return { asset, file }
     }
 
     remove(ids: string | string[]): void {

@@ -1,6 +1,5 @@
 import { GameDesign } from "@/definitions";
 import { ImageAsset } from "@/services/assets";
-import { ImageService } from "@/services/imageService";
 import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
 
 export const DB_NAME = 'Point-and-click-db'
@@ -133,22 +132,8 @@ export const retrieveQuitSave = (db: GameEditorDatabase) => (): Promise<{
 
 const makeAssetRecordKey = (savedDesignKey:SavedDesignKey, assetId:string) => `${savedDesignKey}__${assetId}`
 
-// TO DO - refactor so this function doesn't have to deal with the file services
-export const storeImageAsset = (db: GameEditorDatabase) => async (fileId: string, fileService: ImageService) => {
-
-    const asset = fileService.get(fileId);
-    if (!asset) {
-        console.warn(`could not find asset ${fileId} in service`)
-        return null
-    }
-    const file = await fileService.getFile(fileId)
-    if (!file) {
-        console.warn(`failed to load file ${fileId}`)
-        return null
-    }
-
+export const storeImageAsset = (db: GameEditorDatabase) => async (asset:ImageAsset, file:File) => {
     const savedDesign: SavedDesignKey = 'quit-save'
-
     const copyOfAsset = { ...asset };
     delete copyOfAsset.img;
 
