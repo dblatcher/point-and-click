@@ -3,17 +3,12 @@ import { ImageAsset } from "@/services/assets";
 import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
 
 export const DB_NAME = 'Point-and-click-db'
-export const DB_VERSION = 4
+export const DB_VERSION = 1
 
 
-type KeyStoreKey = 'update-timestamp'
 type SavedDesignKey = 'quit-save'
 
 export interface MyDB extends DBSchema {
-    'key-store': {
-        key: KeyStoreKey;
-        value: number;
-    };
     'designs': {
         key: SavedDesignKey;
         value: {
@@ -29,15 +24,6 @@ export interface MyDB extends DBSchema {
             file: File;
         }
         indexes: { 'by-design-key': SavedDesignKey }
-    };
-    products: {
-        value: {
-            name: string;
-            price: number;
-            productCode: string;
-        };
-        key: string;
-        indexes: { 'by-price': number };
     };
 }
 
@@ -65,18 +51,7 @@ export const openDataBaseConnection = async () => {
             // event
         ) {
             console.log('running upgrade', { oldVersion })
-            if (oldVersion < 1) {
-                db.createObjectStore('key-store');
-                const productStore = db.createObjectStore('products', {
-                    keyPath: 'productCode',
-                });
-                productStore.createIndex('by-price', 'price');
-            }
-
-            if (oldVersion < 3) {
-                db.createObjectStore('designs');
-            }
-
+            db.createObjectStore('designs');
             const imageAssetStore = db.createObjectStore('image-assets');
             imageAssetStore.createIndex('by-design-key', 'savedDesign')
 
@@ -109,13 +84,6 @@ export const deleteDatabase = (db: GameEditorDatabase) => () => {
     })
 }
 
-export const keyStoreUpdate = (db: GameEditorDatabase) => (key: KeyStoreKey, value: number) => {
-    return db.put('key-store', value, key)
-}
-
-export const getKeyStoreValue = (db: GameEditorDatabase) => (key: KeyStoreKey) => {
-    return db.get('key-store', key)
-}
 
 export const setQuitSave = (db: GameEditorDatabase) => (design: GameDesign) => {
     return db.put('designs', { design, timestamp: Date.now() }, 'quit-save')
@@ -130,9 +98,9 @@ export const retrieveQuitSave = (db: GameEditorDatabase) => (): Promise<{
     })
 }
 
-const makeAssetRecordKey = (savedDesignKey:SavedDesignKey, assetId:string) => `${savedDesignKey}__${assetId}`
+const makeAssetRecordKey = (savedDesignKey: SavedDesignKey, assetId: string) => `${savedDesignKey}__${assetId}`
 
-export const storeImageAsset = (db: GameEditorDatabase) => async (asset:ImageAsset, file:File) => {
+export const storeImageAsset = (db: GameEditorDatabase) => async (asset: ImageAsset, file: File) => {
     const savedDesign: SavedDesignKey = 'quit-save'
     const copyOfAsset = { ...asset };
     delete copyOfAsset.img;
