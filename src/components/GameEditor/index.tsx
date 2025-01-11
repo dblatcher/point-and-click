@@ -18,15 +18,17 @@ import { SaveAndLoadButtons } from './SaveAndLoadButtons';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
+import { GameEditorSkeleton } from '../GameEditorSkeleton';
 
 
 export type { GameEditorProps };
 
 
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame }) => {
-
     const [soundService] = useState(new SoundService())
     const [imageService] = useState(new ImageService())
+    const [waitingForDesignFromDb, setWaitingforDesignFromDb] = useState(!usePrebuiltGame)
+
     const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer,
         {
             gameDesign: getInitalDesign(usePrebuiltGame),
@@ -44,15 +46,22 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         dispatchDesignUpdate({ type: 'set-db-instance', db });
         console.log(`DB opened, version ${db.version}`);
 
-
         const { design, timestamp = 0 } = await retrieveQuitSave(db)();
-        if (!design) { return }
+        if (!design) {
+            setWaitingforDesignFromDb(false)
+            return
+        }
 
-        const imageAssetResults = await retrieveImageAssets(db)();
+        const [
+            imageAssetResults,
+            soundAssetResults
+        ] = await Promise.all([
+            retrieveImageAssets(db)(),
+            retrieveSoundAssets(db)()
+        ]);
         if (imageAssetResults) {
             imageService.addFromFile(imageAssetResults, 'DB')
         }
-        const soundAssetResults = await retrieveSoundAssets(db)();
         if (soundAssetResults) {
             soundService.addFromFile(soundAssetResults, 'DB')
         }
@@ -60,13 +69,15 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         const date = new Date(timestamp);
         console.log(`restoring design last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
         dispatchDesignUpdate({ type: 'load-new', gameDesign: design })
-    }, [dispatchDesignUpdate, usePrebuiltGame, imageService, soundService])
+        setWaitingforDesignFromDb(false)
+    }, [dispatchDesignUpdate, usePrebuiltGame, imageService, soundService, setWaitingforDesignFromDb])
 
     useEffect(() => {
         openDataBaseConnection().then(handleDBOpen).catch(err => {
             console.error('OPEN DB FAILED!!', err)
+            setWaitingforDesignFromDb(false)
         })
-    }, [handleDBOpen])
+    }, [handleDBOpen, setWaitingforDesignFromDb])
 
     useEffect(() => {
         if (usePrebuiltGame) {
@@ -165,8 +176,13 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
     }, [usePrebuiltGame, imageService, soundService, gameEditorState.db])
 
 
+    if (waitingForDesignFromDb) {
+        return <GameEditorSkeleton />
+    }
+
     const { gameDesign, history, undoneHistory } = gameEditorState
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
+
 
     return (
         <ThemeProvider theme={editorTheme}>
@@ -180,33 +196,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             }>
                 <AssetsProvider soundService={soundService} imageService={imageService}>
                     <SpritesProvider value={sprites}>
-                        <div>
-                            <h2>db test stuff</h2>
-                            <div>
-                                version:
-                                {gameEditorState.db ? gameEditorState.db.version : 'no db'}
-                            </div>
-                            <div>
-                                <button onClick={() => {
-                                    if (gameEditorState.db) {
-                                        retrieveImageAssets(gameEditorState.db)().then(console.log)
-                                    }
-                                }
-                                }>log image assets</button>
-                                <button onClick={() => {
-                                    if (gameEditorState.db) {
-                                        retrieveSoundAssets(gameEditorState.db)().then(console.log)
-                                    }
-                                }
-                                }>log sound assets</button>
-                                <button onClick={() => {
-                                    if (gameEditorState.db) {
-                                        deleteAllImageAssets(gameEditorState.db)().then(console.log)
-                                    }
-                                }
-                                }>deleteAllImageAssets</button>
-                            </div>
-                        </div>
+
                         <Container component={'main'}
                             maxWidth='xl'
                             sx={{
@@ -239,6 +229,33 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                 <MainWindow />
                             </Box>
                         </Container>
+                        <div>
+                            <h2>db test stuff</h2>
+                            <div>
+                                version:
+                                {gameEditorState.db ? gameEditorState.db.version : 'no db'}
+                            </div>
+                            <div>
+                                <button onClick={() => {
+                                    if (gameEditorState.db) {
+                                        retrieveImageAssets(gameEditorState.db)().then(console.log)
+                                    }
+                                }
+                                }>log image assets</button>
+                                <button onClick={() => {
+                                    if (gameEditorState.db) {
+                                        retrieveSoundAssets(gameEditorState.db)().then(console.log)
+                                    }
+                                }
+                                }>log sound assets</button>
+                                <button onClick={() => {
+                                    if (gameEditorState.db) {
+                                        deleteAllImageAssets(gameEditorState.db)().then(console.log)
+                                    }
+                                }
+                                }>deleteAllImageAssets</button>
+                            </div>
+                        </div>
                     </SpritesProvider>
                 </AssetsProvider>
             </GameDesignProvider>
