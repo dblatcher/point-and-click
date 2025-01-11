@@ -50,11 +50,11 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
 
         const imageAssetResults = await retrieveImageAssets(db)();
         if (imageAssetResults) {
-            imageService.addFromFile(imageAssetResults)
+            imageService.addFromFile(imageAssetResults, 'DB')
         }
         const soundAssetResults = await retrieveSoundAssets(db)();
         if (soundAssetResults) {
-            soundService.addFromFile(soundAssetResults)
+            soundService.addFromFile(soundAssetResults, 'DB')
         }
 
         const date = new Date(timestamp);
@@ -80,6 +80,10 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             const db = gameEditorState.db;
             if (!db) { return }
 
+            if(update.source === 'DB') {
+                return
+            }
+
             if (update.action === 'add') {
                 update.ids.forEach(id => {
                     imageService.getWithFile(id).then(({ asset, file }) => {
@@ -100,6 +104,10 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             console.log('an sound update', update)
             const db = gameEditorState.db;
             if (!db) { return }
+
+            if(update.source === 'DB') {
+                return
+            }
 
             if (update.action === 'add') {
                 update.ids.forEach(id => {

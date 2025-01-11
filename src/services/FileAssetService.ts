@@ -4,11 +4,13 @@ import { FileAsset } from "@/services/assets";
 import { fileToObjectUrl } from "@/lib/files";
 
 type UpdateAction = 'add' | 'remove' | 'populate'
+export type UpdateSource = 'DB' | 'ZIP'
 
 export type AssetServiceUpdate = {
     count: number,
     action: UpdateAction,
     ids: string[],
+    source?: UpdateSource,
 };
 
 interface ServiceEvents {
@@ -25,30 +27,35 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         this.data = {}
     }
 
-    reportUpdate(action: UpdateAction, ids: string[]): void {
+    reportUpdate(action: UpdateAction, ids: string[], source?: UpdateSource): void {
         setTimeout(() => {
             this.emit('update', {
                 count: this.list().length,
                 action,
                 ids,
+                source,
             })
         }, 1)
     }
 
-    add(items: FileAssetType | FileAssetType[]): void {
+    add(items: FileAssetType | FileAssetType[], source?: UpdateSource): void {
         if (!Array.isArray(items)) {
             items = [items]
         }
         items.forEach(item => this.data[item.id] = item)
-        this.reportUpdate('add', items.map(item => item.id))
+        this.postAdd(items)
+        this.reportUpdate('add', items.map(item => item.id), source)
+    }
+
+    protected postAdd(items: FileAssetType[]) {
+        console.log('postAdd', items)
     }
 
     addFromFile(assetsAndFiles: {
         asset: FileAssetType;
         file: File;
-    }[]) {
+    }[], source?: UpdateSource) {
         const newAssets = assetsAndFiles.map(({ asset, file }) => {
-            console.log({ asset }, file)
             const objectUrl = fileToObjectUrl(file)
             if (!objectUrl) {
                 console.error('failed to get object URL', asset, file)
@@ -61,10 +68,10 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         // TO DO - the reportUpdate is triggering putting the file in the DB again
         // even if they just came from the DB
         // need to add a flag to the event to say already in DB?
-        this.add(newAssets)
+        this.add(newAssets, source)
     }
 
-    async getWithFile(id:string) {
+    async getWithFile(id: string) {
         const asset = this.get(id);
         if (!asset) {
             return {}
@@ -101,10 +108,11 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         return Object.values(this.data).filter(item => !!item) as FileAssetType[]
     }
 
-    populate(items: FileAssetType[]) {
+    populate(items: FileAssetType[], source?: UpdateSource) {
         this.data = {}
         items.forEach(item => this.data[item.id] = item)
-        this.reportUpdate('populate', items.map(item => item.id))
+        this.postAdd(items)
+        this.reportUpdate('populate', items.map(item => item.id), source)
     }
 
     // TO DO store the files when loaded rather than 

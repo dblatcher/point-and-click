@@ -44,7 +44,7 @@ export const SaveAndLoadButtons: FunctionComponent = () => {
       setUploadAllError(result.error);
       return;
     }
-    loadNewGame(result.data)
+    loadNewGame({ ...result.data, source: 'ZIP' },)
   };
 
   const saveLabel = 'Save game to zip file'

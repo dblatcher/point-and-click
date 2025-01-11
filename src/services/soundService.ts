@@ -14,15 +14,11 @@ export class SoundService extends FileAssetService<SoundAsset> {
         this.setMaxListeners(20)
     }
 
-    add(items: SoundAsset | SoundAsset[]): void {
-        FileAssetService.prototype.add.apply(this, [items])
-
-        const itemArray = Array.isArray(items) ? items : [items];
-        itemArray.forEach(soundAsset =>
+    protected postAdd(items: SoundAsset[]): void {
+        items.forEach(soundAsset =>
             this.soundDeck?.defineSampleBuffer(soundAsset.id, soundAsset.href)
                 .then(success => {
                     this.emit('load', soundAsset.id, success)
-                    this.reportUpdate('add', itemArray.map(item => item.id))
                 })
         )
     }

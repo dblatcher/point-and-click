@@ -1,4 +1,4 @@
-import { FileAssetService } from "./FileAssetService";
+import { FileAssetService, UpdateSource } from "./FileAssetService";
 import { ImageAsset } from "./assets";
 
 
@@ -10,11 +10,8 @@ export class ImageService extends FileAssetService<ImageAsset> {
             .map(asset => (asset as Readonly<ImageAsset>))
     }
 
-    add(items: ImageAsset | ImageAsset[]): void {
-        FileAssetService.prototype.add.apply(this, [items])
-
-        const itemArray = Array.isArray(items) ? items : [items];
-        itemArray.forEach(imageAsset =>
+    protected postAdd(items: ImageAsset[]): void {
+        items.forEach(imageAsset =>
             this.loadImg(imageAsset)
                 .catch(err => console.error('load image failed', err, imageAsset))
         )

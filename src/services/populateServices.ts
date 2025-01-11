@@ -5,12 +5,13 @@ import { SoundAsset, ImageAsset } from "./assets";
 import { imageAssets, } from "../data/images";
 import { soundAssets } from "../data/sounds";
 import { GameDesign } from "../definitions/Game";
+import { UpdateSource } from "./FileAssetService";
 
 export function populateServicesForPreBuiltGame(
   imageService: ImageService,
   soundService: SoundService
 ): void {
-  console.log("populating services");
+  console.log("populating services for prebuilt game");
   imageService.populate(imageAssets);
   soundService.populate(soundAssets);
 }
@@ -21,8 +22,9 @@ export function populateServices(
   soundAssets: SoundAsset[],
   imageService: ImageService,
   soundService: SoundService,
+  source?: UpdateSource,
 ): void {
-  console.log("populating services for:", gameDesign.id);
-  imageService.populate(imageAssets);
-  soundService.populate(soundAssets);
+  console.log("populating services for:", gameDesign.id, { source });
+  imageService.populate(imageAssets, source);
+  soundService.populate(soundAssets, source);
 }
