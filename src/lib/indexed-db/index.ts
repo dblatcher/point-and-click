@@ -1,9 +1,9 @@
 import { GameDesign } from "@/definitions";
-import { ImageAsset } from "@/services/assets";
+import { ImageAsset, SoundAsset } from "@/services/assets";
 import { DBSchema, deleteDB, IDBPDatabase, openDB } from "idb";
 
 export const DB_NAME = 'Point-and-click-db'
-export const DB_VERSION = 1
+export const DB_VERSION = 2
 
 
 type SavedDesignKey = 'quit-save'
@@ -21,6 +21,15 @@ export interface MyDB extends DBSchema {
         value: {
             savedDesign: SavedDesignKey;
             asset: ImageAsset;
+            file: File;
+        }
+        indexes: { 'by-design-key': SavedDesignKey }
+    };
+    'sound-assets': {
+        key: string;
+        value: {
+            savedDesign: SavedDesignKey;
+            asset: SoundAsset;
             file: File;
         }
         indexes: { 'by-design-key': SavedDesignKey }
@@ -51,9 +60,13 @@ export const openDataBaseConnection = async () => {
             // event
         ) {
             console.log('running upgrade', { oldVersion })
-            db.createObjectStore('designs');
-            const imageAssetStore = db.createObjectStore('image-assets');
-            imageAssetStore.createIndex('by-design-key', 'savedDesign')
+            if (oldVersion < 1) {
+                db.createObjectStore('designs');
+                const imageAssetStore = db.createObjectStore('image-assets');
+                imageAssetStore.createIndex('by-design-key', 'savedDesign')
+            }
+            const soundAssetStore = db.createObjectStore('sound-assets');
+            soundAssetStore.createIndex('by-design-key', 'savedDesign')
 
         },
         blocked(currentVersion, blockedVersion, event) {
@@ -118,4 +131,22 @@ export const deleteImageAsset = (db: GameEditorDatabase) => (assetId: string) =>
 
 export const retrieveImageAssets = (db: GameEditorDatabase) => () => {
     return db.getAllFromIndex('image-assets', 'by-design-key', 'quit-save')
+}
+
+export const storeSoundAsset = (db: GameEditorDatabase) => async (asset: SoundAsset, file: File) => {
+    const savedDesign: SavedDesignKey = 'quit-save'
+    const copyOfAsset = { ...asset };
+    return db.put('sound-assets', {
+        savedDesign,
+        asset: copyOfAsset,
+        file: file,
+    }, makeAssetRecordKey(savedDesign, asset.id))
+}
+
+export const deleteSoundAsset = (db: GameEditorDatabase) => (assetId: string) => {
+    return db.delete('sound-assets', makeAssetRecordKey('quit-save', assetId))
+}
+
+export const retrieveSoundAssets = (db: GameEditorDatabase) => () => {
+    return db.getAllFromIndex('sound-assets', 'by-design-key', 'quit-save')
 }

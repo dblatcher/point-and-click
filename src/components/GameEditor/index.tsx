@@ -4,7 +4,7 @@ import { SpritesProvider } from '@/context/sprite-context';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
-import { deleteImageAsset, GameEditorDatabase, openDataBaseConnection, retrieveImageAssets, retrieveQuitSave, storeImageAsset } from '@/lib/indexed-db';
+import { deleteImageAsset, deleteSoundAsset, GameEditorDatabase, openDataBaseConnection, retrieveImageAssets, retrieveQuitSave, retrieveSoundAssets, storeImageAsset, storeSoundAsset } from '@/lib/indexed-db';
 import { Sprite } from '@/lib/Sprite';
 import { AssetServiceUpdate } from '@/services/FileAssetService';
 import { ImageService } from '@/services/imageService';
@@ -44,31 +44,23 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         dispatchDesignUpdate({ type: 'set-db-instance', db });
         console.log(`DB opened, version ${db.version}`);
 
-        // TO DO - need to also store and retrieve the file assets
-        // and populate the services.
-        // Could subscribe to the update events from the services
-        // and store assets then.
-        // need a good structure to avoid unnecessary transactions
-        // - only save the modified assets (change the update events!)
 
         const { design, timestamp = 0 } = await retrieveQuitSave(db)();
-        if (!design) {
-            return
+        if (!design) { return }
+
+        const imageAssetResults = await retrieveImageAssets(db)();
+        if (imageAssetResults) {
+            imageService.addFromFile(imageAssetResults)
         }
-
-        const assetResults = await retrieveImageAssets(db)();
-
-        if (assetResults) {
-            imageService.addFromFile(assetResults)
+        const soundAssetResults = await retrieveSoundAssets(db)();
+        if (soundAssetResults) {
+            soundService.addFromFile(soundAssetResults)
         }
 
         const date = new Date(timestamp);
         console.log(`restoring design last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
         dispatchDesignUpdate({ type: 'load-new', gameDesign: design })
-
-
-
-    }, [dispatchDesignUpdate, usePrebuiltGame, imageService])
+    }, [dispatchDesignUpdate, usePrebuiltGame, imageService, soundService])
 
     useEffect(() => {
         openDataBaseConnection().then(handleDBOpen).catch(err => {
@@ -106,6 +98,24 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         }
         const handleSoundServiceUpdate = (update: AssetServiceUpdate) => {
             console.log('an sound update', update)
+            const db = gameEditorState.db;
+            if (!db) { return }
+
+            if (update.action === 'add') {
+                update.ids.forEach(id => {
+                    soundService.getWithFile(id).then(({ asset, file }) => {
+                        if (asset && file) {
+                            storeSoundAsset(db)(asset, file)
+                        }
+                    })
+                })
+            }
+
+            if (update.action === 'remove') {
+                update.ids.forEach(id => {
+                    deleteSoundAsset(db)(id)
+                })
+            }
         }
 
         imageService.on('update', handleImageServiceUpdate)
@@ -147,6 +157,12 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                     }
                                 }
                                 }>log image assets</button>
+                                <button onClick={() => {
+                                    if (gameEditorState.db) {
+                                        retrieveSoundAssets(gameEditorState.db)().then(console.log)
+                                    }
+                                }
+                                }>log sound assets</button>
                             </div>
                         </div>
                         <Container component={'main'}
