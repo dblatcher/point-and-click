@@ -1,6 +1,6 @@
 import { ImageService } from "@/services/imageService";
 import { SoundService } from "@/services/soundService";
-import { retrieveImageAssets, retrieveSavedDesign, retrieveSoundAssets } from "./transactions";
+import { makeAssetRecordKey, retrieveImageAssets, retrieveSavedDesign, retrieveSoundAssets } from "./transactions";
 import { GameEditorDatabase, SavedDesignKey } from "./types";
 import { GameDesign } from "@/definitions";
 
@@ -37,20 +37,41 @@ export const retrieveDesignAndPopulateAssets = (db: GameEditorDatabase) => async
 
 export const saveDesignAndAllAssetsToDb = (db: GameEditorDatabase) => async (
     gameDesign: GameDesign,
-    key: SavedDesignKey,
+    savedDesignKey: SavedDesignKey,
     soundService: SoundService,
     imageService: ImageService,
 ) => {
 
-    const allSoundAssetsAndFiles = Promise.all(soundService.list().map(soundService.getWithFile))
-    const allImageAssetsAndFiles = Promise.all(imageService.list().map(imageService.getWithFile))
+    const [
+        allSoundAssetsAndFiles,
+        allImageAssetsAndFiles,
+        imagesInDb,
+        soundsInDb,
+    ] = await Promise.all([
+        soundService.getAllWithFiles(),
+        imageService.getAllWithFiles(),
+        db.getAllKeysFromIndex('image-assets', 'by-design-key', savedDesignKey),
+        db.getAllKeysFromIndex('sound-assets', 'by-design-key', savedDesignKey),
+    ])
 
-    // TO DO 
-    // key all files from both services
-    // - transaction
-    // delete all image assets matching key
-    // delete all sound assets matching key
-    // put new files 
-    // put new game design
 
+    const tx = db.transaction(['image-assets', 'sound-assets', 'designs'], 'readwrite');
+    const imageStore = tx.objectStore('image-assets')
+    const soundStore = tx.objectStore('sound-assets')
+
+    imagesInDb.forEach(assetKey => {
+        imageStore.delete(assetKey)
+    })
+    soundsInDb.forEach(assetKey => {
+        soundStore.delete(assetKey)
+    })
+    allImageAssetsAndFiles.forEach(({ asset, file }) => {
+        imageStore.put({ savedDesign: savedDesignKey, asset: { ...asset, img: undefined }, file }, makeAssetRecordKey(savedDesignKey, asset.id))
+    })
+    allSoundAssetsAndFiles.forEach(({ asset, file }) => {
+        soundStore.put({ savedDesign: savedDesignKey, asset, file }, makeAssetRecordKey(savedDesignKey, asset.id))
+    })
+    tx.objectStore('designs').put({ design: gameDesign, timestamp: Date.now() }, savedDesignKey)
+
+    return tx.done
 }

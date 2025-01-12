@@ -7,7 +7,7 @@ import { GameDesign } from "@/definitions";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { useAssets } from "@/context/asset-context";
-import { retrieveDesignAndPopulateAssets } from "@/lib/indexed-db/complex-transactions";
+import { retrieveDesignAndPopulateAssets, saveDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
 
 interface Props {
     db: GameEditorDatabase
@@ -16,7 +16,6 @@ interface Props {
 type DesignListing = { design: GameDesign, timestamp: number, key: SavedDesignKey }
 
 const fetchSavedDesigns = async (db: GameEditorDatabase): Promise<DesignListing[]> => {
-    console.log('fetchSavedDesigns')
     const designKeys = (await listSavedDesignKeys(db)()).filter(key => key !== 'quit-save')
     const uncheckedResults = await Promise.all(
         designKeys.map(key => retrieveSavedDesign(db)(key))
@@ -24,9 +23,7 @@ const fetchSavedDesigns = async (db: GameEditorDatabase): Promise<DesignListing[
     const validResults: { design: GameDesign, timestamp: number }[] = uncheckedResults
         .flatMap(({ design, timestamp = 0 }) => design ? { design, timestamp } : []);
 
-    const designList = validResults.map((result, index) => ({ ...result, key: designKeys[index] }))
-
-    return designList;
+    return validResults.map((result, index) => ({ ...result, key: designKeys[index] }))
 }
 
 export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) => {
@@ -50,15 +47,13 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
             alert(`there is already a ${newSaveKey}`)
             return
         }
-        // need assets too
-        storeSavedDesign(db)(gameDesign, newSaveKey).then(() => {
+        saveDesignAndAllAssetsToDb(db)(gameDesign, newSaveKey, soundService,imageService).then(() => {
             refreshList()
         })
     }
 
     const saveOverFile = (key: SavedDesignKey) => {
-        // need assets too
-        storeSavedDesign(db)(gameDesign, key).then(() => {
+        saveDesignAndAllAssetsToDb(db)(gameDesign, key, soundService,imageService).then(() => {
             refreshList()
         })
     }
@@ -99,17 +94,14 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
                 {designList.map(({ key, design, timestamp }) => (
                     <div key={key}>
                         <div>
-
                             <span>{key}</span>
                             <span>--{design.id}</span>
                             <span>--{timestamp}</span>
                         </div>
                         <div>
-
                             <button onClick={() => deleteFile(key)}>delete</button>
                             <button onClick={() => saveOverFile(key)}>save over</button>
                             <button onClick={() => loadFile(key)}>load</button>
-
                         </div>
                     </div>
                 ))}

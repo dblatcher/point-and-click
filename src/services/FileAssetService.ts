@@ -83,6 +83,19 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         return { asset, file }
     }
 
+    async getAllWithFiles() {
+        const assets=this.getAll()
+        const assetsWithFiles = await Promise.all(assets.map(async (asset) => {
+            const file = await this.getFile(asset.id)
+            if (!file) {
+                return null
+            } 
+            return {asset, file}
+        }))
+
+        return  assetsWithFiles.flatMap(item => item ? item :[])
+    }
+
     remove(ids: string | string[], source?: UpdateSource): void {
         if (!Array.isArray(ids)) {
             ids = [ids]

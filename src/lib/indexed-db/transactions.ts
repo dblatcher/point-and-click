@@ -26,7 +26,7 @@ export const deleteSavedDesign = (db: GameEditorDatabase) => (savedDesign: Saved
     return db.delete('designs',savedDesign)
 }
 
-const makeAssetRecordKey = (savedDesign: SavedDesignKey, assetId: string) => `${savedDesign}__${assetId}`
+export const makeAssetRecordKey = (savedDesign: SavedDesignKey, assetId: string) => `${savedDesign}__${assetId}`
 
 export const storeImageAsset = (db: GameEditorDatabase) => async (asset: ImageAsset, file: File, savedDesign: SavedDesignKey = 'quit-save') => {
     const copyOfAsset = { ...asset };

@@ -20,7 +20,7 @@ import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
 import { GameEditorSkeleton } from '../GameEditorSkeleton';
 import { SavedDesignDialogButton } from './SavedDesignDialogButton';
-import { retrieveDesignAndPopulateAssets } from '@/lib/indexed-db/complex-transactions';
+import { retrieveDesignAndPopulateAssets, saveDesignAndAllAssetsToDb } from '@/lib/indexed-db/complex-transactions';
 
 
 export type { GameEditorProps };
@@ -251,6 +251,14 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                     }
                                 }
                                 }>deleteAllImageAssets</button>
+                            </div>
+                            <div>
+                                <button onClick={() => {
+                                    if (gameEditorState.db) {
+                                        saveDesignAndAllAssetsToDb(gameEditorState.db)(gameDesign, 'quit-save', soundService, imageService)
+                                    }
+
+                                }}>save</button>
                             </div>
                         </div>
                     </SpritesProvider>
