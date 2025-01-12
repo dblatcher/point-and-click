@@ -62,4 +62,4 @@ export const deleteDatabase = (db: GameEditorDatabase) => () => {
 }
 
 export * from './transactions';
-export type { GameEditorDatabase };
+export * from './types';

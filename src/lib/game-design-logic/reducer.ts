@@ -3,7 +3,7 @@ import { GameEditorState, GameDesignAction } from "./types"
 import { cloneData } from "../clone"
 import { addGameDataItem, putInteraction } from "./mutate-design"
 import { GameDesign } from "@/definitions"
-import { setQuitSave } from "../indexed-db"
+import { storeSavedDesign } from "../indexed-db"
 
 
 const higherLevelAddHistoryItem =
@@ -23,7 +23,7 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
     const saveToQuitSave = (gameEditorState: GameEditorState) => {
         const { db, gameDesign } = gameEditorState
         if (db) {
-            setQuitSave(db)(gameDesign)
+            storeSavedDesign(db)(gameDesign)
         }
         return gameEditorState
     }

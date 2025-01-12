@@ -4,7 +4,7 @@ import { SpritesProvider } from '@/context/sprite-context';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
-import { deleteAllImageAssets, deleteAllSoundAssets, deleteImageAsset, deleteSoundAsset, GameEditorDatabase, openDataBaseConnection, retrieveImageAssets, retrieveQuitSave, retrieveSoundAssets, storeImageAsset, storeSoundAsset } from '@/lib/indexed-db';
+import { deleteAllImageAssets, deleteAllSoundAssets, deleteImageAsset, deleteSoundAsset, GameEditorDatabase, openDataBaseConnection, retrieveImageAssets, retrieveSavedDesign, retrieveSoundAssets, storeImageAsset, storeSoundAsset } from '@/lib/indexed-db';
 import { Sprite } from '@/lib/Sprite';
 import { AssetServiceUpdate } from '@/services/FileAssetService';
 import { ImageService } from '@/services/imageService';
@@ -14,11 +14,12 @@ import { editorTheme } from '@/theme';
 import { Box, ButtonGroup, Container, Stack, ThemeProvider } from '@mui/material';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { MainWindow } from './MainWindow';
-import { SaveAndLoadButtons } from './SaveAndLoadButtons';
+import { ZipFileButtons } from './ZipFileButtons';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
 import { GameEditorSkeleton } from '../GameEditorSkeleton';
+import { SavedDesignDialogButton } from './SavedDesignDialogButton';
 
 
 export type { GameEditorProps };
@@ -52,7 +53,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             imageAssetResults,
             soundAssetResults
         ] = await Promise.all([
-            retrieveQuitSave(db)(),
+            retrieveSavedDesign(db)(),
             retrieveImageAssets(db)(),
             retrieveSoundAssets(db)()
         ]);
@@ -210,7 +211,10 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                             >
                                 <ButtonGroup sx={{ marginTop: 3 }} orientation="horizontal" >
                                     <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />
-                                    <SaveAndLoadButtons />
+                                    <ZipFileButtons />
+                                    {gameEditorState.db &&
+                                        <SavedDesignDialogButton db={gameEditorState.db} />
+                                    }
                                 </ButtonGroup>
 
                                 <TabButtonList />

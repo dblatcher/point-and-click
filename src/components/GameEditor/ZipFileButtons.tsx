@@ -11,7 +11,7 @@ import { Alert, IconButton, Snackbar, Tooltip } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 
 
-export const SaveAndLoadButtons: FunctionComponent = () => {
+export const ZipFileButtons: FunctionComponent = () => {
   const { gameDesign, dispatchDesignUpdate } = useGameDesign()
   const { imageService, soundService } = useAssets()
   const [downloadAllError, setDownloadAllError] = useState<string | undefined>(

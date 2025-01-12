@@ -2,7 +2,8 @@ import { GameDesign } from "@/definitions";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { DBSchema, IDBPDatabase } from "idb";
 
-export type SavedDesignKey = 'quit-save'
+type Name = string;
+export type SavedDesignKey = 'quit-save' | `SAVE_${Name}` 
 
 export interface GameEditorDBSchema extends DBSchema {
     'designs': {
