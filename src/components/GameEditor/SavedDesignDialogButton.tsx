@@ -6,6 +6,8 @@ import { GameEditorDatabase, retrieveSavedDesign, listSavedDesignKeys, storeSave
 import { GameDesign } from "@/definitions";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { useGameDesign } from "@/context/game-design-context";
+import { useAssets } from "@/context/asset-context";
+import { retrieveDesignAndPopulateAssets } from "@/lib/indexed-db/complex-transactions";
 
 interface Props {
     db: GameEditorDatabase
@@ -29,7 +31,8 @@ const fetchSavedDesigns = async (db: GameEditorDatabase): Promise<DesignListing[
 
 export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) => {
 
-    const { gameDesign } = useGameDesign()
+    const { gameDesign, dispatchDesignUpdate } = useGameDesign()
+    const { imageService, soundService } = useAssets()
 
     const [isOpen, setIsOpen] = useState(false)
     const [designList, setDesignList] = useState<DesignListing[]>([])
@@ -61,8 +64,19 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
     }
 
     const deleteFile = (key: SavedDesignKey) => {
-        deleteSavedDesign(db)(key).then(()=> {
+        deleteSavedDesign(db)(key).then(() => {
             refreshList()
+        })
+    }
+    const loadFile = (key: SavedDesignKey) => {
+        retrieveDesignAndPopulateAssets(db)(key, soundService, imageService).then(gameDesign => {
+            console.log(gameDesign)
+            if (!gameDesign) {
+                alert(`could not load ${key}`)
+                return
+            }
+            dispatchDesignUpdate({type:'load-new', gameDesign})
+            setIsOpen(false)
         })
     }
 
@@ -84,11 +98,19 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
 
                 {designList.map(({ key, design, timestamp }) => (
                     <div key={key}>
-                        <span>{key}</span>
-                        <span>--{design.id}</span>
-                        <span>--{timestamp}</span>
-                        <button onClick={() => deleteFile(key)}>delete</button>
-                        <button onClick={() => saveOverFile(key)}>save over</button>
+                        <div>
+
+                            <span>{key}</span>
+                            <span>--{design.id}</span>
+                            <span>--{timestamp}</span>
+                        </div>
+                        <div>
+
+                            <button onClick={() => deleteFile(key)}>delete</button>
+                            <button onClick={() => saveOverFile(key)}>save over</button>
+                            <button onClick={() => loadFile(key)}>load</button>
+
+                        </div>
                     </div>
                 ))}
 

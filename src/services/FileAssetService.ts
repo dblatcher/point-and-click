@@ -83,7 +83,7 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         return { asset, file }
     }
 
-    remove(ids: string | string[]): void {
+    remove(ids: string | string[], source?: UpdateSource): void {
         if (!Array.isArray(ids)) {
             ids = [ids]
         }
@@ -93,7 +93,7 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
                 delete this.data[id]
             }
         })
-        this.reportUpdate('remove', ids)
+        this.reportUpdate('remove', ids, source)
     }
 
     get(id: string): FileAssetType | undefined {

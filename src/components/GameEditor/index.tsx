@@ -20,6 +20,7 @@ import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
 import { GameEditorSkeleton } from '../GameEditorSkeleton';
 import { SavedDesignDialogButton } from './SavedDesignDialogButton';
+import { retrieveDesignAndPopulateAssets } from '@/lib/indexed-db/complex-transactions';
 
 
 export type { GameEditorProps };
@@ -48,26 +49,20 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         dispatchDesignUpdate({ type: 'set-db-instance', db })
         console.log(`DB opened, version ${db.version}`)
 
-        const [
-            { design, timestamp = 0 },
-            imageAssetResults,
-            soundAssetResults
-        ] = await Promise.all([
-            retrieveSavedDesign(db)(),
-            retrieveImageAssets(db)(),
-            retrieveSoundAssets(db)()
-        ]);
-        if (!design) {
+        const quitSaveDesign = await retrieveDesignAndPopulateAssets(db)(
+            'quit-save',
+            soundService,
+            imageService,
+        )
+
+        if (!quitSaveDesign) {
             setWaitingforDesignFromDb(false)
             return
         }
-        imageService.addFromFile(imageAssetResults, 'DB')
-        soundService.addFromFile(soundAssetResults, 'DB')
-        dispatchDesignUpdate({ type: 'load-new', gameDesign: design })
+
+        dispatchDesignUpdate({ type: 'load-new', gameDesign: quitSaveDesign })
         setWaitingforDesignFromDb(false)
 
-        const date = new Date(timestamp)
-        console.log(`restored design last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
     }, [dispatchDesignUpdate, usePrebuiltGame, imageService, soundService, setWaitingforDesignFromDb])
 
     useEffect(() => {
