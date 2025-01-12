@@ -39,37 +39,34 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         }
     )
 
+    // when DB opens, load the quit save and populate file asset services
     const handleDBOpen = useCallback(async (db: GameEditorDatabase) => {
         if (usePrebuiltGame) {
             return
         }
-        dispatchDesignUpdate({ type: 'set-db-instance', db });
-        console.log(`DB opened, version ${db.version}`);
+        dispatchDesignUpdate({ type: 'set-db-instance', db })
+        console.log(`DB opened, version ${db.version}`)
 
-        const { design, timestamp = 0 } = await retrieveQuitSave(db)();
+        const [
+            { design, timestamp = 0 },
+            imageAssetResults,
+            soundAssetResults
+        ] = await Promise.all([
+            retrieveQuitSave(db)(),
+            retrieveImageAssets(db)(),
+            retrieveSoundAssets(db)()
+        ]);
         if (!design) {
             setWaitingforDesignFromDb(false)
             return
         }
-
-        const [
-            imageAssetResults,
-            soundAssetResults
-        ] = await Promise.all([
-            retrieveImageAssets(db)(),
-            retrieveSoundAssets(db)()
-        ]);
-        if (imageAssetResults) {
-            imageService.addFromFile(imageAssetResults, 'DB')
-        }
-        if (soundAssetResults) {
-            soundService.addFromFile(soundAssetResults, 'DB')
-        }
-
-        const date = new Date(timestamp);
-        console.log(`restoring design last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
+        imageService.addFromFile(imageAssetResults, 'DB')
+        soundService.addFromFile(soundAssetResults, 'DB')
         dispatchDesignUpdate({ type: 'load-new', gameDesign: design })
         setWaitingforDesignFromDb(false)
+
+        const date = new Date(timestamp)
+        console.log(`restored design last made at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
     }, [dispatchDesignUpdate, usePrebuiltGame, imageService, soundService, setWaitingforDesignFromDb])
 
     useEffect(() => {
@@ -79,13 +76,13 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         })
     }, [handleDBOpen, setWaitingforDesignFromDb])
 
+    // populate assets if usePrebuiltGame
+    // if not, listen to updaets from services and store in the quit save
     useEffect(() => {
         if (usePrebuiltGame) {
             populateServicesForPreBuiltGame(imageService, soundService)
         }
 
-        // TO DO - if updates are add or remove, save the changes to
-        // the db asset collection for quit save
         const handleImageServiceUpdate = (update: AssetServiceUpdate) => {
             console.log('an image update', update)
             const db = gameEditorState.db;
@@ -164,7 +161,6 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                 })
             }
         }
-
         imageService.on('update', handleImageServiceUpdate)
         soundService.on('update', handleSoundServiceUpdate)
 
