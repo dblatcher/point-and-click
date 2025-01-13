@@ -61,5 +61,6 @@ export const deleteDatabase = (db: GameEditorDatabase) => () => {
     })
 }
 
-export * from './transactions';
+export * from './asset-stores-transactions';
+export * from './design-store-transactions';
 export * from './types';

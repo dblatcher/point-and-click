@@ -2,8 +2,9 @@ import { GameDesign } from "@/definitions";
 import { ImageService } from "@/services/imageService";
 import { setHrefsFromFiles } from "@/services/set-hrefs";
 import { SoundService } from "@/services/soundService";
-import { makeAssetRecordKey, retrieveImageAssets, retrieveSavedDesign, retrieveSoundAssets } from "./transactions";
+import { makeAssetRecordKey, retrieveImageAssets, retrieveSoundAssets } from "./asset-stores-transactions";
 import { GameEditorDatabase, SavedDesignKey } from "./types";
+import { retrieveSavedDesign } from "./design-store-transactions";
 
 // TO DO - think about how we can revoke the object URLs when removing from the services...
 const retrieveDesignAndAssets = (db: GameEditorDatabase) => async (
