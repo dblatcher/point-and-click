@@ -4,10 +4,10 @@ import { SpritesProvider } from '@/context/sprite-context';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
-import { deleteAllImageAssets, deleteAllSoundAssets, deleteImageAsset, deleteSoundAsset, GameEditorDatabase, openDataBaseConnection, storeImageAsset, storeSoundAsset } from '@/lib/indexed-db';
+import { handleImageUpdateFunction, handleSoundUpdateFunction } from '@/lib/handle-asset-functions';
+import { GameEditorDatabase, openDataBaseConnection } from '@/lib/indexed-db';
 import { retrieveDesignAndAssets } from '@/lib/indexed-db/complex-transactions';
 import { Sprite } from '@/lib/Sprite';
-import { AssetServiceUpdate } from '@/services/FileAssetService';
 import { ImageService } from '@/services/imageService';
 import { populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
@@ -24,7 +24,6 @@ import { ZipFileButtons } from './ZipFileButtons';
 
 
 export type { GameEditorProps };
-
 
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame }) => {
     const [soundService] = useState(new SoundService())
@@ -49,7 +48,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         dispatchDesignUpdate({ type: 'set-db-instance', db })
         console.log(`DB opened, version ${db.version}`)
 
-        const {design, timestamp, imageAssets, soundAssets} = await retrieveDesignAndAssets(db)(
+        const { design, timestamp, imageAssets, soundAssets } = await retrieveDesignAndAssets(db)(
             'quit-save',
         )
 
@@ -82,84 +81,8 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             populateServicesForPreBuiltGame(imageService, soundService)
         }
 
-        const handleImageServiceUpdate = (update: AssetServiceUpdate) => {
-            console.log('an image update', update)
-            const db = gameEditorState.db;
-            if (!db) { return }
-
-            if (update.source === 'DB') {
-                return
-            }
-
-            if (update.action === 'populate') {
-                Promise.all([
-                    deleteAllImageAssets(db)()
-                ]).then(() => {
-                    update.ids.forEach(id => {
-                        imageService.getWithFile(id).then(({ asset, file }) => {
-                            if (asset && file) {
-                                storeImageAsset(db)(asset, file)
-                            }
-                        })
-                    })
-                })
-            }
-
-            if (update.action === 'add') {
-                update.ids.forEach(id => {
-                    imageService.getWithFile(id).then(({ asset, file }) => {
-                        if (asset && file) {
-                            storeImageAsset(db)(asset, file)
-                        }
-                    })
-                })
-            }
-
-            if (update.action === 'remove') {
-                update.ids.forEach(id => {
-                    deleteImageAsset(db)(id)
-                })
-            }
-        }
-        const handleSoundServiceUpdate = (update: AssetServiceUpdate) => {
-            console.log('an sound update', update)
-            const db = gameEditorState.db;
-            if (!db) { return }
-
-            if (update.source === 'DB') {
-                return
-            }
-
-            if (update.action === 'populate') {
-                Promise.all([
-                    deleteAllSoundAssets(db)()
-                ]).then(() => {
-                    update.ids.forEach(id => {
-                        soundService.getWithFile(id).then(({ asset, file }) => {
-                            if (asset && file) {
-                                storeSoundAsset(db)(asset, file)
-                            }
-                        })
-                    })
-                })
-            }
-
-            if (update.action === 'add') {
-                update.ids.forEach(id => {
-                    soundService.getWithFile(id).then(({ asset, file }) => {
-                        if (asset && file) {
-                            storeSoundAsset(db)(asset, file)
-                        }
-                    })
-                })
-            }
-
-            if (update.action === 'remove') {
-                update.ids.forEach(id => {
-                    deleteSoundAsset(db)(id)
-                })
-            }
-        }
+        const handleImageServiceUpdate = handleImageUpdateFunction(imageService, gameEditorState.db)
+        const handleSoundServiceUpdate = handleSoundUpdateFunction(soundService, gameEditorState.db)
         imageService.on('update', handleImageServiceUpdate)
         soundService.on('update', handleSoundServiceUpdate)
 
@@ -167,7 +90,6 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             imageService.off('update', handleImageServiceUpdate)
             soundService.off('update', handleSoundServiceUpdate)
         }
-
     }, [usePrebuiltGame, imageService, soundService, gameEditorState.db])
 
 
