@@ -4,12 +4,14 @@ import { makeAssetRecordKey, retrieveImageAssets, retrieveSavedDesign, retrieveS
 import { GameEditorDatabase, SavedDesignKey } from "./types";
 import { GameDesign } from "@/definitions";
 
-export const retrieveDesignAndPopulateAssets = (db: GameEditorDatabase) => async (
+// TO DO - maybe this function should handle using the File to populate the
+// href in the Asset with the Object URL
+// would like to consolidate that operation, maybe do away with AssetService.addFromFile
+// so retrieveDesignAndPopulateAssets can just use AssetService.Populate
+// also think about how we can revoke the object URLs when removing from the services...
+export const retrieveDesignAndAssets = (db: GameEditorDatabase) => async (
     key: SavedDesignKey,
-    soundService: SoundService,
-    imageService: ImageService,
 ) => {
-
     const [
         { design, timestamp = 0 },
         imageAssetResults,
@@ -19,6 +21,20 @@ export const retrieveDesignAndPopulateAssets = (db: GameEditorDatabase) => async
         retrieveImageAssets(db)(key),
         retrieveSoundAssets(db)(key)
     ]);
+    return { design, timestamp, imageAssetResults, soundAssetResults }
+}
+
+
+// TO DO - this function is no longer about the DB, but mostly about populating the services/
+// where does it live?
+
+export const retrieveDesignAndPopulateAssets = (db: GameEditorDatabase) => async (
+    key: SavedDesignKey,
+    soundService: SoundService,
+    imageService: ImageService,
+) => {
+
+    const { design, timestamp, imageAssetResults, soundAssetResults } = await retrieveDesignAndAssets(db)(key)
 
     if (!design) {
         return undefined
