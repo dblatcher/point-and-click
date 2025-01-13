@@ -1,7 +1,6 @@
 import { TypedEmitter } from "tiny-typed-emitter";
 import { getMimeType } from "./assets";
 import { FileAsset } from "@/services/assets";
-import { fileToObjectUrl } from "@/lib/files";
 
 type UpdateAction = 'add' | 'remove' | 'populate'
 export type UpdateSource = 'DB' | 'ZIP'
@@ -49,26 +48,6 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
 
     protected postAdd(items: FileAssetType[]) {
         console.log('postAdd', items)
-    }
-
-    addFromFile(assetsAndFiles: {
-        asset: FileAssetType;
-        file: File;
-    }[], source?: UpdateSource) {
-        const newAssets = assetsAndFiles.map(({ asset, file }) => {
-            const objectUrl = fileToObjectUrl(file)
-            if (!objectUrl) {
-                console.error('failed to get object URL', asset, file)
-                return asset
-            }
-            const newAsset: FileAssetType = { ...asset, href: objectUrl }
-            return newAsset;
-        })
-
-        // TO DO - the reportUpdate is triggering putting the file in the DB again
-        // even if they just came from the DB
-        // need to add a flag to the event to say already in DB?
-        this.add(newAssets, source)
     }
 
     async getWithFile(id: string) {

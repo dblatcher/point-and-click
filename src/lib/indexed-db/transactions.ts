@@ -26,6 +26,18 @@ export const deleteSavedDesign = (db: GameEditorDatabase) => (savedDesign: Saved
     return db.delete('designs',savedDesign)
 }
 
+export const retrieveAllSavedDesigns = (db: GameEditorDatabase) => async () => {
+    const designKeys = (await listSavedDesignKeys(db)()).filter(key => key !== 'quit-save')
+    const uncheckedResults = await Promise.all(
+        designKeys.map(key => retrieveSavedDesign(db)(key))
+    );
+    const validResults: { design: GameDesign, timestamp: number }[] = uncheckedResults
+        .flatMap(({ design, timestamp = 0 }) => design ? { design, timestamp } : []);
+
+    return validResults.map((result, index) => ({ ...result, key: designKeys[index] }))
+}
+
+
 export const makeAssetRecordKey = (savedDesign: SavedDesignKey, assetId: string) => `${savedDesign}__${assetId}`
 
 export const storeImageAsset = (db: GameEditorDatabase) => async (asset: ImageAsset, file: File, savedDesign: SavedDesignKey = 'quit-save') => {

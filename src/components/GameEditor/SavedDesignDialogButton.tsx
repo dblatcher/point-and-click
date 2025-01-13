@@ -1,13 +1,12 @@
 import { Dialog, DialogContent, DialogContentText, DialogTitle, IconButton } from "@mui/material";
 import React, { useState } from "react";
-// import LoadIcon from '@mui/icons-material/Restore';
-import SaveIcon from '@mui/icons-material/Save';
-import { GameEditorDatabase, retrieveSavedDesign, listSavedDesignKeys, storeSavedDesign, SavedDesignKey, deleteSavedDesign } from "@/lib/indexed-db";
-import { GameDesign } from "@/definitions";
-import { ButtonWithTextInput } from "./ButtonWithTextInput";
-import { useGameDesign } from "@/context/game-design-context";
 import { useAssets } from "@/context/asset-context";
-import { retrieveDesignAndPopulateAssets, saveDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
+import { useGameDesign } from "@/context/game-design-context";
+import { GameDesign } from "@/definitions";
+import { GameEditorDatabase, SavedDesignKey, deleteSavedDesign, retrieveAllSavedDesigns } from "@/lib/indexed-db";
+import { retrieveDesignAndPopulateAssets, storeDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
+import SaveIcon from '@mui/icons-material/Save';
+import { ButtonWithTextInput } from "./ButtonWithTextInput";
 
 interface Props {
     db: GameEditorDatabase
@@ -15,16 +14,6 @@ interface Props {
 
 type DesignListing = { design: GameDesign, timestamp: number, key: SavedDesignKey }
 
-const fetchSavedDesigns = async (db: GameEditorDatabase): Promise<DesignListing[]> => {
-    const designKeys = (await listSavedDesignKeys(db)()).filter(key => key !== 'quit-save')
-    const uncheckedResults = await Promise.all(
-        designKeys.map(key => retrieveSavedDesign(db)(key))
-    );
-    const validResults: { design: GameDesign, timestamp: number }[] = uncheckedResults
-        .flatMap(({ design, timestamp = 0 }) => design ? { design, timestamp } : []);
-
-    return validResults.map((result, index) => ({ ...result, key: designKeys[index] }))
-}
 
 export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) => {
 
@@ -34,7 +23,7 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
     const [isOpen, setIsOpen] = useState(false)
     const [designList, setDesignList] = useState<DesignListing[]>([])
 
-    const refreshList = () => fetchSavedDesigns(db).then(setDesignList)
+    const refreshList = () => retrieveAllSavedDesigns(db)().then(setDesignList)
 
     const openAndFetch = () => {
         setIsOpen(true)
@@ -42,35 +31,35 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
     }
 
     const handleNewSaveInput = (name: string) => {
-        const newSaveKey: SavedDesignKey = `SAVE_${name.toUpperCase()}`
-        if (designList.some(design => design.key === newSaveKey)) {
-            alert(`there is already a ${newSaveKey}`)
+        const savedDesignKey: SavedDesignKey = `SAVE_${name.toUpperCase()}`
+        if (designList.some(design => design.key === savedDesignKey)) {
+            alert(`there is already a ${savedDesignKey}`)
             return
         }
-        saveDesignAndAllAssetsToDb(db)(gameDesign, newSaveKey, soundService,imageService).then(() => {
+        storeDesignAndAllAssetsToDb(db)(gameDesign, savedDesignKey, soundService, imageService).then(() => {
             refreshList()
         })
     }
 
-    const saveOverFile = (key: SavedDesignKey) => {
-        saveDesignAndAllAssetsToDb(db)(gameDesign, key, soundService,imageService).then(() => {
+    const saveOverFile = (savedDesignKey: SavedDesignKey) => {
+        storeDesignAndAllAssetsToDb(db)(gameDesign, savedDesignKey, soundService, imageService).then(() => {
             refreshList()
         })
     }
 
-    const deleteFile = (key: SavedDesignKey) => {
-        deleteSavedDesign(db)(key).then(() => {
+    const deleteFile = (savedDesignKey: SavedDesignKey) => {
+        deleteSavedDesign(db)(savedDesignKey).then(() => {
             refreshList()
         })
     }
-    const loadFile = (key: SavedDesignKey) => {
-        retrieveDesignAndPopulateAssets(db)(key, soundService, imageService).then(gameDesign => {
+    const loadFile = (savedDesignKey: SavedDesignKey) => {
+        retrieveDesignAndPopulateAssets(db)(savedDesignKey, soundService, imageService).then(gameDesign => {
             console.log(gameDesign)
             if (!gameDesign) {
-                alert(`could not load ${key}`)
+                alert(`could not load ${savedDesignKey}`)
                 return
             }
-            dispatchDesignUpdate({type:'load-new', gameDesign})
+            dispatchDesignUpdate({ type: 'load-new', gameDesign })
             setIsOpen(false)
         })
     }

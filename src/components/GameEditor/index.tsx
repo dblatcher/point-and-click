@@ -4,7 +4,8 @@ import { SpritesProvider } from '@/context/sprite-context';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
-import { deleteAllImageAssets, deleteAllSoundAssets, deleteImageAsset, deleteSoundAsset, GameEditorDatabase, openDataBaseConnection, retrieveImageAssets, retrieveSavedDesign, retrieveSoundAssets, storeImageAsset, storeSoundAsset } from '@/lib/indexed-db';
+import { deleteAllImageAssets, deleteAllSoundAssets, deleteImageAsset, deleteSoundAsset, GameEditorDatabase, openDataBaseConnection, storeImageAsset, storeSoundAsset } from '@/lib/indexed-db';
+import { retrieveDesignAndPopulateAssets } from '@/lib/indexed-db/complex-transactions';
 import { Sprite } from '@/lib/Sprite';
 import { AssetServiceUpdate } from '@/services/FileAssetService';
 import { ImageService } from '@/services/imageService';
@@ -13,14 +14,13 @@ import { SoundService } from '@/services/soundService';
 import { editorTheme } from '@/theme';
 import { Box, ButtonGroup, Container, Stack, ThemeProvider } from '@mui/material';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import { GameEditorSkeleton } from '../GameEditorSkeleton';
 import { MainWindow } from './MainWindow';
-import { ZipFileButtons } from './ZipFileButtons';
+import { SavedDesignDialogButton } from './SavedDesignDialogButton';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
-import { GameEditorSkeleton } from '../GameEditorSkeleton';
-import { SavedDesignDialogButton } from './SavedDesignDialogButton';
-import { retrieveDesignAndPopulateAssets, saveDesignAndAllAssetsToDb } from '@/lib/indexed-db/complex-transactions';
+import { ZipFileButtons } from './ZipFileButtons';
 
 
 export type { GameEditorProps };
@@ -231,34 +231,6 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                             <div>
                                 version:
                                 {gameEditorState.db ? gameEditorState.db.version : 'no db'}
-                            </div>
-                            <div>
-                                <button onClick={() => {
-                                    if (gameEditorState.db) {
-                                        retrieveImageAssets(gameEditorState.db)().then(console.log)
-                                    }
-                                }
-                                }>log image assets</button>
-                                <button onClick={() => {
-                                    if (gameEditorState.db) {
-                                        retrieveSoundAssets(gameEditorState.db)().then(console.log)
-                                    }
-                                }
-                                }>log sound assets</button>
-                                <button onClick={() => {
-                                    if (gameEditorState.db) {
-                                        deleteAllImageAssets(gameEditorState.db)().then(console.log)
-                                    }
-                                }
-                                }>deleteAllImageAssets</button>
-                            </div>
-                            <div>
-                                <button onClick={() => {
-                                    if (gameEditorState.db) {
-                                        saveDesignAndAllAssetsToDb(gameEditorState.db)(gameDesign, 'quit-save', soundService, imageService)
-                                    }
-
-                                }}>save</button>
                             </div>
                         </div>
                     </SpritesProvider>
