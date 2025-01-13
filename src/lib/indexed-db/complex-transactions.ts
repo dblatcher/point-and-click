@@ -6,8 +6,7 @@ import { makeAssetRecordKey, retrieveImageAssets, retrieveSoundAssets } from "./
 import { GameEditorDatabase, SavedDesignKey } from "./types";
 import { retrieveSavedDesign } from "./design-store-transactions";
 
-// TO DO - think about how we can revoke the object URLs when removing from the services...
-const retrieveDesignAndAssets = (db: GameEditorDatabase) => async (
+export const retrieveDesignAndAssets = (db: GameEditorDatabase) => async (
     key: SavedDesignKey,
 ) => {
     const [
@@ -24,25 +23,6 @@ const retrieveDesignAndAssets = (db: GameEditorDatabase) => async (
     const soundAssets = setHrefsFromFiles(soundAssetResults)
 
     return { design, timestamp, imageAssets, soundAssets }
-}
-
-// TO DO - this function is no longer about the DB, but mostly about populating the services/
-// where does it live?
-export const retrieveDesignAndPopulateAssets = (db: GameEditorDatabase) => async (
-    savedDesignKey: SavedDesignKey,
-    soundService: SoundService,
-    imageService: ImageService,
-) => {
-    const { design, timestamp, imageAssets, soundAssets } = await retrieveDesignAndAssets(db)(savedDesignKey)
-
-    if (!design) {
-        return undefined
-    }
-    imageService.populate(imageAssets, 'DB')
-    soundService.populate(soundAssets, 'DB')
-    const date = new Date(timestamp)
-    console.log(`retrieved ${savedDesignKey} last saved at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
-    return design
 }
 
 export const storeDesignAndAllAssetsToDb = (db: GameEditorDatabase) => async (

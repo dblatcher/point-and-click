@@ -4,7 +4,7 @@ import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { GameDesign } from "@/definitions";
 import { GameEditorDatabase, SavedDesignKey, deleteSavedDesign, retrieveAllSavedDesigns } from "@/lib/indexed-db";
-import { retrieveDesignAndPopulateAssets, storeDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
+import { retrieveDesignAndAssets, storeDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
 import SaveIcon from '@mui/icons-material/Save';
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 
@@ -53,13 +53,16 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
         })
     }
     const loadFile = (savedDesignKey: SavedDesignKey) => {
-        retrieveDesignAndPopulateAssets(db)(savedDesignKey, soundService, imageService).then(gameDesign => {
-            console.log(gameDesign)
+        retrieveDesignAndAssets(db)(savedDesignKey).then(({design: gameDesign, timestamp, imageAssets, soundAssets}) => {
             if (!gameDesign) {
                 alert(`could not load ${savedDesignKey}`)
-                return
+                return undefined
             }
-            dispatchDesignUpdate({ type: 'load-new', gameDesign })
+            imageService.populate(imageAssets, 'DB')
+            soundService.populate(soundAssets, 'DB')
+            const date = new Date(timestamp)
+            console.log(`retrieved ${savedDesignKey} last saved at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
+            dispatchDesignUpdate({ type: 'load-new', gameDesign:gameDesign })
             setIsOpen(false)
         })
     }

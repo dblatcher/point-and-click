@@ -5,7 +5,7 @@ import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
 import { deleteAllImageAssets, deleteAllSoundAssets, deleteImageAsset, deleteSoundAsset, GameEditorDatabase, openDataBaseConnection, storeImageAsset, storeSoundAsset } from '@/lib/indexed-db';
-import { retrieveDesignAndPopulateAssets } from '@/lib/indexed-db/complex-transactions';
+import { retrieveDesignAndAssets } from '@/lib/indexed-db/complex-transactions';
 import { Sprite } from '@/lib/Sprite';
 import { AssetServiceUpdate } from '@/services/FileAssetService';
 import { ImageService } from '@/services/imageService';
@@ -49,18 +49,21 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         dispatchDesignUpdate({ type: 'set-db-instance', db })
         console.log(`DB opened, version ${db.version}`)
 
-        const quitSaveDesign = await retrieveDesignAndPopulateAssets(db)(
+        const {design, timestamp, imageAssets, soundAssets} = await retrieveDesignAndAssets(db)(
             'quit-save',
-            soundService,
-            imageService,
         )
 
-        if (!quitSaveDesign) {
+        if (!design) {
             setWaitingforDesignFromDb(false)
             return
         }
 
-        dispatchDesignUpdate({ type: 'load-new', gameDesign: quitSaveDesign })
+        imageService.populate(imageAssets, 'DB')
+        soundService.populate(soundAssets, 'DB')
+        const date = new Date(timestamp)
+        console.log(`retrieved quit saved from ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
+
+        dispatchDesignUpdate({ type: 'load-new', gameDesign: design })
         setWaitingforDesignFromDb(false)
 
     }, [dispatchDesignUpdate, usePrebuiltGame, imageService, soundService, setWaitingforDesignFromDb])
