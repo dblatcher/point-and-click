@@ -121,10 +121,4 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
             return undefined
         }
     }
-
-    listHref(): string[] {
-        return Object.values(this.data)
-            .filter(asset => typeof asset !== 'undefined')
-            .map(asset => asset.href)
-    }
 }
