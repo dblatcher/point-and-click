@@ -34,3 +34,5 @@ export interface GameEditorDBSchema extends DBSchema {
 }
 
 export type GameEditorDatabase = IDBPDatabase<GameEditorDBSchema>;
+
+export type DesignListing = { design: GameDesign, timestamp: number, key: SavedDesignKey }

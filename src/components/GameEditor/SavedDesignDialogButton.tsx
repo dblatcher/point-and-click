@@ -1,18 +1,15 @@
-import { Dialog, DialogContent, DialogContentText, DialogTitle, IconButton } from "@mui/material";
-import React, { useState } from "react";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
-import { GameDesign } from "@/definitions";
-import { GameEditorDatabase, SavedDesignKey, deleteSavedDesign, retrieveAllSavedDesigns } from "@/lib/indexed-db";
+import { DesignListing, GameEditorDatabase, SavedDesignKey, deleteSavedDesign, retrieveAllSavedDesigns } from "@/lib/indexed-db";
 import { retrieveDesignAndAssets, storeDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
 import SaveIcon from '@mui/icons-material/Save';
+import { Dialog, DialogContent, DialogContentText, DialogTitle, IconButton } from "@mui/material";
+import React, { useState } from "react";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 
 interface Props {
     db: GameEditorDatabase
 }
-
-type DesignListing = { design: GameDesign, timestamp: number, key: SavedDesignKey }
 
 
 export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) => {

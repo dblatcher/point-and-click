@@ -11,6 +11,7 @@ import { LayoutOption, layoutOptions, layouts } from "./game/layouts";
 import { LoadDesignButton } from "./LoadDesignButton";
 import { MarkDown } from "./MarkDown";
 import { PlayerHeaderContent } from "./PlayerHeaderContent";
+import { DbGameList } from "./DbGameList ";
 
 
 type State = {
@@ -119,6 +120,11 @@ export class GameDesignLoader extends React.Component<{}, State> {
                     <Card sx={{ padding: 2, marginX: 2 }}>
                         <MarkDown content={selectADesignContent} />
                     </Card>
+
+                    <DbGameList
+                        onLoad={this.loadGameDesign}
+                        onError={this.handleLoadFail}
+                    />
                 </>
             )}
 
