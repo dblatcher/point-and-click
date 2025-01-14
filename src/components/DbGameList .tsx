@@ -58,7 +58,12 @@ export const DbGameList = ({ onLoad, onError }: Props) => {
                                 backgroundColor: theme.palette.secondary.light,
                                 fontFamily: theme.typography.fontFamily,
                             }}>
-                            {design.id}, {key}
+                            <div>
+                                {design.id}, {key}
+                            </div>
+                            <div>
+                                {design.description ?? '[no description]'}
+                            </div>
                             <button onClick={() => {
                                 loadGameFromDb(key)
                             }}>load</button>

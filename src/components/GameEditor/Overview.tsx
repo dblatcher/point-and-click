@@ -12,9 +12,9 @@ import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
 import { HelpButton } from "./HelpButton";
 import { useAssets } from '@/context/asset-context';
+import { DelayedStringInput } from './DelayedStringInput';
 
-const formSchema = GameContentsDataSchema.pick({
-  id: true,
+const startingConditionsFormSchema = GameContentsDataSchema.pick({
   currentRoomId: true,
 }).merge(FixedGameInfoSchema.pick({
   openingSequenceId: true,
@@ -40,17 +40,27 @@ export const Overview = () => {
   }, [gameDesign.id, setHeaderContent])
 
   return (
-    <Stack>
+    <Stack gap={2}>
       <EditorHeading heading={mainTab?.label ?? 'main'} />
+
+      <EditorBox title='game details'>
+        <DelayedStringInput label='Game Id' value={gameDesign.id} optional
+          inputHandler={(id) => {
+            applyModification(`Change game id to "${id}"`, { id })
+          }} />
+        <DelayedStringInput label='description' value={gameDesign.description ?? ''} optional type='textArea'
+          inputHandler={(description) => {
+            applyModification(`Change description to "${description}"`, { description })
+          }} />
+      </EditorBox>
+
       <Box display={'flex'} flexWrap={'wrap'} gap={2} alignItems={'flex-start'}>
-        <EditorBox title="attributes">
+        <EditorBox title="starting conditions" contentBoxProps={{ minWidth: 160 }}>
           <SchemaForm
-            textInputDelay={2000}
-            schema={formSchema}
+            schema={startingConditionsFormSchema}
             data={gameDesign}
             changeValue={(value, field) => {
               switch (field.key) {
-                case 'id':
                 case 'currentRoomId':
                   if (typeof value === 'string') {
                     applyModification(`Change ${field.key} to "${value}"`, { [field.key]: value })
@@ -66,7 +76,6 @@ export const Overview = () => {
               }
             }}
             fieldAliases={{
-              id: 'Game ID',
               currentRoomId: 'Starting Room',
               openingSequenceId: 'Opening Sequence',
               openingStoryboardId: 'Title Board',

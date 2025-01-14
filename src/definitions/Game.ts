@@ -32,6 +32,7 @@ export const GameContentsDataSchema = z.object({
     flagMap: FlagMapSchema,
     currentRoomId: z.string(),
     id: z.string(),
+    description: z.string().optional().describe('a short description of your game'),
 })
 
 
