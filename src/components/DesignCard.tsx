@@ -1,37 +1,17 @@
-import { Card, Link, Typography, Avatar, Grid, useTheme, Button } from "@mui/material"
 import DownloadIcon from '@mui/icons-material/Download';
+import { Avatar, Button, Card, Grid, Link, Typography, useTheme } from "@mui/material";
 import { ReactNode } from "react";
-import { readGameFromZipFile } from "@/lib/zipFiles";
-import { GameDesign } from "@/definitions";
-import { ImageAsset, SoundAsset } from "@/services/assets";
 
 interface Props {
     title: string,
-    downloadUrl: string,
+    downloadUrl?: string,
     imageUrl?: string,
     content?: ReactNode,
-    onLoad: { (design: GameDesign, imageAssets: ImageAsset[], soundAssets: SoundAsset[]): void }
-    onError: { (message: string): void }
+    loadGame: { (): Promise<void> }
 }
 
 
-export const DesignCard = ({ title, downloadUrl, imageUrl, content, onLoad, onError }: Props) => {
-
-    const loadGameFromUrl = async () => {
-        try {
-            const response = await fetch(downloadUrl);
-            const blob = await response.blob()
-            const game = await readGameFromZipFile(blob)
-            if (game.success) {
-                onLoad(game.data.gameDesign, game.data.imageAssets, game.data.soundAssets)
-            } else {
-                onError(`Invalid game file from: ${downloadUrl}`)
-            }
-        } catch (err) {
-            console.warn(err)
-            onError(`Failed to load game from: ${downloadUrl}`)
-        }
-    }
+export const DesignCard = ({ title, downloadUrl, imageUrl, content, loadGame }: Props) => {
 
     const theme = useTheme();
     return (
@@ -44,14 +24,16 @@ export const DesignCard = ({ title, downloadUrl, imageUrl, content, onLoad, onEr
                     {imageUrl && <Avatar src={imageUrl} alt='' sx={{ bgcolor: theme.palette.primary.dark }} />}
                 </Grid>
                 <Grid item xs={10} justifyContent={'center'} display={'flex'}>
-                    <Button onClick={loadGameFromUrl}>
+                    <Button onClick={loadGame}>
                         <Typography variant="h4" textTransform={'none'}>{title}</Typography>
                     </Button>
                 </Grid>
                 <Grid item xs={1}>
-                    <Link href={downloadUrl} download title={`download ${title}`}>
-                        <DownloadIcon fontSize="large" color={'primary'} />
-                    </Link>
+                    {downloadUrl &&
+                        <Link href={downloadUrl} download title={`download ${title}`}>
+                            <DownloadIcon fontSize="large" color={'primary'} />
+                        </Link>
+                    }
                 </Grid>
             </Grid>
 

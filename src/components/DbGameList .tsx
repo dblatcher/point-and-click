@@ -1,9 +1,10 @@
 import { GameDesign } from "@/definitions";
-import { GameEditorDatabase, openDataBaseConnection, retrieveAllSavedDesigns, DesignListing, SavedDesignKey } from "@/lib/indexed-db";
+import { DesignListing, GameEditorDatabase, retrieveAllSavedDesigns, SavedDesignKey } from "@/lib/indexed-db";
 import { retrieveDesignAndAssets } from "@/lib/indexed-db/complex-transactions";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { Card, Grid, Stack, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
+import { DesignCard } from "./DesignCard";
 
 interface Props {
     onLoad: { (design: GameDesign, imageAssets: ImageAsset[], soundAssets: SoundAsset[]): void }
@@ -39,21 +40,11 @@ export const DbGameList = ({ onLoad, onError, db }: Props) => {
             <Grid item xs={9}>
                 <Stack gap={2}>
                     {designList.map(({ design, key }, index) => (
-                        <Card key={index}
-                            sx={{
-                                backgroundColor: theme.palette.secondary.light,
-                                fontFamily: theme.typography.fontFamily,
-                            }}>
-                            <div>
-                                {design.id}, {key}
-                            </div>
-                            <div>
-                                {design.description ?? '[no description]'}
-                            </div>
-                            <button onClick={() => {
-                                loadGameFromDb(key)
-                            }}>load</button>
-                        </Card>
+                        <DesignCard key={index}
+                            title={design.id}
+                            content={design.description}
+                            loadGame={() =>loadGameFromDb(key)}
+                        />
                     ))}
                 </Stack>
             </Grid>
