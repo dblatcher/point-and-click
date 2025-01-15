@@ -8,31 +8,17 @@ import { useEffect, useState } from "react";
 interface Props {
     onLoad: { (design: GameDesign, imageAssets: ImageAsset[], soundAssets: SoundAsset[]): void }
     onError: { (message: string): void }
+    db: GameEditorDatabase
 }
 
-export const DbGameList = ({ onLoad, onError }: Props) => {
+export const DbGameList = ({ onLoad, onError, db }: Props) => {
 
-    const [db, setDb] = useState<GameEditorDatabase | undefined>(undefined)
     const [designList, setDesignList] = useState<DesignListing[]>([])
     const theme = useTheme()
 
     useEffect(() => {
-
-        let referenceToDbWithinThisHook: GameEditorDatabase | undefined = undefined
-        openDataBaseConnection().then(db => {
-            if (!db) {
-                console.warn('no db')
-            }
-            referenceToDbWithinThisHook = db
-            setDb(db)
-            retrieveAllSavedDesigns(db)().then(setDesignList)
-        })
-
-        return () => {
-            referenceToDbWithinThisHook?.close()
-        }
-
-    }, [setDb])
+        retrieveAllSavedDesigns(db)().then(setDesignList)
+    }, [db, setDesignList])
 
     const loadGameFromDb = async (key: SavedDesignKey) => {
         if (!db) {

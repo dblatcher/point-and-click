@@ -1,27 +1,42 @@
 import selectADesignContent from "@/content/selectADesign.md";
-import { GameCondition, GameDesign } from "@/definitions";
-import { cloneData } from "@/lib/clone";
+import { GameDesign } from "@/definitions";
+import { GameEditorDatabase, openDataBaseConnection } from "@/lib/indexed-db";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { Alert, Card, Grid, Snackbar } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { DbGameList } from "./DbGameList ";
+import { LayoutOption, layoutOptions, layouts } from "./game/layouts";
 import { GameDesignPlayer } from "./GameDesignPlayer";
 import { GameList } from "./GameList";
 import { LayoutRadioButtons } from "./LayoutRadioButtons";
-import { LayoutOption, layoutOptions, layouts } from "./game/layouts";
 import { LoadDesignButton } from "./LoadDesignButton";
 import { MarkDown } from "./MarkDown";
 import { PlayerHeaderContent } from "./PlayerHeaderContent";
-import { DbGameList } from "./DbGameList ";
 
 
 export const GameDesignLoader: React.FunctionComponent = () => {
 
+    const [db, setDb] = useState<GameEditorDatabase | undefined>(undefined)
     const [design, setDesign] = useState<GameDesign | undefined>(undefined)
     const [imageAssets, setImageAssets] = useState<ImageAsset[] | undefined>(undefined)
     const [soundAssets, setSoundAssets] = useState<SoundAsset[] | undefined>(undefined)
     const [loadingSuccessMessage, setLoadingSuccessMessage] = useState<string | undefined>(undefined)
     const [loadingErrorMessage, setLoadingErrorMessage] = useState<string | undefined>(undefined)
     const [layoutOption, setLayoutOption] = useState<LayoutOption>(layoutOptions[0])
+
+    useEffect(() => {
+        let referenceToDbWithinThisHook: GameEditorDatabase | undefined = undefined
+        openDataBaseConnection().then(db => {
+            if (!db) {
+                console.warn('no db')
+            }
+            referenceToDbWithinThisHook = db
+            setDb(db)
+        })
+        return () => {
+            referenceToDbWithinThisHook?.close()
+        }
+    }, [setDb])
 
 
     const loadGameDesign = async (design: GameDesign, imageAssets: ImageAsset[], soundAssets: SoundAsset[]) => {
@@ -80,10 +95,12 @@ export const GameDesignLoader: React.FunctionComponent = () => {
                     <MarkDown content={selectADesignContent} />
                 </Card>
 
-                <DbGameList
-                    onLoad={loadGameDesign}
-                    onError={handleLoadFail}
-                />
+                {db && (
+                    <DbGameList
+                        db={db}
+                        onLoad={loadGameDesign}
+                        onError={handleLoadFail} />
+                )}
             </>
         )}
 
