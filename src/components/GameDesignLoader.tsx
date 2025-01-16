@@ -2,7 +2,7 @@ import selectADesignContent from "@/content/selectADesign.md";
 import { GameDesign } from "@/definitions";
 import { GameEditorDatabase, openDataBaseConnection } from "@/lib/indexed-db";
 import { ImageAsset, SoundAsset } from "@/services/assets";
-import { Alert, Card, Grid, Snackbar } from "@mui/material";
+import { Alert, Box, Card, Grid, Snackbar, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { DbGameList } from "./DbGameList ";
 import { LayoutOption, layoutOptions, layouts } from "./game/layouts";
@@ -71,37 +71,47 @@ export const GameDesignLoader: React.FunctionComponent = () => {
             setSoundAssets(undefined)
         }} />
         {!design && (
-            <>
-                <Grid container spacing={2} padding={2}
-                    justifyContent="center"
-                    alignItems="center">
-                    <Grid item xs={6} gap={2}>
+            <Box sx={{ overflowY: 'auto' }}>
+                <Grid container spacing={2} padding={2}>
+                    <Grid item xs={6} padding={2}>
+                        <Card sx={{ padding: 1 }}>
+                            <MarkDown content={selectADesignContent} />
+                        </Card>
+                    </Grid>
+                    <Grid item xs={6} display={'flex'} flexDirection={'column'} justifyContent={'space-around'}>
                         <LoadDesignButton
                             onLoad={loadGameDesign}
                             onError={handleLoadFail} />
-                    </Grid>
-                    <Grid item xs={6} gap={2}>
                         <LayoutRadioButtons
                             layoutOption={layoutOption}
                             setLayoutOption={setLayoutOption}
                         />
                     </Grid>
                 </Grid>
-                <GameList
-                    onLoad={loadGameDesign}
-                    onError={handleLoadFail}
-                />
-                <Card sx={{ padding: 2, marginX: 2 }}>
-                    <MarkDown content={selectADesignContent} />
-                </Card>
+                <Grid container spacing={2} padding={2}>
+                    <Grid item xs={12} lg={6} padding={2}>
+                        <Card sx={{ padding: 1 }}>
+                            <Typography>Sample Games</Typography>
+                            <GameList
+                                onLoad={loadGameDesign}
+                                onError={handleLoadFail}
+                            />
+                        </Card>
+                    </Grid>
 
-                {db && (
-                    <DbGameList
-                        db={db}
-                        onLoad={loadGameDesign}
-                        onError={handleLoadFail} />
-                )}
-            </>
+                    {db && (
+                        <Grid item xs={12} lg={6} padding={2}>
+                            <Card sx={{ padding: 1 }}>
+                                <Typography>Your Game Designs</Typography>
+                                <DbGameList
+                                    db={db}
+                                    onLoad={loadGameDesign}
+                                    onError={handleLoadFail} />
+                            </Card>
+                        </Grid>
+                    )}
+                </Grid>
+            </Box>
         )}
 
         {design && (
