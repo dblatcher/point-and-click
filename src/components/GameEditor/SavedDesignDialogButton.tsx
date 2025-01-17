@@ -3,14 +3,25 @@ import { useGameDesign } from "@/context/game-design-context";
 import { DesignListing, GameEditorDatabase, SavedDesignKey, deleteSavedDesign, retrieveAllSavedDesigns } from "@/lib/indexed-db";
 import { retrieveDesignAndAssets, storeDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
 import SaveIcon from '@mui/icons-material/Save';
-import { Dialog, DialogContent, DialogContentText, DialogTitle, IconButton } from "@mui/material";
+import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import React, { useState } from "react";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
+import { GameDesign } from "@/definitions";
+import DesignServicesOutlinedIcon from '@mui/icons-material/DesignServicesOutlined';
+import { ClearIcon, DeleteIcon } from "./material-icons";
+import { ButtonWithConfirm } from "./ButtonWithConfirm";
+import { getInitalDesign } from "@/lib/game-design-logic/initial-design";
 
 interface Props {
     db: GameEditorDatabase
 }
 
+// TO DO - deduplication display logic with DbGameList
+const generateSecondaryContent = (timestamp: number, gameDesign: GameDesign) => {
+    const { description } = gameDesign
+    const date = new Date(timestamp).toLocaleString();
+    return <><b>{date}</b>{' '}{description}</>
+}
 
 export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) => {
 
@@ -50,7 +61,7 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
         })
     }
     const loadFile = (savedDesignKey: SavedDesignKey) => {
-        retrieveDesignAndAssets(db)(savedDesignKey).then(({design: gameDesign, timestamp, imageAssets, soundAssets}) => {
+        retrieveDesignAndAssets(db)(savedDesignKey).then(({ design: gameDesign, timestamp, imageAssets, soundAssets }) => {
             if (!gameDesign) {
                 alert(`could not load ${savedDesignKey}`)
                 return undefined
@@ -59,7 +70,7 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
             soundService.populate(soundAssets, 'DB')
             const date = new Date(timestamp)
             console.log(`retrieved ${savedDesignKey} last saved at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
-            dispatchDesignUpdate({ type: 'load-new', gameDesign:gameDesign })
+            dispatchDesignUpdate({ type: 'load-new', gameDesign: gameDesign })
             setIsOpen(false)
         })
     }
@@ -71,36 +82,79 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
         </IconButton>
 
         <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-            <DialogTitle>Saved designs</DialogTitle>
+            <DialogTitle sx={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
+                <span>Saved designs</span>
+                <IconButton onClick={() => setIsOpen(false)}><ClearIcon /></IconButton>
+            </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Database V{db.version}
-                </DialogContentText>
-                <DialogContentText>
-                    {designList.length} saved designs
+                    Database V{db.version}, {designList.length} saved designs
                 </DialogContentText>
 
-                {designList.map(({ key, design, timestamp }) => (
-                    <div key={key}>
-                        <div>
-                            <span>{key}</span>
-                            <span>--{design.id}</span>
-                            <span>--{timestamp}</span>
-                        </div>
-                        <div>
-                            <button onClick={() => deleteFile(key)}>delete</button>
-                            <button onClick={() => saveOverFile(key)}>save over</button>
-                            <button onClick={() => loadFile(key)}>load</button>
-                        </div>
-                    </div>
-                ))}
 
+                <List dense>
+                    {designList.map(({ key, design, timestamp }) => (
+                        <ListItem key={key}
+                            secondaryAction={
+                                <>
+                                    {gameDesign.id === design.id && (
+                                        <IconButton onClick={() => saveOverFile(key)}>
+                                            <SaveIcon fontSize="large" />
+                                        </IconButton>
+                                    )}
+                                    <ButtonWithConfirm
+                                        label={`delete saved design "${key}"`}
+                                        confirmationText={`Are you sure you want to delete the saved design "${key}"? THIS ACTION CANNOT BE UNDONE.`}
+                                        useIconButton
+                                        buttonProps={{ color: 'warning' }}
+                                        onClick={() => deleteFile(key)}
+                                        icon={<DeleteIcon fontSize="large" />}
+                                    />
+                                </>
+
+                            }
+                        >
+                            <ListItemButton onClick={() => loadFile(key)}>
+                                <ListItemAvatar>
+                                    <Avatar sx={{ bgcolor: 'primary.dark' }} ><DesignServicesOutlinedIcon /> </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={`${design.id} [${key}]`}
+                                    secondary={generateSecondaryContent(timestamp, design)}
+                                />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+
+                </List>
+
+
+            </DialogContent>
+            <DialogActions>
                 <ButtonWithTextInput
-                    label="create new save"
+                    label="create new save file"
                     dialogTitle="enter save file name"
                     onEntry={handleNewSaveInput}
+                    buttonProps={{
+                        startIcon: <SaveIcon />
+                    }}
                 />
-            </DialogContent>
+
+                <ButtonWithConfirm
+                    label="reset editor"
+                    onClick={() => {
+                        dispatchDesignUpdate({ type: 'load-new', gameDesign: getInitalDesign() })
+                        soundService.populate([])
+                        imageService.populate([])
+                        setIsOpen(false)
+                    }}
+                    confirmationText={`Are you sure you want to reset the editor to a blank game? THIS ACTION CANNOT BE UNDONE.`}
+                    buttonProps={{
+                        startIcon: <DeleteIcon />,
+                        color: "warning"
+                    }}
+                />
+            </DialogActions>
         </Dialog>
     </>
 

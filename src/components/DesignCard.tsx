@@ -1,6 +1,6 @@
-import DownloadIcon from '@mui/icons-material/Download';
 import DesignServicesOutlinedIcon from '@mui/icons-material/DesignServicesOutlined';
-import { Avatar, ButtonProps, IconButton, IconButtonProps, ListItem, ListItemAvatar, ListItemButton, ListItemText, useTheme } from "@mui/material";
+import DownloadIcon from '@mui/icons-material/Download';
+import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemButton, ListItemText, useTheme } from "@mui/material";
 import { ReactNode } from "react";
 
 interface Props {

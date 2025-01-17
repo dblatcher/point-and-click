@@ -151,13 +151,6 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                 <MainWindow />
                             </Box>
                         </Container>
-                        <div>
-                            <h2>db test stuff</h2>
-                            <div>
-                                version:
-                                {gameEditorState.db ? gameEditorState.db.version : 'no db'}
-                            </div>
-                        </div>
                     </SpritesProvider>
                 </AssetsProvider>
             </GameDesignProvider>
