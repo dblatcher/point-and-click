@@ -1,4 +1,4 @@
-import { ImageAsset, ImageAssetSchema, SoundAsset, SoundAssetSchema, } from "@/services/assets";
+import { assetToFile, ImageAsset, ImageAssetSchema, SoundAsset, SoundAssetSchema, } from "@/services/assets";
 import { ImageService } from "@/services/imageService";
 import { SoundService } from "@/services/soundService";
 import JSZip from "jszip";
@@ -57,7 +57,7 @@ const extractJsonFile = async (
   }
 };
 
-const prepareAssetZip = async (
+const prepareAssetZipFromService = async (
   type: 'images' | 'sounds',
   service: ImageService | SoundService,
   existingZip?: JSZip,
@@ -89,12 +89,43 @@ const prepareAssetZip = async (
   return zip;
 };
 
+const prepareAssetZipFromAssets = async(
+  type: 'images' | 'sounds',
+  assets: ImageAsset[] | SoundAsset[],
+  existingZip?: JSZip,
+) => {
+  const zip = existingZip || new JSZip();
+  const assetsBlob = await dataToBlob(
+    assets.map((asset) => ({ ...asset, href: "" }))
+  );
+
+  if (!assetsBlob) {
+    throw "failed to build assets file";
+  }
+
+  zip.file(FILENAMES[type], assetsBlob);
+
+  const files = await Promise.all(
+    assets.map(assetToFile)
+  );
+
+  if (files.includes(undefined)) {
+    throw `failed to build all asset(${type}) files`;
+  }
+
+  (files as File[]).forEach((file) => {
+    zip.file(`${type}/${file.name}`, file);
+  });
+
+  return zip;
+}
+
 export const buildAssetZipBlob = async (
   type: 'images' | 'sounds',
   service: ImageService | SoundService
 ): Promise<ZipBuildResult> => {
   try {
-    const zip = await prepareAssetZip(type, service);
+    const zip = await prepareAssetZipFromService(type, service);
     const blob = await zip.generateAsync({ type: "blob" });
     return {
       success: true,
@@ -239,8 +270,8 @@ export const buildGameZipBlob = async (
 ): Promise<ZipBuildResult> => {
   try {
     const zip = new JSZip()
-    await prepareAssetZip('images', imageService, zip)
-    await prepareAssetZip('sounds', soundService, zip)
+    await prepareAssetZipFromService('images', imageService, zip)
+    await prepareAssetZipFromService('sounds', soundService, zip)
     await prepareGameDataZip(gameDesign, zip)
 
     const blob = await zip.generateAsync({ type: "blob" });
@@ -320,3 +351,28 @@ export const readGameFromZipFile = async (
     }
   };
 };
+
+
+export const buildGameZipBlobFromAssets =async (
+  gameDesign: GameDesign,
+  imageAssets: ImageAsset[],
+  soundAssets: SoundAsset[],
+): Promise<ZipBuildResult> => {
+  try {
+    const zip = new JSZip()
+    await prepareAssetZipFromAssets('images', imageAssets, zip)
+    await prepareAssetZipFromAssets('sounds', soundAssets, zip)
+    await prepareGameDataZip(gameDesign, zip)
+
+    const blob = await zip.generateAsync({ type: "blob" });
+    return {
+      success: true,
+      blob,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error as string,
+    };
+  }
+}

@@ -72,3 +72,14 @@ export const getFrameDims = (asset: ImageAsset): AspectRatio | undefined => {
     }
     return frameDims
 }
+
+export const assetToFile = async (asset: FileAsset): Promise<File | undefined> => {
+    try {
+        const response = await fetch(asset.href)
+        const blob = await response.blob()
+        return new File([blob], asset.id, { type: getMimeType(asset) })
+    } catch (err) {
+        console.warn(err)
+        return undefined
+    }
+}
