@@ -1,10 +1,10 @@
-import { Box, Card, Grid, Stack, Typography } from '@mui/material'
-import { LinkButton } from '@/components/LinkButton'
-import { PageLayout } from '@/components/PageLayout'
+import { LinkButton } from '@/components/LinkButton';
+import { PageLayout } from '@/components/PageLayout';
+import { Box, Card, Grid, Stack } from '@mui/material';
 
-import content from "@/content/homepage.md";
-import featuresAndDetails from "@/content/featuresAndDetails.md";
 import { MarkDown } from '@/components/MarkDown';
+import featuresAndDetails from "@/content/featuresAndDetails.md";
+import content from "@/content/homepage.md";
 
 
 export default function Home() {

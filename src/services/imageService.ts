@@ -1,4 +1,4 @@
-import { FileAssetService, UpdateSource } from "./FileAssetService";
+import { FileAssetService } from "./FileAssetService";
 import { ImageAsset } from "./assets";
 
 

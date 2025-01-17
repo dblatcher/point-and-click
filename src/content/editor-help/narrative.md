@@ -1,8 +1,8 @@
 **Narratives** are textual descriptions of something happening in the game, such as a **Sequence**, **Order** carried out by an **Actor** or **Consequence** of an **Interaction** or **Conversation Choice**.
 
-They are displayed:
+They are used:
  - in text-based mode. If an **Order** does not have a sequence a basic description (eg "Mario does walk") is printed to the feed instead.
- - ****TO DO**** in narration blocks / transition scenes
+ - as the text in **Story Boards**.
 
 **Narratives** can also be added to **Rooms** to provide an texttual description of the location in text-based mode.
 

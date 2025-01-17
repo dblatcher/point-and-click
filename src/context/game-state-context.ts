@@ -8,7 +8,6 @@ import { SoundService } from '@/services/soundService'
 
 const gameStateContext = createContext<{
     gameState: GameState,
-    // TO DO - only need the enhanced dispatcher
     updateGameState: { (action: GameStateAction | ActionWithoutProp): void },
     gameProps: Readonly<GameProps>,
 }>(
