@@ -63,25 +63,27 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
     }
 
     async getAllWithFiles() {
-        const assets=this.getAll()
+        const assets = this.getAll()
         const assetsWithFiles = await Promise.all(assets.map(async (asset) => {
             const file = await this.getFile(asset.id)
             if (!file) {
                 return null
-            } 
-            return {asset, file}
+            }
+            return { asset, file }
         }))
 
-        return  assetsWithFiles.flatMap(item => item ? item :[])
+        return assetsWithFiles.flatMap(item => item ? item : [])
     }
 
     remove(ids: string | string[], source?: UpdateSource): void {
         if (!Array.isArray(ids)) {
             ids = [ids]
         }
-        // TO DO - need to revoke object URL before deleting the assets
         ids.forEach(id => {
             if (id in this.data) {
+                // TO DO - revoking the object URL here works, but messes up the 
+                // asset tools. Need to think about the UI
+                // if (this.data[id]?.href) { URL.revokeObjectURL(this.data[id].href) }
                 delete this.data[id]
             }
         })
@@ -101,6 +103,7 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
     }
 
     populate(items: FileAssetType[], source?: UpdateSource) {
+        this.getAll().map(asset => asset.href).map(href => URL.revokeObjectURL(href))
         this.data = {}
         items.forEach(item => this.data[item.id] = item)
         this.postAdd(items)

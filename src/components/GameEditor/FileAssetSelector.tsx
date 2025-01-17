@@ -1,7 +1,7 @@
 import { findById, listIds } from "@/lib/util";
 import { FileAsset } from "@/services/assets";
 import { DeleteIcon } from "@/components/GameEditor/material-icons";
-import { Box, Grid, IconButton, List, ListItemButton, ListItemText } from "@mui/material";
+import { Box, Grid, IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { StringInput } from "../SchemaForm/StringInput";
@@ -83,16 +83,21 @@ export const FileAssetSelector = ({
             return (
                 <EditorBox title={legend}>
                     <StringInput label="search" value={searchInput} inputHandler={setSearchInput} />
-                    <List dense>
+                    <List dense disablePadding>
                         {searchedItemsInFilter.map(({ id }) =>
-                            <ListItemButton
-                                selected={id === currentSelection}
-                                key={id} onClick={() => { handleSelect(id) }}>
-                                <ListItemText primary={id} />
-                                <IconButton edge="end" aria-label="delete" onClick={() => { deleteItem(id) }}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItemButton>
+                            <ListItem key={id} disablePadding disableGutters
+                                secondaryAction={
+                                    <IconButton edge="end" aria-label="delete" onClick={() => { deleteItem(id) }}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                }
+                            >
+                                <ListItemButton
+                                    selected={id === currentSelection}
+                                    onClick={() => { handleSelect(id) }}>
+                                    <ListItemText primary={id} />
+                                </ListItemButton>
+                            </ListItem>
                         )}
                     </List>
                 </EditorBox>
