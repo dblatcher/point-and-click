@@ -2,6 +2,7 @@
  - basic game engine supports customisable verbs, inventory based-interactions and conversation trees
  - the editor is functional
  - Text-based mode: play your graphical adventure game with no graphics!
+ - save your designs locally in your browser 
 
 ### Acknowledgments and attribution
 

@@ -25,7 +25,7 @@ export default function Home() {
           <Stack gap={2}>
             <LinkButton href="./game-loader" variant='contained'>game loader</LinkButton>
             <LinkButton href="./prebuilt-game" variant='contained'>prebuilt game</LinkButton>
-            <LinkButton href="./editor" variant='contained'>create game</LinkButton>
+            <LinkButton href="./editor" variant='contained'>game designer</LinkButton>
           </Stack>
         </Grid>
       </Grid>
