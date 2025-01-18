@@ -2,7 +2,7 @@ import castleLifeBlurb from "@/content/castleLifeBlurb.md";
 import { GameDesign } from "@/definitions";
 import { readGameFromZipFile } from "@/lib/zipFiles";
 import { ImageAsset, SoundAsset } from "@/services/assets";
-import { DesignCard } from "./DesignCard";
+import { GameLoaderDesignItem } from "./GameLoaderDesignItem";
 import { MarkDown } from "./MarkDown";
 import { List } from "@mui/material";
 
@@ -42,14 +42,14 @@ export const GameList = (props: {
 
     return (
         <List dense>
-            <DesignCard title="Castle Life"
+            <GameLoaderDesignItem title="Castle Life"
                 downloadUrl="/assets/castle-life.game.zip"
                 imageUrl="/assets/sword.png"
                 loadGame={loadGameFromUrlFunction("/assets/castle-life.game.zip", onLoad, onError)}
                 content={
                     castleLifeBlurb
                 } />
-            <DesignCard title="Test Game"
+            <GameLoaderDesignItem title="Test Game"
                 downloadUrl="/assets/THE_TEST_GAME.game.zip"
                 imageUrl="/assets/things/tube.png"
                 loadGame={loadGameFromUrlFunction("/assets/THE_TEST_GAME.game.zip", onLoad, onError)}

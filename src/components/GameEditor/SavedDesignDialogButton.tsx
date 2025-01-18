@@ -1,16 +1,16 @@
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
+import { GameDesign } from "@/definitions";
+import { getInitalDesign } from "@/lib/game-design-logic/initial-design";
 import { DesignListing, GameEditorDatabase, SavedDesignKey, deleteSavedDesign, retrieveAllSavedDesigns } from "@/lib/indexed-db";
 import { retrieveDesignAndAssets, storeDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
 import SaveIcon from '@mui/icons-material/Save';
-import { Avatar, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, List } from "@mui/material";
 import React, { useState } from "react";
-import { ButtonWithTextInput } from "./ButtonWithTextInput";
-import { GameDesign } from "@/definitions";
-import DesignServicesOutlinedIcon from '@mui/icons-material/DesignServicesOutlined';
-import { ClearIcon, DeleteIcon } from "./material-icons";
+import { DescriptionWithSaveTime, DesignListItem } from "../DesignListItem";
 import { ButtonWithConfirm } from "./ButtonWithConfirm";
-import { getInitalDesign } from "@/lib/game-design-logic/initial-design";
+import { ButtonWithTextInput } from "./ButtonWithTextInput";
+import { ClearIcon, DeleteIcon } from "./material-icons";
 
 interface Props {
     db: GameEditorDatabase
@@ -94,11 +94,14 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
 
                 <List dense>
                     {designList.map(({ key, design, timestamp }) => (
-                        <ListItem key={key}
+                        <DesignListItem key={key}
+                            onClick={() => loadFile(key)}
+                            title={`${design.id} [${key}]`}
+                            description={<DescriptionWithSaveTime timestamp={timestamp} gameDesign={design} />}
                             secondaryAction={
                                 <>
                                     {gameDesign.id === design.id && (
-                                        <IconButton onClick={() => saveOverFile(key)}>
+                                        <IconButton onClick={() => saveOverFile(key)} title={`save over ${key}`}>
                                             <SaveIcon fontSize="large" />
                                         </IconButton>
                                     )}
@@ -111,19 +114,8 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
                                         icon={<DeleteIcon fontSize="large" />}
                                     />
                                 </>
-
                             }
-                        >
-                            <ListItemButton onClick={() => loadFile(key)}>
-                                <ListItemAvatar>
-                                    <Avatar sx={{ bgcolor: 'primary.dark' }} ><DesignServicesOutlinedIcon /> </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary={`${design.id} [${key}]`}
-                                    secondary={generateSecondaryContent(timestamp, design)}
-                                />
-                            </ListItemButton>
-                        </ListItem>
+                        />
                     ))}
 
                 </List>
