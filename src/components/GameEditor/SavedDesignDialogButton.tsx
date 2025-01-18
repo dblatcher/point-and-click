@@ -71,6 +71,7 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
             const date = new Date(timestamp)
             console.log(`retrieved ${savedDesignKey} last saved at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
             dispatchDesignUpdate({ type: 'load-new', gameDesign: gameDesign })
+            storeDesignAndAllAssetsToDb(db)(gameDesign, 'quit-save', soundService, imageService)
             setIsOpen(false)
         })
     }
