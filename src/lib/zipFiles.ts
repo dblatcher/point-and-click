@@ -75,7 +75,7 @@ const prepareAssetZipFromService = async (
   zip.file(FILENAMES[type], assetsBlob);
 
   const files = await Promise.all(
-    assets.map((asset) => service.getFile(asset.id))
+    assets.map(assetToFile)
   );
 
   if (files.includes(undefined)) {

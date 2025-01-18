@@ -1,6 +1,6 @@
-import { TypedEmitter } from "tiny-typed-emitter";
-import { getMimeType } from "./assets";
 import { FileAsset } from "@/services/assets";
+import { TypedEmitter } from "tiny-typed-emitter";
+import { assetToFile } from "./assets";
 
 type UpdateAction = 'add' | 'remove' | 'populate'
 export type UpdateSource = 'DB' | 'ZIP'
@@ -55,7 +55,7 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         if (!asset) {
             return {}
         }
-        const file = await this.getFile(id)
+        const file = await assetToFile(asset)
         if (!file) {
             return {}
         }
@@ -65,7 +65,7 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
     async getAllWithFiles() {
         const assets = this.getAll()
         const assetsWithFiles = await Promise.all(assets.map(async (asset) => {
-            const file = await this.getFile(asset.id)
+            const file = await assetToFile(asset)
             if (!file) {
                 return null
             }
@@ -108,20 +108,5 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         items.forEach(item => this.data[item.id] = item)
         this.postAdd(items)
         this.reportUpdate('populate', items.map(item => item.id), source)
-    }
-
-    // TO DO store the files when loaded rather than 
-    // creating every time
-    getFile = async (id: string): Promise<File | undefined> => {
-        const asset = this.get(id)
-        if (!asset) { return undefined }
-        try {
-            const response = await fetch(asset.href)
-            const blob = await response.blob()
-            return new File([blob], asset.id, { type: getMimeType(asset) })
-        } catch (err) {
-            console.warn(err)
-            return undefined
-        }
     }
 }

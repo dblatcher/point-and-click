@@ -4,8 +4,7 @@ import { ImageService } from '@/services/imageService';
 import { SoundService } from '@/services/soundService';
 
 
-export const handleImageUpdateFunction = (imageService: ImageService, db?: GameEditorDatabase,) => (update: AssetServiceUpdate) => {
-    console.log('an image update', update)
+export const handleImageUpdateFunction = (imageService: ImageService, db?: GameEditorDatabase) => (update: AssetServiceUpdate) => {
     if (!db) { return }
 
     if (update.source === 'DB') {
@@ -41,36 +40,33 @@ export const handleImageUpdateFunction = (imageService: ImageService, db?: GameE
     }
 }
 
-export const handleSoundUpdateFunction = (soundService: SoundService, db?: GameEditorDatabase,) => (update: AssetServiceUpdate) => {
-    console.log('an sound update', update)
+export const handleSoundUpdateFunction = (soundService: SoundService, db?: GameEditorDatabase) => (update: AssetServiceUpdate) => {
     if (!db) { return }
 
     if (update.source === 'DB') {
         return
     }
 
-    if (update.action === 'populate') {
-        Promise.all([
-            deleteAllSoundAssets(db)()
-        ]).then(() => {
-            update.ids.forEach(id => {
-                soundService.getWithFile(id).then(({ asset, file }) => {
-                    if (asset && file) {
-                        storeSoundAsset(db)(asset, file)
-                    }
-                })
-            })
-        })
-    }
-
-    if (update.action === 'add') {
-        update.ids.forEach(id => {
+    const storeFromIds = (ids: string[]) => {
+        ids.forEach(id => {
             soundService.getWithFile(id).then(({ asset, file }) => {
                 if (asset && file) {
                     storeSoundAsset(db)(asset, file)
                 }
             })
         })
+    }
+
+    if (update.action === 'populate') {
+        Promise.all([
+            deleteAllSoundAssets(db)()
+        ]).then(() => {
+            storeFromIds(update.ids)
+        })
+    }
+
+    if (update.action === 'add') {
+        storeFromIds(update.ids)
     }
 
     if (update.action === 'remove') {
