@@ -1,6 +1,5 @@
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
-import { GameDesign } from "@/definitions";
 import { getInitalDesign } from "@/lib/game-design-logic/initial-design";
 import { DesignListing, GameEditorDatabase, SavedDesignKey, deleteSavedDesign, retrieveAllSavedDesigns } from "@/lib/indexed-db";
 import { retrieveDesignAndAssets, storeDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
@@ -16,18 +15,9 @@ interface Props {
     db: GameEditorDatabase
 }
 
-// TO DO - deduplication display logic with DbGameList
-const generateSecondaryContent = (timestamp: number, gameDesign: GameDesign) => {
-    const { description } = gameDesign
-    const date = new Date(timestamp).toLocaleString();
-    return <><b>{date}</b>{' '}{description}</>
-}
-
 export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) => {
-
     const { gameDesign, dispatchDesignUpdate } = useGameDesign()
     const { imageService, soundService } = useAssets()
-
     const [isOpen, setIsOpen] = useState(false)
     const [designList, setDesignList] = useState<DesignListing[]>([])
 
@@ -37,7 +27,6 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
         setIsOpen(true)
         refreshList()
     }
-
     const handleNewSaveInput = (name: string) => {
         const savedDesignKey: SavedDesignKey = `SAVE_${name.toUpperCase()}`
         if (designList.some(design => design.key === savedDesignKey)) {
@@ -48,13 +37,11 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
             refreshList()
         })
     }
-
     const saveOverFile = (savedDesignKey: SavedDesignKey) => {
         storeDesignAndAllAssetsToDb(db)(gameDesign, savedDesignKey, soundService, imageService).then(() => {
             refreshList()
         })
     }
-
     const deleteFile = (savedDesignKey: SavedDesignKey) => {
         deleteSavedDesign(db)(savedDesignKey).then(() => {
             refreshList()
@@ -77,7 +64,6 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
     }
 
     return <>
-
         <IconButton disabled={!db} onClick={openAndFetch}>
             <SaveIcon />
         </IconButton>
@@ -91,8 +77,6 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
                 <DialogContentText>
                     Database V{db.version}, {designList.length} saved designs
                 </DialogContentText>
-
-
                 <List dense>
                     {designList.map(({ key, design, timestamp }) => (
                         <DesignListItem key={key}
@@ -118,10 +102,7 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
                             }
                         />
                     ))}
-
                 </List>
-
-
             </DialogContent>
             <DialogActions>
                 <ButtonWithTextInput
@@ -132,7 +113,6 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
                         startIcon: <SaveIcon />
                     }}
                 />
-
                 <ButtonWithConfirm
                     label="reset editor"
                     onClick={() => {
@@ -150,5 +130,4 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
             </DialogActions>
         </Dialog>
     </>
-
 }
