@@ -13,6 +13,10 @@ const addNewOrUpdate = <T extends GameDataItem>(newItem: T, list: T[]): T[] => {
 }
 
 export const addGameDataItem = (gameDesign: GameDesign, property: GameDataItemType, data: GameDataItem) => {
+    if (!gameDesign[property]) {
+        gameDesign[property] = []
+    }
+
     addNewOrUpdate(data, gameDesign[property] ?? [])
     return gameDesign
 }
