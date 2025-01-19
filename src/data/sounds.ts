@@ -23,17 +23,7 @@ export const soundAssets: SoundAsset[] = [
     },
     {
         id: 'sparrows',
-        href: './assets/sounds/Arremon_abeillei_-_Black-capped_Sparrow_XC250490.mp3',
-        category: 'music',
-    },
-    {
-        id: 'B4organII',
-        href: './assets/sounds/B4organII.ogg',
-        category: 'music',
-    },
-    {
-        id: '2step_pattern1',
-        href: './assets/sounds/2step_pattern1.ogg',
+        href: './assets/sounds/birds-short.mp3',
         category: 'music',
     },
 ]

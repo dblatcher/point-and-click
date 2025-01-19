@@ -21,6 +21,4 @@ Please see the original source pages for licensing details.
 Please consider [donating to wikimedia](https://donate.wikimedia.org/wiki/Ways_to_Give)!
 
 Sample audio tracks:
-- https://commons.wikimedia.org/wiki/File:251progressie.ogg
-- https://commons.wikimedia.org/wiki/File:B4organII.ogg
-- https://commons.wikimedia.org/wiki/File:Arremon_abeillei_-_Black-capped_Sparrow_XC250490.mp3
+- https://commons.wikimedia.org/wiki/File:Arremon_abeillei_-_Black-capped_Sparrow_XC250490.mp3 (modified)

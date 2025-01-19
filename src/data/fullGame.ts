@@ -31,10 +31,6 @@ export const prebuiltGameDesign: GameDesign = {
     storyBoards: [
         {
             id: 'test-board',
-            sound: {
-                soundId: 'B4organII'
-            },
-            progression: 'sound',
             pages: [
                 {
                     title: "Welcome to the test game",
