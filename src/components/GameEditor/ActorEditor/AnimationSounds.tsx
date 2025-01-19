@@ -45,7 +45,7 @@ const ActorFramePreview = (props: { frame: SpriteFrame, actor: ActorData }) => {
 export const AnimationSounds: React.FunctionComponent<Props> = ({ actor, changeSoundMap }) => {
     const [activeAnimationKey, setActiveAnimationKey] = useState<string | undefined>(undefined)
     const { soundAssets } = useAssets()
-    const [soundId, setSoundId] = useState(soundAssets[0].id)
+    const [soundId, setSoundId] = useState(soundAssets[0]?.id)
     const sprites = useSprites()
     const { gameDesign } = useGameDesign()
     const sprite = findById(actor.sprite, sprites)
