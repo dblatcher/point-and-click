@@ -9,6 +9,7 @@ const orderBase = {
 export const MoveOrderSchema = z.object({
     ...orderBase,
     type: z.literal('move'),
+    roomId: z.string().optional(),
     pathIsSet: z.optional(z.boolean()),
     doPendingInteractionWhenFinished: z.optional(z.boolean()),
     steps: z.array(z.object({

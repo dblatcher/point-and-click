@@ -2,7 +2,7 @@ import { findValueAsType } from "@/lib/util";
 import { Order, orderTypes } from "@/definitions/Order";
 import { getDefaultOrder } from "../defaults";
 import { OrderWithoutStepsForm } from "./OrderWithoutStepsForm";
-import { OrderWithStepsForm } from "./OrderWithStepsForm";
+import { MoveOrderForm } from "./MoveOrderForm";
 import { Box } from "@mui/material";
 import { SelectInput } from "@/components/SchemaForm/inputs";
 import { NarrativeEditor } from "../NarrativeEditor";
@@ -36,7 +36,7 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
 
         switch (data.type) {
             case "move":
-                return <OrderWithStepsForm
+                return <MoveOrderForm
                     data={data}
                     animationSuggestions={animationSuggestions}
                     updateData={updateData}

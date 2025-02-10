@@ -59,11 +59,14 @@ export const StringInput: FunctionComponent<StringInputProps> = (props) => {
                     props.inputHandler(value);
                 }
                 if (reason === 'selectOption') {
-                   handleSuggestion?.(value) 
+                    handleSuggestion?.(value)
                 }
             }}
             value={props.value}
             renderInput={(params) => <TextField
+                sx={props.minWidth ? {
+                    minWidth: props.minWidth
+                } : undefined}
                 {...params}
                 {...commonProps}
             />}
