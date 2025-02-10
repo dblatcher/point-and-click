@@ -7,6 +7,7 @@ import { Box } from "@mui/material";
 import { SelectInput } from "@/components/SchemaForm/inputs";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { Narrative } from "@/definitions/BaseTypes";
+import { ActOrderForm } from "./ActOrderForm";
 
 
 interface Props {
@@ -31,21 +32,33 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
         updateData({ ...data, narrative: newNarrative })
     }
 
-    const form = ('steps' in data) ? (
-        <OrderWithStepsForm
-            data={data}
-            animationSuggestions={animationSuggestions}
-            updateData={updateData}
-        />
-    ) : (
-        <OrderWithoutStepsForm
-            data={data}
-            animationSuggestions={animationSuggestions}
-            targetIdOptions={targetIdOptions}
-            targetIdDescriptions={targetIdDescriptions}
-            updateData={updateData}
-        />
-    )
+    const buildForm = () => {
+
+        switch (data.type) {
+            case "move":
+                return <OrderWithStepsForm
+                    data={data}
+                    animationSuggestions={animationSuggestions}
+                    updateData={updateData}
+                />
+            case "act":
+                return <ActOrderForm
+                    data={data}
+                    animationSuggestions={animationSuggestions}
+                    updateData={updateData}
+                />
+            case "say":
+            case "goTo":
+                return <OrderWithoutStepsForm
+                    data={data}
+                    animationSuggestions={animationSuggestions}
+                    targetIdOptions={targetIdOptions}
+                    targetIdDescriptions={targetIdDescriptions}
+                    updateData={updateData}
+                />
+        }
+    }
+
 
     return (
         <Box component={'article'} sx={{ flex: 1, minWidth: 400, paddingY: 2 }}>
@@ -54,7 +67,7 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
                 options={orderTypes}
                 inputHandler={changeType}
             />
-            {form}
+            {buildForm()}
             <NarrativeEditor narrative={data.narrative} update={updateNarrative} />
         </Box>
     )
