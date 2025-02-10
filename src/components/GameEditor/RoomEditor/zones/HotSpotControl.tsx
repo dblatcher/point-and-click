@@ -6,7 +6,7 @@ import { Box, ButtonGroup, Divider, Stack } from "@mui/material";
 import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
 import { useRoomClickEffect } from "../ClickEffect";
 import { ShapeControl } from "./ShapeControl";
-import { WalkToControl, XYControl } from "./XYControl";
+import { WalkToControl, XYControl } from "../../XYControl";
 
 interface Props {
     roomId: string;

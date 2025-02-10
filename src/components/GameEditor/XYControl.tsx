@@ -1,7 +1,7 @@
 
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { Box, IconButton } from "@mui/material";
-import { ClickPointIcon, ClickPointActiveIcon } from "../../material-icons";
+import { ClickPointIcon, ClickPointActiveIcon } from "./material-icons";
 import { ReactNode } from "react";
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 

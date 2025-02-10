@@ -2,10 +2,9 @@ import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { OptionalStringInput } from "@/components/SchemaForm/OptionalStringInput";
 import { Zone } from "@/definitions";
 import { Divider, Stack } from "@mui/material";
-import { EditorBox } from "../../EditorBox";
+import { XYControl } from "../../XYControl";
 import { useRoomClickEffect } from "../ClickEffect";
 import { ShapeControl } from "./ShapeControl";
-import { XYControl } from "./XYControl";
 
 interface Props {
     zone: Zone;

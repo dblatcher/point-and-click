@@ -5,7 +5,7 @@ import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { ArrayControl } from "../../ArrayControl";
 import { ClickPointIcon, ClickPointActiveIcon } from "../../material-icons";
 import { useRoomClickEffect } from "../ClickEffect";
-import { XYControl } from "./XYControl";
+import { XYControl } from "../../XYControl";
 
 interface Props {
     shape: HotspotZone | Zone;

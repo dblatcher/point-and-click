@@ -7,7 +7,7 @@ import { getTargetPoint, getViewAngleCenteredOn, putActorsInDisplayOrder } from 
 import { findById, listIds } from "@/lib/util";
 import { Alert, Box, Slider, Stack, Typography } from "@mui/material";
 import { useState } from "react";
-import { WalkToControl, XYControl } from "../RoomEditor/zones/XYControl";
+import { WalkToControl, XYControl } from "../XYControl";
 import { RoomLocationPicker } from "../RoomLocationPicker";
 
 interface Props {
