@@ -3,7 +3,7 @@ import { useGameDesign } from "@/context/game-design-context";
 import { MoveOrder, MoveStep } from "@/definitions/Order";
 import { findById, listIds } from "@/lib/util";
 import { Box, Typography } from "@mui/material";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { makeNewStep } from "../defaults";
 import { MoveStepFields } from "./MoveStepFields";
@@ -20,7 +20,7 @@ interface Props {
 export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggestions, updateData }) => {
     const { gameDesign } = useGameDesign()
     const { steps } = data
-
+    const [stepBeingEdited, setStepBeingEdited] = useState<number | undefined>(undefined)
     const roomData = findById(data.roomId, gameDesign.rooms)
 
     const modifyOrder = (mod: Partial<MoveOrder>) => {
@@ -68,20 +68,24 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
                             animationSuggestions={animationSuggestions}
                             index={index}
                             changeStep={changeMoveStep}
+                            positionSelectIsActive={stepBeingEdited === index}
+                            setStepBeingEdited={setStepBeingEdited}
                         />
                     )}
                     mutateList={(steps) => modifyOrder({ steps })}
                     createItem={makeNewStep.move}
                     frame="PLAIN"
                 />
-                {/* TO DO - new prop for RoomLocationPicker to render many points*/}
                 {roomData && (
                     <RoomLocationPicker
                         roomData={roomData}
                         previewWidth={300}
                         renderAllZones
                         subPoints={data.steps}
-                        onClick={(point) => changeMoveStep(point, 0)}
+                        onClick={(point) => typeof stepBeingEdited === 'number'
+                            ? changeMoveStep(point, stepBeingEdited)
+                            : modifyOrder({ steps: [...steps, {...makeNewStep.move(), ...point}] })
+                        }
                     />
                 )}
             </Box>
