@@ -80,7 +80,7 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
                         roomData={roomData}
                         previewWidth={300}
                         renderAllZones
-                        targetPoint={data.steps[0]}
+                        subPoints={data.steps}
                         onClick={(point) => changeMoveStep(point, 0)}
                     />
                 )}

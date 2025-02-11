@@ -2,19 +2,21 @@ import { RoomContentItem } from "@/components/game/types";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { Point, RoomData } from "@/definitions";
-import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
+import { calculateScreenX, getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { Box } from "@mui/material";
 import { useState } from "react";
-import { ViewAngleSlider } from "./RoomEditor/ViewAngleSlider";
-import ZoneSvg from "../svg/ZoneSvg";
+import { Pin } from "../svg/Pin";
 import Hotspot from "../svg/Room/HotSpot";
 import { obstableClassNames, walkableClassNames } from "../svg/Room/zoneCssClasses";
+import ZoneSvg from "../svg/ZoneSvg";
+import { ViewAngleSlider } from "./RoomEditor/ViewAngleSlider";
 
 
 interface Props {
     roomData: RoomData,
     contents?: RoomContentItem[],
     targetPoint?: Point,
+    subPoints?: Point[],
     viewAngle?: number,
     previewWidth?: number,
     previewHeight?: number,
@@ -26,7 +28,7 @@ interface Props {
 }
 
 export const RoomLocationPicker = ({
-    roomData, contents = [], targetPoint,
+    roomData, contents = [], targetPoint, subPoints,
     viewAngle: viewAngleProp, previewWidth = 600, previewHeight = previewWidth,
     onClick, renderAllZones, obstacleRefToFocus, walkableRefToFocus, hotspotIdToFocus,
 }: Props) => {
@@ -63,6 +65,16 @@ export const RoomLocationPicker = ({
             noSound={true}
             noMargin={true}
         >
+
+            {subPoints?.map((point, index) => (
+                <svg key={index}
+                    x={calculateScreenX(point.x, viewAngle, roomData)}
+                    y={roomData.height - point.y}
+                    style={{ overflow: 'visible' }}>
+                    <Pin label={(index + 1).toString()}  />
+                </svg>
+            ))}
+
             {targetPoint && (
                 <MarkerShape
                     roomData={roomData}
