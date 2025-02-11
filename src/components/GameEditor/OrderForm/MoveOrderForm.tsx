@@ -1,13 +1,15 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
+import { Point } from "@/definitions";
 import { MoveOrder, MoveStep } from "@/definitions/Order";
 import { findById, listIds } from "@/lib/util";
-import { Box, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { makeNewStep } from "../defaults";
-import { MoveStepFields } from "./MoveStepFields";
+import { ClickPointActiveIcon, ClickPointIcon } from "../material-icons";
 import { RoomLocationPicker } from "../RoomLocationPicker";
+import { MoveStepFields } from "./MoveStepFields";
 
 
 interface Props {
@@ -44,6 +46,8 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
         modifyOrder({ steps })
     }
 
+    const addStep = (point: Point) => modifyOrder({ steps: [...steps, { ...makeNewStep.move(), ...point }] })
+
     return (
         <Box>
             <SelectInput label="room" optional
@@ -51,40 +55,38 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
                 options={listIds(gameDesign.rooms)}
                 inputHandler={(roomId) => modifyOrder({ roomId })} />
 
-            <Box marginTop={2}>
-                {steps.length === 0 ? (
-                    <Typography variant="caption">Insert first step:</Typography>
-                ) : <Typography variant="caption">Steps x{steps.length}</Typography>
-                }
-            </Box>
-
             <Box display={'flex'} gap={2} justifyContent={'space-between'}>
-                <ArrayControl
-                    list={steps}
-                    deleteIcon="clear"
-                    describeItem={(step, index) => (
-                        <MoveStepFields key={index}
-                            step={step}
-                            animationSuggestions={animationSuggestions}
-                            index={index}
-                            changeStep={changeMoveStep}
-                            positionSelectIsActive={stepBeingEdited === index}
-                            setStepBeingEdited={setStepBeingEdited}
-                        />
-                    )}
-                    mutateList={(steps) => modifyOrder({ steps })}
-                    createItem={makeNewStep.move}
-                    frame="PLAIN"
-                />
+                <div>
+                    <ArrayControl
+                        list={steps}
+                        deleteIcon="clear"
+                        noMoveButtons
+                        describeItem={(step, index) => (
+                            <MoveStepFields key={index}
+                                step={step}
+                                animationSuggestions={animationSuggestions}
+                                index={index}
+                                changeStep={changeMoveStep}
+                                positionSelectIsActive={stepBeingEdited === index}
+                                setStepBeingEdited={setStepBeingEdited}
+                            />
+                        )}
+                        mutateList={(steps) => modifyOrder({ steps })}
+                        frame="PLAIN"
+                    />
+                    <Button fullWidth startIcon={typeof stepBeingEdited === 'undefined' ? <ClickPointActiveIcon /> : <ClickPointIcon/>}
+                        variant={"outlined"}
+                        onClick={() => setStepBeingEdited(undefined)}> new step</Button>
+                </div>
                 {roomData && (
                     <RoomLocationPicker
                         roomData={roomData}
-                        previewWidth={300}
+                        previewWidth={400}
                         renderAllZones
                         subPoints={data.steps}
                         onClick={(point) => typeof stepBeingEdited === 'number'
                             ? changeMoveStep(point, stepBeingEdited)
-                            : modifyOrder({ steps: [...steps, {...makeNewStep.move(), ...point}] })
+                            : addStep(point)
                         }
                     />
                 )}
