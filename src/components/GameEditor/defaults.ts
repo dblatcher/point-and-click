@@ -133,7 +133,7 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
 
 export const makeNewStep = {
     act: (): ActStep => ({ duration: 100, reverse: false, animation: '' }),
-    move: (): MoveStep => ({ speed: 100, x: 0, y: 0, animation: '' }),
+    move: (): MoveStep => ({ speed: 1, x: 0, y: 0, animation: '' }),
 }
 
 export const makeBlankEnding = (id = "NEW_ENDING", message = "game over"): Ending => ({ id, message, })

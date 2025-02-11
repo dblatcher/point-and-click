@@ -58,7 +58,7 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
                 }
             </Box>
 
-            <Box display={'flex'} gap={2}>
+            <Box display={'flex'} gap={2} justifyContent={'space-between'}>
                 <ArrayControl
                     list={steps}
                     deleteIcon="clear"

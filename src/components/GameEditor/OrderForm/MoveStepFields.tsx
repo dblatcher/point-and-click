@@ -24,8 +24,9 @@ export const MoveStepFields = (props: {
                 inputHandler={(animation) => changeStep({ animation }, index)}
             />
 
-            <OptionalNumberInput label="speed" notFullWidth
+            <OptionalNumberInput label="speed multiplier" notFullWidth
                 value={step.speed}
+                min={.1} max={10} step={.2}
                 inputHandler={(speed) => changeStep({ speed }, index)}
             />
             <XYControl

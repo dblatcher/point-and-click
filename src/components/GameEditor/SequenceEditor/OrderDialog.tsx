@@ -26,7 +26,11 @@ export const OrderDialog = ({ sequence, stage, index, actorId, close, changeOrde
     const IconForOrderType = getOrderIcon(order)
 
     return (
-        <Dialog open={!!order} onClose={close}>
+        <Dialog open={!!order}
+            onClose={close}
+            fullWidth
+            maxWidth={order?.type === 'move' ? 'md' : undefined}
+        >
             <DialogTitle sx={{ backgroundColor: palette.secondary.light }}>
                 <Stack direction={'row'} alignItems={'center'}>
                     <IconForOrderType />

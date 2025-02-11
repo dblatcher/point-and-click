@@ -15,7 +15,7 @@ export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence,
     const { palette } = useTheme()
     const IconForConsequenceType = getConsequenceIcon(consequence)
     return (
-        <Dialog open={!!consequence} onClose={close}>
+        <Dialog open={!!consequence} onClose={close} fullWidth maxWidth={'md'}>
             <DialogTitle sx={{ backgroundColor: palette.secondary.light }}>
                 <Box display="flex" gap={2} alignItems={'center'}>
                     <IconForConsequenceType />
