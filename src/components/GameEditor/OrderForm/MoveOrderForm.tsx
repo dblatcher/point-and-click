@@ -3,13 +3,14 @@ import { useGameDesign } from "@/context/game-design-context";
 import { Point } from "@/definitions";
 import { MoveOrder, MoveStep } from "@/definitions/Order";
 import { findById, listIds } from "@/lib/util";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { makeNewStep } from "../defaults";
 import { ClickPointActiveIcon, ClickPointIcon } from "../material-icons";
 import { RoomLocationPicker } from "../RoomLocationPicker";
 import { MoveStepFields } from "./MoveStepFields";
+import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 
 
 interface Props {
@@ -18,6 +19,15 @@ interface Props {
     updateData: { (data: MoveOrder): void };
 }
 
+const getAnimationForEveryStep = (steps: MoveStep[]) => {
+    const set = new Set(steps.map(step => step.animation))
+    return set.size === 1 ? Array.from(set)[0] : undefined
+}
+
+const getSpeedForEveryStep = (steps: MoveStep[]) => {
+    const set = new Set(steps.map(step => step.speed))
+    return set.size === 1 ? Array.from(set)[0] : undefined
+}
 
 export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggestions, updateData }) => {
     const { gameDesign } = useGameDesign()
@@ -46,15 +56,52 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
         modifyOrder({ steps })
     }
 
-    const addStep = (point: Point) => modifyOrder({ steps: [...steps, { ...makeNewStep.move(), ...point }] })
+    const sharedAnimation = getAnimationForEveryStep(steps)
+    const sharedSpeed = getSpeedForEveryStep(steps)
+
+    const addStep = (point: Point) => modifyOrder({
+        steps: [...steps, {
+            ...makeNewStep.move(),
+            animation: sharedAnimation,
+            speed: sharedSpeed,
+            ...point
+        }]
+    })
+
+    const changeAnimationOnEveryStep = (animation: string | undefined) => {
+        modifyOrder({
+            steps: steps.map(step => ({ ...step, animation }))
+        })
+    }
+
+    const changeSpeedOnEveryStep = (speed: number | undefined) => {
+        modifyOrder({
+            steps: steps.map(step => ({ ...step, speed }))
+        })
+    }
 
     return (
         <Box>
-            <SelectInput label="room" optional
-                value={data.roomId}
-                options={listIds(gameDesign.rooms)}
-                inputHandler={(roomId) => modifyOrder({ roomId })} />
-
+            <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+                <Box display={'flex'} gap={2} alignItems={'center'}>
+                    <Typography>For every step:</Typography>
+                    <SelectInput label="animation" optional notFullWidth
+                        minWidth={120}
+                        value={sharedAnimation}
+                        options={animationSuggestions ?? []}
+                        inputHandler={changeAnimationOnEveryStep} />
+                    <OptionalNumberInput label="speed" optional notFullWidth
+                        minWidth={120}
+                        value={sharedSpeed}
+                        min={.1} max={10} step={.2}
+                        inputHandler={changeSpeedOnEveryStep} />
+                </Box>
+                <SelectInput label="room" optional notFullWidth
+                    minWidth={80}
+                    value={data.roomId}
+                    options={listIds(gameDesign.rooms)}
+                    inputHandler={(roomId) => modifyOrder({ roomId })} />
+            </Box>
             <Box display={'flex'} gap={2} justifyContent={'space-between'}>
                 <div>
                     <ArrayControl
@@ -74,7 +121,7 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
                         mutateList={(steps) => modifyOrder({ steps })}
                         frame="PLAIN"
                     />
-                    <Button fullWidth startIcon={typeof stepBeingEdited === 'undefined' ? <ClickPointActiveIcon /> : <ClickPointIcon/>}
+                    <Button fullWidth startIcon={typeof stepBeingEdited === 'undefined' ? <ClickPointActiveIcon /> : <ClickPointIcon />}
                         variant={"outlined"}
                         onClick={() => setStepBeingEdited(undefined)}> new step</Button>
                 </div>
@@ -82,6 +129,7 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
                     <RoomLocationPicker
                         roomData={roomData}
                         previewWidth={400}
+                        previewHeight={300}
                         renderAllZones
                         subPoints={data.steps}
                         onClick={(point) => typeof stepBeingEdited === 'number'
