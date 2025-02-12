@@ -26,7 +26,11 @@ function determineDirection(postion: Point, desination: Point, availableDirectio
 }
 
 
-export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Sprite, instantMode?:boolean): void {
+export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Sprite, instantMode?: boolean): void {
+    if (moveOrder.roomId && moveOrder.roomId !== actor.room) {
+        console.warn(`${actor.id} is in ${actor.room ?? '[NOWHERE]'}, not ${moveOrder.roomId} - cancelling order`)
+        moveOrder.steps.splice(0, moveOrder.steps.length)
+    }
 
     if (instantMode) {
         const finalStep = moveOrder.steps[moveOrder.steps.length - 1]
