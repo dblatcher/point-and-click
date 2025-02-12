@@ -11,6 +11,7 @@ import { ClickPointActiveIcon, ClickPointIcon } from "../material-icons";
 import { RoomLocationPicker } from "../RoomLocationPicker";
 import { MoveStepFields } from "./MoveStepFields";
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
+import { buildContentForRoomInDesign } from "@/components/game/put-contents-in-order";
 
 
 interface Props {
@@ -128,6 +129,7 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
                 {roomData && (
                     <RoomLocationPicker
                         roomData={roomData}
+                        contents={buildContentForRoomInDesign(roomData.id, gameDesign)}
                         previewWidth={400}
                         previewHeight={300}
                         renderAllZones

@@ -1,7 +1,7 @@
-import { putActorsInDisplayOrder } from "@/lib/roomFunctions";
+import { CommandTarget, GameDesign } from "@/definitions";
 import { GameState } from "@/lib/game-state-logic/types";
+import { putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { HandleClickFunction, RoomContentItem } from "./types";
-import { CommandTarget } from "@/definitions";
 
 export const buildContentsList = (
     state: GameState,
@@ -16,12 +16,21 @@ export const buildContentsList = (
         .filter(_ => _.room === currentRoom?.id)
         .sort(putActorsInDisplayOrder)
 
-    const contentList: RoomContentItem[] = actorsInOrder.map(data => ({
+    return actorsInOrder.map(data => ({
         data,
         orders: actorOrderMap[data.id],
         clickHandler: (data.isPlayer || data.noInteraction) ? undefined : clickHandler,
         contextClickHandler: (data.isPlayer || data.noInteraction) ? undefined : contextClickHandler,
     }))
+}
 
-    return contentList
+export const buildContentForRoomInDesign = (roomId:string, gameDesign:GameDesign): RoomContentItem[] => {
+    const { actors } = gameDesign
+    const actorsInOrder = actors
+        .filter(_ => _.room === roomId)
+        .sort(putActorsInDisplayOrder)
+
+    return actorsInOrder.map(data => ({
+        data,
+    }))
 }
