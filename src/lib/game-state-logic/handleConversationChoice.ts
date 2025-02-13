@@ -3,6 +3,7 @@ import { cloneData } from "@/lib/clone";
 import { GameState } from "@/lib/game-state-logic/types";
 import { findById } from "@/lib/util";
 import { ChoiceRefSet } from "../../definitions/Conversation";
+import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
 
 
 function findChoiceFromRefSet(
@@ -76,7 +77,7 @@ function buildDefaultSequence(choice: ConversationChoice, state: GameState): Seq
             {
                 type: 'say',
                 text: choice.text,
-                time: 250,
+                time: DEFAULT_TALK_TIME,
             }
         ]
     }

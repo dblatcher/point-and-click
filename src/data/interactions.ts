@@ -238,12 +238,12 @@ export const interactions: Interaction[] = [
                     {
                         type: 'say',
                         text: 'I took it.',
-                        time: 250,
+                        time: 150,
                     },
                     {
                         type: 'say',
                         text: 'Birds have stopped singing',
-                        time: 250,
+                        time: 150,
                     }
                 ]
             },
@@ -271,7 +271,7 @@ export const interactions: Interaction[] = [
                     {
                         type: 'say',
                         text: 'It is out already',
-                        time: 250,
+                        time: 150,
                     }
                 ]
             },
@@ -296,7 +296,7 @@ export const interactions: Interaction[] = [
                     {
                         type: 'say',
                         text: 'It is burning already',
-                        time: 250,
+                        time: 150,
                     }
                 ]
             },
@@ -329,7 +329,7 @@ export const interactions: Interaction[] = [
                     {
                         type: 'say',
                         text: 'this will end the game',
-                        time: 250,
+                        time: 150,
                     }
                 ]
             },

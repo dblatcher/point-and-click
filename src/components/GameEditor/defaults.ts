@@ -5,7 +5,7 @@ import {
 import { ActStep, MoveStep } from "@/definitions/Order";
 import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
 
-const DEFAULT_TALK_TIME = 250;
+export const DEFAULT_TALK_TIME = 200;
 
 export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'WALK', label: 'walk to', isMoveVerb: true },

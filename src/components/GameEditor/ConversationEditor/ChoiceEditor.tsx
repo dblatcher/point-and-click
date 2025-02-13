@@ -8,7 +8,7 @@ import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogT
 import { useState } from "react"
 import { ButtonWithConfirm } from "../ButtonWithConfirm"
 import { SequenceEditor } from "../SequenceEditor"
-import { makeBlankSequence } from "../defaults"
+import { DEFAULT_TALK_TIME, makeBlankSequence } from "../defaults"
 import { DeleteIcon } from "../material-icons"
 import { ChoiceListControl } from "./ChoiceListControl"
 import { HelpButton } from "../HelpButton"
@@ -48,7 +48,7 @@ export const ChoiceEditor = ({
             const orderToSayConversationText: SayOrder = {
                 type: 'say',
                 text: choice.text,
-                time: 250,
+                time: DEFAULT_TALK_TIME,
             }
             if (!firstStage.actorOrders) {
                 firstStage.actorOrders = {}

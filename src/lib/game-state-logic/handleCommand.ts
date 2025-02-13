@@ -10,6 +10,7 @@ import { getDefaultResponseText, matchInteraction, describeCommand } from "@/lib
 import { getTargetPoint } from "@/lib/roomFunctions";
 import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
+import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
 
 function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
     const { actors, rooms, currentRoomId } = state
@@ -30,7 +31,7 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
     } else {
         const text = getDefaultResponseText(command, unreachable)
         issueOrdersOutsideSequence(state, player.id, [{
-            type: 'say', text, time: 250
+            type: 'say', text, time: DEFAULT_TALK_TIME
         }])
     }
     return state
