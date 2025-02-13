@@ -34,17 +34,23 @@ export const getBlankRoom: { (): RoomData } = () => ({
 })
 
 export const getDefaultOrder = (type: OrderType): Order => {
-
-    if (type === 'say') {
-        return { type, text: '', time: DEFAULT_TALK_TIME }
-    }
-    if (type === 'goTo') {
-        return { type, speed: 2, targetId: '', animation: '' }
-    }
-
-    return {
-        type,
-        steps: []
+    switch (type) {
+        case "move":
+            return {
+                type,
+                steps: []
+            }
+        case "act":
+            return {
+                type,
+                steps: [{
+                    duration: 100,
+                }]
+            }
+        case "say":
+            return { type, text: '', time: DEFAULT_TALK_TIME }
+        case "goTo":
+            return { type, speed: 2, targetId: '', animation: '' }
     }
 }
 
