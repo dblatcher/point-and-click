@@ -23,7 +23,7 @@ export const OrderDialog = ({ sequence, stage, index, actorId, close, changeOrde
     const { gameDesign } = useGameDesign()
     const order: Order | undefined = sequence?.stages[stage].actorOrders?.[actorId]?.[index]
     const { ids: targetIdsWithoutItems, descriptions: targetDescriptionsWithoutItems } = getTargetLists(gameDesign, true)
-    const IconForOrderType = getOrderIcon(order)
+    const IconForOrderType = getOrderIcon(order?.type)
 
     return (
         <Dialog open={!!order}

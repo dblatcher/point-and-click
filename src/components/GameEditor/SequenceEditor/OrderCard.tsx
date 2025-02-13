@@ -29,7 +29,7 @@ const getDescription = (order: Order): string => {
 
 export const OrderCard = ({ order, handleEditButton, width }: Props) => (
     <ConceptCard
-        Icon={getOrderIcon(order)}
+        Icon={getOrderIcon(order.type)}
         handleClick={handleEditButton}
         description={getDescription(order)}
         title={order.type}

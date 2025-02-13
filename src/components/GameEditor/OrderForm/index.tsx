@@ -1,13 +1,13 @@
-import { findValueAsType } from "@/lib/util";
-import { Order, orderTypes } from "@/definitions/Order";
-import { getDefaultOrder } from "../defaults";
-import { OrderWithoutStepsForm } from "./OrderWithoutStepsForm";
-import { MoveOrderForm } from "./MoveOrderForm";
-import { Box } from "@mui/material";
-import { SelectInput } from "@/components/SchemaForm/inputs";
-import { NarrativeEditor } from "../NarrativeEditor";
 import { Narrative } from "@/definitions/BaseTypes";
+import { Order, orderTypes } from "@/definitions/Order";
+import { findValueAsType } from "@/lib/util";
+import { Box, Button, ButtonGroup } from "@mui/material";
+import { getDefaultOrder } from "../defaults";
+import { NarrativeEditor } from "../NarrativeEditor";
+import { getOrderIcon } from "../SequenceEditor/get-order-details";
 import { ActOrderForm } from "./ActOrderForm";
+import { MoveOrderForm } from "./MoveOrderForm";
+import { OrderWithoutStepsForm } from "./OrderWithoutStepsForm";
 
 
 interface Props {
@@ -33,7 +33,6 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
     }
 
     const buildForm = () => {
-
         switch (data.type) {
             case "move":
                 return <MoveOrderForm
@@ -59,14 +58,20 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
         }
     }
 
-
     return (
         <Box component={'article'} sx={{ flex: 1, minWidth: 400, paddingY: 2 }}>
-            <SelectInput label="order type"
-                value={data.type}
-                options={orderTypes}
-                inputHandler={changeType}
-            />
+            <ButtonGroup fullWidth sx={{ marginBottom: 1 }}>
+                {orderTypes.map(type => {
+                    const OrderIcon = getOrderIcon(type)
+                    return <Button
+                        key={type}
+                        variant={type === data.type ? 'contained' : 'outlined'}
+                        startIcon={<OrderIcon />}
+                        onClick={() => changeType(type)}
+                    >{type}</Button>
+                }
+                )}
+            </ButtonGroup>
             {buildForm()}
             <NarrativeEditor narrative={data.narrative} update={updateNarrative} />
         </Box>

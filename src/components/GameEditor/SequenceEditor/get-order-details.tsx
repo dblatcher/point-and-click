@@ -21,8 +21,8 @@ import { FlagCircleIcon } from "../material-icons";
 import SurroundSoundIcon from '@mui/icons-material/SurroundSound';
 import MusicNote from "@mui/icons-material/MusicNote";
 
-export const getOrderIcon = (order?: Order): typeof ChatOutlinedIcon => {
-    switch (order?.type) {
+export const getOrderIcon = (orderType?: Order['type']): typeof ChatOutlinedIcon => {
+    switch (orderType) {
         case "move":
             return RouteIcon
         case "act":
