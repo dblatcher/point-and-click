@@ -86,7 +86,7 @@ export const getConsequenceDescription = (c: Consequence): string => {
         case "changeRoom":
             return `room: ${c.roomId ?? UNSET} ${c.takePlayer ? '(player comes)' : ''}`
         case "inventory":
-            return `${c.addOrRemove} ${c.itemId} TO ${c.actorId ?? PLAYER} `
+            return `${c.addOrRemove} ${c.itemId} ${c.addOrRemove === 'ADD' ? 'TO' : 'FROM'} ${c.actorId ?? PLAYER} `
         case "removeActor":
             return `remove actor ${c.actorId ?? UNSET}`;
         case "teleportActor":
