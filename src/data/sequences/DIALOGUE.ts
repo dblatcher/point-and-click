@@ -9,6 +9,7 @@ export const DIALOGUE: Sequence = {
                 PLAYER: [
                     {
                         type: 'move',
+                        roomId: 'OUTSIDE',
                         steps: [
                             { x: 350, y: 30, animation: 'run', speed: 2 },
                             { x: 340, y: 30, animation: 'run' },
@@ -43,7 +44,7 @@ export const DIALOGUE: Sequence = {
             actorOrders: {
                 EVIL_SKINNER: [
                     { type: 'say', time: 120, text: 'ha ha ha ha!' },
-                    { type: 'move', steps: [{ x: 200, y: 30 }] },
+                    { type: 'move', roomId: 'INSIDE', steps: [{ x: 200, y: 30 }] },
                 ],
                 PLAYER: [
                     { type: 'say', time: 200, text: 'Noooo!', animation: 'yell' },

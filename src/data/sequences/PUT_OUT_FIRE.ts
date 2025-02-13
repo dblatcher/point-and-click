@@ -7,6 +7,7 @@ export const PUT_OUT_FIRE: Sequence = {
             actorOrders: {
                 PLAYER: [
                     {
+                        roomId: 'OUTSIDE',
                         type: 'move', steps: [{
                             x: 240, y: 10
                         }]
