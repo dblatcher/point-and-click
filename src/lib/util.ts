@@ -33,7 +33,7 @@ export function findIndexById<T extends { id: string }>(id: string | undefined, 
     return list.findIndex(_ => _.id === id)
 }
 
-export function findValueAsType<T> (value: unknown, list: T[]): T | undefined {
+export function findValueAsType<T>(value: unknown, list: T[]): T | undefined {
     if (list.includes(value as T)) {
         return value as T
     }
@@ -48,4 +48,8 @@ export function deduplicateStringArray(list: string[]): string[] {
         }
     })
     return newList
+}
+
+export function insertAt<T>(index: number, item: T, list: T[]): T[] {
+    return [...list.slice(0, index), item, ...list.slice(index)]
 }

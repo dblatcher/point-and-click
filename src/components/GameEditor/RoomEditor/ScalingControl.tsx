@@ -89,7 +89,7 @@ export const ScalingControl = ({ room }: Props) => {
                     }}
                     mutateList={change}
                     createItem={addNew}
-                    createButton="END"
+                    createButtonPlacement="END"
                 />
 
                 <EditorBox title={`Test Sprite: ${testActor?.id ?? '[none]'}`}>

@@ -1,5 +1,5 @@
 import { ImmediateConsequence, Order, Stage } from "@/definitions";
-import { Box, Button, Grid, IconButton, Stack } from "@mui/material";
+import { Box, Button, ButtonGroup, Grid, IconButton, Stack } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
@@ -8,6 +8,10 @@ import { ConsequenceCard } from "./ConsequenceCard";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { Narrative } from "@/definitions/BaseTypes";
 import { ClearOutlinedIcon } from "../material-icons";
+import { orderTypes } from "@/definitions/Order";
+import { getOrderIcon } from "./get-order-details";
+import { insertAt } from "@/lib/util";
+import { OrderTypeButtons } from "../OrderTypeButtons";
 
 
 interface Props {
@@ -67,7 +71,7 @@ export const StageFlow = ({
                                 createItem={() => (
                                     makeNewConsequence('changeStatus') as ImmediateConsequence
                                 )}
-                                createButton="END"
+                                createButtonPlacement="END"
                                 noMoveButtons
                                 color="secondary"
                             />
@@ -79,7 +83,7 @@ export const StageFlow = ({
                 {actorIds.map((actorId) => (
                     <Grid item key={actorId} display={'flex'} >
                         <EditorBox title={actorId}
-                            boxProps={{ minWidth: 280 }}
+                            boxProps={{ minWidth: 260 }}
                             barContent={(
                                 <IconButton size="small"
                                     onClick={() => { removeActorFromAll(actorId) }}
@@ -102,11 +106,24 @@ export const StageFlow = ({
                                                     index: orderIndex,
                                                 })
                                             }}
-                                            width={230}
+                                            width={220}
                                         />
                                     )}
                                     mutateList={(newList) => { changeOrderList(newList, stageIndex, actorId) }}
-                                    createItem={() => getDefaultOrder('say')}
+                                    customCreateButton={index => (
+                                        <OrderTypeButtons
+                                            handler={(type) => () => {
+                                                changeOrderList(
+                                                    insertAt(index, getDefaultOrder(type), stage.actorOrders?.[actorId] ?? []), stageIndex, actorId
+                                                )
+                                                setOrderParams({
+                                                    stage: stageIndex,
+                                                    actorId,
+                                                    index,
+                                                })
+                                            }}
+                                        />
+                                    )}
                                 />
                             </Box>
                         </EditorBox>

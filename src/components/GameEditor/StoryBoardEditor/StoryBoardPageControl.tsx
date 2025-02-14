@@ -75,7 +75,7 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                     </Stack>
 
                     <Typography variant="h3">Pictures</Typography>
-                    <ArrayControl horizontalMoveButtons buttonSize={'small'} createButton="END"
+                    <ArrayControl horizontalMoveButtons buttonSize={'small'} createButtonPlacement="END"
                         stackProps={{ divider: <Divider /> }}
                         list={page.pictures}
                         mutateList={(newPictures) => {

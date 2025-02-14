@@ -12,7 +12,8 @@ interface Props<T> {
     describeItem: { (item: T, index: number): ReactNode };
     mutateList: { (newList: T[]): void };
     createItem?: { (): T | undefined };
-    createButton?: 'END';
+    customCreateButton?: { (index: number): ReactNode }
+    createButtonPlacement?: 'END';
     noMoveButtons?: boolean;
     noDeleteButtons?: boolean;
     insertText?: string;
@@ -108,7 +109,7 @@ const Frame = (props: { children: ReactNode, index: number, framing: Framing }) 
 }
 
 const CardsFormat = <T,>({
-    list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
+    list, describeItem, createItem, createButtonPlacement: createButton, noMoveButtons, noDeleteButtons,
     color = 'primary',
     buttonSize = 'large',
     horizontalMoveButtons = true,
@@ -165,25 +166,34 @@ const CardsFormat = <T,>({
 }
 
 const StackFormat = <T,>({
-    list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
+    list, describeItem, createItem, createButtonPlacement: createButton, noMoveButtons, noDeleteButtons,
     color = 'primary',
     frame = 'NONE',
     buttonSize = 'large',
     horizontalMoveButtons = false,
     stackProps,
     deleteIcon = 'delete',
+    customCreateButton,
     handleInsert,
     handleMove,
     handleDelete,
 }: FormatProps<T>) => {
 
+    const renderCreateButton = (index: number): ReactNode => {
+        if (customCreateButton) {
+            return customCreateButton(index)
+        }
+        if (createItem) {
+            return <InsertButton index={index} handleInsert={handleInsert} color={color} buttonSize={buttonSize} />
+        }
+        return null
+    }
+
     return (
         <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }} {...stackProps}>
             {list.map((item, index) => (
                 <Fragment key={index}>
-                    {(!!createItem && createButton !== 'END') && (
-                        <InsertButton index={index} handleInsert={handleInsert} color={color} buttonSize={buttonSize} />
-                    )}
+                    {(createButton !== 'END') && renderCreateButton(index)}
                     <Frame index={index} framing={frame}>
                         <Stack component={'article'}
                             justifyContent={'space-between'}
@@ -217,17 +227,16 @@ const StackFormat = <T,>({
                 </Fragment>
             ))}
             {
-                !!createItem && (
-                    <InsertButton index={list.length} handleInsert={handleInsert} color={color} buttonSize={buttonSize} />
-                )
+                renderCreateButton(list.length)
             }
         </Stack >
     )
 }
 
 export const ArrayControl = <T,>({
-    list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
+    list, describeItem, createItem, createButtonPlacement, noMoveButtons, noDeleteButtons,
     mutateList,
+    customCreateButton,
     color = 'primary',
     frame = 'NONE',
     buttonSize = 'large',
@@ -262,7 +271,7 @@ export const ArrayControl = <T,>({
     }
 
     const formatProps = {
-        list, describeItem, createItem, createButton, noMoveButtons, noDeleteButtons,
+        list, describeItem, createItem, createButton: createButtonPlacement, noMoveButtons, noDeleteButtons,
         mutateList,
         color,
         frame,
@@ -274,6 +283,7 @@ export const ArrayControl = <T,>({
         handleDelete,
         handleMove,
         handleInsert,
+        customCreateButton
     }
 
     if (format === 'cards') {

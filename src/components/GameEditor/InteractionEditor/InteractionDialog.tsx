@@ -146,7 +146,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                         <EditorBox title="Consequences">
                             <ArrayControl
                                 list={consequences}
-                                createButton="END"
+                                createButtonPlacement="END"
                                 noMoveButtons={true}
                                 describeItem={(consequence, index) => (
                                     <Box paddingBottom={1}>

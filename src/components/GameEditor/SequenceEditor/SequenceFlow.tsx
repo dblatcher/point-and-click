@@ -7,6 +7,9 @@ import { PickActorDialog } from "../PickActorDialog";
 import { ConsequenceDialog } from "./ConsequenceDialog";
 import { OrderDialog } from "./OrderDialog";
 import { StageFlow } from "./StageFlow";
+import { Button } from "@mui/material";
+import { insertAt } from "@/lib/util";
+import { AddIcon } from "../material-icons";
 
 interface Props {
     sequence: Sequence
@@ -82,9 +85,14 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
                     />
                 )}
                 mutateList={changeStages}
-                createItem={makeBlankStage}
-                insertText={`INSERT NEW STAGE`}
-                deleteText={`REMOVE STAGE`}
+                customCreateButton={(index) => (
+                    <Button
+                        sx={{ marginX: 2 }}
+                        startIcon={<AddIcon />}
+                        variant="outlined"
+                        onClick={() => changeStages(insertAt(index, makeBlankStage(), sequence.stages))}
+                    >New stage</Button>
+                )}
             />
 
             {(consequenceParams && consequenceToEdit) && (

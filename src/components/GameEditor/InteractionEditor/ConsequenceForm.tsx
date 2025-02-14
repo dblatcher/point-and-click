@@ -6,7 +6,7 @@ import { Narrative } from "@/definitions/BaseTypes";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
-import { findById, listIds } from "@/lib/util";
+import { findById, insertAt, listIds } from "@/lib/util";
 import { Box } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
@@ -18,6 +18,7 @@ import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
 import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
 import { SoundPreview } from "../SoundAssetTool/SoundPreview";
 import { useAssets } from "@/context/asset-context";
+import { OrderTypeButtons } from "../OrderTypeButtons";
 
 interface Props {
     consequence: AnyConsequence;
@@ -154,6 +155,13 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                             </EditorBox>
                         }
                         createItem={() => getDefaultOrder('say')}
+                        customCreateButton={index => (
+                            <OrderTypeButtons
+                                handler={(type) => () => {
+                                    updateProperty('orders', insertAt(index, getDefaultOrder(type), consequence.orders ?? []))
+                                }}
+                            />
+                        )}
                         mutateList={newList => { updateProperty('orders', newList) }}
                     />
                 )}
