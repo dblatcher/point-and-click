@@ -89,6 +89,7 @@ export const interactions: Interaction[] = [
     },
     {
         verbId: 'LOOK',
+        mustReachFirst: true,
         targetId: 'sun',
         consequences: [
             {
@@ -98,13 +99,33 @@ export const interactions: Interaction[] = [
                         type: 'say',
                         text: 'Looking at the sun is bad for your eyes.',
                         time: 100,
+                        startDirection: 'right'
                     }
                 ]
             },
+        ]
+    },
+    {
+        verbId: 'PUSH',
+        targetId: 'bush',
+        mustReachFirst: true,
+        consequences: [
             {
-                type: 'storyBoardConsequence',
-                storyBoardId: 'part-two'
-            }
+                type: 'order',
+                orders: [
+                    {
+                        type: 'act',
+                        steps: [
+                            {
+                                duration: 100,
+                                animation: 'run'
+                            }
+                        ],
+                        startDirection: 'left',
+                        endDirection:'right',
+                    }
+                ]
+            },
         ]
     },
     {
@@ -253,7 +274,7 @@ export const interactions: Interaction[] = [
                 volume: 1,
             },
             {
-                type : 'ambientNoise',
+                type: 'ambientNoise',
                 sound: undefined,
                 roomId: 'OUTSIDE'
             }

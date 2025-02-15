@@ -6,7 +6,7 @@ import { Point } from "@/lib/pathfinding/geometry";
 import { findPath } from "@/lib/pathfinding/pathfind";
 import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
-import { exectuteSay } from "./executeSay";
+import { executeSay } from "./executeSay";
 import { makeMoveOrderFromGoto } from "./makeMoveOrderFromGoto";
 import { Sprite } from "@/lib/Sprite";
 
@@ -44,7 +44,7 @@ function executeOrder(nextOrder: Order, subject: ActorData, cellMatrix: CellMatr
             executeMove(nextOrder, subject, sprite, instantMode);
             break;
         case "say":
-            exectuteSay(nextOrder, instantMode);
+            executeSay(nextOrder, instantMode);
             break;
         case "act":
             executeAction(nextOrder, instantMode);
@@ -56,6 +56,7 @@ function executeOrder(nextOrder: Order, subject: ActorData, cellMatrix: CellMatr
             break;
         }
     }
+
 }
 
 const orderIsFinished = (order: Order): boolean => {
@@ -85,11 +86,17 @@ export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: 
 
     if (!nextOrder._started) {
         state.emitter.emit('in-game-event', { type: 'order', order: nextOrder, actor: subject })
+        if (nextOrder.startDirection) {
+            subject.direction = nextOrder.startDirection
+        }
         nextOrder._started = true
     }
     executeOrder(nextOrder, subject, cellMatrix, state, orders, sprite, instantMode);
 
     if (orderIsFinished(nextOrder)) {
+        if (nextOrder.endDirection) {
+            subject.direction = nextOrder.endDirection
+        }
         orders.shift()
         if (nextOrder.type === 'move' && nextOrder.doPendingInteractionWhenFinished) {
             return true

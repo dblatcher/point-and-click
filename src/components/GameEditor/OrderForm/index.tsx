@@ -1,10 +1,11 @@
-import { Narrative } from "@/definitions/BaseTypes";
+import { Direction, directions, Narrative } from "@/definitions/BaseTypes";
 import { Order } from "@/definitions/Order";
 import { Box } from "@mui/material";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { ActOrderForm } from "./ActOrderForm";
 import { MoveOrderForm } from "./MoveOrderForm";
 import { OrderWithoutStepsForm } from "./OrderWithoutStepsForm";
+import { SelectInput } from "@/components/SchemaForm/SelectInput";
 
 
 interface Props {
@@ -50,7 +51,28 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
     return (
         <Box component={'article'} sx={{ flex: 1, minWidth: 400, paddingY: 2 }}>
             {buildForm()}
-            <NarrativeEditor narrative={data.narrative} update={updateNarrative} />
+
+            <Box display={'flex'} gap={2}>
+                {(data.type !== 'move' && data.type !== 'goTo') && (
+                    <SelectInput label="start direction"
+                        notFullWidth
+                        minWidth={100}
+                        options={directions}
+                        optional
+                        value={data.startDirection}
+                        inputHandler={(startDirection) => { updateData({ ...data, startDirection: startDirection as Direction }) }}
+                    />
+                )}
+                <SelectInput label="end direction"
+                    notFullWidth
+                    minWidth={100}
+                    options={directions}
+                    optional
+                    value={data.endDirection}
+                    inputHandler={(endDirection) => { updateData({ ...data, endDirection: endDirection as Direction }) }}
+                />
+                <NarrativeEditor narrative={data.narrative} update={updateNarrative} />
+            </Box>
         </Box>
     )
 }

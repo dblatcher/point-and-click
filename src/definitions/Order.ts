@@ -1,9 +1,11 @@
 import { z } from "zod"
-import { NarrativeSchema } from "./BaseTypes"
+import { DirectionEnum, NarrativeSchema } from "./BaseTypes"
 
 const orderBase = {
     _started: z.oboolean(),
     narrative: NarrativeSchema.optional(),
+    startDirection: DirectionEnum.optional(),
+    endDirection: DirectionEnum.optional(),
 }
 
 const moveStepSchema = z.object({
