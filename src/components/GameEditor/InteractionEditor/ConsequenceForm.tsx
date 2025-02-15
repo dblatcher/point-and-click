@@ -1,7 +1,7 @@
 import { SchemaForm, getModification } from "@/components/SchemaForm";
-import { SelectInput } from "@/components/SchemaForm/inputs";
+import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
-import { AnyConsequence, Consequence, ConsequenceType, GameDesign, Order } from "@/definitions";
+import { AnyConsequence, Consequence, GameDesign, Order } from "@/definitions";
 import { Narrative } from "@/definitions/BaseTypes";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
@@ -12,13 +12,12 @@ import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { OrderForm } from "../OrderForm";
-import { SpritePreview } from "../SpritePreview";
-import { getDefaultOrder, makeNewConsequence } from "../defaults";
-import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
-import { getActorDescriptions, getConversationsDescriptions, getItemDescriptions, getSequenceDescriptions, getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
-import { SoundPreview } from "../SoundAssetTool/SoundPreview";
-import { useAssets } from "@/context/asset-context";
 import { OrderTypeButtons } from "../OrderTypeButtons";
+import { SoundPreview } from "../SoundAssetTool/SoundPreview";
+import { SpritePreview } from "../SpritePreview";
+import { getDefaultOrder } from "../defaults";
+import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
+import { getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
 
 interface Props {
     consequence: AnyConsequence;
@@ -63,13 +62,6 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         choiceRef: choiceRefList,
         storyBoardId: listIds(gameDesign.storyBoards ?? [])
     }
-    const optionListDescriptions: { [index: string]: string[] | undefined } = {
-        targetId: targetDescriptions,
-        actorId: getActorDescriptions(gameDesign),
-        itemId: getItemDescriptions(gameDesign),
-        conversationId: getConversationsDescriptions(gameDesign),
-        sequence: getSequenceDescriptions(gameDesign)
-    }
 
     // for properties not handled by the Schema form
     const updateProperty = (property: 'orders', value: unknown): void => {
@@ -79,12 +71,6 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                 copy[property] = value as Order[]
         }
         update(copy)
-    }
-
-    const changeType = (value: string | undefined): void => {
-        if (consequenceTypes.includes(value as ConsequenceType)) {
-            update(makeNewConsequence(value as ConsequenceType))
-        }
     }
 
     const editOrder = (newOrder: Order, index: number): void => {
@@ -107,15 +93,6 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
     return (
         <Box display={'flex'}>
             <Box paddingY={2}>
-                <Box marginBottom={2}>
-                    <SelectInput value={consequence.type}
-                        label={'type'}
-                        options={optionListIds.type}
-                        descriptions={optionListDescriptions.type}
-                        inputHandler={changeType}
-                    />
-                </Box>
-
                 {/* doesn't use andy free text fields, but include delay incase schema changes */}
                 <SchemaForm
                     textInputDelay={2000}

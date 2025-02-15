@@ -13,6 +13,7 @@ interface Props<T> {
     mutateList: { (newList: T[]): void };
     createItem?: { (): T | undefined };
     customCreateButton?: { (index: number): ReactNode }
+    customInsertFunction?: { (index: number): void };
     createButtonPlacement?: 'END';
     noMoveButtons?: boolean;
     noDeleteButtons?: boolean;
@@ -28,7 +29,7 @@ interface Props<T> {
 }
 
 type FormatProps<T> = Props<T> & {
-    handleInsert: {
+    handleInsert?: {
         (index: number): void;
     };
     handleMove: {
@@ -109,7 +110,7 @@ const Frame = (props: { children: ReactNode, index: number, framing: Framing }) 
 }
 
 const CardsFormat = <T,>({
-    list, describeItem, createItem, createButtonPlacement: createButton, noMoveButtons, noDeleteButtons,
+    list, describeItem, createButtonPlacement: createButton, noMoveButtons, noDeleteButtons,
     color = 'primary',
     buttonSize = 'large',
     horizontalMoveButtons = true,
@@ -122,7 +123,7 @@ const CardsFormat = <T,>({
     return <Box display={'flex'} gap={2} flexWrap={'wrap'}>
         {list.map((item, index) => (
             <Fragment key={index}>
-                {(!!createItem && createButton !== 'END') && (
+                {(!!handleInsert && createButton !== 'END') && (
                     <IconButton size={buttonSize}
                         title="insert"
                         color={color}
@@ -152,7 +153,7 @@ const CardsFormat = <T,>({
         ))}
 
         {
-            !!createItem && (
+            !!handleInsert && (
                 <IconButton size={buttonSize}
                     title="insert"
                     color={color}
@@ -166,7 +167,7 @@ const CardsFormat = <T,>({
 }
 
 const StackFormat = <T,>({
-    list, describeItem, createItem, createButtonPlacement: createButton, noMoveButtons, noDeleteButtons,
+    list, describeItem, createButtonPlacement: createButton, noMoveButtons, noDeleteButtons,
     color = 'primary',
     frame = 'NONE',
     buttonSize = 'large',
@@ -183,7 +184,7 @@ const StackFormat = <T,>({
         if (customCreateButton) {
             return customCreateButton(index)
         }
-        if (createItem) {
+        if (handleInsert) {
             return <InsertButton index={index} handleInsert={handleInsert} color={color} buttonSize={buttonSize} />
         }
         return null
@@ -244,6 +245,7 @@ export const ArrayControl = <T,>({
     stackProps,
     deleteIcon = 'delete',
     format = 'stack',
+    customInsertFunction,
 }: Props<T>) => {
 
     const handleDelete = (index: number) => {
@@ -252,14 +254,18 @@ export const ArrayControl = <T,>({
         mutateList(listCopy)
     }
 
-    const handleInsert = (index: number) => {
-        if (!createItem) { return }
-        const listCopy = [...list]
-        const newItem = createItem()
-        if (typeof newItem === 'undefined') { return }
-        listCopy.splice(index, 0, newItem)
-        mutateList(listCopy)
-    }
+    const handleInsert = customInsertFunction
+        ? customInsertFunction
+        : createItem
+            ? (index: number) => {
+                if (!createItem) { return }
+                const listCopy = [...list]
+                const newItem = createItem()
+                if (typeof newItem === 'undefined') { return }
+                listCopy.splice(index, 0, newItem)
+                mutateList(listCopy)
+            }
+            : undefined
 
     const handleMove = (index: number, direction: 'UP' | 'DOWN') => {
         const reinsertIndex = direction === 'UP' ? index - 1 : index + 1
@@ -283,7 +289,7 @@ export const ArrayControl = <T,>({
         handleDelete,
         handleMove,
         handleInsert,
-        customCreateButton
+        customCreateButton,
     }
 
     if (format === 'cards') {

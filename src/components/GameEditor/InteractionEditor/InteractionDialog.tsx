@@ -5,7 +5,7 @@ import { InteractionSchema } from "@/definitions/Interaction";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findTarget } from "@/lib/commandFunctions";
-import { listIds } from "@/lib/util";
+import { insertAt, listIds } from "@/lib/util";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
@@ -17,6 +17,7 @@ import { makeNewConsequence } from "../defaults";
 import { InteractionIcon } from "../material-icons";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { FlagConditionControl } from "./FlagConditionControl";
+import { PickConsequenceTypeDialogue } from "../PickConsequenceTypeDialogue";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -31,6 +32,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
             consequences: initialState.consequences ?? []
         }))
     const [activeConsequenceIndex, setActiveConsequenceIndex] = useState<number | undefined>(undefined)
+    const [insertConsequenceDialogIndex, setInsertConsequenceDialogIndex] = useState<number | undefined>(undefined)
     const { gameDesign } = useGameDesign()
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
     const activeConsequence = typeof activeConsequenceIndex === 'number' ? interaction.consequences?.[activeConsequenceIndex] : undefined
@@ -157,9 +159,9 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                     </Box>
                                 )}
                                 mutateList={consequences => updateInteraction({ consequences })}
-                                createItem={() => makeNewConsequence('order')}
-                                insertText={`ADD NEW CONSEQUENCE`}
-                                deleteText={`REMOVE CONSEQUENCE`}
+                                customInsertFunction={(index) => {
+                                    setInsertConsequenceDialogIndex(index)
+                                }}
                             />
                         </EditorBox>
                         {activeConsequence && (
@@ -183,6 +185,18 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                     title={(!parseResult.success && parseResult.error.message) || ''}
                 >SAVE CHANGES</Button>
             </DialogActions>
+
+            <PickConsequenceTypeDialogue
+                open={typeof insertConsequenceDialogIndex === 'number'}
+                onClose={() => setInsertConsequenceDialogIndex(undefined)}
+                handleChoice={type => {
+                    if (typeof insertConsequenceDialogIndex === 'number') {
+                        updateInteraction({ consequences: insertAt(insertConsequenceDialogIndex, makeNewConsequence(type), interaction.consequences ?? []) })
+                        setActiveConsequenceIndex(insertConsequenceDialogIndex)
+                    }
+                    setInsertConsequenceDialogIndex(undefined)
+                }} />
+
         </Dialog >
     )
 }

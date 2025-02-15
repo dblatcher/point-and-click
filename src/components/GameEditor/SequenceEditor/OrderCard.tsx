@@ -22,9 +22,8 @@ const getDescription = (order: Order): string => {
             return `"${text}"`
         }
         case "goTo":
-            return `${order.targetId ?? '?'}`
+            return order.targetId || '[UNSET]'
     }
-
 }
 
 export const OrderCard = ({ order, handleEditButton, width }: Props) => (

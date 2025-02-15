@@ -1,17 +1,17 @@
 import { ImmediateConsequence, Order, Stage } from "@/definitions";
-import { Box, Button, ButtonGroup, Grid, IconButton, Stack } from "@mui/material";
-import { ArrayControl } from "../ArrayControl";
-import { EditorBox } from "../EditorBox";
-import { getDefaultOrder, makeNewConsequence } from "../defaults";
-import { OrderCard } from "./OrderCard";
-import { ConsequenceCard } from "./ConsequenceCard";
-import { NarrativeEditor } from "../NarrativeEditor";
 import { Narrative } from "@/definitions/BaseTypes";
-import { ClearOutlinedIcon } from "../material-icons";
-import { orderTypes } from "@/definitions/Order";
-import { getOrderIcon } from "./get-order-details";
 import { insertAt } from "@/lib/util";
+import { Box, Button, Dialog, DialogContent, Grid, IconButton, Stack } from "@mui/material";
+import { useState } from "react";
+import { ArrayControl } from "../ArrayControl";
+import { PickConsequenceTypeDialogue } from "../PickConsequenceTypeDialogue";
+import { EditorBox } from "../EditorBox";
+import { NarrativeEditor } from "../NarrativeEditor";
 import { OrderTypeButtons } from "../OrderTypeButtons";
+import { getDefaultOrder, makeNewConsequence } from "../defaults";
+import { ClearOutlinedIcon } from "../material-icons";
+import { ConsequenceCard } from "./ConsequenceCard";
+import { OrderCard } from "./OrderCard";
 
 
 interface Props {
@@ -45,6 +45,8 @@ export const StageFlow = ({
     changeOrderList, removeActorFromAll, changeConsequenceNarrative,
 }: Props) => {
 
+    const [insertConsequenceDialogIndex, setInsertConsequenceDialogIndex] = useState<number | undefined>(undefined)
+
     return (
         <Box>
             <Grid container>
@@ -68,9 +70,9 @@ export const StageFlow = ({
                                 mutateList={(newList) => {
                                     changeConsequenceList(newList, stageIndex)
                                 }}
-                                createItem={() => (
-                                    makeNewConsequence('changeStatus') as ImmediateConsequence
-                                )}
+                                customInsertFunction={(index) => {
+                                    setInsertConsequenceDialogIndex(index)
+                                }}
                                 createButtonPlacement="END"
                                 noMoveButtons
                                 color="secondary"
@@ -79,6 +81,20 @@ export const StageFlow = ({
                         </Stack>
                     </EditorBox>
                 </Grid>
+
+                <PickConsequenceTypeDialogue
+                    open={typeof insertConsequenceDialogIndex === 'number'} onClose={() => setInsertConsequenceDialogIndex(undefined)}
+                    immediateOnly
+                    handleChoice={type => {
+                        if (typeof insertConsequenceDialogIndex === 'number') {
+                            changeConsequenceList(insertAt(insertConsequenceDialogIndex, makeNewConsequence(type) as ImmediateConsequence, stage.immediateConsequences ?? []), stageIndex)
+                            setConsequenceParams({
+                                stage: stageIndex,
+                                index: insertConsequenceDialogIndex,
+                            })
+                        }
+                        setInsertConsequenceDialogIndex(undefined)
+                    }} />
 
                 {actorIds.map((actorId) => (
                     <Grid item key={actorId} display={'flex'} >

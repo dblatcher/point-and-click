@@ -1,5 +1,5 @@
 import { Consequence } from "@/definitions";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, useTheme } from "@mui/material";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";
 
@@ -13,7 +13,7 @@ interface Props {
 
 export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence, immediateOnly }: Props) => {
     const { palette } = useTheme()
-    const IconForConsequenceType = getConsequenceIcon(consequence)
+    const IconForConsequenceType = getConsequenceIcon(consequence.type)
     return (
         <Dialog open={!!consequence} onClose={close} fullWidth maxWidth={'md'}>
             <DialogTitle sx={{ backgroundColor: palette.secondary.light }}>

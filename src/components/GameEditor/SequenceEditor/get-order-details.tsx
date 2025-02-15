@@ -1,4 +1,4 @@
-import { Consequence, Order } from "@/definitions";
+import { Consequence, ConsequenceType, Order } from "@/definitions";
 import AnimationIcon from '@mui/icons-material/Animation';
 import CameraIndoorOutlinedIcon from '@mui/icons-material/CameraIndoorOutlined';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
@@ -37,8 +37,8 @@ export const getOrderIcon = (orderType?: Order['type']): typeof ChatOutlinedIcon
 }
 
 
-export const getConsequenceIcon = (consequence?: Consequence): typeof ChatOutlinedIcon => {
-    switch (consequence?.type) {
+export const getConsequenceIcon = (type: ConsequenceType): typeof ChatOutlinedIcon => {
+    switch (type) {
         case "conversation":
         case "conversationChoice":
             return ForumOutlinedIcon

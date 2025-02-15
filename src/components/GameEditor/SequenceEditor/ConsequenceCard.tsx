@@ -11,13 +11,13 @@ interface Props {
 
 
 export const ConsequenceIcon = (props: { consequence: Consequence }) => {
-    const Icon = getConsequenceIcon(props.consequence)
+    const Icon = getConsequenceIcon(props.consequence.type)
     return  <Tooltip title={getConsequenceDescription(props.consequence)} ><Icon/></Tooltip>
 }
 
 export const ConsequenceCard = ({ consequence, handleEditButton, width }: Props) => (
     <ConceptCard
-        Icon={getConsequenceIcon(consequence)}
+        Icon={getConsequenceIcon(consequence.type)}
         handleClick={handleEditButton}
         description={getConsequenceDescription(consequence)}
         title={consequence.type}
