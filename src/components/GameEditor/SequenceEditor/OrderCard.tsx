@@ -15,7 +15,7 @@ const getDescription = (order: Order): string => {
             return `${order.steps.length}x steps`
         case "act": {
             const actions = order.steps.map(step => step.animation);
-            return `${actions.join()}`
+            return `animations: ${actions.join()}`
         }
         case "say": {
             const text = order.text.length > 35 ? order.text.substring(0, 32) + "..." : order.text

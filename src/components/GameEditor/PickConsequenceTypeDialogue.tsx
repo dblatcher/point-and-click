@@ -6,7 +6,6 @@ import { getConsequenceIcon } from "./SequenceEditor/get-order-details"
 interface Props {
     immediateOnly?: boolean
     handleChoice: { (consequenceType: ConsequenceType): void }
-    selectedConsequenceType?: ConsequenceType
     open: boolean
     onClose: { (): void }
 }
@@ -16,12 +15,13 @@ const ConsequenceIcon = ({ type }: { type: ConsequenceType }) => {
     return <Icon />
 }
 
-export const PickConsequenceTypeDialogue = ({ immediateOnly, handleChoice, selectedConsequenceType, open, onClose }: Props) => {
+export const PickConsequenceTypeDialogue = ({ immediateOnly, handleChoice, open, onClose }: Props) => {
     const flatList = immediateOnly ? [...immediateConsequenceTypes] : [...consequenceTypes];
     const splitList: ConsequenceType[][] = []
+    const optionsPerList = immediateOnly ? 5 : 6
 
     while (flatList.length > 0) {
-        splitList.push(flatList.splice(0, 5))
+        splitList.push(flatList.splice(0, optionsPerList))
     }
 
     return (

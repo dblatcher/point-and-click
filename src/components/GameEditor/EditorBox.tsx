@@ -53,9 +53,9 @@ export const EditorBox = ({
             )}
             <Box component={'section'}
                 {...contentBoxProps}
-                sx={{
+                sx={contentBoxProps?.sx ?? {
                     padding: 1,
-                    ...contentBoxProps?.sx,
+
                 }}
             >
                 {children}

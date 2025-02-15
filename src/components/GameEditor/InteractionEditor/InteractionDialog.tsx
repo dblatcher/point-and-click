@@ -121,7 +121,6 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                 <Grid container>
                     <Grid item xs={6}>
                         <EditorBox title="Conditions">
-
                             <Stack spacing={2} paddingBottom={2}>
                                 <SelectInput
                                     label="Room must be:"
@@ -145,7 +144,10 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                         <FlagConditionControl interaction={interaction} updateInteraction={updateInteraction} />
                     </Grid>
                     <Grid item xs={6}>
-                        <EditorBox title="Consequences">
+                        <EditorBox title="Consequences"
+                            boxProps={{ height: '100%', boxSizing: 'border-box', position: 'relative', display: 'flex', flexDirection: 'column' }}
+                            contentBoxProps={{ flex: 1, sx: { paddingY: 4, paddingX: 3 } }}
+                        >
                             <ArrayControl
                                 list={consequences}
                                 createButtonPlacement="END"
