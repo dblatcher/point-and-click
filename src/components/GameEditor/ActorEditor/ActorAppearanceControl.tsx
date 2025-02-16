@@ -86,7 +86,7 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                         <Box flex={1} display={'flex'} justifyContent={'center'}>
                             <NumberInput
                                 label="display baseline" value={data.baseline || 0}
-                                min={0} max={data.height}
+                                min={-200} max={data.height}
                                 inputHandler={(baseline) => updateFromPartial({ baseline })} />
                         </Box>
                     </Box>
