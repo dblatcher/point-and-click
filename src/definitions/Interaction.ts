@@ -12,6 +12,7 @@ export const InteractionSchema = z.object({
     consequences: z.array(ConsequenceSchema),
     flagsThatMustBeFalse: z.array(z.string()).optional(),
     flagsThatMustBeTrue: z.array(z.string()).optional(),
+    requiredInventory: z.array(z.string()).optional(),
 })
 
 export type Interaction = z.infer<typeof InteractionSchema>

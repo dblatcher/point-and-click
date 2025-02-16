@@ -1,7 +1,7 @@
 import { Interaction } from "@/definitions";
 import { IconButton, Stack, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
-import { ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon, FlagFilledIcon, FlagOutlinedIcon } from "../material-icons";
+import { ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon, FlagFilledIcon, FlagOutlinedIcon, InventoryIcon } from "../material-icons";
 import { ConsequenceIcon } from "../SequenceEditor/ConsequenceCard";
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInteraction, openEditor }: Props) => {
     const {
         verbId, targetId, targetStatus, itemId, roomId,
-        consequences, flagsThatMustBeFalse = [], flagsThatMustBeTrue = []
+        consequences, flagsThatMustBeFalse = [], flagsThatMustBeTrue = [], requiredInventory = []
     } = interaction
 
     return (
@@ -45,6 +45,11 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
                 {flagsThatMustBeFalse.map((flagKey, index) => (
                     <Tooltip title={`${flagKey} must be OFF`} key={index}>
                         <FlagOutlinedIcon />
+                    </Tooltip>
+                ))}
+                {requiredInventory.map((itemId, index) => (
+                    <Tooltip title={itemId} key={index}>
+                        <InventoryIcon />
                     </Tooltip>
                 ))}
             </TableCell>

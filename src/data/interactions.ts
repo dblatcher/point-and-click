@@ -122,7 +122,7 @@ export const interactions: Interaction[] = [
                             }
                         ],
                         startDirection: 'left',
-                        endDirection:'right',
+                        endDirection: 'right',
                     }
                 ]
             },
@@ -183,6 +183,23 @@ export const interactions: Interaction[] = [
                     }
                 ]
             }
+        ]
+    },
+    {
+        verbId: 'TAKE',
+        targetId: 'sun',
+        mustReachFirst: true,
+        requiredInventory: ['PASTA', 'ITEM_THAT_DOES_NOT_EXIST'],
+        consequences: [
+            {
+                type: 'order', orders: [
+                    {
+                        type: 'say',
+                        text: 'I cannot take the sun, even with this tube of pasta',
+                        time: 100,
+                    }
+                ]
+            },
         ]
     },
     {

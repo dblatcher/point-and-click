@@ -75,7 +75,7 @@ export function handleCommand(command: Command, props: GameProps): { (state: Gam
         if (!currentRoom) { return state }
 
         const player = actors.find(_ => _.isPlayer)
-        const interaction = matchInteraction(command, currentRoom, state.interactions, state.flagMap)
+        const interaction = matchInteraction(command, currentRoom, state.interactions, state)
         const mustReachFirst = interaction && (command.verb.isMoveVerb || interaction.mustReachFirst)
 
         const descriptionForLog = describeCommand(command)

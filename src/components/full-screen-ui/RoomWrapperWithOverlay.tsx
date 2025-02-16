@@ -80,7 +80,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const performDefaultInteraction = (target: CommandTarget) => {
         if (moveVerb) {
             const moveCommand = { verb: moveVerb, target };
-            const moveInteraction = matchInteraction(moveCommand, currentRoom, gameProps.interactions, gameState.flagMap)
+            const moveInteraction = matchInteraction(moveCommand, currentRoom, gameProps.interactions, gameState)
             if (moveInteraction) {
                 return updateGameState({
                     type: 'SEND-COMMAND', command: moveCommand

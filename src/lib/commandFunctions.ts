@@ -1,6 +1,6 @@
 import { Command, Interaction, RoomData, FlagMap, CommandTarget, GameContents } from "@/definitions";
-
 import { findById } from "./util";
+import { GameState } from "./game-state-logic/types";
 
 export const wildCard = {
     ITEM: "$ITEM",
@@ -79,13 +79,19 @@ function failsOnFlags(mustBe: boolean, idList: string[], flagMap: FlagMap): bool
     return results.includes(false)
 }
 
+function failsOnInventory(requiredInventory: string[], gameState: GameState): boolean {
+    const player = gameState.actors.find(actor => actor.isPlayer)
+    return gameState.items.some(item => item.actorId !== player?.id && requiredInventory.includes(item.id))
+}
+
 export function matchInteraction(
     command: Command,
     room: RoomData | undefined,
     interactions: Interaction[],
-    flagMap: FlagMap,
+    gameState: GameState,
 ): Interaction | undefined {
     const { verb, item, target } = command
+    const { flagMap } = gameState
     return interactions.find(interaction => {
 
         const matchesCommandAndTargetStatus = interaction.verbId === verb.id
@@ -106,6 +112,12 @@ export function matchInteraction(
 
         if (interaction.flagsThatMustBeFalse) {
             if (failsOnFlags(false, interaction.flagsThatMustBeFalse, flagMap)) {
+                return false
+            }
+        }
+
+        if (interaction.requiredInventory) {
+            if (failsOnInventory(interaction.requiredInventory, gameState)) {
                 return false
             }
         }

@@ -18,14 +18,12 @@ export const FlagConditionControl: React.FunctionComponent<Props> = ({ interacti
     const { flagMap } = gameDesign;
     const { flagsThatMustBeFalse = [], flagsThatMustBeTrue = [] } = interaction
 
-
     return <EditorBox title="Required Flags" barContent={(
         <div style={{ display: 'flex', alignItems: 'center' }}>
             <HelpButton helpTopic="flag-conditions" />
         </div>
     )}>
         <Stack divider={<Divider />}>
-
             <MultipleSelectChip
                 label="Must be on"
                 options={Object.keys(flagMap).filter(id => !flagsThatMustBeFalse.includes(id)).map(id => ({ id, description: flagMap[id]?.description }))}

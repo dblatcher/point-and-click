@@ -13,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import HideImageOutlinedIcon from '@mui/icons-material/HideImageOutlined';
 import UploadIcon from "@mui/icons-material/Upload";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import InventoryIcon from '@mui/icons-material/Inventory2Outlined';
 import AnimationIcon from '@mui/icons-material/Animation';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import HelpIcon from "@mui/icons-material/Help";
@@ -67,6 +68,7 @@ export {
     FlagFilledIcon,
     HelpIcon,
     HideImageOutlinedIcon,
+    InventoryIcon,
     LinkIcon,
     LogOut,
     InteractionIcon,

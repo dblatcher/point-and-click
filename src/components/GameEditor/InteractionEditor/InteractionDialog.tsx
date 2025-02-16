@@ -18,6 +18,7 @@ import { InteractionIcon } from "../material-icons";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { FlagConditionControl } from "./FlagConditionControl";
 import { PickConsequenceTypeDialogue } from "../PickConsequenceTypeDialogue";
+import { MultipleSelectChip } from "../MultipleSelectChip";
 
 interface Props {
     initialState: Partial<Interaction>;
@@ -139,6 +140,15 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                     inputHandler={(mustReachFirst) => { updateInteraction({ mustReachFirst }) }}
                                     value={!!interaction.mustReachFirst}
                                 />
+
+                                <MultipleSelectChip
+                                    label="Required inventory items"
+                                    options={gameDesign.items.map(item => item)}
+                                    selectedOptionIds={interaction.requiredInventory ?? []}
+                                    setSelectedOptionIds={requiredInventory => updateInteraction({ requiredInventory })}
+                                    idBase="required-inventory"
+                                />
+
                             </Stack>
                         </EditorBox>
                         <FlagConditionControl interaction={interaction} updateInteraction={updateInteraction} />

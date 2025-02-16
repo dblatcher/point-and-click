@@ -7,6 +7,6 @@ export const InteractionTableHeaders: React.FunctionComponent = () => (
         <TableCell>item</TableCell>
         <TableCell>room</TableCell>
         <TableCell rowSpan={2}>Consequences</TableCell>
-        <TableCell rowSpan={2}>Required Flags</TableCell>
+        <TableCell rowSpan={2}>Conditions</TableCell>
     </TableRow>
 )
