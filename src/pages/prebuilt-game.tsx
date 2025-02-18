@@ -1,20 +1,30 @@
 import { GameDesignPlayer } from '@/components/GameDesignPlayer'
-import { prebuiltGameDesign } from '@/data/fullGame'
-import { imageAssets } from '@/data/images'
-import { soundAssets } from '@/data/sounds'
 import { PageLayout } from '@/components/PageLayout'
 import { bigLayoutSet } from '@/components/game-mui-ux'
+import { DesignAndAssets, getGameFromApi } from '@/lib/api-usage'
+import { useEffect, useState } from 'react'
 
 
 export default function GameLoaderPage() {
+  const [data, setData] = useState<DesignAndAssets | undefined>()
+  const [loadError, setLoadError] = useState<Error | undefined>()
+
+  useEffect(() => {
+    getGameFromApi().then(setData).catch(setLoadError)
+  }, [setData, setLoadError])
+
   return (
     <PageLayout noPageScroll>
-      <GameDesignPlayer
-        gameDesign={prebuiltGameDesign}
-        imageAssets={imageAssets}
-        soundAssets={soundAssets}
-        uiComponents={bigLayoutSet}
-      />
+
+      {loadError && <p>ERROR: {loadError.message}</p>}
+
+      {data ?
+        <GameDesignPlayer
+          gameDesign={data.gameDesign}
+          imageAssets={data.imageAssets}
+          soundAssets={data.soundAssets}
+          uiComponents={bigLayoutSet}
+        /> : null}
     </PageLayout>
   )
 }
