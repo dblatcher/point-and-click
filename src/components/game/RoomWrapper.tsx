@@ -7,7 +7,7 @@ import { buildContentsList } from "./put-contents-in-order";
 
 
 // use true for debugging only- slows program!
-const renderCells = false
+const renderCells = true
 
 export const RoomWrapper: React.FunctionComponent = () => {
     const { gameProps, gameState, updateGameState } = useGameState()

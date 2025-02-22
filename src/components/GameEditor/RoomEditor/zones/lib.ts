@@ -1,9 +1,10 @@
 import { HotspotZone, RoomData, SupportedZoneShape, Zone } from "@/definitions";
-import { Point } from "physics-worlds/dist/src/geometry";
 import { ClickEffect } from "../ClickEffect";
 import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { cloneData } from "@/lib/clone";
 import { Polygon } from "@/definitions/Zone";
+
+interface Point { x: number; y: number }
 
 export function makeNewZone(point: Point, shape: SupportedZoneShape): Zone {
     const zone: Zone = { x: point.x, y: point.y }

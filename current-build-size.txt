@@ -1,0 +1,19 @@
+Route (pages)                              Size     First Load JS
+┌ ○ / (478 ms)                             2.96 kB         138 kB
+├   /_app                                  0 B            89.9 kB
+├ ○ /404                                   181 B          90.1 kB
+├ λ /api/game                              0 B            89.9 kB
+├ λ /api/hello                             0 B            89.9 kB
+├ ○ /attribution (308 ms)                  1.79 kB         135 kB
+├ ○ /editor (315 ms)                       1.74 kB         124 kB
+├ ○ /game-loader (640 ms)                  54 kB           308 kB
+├   └ css/0c4187c859233367.css             1 kB
+├ ○ /prebuilt-editor (314 ms)              1.75 kB         124 kB
+├ ○ /prebuilt-game (436 ms)                473 B           236 kB
+└ ○ /prebuilt-text-game                    7.16 kB         213 kB
++ First Load JS shared by all              90 kB
+  ├ chunks/framework-2c79e2a64abdb08b.js   45.2 kB
+  ├ chunks/main-7477d36a73a3487c.js        27 kB
+  ├ chunks/pages/_app-52dbb895217919ee.js  15.2 kB
+  ├ chunks/webpack-e0b43398e3022d9f.js     2.44 kB
+  └ css/8cdb51331b86797e.css               118 B

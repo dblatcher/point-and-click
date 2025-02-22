@@ -2,10 +2,7 @@ import { type RoomData } from "../../definitions/RoomData"
 import { type Zone } from "../../definitions/Zone"
 import { Circle, isPointInsideCircle, isPointInsidePolygon, isPointInsideRectangle, Point, Rectangle } from "./geometry"
 
-type CellMatrix = (0 | 1)[][]
-
-
-export type { CellMatrix }
+export type CellMatrix = (0 | 1)[][]
 
 function isCellBlocked(
     rowIndex: number, cellIndex: number, cellSize: number,

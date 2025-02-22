@@ -23,7 +23,6 @@
     "jszip": "^3.10.1",
     "micromark": "^3.1.0",
     "next": "13.2.4",
-    "physics-worlds": "^2.3.0",
     "raw-loader": "^4.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
