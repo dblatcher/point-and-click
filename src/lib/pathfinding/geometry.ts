@@ -2,6 +2,9 @@
 // importing isPointInsidePolygon was adding ~15kb to the js load
 // should build an efficient library for geometry (with test coverage!)
 
+// TO DO - isPointInsidePolygon is buggy?
+// can get a missing rows of cells the player can walk through 
+// confirmed bug existed when using worlds library
 
 interface Point { x: number; y: number }
 
