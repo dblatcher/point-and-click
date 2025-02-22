@@ -8,11 +8,10 @@ import { Layout } from "../game-ui/Layout";
 import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 import { GameProps } from "./types";
 
-const TIMER_SPEED = 10
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
     const [gameState, dispatch] = useReducer(gameStateReducer, getInitialGameState(props))
-    const { showDebugLog, uiComponents = {} } = props
+    const { showDebugLog, uiComponents = {}, timerInterval = 10 } = props
     const {
         GameLayoutComponent = Layout,
     } = uiComponents
@@ -24,7 +23,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         if (gameState.isPaused || currentStoryBoard) { return }
         dispatch({ type: 'TICK-UPDATE', props })
     }
-    useInterval(tick, TIMER_SPEED)
+    useInterval(tick, timerInterval)
 
     return <GameStateProvider value={{
         gameState,

@@ -14,12 +14,12 @@ import { SoundEffectMap, SoundValue } from "../../definitions/ActorData";
 import { HandleClickFunction, HandleHoverFunction } from "../game/types";
 import { FrameShape } from "./FrameShape";
 import { SpriteShape } from "./SpriteShape";
+import { useGameState } from "@/context/game-state-context";
 
 interface Props {
     roomData: RoomData;
     viewAngle: number;
     data: ActorData;
-    animationRate?: number;
     clickHandler?: HandleClickFunction<ActorData>;
     contextClickHandler?: HandleClickFunction<ActorData>;
     handleHover?: HandleHoverFunction;
@@ -66,13 +66,14 @@ export const ActorFigure: FunctionComponent<Props> = ({
     data,
     roomData,
     viewAngle,
-    animationRate = 200,
     isPaused,
     clickHandler, handleHover, contextClickHandler,
     orders = [],
     overrideSprite,
     noSound,
 }: Props) => {
+    const { gameProps } = useGameState()
+    const animationRate = (gameProps.timerInterval ?? 10) * 20
     const [frameIndex, setFrameIndex] = useState<number>(0)
     const sprites = useSprites()
 
@@ -160,7 +161,6 @@ export const ActorFigure: FunctionComponent<Props> = ({
                         <PersistentSound
                             key={index}
                             soundValue={soundValue}
-                            animationRate={animationRate}
                             isPaused={isPaused} />)}
                     {intermittentSoundValues.map((soundValue, index) => (
                         <IntermitentSound

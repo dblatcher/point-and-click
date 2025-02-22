@@ -5,7 +5,6 @@ import { useAssets } from "@/context/asset-context";
 
 interface Props {
     soundValue?: SoundValue;
-    animationRate?: number;
     isPaused: boolean;
 }
 

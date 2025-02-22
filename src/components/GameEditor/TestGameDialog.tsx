@@ -6,6 +6,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, IconBu
 import { useState } from "react";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
+import { RangeInput } from "./RangeInput";
 
 
 export const TestGameDialog = () => {
@@ -13,6 +14,7 @@ export const TestGameDialog = () => {
     const { gameDesign } = useGameDesign()
     const { soundService } = useAssets()
     const [showDebugLog, setShowDebugLog] = useState(false)
+    const [interval, setInterval] = useState(10)
     const [gameTestDialogOpen, setGameTestDialogOpen] = useState(false);
     const [resetTimeStamp, setResetTimeStamp] = useState(0);
 
@@ -37,6 +39,12 @@ export const TestGameDialog = () => {
                 <DialogActions>
                     <DialogContentText sx={{ marginRight: 'auto' }}>Test: {gameDesign.id}</DialogContentText>
                     <BooleanInput value={showDebugLog} inputHandler={setShowDebugLog} label="debug log" />
+                    <RangeInput label="game speed"
+                        min={1} max={20} step={1}
+                        value={interval}
+                        formattedValue={`x${(10 / interval).toFixed(1)}`}
+                        onChange={event => setInterval(Number(event.target.value))}
+                    />
                     <Button onClick={reset} >reset game test</Button>
                     <Button onClick={close} >close game test</Button>
                 </DialogActions>
@@ -48,6 +56,7 @@ export const TestGameDialog = () => {
                         showDebugLog={showDebugLog}
                         _sprites={sprites}
                         soundService={soundService}
+                        timerInterval={interval}
                     />
                 </DialogContent>
             </Dialog>
