@@ -169,7 +169,8 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                         state.actorOrders[actor.id],
                         state,
                         findById(actor.sprite, action.props._sprites),
-                        action.props.instantMode
+                        action.props.instantMode,
+                        action.props.orderSpeed,
                     )
                     if (triggersPendingInteraction) {
                         pendingInteractionShouldBeDone = true

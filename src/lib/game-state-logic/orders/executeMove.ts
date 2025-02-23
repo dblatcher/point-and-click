@@ -26,7 +26,7 @@ function determineDirection(postion: Point, desination: Point, availableDirectio
 }
 
 
-export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Sprite, instantMode?: boolean): void {
+export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Sprite, instantMode?: boolean, orderSpeed = 1): void {
     if (moveOrder.roomId && moveOrder.roomId !== actor.room) {
         console.warn(`${actor.id} is in ${actor.room ?? '[NOWHERE]'}, not ${moveOrder.roomId} - cancelling order`)
         moveOrder.steps.splice(0, moveOrder.steps.length)
@@ -46,7 +46,7 @@ export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Spr
     const [nextStep] = moveOrder.steps;
     if (!nextStep) { return }
     const { speed: stepSpeed = 1 } = nextStep
-    const speed = actorSpeed * stepSpeed
+    const speed = actorSpeed * stepSpeed * orderSpeed
 
     let newX = x
     let newY = y

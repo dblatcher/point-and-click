@@ -17,6 +17,7 @@ export type GameProps = Readonly<{
     instantMode?: boolean;
     soundService: SoundService;
     timerInterval?: number;
+    orderSpeed?: number;
 } & GameCondition>
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };

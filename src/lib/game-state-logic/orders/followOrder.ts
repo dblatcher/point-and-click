@@ -35,19 +35,28 @@ function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order:
     order.steps = newSteps
 }
 
-function executeOrder(nextOrder: Order, subject: ActorData, cellMatrix: CellMatrix, state: GameState, orders: Order[], sprite?: Sprite, instantMode?: boolean,) {
+function executeOrder(
+    nextOrder: Order, 
+    subject: ActorData, 
+    cellMatrix: CellMatrix, 
+    state: GameState, 
+    orders: Order[],
+    sprite?: Sprite, 
+    instantMode = false, 
+    orderSpeed = 1
+) {
     switch (nextOrder.type) {
         case "move":
             if (!nextOrder.pathIsSet) {
                 findPathBetweenSteps(subject, cellMatrix, nextOrder);
             }
-            executeMove(nextOrder, subject, sprite, instantMode);
+            executeMove(nextOrder, subject, sprite, instantMode, orderSpeed);
             break;
         case "say":
-            executeSay(nextOrder, instantMode);
+            executeSay(nextOrder, instantMode, orderSpeed);
             break;
         case "act":
-            executeAction(nextOrder, instantMode);
+            executeAction(nextOrder, instantMode, orderSpeed);
             break;
         case "goTo": {
             const moveOrder = makeMoveOrderFromGoto(nextOrder, state);
@@ -78,7 +87,7 @@ const orderIsFinished = (order: Order): boolean => {
  * @param orders a list of orders, either from a sequence.actorOrders or GameState.actorOrders
  * @returns whether they just finished an order that triggers the pendingInteraction
  */
-export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: Order[] | undefined, state: GameState, sprite?: Sprite, instantMode?: boolean): boolean {
+export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: Order[] | undefined, state: GameState, sprite?: Sprite, instantMode = false, orderSpeed = 1): boolean {
     if (!orders || orders.length === 0) { return false }
     // TO DO - for instantMode, should emit all the order reports here
     // one order per cycle is not really instant
@@ -91,7 +100,7 @@ export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: 
         }
         nextOrder._started = true
     }
-    executeOrder(nextOrder, subject, cellMatrix, state, orders, sprite, instantMode);
+    executeOrder(nextOrder, subject, cellMatrix, state, orders, sprite, instantMode, orderSpeed);
 
     if (orderIsFinished(nextOrder)) {
         if (nextOrder.endDirection) {

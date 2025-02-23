@@ -56,6 +56,7 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
         state,
         findById(actor.sprite, props._sprites),
         props.instantMode,
+        props.orderSpeed,
     ))
 
     if (currentStage.immediateConsequences) {

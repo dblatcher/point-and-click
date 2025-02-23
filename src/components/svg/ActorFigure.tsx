@@ -73,7 +73,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
     noSound,
 }: Props) => {
     const { gameProps } = useGameState()
-    const animationRate = (gameProps.timerInterval ?? 10) * 20
+    const animationRate = 200 / (gameProps.orderSpeed ?? 1)
     const [frameIndex, setFrameIndex] = useState<number>(0)
     const sprites = useSprites()
 

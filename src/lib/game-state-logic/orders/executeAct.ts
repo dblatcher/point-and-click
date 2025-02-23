@@ -1,7 +1,7 @@
 import { ActOrder } from "@/definitions";
 
 
-export function executeAction(actOrder: ActOrder, instantMode?: boolean): void {
+export function executeAction(actOrder: ActOrder, instantMode = false, orderSpeed = 1): void {
     if (instantMode) {
         actOrder.steps.splice(0, actOrder.steps.length)
         return
@@ -11,7 +11,7 @@ export function executeAction(actOrder: ActOrder, instantMode?: boolean): void {
         if (typeof nextAction.timeElapsed === 'undefined') {
             nextAction.timeElapsed = 0
         }
-        nextAction.timeElapsed++
+        nextAction.timeElapsed += orderSpeed
         if (nextAction.timeElapsed >= nextAction.duration) {
             actOrder.steps.shift()
         }
