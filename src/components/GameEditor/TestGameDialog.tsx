@@ -49,7 +49,11 @@ export const TestGameDialog = () => {
                     <Button onClick={reset} >reset game test</Button>
                     <Button onClick={close} >close game test</Button>
                 </DialogActions>
-                <DialogContent>
+                <DialogContent sx={{
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}>
                     <Game
                         key={resetTimeStamp}
                         {...gameDesign} actorOrders={{}}
