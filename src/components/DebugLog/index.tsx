@@ -1,10 +1,10 @@
-
-import { Order } from "@/definitions";
-import { useEffect, useRef, useState } from "react";
 import { useGameState } from "@/context/game-state-context";
-import styles from "./styles.module.css";
 import { LogEntry } from "@/lib/inGameDebugging";
-
+import { Box, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { ActorTable } from "./ActorTable";
+import { EventFeed } from "./EventFeed";
+import { FlagList } from "./FlagList";
 
 export const DebugLog = () => {
     const { gameState } = useGameState();
@@ -21,114 +21,32 @@ export const DebugLog = () => {
         }
     })
 
-
-    const listRef = useRef<HTMLUListElement>(null)
-    useEffect(() => {
-        const { current: listElement } = listRef
-        if (!listElement) { return }
-        listElement.scrollTo({ left: 0, top: listElement.scrollHeight })
-    }, [log.length])
-
-    const actorsInRoom = gameState.actors.filter(_ => _.room === gameState.currentRoomId)
-
-    const describeOrder = (order?: Order): [string, string] => {
-        if (!order) { return ["", ""] }
-        if (!('steps' in order)) {
-            return [order.type, order.animation || ""]
-        }
-        const [currentStep] = order.steps
-        return [order.type, currentStep?.animation || ""]
-    }
-    const getOrderDescrition = (actorId: string): [string, string] => {
-        const { sequenceRunning, actorOrders } = gameState
-        if (sequenceRunning && sequenceRunning.stages.length > 0) {
-            const [currentStage] = sequenceRunning.stages;
-
-            if (currentStage.actorOrders && currentStage.actorOrders[actorId]) {
-                const [currentStageOrder] = currentStage.actorOrders[actorId];
-                return describeOrder(currentStageOrder)
-            }
-        }
-
-        const orders = actorOrders[actorId]
-        if (orders && orders.length > 0) {
-            const [currentOrder] = orders
-            return describeOrder(currentOrder)
-        }
-        return describeOrder()
-    }
-
     return (
-        <aside>
-            <div className={styles.layout}>
-                <section className={styles.statusSection}>
-                    <p>room:{gameState.currentRoomId}</p>
-                    <p>sequence:{gameState.sequenceRunning?.id}</p>
-                    <p>conversation:{gameState.currentConversationId}</p>
-                </section>
-            </div>
-            <div className={styles.layout}>
-                <div>
-                    <table className={styles.actorTable}>
-                        <thead>
-                            <tr>
-                                <th />
-                                <th>status</th>
-                                <th>order type</th>
-                                <th>animation</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {actorsInRoom.map((actor, index) => (
-                                <tr key={index}>
-                                    <th>{actor.id}</th>
-                                    <td>{actor.status}</td>
-                                    {getOrderDescrition(actor.id).map((text, index2) => (
-                                        <td key={index2}>{text}</td>
-                                    ))}
-                                </tr>
-                            )
-                            )}
-                        </tbody>
-                    </table>
-
-                    <table className={styles.actorTable}>
-                        <thead>
-                            <tr>
-                                <th>Flag</th>
-                                <th>value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Object.entries(gameState.flagMap).map(entry => {
-                                if (!entry || !entry[1]) { return null }
-                                const [flagKey, flag] = entry;
-                                return <tr key={flagKey}>
-                                    <td>{flagKey}</td>
-                                    <td>{flag?.value ? 'TRUE' : 'FALSE'}</td>
-                                    <td>{flag?.description}</td>
-                                </tr>
-                            })}
-                        </tbody>
-                    </table>
-
-                </div>
-
-                <div style={{ flex: 1 }}>
-                    <ul className={styles.loglist} ref={listRef} style={{ height: '100px' }}>
-                        {log.map((entry, index) => (
-                            <li key={index}>
-                                <b>
-                                    {entry.time.toLocaleTimeString()}:
-                                </b>
-                                {entry.content}
-                            </li>
-                        ))}
-                    </ul>
-                    <button onClick={() => { setLog([]) }}>clear log</button>
-                </div>
-            </div>
-            <hr />
-        </aside >
+        <Box component={'aside'} borderBottom={1} marginBottom={2} paddingBottom={2}>
+            <Box sx={{
+                display: 'flex',
+                gap: 4,
+                alignItems: 'flex-start',
+            }} component={'section'}>
+                <Typography>
+                    <b>room:</b>
+                    {gameState.currentRoomId}</Typography>
+                <Typography>
+                    <b>sequence:</b>
+                    {gameState.sequenceRunning?.id ?? '[none]'}</Typography>
+                <Typography>
+                    <b>conversation:</b>
+                    {gameState.currentConversationId ?? '[none]'} </Typography>
+            </Box>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+            }} component={'section'}>
+                <ActorTable />
+                <FlagList flagMap={gameState.flagMap} />
+                <EventFeed log={log} clearLog={() => setLog([])} />
+            </Box>
+        </Box >
     );
 };

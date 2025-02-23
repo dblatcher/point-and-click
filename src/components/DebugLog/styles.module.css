@@ -1,34 +1,4 @@
 
-.layout {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.loglist {
-    flex: 1;
-    margin: 0;
-    resize: vertical;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    background-color: greenyellow;
-    min-height: 8em;
-    font-size: small;
-    list-style: none;
-    padding: 0 0 0 1em;
-}
-
-.statusSection {
-    flex: 1;
-    margin: 0;
-    display: flex;
-}
-
-.statusSection p {
-    margin: 0;
-    flex: 1;
-}
-
 .actorTable td, .actorTable th {
     font-size: small;
     min-width: 6em;
