@@ -12,10 +12,9 @@ export const EventFeed = ({ log, clearLog }: Props) => {
     return (
         <Box sx={{
             flex: 1,
-            borderStyle: 'solid',
-            borderWidth: 1,
             display: 'flex',
             flexDirection: 'column'
+            
         }}>
             <ScrollingFeed
                 maxHeight={100}
@@ -24,7 +23,8 @@ export const EventFeed = ({ log, clearLog }: Props) => {
                     role: 'log',
                     'aria-atomic': true,
                     'aria-live': 'polite',
-                    'aria-label': 'in-game events'
+                    'aria-label': 'in-game events',
+                    borderBottom: '1px solid'
                 }}
                 listProps={{
                     sx: {
@@ -38,7 +38,7 @@ export const EventFeed = ({ log, clearLog }: Props) => {
                         {entry.content}
                     </Typography>
                 ))} />
-            <Button onClick={clearLog}>clear log</Button>
+            <Button sx={{alignSelf:'flex-start'}} variant="outlined" onClick={clearLog}>clear log</Button>
         </Box >
     );
 };

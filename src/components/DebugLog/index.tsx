@@ -25,27 +25,29 @@ export const DebugLog = () => {
         <Box component={'aside'} borderBottom={1} marginBottom={2} paddingBottom={2}>
             <Box sx={{
                 display: 'flex',
-                gap: 4,
-                alignItems: 'flex-start',
-            }} component={'section'}>
-                <Typography>
-                    <b>room:</b>
-                    {gameState.currentRoomId}</Typography>
-                <Typography>
-                    <b>sequence:</b>
-                    {gameState.sequenceRunning?.id ?? '[none]'}</Typography>
-                <Typography>
-                    <b>conversation:</b>
-                    {gameState.currentConversationId ?? '[none]'} </Typography>
-            </Box>
-            <Box sx={{
-                display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'flex-start',
             }} component={'section'}>
+                <Box sx={{
+                    display: 'flex',
+                    gap: 1,
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    alignSelf: 'center',
+                }} component={'section'}>
+                    <Typography>
+                        <b>room:</b>
+                        {gameState.currentRoomId}</Typography>
+                    <Typography>
+                        <b>sequence:</b>
+                        {gameState.sequenceRunning?.id ?? '[none]'}</Typography>
+                    <Typography>
+                        <b>conversation:</b>
+                        {gameState.currentConversationId ?? '[none]'} </Typography>
+                </Box>
                 <ActorTable />
-                <FlagList flagMap={gameState.flagMap} />
                 <EventFeed log={log} clearLog={() => setLog([])} />
+                <FlagList flagMap={gameState.flagMap} />
             </Box>
         </Box >
     );

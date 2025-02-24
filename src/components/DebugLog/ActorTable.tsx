@@ -1,7 +1,7 @@
 import { useGameState } from "@/context/game-state-context";
-import styles from "./styles.module.css";
 import { Order } from "@/definitions";
 import React from "react";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 export const ActorTable: React.FunctionComponent = () => {
 
@@ -36,27 +36,27 @@ export const ActorTable: React.FunctionComponent = () => {
     }
 
     return (<div>
-        <table className={styles.actorTable}>
-            <thead>
-                <tr>
-                    <th />
-                    <th>status</th>
-                    <th>order type</th>
-                    <th>animation</th>
-                </tr>
-            </thead>
-            <tbody>
+        <Table size="small" >
+            <TableHead>
+                <TableRow>
+                    <TableCell />
+                    <TableCell>status</TableCell>
+                    <TableCell>order type</TableCell>
+                    <TableCell>animation</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
                 {actorsInRoom.map((actor, index) => (
-                    <tr key={index}>
-                        <th>{actor.id}</th>
-                        <td>{actor.status}</td>
+                    <TableRow key={index}>
+                        <TableCell component='th'>{actor.id}</TableCell>
+                        <TableCell>{actor.status}</TableCell>
                         {getOrderDescrition(actor.id).map((text, index2) => (
-                            <td key={index2}>{text}</td>
+                            <TableCell key={index2}>{text}</TableCell>
                         ))}
-                    </tr>
+                    </TableRow>
                 )
                 )}
-            </tbody>
-        </table>
+            </TableBody>
+        </Table>
     </div>)
 }
