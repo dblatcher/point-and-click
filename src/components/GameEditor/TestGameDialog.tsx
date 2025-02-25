@@ -7,6 +7,9 @@ import { useState } from "react";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
 import { RangeInput } from "./RangeInput";
+import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
+import { GameDesign } from "@/definitions";
+import { cloneData } from "@/lib/clone";
 
 
 export const TestGameDialog = () => {
@@ -15,11 +18,17 @@ export const TestGameDialog = () => {
     const { soundService } = useAssets()
     const [showDebugLog, setShowDebugLog] = useState(false)
     const [gameSpeed, setGameSpeed] = useState(1)
+    const [modifiedGameDesign, setModifiedGameDesign] = useState(cloneData(gameDesign))
     const [gameTestDialogOpen, setGameTestDialogOpen] = useState(false);
     const [resetTimeStamp, setResetTimeStamp] = useState(0);
 
     const reset = () => setResetTimeStamp(Date.now())
     const close = () => setGameTestDialogOpen(false)
+
+    const handleModifiedDesign = (newGameDesignMod: GameDesign) => {
+        setModifiedGameDesign(cloneData({ ...gameDesign, ...newGameDesignMod }))
+        reset()
+    }
 
     return (
         <>
@@ -48,6 +57,7 @@ export const TestGameDialog = () => {
                     <BooleanInput value={showDebugLog} inputHandler={setShowDebugLog} label="debug log" />
                     <Button onClick={reset} >reset game test</Button>
                     <Button onClick={close} >close game test</Button>
+                    <ChangeGameStateDialog sendModifiedDesign={handleModifiedDesign} />
                 </DialogActions>
                 <DialogContent sx={{
                     position: 'relative',
@@ -56,7 +66,7 @@ export const TestGameDialog = () => {
                 }}>
                     <Game
                         key={resetTimeStamp}
-                        {...gameDesign} actorOrders={{}}
+                        {...modifiedGameDesign} actorOrders={{}}
                         gameNotBegun
                         showDebugLog={showDebugLog}
                         _sprites={sprites}
