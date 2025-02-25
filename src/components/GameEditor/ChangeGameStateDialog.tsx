@@ -1,12 +1,14 @@
 import { GameDesignProvider, useGameDesign } from "@/context/game-design-context"
+import { GameDesign } from "@/definitions"
 import { cloneData } from "@/lib/clone"
 import { gameDesignReducer } from "@/lib/game-design-logic/reducer"
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
 import { useReducer, useState } from "react"
-import { FlagMapControl } from "./FlagMapControl"
-import { GameDesign } from "@/definitions"
-import { StartingConditionsForm } from "./StartingConditionsForm"
 import { EditorBox } from "./EditorBox"
+import { FlagMapControl } from "./FlagMapControl"
+import { StartingConditionsForm } from "./StartingConditionsForm"
+import { StartingInventory } from "./StartingInventory"
+import { ActorPositions } from "./ActorPositions"
 
 
 interface Props {
@@ -29,7 +31,7 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
 
     return <>
         <Button onClick={() => setDialogOpen(true)} >state</Button>
-        <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth={'md'}>
             <DialogTitle>Change state: {gameDesign.id}</DialogTitle>
             <DialogContent>
                 <GameDesignProvider input={{
@@ -42,6 +44,8 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
                         <EditorBox title="Flags">
                             <FlagMapControl forModifier />
                         </EditorBox>
+                        <StartingInventory />
+                        <ActorPositions />
                     </Box>
                 </GameDesignProvider>
             </DialogContent>

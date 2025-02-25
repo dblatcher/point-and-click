@@ -11,6 +11,7 @@ import { EditorHeading } from "./EditorHeading";
 import { FlagMapControl } from "./FlagMapControl";
 import { HelpButton } from "./HelpButton";
 import { StartingConditionsForm } from './StartingConditionsForm';
+import { StartingInventory } from './StartingInventory';
 
 export const Overview = () => {
   const { gameDesign, openInEditor, applyModification } = useGameDesign();
@@ -80,6 +81,7 @@ export const Overview = () => {
         <EditorBox title="Flags" barContent={<HelpButton helpTopic={'flags'} />}>
           <FlagMapControl />
         </EditorBox>
+        <StartingInventory />
       </Box>
     </Stack>
   );
