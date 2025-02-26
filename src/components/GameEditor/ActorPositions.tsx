@@ -27,7 +27,7 @@ export const ActorPositions = () => {
                 open={!!actorToPosition}
                 onClose={() => setActorId(undefined)}
             >
-                <DialogTitle>{actorToPosition?.name}</DialogTitle>
+                <DialogTitle>Position:  {actorToPosition?.name ?? actorToPosition?.id}</DialogTitle>
                 <DialogContent>
                     {actorToPosition && (<>
                         <StringInput optional value={actorToPosition.status ?? ''} label="status"

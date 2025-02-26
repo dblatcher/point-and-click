@@ -2,10 +2,23 @@ import { useGameDesign } from "@/context/game-design-context";
 import { listIds } from "@/lib/util";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { EditorBox } from "./EditorBox";
+import { Button, Tooltip } from "@mui/material";
 
 
 export const StartingConditionsForm = () => {
     const { gameDesign, applyModification } = useGameDesign();
+    const player = gameDesign.actors.find(_ => _.isPlayer)
+    const startsInRoomPlayerDoesNotStartIn = !!player && player.room !== gameDesign.currentRoomId
+
+    const setStartingRoomToPlayersLocation = () =>
+        applyModification(`Change starting room to ${player?.room}`, { currentRoomId: player?.room })
+
+    const roomButtonTitle = !player
+        ? 'No player actor is defined'
+        : startsInRoomPlayerDoesNotStartIn
+            ? `Change starting room to ${player.room}`
+            : undefined
+
     return (
         <EditorBox title="starting conditions" contentBoxProps={{ minWidth: 160, display: 'flex', flexDirection: 'column', gap: 3 }}>
             <SelectInput optional label='Starting Room'
@@ -20,6 +33,17 @@ export const StartingConditionsForm = () => {
                 value={gameDesign.openingStoryboardId}
                 inputHandler={openingStoryboardId => applyModification(`Change Title board to ${openingStoryboardId}`, { openingStoryboardId })}
                 options={listIds(gameDesign.storyBoards ?? [])} />
+            <Tooltip title={roomButtonTitle}>
+                <span>
+                    <Button
+                        variant="outlined"
+                        onClick={setStartingRoomToPlayersLocation}
+                        disabled={!startsInRoomPlayerDoesNotStartIn}
+                    >
+                        Start in player room
+                    </Button>
+                </span>
+            </Tooltip>
         </EditorBox>
     )
 }
