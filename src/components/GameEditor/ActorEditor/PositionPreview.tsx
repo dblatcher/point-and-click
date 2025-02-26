@@ -6,23 +6,28 @@ import { Direction, directions } from "@/definitions/BaseTypes";
 import { getTargetPoint, getViewAngleCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { findById, listIds } from "@/lib/util";
 import { Alert, Box, Slider, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { WalkToControl, XYControl } from "../XYControl";
 import { RoomLocationPicker } from "../RoomLocationPicker";
 
 interface Props {
     actorData: ActorData;
     updateFromPartial: { (mod: Partial<ActorData>): void }
+    defaultPreviewWidth?: number
 }
 
 type PointRole = 'position' | 'walkTo';
 
 
-export const PositionPreview = ({ actorData, updateFromPartial }: Props) => {
+export const PositionPreview = ({ actorData, updateFromPartial, defaultPreviewWidth = 400 }: Props) => {
     const [role, setRole] = useState<PointRole>('position')
-    const [previewWidth, setPreviewWidth] = useState(400)
+    const [previewWidth, setPreviewWidth] = useState(defaultPreviewWidth)
     const [lockAngle, setLockAngle] = useState(true)
     const { gameDesign } = useGameDesign();
+
+    useEffect(() => {
+        setPreviewWidth(defaultPreviewWidth)
+    }, [actorData.room, defaultPreviewWidth, setPreviewWidth])
 
     const roomData = findById(actorData.room, gameDesign.rooms)
 

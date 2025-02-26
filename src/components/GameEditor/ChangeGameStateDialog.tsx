@@ -30,10 +30,6 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
         <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth={'md'}>
             <DialogTitle>Modify game: {gameDesign.id}</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    This control is for changing the starting conditions of the game for testing.
-                    It does not make any permanent changes to your game design.
-                </DialogContentText>
                 <GameDesignProvider input={{
                     ...modifiedGameState,
                     dispatchDesignUpdate
@@ -42,6 +38,10 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
                 </GameDesignProvider>
             </DialogContent>
             <DialogActions>
+                <DialogContentText>
+                    This control is for changing the starting conditions of the game for testing.
+                    It does not make any permanent changes to your game design.
+                </DialogContentText>
                 <Button variant="outlined" onClick={() => {
                     dispatchDesignUpdate({ type: 'load-new', gameDesign: gameDesign })
                 }}>reset changes</Button>
