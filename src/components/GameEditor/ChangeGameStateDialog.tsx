@@ -26,7 +26,7 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
     )
 
     return <>
-        <Button onClick={() => setDialogOpen(true)} >state</Button>
+        <Button onClick={() => setDialogOpen(true)} >Modify</Button>
         <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth={'md'}>
             <DialogTitle>Modify game: {gameDesign.id}</DialogTitle>
             <DialogContent>

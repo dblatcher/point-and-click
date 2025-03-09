@@ -2,7 +2,7 @@ import { Game } from "@/components/game/Game";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from "@mui/material";
+import { Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from "@mui/material";
 import { useState } from "react";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
@@ -55,9 +55,11 @@ export const TestGameDialog = () => {
                         onChange={event => setGameSpeed(Number(event.target.value))}
                     />
                     <BooleanInput value={showDebugLog} inputHandler={setShowDebugLog} label="debug log" />
-                    <Button onClick={reset} >reset game test</Button>
-                    <Button onClick={close} >close game test</Button>
-                    <ChangeGameStateDialog sendModifiedDesign={handleModifiedDesign} />
+                    <ButtonGroup>
+                        <Button onClick={reset} >reset</Button>
+                        <ChangeGameStateDialog sendModifiedDesign={handleModifiedDesign} />
+                        <Button onClick={close} >close</Button>
+                    </ButtonGroup>
                 </DialogActions>
                 <DialogContent sx={{
                     position: 'relative',
