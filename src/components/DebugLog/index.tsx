@@ -28,27 +28,27 @@ export const DebugLog = () => {
                 justifyContent: 'space-between',
                 alignItems: 'flex-start',
             }} component={'section'}>
-                <Box sx={{
-                    display: 'flex',
-                    gap: 1,
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    alignSelf: 'center',
-                }} component={'section'}>
-                    <Typography>
-                        <b>room:</b>
-                        {gameState.currentRoomId}</Typography>
-                    <Typography>
-                        <b>sequence:</b>
-                        {gameState.sequenceRunning?.id ?? '[none]'}</Typography>
-                    <Typography>
-                        <b>conversation:</b>
-                        {gameState.currentConversationId ?? '[none]'} </Typography>
-                </Box>
-                <ActorTable />
                 <EventFeed log={log} clearLog={() => setLog([])} />
                 <FlagList flagMap={gameState.flagMap} />
             </Box>
+            <Box sx={{
+                display: 'flex',
+                gap: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignSelf: 'center',
+            }} component={'section'}>
+                <Typography>
+                    <b>room:</b>
+                    {gameState.currentRoomId}</Typography>
+                <Typography>
+                    <b>sequence:</b>
+                    {gameState.sequenceRunning?.id ?? '[none]'}</Typography>
+                <Typography>
+                    <b>conversation:</b>
+                    {gameState.currentConversationId ?? '[none]'} </Typography>
+            </Box>
+
         </Box >
     );
 };

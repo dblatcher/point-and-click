@@ -29,7 +29,7 @@ export const EventFeed = ({ log, clearLog }: Props) => {
                 listProps={{
                     sx: {
                         listStyle: 'none',
-                        padding: 1,
+                        paddingX: 1,
                     }
                 }}
                 feed={log.map((entry, index) => (
