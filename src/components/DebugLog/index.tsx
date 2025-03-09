@@ -2,7 +2,6 @@ import { useGameState } from "@/context/game-state-context";
 import { LogEntry } from "@/lib/inGameDebugging";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ActorTable } from "./ActorTable";
 import { EventFeed } from "./EventFeed";
 import { FlagList } from "./FlagList";
 
