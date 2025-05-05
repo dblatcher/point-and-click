@@ -48,7 +48,7 @@ export const FixedGameInfoSchema = z.object({
 })
 export const GameDataSchema = GameContentsDataSchema.and(GameHappeningsSchema)
 const GameConditionSchema = GameContentsDataSchema.and(GameHappeningsSchema).and(FixedGameInfoSchema)
-export const GameDesignSchema = GameContentsDataSchema.and(FixedGameInfoSchema).describe('The game schema')
+export const v2GameDesignSchema = GameContentsDataSchema.and(FixedGameInfoSchema).describe('The game schema')
 
 //                  GameData GameCondition GameDesign GameContents
 // GameHappenings  |   x    |   x        |           |
@@ -59,7 +59,7 @@ export type GameContents = z.infer<typeof GameContentsDataSchema>
 export type GameData = z.infer<typeof GameDataSchema>
 export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>
-export type GameDesign = z.infer<typeof GameDesignSchema>
+export type V2GameDesign = z.infer<typeof v2GameDesignSchema>
 
 export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Ending | Verb| StoryBoard
 

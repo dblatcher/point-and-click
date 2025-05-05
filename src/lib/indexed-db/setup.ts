@@ -1,5 +1,6 @@
 import { deleteDB, openDB } from "idb";
 import { GameEditorDatabase, GameEditorDBSchema } from "./types";
+import { migrateData } from "./migration";
 
 
 const DB_NAME = 'Point-and-click-db'
@@ -18,20 +19,30 @@ const putStuffOnWindow = (db: GameEditorDatabase) => {
 
 
 export const openDataBaseConnection = async () => {
+
+    let versionToMigrateFrom = 0;
+
     const db = await openDB<GameEditorDBSchema>(DB_NAME, DB_VERSION, {
-        upgrade(
+        async upgrade(
             db,
             oldVersion,
-            // newVersion,
-            // transaction,
-            // event
         ) {
-            console.log('running upgrade', { oldVersion })
-            db.createObjectStore('designs');
-            const imageAssetStore = db.createObjectStore('image-assets');
-            imageAssetStore.createIndex('by-design-key', 'savedDesign')
-            const soundAssetStore = db.createObjectStore('sound-assets');
-            soundAssetStore.createIndex('by-design-key', 'savedDesign')
+
+            // no old DB
+            if (oldVersion === 0) {
+                console.log('creating new DB')
+                db.createObjectStore('designs');
+                const imageAssetStore = db.createObjectStore('image-assets');
+                imageAssetStore.createIndex('by-design-key', 'savedDesign')
+                const soundAssetStore = db.createObjectStore('sound-assets');
+                soundAssetStore.createIndex('by-design-key', 'savedDesign')
+                return
+            }
+
+            if (oldVersion < DB_VERSION) {
+                versionToMigrateFrom = oldVersion
+                return
+            }
         },
         blocked(currentVersion, blockedVersion, event) {
             console.warn('open db blocked', { currentVersion, blockedVersion, event })
@@ -45,6 +56,10 @@ export const openDataBaseConnection = async () => {
     });
 
     putStuffOnWindow(db)
+    if (versionToMigrateFrom) {
+        await migrateData(db)(versionToMigrateFrom, DB_VERSION);
+    }
+
     return db
 }
 

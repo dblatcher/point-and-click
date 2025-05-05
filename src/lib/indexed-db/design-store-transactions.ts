@@ -1,7 +1,7 @@
 import { GameDesign } from "@/definitions";
 import { GameEditorDatabase, SavedDesignKey } from "./types";
 
-const listSavedDesignKeys = (db:GameEditorDatabase) => () => {
+const listSavedDesignKeys = (db: GameEditorDatabase) => () => {
     return db.getAllKeys('designs')
 }
 
@@ -22,11 +22,14 @@ export const retrieveSavedDesign = (db: GameEditorDatabase) => (savedDesign: Sav
 }
 
 export const deleteSavedDesign = (db: GameEditorDatabase) => (savedDesign: SavedDesignKey) => {
-    return db.delete('designs',savedDesign)
+    return db.delete('designs', savedDesign)
 }
 
-export const retrieveAllSavedDesigns = (db: GameEditorDatabase) => async () => {
-    const designKeys = (await listSavedDesignKeys(db)()).filter(key => key !== 'quit-save')
+export const retrieveAllSavedDesigns = (db: GameEditorDatabase) => async (includeQuitSave = false) => {
+    const designKeys = includeQuitSave
+        ? await listSavedDesignKeys(db)()
+        : (await listSavedDesignKeys(db)()).filter(key => key !== 'quit-save');
+
     const uncheckedResults = await Promise.all(
         designKeys.map(key => retrieveSavedDesign(db)(key))
     );

@@ -36,6 +36,7 @@ export const Overview = () => {
       <EditorHeading heading={mainTab?.label ?? 'main'} />
 
       <EditorBox title='game details'>
+        <p>schema number: {gameDesign.schemaVersion}</p>
         <DelayedStringInput label='Game Id' value={gameDesign.id} optional
           inputHandler={(id) => {
             applyModification(`Change game id to "${id}"`, { id })

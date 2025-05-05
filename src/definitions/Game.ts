@@ -24,6 +24,7 @@ const GameHappeningsSchema = z.object({
 })
 
 export const GameContentsDataSchema = z.object({
+    schemaVersion: z.number(),
     rooms: RoomDataSchema.array(),
     items: ItemDataSchema.array(),
     actors: ActorDataSchema.array(),
@@ -33,7 +34,6 @@ export const GameContentsDataSchema = z.object({
     currentRoomId: z.string(),
     id: z.string(),
     description: z.string().optional().describe('a short description of your game'),
-    schemaVersion: z.number(),
 })
 
 
