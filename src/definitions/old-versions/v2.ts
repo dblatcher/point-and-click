@@ -1,16 +1,17 @@
 import { z } from "zod"
-import { InteractionSchema } from "./Interaction"
-import { ItemData, ItemDataSchema } from "./ItemData"
-import { orderSchema } from "./Order"
-import { RoomData, RoomDataSchema } from "./RoomData"
-import { Sequence, SequenceSchema } from "./Sequence"
-import { ActorData, ActorDataSchema } from "./ActorData"
-import { Verb, VerbSchema } from "./Verb"
-import { Conversation, ConversationSchema } from "./Conversation"
-import { SpriteData, SpriteDataSchema } from "./SpriteSheet"
-import { Ending, EndingSchema } from "./Ending"
-import { FlagMapSchema } from "./Flag"
-import { StoryBoard, StoryBoardSchema } from "./StoryBoard"
+import { ActorDataSchema, ActorData } from "../ActorData"
+import { ConversationSchema, Conversation } from "../Conversation"
+import { EndingSchema, Ending } from "../Ending"
+import { FlagMapSchema } from "../Flag"
+import { InteractionSchema } from "../Interaction"
+import { ItemDataSchema, ItemData } from "../ItemData"
+import { orderSchema } from "../Order"
+import { RoomDataSchema, RoomData } from "../RoomData"
+import { SequenceSchema, Sequence } from "../Sequence"
+import { SpriteDataSchema, SpriteData } from "../SpriteSheet"
+import { StoryBoardSchema, StoryBoard } from "../StoryBoard"
+import { VerbSchema, Verb } from "../Verb"
+
 
 
 const GameHappeningsSchema = z.object({
@@ -33,7 +34,6 @@ export const GameContentsDataSchema = z.object({
     currentRoomId: z.string(),
     id: z.string(),
     description: z.string().optional().describe('a short description of your game'),
-    schemaVersion: z.number(),
 })
 
 
@@ -61,7 +61,7 @@ export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>
 export type GameDesign = z.infer<typeof GameDesignSchema>
 
-export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Ending | Verb | StoryBoard
+export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Ending | Verb| StoryBoard
 
 export const GameDataItemTypeEnum = z.enum([
     'rooms', 'items', 'actors', 'conversations', 'sprites', 'sequences', 'endings', 'verbs', 'storyBoards'
