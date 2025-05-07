@@ -32,7 +32,7 @@ export const StartingConditionsForm = () => {
             <SelectInput optional label='Title Board'
                 value={gameDesign.openingStoryboardId}
                 inputHandler={openingStoryboardId => applyModification(`Change Title board to ${openingStoryboardId}`, { openingStoryboardId })}
-                options={listIds(gameDesign.storyBoards ?? [])} />
+                options={listIds(gameDesign.storyBoards)} />
             <Tooltip title={roomButtonTitle}>
                 <span>
                     <Button

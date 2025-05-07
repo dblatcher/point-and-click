@@ -60,7 +60,7 @@ export const MainWindow = () => {
     const currentItem = findById(gameItemIds.items, gameDesign.items)
     const currentActor = findById(gameItemIds.actors, gameDesign.actors)
     const currentConversation = findById(gameItemIds.conversations, gameDesign.conversations)
-    const currentStoryBoard = findById(gameItemIds.storyBoards, gameDesign.storyBoards ?? [])
+    const currentStoryBoard = findById(gameItemIds.storyBoards, gameDesign.storyBoards)
 
     switch (tabOpen) {
         case 'rooms':

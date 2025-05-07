@@ -13,7 +13,7 @@ export const RoomWrapper: React.FunctionComponent = () => {
     const { gameProps, gameState, updateGameState } = useGameState()
     const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
-    const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards ?? [])
+    const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards)
 
     const handleTargetClick = (target: CommandTarget) => {
         updateGameState({ type: 'TARGET-CLICK', target })

@@ -17,7 +17,7 @@ export const addGameDataItem = (gameDesign: GameDesign, property: GameDataItemTy
         gameDesign[property] = []
     }
 
-    addNewOrUpdate(data, gameDesign[property] ?? [])
+    addNewOrUpdate(data, gameDesign[property])
     return gameDesign
 }
 

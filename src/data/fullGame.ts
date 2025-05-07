@@ -15,6 +15,7 @@ const startingRoom = rooms.find(room => room.id === player?.room) || rooms[0]
 
 export const prebuiltGameDesign: GameDesign = {
     id: "THE_TEST_GAME",
+    schemaVersion: 3,
     rooms,
     actors,
     interactions,

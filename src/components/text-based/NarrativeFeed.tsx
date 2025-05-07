@@ -24,7 +24,7 @@ export const NarrativeFeed = () => {
 
     useEffect(() => {
         if (currentStoryBoardId) {
-            const board = findById(currentStoryBoardId, gameProps.storyBoards ?? [])
+            const board = findById(currentStoryBoardId, gameProps.storyBoards)
             const boardMessages: FeedItem[] =
                 board
                     ? storyBoardReportToFeedLines(board)

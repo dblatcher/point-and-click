@@ -17,7 +17,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     } = uiComponents
     const { currentStoryBoardId } = gameState
 
-    const currentStoryBoard = findById(currentStoryBoardId, props.storyBoards ?? [])
+    const currentStoryBoard = findById(currentStoryBoardId, props.storyBoards)
 
     const tick = () => {
         if (gameState.isPaused || currentStoryBoard) { return }

@@ -25,7 +25,7 @@ export const DeleteDataItemButton = ({ dataItem, itemType, itemTypeName, buttonP
                 ...buttonProps 
             }}
             onClick={() => {
-                const items = gameDesign[itemType] ?? [];
+                const items = gameDesign[itemType];
                 const index = items.findIndex(otherItem => otherItem.id === dataItem.id)
                 if (index === -1) {
                     return console.error(`${itemTypeName} not found when trying to delete`, { dataItem, items })

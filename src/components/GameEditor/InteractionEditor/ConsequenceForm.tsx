@@ -60,7 +60,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         flag: Object.keys(gameDesign.flagMap),
         branchId: branchIdList,
         choiceRef: choiceRefList,
-        storyBoardId: listIds(gameDesign.storyBoards ?? [])
+        storyBoardId: listIds(gameDesign.storyBoards)
     }
 
     // for properties not handled by the Schema form

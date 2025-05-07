@@ -6,6 +6,7 @@ import { GameDesignSchema } from "@/definitions/Game";
 export const migrateV2Design = (v2Design: V2GameDesign, schemaVersion: number): GameDesign => {
     return {
         ...v2Design,
+        storyBoards: v2Design.storyBoards ?? [],
         schemaVersion,
     }
 }

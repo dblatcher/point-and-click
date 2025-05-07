@@ -63,7 +63,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const { isConversationRunning, isSequenceRunning, inventory, lookVerb, moveVerb } = useGameStateDerivations()
     const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
-    const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards ?? [])
+    const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards)
 
 
     useEffect(() => {

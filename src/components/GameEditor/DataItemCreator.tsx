@@ -58,7 +58,7 @@ const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designP
 export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, schema, designProperty, itemTypeName }: Props<DataType>) => {
     const { gameDesign, createGameDataItem, openInEditor } = useGameDesign()
     const [warning, setWarning] = useState<string | undefined>()
-    const dataTypeArray = gameDesign[designProperty] ?? [];
+    const dataTypeArray = gameDesign[designProperty];
 
     const handleStartFromScratch = (proposedId: string) => {
         attemptCreate({ ...createBlank(), id: proposedId })

@@ -32,7 +32,7 @@ export const StoryBoardEditor: React.FunctionComponent<Props> = ({ storyBoard })
     const update = (message: string, mod: Partial<StoryBoard>) => {
         return applyModification(
             message,
-            { storyBoards: patchMember(storyBoard.id, mod, gameDesign.storyBoards ?? []) }
+            { storyBoards: patchMember(storyBoard.id, mod, gameDesign.storyBoards) }
         )
     }
 
