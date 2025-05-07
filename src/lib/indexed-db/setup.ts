@@ -4,7 +4,7 @@ import { migrateData } from "./migration";
 
 
 const DB_NAME = 'Point-and-click-db'
-const DB_VERSION = 2
+export const DB_VERSION = 3
 
 type WindowPlus = Window & {
     MY_DATABASE?: GameEditorDatabase,
@@ -60,7 +60,7 @@ export const openDataBaseConnection = async () => {
         await migrateData(db)(versionToMigrateFrom, DB_VERSION);
     }
 
-    return db
+    return { db }
 }
 
 export const deleteDatabase = (db: GameEditorDatabase) => () => {

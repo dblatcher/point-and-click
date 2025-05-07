@@ -41,7 +41,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
     )
 
     // when DB opens, load the quit save and populate file asset services
-    const handleDBOpen = useCallback(async (db: GameEditorDatabase) => {
+    const handleDBOpen = useCallback(async ({ db }: { db: GameEditorDatabase }) => {
         if (usePrebuiltGame) {
             return
         }

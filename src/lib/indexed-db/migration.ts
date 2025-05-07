@@ -1,15 +1,7 @@
-import { GameDesign } from "@/definitions";
 import { V2GameDesign } from "@/definitions/old-versions/v2";
+import { migrateV2Design } from "@/lib/design-version-management";
 import { retrieveAllSavedDesigns, storeSavedDesign } from "./design-store-transactions";
 import { GameEditorDatabase } from "./types";
-
-
-const migrateV2Design = (v2Design: V2GameDesign, schemaVersion: number): GameDesign => {
-    return {
-        ...v2Design,
-        schemaVersion,
-    }
-}
 
 
 export const migrateData = (db: GameEditorDatabase) => async (oldVersion: number, newVersion: number) => {

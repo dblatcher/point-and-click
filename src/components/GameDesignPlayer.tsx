@@ -1,17 +1,17 @@
-import { GameCondition, GameData, GameDesign } from "@/definitions";
 import { Game } from "@/components/game/Game";
+import { AssetsProvider } from "@/context/asset-context";
+import { SpritesProvider } from "@/context/sprite-context";
+import { GameCondition, GameData, GameDesign } from "@/definitions";
 import { cloneData } from "@/lib/clone";
-import { ImageAsset } from "@/services/assets";
+import { parseAndUpgrade } from "@/lib/design-version-management";
+import { Sprite } from "@/lib/Sprite";
+import { ImageAsset, SoundAsset } from "@/services/assets";
+import { ImageService } from "@/services/imageService";
 import { populateServices } from "@/services/populateServices";
-import { SoundAsset } from "@/services/assets";
+import { SoundService } from "@/services/soundService";
 import React from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
-import { SpritesProvider } from "@/context/sprite-context";
-import { Sprite } from "@/lib/Sprite";
-import { GameDataSchema } from "@/definitions/Game";
-import { AssetsProvider } from "@/context/asset-context";
-import { ImageService } from "@/services/imageService";
-import { SoundService } from "@/services/soundService";
+import { DB_VERSION } from "@/lib/indexed-db";
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
 const SAVED_GAME_DELIMITER = "//"
@@ -96,17 +96,18 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
     try {
       const data = JSON.parse(jsonString) as unknown;
-      const parse = GameDataSchema.safeParse(data)
-      if (!parse.success) {
-        console.warn(parse.error)
+      const {design, message} = parseAndUpgrade(data, DB_VERSION)
+
+      if (!design) {
+        console.warn(message ?? 'parse fail')
         throw new Error('parse fail')
       }
-      if (parse.data.id !== this.props.gameDesign.id) {
+      if (design.id !== this.props.gameDesign.id) {
         throw new Error('Not from the right game - ids do not match')
       }
       const loadedConditions = {
         ...this.state.gameCondition,
-        ...parse.data,
+        ...design,
       }
       this.setState({
         timestamp: Date.now(),

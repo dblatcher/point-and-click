@@ -3,8 +3,9 @@ import { ImageService } from "@/services/imageService";
 import { SoundService } from "@/services/soundService";
 import JSZip from "jszip";
 import { GameDesign } from "../definitions";
-import { GameDesignSchema } from "../definitions/Game";
+import { parseAndUpgrade } from "./design-version-management";
 import { dataToBlob, fileToObjectUrl } from "./files";
+import { DB_VERSION } from "./indexed-db";
 
 type ZipActionFailure = {
   success: false;
@@ -330,22 +331,20 @@ export const readGameFromZipFile = async (
     };
   }
 
-  const results = GameDesignSchema.safeParse(data);
+  const {design, message} = parseAndUpgrade(data, DB_VERSION);
 
-  if (!results.success) {
-    console.warn(results.error);
+  if (!design) {
+    console.warn(message);
     return {
       success: false,
       error: `data in ${FILENAMES.game} was not a GameDesign`,
     };
   }
 
-  console.log(results);
-
   return {
     success: true,
     data: {
-      gameDesign: results.data,
+      gameDesign: design,
       imageAssets: readImageResult.data,
       soundAssets: readSoundResult.data,
     }
