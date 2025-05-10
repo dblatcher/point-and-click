@@ -63,10 +63,10 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         const date = new Date(timestamp)
         console.log(`retrieved quit saved from ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
 
-        const { gameDesign, message } = parseAndUpgrade(design);
+        const { gameDesign, failureMessage } = parseAndUpgrade(design);
 
         if (!gameDesign) {
-            alert(`Could not parse quit save: ${message ?? 'UNKNOWN'}`);
+            alert(`Could not parse quit save: ${failureMessage ?? 'UNKNOWN'}`);
             setWaitingforDesignFromDb(false);
             return
         }

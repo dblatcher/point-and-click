@@ -11,24 +11,44 @@ export const migrateV2Design = (v2Design: V2GameDesign, schemaVersion: number): 
     }
 }
 
-export const parseAndUpgrade = (maybeGameDesign: unknown): { gameDesign?: GameDesign, message?: string } => {
+type DesignParseResult = {
+    success: true,
+    gameDesign: GameDesign,
+    sourceVersion: number,
+    failureMessage?: undefined,
+    updated?: boolean,
+} | {
+    success: false,
+    gameDesign?: undefined,
+    sourceVersion?: number,
+    failureMessage?: string,
+    updated?: boolean,
+}
+
+export const parseAndUpgrade = (maybeGameDesign: unknown): DesignParseResult => {
 
     const parseResult = GameDesignSchema.safeParse(maybeGameDesign);
     if (parseResult.success) {
         return ({
-            gameDesign: parseResult.data
+            success: true,
+            gameDesign: parseResult.data,
+            sourceVersion: DB_VERSION,
+            updated: false,
         })
     }
 
     const v2ParseResult = v2GameDesignSchema.safeParse(maybeGameDesign);
     if (v2ParseResult.success) {
         return ({
+            success: true,
             gameDesign: migrateV2Design(v2ParseResult.data, DB_VERSION),
-            message: 'upgraded from v2 design'
+            sourceVersion: 2,
+            updated: true,
         })
     }
 
     return {
-        message: parseResult.error.message
+        success: false,
+        failureMessage: v2ParseResult.error.message
     }
 }

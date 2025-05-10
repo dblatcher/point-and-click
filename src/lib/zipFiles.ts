@@ -331,10 +331,10 @@ export const readGameFromZipFile = async (
     };
   }
 
-  const { gameDesign, message } = parseAndUpgrade(data);
+  const { gameDesign, failureMessage } = parseAndUpgrade(data);
 
   if (!gameDesign) {
-    console.warn(message);
+    console.warn(failureMessage);
     return {
       success: false,
       error: `data in ${FILENAMES.game} was not a GameDesign`,

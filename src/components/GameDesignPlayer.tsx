@@ -95,10 +95,10 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
     try {
       const data = JSON.parse(jsonString) as unknown;
-      const {gameDesign, message} = parseAndUpgrade(data)
+      const {gameDesign, failureMessage} = parseAndUpgrade(data)
 
       if (!gameDesign) {
-        console.warn(message ?? 'parse fail')
+        console.warn(failureMessage ?? 'parse fail')
         throw new Error('parse fail')
       }
       if (gameDesign.id !== this.props.gameDesign.id) {

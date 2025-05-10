@@ -59,10 +59,10 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
             const date = new Date(timestamp)
             console.log(`retrieved ${savedDesignKey} last saved at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
 
-            const { gameDesign, message } = parseAndUpgrade(design);
+            const { gameDesign, failureMessage } = parseAndUpgrade(design);
 
             if (!gameDesign) {
-                alert(`Could not parse ${savedDesignKey}: ${message ?? 'UNKNOWN'}`);
+                alert(`Could not parse ${savedDesignKey}: ${failureMessage ?? 'UNKNOWN'}`);
                 return undefined
             }
 

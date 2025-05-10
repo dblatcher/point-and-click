@@ -34,9 +34,9 @@ export const DbGameList = ({ onLoad, onError, db }: Props) => {
             return
         }
 
-        const { gameDesign, message } = parseAndUpgrade(designFromDb)
+        const { gameDesign, failureMessage } = parseAndUpgrade(designFromDb)
         if (!gameDesign) {
-            onError(`Failed to upgrade ${key} to current version: ${message ?? 'UNKNOWN'}`)
+            onError(`Failed to upgrade ${key} to current version: ${failureMessage ?? 'UNKNOWN'}`)
             return
         }
 
