@@ -2,8 +2,8 @@ import { Game } from "@/components/game/Game";
 import { AssetsProvider } from "@/context/asset-context";
 import { SpritesProvider } from "@/context/sprite-context";
 import { GameCondition, GameData, GameDesign } from "@/definitions";
+import { v2GameDataSchema } from "@/definitions/old-versions/v2";
 import { cloneData } from "@/lib/clone";
-import { parseAndUpgrade } from "@/lib/design-version-management";
 import { Sprite } from "@/lib/Sprite";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { ImageService } from "@/services/imageService";
@@ -95,18 +95,18 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
     try {
       const data = JSON.parse(jsonString) as unknown;
-      const {gameDesign, failureMessage} = parseAndUpgrade(data)
+      const gameDataparseResult = v2GameDataSchema.safeParse(data);
 
-      if (!gameDesign) {
-        console.warn(failureMessage ?? 'parse fail')
+      if (!gameDataparseResult.success) {
+        console.warn(gameDataparseResult.error.issues)
         throw new Error('parse fail')
       }
-      if (gameDesign.id !== this.props.gameDesign.id) {
+      if (gameDataparseResult.data.id !== this.props.gameDesign.id) {
         throw new Error('Not from the right game - ids do not match')
       }
       const loadedConditions = {
         ...this.state.gameCondition,
-        ...gameDesign,
+        ...gameDataparseResult.data,
       }
       this.setState({
         timestamp: Date.now(),

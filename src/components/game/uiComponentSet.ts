@@ -1,5 +1,5 @@
 import { ItemData, Verb } from "@/definitions";
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent } from "react";
 import { HandleHoverFunction } from "./types";
 
 

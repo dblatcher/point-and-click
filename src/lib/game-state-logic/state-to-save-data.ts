@@ -3,14 +3,14 @@ import { GameState } from "./types"
 
 export const getSaveData = (gameState: GameState): GameData => {
     const {
-        id,
+        id, schemaVersion,
         rooms, actors, interactions, items,
         currentRoomId, actorOrders, sequenceRunning,
         conversations, currentConversationId, flagMap, gameNotBegun
     } = gameState
 
     return {
-        id,
+        id, schemaVersion,
         rooms, actors, interactions, items,
         currentRoomId, actorOrders, sequenceRunning,
         conversations, currentConversationId, flagMap, gameNotBegun

@@ -10,7 +10,7 @@ import { SequenceSchema } from "../Sequence"
 import { SpriteDataSchema } from "../SpriteSheet"
 import { StoryBoardSchema } from "../StoryBoard"
 import { VerbSchema } from "../Verb"
-
+import { GameHappeningsSchema } from "../Game"
 
 const GameContentsDataSchema = z.object({
     rooms: RoomDataSchema.array(),
@@ -34,6 +34,9 @@ const FixedGameInfoSchema = z.object({
     openingStoryboardId: z.string().optional(),
     storyBoards: StoryBoardSchema.array().optional(),
 })
+
+export const v2GameDataSchema = GameContentsDataSchema.and(GameHappeningsSchema)
+
 
 export const v2GameDesignSchema = GameContentsDataSchema.and(FixedGameInfoSchema).describe('The game schema')
 export type V2GameDesign = z.infer<typeof v2GameDesignSchema>

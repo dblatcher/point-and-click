@@ -13,7 +13,7 @@ import { FlagMapSchema } from "./Flag"
 import { StoryBoard, StoryBoardSchema } from "./StoryBoard"
 
 
-const GameHappeningsSchema = z.object({
+export const GameHappeningsSchema = z.object({
     sequenceRunning: SequenceSchema.optional(),
     currentStoryBoardId: z.string().optional(),
     actorOrders: z.record(z.string(), orderSchema.array()),
