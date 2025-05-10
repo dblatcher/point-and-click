@@ -1,7 +1,7 @@
 import { GameDesign } from "@/definitions";
 import { V2GameDesign, v2GameDesignSchema } from "@/definitions/old-versions/v2";
 import { GameDesignSchema } from "@/definitions/Game";
-
+import { DB_VERSION } from "../indexed-db";
 
 export const migrateV2Design = (v2Design: V2GameDesign, schemaVersion: number): GameDesign => {
     return {
@@ -11,19 +11,19 @@ export const migrateV2Design = (v2Design: V2GameDesign, schemaVersion: number): 
     }
 }
 
-export const parseAndUpgrade = (maybeGameDesign: unknown, schemaVersion: number): { design?: GameDesign, message?: string } => {
+export const parseAndUpgrade = (maybeGameDesign: unknown): { gameDesign?: GameDesign, message?: string } => {
 
     const parseResult = GameDesignSchema.safeParse(maybeGameDesign);
     if (parseResult.success) {
         return ({
-            design: parseResult.data
+            gameDesign: parseResult.data
         })
     }
 
     const v2ParseResult = v2GameDesignSchema.safeParse(maybeGameDesign);
     if (v2ParseResult.success) {
         return ({
-            design: migrateV2Design(v2ParseResult.data, schemaVersion),
+            gameDesign: migrateV2Design(v2ParseResult.data, DB_VERSION),
             message: 'upgraded from v2 design'
         })
     }

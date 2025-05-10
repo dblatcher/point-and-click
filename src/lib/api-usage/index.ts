@@ -1,7 +1,6 @@
 import { ImageAssetSchema, SoundAssetSchema } from "@/services/assets"
 import { z } from "zod"
 import { parseAndUpgrade } from "../design-version-management"
-import { DB_VERSION } from "../indexed-db"
 
 
 const designAndAssetsSchema = z.object({
@@ -21,7 +20,7 @@ export const getGameFromApi = async (): Promise<DesignAndAssets> => {
     throw (new Error('failed to parse loaded game data'))
   }
 
-  const { design, message } = parseAndUpgrade(dataParse.data.gameDesign, DB_VERSION)
+  const { gameDesign: design, message } = parseAndUpgrade(dataParse.data.gameDesign)
 
   if (!design) {
     console.error(message)

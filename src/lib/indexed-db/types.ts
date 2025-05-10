@@ -1,15 +1,16 @@
 import { GameDesign } from "@/definitions";
+import { V2GameDesign } from "@/definitions/old-versions/v2";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { DBSchema, IDBPDatabase } from "idb";
 
 type Name = string;
-export type SavedDesignKey = 'quit-save' | `SAVE_${Name}` 
+export type SavedDesignKey = 'quit-save' | `SAVE_${Name}`
 
 export interface GameEditorDBSchema extends DBSchema {
     'designs': {
         key: SavedDesignKey;
         value: {
-            design: GameDesign,
+            design: GameDesign | V2GameDesign,
             timestamp: number,
         };
     };
@@ -35,4 +36,4 @@ export interface GameEditorDBSchema extends DBSchema {
 
 export type GameEditorDatabase = IDBPDatabase<GameEditorDBSchema>;
 
-export type DesignListing = { design: GameDesign, timestamp: number, key: SavedDesignKey }
+export type DesignListing = { design: GameDesign | V2GameDesign, timestamp: number, key: SavedDesignKey }

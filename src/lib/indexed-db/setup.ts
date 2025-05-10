@@ -1,6 +1,6 @@
 import { deleteDB, openDB } from "idb";
 import { GameEditorDatabase, GameEditorDBSchema } from "./types";
-import { migrateData } from "./migration";
+// import { migrateData } from "./migration";
 
 
 const DB_NAME = 'Point-and-click-db'
@@ -57,7 +57,7 @@ export const openDataBaseConnection = async () => {
 
     putStuffOnWindow(db)
     if (versionToMigrateFrom) {
-        await migrateData(db)(versionToMigrateFrom, DB_VERSION);
+        // await migrateData(db)(versionToMigrateFrom, DB_VERSION);
     }
 
     return { db }

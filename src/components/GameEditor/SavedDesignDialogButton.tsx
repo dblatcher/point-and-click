@@ -10,6 +10,7 @@ import { DescriptionWithSaveTime, DesignListItem } from "../DesignListItem";
 import { ButtonWithConfirm } from "./ButtonWithConfirm";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { ClearIcon, DeleteIcon } from "./material-icons";
+import { parseAndUpgrade } from "@/lib/design-version-management";
 
 interface Props {
     db: GameEditorDatabase
@@ -48,8 +49,8 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
         })
     }
     const loadFile = (savedDesignKey: SavedDesignKey) => {
-        retrieveDesignAndAssets(db)(savedDesignKey).then(({ design: gameDesign, timestamp, imageAssets, soundAssets }) => {
-            if (!gameDesign) {
+        retrieveDesignAndAssets(db)(savedDesignKey).then(({ design, timestamp, imageAssets, soundAssets }) => {
+            if (!design) {
                 alert(`could not load ${savedDesignKey}`)
                 return undefined
             }
@@ -57,7 +58,15 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
             soundService.populate(soundAssets, 'DB')
             const date = new Date(timestamp)
             console.log(`retrieved ${savedDesignKey} last saved at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
-            dispatchDesignUpdate({ type: 'load-new', gameDesign: gameDesign })
+
+            const { gameDesign, message } = parseAndUpgrade(design);
+
+            if (!gameDesign) {
+                alert(`Could not parse ${savedDesignKey}: ${message ?? 'UNKNOWN'}`);
+                return undefined
+            }
+
+            dispatchDesignUpdate({ type: 'load-new', gameDesign })
             storeDesignAndAllAssetsToDb(db)(gameDesign, 'quit-save', soundService, imageService)
             setIsOpen(false)
         })

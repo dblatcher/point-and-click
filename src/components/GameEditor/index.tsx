@@ -21,6 +21,7 @@ import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
 import { ZipFileButtons } from './ZipFileButtons';
+import { parseAndUpgrade } from '@/lib/design-version-management';
 
 
 export type { GameEditorProps };
@@ -62,7 +63,15 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         const date = new Date(timestamp)
         console.log(`retrieved quit saved from ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
 
-        dispatchDesignUpdate({ type: 'load-new', gameDesign: design })
+        const { gameDesign, message } = parseAndUpgrade(design);
+
+        if (!gameDesign) {
+            alert(`Could not parse quit save: ${message ?? 'UNKNOWN'}`);
+            setWaitingforDesignFromDb(false);
+            return
+        }
+
+        dispatchDesignUpdate({ type: 'load-new', gameDesign })
         setWaitingforDesignFromDb(false)
 
     }, [dispatchDesignUpdate, usePrebuiltGame, imageService, soundService, setWaitingforDesignFromDb])

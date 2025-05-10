@@ -11,7 +11,6 @@ import { populateServices } from "@/services/populateServices";
 import { SoundService } from "@/services/soundService";
 import React from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
-import { DB_VERSION } from "@/lib/indexed-db";
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
 const SAVED_GAME_DELIMITER = "//"
@@ -96,18 +95,18 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
     try {
       const data = JSON.parse(jsonString) as unknown;
-      const {design, message} = parseAndUpgrade(data, DB_VERSION)
+      const {gameDesign, message} = parseAndUpgrade(data)
 
-      if (!design) {
+      if (!gameDesign) {
         console.warn(message ?? 'parse fail')
         throw new Error('parse fail')
       }
-      if (design.id !== this.props.gameDesign.id) {
+      if (gameDesign.id !== this.props.gameDesign.id) {
         throw new Error('Not from the right game - ids do not match')
       }
       const loadedConditions = {
         ...this.state.gameCondition,
-        ...design,
+        ...gameDesign,
       }
       this.setState({
         timestamp: Date.now(),

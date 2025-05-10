@@ -1,5 +1,6 @@
 import { GameDesign } from "@/definitions";
 import { GameEditorDatabase, SavedDesignKey } from "./types";
+import { V2GameDesign } from "@/definitions/old-versions/v2";
 
 const listSavedDesignKeys = (db: GameEditorDatabase) => () => {
     return db.getAllKeys('designs')
@@ -10,7 +11,7 @@ export const storeSavedDesign = (db: GameEditorDatabase) => (design: GameDesign,
 }
 
 export const retrieveSavedDesign = (db: GameEditorDatabase) => (savedDesign: SavedDesignKey = 'quit-save'): Promise<{
-    design?: GameDesign;
+    design?: GameDesign | V2GameDesign;
     timestamp?: number;
 }> => {
     return db.get('designs', savedDesign).then(result => {
@@ -33,7 +34,7 @@ export const retrieveAllSavedDesigns = (db: GameEditorDatabase) => async (includ
     const uncheckedResults = await Promise.all(
         designKeys.map(key => retrieveSavedDesign(db)(key))
     );
-    const validResults: { design: GameDesign, timestamp: number }[] = uncheckedResults
+    const validResults: { design: GameDesign | V2GameDesign, timestamp: number }[] = uncheckedResults
         .flatMap(({ design, timestamp = 0 }) => design ? { design, timestamp } : []);
 
     return validResults.map((result, index) => ({ ...result, key: designKeys[index] }))

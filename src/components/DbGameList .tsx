@@ -1,13 +1,14 @@
 import { GameDesign } from "@/definitions";
+import { parseAndUpgrade } from "@/lib/design-version-management";
+import { makeDownloadFile } from "@/lib/files";
 import { DesignListing, GameEditorDatabase, retrieveAllSavedDesigns, SavedDesignKey } from "@/lib/indexed-db";
 import { retrieveDesignAndAssets } from "@/lib/indexed-db/complex-transactions";
+import { buildGameZipBlobFromAssets } from "@/lib/zipFiles";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { List } from "@mui/material";
 import { useEffect, useState } from "react";
-import { GameLoaderDesignItem } from "./GameLoaderDesignItem";
-import { buildGameZipBlobFromAssets } from "@/lib/zipFiles";
-import { makeDownloadFile } from "@/lib/files";
 import { DescriptionWithSaveTime } from "./DesignListItem";
+import { GameLoaderDesignItem } from "./GameLoaderDesignItem";
 
 interface Props {
     onLoad: { (design: GameDesign, imageAssets: ImageAsset[], soundAssets: SoundAsset[]): void }
@@ -27,12 +28,19 @@ export const DbGameList = ({ onLoad, onError, db }: Props) => {
         if (!db) {
             return
         }
-        const { design, imageAssets, soundAssets } = await retrieveDesignAndAssets(db)(key)
-        if (!design) {
+        const { design: designFromDb, imageAssets, soundAssets } = await retrieveDesignAndAssets(db)(key)
+        if (!designFromDb) {
             onError(`Failed to load ${key} from local database.`)
             return
         }
-        onLoad(design, imageAssets, soundAssets)
+
+        const { gameDesign, message } = parseAndUpgrade(designFromDb)
+        if (!gameDesign) {
+            onError(`Failed to upgrade ${key} to current version: ${message ?? 'UNKNOWN'}`)
+            return
+        }
+
+        onLoad(gameDesign, imageAssets, soundAssets)
     }
 
     return (

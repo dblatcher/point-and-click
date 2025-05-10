@@ -1,3 +1,4 @@
+import { V2GameDesign } from "@/definitions/old-versions/v2";
 import { assetToFile, ImageAsset, ImageAssetSchema, SoundAsset, SoundAssetSchema, } from "@/services/assets";
 import { ImageService } from "@/services/imageService";
 import { SoundService } from "@/services/soundService";
@@ -5,7 +6,6 @@ import JSZip from "jszip";
 import { GameDesign } from "../definitions";
 import { parseAndUpgrade } from "./design-version-management";
 import { dataToBlob, fileToObjectUrl } from "./files";
-import { DB_VERSION } from "./indexed-db";
 
 type ZipActionFailure = {
   success: false;
@@ -90,7 +90,7 @@ const prepareAssetZipFromService = async (
   return zip;
 };
 
-const prepareAssetZipFromAssets = async(
+const prepareAssetZipFromAssets = async (
   type: 'images' | 'sounds',
   assets: ImageAsset[] | SoundAsset[],
   existingZip?: JSZip,
@@ -251,7 +251,7 @@ export const readSoundAssetFromZipFile = async (
 };
 
 const prepareGameDataZip = async (
-  gameDesign: GameDesign,
+  gameDesign: GameDesign | V2GameDesign,
   existingZip?: JSZip,
 ): Promise<JSZip> => {
   const zip = existingZip || new JSZip();
@@ -331,9 +331,9 @@ export const readGameFromZipFile = async (
     };
   }
 
-  const {design, message} = parseAndUpgrade(data, DB_VERSION);
+  const { gameDesign, message } = parseAndUpgrade(data);
 
-  if (!design) {
+  if (!gameDesign) {
     console.warn(message);
     return {
       success: false,
@@ -344,7 +344,7 @@ export const readGameFromZipFile = async (
   return {
     success: true,
     data: {
-      gameDesign: design,
+      gameDesign,
       imageAssets: readImageResult.data,
       soundAssets: readSoundResult.data,
     }
@@ -352,8 +352,8 @@ export const readGameFromZipFile = async (
 };
 
 
-export const buildGameZipBlobFromAssets =async (
-  gameDesign: GameDesign,
+export const buildGameZipBlobFromAssets = async (
+  gameDesign: GameDesign | V2GameDesign,
   imageAssets: ImageAsset[],
   soundAssets: SoundAsset[],
 ): Promise<ZipBuildResult> => {
