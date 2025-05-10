@@ -7,16 +7,23 @@ import { useEffect, useState } from 'react'
 
 export default function GameLoaderPage() {
   const [data, setData] = useState<DesignAndAssets | undefined>()
-  const [loadError, setLoadError] = useState<Error | undefined>()
+  const [loadError, setLoadError] = useState<string | undefined>()
 
   useEffect(() => {
-    getGameFromApi().then(setData).catch(setLoadError)
+    getGameFromApi().then(result => {
+      if (!result.success) {
+        return setLoadError(result.failureMessage)
+      }
+      setLoadError(undefined);
+      return setData(result.data)
+    }
+    ).catch((err: Error) => setLoadError(err.message))
   }, [setData, setLoadError])
 
   return (
     <PageLayout noPageScroll>
 
-      {loadError && <p>ERROR: {loadError.message}</p>}
+      {loadError && <p>ERROR: {loadError}</p>}
 
       {data ?
         <GameDesignPlayer

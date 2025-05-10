@@ -1,7 +1,7 @@
+import { GameDesignSchema } from "@/definitions/Game"
 import { ImageAssetSchema, SoundAssetSchema } from "@/services/assets"
 import { z } from "zod"
 import { parseAndUpgrade } from "../design-version-management"
-import { GameDesignSchema } from "@/definitions/Game"
 
 
 const unparsedDesignAndAssetsSchema = z.object({
@@ -18,24 +18,64 @@ const designAndAssetsSchema = z.object({
 
 export type DesignAndAssets = z.infer<typeof designAndAssetsSchema>
 
-export const getGameFromApi = async (): Promise<DesignAndAssets> => {
-  const response = await fetch('/api/game')
-  const json = await response.json()
+type ApiGameResult = {
+  success: true,
+  data: DesignAndAssets,
+  failureMessage?: undefined,
+} | {
+  success: false,
+  data?: undefined,
+  failureMessage: string,
+}
+
+
+const fetchOkJson = async (input: RequestInfo | URL, init?: RequestInit): Promise<unknown | undefined> => {
+  try {
+    const response = await fetch(input, init);
+    if (!response.ok) {
+      console.error(`fetch json got ${response.status} (${response.statusText}) response`);
+      return undefined
+    }
+    return await response.json();
+  } catch (err) {
+    console.error('fetch json failed', err)
+    return undefined
+  }
+}
+
+export const getGameFromApi = async (): Promise<ApiGameResult> => {
+
+  const json = await fetchOkJson('/api/game');
+  if (!json) {
+    return {
+      success: false,
+      failureMessage: `failed to fetch data from server.`
+    }
+  }
+
   const dataParse = unparsedDesignAndAssetsSchema.safeParse(json)
   if (!dataParse.success) {
     console.error(dataParse.error.issues)
-    throw (new Error('failed to parse loaded game data'))
+    return {
+      success: false,
+      failureMessage: `failed to parse loaded game data: ${dataParse.error.message}`
+    }
   }
 
-  const designParse = parseAndUpgrade(dataParse.data.gameDesign)
-
-  if (!designParse.success) {
-    console.error(designParse.failureMessage)
-    throw (new Error('failed to parse loaded game design'))
+  const designParseResult = parseAndUpgrade(dataParse.data.gameDesign)
+  if (!designParseResult.success) {
+    console.error(designParseResult.failureMessage)
+    return {
+      success: false,
+      failureMessage: 'failed to parse loaded game design'
+    }
   }
 
   return {
-    ...dataParse.data,
-    gameDesign: designParse.gameDesign,
+    success: true,
+    data: {
+      ...dataParse.data,
+      gameDesign: designParseResult.gameDesign,
+    }
   }
 }

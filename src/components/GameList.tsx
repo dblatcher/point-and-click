@@ -41,18 +41,25 @@ const loadGameFromApi = (
     onLoad: Props['onLoad'],
     onError: Props['onError'],
 ) => async () => {
-    try {
-        const { gameDesign, imageAssets, soundAssets } = await getGameFromApi();
-        onLoad(gameDesign, imageAssets, soundAssets)
-    } catch (error) {
-        onError('failed to load')
+    const result = await getGameFromApi();
+    if (!result.success) {
+        onError(`failed to load: ${result.failureMessage}`)
+        return
     }
+    const { gameDesign, imageAssets, soundAssets } = result.data;
+    onLoad(gameDesign, imageAssets, soundAssets)
 }
 
 const downloadFromApi = (
     onError: Props['onError'],
 ) => async () => {
-    const { gameDesign, imageAssets, soundAssets } = await getGameFromApi();
+    const result = await getGameFromApi();
+    if (!result.success) {
+        onError(`download failed: ${result.failureMessage}`)
+        return
+    }
+    const { gameDesign, imageAssets, soundAssets } = await result.data;
+
     const zipResult = await buildGameZipBlobFromAssets(gameDesign, imageAssets, soundAssets)
     if (zipResult.success) {
         makeDownloadFile(`${gameDesign.id}.game.zip`, zipResult.blob);
