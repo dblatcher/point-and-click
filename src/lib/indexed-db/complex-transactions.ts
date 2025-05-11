@@ -3,12 +3,13 @@ import { ImageService } from "@/services/imageService";
 import { setHrefsFromFiles } from "@/services/set-hrefs";
 import { SoundService } from "@/services/soundService";
 import { makeAssetRecordKey, retrieveImageAssets, retrieveSoundAssets } from "./asset-stores-transactions";
-import { GameEditorDatabase, SavedDesignKey } from "./types";
 import { retrieveSavedDesign } from "./design-store-transactions";
+import { MaybeDesignAndAssets, GameEditorDatabase, SavedDesignKey } from "./types";
+
 
 export const retrieveDesignAndAssets = (db: GameEditorDatabase) => async (
     key: SavedDesignKey,
-) => {
+): Promise<MaybeDesignAndAssets> => {
     const [
         { design, timestamp = 0 },
         imageAssetResults,

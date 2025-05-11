@@ -2,6 +2,7 @@ import { GameDesign, Interaction, RoomData } from '@/definitions'
 import { GameDataItem, GameDataItemType } from '@/definitions/Game'
 import { TabId } from '@/lib/editor-config'
 import { GameDesignAction } from '@/lib/game-design-logic/types'
+import { DB_VERSION, MaybeDesignAndAssets } from '@/lib/indexed-db'
 import { patchMember } from '@/lib/update-design'
 import { createContext, ReactNode, useContext } from 'react'
 
@@ -11,6 +12,7 @@ type GameDesignContextInputs = {
     tabOpen: TabId,
     gameItemIds: Partial<Record<GameDataItemType, string>>,
     dispatchDesignUpdate: { (value: GameDesignAction): void },
+    handleIncomingDesign: { (sourceIdentifier: string, designAndAssets: MaybeDesignAndAssets): boolean },
 }
 
 type GameDesignContextProps = GameDesignContextInputs & {
@@ -27,6 +29,7 @@ const GameDesignContext = createContext<GameDesignContextProps>(
     {
         gameDesign: {
             id: '',
+            schemaVersion: DB_VERSION,
             currentRoomId: '',
             actors: [],
             rooms: [],
@@ -38,10 +41,12 @@ const GameDesignContext = createContext<GameDesignContextProps>(
             sequences: [],
             endings: [],
             sprites: [],
+            storyBoards: []
         },
         tabOpen: 'main',
         gameItemIds: {},
         dispatchDesignUpdate: () => { },
+        handleIncomingDesign: () => false,
         createGameDataItem: () => { },
         deleteArrayItem: () => { },
         openInEditor: () => { },

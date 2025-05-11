@@ -1,6 +1,6 @@
 import { GameDesign } from "@/definitions";
 import { uploadFile } from "@/lib/files";
-import { readGameFromZipFile } from "@/lib/zipFiles";
+import { readParseAndUpdateGameFromZipFile } from "@/lib/zipFiles";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { Button } from "@mui/material";
 import { FunctionComponent } from "react";
@@ -20,7 +20,7 @@ export const LoadDesignButton: FunctionComponent<Props> = ({ onLoad, onError }) 
             return;
         }
 
-        const result = await readGameFromZipFile(file);
+        const result = await readParseAndUpdateGameFromZipFile(file);
         if (!result.success) {
             onError(result.error)
             return;

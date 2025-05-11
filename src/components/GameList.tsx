@@ -1,6 +1,6 @@
 import castleLifeBlurb from "@/content/castleLifeBlurb.md";
 import { GameDesign } from "@/definitions";
-import { buildGameZipBlobFromAssets, readGameFromZipFile } from "@/lib/zipFiles";
+import { buildGameZipBlobFromAssets, readParseAndUpdateGameFromZipFile } from "@/lib/zipFiles";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { List } from "@mui/material";
 import { GameLoaderDesignItem } from "./GameLoaderDesignItem";
@@ -24,7 +24,7 @@ const loadGameFromZipFileUrl = (
         try {
             const response = await fetch(downloadUrl);
             const blob = await response.blob()
-            const game = await readGameFromZipFile(blob)
+            const game = await readParseAndUpdateGameFromZipFile(blob)
             if (game.success) {
                 onLoad(game.data.gameDesign, game.data.imageAssets, game.data.soundAssets)
             } else {

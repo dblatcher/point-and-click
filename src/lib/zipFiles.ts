@@ -6,6 +6,7 @@ import JSZip from "jszip";
 import { GameDesign } from "../definitions";
 import { parseAndUpgrade } from "./design-version-management";
 import { dataToBlob, fileToObjectUrl } from "./files";
+import { MaybeDesignAndAssets } from "@/lib/indexed-db"
 
 type ZipActionFailure = {
   success: false;
@@ -288,15 +289,7 @@ export const buildGameZipBlob = async (
   }
 };
 
-export const readGameFromZipFile = async (
-  file: Blob
-): Promise<
-  ZipReadResult<{
-    gameDesign: GameDesign;
-    imageAssets: ImageAsset[];
-    soundAssets: SoundAsset[];
-  }>
-> => {
+export const readMaybeDesignAndAssetsFromZipFile = async (file: Blob): Promise<ZipReadResult<MaybeDesignAndAssets>> => {
   const readImageResult = await readImageAssetFromZipFile(file);
   if (!readImageResult.success) {
     return {
@@ -331,7 +324,33 @@ export const readGameFromZipFile = async (
     };
   }
 
-  const { gameDesign, failureMessage } = parseAndUpgrade(data);
+  return {
+    success: true,
+    data: {
+      design: data,
+      imageAssets: readImageResult.data,
+      soundAssets: readSoundResult.data,
+    }
+  }
+}
+
+
+export const readParseAndUpdateGameFromZipFile = async (
+  file: Blob
+): Promise<
+  ZipReadResult<{
+    gameDesign: GameDesign;
+    imageAssets: ImageAsset[];
+    soundAssets: SoundAsset[];
+  }>
+> => {
+
+  const maybeDesignAndAssets = await readMaybeDesignAndAssetsFromZipFile(file);
+  if (!maybeDesignAndAssets.success) {
+    return maybeDesignAndAssets
+  }
+
+  const { gameDesign, failureMessage } = parseAndUpgrade(maybeDesignAndAssets.data.design);
 
   if (!gameDesign) {
     console.warn(failureMessage);
@@ -345,8 +364,8 @@ export const readGameFromZipFile = async (
     success: true,
     data: {
       gameDesign,
-      imageAssets: readImageResult.data,
-      soundAssets: readSoundResult.data,
+      imageAssets: maybeDesignAndAssets.data.imageAssets,
+      soundAssets: maybeDesignAndAssets.data.soundAssets,
     }
   };
 };

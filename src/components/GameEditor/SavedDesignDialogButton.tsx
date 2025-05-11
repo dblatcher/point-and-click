@@ -10,14 +10,13 @@ import { DescriptionWithSaveTime, DesignListItem } from "../DesignListItem";
 import { ButtonWithConfirm } from "./ButtonWithConfirm";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { ClearIcon, DeleteIcon } from "./material-icons";
-import { parseAndUpgrade } from "@/lib/design-version-management";
 
 interface Props {
     db: GameEditorDatabase
 }
 
 export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) => {
-    const { gameDesign, dispatchDesignUpdate } = useGameDesign()
+    const { gameDesign, dispatchDesignUpdate, handleIncomingDesign } = useGameDesign()
     const { imageService, soundService } = useAssets()
     const [isOpen, setIsOpen] = useState(false)
     const [designList, setDesignList] = useState<DesignListing[]>([])
@@ -49,24 +48,12 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
         })
     }
     const loadFile = (savedDesignKey: SavedDesignKey) => {
-        retrieveDesignAndAssets(db)(savedDesignKey).then(({ design, timestamp, imageAssets, soundAssets }) => {
-            if (!design) {
+        retrieveDesignAndAssets(db)(savedDesignKey).then((designAndAssets) => {
+            const success = handleIncomingDesign(savedDesignKey, designAndAssets)
+            if (!success) {
                 alert(`could not load ${savedDesignKey}`)
                 return undefined
             }
-            imageService.populate(imageAssets, 'DB')
-            soundService.populate(soundAssets, 'DB')
-            const date = new Date(timestamp)
-            console.log(`retrieved ${savedDesignKey} last saved at ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
-
-            const { gameDesign, failureMessage } = parseAndUpgrade(design);
-
-            if (!gameDesign) {
-                alert(`Could not parse ${savedDesignKey}: ${failureMessage ?? 'UNKNOWN'}`);
-                return undefined
-            }
-
-            dispatchDesignUpdate({ type: 'load-new', gameDesign })
             storeDesignAndAllAssetsToDb(db)(gameDesign, 'quit-save', soundService, imageService)
             setIsOpen(false)
         })

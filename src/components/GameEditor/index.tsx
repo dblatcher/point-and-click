@@ -5,7 +5,7 @@ import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
 import { handleImageUpdateFunction, handleSoundUpdateFunction } from '@/lib/handle-asset-functions';
-import { GameEditorDatabase, openDataBaseConnection } from '@/lib/indexed-db';
+import { MaybeDesignAndAssets, GameEditorDatabase, openDataBaseConnection, SavedDesignKey } from '@/lib/indexed-db';
 import { retrieveDesignAndAssets } from '@/lib/indexed-db/complex-transactions';
 import { Sprite } from '@/lib/Sprite';
 import { ImageService } from '@/services/imageService';
@@ -41,6 +41,36 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         }
     )
 
+    const handleIncomingDesign = useCallback((sourceIdentifier: string, designAndAssets: MaybeDesignAndAssets): boolean => {
+        const { design, timestamp, imageAssets, soundAssets } = designAndAssets;
+
+        if (!design) {
+            console.log(`no design ${sourceIdentifier} found`);
+            setWaitingforDesignFromDb(false)
+            return false
+        }
+
+        // TO DO - handle time formats for undefined
+        const date = new Date(timestamp ?? 0);
+        console.log(`retrieved ${sourceIdentifier} from ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
+
+        const { gameDesign, failureMessage, updated, sourceVersion } = parseAndUpgrade(design);
+
+        if (!gameDesign) {
+            alert(`Could not parse ${sourceIdentifier}: ${failureMessage ?? 'UNKNOWN'}`);
+            setWaitingforDesignFromDb(false);
+            return false
+        }
+        if (updated) {
+            console.log(`Updated from version ${sourceVersion}`);
+        }
+        imageService.populate(imageAssets, 'DB')
+        soundService.populate(soundAssets, 'DB')
+        dispatchDesignUpdate({ type: 'load-new', gameDesign })
+        setWaitingforDesignFromDb(false)
+        return true
+    }, [imageService, soundService])
+
     // when DB opens, load the quit save and populate file asset services
     const handleDBOpen = useCallback(async ({ db }: { db: GameEditorDatabase }) => {
         if (usePrebuiltGame) {
@@ -49,32 +79,10 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         dispatchDesignUpdate({ type: 'set-db-instance', db })
         console.log(`DB opened, version ${db.version}`)
 
-        const { design, timestamp, imageAssets, soundAssets } = await retrieveDesignAndAssets(db)(
-            'quit-save',
-        )
+        const designAndAssets = await retrieveDesignAndAssets(db)('quit-save')
+        handleIncomingDesign('quit-save', designAndAssets)
 
-        if (!design) {
-            setWaitingforDesignFromDb(false)
-            return
-        }
-
-        imageService.populate(imageAssets, 'DB')
-        soundService.populate(soundAssets, 'DB')
-        const date = new Date(timestamp)
-        console.log(`retrieved quit saved from ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
-
-        const { gameDesign, failureMessage } = parseAndUpgrade(design);
-
-        if (!gameDesign) {
-            alert(`Could not parse quit save: ${failureMessage ?? 'UNKNOWN'}`);
-            setWaitingforDesignFromDb(false);
-            return
-        }
-
-        dispatchDesignUpdate({ type: 'load-new', gameDesign })
-        setWaitingforDesignFromDb(false)
-
-    }, [dispatchDesignUpdate, usePrebuiltGame, imageService, soundService, setWaitingforDesignFromDb])
+    }, [usePrebuiltGame, handleIncomingDesign])
 
     useEffect(() => {
         openDataBaseConnection().then(handleDBOpen).catch(err => {
@@ -118,6 +126,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                     tabOpen: gameEditorState.tabOpen,
                     gameItemIds: gameEditorState.gameItemIds,
                     dispatchDesignUpdate,
+                    handleIncomingDesign,
                 }
             }>
                 <AssetsProvider soundService={soundService} imageService={imageService}>

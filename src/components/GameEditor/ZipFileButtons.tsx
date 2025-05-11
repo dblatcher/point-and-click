@@ -5,14 +5,13 @@ import {
   makeDownloadFile,
   uploadFile,
 } from "@/lib/files";
-import { higherLevelLoadNewGame } from "@/lib/game-design-logic/load-new-design";
-import { buildGameZipBlob, readGameFromZipFile } from "@/lib/zipFiles";
+import { buildGameZipBlob, readMaybeDesignAndAssetsFromZipFile } from "@/lib/zipFiles";
 import { Alert, IconButton, Snackbar, Tooltip } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 
 
 export const ZipFileButtons: FunctionComponent = () => {
-  const { gameDesign, dispatchDesignUpdate } = useGameDesign()
+  const { gameDesign, dispatchDesignUpdate, handleIncomingDesign } = useGameDesign()
   const { imageService, soundService } = useAssets()
   const [downloadAllError, setDownloadAllError] = useState<string | undefined>(
     undefined
@@ -20,8 +19,6 @@ export const ZipFileButtons: FunctionComponent = () => {
   const [uploadAllError, setUploadAllError] = useState<string | undefined>(
     undefined
   );
-
-  const loadNewGame = higherLevelLoadNewGame(dispatchDesignUpdate, soundService, imageService);
 
   const downloadAll = async () => {
     setDownloadAllError(undefined);
@@ -39,12 +36,13 @@ export const ZipFileButtons: FunctionComponent = () => {
     if (!file) {
       return;
     }
-    const result = await readGameFromZipFile(file);
+    const result = await readMaybeDesignAndAssetsFromZipFile(file);
     if (!result.success) {
       setUploadAllError(result.error);
       return;
     }
-    loadNewGame({ ...result.data, source: 'ZIP' },)
+
+    handleIncomingDesign(file.name, { ...result.data, timestamp: file.lastModified })
   };
 
   const saveLabel = 'Save game to zip file'
