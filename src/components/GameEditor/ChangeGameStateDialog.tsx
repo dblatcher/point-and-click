@@ -32,7 +32,8 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
             <DialogContent>
                 <GameDesignProvider input={{
                     ...modifiedGameState,
-                    dispatchDesignUpdate
+                    dispatchDesignUpdate,
+                    handleIncomingDesign: () => true,
                 }}>
                     <ChangeGameStateControls />
                 </GameDesignProvider>

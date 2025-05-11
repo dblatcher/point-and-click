@@ -13,6 +13,7 @@ import { followOrder } from "./orders/followOrder"
 import { cloneData } from "@/lib/clone"
 import { generateCellMatrix } from "@/lib/pathfinding/cells"
 import { GameEventEmitter } from "@/lib/game-event-emitter"
+import { DB_VERSION } from "../indexed-db";
 
 
 export type GameStateAction =
@@ -214,6 +215,7 @@ export const getInitialGameState = (props: GameProps): GameState => {
     const cellMatrix = currentRoom ? generateCellMatrix(currentRoom, CELL_SIZE) : undefined
 
     return {
+        schemaVersion: DB_VERSION,
         viewAngle: 0,
         isPaused: props.startPaused || false,
         id: props.id,

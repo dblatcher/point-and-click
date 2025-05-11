@@ -5,6 +5,7 @@ import { GameEventEmitter } from '../lib/game-event-emitter'
 import { ActionWithoutProp, GameStateAction } from '@/lib/game-state-logic/game-state-reducer'
 import { GameProps } from '@/components/game/types'
 import { SoundService } from '@/services/soundService'
+import { DB_VERSION } from '@/lib/indexed-db'
 
 const gameStateContext = createContext<{
     gameState: GameState,
@@ -14,6 +15,7 @@ const gameStateContext = createContext<{
     {
         gameState: {
             viewAngle: 0,
+            schemaVersion: DB_VERSION,
             isPaused: false,
             id: '',
             currentRoomId: '',
@@ -35,6 +37,7 @@ const gameStateContext = createContext<{
         updateGameState: () => { },
         gameProps: {
             _sprites: [],
+            schemaVersion: DB_VERSION,
             soundService: new SoundService,
             id: '',
             rooms: [],
@@ -42,6 +45,7 @@ const gameStateContext = createContext<{
             actors: [],
             interactions: [],
             conversations: [],
+            storyBoards: [],
             flagMap: {},
             currentRoomId: '',
             actorOrders: {},
