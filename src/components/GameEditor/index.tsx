@@ -22,6 +22,7 @@ import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
 import { ZipFileButtons } from './ZipFileButtons';
 import { parseAndUpgrade } from '@/lib/design-version-management';
+import { UpgradeNotice } from './UpgradeNotice';
 
 
 export type { GameEditorProps };
@@ -63,6 +64,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         }
         if (updated) {
             console.log(`Updated from version ${sourceVersion}`);
+            dispatchDesignUpdate({ type: 'set-upgrade-info', data: { sourceIdentifier, sourceVersion } });
         }
         imageService.populate(imageAssets, 'DB')
         soundService.populate(soundAssets, 'DB')
@@ -125,6 +127,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                     gameDesign: gameEditorState.gameDesign,
                     tabOpen: gameEditorState.tabOpen,
                     gameItemIds: gameEditorState.gameItemIds,
+                    upgradeInfo: gameEditorState.upgradeInfo,
                     dispatchDesignUpdate,
                     handleIncomingDesign,
                 }
@@ -167,6 +170,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                 sx={{ overflowY: 'auto' }}
                             >
                                 <MainWindow />
+<UpgradeNotice />
                             </Box>
                         </Container>
                     </SpritesProvider>

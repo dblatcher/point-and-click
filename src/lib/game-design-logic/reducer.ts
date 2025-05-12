@@ -36,6 +36,13 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
                 db
             }
 
+        case "set-upgrade-info":
+            const { data } = action
+            return {
+                ...gameEditorState,
+                upgradeInfo: data,
+            }
+
         case 'open-in-editor': {
             const { tabId, itemId } = action
             const { gameItemIds } = gameEditorState

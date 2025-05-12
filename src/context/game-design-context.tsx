@@ -1,7 +1,7 @@
 import { GameDesign, Interaction, RoomData } from '@/definitions'
 import { GameDataItem, GameDataItemType } from '@/definitions/Game'
 import { TabId } from '@/lib/editor-config'
-import { GameDesignAction } from '@/lib/game-design-logic/types'
+import { DesignUpgradeInfo, GameDesignAction } from '@/lib/game-design-logic/types'
 import { DB_VERSION, MaybeDesignAndAssets } from '@/lib/indexed-db'
 import { patchMember } from '@/lib/update-design'
 import { createContext, ReactNode, useContext } from 'react'
@@ -11,6 +11,7 @@ type GameDesignContextInputs = {
     gameDesign: GameDesign,
     tabOpen: TabId,
     gameItemIds: Partial<Record<GameDataItemType, string>>,
+    upgradeInfo?: DesignUpgradeInfo
     dispatchDesignUpdate: { (value: GameDesignAction): void },
     handleIncomingDesign: { (sourceIdentifier: string, designAndAssets: MaybeDesignAndAssets): boolean },
 }

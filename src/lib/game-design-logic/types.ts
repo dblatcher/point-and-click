@@ -60,6 +60,11 @@ type SetDBInstance = {
     db: GameEditorDatabase,
 }
 
+type SetUpgradeInfo = {
+    type: 'set-upgrade-info',
+    data: DesignUpgradeInfo | undefined,
+}
+
 export type GameDesignAction =
     OpenInEditorAction |
     ModifyDesignAction |
@@ -69,8 +74,14 @@ export type GameDesignAction =
     CreateDataItemAction |
     DeleteDataItemAction |
     ChangeOrAddInteractionAction |
-    DeleteInteractionAction|
-    SetDBInstance;
+    DeleteInteractionAction |
+    SetDBInstance |
+    SetUpgradeInfo;
+
+export type DesignUpgradeInfo = {
+    sourceIdentifier: string;
+    sourceVersion: number;
+}
 
 export type GameEditorState = {
     gameDesign: GameDesign;
@@ -79,4 +90,5 @@ export type GameEditorState = {
     tabOpen: TabId;
     gameItemIds: Partial<Record<GameDataItemType, string>>;
     db?: GameEditorDatabase;
+    upgradeInfo?: DesignUpgradeInfo;
 }
