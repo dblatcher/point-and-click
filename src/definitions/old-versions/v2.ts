@@ -13,6 +13,7 @@ import { VerbSchema } from "../Verb"
 import { GameHappeningsSchema } from "../Game"
 
 const GameContentsDataSchema = z.object({
+    schemaVersion: z.undefined(),
     rooms: RoomDataSchema.array(),
     items: ItemDataSchema.array(),
     actors: ActorDataSchema.array(),

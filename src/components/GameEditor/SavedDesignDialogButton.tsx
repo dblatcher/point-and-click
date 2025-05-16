@@ -78,6 +78,7 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
                         <DesignListItem key={key}
                             onClick={() => loadFile(key)}
                             title={`${design.id} [${key}]`}
+                            schemaVersion={design.schemaVersion}
                             description={<DescriptionWithSaveTime timestamp={timestamp} gameDesign={design} />}
                             secondaryAction={
                                 <>
