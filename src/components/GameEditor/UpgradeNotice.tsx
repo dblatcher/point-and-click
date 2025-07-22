@@ -1,7 +1,7 @@
 import { useGameDesign } from "@/context/game-design-context"
 import { changeHistory } from "@/definitions/old-versions/changes"
 import { DB_VERSION } from "@/lib/indexed-db"
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, List, ListItem, ListItemText } from "@mui/material"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, List, ListItem, ListItemText, ListSubheader } from "@mui/material"
 import { FunctionComponent } from "react"
 
 
@@ -10,6 +10,8 @@ export const UpgradeNotice: FunctionComponent = () => {
     if (!upgradeInfo) {
         return null
     }
+
+    const upgradesMade = changeHistory.filter(item => item.schemaVersion > upgradeInfo.sourceVersion)
 
     return (
         <Dialog open={!!upgradeInfo}>
@@ -23,28 +25,26 @@ export const UpgradeNotice: FunctionComponent = () => {
                         It has been upgraded to v{DB_VERSION}.
                     </DialogContentText>
 
-                    <List>
-                        {changeHistory.map((item, index) => (
-                            <ListItem key={index}>
-                                <ListItemText
-                                    primary={`Version ${item.schemaVersion}`}
-                                    secondary={
-                                        <ul>
-                                            {item.changes.map((change, index2) =>
-                                                <li key={index2}>{change.description}</li>
-                                            )}
-                                        </ul>
-                                    }
-                                />
-                            </ListItem>
-                        ))}
-                    </List>
+                    {upgradesMade.map((item, index) => (
+                        <List key={index}
+                            disablePadding
+                            dense
+                            subheader={<ListSubheader component="div">Version {item.schemaVersion}</ListSubheader>}
+                        >
+                            {item.changes.map((change, index2) =>
+                                <ListItem  key={index2}>
+                                    <ListItemText sx={{ pl: 4 }} primary={change.description} />
+                                </ListItem>
+                            )}
+                        </List >
+                    ))}
                 </DialogContent>
-            )}
+            )
+            }
 
             <DialogActions>
                 <Button onClick={() => dispatchDesignUpdate({ type: 'set-upgrade-info', data: undefined })}>ok</Button>
             </DialogActions>
-        </Dialog>
+        </Dialog >
     )
 }

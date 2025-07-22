@@ -20,5 +20,18 @@ export const changeHistory: VersionChange[] = [
                 description: "storyBoards array is required"
             }
         ]
+    },
+    {
+        schemaVersion: 4,
+        changes: [
+            {
+                breaking: true,
+                description: "Endings deprecated in favour of storyBoards. Any Endings have been converted to Storyboards."
+            },
+            {
+                breaking: false,
+                description: "StoryBoards have ending option."
+            }
+        ]
     }
 ]

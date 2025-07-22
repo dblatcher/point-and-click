@@ -41,6 +41,7 @@ export type BoardFont = z.infer<typeof BoardFontSchema>
 
 export const StoryBoardSchema = z.object({
     id: z.string(),
+    isEndOfGame: z.boolean().optional(),
     pages: StoryBoardPageSchema.array(),
     font: BoardFontSchema.optional(),
     sound: soundInstanceSchema.optional(),

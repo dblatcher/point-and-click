@@ -10,6 +10,7 @@ import { PageMenu } from "./PageMenu";
 import { EditorBox } from "../EditorBox";
 import { EnumSelectInput } from "../EnumSelectInput";
 import { AmbientSoundControl } from "../RoomEditor/AmbientSoundControl";
+import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 
 interface Props {
     storyBoard: StoryBoard
@@ -78,8 +79,15 @@ export const StoryBoardEditor: React.FunctionComponent<Props> = ({ storyBoard })
                         update(`unset font on storyboard ${storyBoard.id}`, { font: undefined })
                     } />
                 <Box border={1} padding={2} fontSize={'small'}>
-                    <span style={{fontFamily:storyBoard.font}}>abcdefghijklmnopqrstuvwxyz</span>
+                    <span style={{ fontFamily: storyBoard.font }}>abcdefghijklmnopqrstuvwxyz</span>
                 </Box>
+            </Box>
+            <Box>
+                <BooleanInput
+                    label="is end of game"
+                    value={storyBoard.isEndOfGame ?? false}
+                    title="is end of game"
+                    inputHandler={(isEndOfGame) => update(`set ${storyBoard.id} to ${isEndOfGame ? 'be' : 'not be'} the end of the game`, { isEndOfGame })} />
             </Box>
         </EditorBox>
 

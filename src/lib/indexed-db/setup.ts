@@ -1,10 +1,9 @@
 import { deleteDB, openDB } from "idb";
 import { GameEditorDatabase, GameEditorDBSchema } from "./types";
-// import { migrateData } from "./migration";
 
 
 const DB_NAME = 'Point-and-click-db'
-export const DB_VERSION = 3
+export const DB_VERSION = 4
 
 type WindowPlus = Window & {
     MY_DATABASE?: GameEditorDatabase,
@@ -19,9 +18,6 @@ const putStuffOnWindow = (db: GameEditorDatabase) => {
 
 
 export const openDataBaseConnection = async () => {
-
-    let versionToMigrateFrom = 0;
-
     const db = await openDB<GameEditorDBSchema>(DB_NAME, DB_VERSION, {
         async upgrade(
             db,
@@ -39,10 +35,6 @@ export const openDataBaseConnection = async () => {
                 return
             }
 
-            if (oldVersion < DB_VERSION) {
-                versionToMigrateFrom = oldVersion
-                return
-            }
         },
         blocked(currentVersion, blockedVersion, event) {
             console.warn('open db blocked', { currentVersion, blockedVersion, event })
@@ -56,9 +48,6 @@ export const openDataBaseConnection = async () => {
     });
 
     putStuffOnWindow(db)
-    if (versionToMigrateFrom) {
-        // await migrateData(db)(versionToMigrateFrom, DB_VERSION);
-    }
 
     return { db }
 }

@@ -11,6 +11,7 @@ import { SpriteData, SpriteDataSchema } from "./SpriteSheet"
 import { Ending, EndingSchema } from "./Ending"
 import { FlagMapSchema } from "./Flag"
 import { StoryBoard, StoryBoardSchema } from "./StoryBoard"
+import { DB_VERSION } from "@/lib/indexed-db"
 
 
 export const GameHappeningsSchema = z.object({
@@ -24,7 +25,7 @@ export const GameHappeningsSchema = z.object({
 })
 
 export const GameContentsDataSchema = z.object({
-    schemaVersion: z.number(),
+    schemaVersion: z.literal(DB_VERSION),
     rooms: RoomDataSchema.array(),
     items: ItemDataSchema.array(),
     actors: ActorDataSchema.array(),
