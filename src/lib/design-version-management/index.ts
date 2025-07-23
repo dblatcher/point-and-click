@@ -22,7 +22,8 @@ const convertEndingToStoryBoard = (ending: Ending, customId?: string): StoryBoar
     const picture: PagePicture | undefined = ending.imageId ? {
         x: 'center',
         y: 'center',
-        width: ending.imageWidth,
+        width: ending.imageWidth ? ending.imageWidth / 16 : 20, // imageWidth was in pixels, PagePicture.width is in em
+        height: ending.imageWidth ? ending.imageWidth / 16 : 20,
         image: {
             imageId: ending.imageId
         }
@@ -37,8 +38,8 @@ const convertEndingToStoryBoard = (ending: Ending, customId?: string): StoryBoar
                 narrative: {
                     text: [],
                 },
-                backgroundColor: '#FFFFFF',
-                color: '#000000',
+                color: '#FFFFFF',
+                backgroundColor: '#000000',
                 pictures: picture ? [picture] : []
             }
         ]
