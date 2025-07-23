@@ -40,7 +40,7 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
 export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) => {
     const { gameDesign } = useGameDesign()
     const { soundAssets, soundService } = useAssets()
-    const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
+    const { ids: targetIds} = getTargetLists(gameDesign)
     const { ids: targetIdsWithoutItems, descriptions: targetDescriptionsWithoutItems } = getTargetLists(gameDesign, true)
 
     const { branchIdList, choiceRefList } = getBranchIdAndChoiceRefOptions(consequence.conversationId, consequence.branchId, gameDesign)

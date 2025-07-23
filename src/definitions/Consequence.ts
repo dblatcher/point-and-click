@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { Order, orderSchema } from "./Order"
 import { Narrative, NarrativeSchema } from "./BaseTypes"
+import { EndingConsequenceSchema } from "./old-versions/deprecated-schemas"
 
 const OrderConsequenceSchema = z.object({
     type: z.literal('order'),
@@ -52,15 +53,6 @@ const ConversationConsequenceSchema = z.object({
     type: z.literal('conversation'),
     conversationId: z.string(),
     end: z.optional(z.boolean()),
-    narrative: NarrativeSchema.optional(),
-})
-
-/**
- * deprecated
- */
-const EndingConsequenceSchema = z.object({
-    type: z.literal('ending'),
-    endingId: z.string(),
     narrative: NarrativeSchema.optional(),
 })
 

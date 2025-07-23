@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { EndingSchema } from "./Ending"
+import { EndingSchema } from "./deprecated-schemas"
 import { FixedGameInfoSchema, GameContentsDataSchema, GameHappeningsSchema } from "../Game"
 import { StoryBoardSchema } from "../StoryBoard"
 
