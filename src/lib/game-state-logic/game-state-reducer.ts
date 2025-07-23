@@ -27,12 +27,14 @@ export type GameStateAction =
     | { type: 'SET-SCREEN-SIZE', height?: number, width?: number }
     | { type: 'TICK-UPDATE', props: GameProps }
     | { type: 'CLEAR-STORYBOARD' }
+    | { type: 'RESTART', props: GameProps }
 
 export type ActionWithoutProp =
     | { type: 'SEND-COMMAND', command: Command }
     | { type: 'TARGET-CLICK', target: CommandTarget }
     | { type: 'CONVERSATION-CHOICE', choice: ConversationChoice }
     | { type: 'TICK-UPDATE' }
+    | { type: 'RESTART' }
 
 export const makeDispatcherWithProps =
     (dispatch: React.Dispatch<GameStateAction>, props: GameProps) =>
@@ -42,6 +44,7 @@ export const makeDispatcherWithProps =
                 case "TARGET-CLICK":
                 case "CONVERSATION-CHOICE":
                 case "TICK-UPDATE":
+                case "RESTART":
                     return dispatch({ ...action, props })
                 case "SET-PAUSED":
                 case "VERB-SELECT":
@@ -53,6 +56,7 @@ export const makeDispatcherWithProps =
             }
         }
 
+export const getStoryboardCloseAction = (isEndOfGame?: boolean): ActionWithoutProp | GameStateAction => isEndOfGame ? { type: 'RESTART' } : { type: 'CLEAR-STORYBOARD' }
 
 export const screenSizeAction = (width?: number, height?: number): GameStateAction => ({ type: 'SET-SCREEN-SIZE', height, width })
 
@@ -196,19 +200,28 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 currentStoryBoardId: undefined
             }
         }
+
+        case "RESTART": {
+            gameState.emitter.emit('prompt-feedback', { message: 'GAME RESTARTED', type: 'system' })
+            return getInitialGameState(action.props, gameState.emitter)
+        }
     }
 }
 
-export const getInitialGameState = (props: GameProps): GameState => {
+export const getInitialGameState = (props: GameProps, existingEmitter?: GameEventEmitter): GameState => {
     const rooms = props.rooms.map(cloneData);
     const actors = props.actors.map(cloneData);
     const items = props.items.map(cloneData);
     const conversations = props.conversations.map(cloneData);
+    const interactions = props.interactions.map(cloneData);
+    const actorOrders = cloneData(props.actorOrders);
     const flagMap = cloneData(props.flagMap);
+
     const openingSequenceInProps = findById(props.openingSequenceId, props.sequences)
     const openingSequenceCopy = (openingSequenceInProps && props.gameNotBegun)
         ? cloneData(openingSequenceInProps)
         : undefined
+    const sequenceRunning = props.sequenceRunning ? cloneData(props.sequenceRunning) : openingSequenceCopy;
 
     const currentStoryBoardId = props.gameNotBegun ? props.openingStoryboardId : props.currentStoryBoardId
     const currentRoom = findById(props.currentRoomId, rooms)
@@ -223,10 +236,10 @@ export const getInitialGameState = (props: GameProps): GameState => {
         actors,
         rooms,
         currentVerbId: props.verbs[0].id,
-        interactions: [...props.interactions],
+        interactions: interactions,
         items,
-        sequenceRunning: props.sequenceRunning || openingSequenceCopy,
-        actorOrders: props.actorOrders || {},
+        sequenceRunning,
+        actorOrders,
         conversations,
         currentConversationId: props.currentConversationId,
         flagMap,
@@ -234,7 +247,7 @@ export const getInitialGameState = (props: GameProps): GameState => {
         currentStoryBoardId,
         roomHeight: 400,
         roomWidth: 800,
-        emitter: new GameEventEmitter(),
+        emitter: existingEmitter ?? new GameEventEmitter(),
         cellMatrix,
     }
 }

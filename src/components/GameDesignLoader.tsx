@@ -26,7 +26,7 @@ export const GameDesignLoader: React.FunctionComponent = () => {
 
     useEffect(() => {
         let referenceToDbWithinThisHook: GameEditorDatabase | undefined = undefined
-        openDataBaseConnection().then(({db}) => {
+        openDataBaseConnection().then(({ db }) => {
             if (!db) {
                 console.warn('no db')
             }
@@ -116,6 +116,7 @@ export const GameDesignLoader: React.FunctionComponent = () => {
 
         {design && (
             <GameDesignPlayer
+                instantMode={layoutOption === 'textBased'}
                 gameDesign={design}
                 imageAssets={imageAssets ?? []}
                 soundAssets={soundAssets ?? []}

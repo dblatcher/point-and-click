@@ -1,9 +1,10 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context"
 import { Command, Conversation, ConversationChoice } from "@/definitions"
 import { reportConversationBranch } from "@/lib/game-event-emitter"
+import { getStoryboardCloseAction } from "@/lib/game-state-logic/game-state-reducer"
 import { standard } from "@/lib/text-based/standard-text"
 import { promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
-import { clamp } from "@/lib/util"
+import { clamp, findById } from "@/lib/util"
 import { Box, TextField } from "@mui/material"
 import { useRef, useState } from "react"
 
@@ -39,7 +40,8 @@ export const TextPrompt = () => {
 
     const handleSubmit = () => {
         if (gameState.currentStoryBoardId) {
-            updateGameState({ type: 'CLEAR-STORYBOARD' })
+            const storyboard = findById(gameState.currentStoryBoardId, gameProps.storyBoards)
+            updateGameState(getStoryboardCloseAction(storyboard?.isEndOfGame))
             return
         }
         if (isSequenceRunning) {

@@ -4,6 +4,7 @@ import { StoryPageDisplay } from "./StoryPageDisplay";
 import { useAssets } from "@/context/asset-context";
 import { SoundControl } from "sound-deck";
 import { useGameState } from "@/context/game-state-context";
+import { getStoryboardCloseAction } from "@/lib/game-state-logic/game-state-reducer";
 
 interface Props {
     storyBoard: StoryBoard
@@ -47,6 +48,7 @@ const buttonsStyle: CSSProperties = {
     padding: 5,
 }
 
+
 export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard }) => {
     const { updateGameState } = useGameState()
     const [pageNumber, setPageNumber] = useState(0)
@@ -72,7 +74,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
                         schedulePageTurns(setPageNumber, duration, storyBoard.pages.length)
                     }
                     soundControl.whenEnded.then(() => {
-                        updateGameState({ type: 'CLEAR-STORYBOARD' })
+                        updateGameState(getStoryboardCloseAction(storyBoard.isEndOfGame));
                     })
                 }
                 setSound(soundControl)
@@ -84,14 +86,10 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
     const onLastPage = pageNumber === storyBoard.pages.length - 1;
     const onFirstPage = pageNumber === 0;
 
-    const close = () => {
-        sound?.stop()
-        updateGameState({ type: 'CLEAR-STORYBOARD' })
-    }
-
     const proceed = () => {
         if (onLastPage || storyBoard.progression === 'sound') {
-            close()
+            sound?.stop()
+            updateGameState(getStoryboardCloseAction(storyBoard.isEndOfGame))
         } else {
             goToNextPage()
         }
