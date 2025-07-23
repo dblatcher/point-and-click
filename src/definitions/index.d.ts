@@ -17,7 +17,6 @@ export type { Interaction } from "./Interaction"
 export { zoneTypes } from "./Interaction"
 export type { Sequence } from "./Sequence";
 export type { SpriteData, SpriteFrame, Animation } from "./SpriteSheet";
-export type { Ending } from "./old-versions/Ending"
 export type { FlagMap, Flag } from "./Flag"
 
 export type { Direction, Ident, SpriteParams, Position } from "./BaseTypes"

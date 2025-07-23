@@ -1,9 +1,10 @@
-import { Consequence, Conversation, Ending, GameDesign, ImmediateConsequence, Sequence } from "@/definitions";
+import { Consequence, Conversation, GameDesign, ImmediateConsequence, Sequence } from "@/definitions";
 import { GameDesignSchema } from "@/definitions/Game";
 import { V2GameDesign, v2GameDesignSchema } from "@/definitions/old-versions/v2";
 import { V3GameDesign, v3GameDesignSchema } from "@/definitions/old-versions/v3";
 import { DB_VERSION } from "../indexed-db";
 import { PagePicture, StoryBoard } from "@/definitions/StoryBoard";
+import { Ending } from "@/definitions/old-versions/Ending";
 
 const upgradeV2toV3 = (v2Design: V2GameDesign): V3GameDesign => {
     return {
