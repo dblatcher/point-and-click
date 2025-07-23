@@ -26,7 +26,6 @@ export const itemMenuPropsAreEqual = (prevProps: ItemMenuProps, nextProps: ItemM
 export type SaveMenuProps = {
     save?: { (fileName?: string): void };
     deleteSave?: { (fileName: string): void }
-    reset?: { (): void };
     listSavedGames?: { (): string[] }
     load?: { (fileName?: string): void };
     isPaused: boolean;

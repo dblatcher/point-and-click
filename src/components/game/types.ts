@@ -6,7 +6,6 @@ import { UiComponentSet } from "./uiComponentSet";
 
 export type GameProps = Readonly<{
     save?: { (saveDate: GameData, fileName?: string): void };
-    reset?: { (): void };
     load?: { (fileName?: string): void };
     deleteSave?: { (fileName: string): void };
     listSavedGames?: { (): string[] };

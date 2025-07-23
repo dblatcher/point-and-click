@@ -1,3 +1,5 @@
+import { useGameState } from '@/context/game-state-context';
+import DeleteIcon from '@mui/icons-material/Delete';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import LoadIcon from '@mui/icons-material/Restore';
@@ -8,11 +10,11 @@ import { useState } from 'react';
 import { SaveMenuProps } from "../game/uiComponentSet";
 import { StringInput } from '../SchemaForm/StringInput';
 import { SoundToggle } from './SoundToggle';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 
-export const DialogSaveMenu = ({ save, reset, load, isPaused, setIsPaused, listSavedGames, deleteSave }: SaveMenuProps) => {
+export const DialogSaveMenu = ({ save, load, isPaused, setIsPaused, listSavedGames, deleteSave }: SaveMenuProps) => {
 
+    const { updateGameState } = useGameState();
     const [newSaveName, setNewSaveName] = useState('')
     const [savedGameNames, setSavedGameNames] = useState(listSavedGames?.() ?? [])
 
@@ -45,7 +47,7 @@ export const DialogSaveMenu = ({ save, reset, load, isPaused, setIsPaused, listS
                             <ListItemIcon><PlayIcon /></ListItemIcon>
                             <ListItemText primary="Continue" />
                         </ListItemButton>
-                        <ListItemButton onClick={reset}>
+                        <ListItemButton onClick={() => updateGameState({ type: 'RESTART' })}>
                             <ListItemIcon><RestartAltIcon /></ListItemIcon>
                             <ListItemText primary="Restart" />
                         </ListItemButton>

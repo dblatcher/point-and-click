@@ -10,12 +10,11 @@ export const SaveMenuWrapper = ({ SaveMenuComponent }: Props) => {
 
     const { gameProps, gameState, updateGameState } = useGameState()
 
-    const { deleteSave, save, reset, load, listSavedGames } = gameProps
+    const { deleteSave, save, load, listSavedGames } = gameProps
 
     return (
         <SaveMenuComponent
             load={load ? (fileName) => { load(fileName) } : undefined}
-            reset={reset ? () => { reset() } : undefined}
             save={save ? (fileName) => { save(getSaveData(gameState), fileName) } : undefined}
             deleteSave={deleteSave}
             listSavedGames={listSavedGames}

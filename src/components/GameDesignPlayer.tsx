@@ -159,7 +159,6 @@ export class GameDesignPlayer extends React.Component<Props, State> {
               save={this.save}
               deleteSave={this.deleteSave}
               listSavedGames={this.listSavedGames}
-              reset={this.reset}
               key={timestamp}
               _sprites={this.sprites}
               uiComponents={uiComponents}
