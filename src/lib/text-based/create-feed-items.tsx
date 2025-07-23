@@ -1,11 +1,11 @@
-import { GameState } from "@/lib/game-state-logic/types";
-import { ActorData, Ending } from "@/definitions";
+import { ActorData } from "@/definitions";
+import { StoryBoard } from "@/definitions/StoryBoard";
 import { describeCommand, findTarget } from "@/lib/commandFunctions";
 import { CommandReport, ConsequenceReport, ConversationBranchReport, InGameEvent, OrderReport, SequenceStageReport } from "@/lib/game-event-emitter";
+import { GameState } from "@/lib/game-state-logic/types";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
 import { standard } from "./standard-text";
-import { StoryBoard } from "@/definitions/StoryBoard";
 
 const stringToFeedItem = (message: string) => ({
     message
@@ -58,7 +58,7 @@ const conversationBranchReportToFeedLines = (commandReport: ConversationBranchRe
         type: 'dialogue'
     }];
 };
-const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameState, endings: Ending[]): FeedItem[] => {
+const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameState): FeedItem[] => {
     const { consequence, success, offscreen } = consequenceReport;
     if (!success || offscreen) {
         return [];
@@ -113,14 +113,6 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
                 return [{ message: standard.CONVERSATION_END, type: 'system' }]
             }
             return [{ message: standard.CONVERSATION_START, type: 'system' }]
-        case "ending": {
-            const ending = findById(consequence.endingId, endings)
-
-            return ending ? [
-                { message: ending?.message },
-                { message: `GAME OVER`, type: 'system' }
-            ] : [{ message: `GAME OVER`, type: 'system' }]
-        }
         case "toggleZone":
         // TO DO - how to describe a zone toggle?
         case "storyBoardConsequence":
@@ -131,6 +123,8 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
         case "order":
         case "backgroundMusic":
         case "ambientNoise":
+
+        case "ending":
             return [];
     }
 };
@@ -149,14 +143,14 @@ export const storyBoardReportToFeedLines = (storyBoard: StoryBoard): FeedItem[] 
     }))
 };
 
-export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameState, endings: Ending[]): FeedItem[] => {
+export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameState): FeedItem[] => {
     switch (inGameEvent.type) {
         case "command":
             return [commandReportToFeedLine(inGameEvent)]
         case "order":
             return orderReportToFeedLine(inGameEvent, state)
         case "consequence":
-            return consequenceReportToFeedLines(inGameEvent, state, endings)
+            return consequenceReportToFeedLines(inGameEvent, state)
         case "conversation-branch":
             return conversationBranchReportToFeedLines(inGameEvent)
         case "sequence-stage":

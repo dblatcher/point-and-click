@@ -30,7 +30,7 @@ export const changeHistory: VersionChange[] = [
             },
             {
                 breaking: false,
-                description: "StoryBoards have ending option."
+                description: "StoryBoards have end of game option."
             }
         ]
     }

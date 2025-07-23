@@ -135,17 +135,6 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 reportConversationBranch(state)
                 break;
             }
-            case 'ending': {
-                const { endingId } = consequence
-                const ending = findById(endingId, props.endings)
-                if (!ending) {
-                    console.warn(`no such ending "${endingId}"`)
-                    break;
-                }
-                state.endingId = endingId
-                conseqeunceSuccess = true
-                break;
-            }
             case 'toggleZone': {
                 const { roomId, ref, on, zoneType } = consequence
                 const room = findById(roomId, state.rooms)
@@ -226,8 +215,13 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 break;
             }
             case 'storyBoardConsequence': {
-                const {storyBoardId} = consequence
-                state.currentStoryBoardId = storyBoardId
+                const { storyBoardId } = consequence
+                const storyBoard = findById(storyBoardId, props.storyBoards)
+                if (storyBoard) {
+                    state.currentStoryBoardId = storyBoardId
+                } else {
+                    console.warn('no such storyBoard', storyBoardId)
+                }
                 break
             }
             default: {

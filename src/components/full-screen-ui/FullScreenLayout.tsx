@@ -1,7 +1,6 @@
 import { useGameStateDerivations } from "@/context/game-state-context";
 import { DialogSaveMenu } from "../game-mui-ux/DialogSaveMenu";
 import { ConversationMenu } from "../game-ui/ConversationMenu";
-import { EndingWrapper } from "../game-ui/EndingScreen";
 import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { RoomWrapperWithOverlay } from "./RoomWrapperWithOverlay";
 import { FullScreenWrapper } from "../FullScreenWrapper";
@@ -25,7 +24,6 @@ export const FullScreenLayout = () => {
                     <SaveMenuWrapper SaveMenuComponent={DialogSaveMenu} />
                 </div>
                 <RoomWrapperWithOverlay />
-                <EndingWrapper />
                 {!isSequenceRunning && (
                     <div style={{
                         position: 'absolute',

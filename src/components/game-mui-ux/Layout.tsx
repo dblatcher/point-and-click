@@ -6,7 +6,6 @@ import { CommandLine } from "./CommandLine";
 import { VerbMenu } from "./VerbMenu";
 import { ConversationMenu } from "./ConversationMenu";
 import { ItemMenu } from "./ItemMenu";
-import { EndingWrapper } from "../game-ui/EndingScreen";
 import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { DialogSaveMenu } from "./DialogSaveMenu";
 import { RoomWrapper } from "../game/RoomWrapper";
@@ -50,7 +49,6 @@ export const Layout = () => {
                             </>)}
                         </Card>
                     </Card>
-                    <EndingWrapper />
                 </Container>
             </FullScreenWrapper>
         </Container>

@@ -371,7 +371,7 @@ export const interactions: Interaction[] = [
                     }
                 ]
             },
-            { type: 'ending', endingId: 'WIN' },
+            { type: 'storyBoardConsequence', storyBoardId: 'WIN' },
         ]
     },
     {

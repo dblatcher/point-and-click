@@ -53,7 +53,6 @@ const gameStateContext = createContext<{
             verbs: [],
             sequences: [],
             sprites: [],
-            endings: []
         }
     }
 )
@@ -66,26 +65,24 @@ export const useGameState = () => {
 
 export const useGameStateDerivations = () => {
     const { gameState, gameProps } = useContext(gameStateContext)
-    const { currentConversationId, conversations, endingId, sequenceRunning, items, currentItemId, actors } = gameState
+    const { currentConversationId, conversations, sequenceRunning, items, currentItemId, actors } = gameState
 
     const player = actors.find(actor => actor.isPlayer)
     const inventory = items.filter(item => item.actorId === player?.id)
     const currentConversation = findById(currentConversationId, conversations)
     const verb = findById(gameState.currentVerbId, gameProps.verbs);
-    const ending = findById(gameState.endingId, gameProps.endings)
     const lookVerb = gameProps.verbs.find(verb => verb.isLookVerb) ?? gameProps.verbs.find(verb => verb.id === 'LOOK');
     const moveVerb = gameProps.verbs.find(verb => verb.isMoveVerb) ?? gameProps.verbs.find(verb => verb.id === 'WALK');
 
     return {
         currentConversation,
         isConversationRunning: !!currentConversation,
-        isGameEnded: !!endingId,
+        isGameEnded: false, //  TO DO - see if this is valuable, if so derive from storyboard
         isSequenceRunning: !!sequenceRunning,
         currentItem: findById(currentItemId, items),
         player,
         inventory,
         verb,
-        ending,
         lookVerb,
         moveVerb,
     }

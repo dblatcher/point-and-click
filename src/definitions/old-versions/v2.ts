@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { ActorDataSchema } from "../ActorData"
 import { ConversationSchema } from "../Conversation"
-import { EndingSchema } from "../Ending"
+import { EndingSchema } from "./Ending"
 import { FlagMapSchema } from "../Flag"
 import { InteractionSchema } from "../Interaction"
 import { ItemDataSchema } from "../ItemData"

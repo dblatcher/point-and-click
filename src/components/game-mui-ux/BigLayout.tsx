@@ -2,7 +2,6 @@ import { useGameState, useGameStateDerivations } from "@/context/game-state-cont
 import { Box, Grid } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { ResizeWatcher } from "../ResizeWatcher";
-import { EndingWrapper } from "../game-ui/EndingScreen";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
 import { ItemMenu } from "./ItemMenu";
@@ -80,7 +79,6 @@ export const BigLayout = () => {
                     </>)}
                 </Box>
             </div>
-            <EndingWrapper />
         </ResizeWatcher>
     )
 }

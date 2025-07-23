@@ -57,8 +57,6 @@ const getIdWithUnusedSuffix = (base: string, existingIds: string[]): string => {
 
 const migrateV3Design = (v3Design: V3GameDesign): GameDesign => {
 
-    console.log('endings', v3Design.endings)
-    console.log('storyboards', v3Design.storyBoards)
 
     const { storyBoards, interactions, sequences, conversations } = v3Design
 
@@ -120,7 +118,6 @@ const migrateV3Design = (v3Design: V3GameDesign): GameDesign => {
 
     return {
         ...v3Design,
-        endings: [],
         storyBoards: [...storyBoards, ...convertedEndings],
         interactions: modifiedInteractions,
         sequences: modifiedSequences,

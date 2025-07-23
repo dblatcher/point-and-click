@@ -26,7 +26,6 @@ export const tabOrder: EditorTab[] = [
     buildTab('items', 'Inventory Items'),
     buildTab('conversations'),
     buildTab('sequences'),
-    buildTab('endings'),
     buildTab('verbs'),
     buildTab('interactions'),
     buildTab('images', 'image assets'),

@@ -18,7 +18,6 @@ export const getInitalDesign = (usePrebuiltGame?: boolean): GameDesign => {
         currentRoomId: defaultRoomId,
         sequences: [],
         sprites: [],
-        endings: [],
         storyBoards: [],
         flagMap: {},
     }

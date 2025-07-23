@@ -1,7 +1,6 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
-import { EndingWrapper } from "./EndingScreen";
 import { ItemMenu } from "./ItemMenu";
 import { SoundToggle } from "./SoundToggle";
 import { VerbMenu } from "./VerbMenu";
@@ -22,7 +21,6 @@ export const Layout = () => {
         <button onClick={() => updateGameState(screenSizeAction(roomWidth - 10, roomHeight - 10))}>-</button>
         <SoundToggle />
         <RoomWrapper />
-        <EndingWrapper />
         {isConversationRunning ? (
             <>
                 {!isSequenceRunning && <ConversationMenu />}

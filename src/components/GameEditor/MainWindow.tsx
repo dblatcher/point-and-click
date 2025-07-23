@@ -1,17 +1,17 @@
+import { useAssets } from '@/context/asset-context';
 import { useGameDesign } from '@/context/game-design-context';
 import { ActorDataSchema } from "@/definitions/ActorData";
 import { ConversationSchema } from "@/definitions/Conversation";
-import { GameDataItemType } from "@/definitions/Game";
 import { ItemDataSchema } from "@/definitions/ItemData";
 import { RoomDataSchema } from "@/definitions/RoomData";
 import { SpriteDataSchema } from "@/definitions/SpriteSheet";
+import { useKeyBoard } from '@/hooks/use-keyboard';
 import { findById } from "@/lib/util";
 import { Box } from "@mui/material";
-import { TabId, tabOrder } from "../../lib/editor-config";
+import { tabOrder } from "../../lib/editor-config";
 import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
 import { DataItemCreator } from "./DataItemCreator";
-import { EndingEditor } from "./EndingEditor";
 import { ImageAssetTool } from "./ImageAssetTool";
 import { InteractionEditor } from "./InteractionEditor";
 import { ItemEditor } from "./ItemEditor";
@@ -20,12 +20,10 @@ import { RoomEditor } from "./RoomEditor";
 import { SequenceEditor } from "./SequenceEditor";
 import { SoundAssetTool } from "./SoundAssetTool";
 import { SpriteEditor } from "./SpriteEditor";
+import { StoryBoardEditor } from './StoryBoardEditor/StoryBoardEditor';
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankEnding, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb, makeEmptyStoryBoard } from "./defaults";
-import { useKeyBoard } from '@/hooks/use-keyboard';
-import { useAssets } from '@/context/asset-context';
-import { StoryBoardEditor } from './StoryBoardEditor/StoryBoardEditor';
+import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb, makeEmptyStoryBoard } from "./defaults";
 
 export const MainWindow = () => {
     const { gameDesign, tabOpen, openInEditor, gameItemIds } = useGameDesign()
@@ -54,7 +52,6 @@ export const MainWindow = () => {
 
     const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
     const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
-    const currentEnding = findById(gameItemIds.endings, gameDesign.endings)
     const currentRoom = findById(gameItemIds.rooms, gameDesign.rooms)
     const currentSprite = findById(gameItemIds.sprites, gameDesign.sprites)
     const currentItem = findById(gameItemIds.items, gameDesign.items)
@@ -121,14 +118,6 @@ export const MainWindow = () => {
                     createBlank={makeBlankSequence}
                     designProperty="sequences"
                     itemTypeName="sequence"
-                />
-        case 'endings':
-            return currentEnding
-                ? <EndingEditor ending={currentEnding} />
-                : <DataItemCreator
-                    createBlank={makeBlankEnding}
-                    designProperty="endings"
-                    itemTypeName="ending"
                 />
         case 'verbs':
             return currentVerb

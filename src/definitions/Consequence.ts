@@ -55,6 +55,9 @@ const ConversationConsequenceSchema = z.object({
     narrative: NarrativeSchema.optional(),
 })
 
+/**
+ * deprecated
+ */
 const EndingConsequenceSchema = z.object({
     type: z.literal('ending'),
     endingId: z.string(),
@@ -147,7 +150,8 @@ export const ConsequenceSchema = z.union([
 
 const ConsequenceTypeEnum = z.enum([
     'conversation', 'sequence', 'changeStatus', 'backgroundMusic', 'ambientNoise',
-    'removeActor', 'inventory', 'changeRoom', 'order', 'ending',
+    'removeActor', 'inventory', 'changeRoom', 'order', 
+    // 'ending',
     'teleportActor', 'toggleZone', 'soundEffect', 'flag', 'conversationChoice', 'storyBoardConsequence'
 ])
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
@@ -181,7 +185,6 @@ export type AnyConsequence = Consequence & {
     itemId?: string;
     status?: string;
     actorId?: string;
-    endingId?: string;
     roomId?: string;
     text?: string;
     targetType?: string;
@@ -212,7 +215,7 @@ export const ImmediateConsequenceSchema = z.union([
     ChangeStatusConsequenceSchema,
     InventoryConsequenceSchema,
     ConversationConsequenceSchema,
-    EndingConsequenceSchema,
+    // EndingConsequenceSchema,
     TeleportActorConsequenceSchema,
     ToggleZoneConsequenceSchema,
     SoundEffectConsequenceSchema,

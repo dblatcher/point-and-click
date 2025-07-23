@@ -1,6 +1,6 @@
 import {
     Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType,
-    Stage, ConversationChoice, Ending, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData
+    Stage, ConversationChoice, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData
 } from "@/definitions";
 import { ActStep, MoveStep } from "@/definitions/Order";
 import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
@@ -110,8 +110,6 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type: "inventory", itemId: '', addOrRemove: 'ADD' }
         case 'changeRoom':
             return { type: 'changeRoom', roomId: '', takePlayer: true, x: 0, y: 0 }
-        case 'ending':
-            return { type: 'ending', endingId: '' }
         case 'teleportActor':
             return { type: 'teleportActor', actorId: '', x: 0, y: 0, roomId: '' }
         case 'order':
@@ -139,8 +137,6 @@ export const makeNewStep = {
     act: (): ActStep => ({ duration: 100, reverse: false, animation: '' }),
     move: (): MoveStep => ({ speed: 1, x: 0, y: 0, animation: '' }),
 }
-
-export const makeBlankEnding = (id = "NEW_ENDING", message = "game over"): Ending => ({ id, message, })
 
 export const makeEmptyStoryBoard = (id = "NEW_STORYBOARD"): StoryBoard => ({ id, pages: [] })
 export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({

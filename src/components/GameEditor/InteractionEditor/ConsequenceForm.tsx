@@ -53,7 +53,6 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         targetType: ['actor', 'item', 'hotspot'],
         addOrRemove: ['ADD', 'REMOVE'],
         sequence: listIds(gameDesign.sequences),
-        endingId: listIds(gameDesign.endings),
         zoneType: zoneTypes,
         ref: getZoneRefsOrIds(gameDesign, consequence.roomId || '', consequence.zoneType),
         sound: soundAssets.map(_ => _.id),

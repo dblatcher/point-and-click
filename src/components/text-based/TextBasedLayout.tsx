@@ -1,6 +1,5 @@
 import { CommandLine } from "@/components/game-ui/CommandLine";
 import { ConversationMenu } from "@/components/game-ui/ConversationMenu";
-import { EndingWrapper } from "@/components/game-ui/EndingScreen";
 import { ItemMenu } from "@/components/game-ui/ItemMenu";
 import { SoundToggle } from "@/components/game-ui/SoundToggle";
 import { VerbMenu } from "@/components/game-ui/VerbMenu";
@@ -40,8 +39,6 @@ export const TextBasedLayout = () => {
                 <TextPrompt />
             </Box>
         </Box>
-
-        <EndingWrapper />
 
         <Box display={'flex'}>
             <figure role='img'>

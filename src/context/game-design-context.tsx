@@ -40,7 +40,6 @@ const GameDesignContext = createContext<GameDesignContextProps>(
             flagMap: {},
             verbs: [],
             sequences: [],
-            endings: [],
             sprites: [],
             storyBoards: []
         },

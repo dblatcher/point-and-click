@@ -61,7 +61,7 @@ export const getStoryboardCloseAction = (isEndOfGame?: boolean): ActionWithoutPr
 export const screenSizeAction = (width?: number, height?: number): GameStateAction => ({ type: 'SET-SCREEN-SIZE', height, width })
 
 export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState, action) => {
-    const isActive: boolean = !gameState.endingId && !gameState.isPaused && !gameState.sequenceRunning
+    const isActive: boolean = !gameState.currentStoryBoardId && !gameState.isPaused && !gameState.sequenceRunning
     const player = gameState.actors.find(actor => actor.isPlayer)
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
 

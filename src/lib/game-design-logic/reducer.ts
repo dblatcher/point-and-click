@@ -54,7 +54,6 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
                 case 'conversations':
                 case 'sprites':
                 case 'sequences':
-                case 'endings':
                 case 'verbs':
                 case 'storyBoards':
                     gameItemIds[tabId] = itemId

@@ -10,7 +10,6 @@ import { FeedLine } from "./FeedLine";
 
 export const NarrativeFeed = () => {
     const { gameState, gameProps } = useGameState();
-    const { endings } = gameProps
     const { emitter, currentStoryBoardId } = gameState
     const [feed, setFeed] = useState<FeedItem[]>([])
     const feedQueue = useRef<FeedItem[]>([])
@@ -37,7 +36,7 @@ export const NarrativeFeed = () => {
 
     useEffect(() => {
         const handleInGameEvent = (inGameEvent: InGameEvent) => {
-            feedQueue.current.push(...inGameEventToFeedLines(inGameEvent, gameState, endings))
+            feedQueue.current.push(...inGameEventToFeedLines(inGameEvent, gameState))
         }
 
         const handlePromptFeedback = (feedback: PromptFeedbackReport) => {

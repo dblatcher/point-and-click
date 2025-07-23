@@ -8,7 +8,6 @@ import { ActorData, ActorDataSchema } from "./ActorData"
 import { Verb, VerbSchema } from "./Verb"
 import { Conversation, ConversationSchema } from "./Conversation"
 import { SpriteData, SpriteDataSchema } from "./SpriteSheet"
-import { Ending, EndingSchema } from "./Ending"
 import { FlagMapSchema } from "./Flag"
 import { StoryBoard, StoryBoardSchema } from "./StoryBoard"
 import { DB_VERSION } from "@/lib/indexed-db"
@@ -19,7 +18,6 @@ export const GameHappeningsSchema = z.object({
     currentStoryBoardId: z.string().optional(),
     actorOrders: z.record(z.string(), orderSchema.array()),
     currentConversationId: z.string().optional(),
-    endingId: z.string().optional(),
     pendingInteraction: InteractionSchema.optional(),
     gameNotBegun: z.boolean(),
 })
@@ -42,7 +40,6 @@ export const FixedGameInfoSchema = z.object({
     verbs: VerbSchema.array(),
     sequences: SequenceSchema.array(),
     sprites: SpriteDataSchema.array(),
-    endings: EndingSchema.array(),
     openingSequenceId: z.string().optional(),
     openingStoryboardId: z.string().optional(),
     storyBoards: StoryBoardSchema.array(),
@@ -62,10 +59,10 @@ export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
 export type GameCondition = z.infer<typeof GameConditionSchema>
 export type GameDesign = z.infer<typeof GameDesignSchema>
 
-export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Ending | Verb | StoryBoard
+export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Verb | StoryBoard
 
 export const GameDataItemTypeEnum = z.enum([
-    'rooms', 'items', 'actors', 'conversations', 'sprites', 'sequences', 'endings', 'verbs', 'storyBoards'
+    'rooms', 'items', 'actors', 'conversations', 'sprites', 'sequences', 'verbs', 'storyBoards'
 ])
 
 export type GameDataItemType =
@@ -75,6 +72,5 @@ export type GameDataItemType =
     | 'conversations'
     | 'sprites'
     | 'sequences'
-    | 'endings'
     | 'verbs'
     | 'storyBoards'

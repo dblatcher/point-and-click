@@ -58,8 +58,6 @@ export const getConsequenceIcon = (type: ConsequenceType): typeof ChatOutlinedIc
             return PictureInPictureAltOutlinedIcon
         case "sequence":
             return FormatListNumberedRtlOutlinedIcon
-        case "ending":
-            return CancelPresentationOutlinedIcon
         case "order":
             return AssignmentOutlinedIcon
         case "backgroundMusic":
@@ -105,8 +103,6 @@ export const getConsequenceDescription = (c: Consequence): string => {
             return `run ${quoted(c.sequence)}`
         case "changeStatus":
             return `${c.targetId ?? UNSET}${brackets(c.targetType)} status =  ${quoted(c.status)}`
-        case "ending":
-            return `Ending: ${quoted(c.endingId)}`
         case "backgroundMusic":
             return `Set BGM in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
         case "ambientNoise":
