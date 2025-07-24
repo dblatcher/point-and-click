@@ -4,7 +4,7 @@ import { V2GameDesign, v2GameDesignSchema } from "@/definitions/old-versions/v2"
 import { V3GameDesign, v3GameDesignSchema } from "@/definitions/old-versions/v3";
 import { DB_VERSION } from "../indexed-db";
 import { PagePicture, StoryBoard } from "@/definitions/StoryBoard";
-import { Ending } from "@/definitions/old-versions/deprecated-schemas";
+import { ConsequenceWithDeprecated, ConversationWithDeprecatedConsequences, Ending, SequenceWithDeprecatedConsequences } from "@/definitions/old-versions/deprecated-schemas";
 
 const upgradeV2toV3 = (v2Design: V2GameDesign): V3GameDesign => {
     return {
@@ -57,8 +57,6 @@ const getIdWithUnusedSuffix = (base: string, existingIds: string[]): string => {
 }
 
 const migrateV3Design = (v3Design: V3GameDesign): GameDesign => {
-
-
     const { storyBoards, interactions, sequences, conversations } = v3Design
 
     const storyBoardsIds = storyBoards.map(s => s.id);
@@ -76,7 +74,7 @@ const migrateV3Design = (v3Design: V3GameDesign): GameDesign => {
     // TO DO - find all ending consequences in interactions, sequences and conversations
     // convert to storyboard consequences using id map
 
-    const convertConsequenceIfEnding = (consequence: Consequence): Consequence => {
+    const convertConsequenceIfEnding = (consequence: ConsequenceWithDeprecated): Consequence => {
         if (consequence.type !== 'ending') {
             return consequence
         }
@@ -87,35 +85,36 @@ const migrateV3Design = (v3Design: V3GameDesign): GameDesign => {
             narrative: consequence.narrative,
         }
     }
-    const convertConsequencesInSequence = (sequence: Sequence): Sequence => ({
+    const convertSequence = (sequence: SequenceWithDeprecatedConsequences): Sequence => ({
         ...sequence,
         stages: sequence.stages.map(stage => ({
             ...stage,
             immediateConsequences: stage.immediateConsequences?.map(convertConsequenceIfEnding) as ImmediateConsequence[]
         }))
     });
-
-    const modifiedInteractions = interactions.map(interaction => {
-        return { ...interaction, consequences: interaction.consequences.map(convertConsequenceIfEnding) }
-    })
-
-    const modifiedSequences = sequences.map(convertConsequencesInSequence)
-
-    const modifiedConversations: Conversation[] = conversations.map(conversation => {
-        const { branches } = conversation;
+    const convertConversations = (conversation:ConversationWithDeprecatedConsequences):Conversation => {
+        const { branches } = conversation as Conversation;
         for (let branchKey in branches) {
             const branch = branches[branchKey];
             if (!branch) { continue }
             branch.choices = branch.choices.map(choice => ({
                 ...choice,
-                choiceSequence: choice.choiceSequence ? convertConsequencesInSequence(choice.choiceSequence) : undefined
+                choiceSequence: choice.choiceSequence ? convertSequence(choice.choiceSequence) : undefined
             }))
         }
         return {
             ...conversation,
             branches,
         }
+    }
+
+    const modifiedInteractions = interactions.map(interaction => {
+        return { ...interaction, consequences: interaction.consequences.map(convertConsequenceIfEnding) }
     })
+
+    const modifiedSequences = sequences.map(convertSequence)
+
+    const modifiedConversations: Conversation[] = conversations.map(convertConversations)
 
     return {
         ...v3Design,

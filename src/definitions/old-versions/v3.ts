@@ -1,25 +1,20 @@
 import { z } from "zod"
-import { EndingSchema } from "./deprecated-schemas"
-import { FixedGameInfoSchema, GameContentsDataSchema, GameHappeningsSchema } from "../Game"
-import { StoryBoardSchema } from "../StoryBoard"
+import { FixedGameInfoSchema, GameContentsDataSchema } from "../Game"
+import { ConversationSchemaWithDeprecatedConsequences, EndingSchema, InteractionSchemaWithDeprecatedConsequences, SequenceSchemaWithDeprecatedConsequences } from "./deprecated-schemas"
 
-
-
-const v3GameHappeningsSchema = GameHappeningsSchema.merge(z.object({
-    endingId: z.string().optional(),
-}))
 
 const v3GameContentsDataSchema = GameContentsDataSchema.merge(z.object({
     schemaVersion: z.literal(3),
+    interactions: InteractionSchemaWithDeprecatedConsequences.array(),
+    conversations: ConversationSchemaWithDeprecatedConsequences.array(),
 }))
 
 
 const v3FixedGameInfoSchema = FixedGameInfoSchema.merge(z.object({
     endings: EndingSchema.array(),
-    storyBoards: StoryBoardSchema.array(),
+    sequences: SequenceSchemaWithDeprecatedConsequences.array(),
 }))
 
-export const v3GameDataSchema = v3GameContentsDataSchema.and(v3GameHappeningsSchema)
 
 
 export const v3GameDesignSchema = v3GameContentsDataSchema.and(v3FixedGameInfoSchema).describe('The game schema')

@@ -1,24 +1,20 @@
 import { z } from "zod"
 import { ActorDataSchema } from "../ActorData"
-import { ConversationSchema } from "../Conversation"
-import { EndingSchema } from "./deprecated-schemas"
 import { FlagMapSchema } from "../Flag"
-import { InteractionSchema } from "../Interaction"
 import { ItemDataSchema } from "../ItemData"
 import { RoomDataSchema } from "../RoomData"
-import { SequenceSchema } from "../Sequence"
 import { SpriteDataSchema } from "../SpriteSheet"
 import { StoryBoardSchema } from "../StoryBoard"
 import { VerbSchema } from "../Verb"
-import { GameHappeningsSchema } from "../Game"
+import { ConversationSchemaWithDeprecatedConsequences, EndingSchema, InteractionSchemaWithDeprecatedConsequences, SequenceSchemaWithDeprecatedConsequences } from "./deprecated-schemas"
 
 const GameContentsDataSchema = z.object({
     schemaVersion: z.undefined(),
     rooms: RoomDataSchema.array(),
     items: ItemDataSchema.array(),
     actors: ActorDataSchema.array(),
-    interactions: InteractionSchema.array(),
-    conversations: ConversationSchema.array(),
+    interactions: InteractionSchemaWithDeprecatedConsequences.array(),
+    conversations: ConversationSchemaWithDeprecatedConsequences.array(),
     flagMap: FlagMapSchema,
     currentRoomId: z.string(),
     id: z.string(),
@@ -28,7 +24,7 @@ const GameContentsDataSchema = z.object({
 
 const FixedGameInfoSchema = z.object({
     verbs: VerbSchema.array(),
-    sequences: SequenceSchema.array(),
+    sequences: SequenceSchemaWithDeprecatedConsequences.array(),
     sprites: SpriteDataSchema.array(),
     endings: EndingSchema.array(),
     openingSequenceId: z.string().optional(),
@@ -36,7 +32,6 @@ const FixedGameInfoSchema = z.object({
     storyBoards: StoryBoardSchema.array().optional(),
 })
 
-export const v2GameDataSchema = GameContentsDataSchema.and(GameHappeningsSchema)
 
 
 export const v2GameDesignSchema = GameContentsDataSchema.and(FixedGameInfoSchema).describe('The game schema')

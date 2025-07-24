@@ -1,7 +1,6 @@
 import { z } from "zod"
 import { Narrative } from "./BaseTypes"
 import { AmbientNoiseConsequenceSchema, BackgroundMusicConsequenceSchema, ChangeRoomConsequenceSchema, ChangeStatusConsequenceSchema, ConversationChoiceConsequenceSchema, ConversationConsequenceSchema, FlagConsequenceSchema, InventoryConsequenceSchema, OrderConsequenceSchema, RemoveActorConsequenceSchema, SequenceConsequenceSchema, SoundEffectConsequenceSchema, StoryBoardConsequenceSchema, TeleportActorConsequenceSchema, ToggleZoneConsequenceSchema } from "./consequence-subtypes"
-import { EndingConsequenceSchema } from "./old-versions/deprecated-schemas"
 import { Order } from "./Order"
 
 export type OrderConsequence = z.infer<typeof OrderConsequenceSchema>
@@ -18,7 +17,6 @@ export const ConsequenceSchema = z.union([
     ChangeStatusConsequenceSchema,
     SequenceConsequenceSchema,
     ConversationConsequenceSchema,
-    EndingConsequenceSchema,
     TeleportActorConsequenceSchema,
     ToggleZoneConsequenceSchema,
     SoundEffectConsequenceSchema,
@@ -32,7 +30,6 @@ export const ConsequenceSchema = z.union([
 const ConsequenceTypeEnum = z.enum([
     'conversation', 'sequence', 'changeStatus', 'backgroundMusic', 'ambientNoise',
     'removeActor', 'inventory', 'changeRoom', 'order', 
-    // 'ending',
     'teleportActor', 'toggleZone', 'soundEffect', 'flag', 'conversationChoice', 'storyBoardConsequence'
 ])
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
@@ -46,7 +43,6 @@ export const consequenceMap = {
     inventory: InventoryConsequenceSchema,
     changeRoom: ChangeRoomConsequenceSchema,
     order: OrderConsequenceSchema,
-    ending: EndingConsequenceSchema,
     teleportActor: TeleportActorConsequenceSchema,
     toggleZone: ToggleZoneConsequenceSchema,
     soundEffect: SoundEffectConsequenceSchema,
@@ -96,7 +92,6 @@ export const ImmediateConsequenceSchema = z.union([
     ChangeStatusConsequenceSchema,
     InventoryConsequenceSchema,
     ConversationConsequenceSchema,
-    // EndingConsequenceSchema,
     TeleportActorConsequenceSchema,
     ToggleZoneConsequenceSchema,
     SoundEffectConsequenceSchema,
