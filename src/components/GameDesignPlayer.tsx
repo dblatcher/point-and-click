@@ -2,7 +2,6 @@ import { Game } from "@/components/game/Game";
 import { AssetsProvider } from "@/context/asset-context";
 import { SpritesProvider } from "@/context/sprite-context";
 import { GameCondition, GameData, GameDesign } from "@/definitions";
-import { v2GameDataSchema } from "@/definitions/old-versions/v2";
 import { cloneData } from "@/lib/clone";
 import { Sprite } from "@/lib/Sprite";
 import { ImageAsset, SoundAsset } from "@/services/assets";
@@ -11,6 +10,7 @@ import { populateServices } from "@/services/populateServices";
 import { SoundService } from "@/services/soundService";
 import React from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
+import { GameDataSchema } from "@/definitions/Game";
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
 const SAVED_GAME_DELIMITER = "//"
@@ -95,7 +95,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
     try {
       const data = JSON.parse(jsonString) as unknown;
-      const gameDataparseResult = v2GameDataSchema.safeParse(data);
+      const gameDataparseResult = GameDataSchema.safeParse(data);
 
       if (!gameDataparseResult.success) {
         console.warn(gameDataparseResult.error.issues)
