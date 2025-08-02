@@ -1,6 +1,7 @@
 import { type RoomData } from "../../definitions/RoomData"
 import { type Zone } from "../../definitions/Zone"
-import { Circle, isPointInsideCircle, isPointInsidePolygon, isPointInsideRectangle, Point, Rectangle } from "./geometry"
+import { Circle, isPointInsideCircle, isPointInsideRectangle, Point, Rectangle } from "./geometry"
+import { isPointInsidePolygon } from "typed-geometry"
 
 export type CellMatrix = (0 | 1)[][]
 
@@ -14,17 +15,12 @@ function isCellBlocked(
         y: (rowIndex - .5) * cellSize,
     }
 
-    const higherPoint: Point = {
-        x: cellCenter.x,
-        y: cellCenter.y + (cellSize / 10)
-    }
 
     const isInObstable = isPointInsideAny(cellCenter, obstacleZones)
-        && isPointInsideAny(higherPoint, obstacleZones)
 
     if (walkableZones) {
         const isInWalkable = isPointInsideAny(cellCenter, walkableZones)
-            && isPointInsideAny(higherPoint, walkableZones)
+           
 
         return isInObstable || !isInWalkable
     }
@@ -34,9 +30,11 @@ function isCellBlocked(
 
 export function isPointInsideAny(point: Point, zones: { polygons: Point[][]; rectangles: Rectangle[]; circles: Circle[] }): boolean {
     const { polygons, rectangles, circles } = zones;
-    return polygons.some(polygon => isPointInsidePolygon(point, polygon))
+    return (
+        polygons.some(polygon => isPointInsidePolygon(point, polygon))
         || rectangles.some(rectangle => isPointInsideRectangle(point, rectangle))
         || circles.some(circle => isPointInsideCircle(point, circle))
+    )
 }
 
 
@@ -78,15 +76,15 @@ function getObstacleCircles(obstacleAreas: Zone[]): Circle[] {
 export function generateCellMatrix(roomData: RoomData, cellSize: number) {
     const { width, height, obstacleAreas = [], walkableAreas = [] } = roomData
     const walkable = walkableAreas.length > 0 ? {
-        polygons: getObstaclePolygons(walkableAreas.filter(zone=>!zone.disabled)),
-        rectangles: getObstacleRectangle(walkableAreas.filter(zone=>!zone.disabled)),
-        circles: getObstacleCircles(walkableAreas.filter(zone=>!zone.disabled)),
+        polygons: getObstaclePolygons(walkableAreas.filter(zone => !zone.disabled)),
+        rectangles: getObstacleRectangle(walkableAreas.filter(zone => !zone.disabled)),
+        circles: getObstacleCircles(walkableAreas.filter(zone => !zone.disabled)),
     } : null
 
     const obstable = {
-        polygons: getObstaclePolygons(obstacleAreas.filter(zone=>!zone.disabled)),
-        rectangles: getObstacleRectangle(obstacleAreas.filter(zone=>!zone.disabled)),
-        circles: getObstacleCircles(obstacleAreas.filter(zone=>!zone.disabled)),
+        polygons: getObstaclePolygons(obstacleAreas.filter(zone => !zone.disabled)),
+        rectangles: getObstacleRectangle(obstacleAreas.filter(zone => !zone.disabled)),
+        circles: getObstacleCircles(obstacleAreas.filter(zone => !zone.disabled)),
     }
 
     const matrixHeight = Math.ceil(height / cellSize)
