@@ -82,6 +82,10 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
         }
     }, [setPageNumber, storyBoard, soundService, setSound, updateGameState])
 
+    useEffect(() => {
+        return () => sound?.stop()
+    }, [sound])
+
     const currentPage = storyBoard.pages[pageNumber]
     const onLastPage = pageNumber === storyBoard.pages.length - 1;
     const onFirstPage = pageNumber === 0;
