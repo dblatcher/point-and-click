@@ -25,9 +25,14 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
         }
     )
 
+    const closeAndSendDesign = () => {
+        setDialogOpen(false)
+        sendModifiedDesign(modifiedGameState.gameDesign)
+    }
+
     return <>
         <Button onClick={() => setDialogOpen(true)} >Modify</Button>
-        <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth={'md'}>
+        <Dialog open={dialogOpen} onClose={closeAndSendDesign} fullWidth maxWidth={'md'}>
             <DialogTitle>Modify game: {gameDesign.id}</DialogTitle>
             <DialogContent>
                 <GameDesignProvider input={{
@@ -46,10 +51,7 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
                 <Button variant="outlined" onClick={() => {
                     dispatchDesignUpdate({ type: 'load-new', gameDesign: gameDesign })
                 }}>reset changes</Button>
-                <Button variant="contained" onClick={() => {
-                    setDialogOpen(false)
-                    sendModifiedDesign(modifiedGameState.gameDesign)
-                }} >start game with changes</Button>
+                <Button variant="contained" onClick={closeAndSendDesign} >start game with changes</Button>
             </DialogActions>
         </Dialog>
     </>

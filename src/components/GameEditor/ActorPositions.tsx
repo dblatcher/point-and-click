@@ -15,7 +15,7 @@ export const ActorPositions = ({ actorId, setActorId }: Props) => {
     }
 
     return (
-        <EditorBox title="Actor Positions" contentBoxProps={{ minWidth: 160, display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <EditorBox contentBoxProps={{ minWidth: 160, display: 'flex', flexDirection: 'column', gap: 3 }}>
             <List dense disablePadding>
                 {gameDesign.actors.map((actor, index) => (
                     <ListItemButton key={index} onClick={handleClick(actor.id)}>

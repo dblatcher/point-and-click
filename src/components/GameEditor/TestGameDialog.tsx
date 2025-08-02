@@ -17,16 +17,21 @@ export const TestGameDialog = () => {
     const { gameDesign } = useGameDesign()
     const { soundService } = useAssets()
     const [showDebugLog, setShowDebugLog] = useState(false)
+    const [haveStartedTests, setHaveStartedTest] = useState(false)
     const [gameSpeed, setGameSpeed] = useState(1)
     const [modifiedGameDesign, setModifiedGameDesign] = useState(cloneData(gameDesign))
     const [gameTestDialogOpen, setGameTestDialogOpen] = useState(false);
     const [resetTimeStamp, setResetTimeStamp] = useState(0);
 
     const reset = () => setResetTimeStamp(Date.now())
-    const close = () => setGameTestDialogOpen(false)
+    const close = () => {
+        setGameTestDialogOpen(false)
+        setHaveStartedTest(false)
+    }
 
     const handleModifiedDesign = (newGameDesignMod: GameDesign) => {
         setModifiedGameDesign(cloneData({ ...gameDesign, ...newGameDesignMod }))
+        setHaveStartedTest(true)
         reset()
     }
 
@@ -66,16 +71,18 @@ export const TestGameDialog = () => {
                     display: 'flex',
                     flexDirection: 'column',
                 }}>
-                    <Game
-                        key={resetTimeStamp}
-                        {...modifiedGameDesign} actorOrders={{}}
-                        gameNotBegun
-                        showDebugLog={showDebugLog}
-                        _sprites={sprites}
-                        soundService={soundService}
-                        timerInterval={10}
-                        orderSpeed={gameSpeed}
-                    />
+                    {haveStartedTests && (
+                        <Game
+                            key={resetTimeStamp}
+                            {...modifiedGameDesign} actorOrders={{}}
+                            gameNotBegun
+                            showDebugLog={showDebugLog}
+                            _sprites={sprites}
+                            soundService={soundService}
+                            timerInterval={10}
+                            orderSpeed={gameSpeed}
+                        />
+                    )}
                 </DialogContent>
             </Dialog>
         </>

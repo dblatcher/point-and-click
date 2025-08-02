@@ -1,11 +1,12 @@
 import { AssetsProvider } from '@/context/asset-context';
 import { GameDesignProvider } from '@/context/game-design-context';
 import { SpritesProvider } from '@/context/sprite-context';
+import { parseAndUpgrade } from '@/lib/design-version-management';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
 import { handleImageUpdateFunction, handleSoundUpdateFunction } from '@/lib/handle-asset-functions';
-import { MaybeDesignAndAssets, GameEditorDatabase, openDataBaseConnection, SavedDesignKey } from '@/lib/indexed-db';
+import { GameEditorDatabase, MaybeDesignAndAssets, openDataBaseConnection } from '@/lib/indexed-db';
 import { retrieveDesignAndAssets } from '@/lib/indexed-db/complex-transactions';
 import { Sprite } from '@/lib/Sprite';
 import { ImageService } from '@/services/imageService';
@@ -20,9 +21,8 @@ import { SavedDesignDialogButton } from './SavedDesignDialogButton';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
-import { ZipFileButtons } from './ZipFileButtons';
-import { parseAndUpgrade } from '@/lib/design-version-management';
 import { UpgradeNotice } from './UpgradeNotice';
+import { ZipFileButtons } from './ZipFileButtons';
 
 
 export type { GameEditorProps };
@@ -170,7 +170,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                                 sx={{ overflowY: 'auto' }}
                             >
                                 <MainWindow />
-<UpgradeNotice />
+                                <UpgradeNotice />
                             </Box>
                         </Container>
                     </SpritesProvider>
