@@ -40,8 +40,11 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import RedoIcon from "@mui/icons-material/Redo";
+import ActorIcon from "@mui/icons-material/Person";
+import HotspotIcon from '@mui/icons-material/Adjust';
 
 export {
+    ActorIcon,
     AddIcon,
     AnimationIcon,
     ArrowDownwardIcon,
@@ -68,6 +71,7 @@ export {
     FlagFilledIcon,
     HelpIcon,
     HideImageOutlinedIcon,
+    HotspotIcon,
     InventoryIcon,
     LinkIcon,
     LogOut,

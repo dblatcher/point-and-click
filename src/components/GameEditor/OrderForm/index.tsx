@@ -6,13 +6,14 @@ import { ActOrderForm } from "./ActOrderForm";
 import { MoveOrderForm } from "./MoveOrderForm";
 import { OrderWithoutStepsForm } from "./OrderWithoutStepsForm";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
+import { ReactNode } from "react";
 
 
 interface Props {
     data: Order;
     animationSuggestions: string[];
     targetIdOptions: string[];
-    targetIdDescriptions: string[];
+    targetIdDescriptions: ReactNode[];
     updateData: { (data: Order): void };
 }
 

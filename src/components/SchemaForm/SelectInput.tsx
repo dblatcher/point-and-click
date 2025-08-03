@@ -1,6 +1,6 @@
 import type { SelectChangeEvent } from '@mui/material';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import type { FunctionComponent } from 'react';
+import type { FunctionComponent, ReactNode } from 'react';
 import type { FieldProps } from './types';
 
 const EMPTY_STRING = '';
@@ -11,7 +11,7 @@ export const SelectInput: FunctionComponent<
         optional?: boolean;
         inputHandler: { (value: string | undefined): void };
         options: string[];
-        descriptions?: string[];
+        descriptions?: ReactNode[];
     }
 > = (props) => {
     const { value, optional, options, inputHandler, label, descriptions, minWidth } = props;

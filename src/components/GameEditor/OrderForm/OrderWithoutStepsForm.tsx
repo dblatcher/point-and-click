@@ -1,7 +1,7 @@
 
 import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm";
 import { GotoOrder, GotoOrderSchema, SayOrder, SayOrderSchema } from "@/definitions/Order";
-import { Component } from "react";
+import { Component, ReactNode } from "react";
 
 
 type OrderWithoutSteps = SayOrder | GotoOrder
@@ -10,7 +10,7 @@ interface Props {
     data: OrderWithoutSteps;
     animationSuggestions: string[];
     targetIdOptions: string[];
-    targetIdDescriptions: string[];
+    targetIdDescriptions: ReactNode[];
     updateData: { (data: OrderWithoutSteps): void };
 }
 

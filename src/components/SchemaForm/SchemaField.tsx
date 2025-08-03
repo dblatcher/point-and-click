@@ -7,6 +7,7 @@ import { SelectInput } from "./SelectInput";
 import { NumberInput } from "./NumberInput";
 import { OptionalNumberInput } from "./OptionalNumberInput";
 import { DelayedStringInput } from "../GameEditor/DelayedStringInput";
+import { ReactNode } from "react";
 
 // noTriState is set by default in SchemaForm, so no implementation of the
 // TriStateInput is currently needed
@@ -16,7 +17,7 @@ interface SchemaFieldProps<T> {
     noTriState?: boolean;
     change: { (value: FieldValue, field: FieldDef): void };
     options?: string[];
-    optionDescriptions?: string[];
+    optionDescriptions?: ReactNode[];
     suggestions?: string[];
     stringInputType?: string;
     showUnsupported?: boolean;

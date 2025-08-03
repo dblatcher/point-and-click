@@ -5,7 +5,7 @@ import { Interaction } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import { Fragment, useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { InteractionDialog } from "./InteractionDialog";
@@ -36,12 +36,12 @@ const doesMatchFilters = (
 
 const getFilteredTargets = (
     filteredInteractions: Interaction[],
-    targetLists: { ids: string[]; descriptions: string[]; }
+    targetLists: { ids: string[]; descriptions: ReactNode[]; }
 ): {
-    ids: string[]; descriptions: string[];
+    ids: string[]; descriptions: ReactNode[];
 } => {
     const ids: string[] = []
-    const descriptions: string[] = []
+    const descriptions: ReactNode[] = []
 
     targetLists.ids.forEach((id, index) => {
         if (filteredInteractions.some(interaction => interaction.targetId === id)) {
