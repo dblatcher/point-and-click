@@ -2,6 +2,7 @@ import { z } from "zod"
 import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
 import { SchemaField } from "./SchemaField"
 import { Stack, Typography, StackProps, TypographyProps, } from "@mui/material"
+import { ReactNode } from "react"
 
 export type { FieldValue, FieldDef, NumberInputSettings }
 export { getModification } from "./getModification"
@@ -13,7 +14,7 @@ interface Props<T extends z.ZodRawShape> {
     changeValue: { (value: FieldValue, field: FieldDef): void };
     options?: Partial<Record<keyof T, string[]>>;
     fieldAliases?: Partial<Record<keyof T, string>>;
-    optionDescriptions?: Partial<Record<keyof T, string[]>>;
+    optionDescriptions?: Partial<Record<keyof T, ReactNode[]>>;
     suggestions?: Partial<Record<keyof T, string[]>>;
     numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
     containerProps?: Partial<StackProps>
