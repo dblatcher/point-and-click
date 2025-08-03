@@ -9,7 +9,7 @@ import { EditorHeading } from "./EditorHeading";
 import { FramePickDialogButton } from "./FramePickDialogButton";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
-import { FramePreview } from "./SpriteEditor/FramePreview";
+import { FramePreview } from "./FramePreview";
 import { HideImageOutlinedIcon } from "./material-icons";
 
 type Props = {

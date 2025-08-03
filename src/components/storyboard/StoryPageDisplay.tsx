@@ -1,6 +1,6 @@
 import { BoardFont, PagePicture, StoryBoardPage } from "@/definitions/StoryBoard";
 import React, { CSSProperties } from "react";
-import { FramePreview } from "../GameEditor/SpriteEditor/FramePreview";
+import { FramePreview } from "../GameEditor/FramePreview";
 
 type Props = {
     page: StoryBoardPage

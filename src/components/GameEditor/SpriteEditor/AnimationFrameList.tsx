@@ -1,7 +1,7 @@
 import { Direction, SpriteFrame } from "@/definitions";
 import { Alert, Button, Stack } from "@mui/material";
 import { ArrayControl } from "../ArrayControl";
-import { FramePreview } from "./FramePreview";
+import { FramePreview } from "../FramePreview";
 
 interface Props {
     animKey: string;

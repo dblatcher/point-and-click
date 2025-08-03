@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import React, { ReactNode, useState } from "react";
-import { FramePicker } from "./SpriteEditor/FramePicker";
+import { FramePicker } from "./FramePicker";
 import { FileAsset } from "@/services/assets";
 
 interface Props {

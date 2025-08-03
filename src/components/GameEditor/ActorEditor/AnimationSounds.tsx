@@ -9,7 +9,7 @@ import { Alert, Box, Button, Divider, IconButton, Typography } from "@mui/materi
 import React, { useState } from "react";
 import { FileAssetSelector } from "../FileAssetSelector";
 import { AddIcon, AudioFileOutlinedIcon } from "../material-icons";
-import { FramePreview } from "../SpriteEditor/FramePreview";
+import { FramePreview } from "../FramePreview";
 import { SpritePreview } from "../SpritePreview";
 import { SoundBoxes } from "./SoundBoxes";
 

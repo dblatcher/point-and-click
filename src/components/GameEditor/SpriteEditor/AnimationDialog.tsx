@@ -5,7 +5,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { SpritePreview } from "../SpritePreview";
 import { AnimationFrameList } from "./AnimationFrameList";
-import { FramePicker } from "./FramePicker";
+import { FramePicker } from "../FramePicker";
 
 interface Props {
     selectedDirection?: Direction

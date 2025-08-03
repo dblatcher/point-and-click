@@ -14,7 +14,7 @@ import { EditorHeading } from "./EditorHeading";
 import { formatIdInput } from "./helpers";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 import { RoomLocationPicker } from "./RoomLocationPicker";
-import { FramePreview } from "./SpriteEditor/FramePreview";
+import { FramePreview } from "./FramePreview";
 import { SpritePreview } from "./SpritePreview";
 
 type Props<DataType extends GameDataItem> = {

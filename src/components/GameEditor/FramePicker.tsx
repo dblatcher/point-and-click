@@ -4,8 +4,8 @@ import { useAssets } from "@/context/asset-context";
 import { FileAsset, ImageAsset } from "@/services/assets";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { FunctionComponent, useState } from "react";
-import { FileAssetSelector } from "../FileAssetSelector";
-import { EditorBox } from "../EditorBox";
+import { FileAssetSelector } from "./FileAssetSelector";
+import { EditorBox } from "./EditorBox";
 import { FramePreview } from "./FramePreview";
 
 interface Props {

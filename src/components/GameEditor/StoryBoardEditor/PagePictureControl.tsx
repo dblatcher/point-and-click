@@ -2,7 +2,7 @@ import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { PagePicture } from "@/definitions/StoryBoard";
 import { Box, Button, ButtonProps, Grid, Stack, Typography } from "@mui/material";
 import { FramePickDialogButton } from "../FramePickDialogButton";
-import { FramePreview } from "../SpriteEditor/FramePreview";
+import { FramePreview } from "../FramePreview";
 import { AspectRatioControl } from "../AspectRatioControl";
 import { HideImageOutlinedIcon } from "../material-icons";
 
