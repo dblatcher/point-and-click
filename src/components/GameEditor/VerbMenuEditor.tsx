@@ -1,11 +1,8 @@
-import { VerbMenuInner } from "@/components/game-ui/VerbMenu";
 import { useGameDesign } from "@/context/game-design-context";
-import { listIds } from "@/lib/util";
-import { Paper, Stack, Typography } from "@mui/material";
-import { ArrayControl } from "./ArrayControl";
-import { EditorBox } from "./EditorBox";
-import { EditorHeading } from "./EditorHeading";
 import { tabIcons } from "@/lib/editor-config";
+import { Stack, Typography } from "@mui/material";
+import { ArrayControl } from "./ArrayControl";
+import { EditorHeading } from "./EditorHeading";
 
 
 export const VerbMenuEditor = () => {
@@ -20,15 +17,6 @@ export const VerbMenuEditor = () => {
                     <Typography key={index}>{verb.id} : {verb.label}</Typography>
                 )}
             />
-            <EditorBox title="Preview">
-                <Paper>
-                    <VerbMenuInner key={listIds(gameDesign.verbs).join()}
-                        verbs={gameDesign.verbs}
-                        currentVerbId={gameDesign.verbs[0] ? gameDesign.verbs[0].id : ''}
-                        select={() => { }}
-                    />
-                </Paper>
-            </EditorBox>
         </Stack>
     </>)
 }

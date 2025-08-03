@@ -10,9 +10,10 @@ interface Props {
     newPartial: Partial<Interaction>
     criteria: { (interaction: Interaction): boolean }
     disabled?: boolean;
+    label?: string;
 }
 
-export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newPartial, criteria, disabled }) => {
+export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newPartial, criteria, disabled, label='interactions' }) => {
     const { gameDesign, changeOrAddInteraction } = useGameDesign()
     const [interactionDialogOpen, setInteractionDialogOpen] = useState(false)
     const [pickInteractionDialogOpen, setPickInteractionDialogOpen] = useState(false)
@@ -38,7 +39,7 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newP
             variant="outlined"
             disabled={disabled}
             startIcon={<InteractionIcon />}
-        >interactions</Button>
+        >{label}</Button>
 
         {(interactionDialogOpen) &&
             <InteractionDialog

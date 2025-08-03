@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import React, { ReactNode, useState } from "react";
 import { FramePicker } from "./SpriteEditor/FramePicker";
+import { FileAsset } from "@/services/assets";
 
 interface Props {
     buttonContent?: ReactNode;
@@ -9,6 +10,8 @@ interface Props {
     disabled?: boolean;
     pickFrame: { (row: number, col: number, imageId?: string): void };
     buttonProps?: ButtonProps
+    filterAssets?: { (asset: FileAsset): boolean }
+    showRemoveButton?: boolean;
 }
 
 const defaultState = () => ({ row: 0, col: 0, imageId: undefined })
@@ -19,7 +22,9 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
     disabled,
     pickFrame,
     buttonContent,
-    buttonProps
+    buttonProps,
+    filterAssets = (item) => item.category === 'spriteSheet' || item.category === 'any',
+    showRemoveButton
 }: Props) => {
     const [dialogOpen, setDialogOpen] = useState(false)
     const [localFrame, setLocalFrame] = useState<{
@@ -31,6 +36,11 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
     const handleSelect = () => {
         const { row, col, imageId } = localFrame
         pickFrame(row, col, imageId)
+        setDialogOpen(false)
+    }
+
+    const remove = () => {
+        pickFrame(0, 0, undefined)
         setDialogOpen(false)
     }
 
@@ -46,16 +56,15 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>
                 <FramePicker forDialog
-                    imageFilter={(item) => {
-                        return item.category === 'spriteSheet' || item.category === 'any'
-                    }}
+                    imageFilter={filterAssets}
                     pickFrame={(row, col, imageId) => setLocalFrame({ row, col, imageId })}
                     {...localFrame} />
             </DialogContent>
             <DialogActions>
-                <ButtonGroup>
+                <ButtonGroup  variant="contained">
                     <Button variant="outlined" onClick={() => setDialogOpen(false)}>cancel</Button>
-                    <Button variant="contained" onClick={handleSelect}>pick frame</Button>
+                    {showRemoveButton && <Button onClick={remove}>remove</Button>}
+                    <Button onClick={handleSelect}>pick frame</Button>
                 </ButtonGroup>
             </DialogActions>
         </Dialog>
