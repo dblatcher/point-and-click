@@ -20,6 +20,7 @@ import { EditorHeading } from "../EditorHeading";
 import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { SoundAssetForm } from "./SoundAssetForm";
 import { SoundPreview } from "./SoundPreview";
+import { SoundIcon } from "../material-icons";
 
 type State = {
   saveWarning?: string;
@@ -207,7 +208,7 @@ export class SoundAssetTool extends Component<Props, State> {
 
     return (
       <article>
-        <EditorHeading heading="Sound asset tool" />
+        <EditorHeading heading="Sound asset tool" icon={SoundIcon} />
         <ZipFileControl
           clearForm={this.clearForm}
           clearWarning={() => this.setState({ uploadWarning: undefined })}

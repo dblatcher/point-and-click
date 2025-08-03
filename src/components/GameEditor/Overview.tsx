@@ -59,7 +59,7 @@ export const Overview = () => {
                         variant="outlined"
                         fullWidth
                         onClick={() => openInEditor(tab.id, undefined)}
-                      >{tab.label}</Button>
+                      >{tab.label ?? tab.id}</Button>
                     </TableCell>
                     <TableCell>
                       {tab.itemType && "x" + (gameDesign[tab.itemType] ?? []).length}

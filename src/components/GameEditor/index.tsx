@@ -148,7 +148,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
 
                             <Stack component={'nav'}
                                 spacing={1}
-                                width={150}
+                                width={155}
                             >
                                 <ButtonGroup sx={{ marginTop: 3 }} orientation="horizontal" >
                                     <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />

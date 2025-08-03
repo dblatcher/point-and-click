@@ -3,7 +3,7 @@ import { useGameDesign } from "@/context/game-design-context";
 import { ActorData, GameDataItem, ItemData, RoomData } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { cloneData } from "@/lib/clone";
-import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
+import { DATA_TYPES_WITH_JSON, tabIcons } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
 import { Alert, Box, Button, ButtonGroup, Divider, Grid, Stack } from "@mui/material";
 import { useState } from "react";
@@ -105,7 +105,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
 
     return (
         <Stack component={'article'} spacing={2} height={'100%'}>
-            <EditorHeading heading={designProperty} />
+            <EditorHeading heading={designProperty} icon={tabIcons[designProperty]} />
             <Stack component={'article'} spacing={2} divider={<Divider />}>
                 {dataTypeArray.map(item => (
                     <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'} key={item.id}>

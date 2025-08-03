@@ -1,4 +1,4 @@
-import { AddIcon } from "@/components/GameEditor/material-icons";
+import { AddIcon, InteractionIcon } from "@/components/GameEditor/material-icons";
 import { SelectInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
 import { Interaction } from "@/definitions";
@@ -89,7 +89,7 @@ export const InteractionEditor: React.FunctionComponent = () => {
 
     return (
         <article>
-            <EditorHeading heading="Interactions" />
+            <EditorHeading icon={InteractionIcon} heading="Interactions" />
             <TableContainer component={Paper}>
                 <Table size="small" padding="normal" sx={{ captionSide: 'top' }}>
                     <caption>

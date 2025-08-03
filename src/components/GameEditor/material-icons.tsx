@@ -10,6 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import DownloadIcon from '@mui/icons-material/Download';
 import EditIcon from '@mui/icons-material/Edit';
+import ExclamationIcon from '@mui/icons-material/PriorityHighOutlined';
 import HideImageOutlinedIcon from '@mui/icons-material/HideImageOutlined';
 import UploadIcon from "@mui/icons-material/Upload";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -42,6 +43,15 @@ import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import RedoIcon from "@mui/icons-material/Redo";
 import ActorIcon from "@mui/icons-material/Person";
 import HotspotIcon from '@mui/icons-material/Adjust';
+import RoomIcon from '@mui/icons-material/OtherHouses';
+import ConversationIcon from '@mui/icons-material/ForumOutlined';
+import SequenceIcon from '@mui/icons-material/FormatListNumberedRtlOutlined';
+import SoundIcon from '@mui/icons-material/VolumeUp';
+import ImageIcon from '@mui/icons-material/Image';
+import SpriteIcon from '@mui/icons-material/AutoAwesomeMotion';
+import SlideshowIcon from '@mui/icons-material/Slideshow';
+
+export type IconComponent = typeof ActorIcon;
 
 export {
     ActorIcon,
@@ -53,6 +63,7 @@ export {
     ArrowRightIcon,
     AspectRatioIcon,
     AudioFileOutlinedIcon,
+    ConversationIcon,
     CheckBoxIcon,
     CheckBoxOutlineBlankIcon,
     ClearIcon,
@@ -66,12 +77,14 @@ export {
     DownloadIcon,
     EditIcon,
     ExpandMoreIcon,
+    ExclamationIcon,
     FlagCircleIcon,
     FlagOutlinedIcon,
     FlagFilledIcon,
     HelpIcon,
     HideImageOutlinedIcon,
     HotspotIcon,
+    ImageIcon,
     InventoryIcon,
     LinkIcon,
     LogOut,
@@ -81,12 +94,17 @@ export {
     PlayCircleOutlineOutlinedIcon,
     RepeatOneIcon,
     SaveIcon,
+    SlideshowIcon,
     SortIcon,
+    SpriteIcon,
     SpeakerNotesOffIcon,
     StarOutlineIcon,
     StarIcon,
     UploadIcon,
     UndoIcon,
     RedoIcon,
+    RoomIcon,
+    SequenceIcon,
+    SoundIcon,
 };
 

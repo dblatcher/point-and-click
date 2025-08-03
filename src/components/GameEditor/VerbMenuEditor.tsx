@@ -5,12 +5,13 @@ import { Paper, Stack, Typography } from "@mui/material";
 import { ArrayControl } from "./ArrayControl";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
+import { tabIcons } from "@/lib/editor-config";
 
 
 export const VerbMenuEditor = () => {
     const { gameDesign, applyModification } = useGameDesign()
     return (<>
-        <EditorHeading heading="Verb Menu" helpTopic="verb menu" />
+        <EditorHeading heading="Verb Menu" helpTopic="verb menu"  icon={tabIcons['verbs']}/>
         <Stack direction="row" justifyContent="space-between">
             <ArrayControl noDeleteButtons horizontalMoveButtons
                 list={gameDesign.verbs}

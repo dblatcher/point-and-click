@@ -1,8 +1,19 @@
+import {
+    ActorIcon, ConversationIcon, ExclamationIcon,
+    IconComponent, ImageIcon, InteractionIcon,
+    InventoryIcon, RoomIcon, SequenceIcon,
+    SlideshowIcon, SoundIcon, SpriteIcon
+} from "@/components/GameEditor/material-icons";
 import { GameDataItemType, GameDataItemTypeEnum } from "@/definitions/Game";
 
 export type NonItemEditorType = 'main' | 'images' | 'sounds' | 'interactions';
 export type TabId = NonItemEditorType | GameDataItemType
-export type EditorTab = { id: TabId, label: string, itemType?: GameDataItemType, helpTopic?: string }
+export type EditorTab = {
+    id: TabId,
+    label?: string,
+    itemType?: GameDataItemType,
+    helpTopic?: string
+}
 
 const validateItemType = (id: TabId): GameDataItemType | undefined => {
     const parse = GameDataItemTypeEnum.safeParse(id);
@@ -11,26 +22,41 @@ const validateItemType = (id: TabId): GameDataItemType | undefined => {
 
 const buildTab = (id: TabId, label?: string): EditorTab => ({
     id,
-    label: label ?? id,
+    label,
     itemType: validateItemType(id),
     helpTopic: [
         'items', 'rooms', 'verb menu', 'actors'
     ].includes(id) ? id : undefined
 })
 
+export const tabIcons: Record<TabId, IconComponent | undefined> = {
+    main: undefined,
+    images: ImageIcon,
+    sounds: SoundIcon,
+    interactions: InteractionIcon,
+    rooms: RoomIcon,
+    items: InventoryIcon,
+    actors: ActorIcon,
+    conversations: ConversationIcon,
+    sprites: SpriteIcon,
+    sequences: SequenceIcon,
+    verbs: ExclamationIcon,
+    storyBoards: SlideshowIcon
+}
+
 export const tabOrder: EditorTab[] = [
     buildTab('main', 'overview'),
     buildTab('rooms'),
     buildTab('sprites'),
     buildTab('actors'),
-    buildTab('items', 'Inventory Items'),
+    buildTab('items', 'Inventory Items',),
     buildTab('conversations'),
-    buildTab('sequences'),
-    buildTab('verbs'),
+    buildTab('sequences', ),
+    buildTab('verbs',),
     buildTab('interactions'),
-    buildTab('images', 'image assets'),
-    buildTab('sounds', 'audio assets'),
-    buildTab('storyBoards', 'Story Boards')
+    buildTab('images', 'image assets',),
+    buildTab('sounds', 'audio assets',),
+    buildTab('storyBoards', 'Story Boards',)
 ]
 
 export const DATA_TYPES_WITH_JSON: GameDataItemType[] = [

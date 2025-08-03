@@ -20,6 +20,7 @@ import { ZipFileControl } from "../asset-components/ZipFileControl";
 import { ImageAssetForm } from "./ImageAssetForm";
 import { ImageAssetPreview } from "./ImageAssetPreview";
 import { FileAssetSelector } from "../FileAssetSelector";
+import { ImageIcon } from "../material-icons";
 
 
 type State = {
@@ -220,7 +221,7 @@ export class ImageAssetTool extends Component<Props, State> {
 
     return (
       <article>
-        <EditorHeading heading="Image asset tool" />
+        <EditorHeading heading="Image asset tool" icon={ImageIcon}/>
         <ZipFileControl
           clearForm={this.clearForm}
           uploadWarning={uploadWarning}

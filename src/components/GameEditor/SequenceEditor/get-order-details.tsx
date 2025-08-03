@@ -2,24 +2,17 @@ import { Consequence, ConsequenceType, Order } from "@/definitions";
 import AnimationIcon from '@mui/icons-material/Animation';
 import CameraIndoorOutlinedIcon from '@mui/icons-material/CameraIndoorOutlined';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
-
-import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import PersonOffOutlinedIcon from '@mui/icons-material/PersonOffOutlined';
 import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
 import PictureInPictureAltOutlinedIcon from '@mui/icons-material/PictureInPictureAltOutlined';
 import PlaceIcon from '@mui/icons-material/Place';
-import PriorityHighOutlinedIcon from '@mui/icons-material/PriorityHighOutlined';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import RouteIcon from '@mui/icons-material/Route';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import FormatListNumberedRtlOutlinedIcon from '@mui/icons-material/FormatListNumberedRtlOutlined';
-import CancelPresentationOutlinedIcon from '@mui/icons-material/CancelPresentationOutlined';
-import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
-import { FlagCircleIcon } from "../material-icons";
-
-import SurroundSoundIcon from '@mui/icons-material/SurroundSound';
 import MusicNote from "@mui/icons-material/MusicNote";
+import SurroundSoundIcon from '@mui/icons-material/SurroundSound';
+import { ConversationIcon, ExclamationIcon, FlagCircleIcon, SequenceIcon, SoundIcon } from "../material-icons";
 
 export const getOrderIcon = (orderType?: Order['type']): typeof ChatOutlinedIcon => {
     switch (orderType) {
@@ -41,7 +34,7 @@ export const getConsequenceIcon = (type: ConsequenceType): typeof ChatOutlinedIc
     switch (type) {
         case "conversation":
         case "conversationChoice":
-            return ForumOutlinedIcon
+            return ConversationIcon
         case "changeRoom":
             return CameraIndoorOutlinedIcon
         case "inventory":
@@ -51,13 +44,13 @@ export const getConsequenceIcon = (type: ConsequenceType): typeof ChatOutlinedIc
         case "teleportActor":
             return PersonPinCircleOutlinedIcon
         case "soundEffect":
-            return VolumeUpIcon
+            return SoundIcon
         case "flag":
             return FlagCircleIcon
         case "toggleZone":
             return PictureInPictureAltOutlinedIcon
         case "sequence":
-            return FormatListNumberedRtlOutlinedIcon
+            return SequenceIcon
         case "order":
             return AssignmentOutlinedIcon
         case "backgroundMusic":
@@ -66,7 +59,7 @@ export const getConsequenceIcon = (type: ConsequenceType): typeof ChatOutlinedIc
             return SurroundSoundIcon
         case "changeStatus":
         default:
-            return PriorityHighOutlinedIcon
+            return ExclamationIcon
     }
 }
 
