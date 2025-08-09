@@ -4,6 +4,7 @@ import React from "react";
 import { Room } from "../svg/Room";
 import { CommandTarget } from "@/definitions";
 import { buildContentsList } from "./put-contents-in-order";
+import { PersistentSound } from "../sound/PersistentSound";
 
 
 // use true for debugging only- slows program!
@@ -41,6 +42,8 @@ export const RoomWrapper: React.FunctionComponent = () => {
                 obstacleCells={renderCells ? gameState.cellMatrix : undefined}
             />
         )}
+        <PersistentSound isPaused={isPaused} soundValue={currentRoom?.backgroundMusic} />
+        <PersistentSound isPaused={isPaused} soundValue={currentRoom?.ambientNoise} />
     </>
 
 }

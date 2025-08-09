@@ -16,7 +16,7 @@ export const PersistentSound: FunctionComponent<Props> = ({
     const [stateSoundValue, setStateSoundValue] = useState<SoundValue | undefined>(undefined)
     const { soundService } = useAssets()
 
-    const startSound = (newSoundValue: SoundValue | undefined): void => {
+    const startSound = useCallback((newSoundValue: SoundValue | undefined): void => {
         soundControl?.stop()
         if (newSoundValue) {
             setSoundControl(soundService.play(newSoundValue.soundId, {
@@ -27,12 +27,18 @@ export const PersistentSound: FunctionComponent<Props> = ({
             setSoundControl(null)
         }
         setStateSoundValue(newSoundValue)
-    }
-    const startSoundCallback = useCallback(startSound, [soundControl, soundService])
+    }, [soundControl, soundService])
+
+
+    const adjustVolume = useCallback((volume: number) => {
+        if (soundControl) {
+            soundControl.volume = volume
+        }
+    }, [soundControl])
 
     const reactToSoundBeingEnabled = (isEnabled: boolean): void => {
         if (isEnabled && stateSoundValue && !soundControl) {
-            startSoundCallback(stateSoundValue)
+            startSound(stateSoundValue)
         }
     }
     useEffect(() => {
@@ -50,18 +56,22 @@ export const PersistentSound: FunctionComponent<Props> = ({
         if (isPaused && soundControl) {
             setSoundControl(null)
         } else if (!isPaused && stateSoundValue && !soundControl) {
-            startSoundCallback(stateSoundValue)
+            startSound(stateSoundValue)
         }
         return (): void => {
             soundControl?.stop()
         }
-    }, [isPaused, soundControl, stateSoundValue, startSoundCallback])
+    }, [isPaused, soundControl, stateSoundValue, startSound])
 
-    useEffect(()=> {
+    useEffect(() => {
         if (stateSoundValue !== soundValue) {
-            startSoundCallback(soundValue)
+            if (soundValue && stateSoundValue?.soundId === soundValue?.soundId) {
+                return adjustVolume(soundValue?.volume ?? 1)
+            }
+
+            startSound(soundValue)
         }
-    }, [stateSoundValue, soundValue, startSoundCallback])
+    }, [stateSoundValue, soundValue, startSound, adjustVolume])
 
     return null
 }
