@@ -1,4 +1,4 @@
-import { ConceptCard } from "@/components/GameEditor/ConceptCard";
+import { TextConceptCard } from "@/components/GameEditor/ConceptCard";
 import { Order } from "@/definitions";
 import { getOrderIcon } from "./get-order-details";
 
@@ -27,10 +27,10 @@ const getDescription = (order: Order): string => {
 }
 
 export const OrderCard = ({ order, handleEditButton, width }: Props) => (
-    <ConceptCard
+    <TextConceptCard
         Icon={getOrderIcon(order.type)}
         handleClick={handleEditButton}
-        description={getDescription(order)}
+        text={getDescription(order)}
         title={order.type}
         narrative={order.narrative}
         width={width}

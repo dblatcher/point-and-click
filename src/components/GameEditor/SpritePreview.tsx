@@ -22,7 +22,7 @@ const makeRoomData = (data: ActorData, scale: number): RoomData => ({
 })
 
 const getscale = (actor: ActorData, scale: number, maxHeight?: number) => {
-    if (!maxHeight) {
+    if (!maxHeight || !actor.height) {
         return scale
     }
     return maxHeight / actor.height

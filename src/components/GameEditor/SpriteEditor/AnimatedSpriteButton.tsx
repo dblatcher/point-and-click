@@ -2,6 +2,7 @@ import { Direction, Animation, ActorData } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
 import { Button, Typography } from "@mui/material";
 import { SpritePreview } from "../SpritePreview";
+import { buildActorData } from "@/lib/sprite-to-actor";
 
 interface Props {
     sprite: Sprite
@@ -10,24 +11,6 @@ interface Props {
     animationKey: string
     isDefault?: boolean
     onClick: { (): void }
-}
-
-const buildActorData = (sprite: Sprite, animationKey: string, direction: Direction): ActorData => {
-    const image = sprite.getFrame(animationKey, 0, direction)?.image
-    const widthScale = image?.widthScale || 1
-    const heightScale = image?.heightScale || 1
-
-    return {
-        type: 'actor',
-        id: 'preview',
-        x: 50 / widthScale,
-        y: 0,
-        height: 100 / heightScale,
-        width: 100 / widthScale,
-        sprite: sprite.id,
-        status: animationKey,
-        direction
-    }
 }
 
 export const AnimatedSpriteButton = ({

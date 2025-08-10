@@ -1,21 +1,17 @@
-import { AddIcon, ContentCopyIcon, EditIcon, UploadIcon } from "@/components/GameEditor/material-icons";
+import { AddIcon, ClearIcon, UploadIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
-import { ActorData, GameDataItem, ItemData, RoomData } from "@/definitions";
+import { GameDataItem } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
-import { cloneData } from "@/lib/clone";
 import { DATA_TYPES_WITH_JSON, tabIcons } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
-import { Alert, Box, Button, ButtonGroup, Divider, Grid, Stack } from "@mui/material";
+import { Alert, Box, Button, Grid, IconButton, Stack } from "@mui/material";
 import { useState } from "react";
 import { ZodSchema } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
-import { DeleteDataItemButton } from "./DeleteDataItemButton";
+import { DataItemCard } from "./DataItemCard";
 import { EditorHeading } from "./EditorHeading";
 import { formatIdInput } from "./helpers";
-import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
-import { RoomLocationPicker } from "./RoomLocationPicker";
-import { FramePreview } from "./FramePreview";
-import { SpritePreview } from "./SpritePreview";
+import { StringInput } from "../SchemaForm/StringInput";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -24,48 +20,21 @@ type Props<DataType extends GameDataItem> = {
     itemTypeName: string
 }
 
-const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
-    if (designProperty === 'rooms') {
-        const roomData = item as RoomData
-        return <RoomLocationPicker roomData={roomData} previewHeight={60} viewAngle={0} />
-    }
-    if (designProperty === 'actors') {
-        const actorData = item as ActorData
-        return <SpritePreview data={actorData} animation='default' noBaseLine maxHeight={60} />
-    }
-    if (designProperty === 'items') {
-        const { imageId, row = 0, col = 0 } = item as ItemData
-        if (imageId) {
-            return <FramePreview frame={{ imageId, row, col }} height={50} width={50} />
-        }
-        return <Box sx={{ height: 50 }}></Box>
-    }
-    return null
-}
-
-const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
-    const { id } = item
-    if (designProperty === 'actors') {
-        const { noInteraction } = item as ActorData
-        return <InteractionsDialogsButton disabled={noInteraction} criteria={i => i.targetId === id} newPartial={{ targetId: id }} />
-    }
-    if (designProperty === 'items') {
-        return <InteractionsDialogsButton criteria={i => i.targetId === id || i.itemId === id} newPartial={{ itemId: id }} />
-    }
-    return null
-}
 
 export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, schema, designProperty, itemTypeName }: Props<DataType>) => {
     const { gameDesign, createGameDataItem, openInEditor } = useGameDesign()
-    const [warning, setWarning] = useState<string | undefined>()
+    const [warning, setWarning] = useState<string>()
+    const [searchInput, setSearchInput] = useState('')
     const dataTypeArray = gameDesign[designProperty];
+
+    const filteredItems = searchInput
+        ? dataTypeArray.filter(i =>
+            i.id.toLowerCase().includes(searchInput.toLowerCase())
+        )
+        : dataTypeArray
 
     const handleStartFromScratch = (proposedId: string) => {
         attemptCreate({ ...createBlank(), id: proposedId })
-    }
-
-    function handleDuplicate(proposedId: string, item: GameDataItem): void {
-        attemptCreate({ ...cloneData(item) as DataType, id: proposedId })
     }
 
     const handleLoadButton = async () => {
@@ -82,7 +51,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
         attemptCreate(data as unknown as DataType)
     }
 
-    const attemptCreate = (newDataItem: DataType) => {
+    const attemptCreate = (newDataItem: GameDataItem) => {
         setWarning(undefined)
         if (!newDataItem.id) {
             return setWarning('no id specified')
@@ -90,11 +59,12 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
         if (dataTypeArray.some(existingItem => existingItem.id == newDataItem.id)) {
             return setWarning(`${designProperty} already has a member with the id "${newDataItem.id}"`)
         }
+        setSearchInput('');
         createGameDataItem(designProperty, newDataItem)
         openInEditor(designProperty, newDataItem.id)
     }
 
-    const includeLoadButton = DATA_TYPES_WITH_JSON.includes(designProperty)
+    const includeUploadButton = DATA_TYPES_WITH_JSON.includes(designProperty)
 
     const getInputIdError = (input: string) => {
         if (dataTypeArray.some(item => item.id === input)) {
@@ -106,78 +76,50 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
     return (
         <Stack component={'article'} spacing={2} height={'100%'}>
             <EditorHeading heading={designProperty} icon={tabIcons[designProperty]} />
-            <Stack component={'article'} spacing={2} divider={<Divider />}>
-                {dataTypeArray.map(item => (
-                    <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'} key={item.id}>
-                        <Grid item xs={3}>
-                            <Button
-                                startIcon={<EditIcon />}
-                                variant="contained"
-                                sx={{ width: '100%' }}
-                                onClick={() => openInEditor(designProperty, item.id)}
-                            >{item.id}</Button>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <ButtonGroup>
-                                <ItemInteraction item={item} designProperty={designProperty} />
-                                <ButtonWithTextInput
-                                    label={'copy'}
-                                    buttonProps={{
-                                        startIcon: <ContentCopyIcon />,
-                                        variant: 'outlined',
-                                    }}
-                                    getError={getInputIdError}
-                                    modifyInput={formatIdInput}
-                                    onEntry={(newId) => handleDuplicate(newId, item)}
-                                    dialogTitle={`Enter ${itemTypeName} id`}
-                                />
-                                <DeleteDataItemButton
-                                    buttonProps={{
-                                        variant: 'outlined',
-                                    }}
-                                    dataItem={item}
-                                    itemType={designProperty}
-                                    itemTypeName={itemTypeName}
-                                />
-                            </ButtonGroup>
-                        </Grid>
-
-                        <Grid item xs={3} display={'flex'} justifyContent={'flex-end'}>
-                            <ItemPreview item={item} designProperty={designProperty} />
-                        </Grid>
+            <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'}>
+                <StringInput notFullWidth label="search" value={searchInput} inputHandler={setSearchInput} />
+                <IconButton color="primary" title="clear search" onClick={()=>setSearchInput('')} ><ClearIcon /></IconButton>
+            </Box>
+            <Grid container spacing={2} maxWidth={'95%'} paddingBottom={4}>
+                {filteredItems.map(item => (
+                    <Grid item key={item.id} xs={6} lg={4} xl={3}>
+                        <DataItemCard key={item.id}
+                            designProperty={designProperty}
+                            item={item}
+                            attemptCreate={attemptCreate}
+                            itemTypeName={itemTypeName} />
                     </Grid>
                 ))}
-                <Grid container maxWidth={'sm'} spacing={2} alignItems={'center'}>
-                    <Grid item xs={6}>
-                        <ButtonWithTextInput
-                            label={`Add new ${itemTypeName}`}
-                            onEntry={handleStartFromScratch}
-                            modifyInput={formatIdInput}
-                            buttonProps={{
-                                startIcon: <AddIcon />,
-                                variant: 'contained',
-                                sx: { width: '100%' },
-                            }}
-                            getError={getInputIdError}
-                            dialogTitle={`Enter ${itemTypeName} id`}
-                            keyboardShortcut="#"
-                        />
-                    </Grid>
-                    {includeLoadButton && (
-                        <Grid item xs={4}>
-                            <Button
-                                sx={{ width: '100%' }}
-                                variant="outlined"
-                                onClick={handleLoadButton}
-                                startIcon={<UploadIcon />}
-                            >upload {itemTypeName} data</Button>
-                        </Grid>
-                    )}
+                <Grid item xs={6} lg={4} xl={3}>
+                    <ButtonWithTextInput
+                        label={`Add new ${itemTypeName}`}
+                        onEntry={handleStartFromScratch}
+                        modifyInput={formatIdInput}
+                        buttonProps={{
+                            startIcon: <AddIcon />,
+                            variant: 'contained',
+                            sx: { width: '100%', height: '100%', minHeight: 60 },
+                        }}
+                        getError={getInputIdError}
+                        dialogTitle={`Enter ${itemTypeName} id`}
+                        keyboardShortcut="#"
+                    />
                 </Grid>
-            </Stack>
-
+                {includeUploadButton && (
+                    <Grid item xs={6} lg={4} xl={3}>
+                        <Button
+                            sx={{ width: '100%', height: '100%', minHeight: 60 }}
+                            variant="outlined"
+                            onClick={handleLoadButton}
+                            startIcon={<UploadIcon />}
+                        >upload {itemTypeName} data</Button>
+                    </Grid>
+                )}
+            </Grid>
             {warning && (
-                <Alert severity="warning">{warning}</Alert>
+                <Box>
+                    <Alert severity="warning">{warning}</Alert>
+                </Box>
             )}
         </Stack >
     )

@@ -1,5 +1,5 @@
 import { FileAsset, isSoundAsset } from "@/services/assets";
-import { ConceptCard } from "../ConceptCard";
+import { TextConceptCard } from "../ConceptCard";
 import { AudioFileOutlinedIcon, PhotoOutlinedIcon } from "@/components/GameEditor/material-icons"
 
 interface Props {
@@ -19,9 +19,9 @@ export const AssetCard = ({ asset, handleClick }: Props) => {
         ? 'sound'
         : 'image'
 
-    return <ConceptCard
+    return <TextConceptCard
         title={title}
-        description={`${asset.id}: ${asset.category}`}
+        text={`${asset.id}: ${asset.category}`}
         Icon={Icon}
         handleClick={handleClick}
     />

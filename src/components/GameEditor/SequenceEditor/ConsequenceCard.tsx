@@ -1,4 +1,4 @@
-import { ConceptCard } from "@/components/GameEditor/ConceptCard";
+import { TextConceptCard } from "@/components/GameEditor/ConceptCard";
 import { Consequence } from "@/definitions";
 import { getConsequenceIcon, getConsequenceDescription } from "./get-order-details";
 import { Tooltip } from "@mui/material";
@@ -16,10 +16,10 @@ export const ConsequenceIcon = (props: { consequence: Consequence }) => {
 }
 
 export const ConsequenceCard = ({ consequence, handleEditButton, width }: Props) => (
-    <ConceptCard
+    <TextConceptCard
         Icon={getConsequenceIcon(consequence.type)}
         handleClick={handleEditButton}
-        description={getConsequenceDescription(consequence)}
+        text={getConsequenceDescription(consequence)}
         title={consequence.type}
         narrative={consequence.narrative}
         width={width}

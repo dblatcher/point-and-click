@@ -70,25 +70,25 @@ export const ItemEditor = ({ item }: Props) => {
                             <Typography>Pick Icon</Typography>
                             {imageId
                                 ? <FramePreview frame={{ imageId, row, col }} height={100} width={100} />
-                                : <Box ><HideImageOutlinedIcon sx={{ height: 50, width: 50 }} /></Box>}
+                                : <Box><HideImageOutlinedIcon sx={{ height: 50, width: 50 }} /></Box>}
                         </Box>
                     }
                 />
 
                 <Box display='flex' gap={2}>
-                <InteractionsDialogsButton
-                    label="interactions as target"
-                    criteria={(interaction) => interaction.targetId === id}
-                    newPartial={{ targetId: id }}
-                />
+                    <InteractionsDialogsButton
+                        label="interactions as target"
+                        criteria={(interaction) => interaction.targetId === id}
+                        newPartial={{ targetId: id }}
+                    />
 
-                <InteractionsDialogsButton
-                    label="interactions as item"
-                    criteria={(interaction) => interaction.itemId === id}
-                    newPartial={{ itemId: id }}
-                />
-            </Box>
-        </Stack>
+                    <InteractionsDialogsButton
+                        label="interactions as item"
+                        criteria={(interaction) => interaction.itemId === id}
+                        newPartial={{ itemId: id }}
+                    />
+                </Box>
+            </Stack>
         </Stack >
     )
 }
