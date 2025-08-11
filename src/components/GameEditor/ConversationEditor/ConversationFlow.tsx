@@ -1,6 +1,6 @@
-import { AddIcon, DeleteIcon, StarIcon, StarOutlineIcon, SortIcon } from "@/components/GameEditor/material-icons"
+import { AddIcon, DeleteIcon, StarIcon, StarOutlineIcon, SortIcon, ExclamationIcon } from "@/components/GameEditor/material-icons"
 import { Conversation, ConversationBranch } from "@/definitions"
-import { Box, Button, IconButton, Stack, useTheme } from "@mui/material"
+import { Box, Button, IconButton, Stack, Tooltip, useTheme } from "@mui/material"
 import Checkbox from '@mui/material/Checkbox'
 import { Fragment, useEffect, useRef, useState } from "react"
 import { ButtonWithConfirm } from "../ButtonWithConfirm"
@@ -20,40 +20,44 @@ interface Props {
     changeDefaultBranch: { (branchKey: string): void }
 }
 
+type BranchAndKey = { branchKey: string, branch: ConversationBranch, unreachable?: boolean };
 
-const assignRanks = (conversation: Conversation): Record<string, number> => {
-    const { defaultBranch, id, branches } = conversation;
-    const entries = Object.entries(branches);
-    const firstBranch = branches[defaultBranch]
-    const record: Record<string, number> = {};
+const getHeirarchy = (conversation: Conversation): BranchAndKey[][] => {
+    const { defaultBranch, branches } = conversation;
+    const defaultBranchData = branches[defaultBranch];
 
-    entries.forEach(([branchKey, branch]) => {
-        if (branchKey === defaultBranch) {
-            record[branchKey] = 0;
-            return;
+    if (!defaultBranchData) {
+        return []
+    }
+
+    const heirarchy: BranchAndKey[][] = [[{ branchKey: defaultBranch, branch: defaultBranchData }]]
+    let unassignedKeys = Object.keys(conversation.branches).filter(branchKey => branchKey !== defaultBranch);
+
+    const addNextLevel = () => {
+        const previousLevel = heirarchy.slice(-1).pop();
+        if (!previousLevel) { return }
+        const branchesReachableFromPreviousLevel = previousLevel.flatMap(branchInLastLevel => branchInLastLevel.branch.choices.flatMap(choice => choice.nextBranch ?? []))
+
+        const branchesForNewLevel = unassignedKeys.filter(branchKey => branchesReachableFromPreviousLevel.includes(branchKey));
+        unassignedKeys = unassignedKeys.filter(branchKey => !branchesForNewLevel.includes(branchKey));
+
+        const newLevel: BranchAndKey[] = branchesForNewLevel
+            .flatMap(branchKey => branches[branchKey] ? { branchKey, branch: branches[branchKey] } : [])
+        heirarchy.push(newLevel);
+
+        if (unassignedKeys.length === 0) {
+            return
         }
-        if (firstBranch?.choices.some(choice => choice.nextBranch === branchKey)) {
-            record[branchKey] = 1;
-            return;
+        if (newLevel.length > 0) {
+            return addNextLevel()
         }
-        record[branchKey] = 2;
-    })
-    return record
-}
+        // not adding more, so dump all the rest in the last level
+        const dumpLevel: BranchAndKey[] = unassignedKeys
+            .flatMap(branchKey => branches[branchKey] ? { branchKey, branch: branches[branchKey], unreachable: true } : [])
+        heirarchy.push(dumpLevel);
+    }
 
-const getHeirarchy = (conversation: Conversation): [string, ConversationBranch][][] => {
-    const ranks = assignRanks(conversation)
-    const entries = Object.entries(conversation.branches);
-    const heirarchy: [string, ConversationBranch][][] = [[], [], []]
-
-    entries.forEach(([branchKey, branch]) => {
-        const rank = ranks[branchKey]
-        if (!branch || typeof rank !== 'number') { return }
-        if (!heirarchy[rank]) { heirarchy[rank] = [] }
-
-        heirarchy[rank].push([branchKey, branch])
-    })
-
+    addNextLevel()
     return heirarchy
 }
 
@@ -80,29 +84,32 @@ type BranchBoxProps = {
     deleteBranch: { (branchKey: string): void }
     isDefaultBranch: boolean
     makeDefault: { (): void }
+    unreachable?: boolean
 }
 
-const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialog, deleteBranch, isDefaultBranch, makeDefault }: BranchBoxProps) => {
+const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialog, deleteBranch, isDefaultBranch, makeDefault, unreachable }: BranchBoxProps) => {
     const { palette } = useTheme()
     return (
         <div data-branch-identifier={branchKey}>
-
             <EditorBox
                 leftContent={
-                    <Checkbox
-                        aria-label="make default branch"
-                        onChange={({ target }) => {
-                            if (target.checked) {
-                                makeDefault()
-                            }
-                        }}
-                        disabled={isDefaultBranch}
-                        checked={isDefaultBranch}
-                        icon={<StarOutlineIcon htmlColor={palette.primary.contrastText} />}
-                        checkedIcon={<StarIcon htmlColor={palette.primary.contrastText} />}
-                    />
+                    <>
+                        <Checkbox
+                            aria-label="make default branch"
+                            onChange={({ target }) => {
+                                if (target.checked) {
+                                    makeDefault()
+                                }
+                            }}
+                            disabled={isDefaultBranch}
+                            checked={isDefaultBranch}
+                            icon={<StarOutlineIcon htmlColor={palette.primary.contrastText} />}
+                            checkedIcon={<StarIcon htmlColor={palette.primary.contrastText} />}
+                        />
+                        {unreachable && <Tooltip title={'cannot reach branch'}><ExclamationIcon color="warning" /></Tooltip>}
+                    </>
                 }
-                title={`Branch: ${branchKey}`}
+                title={branchKey}
                 barContent={
                     <>
                         <IconButton onClick={() => { openOrderDialog(branchKey) }} aria-label="sort choices">
@@ -130,8 +137,8 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
                         paddingY: 1,
                     }}
                         startIcon={<AddIcon />}
-                        onClick={() => { 
-                            addNewChoice(branchKey) 
+                        onClick={() => {
+                            addNewChoice(branchKey)
                             openEditor(branchKey, branch.choices.length)
                         }}
                     >Add choice</Button>
@@ -145,7 +152,6 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
     const [nodePairs, setNodePairs] = useState<[Element, Element][]>([])
     const containerRef = useRef<HTMLElement>()
     const heirarchy = getHeirarchy(conversation)
-
 
     useEffect(() => {
         const pairs: [Element, Element][] = []
@@ -183,22 +189,20 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                     <Stack key={rankIndex}
                         direction={'row'}
                         spacing={2}
-                        justifyContent={rankIndex === 0 ? 'center' : 'space-between'}
+                        justifyContent={rankIndex === 0 ? 'center' : rankIndex % 2 ? 'space-between' : 'space-around'}
                         alignItems={'flex-start'}
                     >
-                        {rank.map(([branchKey, branch], itemIndex) => {
+                        {rank.map(({ branchKey, branch, unreachable }, itemIndex) => {
                             return (
                                 <BranchBox
                                     isDefaultBranch={branchKey === conversation.defaultBranch}
-                                    makeDefault={() => {
-                                        console.log(`want to make ${branchKey} the default for conversation ${conversation.id}`)
-                                        changeDefaultBranch(branchKey)
-                                    }}
+                                    makeDefault={() => changeDefaultBranch(branchKey)}
                                     openEditor={openEditor}
                                     addNewChoice={addNewChoice}
                                     openOrderDialog={openOrderDialog}
                                     deleteBranch={deleteBranch}
                                     key={`${rankIndex}-${itemIndex}`}
+                                    unreachable={unreachable}
                                     branch={branch} branchKey={branchKey} />
                             )
                         })}
