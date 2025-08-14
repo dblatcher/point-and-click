@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { InteractionIcon } from '@/components/GameEditor/material-icons';
-import { Button } from "@mui/material";
+import { Button, ButtonProps } from "@mui/material";
 import { InteractionDialog } from "./InteractionEditor/InteractionDialog";
 import { useGameDesign } from "@/context/game-design-context";
 import { Interaction } from "@/definitions";
@@ -11,9 +11,16 @@ interface Props {
     criteria: { (interaction: Interaction): boolean }
     disabled?: boolean;
     label?: string;
+    variant?: ButtonProps['variant'];
 }
 
-export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newPartial, criteria, disabled, label='interactions' }) => {
+export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({
+    newPartial,
+    criteria,
+    disabled,
+    label = 'interactions',
+    variant = 'outlined'
+}) => {
     const { gameDesign, changeOrAddInteraction } = useGameDesign()
     const [interactionDialogOpen, setInteractionDialogOpen] = useState(false)
     const [pickInteractionDialogOpen, setPickInteractionDialogOpen] = useState(false)
@@ -36,7 +43,7 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({ newP
 
     return <>
         <Button onClick={handleInteractionButton}
-            variant="outlined"
+            variant={variant}
             disabled={disabled}
             startIcon={<InteractionIcon />}
         >{label}</Button>

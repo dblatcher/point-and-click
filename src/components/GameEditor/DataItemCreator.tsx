@@ -4,13 +4,13 @@ import { GameDataItem } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { DATA_TYPES_WITH_JSON, tabIcons } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
-import { Alert, Box, Button, Grid, IconButton, Stack } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Grid, IconButton, Stack } from "@mui/material";
 import { useState } from "react";
 import { ZodSchema } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { DataItemCard } from "./DataItemCard";
 import { EditorHeading } from "./EditorHeading";
-import { formatIdInput } from "./helpers";
+import { formatIdInput, hasPreview } from "./helpers";
 import { StringInput } from "../SchemaForm/StringInput";
 
 type Props<DataType extends GameDataItem> = {
@@ -78,7 +78,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
             <EditorHeading heading={designProperty} icon={tabIcons[designProperty]} />
             <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'}>
                 <StringInput notFullWidth label="search" value={searchInput} inputHandler={setSearchInput} />
-                <IconButton color="primary" title="clear search" onClick={()=>setSearchInput('')} ><ClearIcon /></IconButton>
+                <IconButton color="primary" title="clear search" onClick={() => setSearchInput('')} ><ClearIcon /></IconButton>
             </Box>
             <Grid container spacing={2} maxWidth={'95%'} paddingBottom={4}>
                 {filteredItems.map(item => (
@@ -90,31 +90,29 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                             itemTypeName={itemTypeName} />
                     </Grid>
                 ))}
-                <Grid item xs={6} lg={4} xl={3}>
-                    <ButtonWithTextInput
-                        label={`Add new ${itemTypeName}`}
-                        onEntry={handleStartFromScratch}
-                        modifyInput={formatIdInput}
-                        buttonProps={{
-                            startIcon: <AddIcon />,
-                            variant: 'contained',
-                            sx: { width: '100%', height: '100%', minHeight: 60 },
-                        }}
-                        getError={getInputIdError}
-                        dialogTitle={`Enter ${itemTypeName} id`}
-                        keyboardShortcut="#"
-                    />
+                <Grid item xs={6} lg={4} xl={3} minHeight={hasPreview(designProperty) ? 120 : 70} display={'flex'} flexDirection={'column'}>
+                    <ButtonGroup orientation="vertical" sx={{ flex: 1 }} variant="contained">
+                        <ButtonWithTextInput
+                            label={`Add new ${itemTypeName}`}
+                            onEntry={handleStartFromScratch}
+                            modifyInput={formatIdInput}
+                            buttonProps={{
+                                startIcon: <AddIcon />,
+                                sx: { flex: 1 },
+                            }}
+                            getError={getInputIdError}
+                            dialogTitle={`Enter ${itemTypeName} id`}
+                            keyboardShortcut="#"
+                        />
+                        {includeUploadButton && (
+                            <Button
+                                sx={{ flex: 1 }}
+                                onClick={handleLoadButton}
+                                startIcon={<UploadIcon />}
+                            >upload {itemTypeName} data</Button>
+                        )}
+                    </ButtonGroup>
                 </Grid>
-                {includeUploadButton && (
-                    <Grid item xs={6} lg={4} xl={3}>
-                        <Button
-                            sx={{ width: '100%', height: '100%', minHeight: 60 }}
-                            variant="outlined"
-                            onClick={handleLoadButton}
-                            startIcon={<UploadIcon />}
-                        >upload {itemTypeName} data</Button>
-                    </Grid>
-                )}
             </Grid>
             {warning && (
                 <Box>

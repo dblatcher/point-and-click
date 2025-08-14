@@ -1,13 +1,7 @@
 import { ConversationChoice } from "@/definitions";
 import { Button, Tooltip, Typography } from "@mui/material";
 import { LogOut, SpeakerNotesOffIcon, RepeatOneIcon } from "@/components/GameEditor/material-icons"
-
-function truncateLine(text: string, length: number) {
-    if (text.length <= length) {
-        return text
-    }
-    return `${text.substring(0, length - 3)}...`;
-}
+import { truncateLine } from "../helpers";
 
 interface Props {
     choice: ConversationChoice

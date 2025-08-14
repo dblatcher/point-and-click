@@ -1,5 +1,5 @@
 import { Narrative } from '@/definitions/BaseTypes';
-import { Box, Card, CardActionArea, Typography } from "@mui/material";
+import { Box, Card, CardActionArea, CardActions, Typography } from "@mui/material";
 import { DescriptionOutlinedIcon, IconComponent } from './material-icons';
 import { ReactNode } from 'react';
 
@@ -9,19 +9,18 @@ interface Props {
     handleClick?: { (): void }
     width?: number
     children?: ReactNode
+    actions?: ReactNode
     palette?: 'secondary' | 'primary'
 }
 
-export const ConceptCard = ({ Icon, handleClick, title, width, children, palette = 'secondary' }: Props) => {
-
+export const ConceptCard = ({ Icon, handleClick, title, width, children, palette = 'secondary', actions }: Props) => {
     const Wrapper = handleClick ? CardActionArea : "div";
-
     return (
-        <Card onClick={handleClick}
+        <Card
             sx={{ maxWidth: width, minWidth: width, borderColor: `${palette}.light` }}
             variant="outlined"
         >
-            <Wrapper>
+            <Wrapper onClick={handleClick}>
                 <Box display={'flex'} alignItems={'center'}
                     sx={{ backgroundColor: `${palette}.light`, paddingX: 1, paddingY: .25 }}
                 >
@@ -32,6 +31,7 @@ export const ConceptCard = ({ Icon, handleClick, title, width, children, palette
                 </Box>
                 {children}
             </Wrapper>
+            {!!actions && <CardActions disableSpacing >{actions}</CardActions>}
         </Card >
     )
 }
@@ -43,7 +43,6 @@ type TextProps = Omit<Props, 'children'> & {
 
 export const TextConceptCard = ({ text, narrative, ...rest }: TextProps) => {
     return <ConceptCard {...rest}>
-
         <Box
             display={'flex'}
             justifyContent={'space-between'}
@@ -53,7 +52,5 @@ export const TextConceptCard = ({ text, narrative, ...rest }: TextProps) => {
             <Typography >{text}</Typography>
             {narrative && <DescriptionOutlinedIcon />}
         </Box>
-
-
     </ConceptCard>
 }

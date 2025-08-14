@@ -124,14 +124,14 @@ export const MainWindow = () => {
                 ? <VerbEditor verb={currentVerb}
                 />
                 : <>
-                    <VerbMenuEditor />
-                    <Box marginTop={2}>
+                    <Box marginBottom={2}>
                         <DataItemCreator
                             createBlank={makeBlankVerb}
                             designProperty="verbs"
                             itemTypeName="verb"
                         />
                     </Box>
+                    <VerbMenuEditor />
                 </>
         case 'images':
             return <ImageAssetTool imageService={imageService} />

@@ -8,7 +8,7 @@ import { EditorHeading } from "./EditorHeading";
 export const VerbMenuEditor = () => {
     const { gameDesign, applyModification } = useGameDesign()
     return (<>
-        <EditorHeading heading="Verb Menu" helpTopic="verb menu"  icon={tabIcons['verbs']}/>
+        <EditorHeading heading="Verb Order" helpTopic="verb menu"  icon={tabIcons['verbs']}/>
         <Stack direction="row" justifyContent="space-between">
             <ArrayControl noDeleteButtons horizontalMoveButtons
                 list={gameDesign.verbs}

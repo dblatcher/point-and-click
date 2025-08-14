@@ -1,20 +1,20 @@
-import { ContentCopyIcon, EditIcon, HideImageOutlinedIcon } from "@/components/GameEditor/material-icons";
+import { ContentCopyIcon, HideImageOutlinedIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { ActorData, GameDataItem, ItemData, RoomData, SpriteData } from "@/definitions";
+import { ActorData, Conversation, GameDataItem, ItemData, RoomData, Sequence, SpriteData } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { StoryBoard } from "@/definitions/StoryBoard";
 import { cloneData } from "@/lib/clone";
 import { tabIcons } from "@/lib/editor-config";
 import { buildActorData } from "@/lib/sprite-to-actor";
 import { findById } from "@/lib/util";
-import { Box, BoxProps, Button, ButtonGroup } from "@mui/material";
+import { Box, BoxProps, Typography } from "@mui/material";
 import { StoryPageDisplay } from "../storyboard/StoryPageDisplay";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { ConceptCard } from "./ConceptCard";
 import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { FramePreview } from "./FramePreview";
-import { formatIdInput } from "./helpers";
+import { formatIdInput, truncateLine } from "./helpers";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 import { RoomLocationPicker } from "./RoomLocationPicker";
 import { SpritePreview } from "./SpritePreview";
@@ -37,8 +37,6 @@ const previewBoxProps: BoxProps = {
     width: PREVIEW_WIDTH,
     height: PREVIEW_HEIGHT,
 }
-
-const hasPreview = (designProperty: GameDataItemType) => ['rooms', 'actors', 'sprites', 'items', 'stroyboards'].includes(designProperty)
 
 const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
     const sprites = useSprites();
@@ -69,7 +67,7 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
         const { imageId, row = 0, col = 0 } = item as ItemData
         return <Box {...previewBoxProps}>
             {imageId
-                ? <FramePreview frame={{ imageId, row, col }} height={50} width={50} />
+                ? <FramePreview frame={{ imageId, row, col }} height={80} width={80} />
                 : <HideImageOutlinedIcon sx={{ height: 50, width: 50 }} />
             }
         </Box>
@@ -87,14 +85,76 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
     return null
 }
 
+const ItemDetails = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
+    const { gameDesign: { openingSequenceId, openingStoryboardId } } = useGameDesign()
+    switch (designProperty) {
+        case "rooms":
+            const room = item as RoomData;
+            return <Box paddingX={1}>
+                {room.name && <Typography>{room.name}</Typography>}
+                <Typography>{room.width} x {room.height}</Typography>
+                <Typography>x{room.hotspots?.length ?? 0} hotspots</Typography>
+            </Box>
+        case "items":
+            const itemData = item as ItemData;
+            return <Box paddingX={1}>
+                <Typography>{itemData.name}</Typography>
+            </Box>
+        case "actors":
+            const actor = item as ActorData;
+            return (
+                <Box paddingX={1}>
+                    <Typography>{actor.name}</Typography>
+                    {actor.isPlayer && <Typography><b>PLAYER CHARACTER</b></Typography>}
+                    <Typography>starts in: {actor.room ?? '[nowhere]'}</Typography>
+                </Box>
+            )
+        case "conversations":
+            const conversation = item as Conversation;
+            const branches = Object.values(conversation.branches);
+            const choices = branches.flatMap(branch => branch?.choices || [])
+            return <Box paddingX={1}>
+                <Typography>x{branches.length} branches</Typography>
+                <Typography>x{choices.length} choices</Typography>
+            </Box>
+        case "sprites":
+            const spriteData = item as SpriteData;
+            const animationList = Object.keys(spriteData.animations);
+            const displayText = truncateLine(animationList.join(", "), 130)
+            return <Box paddingX={1}>
+                <Typography>{displayText}</Typography>
+            </Box>
+        case "sequences": {
+            const { description = '', stages, id } = item as Sequence;
+            const descriptionText = description.trim().length > 0 ? truncateLine(description, 50) : '[no description]'
+            return <Box paddingX={1}>
+                <Typography>{descriptionText}</Typography>
+                <Typography>x{stages.length} stages
+                    {id === openingSequenceId && <b>{' '}OPENING SEQUENCE</b>}
+                </Typography>
+            </Box>
+        }
+        case "verbs":
+            return null
+        case "storyBoards": {
+            const { isEndOfGame, pages, id } = item as StoryBoard;
+            return <Box paddingX={1}>
+                <Typography>x{pages.length} pages</Typography>
+                {isEndOfGame && <Typography><b>ENDS GAME</b></Typography>}
+                {id === openingStoryboardId && <Typography><b>TITLE SEQUENCE</b></Typography>}
+            </Box>
+        }
+    }
+}
+
 const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
     const { id } = item
     if (designProperty === 'actors') {
         const { noInteraction } = item as ActorData
-        return <InteractionsDialogsButton disabled={noInteraction} criteria={i => i.targetId === id} newPartial={{ targetId: id }} />
+        return <InteractionsDialogsButton variant='text' disabled={noInteraction} criteria={i => i.targetId === id} newPartial={{ targetId: id }} />
     }
     if (designProperty === 'items') {
-        return <InteractionsDialogsButton criteria={i => i.targetId === id || i.itemId === id} newPartial={{ itemId: id }} />
+        return <InteractionsDialogsButton variant='text' criteria={i => i.targetId === id || i.itemId === id} newPartial={{ itemId: id }} />
     }
     return null
 }
@@ -116,40 +176,34 @@ export const DataItemCard = <DataType extends GameDataItem,>({ attemptCreate, it
 
     return (
         <ConceptCard
+            handleClick={() => openInEditor(designProperty, item.id)}
             palette="primary"
             title={item.id}
             Icon={tabIcons[designProperty]}
+            actions={<>
+                <ButtonWithTextInput
+                    label={'copy'}
+                    buttonProps={{
+                        startIcon: <ContentCopyIcon />,
+                    }}
+                    getError={getInputIdError}
+                    modifyInput={formatIdInput}
+                    onEntry={(newId) => handleDuplicate(newId, item)}
+                    dialogTitle={`Enter ${itemTypeName} id`}
+                />
+                <DeleteDataItemButton
+                    buttonProps={{
+                    }}
+                    dataItem={item}
+                    itemType={designProperty}
+                    itemTypeName={itemTypeName}
+                />
+                <ItemInteraction item={item} designProperty={designProperty} />
+            </>}
         >
-            <Box display={'flex'} padding={2} gap={2} alignItems={'center'}>
+            <Box display={'flex'} gap={2} alignItems={'center'} justifyContent="space-between">
+                <ItemDetails item={item} designProperty={designProperty} />
                 <ItemPreview item={item} designProperty={designProperty} />
-                <ButtonGroup orientation="vertical">
-                    <Button
-                        variant="contained"
-                        startIcon={<EditIcon />}
-                        onClick={() => openInEditor(designProperty, item.id)}>edit</Button>
-                    <ItemInteraction item={item} designProperty={designProperty} />
-                </ButtonGroup>
-                <ButtonGroup orientation= {hasPreview(designProperty) ?  "vertical": 'horizontal'}>
-                    <ButtonWithTextInput
-                        label={'copy'}
-                        buttonProps={{
-                            startIcon: <ContentCopyIcon />,
-                            variant: 'outlined',
-                        }}
-                        getError={getInputIdError}
-                        modifyInput={formatIdInput}
-                        onEntry={(newId) => handleDuplicate(newId, item)}
-                        dialogTitle={`Enter ${itemTypeName} id`}
-                    />
-                    <DeleteDataItemButton
-                        buttonProps={{
-                            variant: 'outlined',
-                        }}
-                        dataItem={item}
-                        itemType={designProperty}
-                        itemTypeName={itemTypeName}
-                    />
-                </ButtonGroup>
             </Box>
         </ConceptCard>
     )
