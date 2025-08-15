@@ -7,7 +7,7 @@ import { patchMember } from "@/lib/update-design";
 import { Grid } from "@mui/material";
 import { DelayedStringInput } from "../DelayedStringInput";
 import { EditorHeading } from "../EditorHeading";
-import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
+import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { SequenceFlow } from "./SequenceFlow";
 
 

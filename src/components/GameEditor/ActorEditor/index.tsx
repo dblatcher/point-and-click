@@ -11,7 +11,7 @@ import { useState } from "react";
 import { ColorInput } from "../ColorInput";
 import { EditorHeading } from "../EditorHeading";
 import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
-import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
+import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { ActorAppearanceControl } from "./ActorAppearanceControl";
 import { AnimationSounds } from "./AnimationSounds";
 import { PositionPreview } from "./PositionPreview";

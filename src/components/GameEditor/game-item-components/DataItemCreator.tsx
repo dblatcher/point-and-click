@@ -7,11 +7,11 @@ import { uploadJsonData } from "@/lib/files";
 import { Alert, Box, Button, ButtonGroup, Grid, Stack } from "@mui/material";
 import { useState } from "react";
 import { ZodSchema } from "zod";
-import { ButtonWithTextInput } from "./ButtonWithTextInput";
+import { ButtonWithTextInput } from "../ButtonWithTextInput";
 import { DataItemCard } from "./DataItemCard";
-import { EditorHeading } from "./EditorHeading";
-import { formatIdInput, hasPreview } from "./helpers";
-import { SearchControl } from "./SearchControl";
+import { EditorHeading } from "../EditorHeading";
+import { formatIdInput, hasPreview } from "../helpers";
+import { SearchControl } from "../SearchControl";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }

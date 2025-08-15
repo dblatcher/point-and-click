@@ -4,7 +4,7 @@ import { patchMember } from "@/lib/update-design";
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import { EditorHeading } from "../EditorHeading";
-import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
+import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { PageMenu } from "./PageMenu";
 
 import { EditorBox } from "../EditorBox";

@@ -1,4 +1,12 @@
+import { ButtonWithTextInput } from "@/components/GameEditor/ButtonWithTextInput";
+import { ConceptCard } from "@/components/GameEditor/ConceptCard";
+import { FramePreview } from "@/components/GameEditor/FramePreview";
+import { DeleteDataItemButton } from "@/components/GameEditor/game-item-components/DeleteDataItemButton";
+import { formatIdInput, truncateLine } from "@/components/GameEditor/helpers";
+import { InteractionsDialogsButton } from "@/components/GameEditor/InteractionsDialogsButton";
 import { ContentCopyIcon, HideImageOutlinedIcon } from "@/components/GameEditor/material-icons";
+import { RoomLocationPicker } from "@/components/GameEditor/RoomLocationPicker";
+import { SpritePreview } from "@/components/GameEditor/SpritePreview";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
 import { ActorData, Conversation, GameDataItem, ItemData, RoomData, Sequence, SpriteData } from "@/definitions";
@@ -9,15 +17,7 @@ import { tabIcons } from "@/lib/editor-config";
 import { buildActorData } from "@/lib/sprite-to-actor";
 import { findById } from "@/lib/util";
 import { Box, BoxProps, Typography } from "@mui/material";
-import { StoryPageDisplay } from "../storyboard/StoryPageDisplay";
-import { ButtonWithTextInput } from "./ButtonWithTextInput";
-import { ConceptCard } from "./ConceptCard";
-import { DeleteDataItemButton } from "./DeleteDataItemButton";
-import { FramePreview } from "./FramePreview";
-import { formatIdInput, truncateLine } from "./helpers";
-import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
-import { RoomLocationPicker } from "./RoomLocationPicker";
-import { SpritePreview } from "./SpritePreview";
+import { StoryPageDisplay } from "../../storyboard/StoryPageDisplay";
 
 type Props<DataType extends GameDataItem> = {
     item: DataType;

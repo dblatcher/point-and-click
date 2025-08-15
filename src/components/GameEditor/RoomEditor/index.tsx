@@ -2,7 +2,7 @@ import { RoomData, ZoneType } from "@/definitions";
 import { Stack, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import { EditorHeading } from "../EditorHeading";
-import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
+import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { DimensionControl } from "./DimensionControl";
 import { RoomDescriptionControl } from "./RoomDescriptionControl";
 import { ScalingControl } from "./ScalingControl";

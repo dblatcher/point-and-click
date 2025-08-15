@@ -8,7 +8,7 @@ import { DelayedStringInput } from "./DelayedStringInput";
 import { EditorHeading } from "./EditorHeading";
 import { FramePickDialogButton } from "./FramePickDialogButton";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
-import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
+import { ItemEditorHeaderControls } from "./game-item-components/ItemEditorHeaderControls";
 import { FramePreview } from "./FramePreview";
 import { HideImageOutlinedIcon } from "./material-icons";
 

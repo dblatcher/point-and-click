@@ -2,9 +2,9 @@ import { GameDataItem } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { Box, ButtonGroup } from "@mui/material";
 import { DeleteDataItemButton } from "./DeleteDataItemButton";
-import { DownloadJsonButton } from "./SpriteEditor/DownloadJsonButton";
+import { DownloadJsonButton } from "./DownloadJsonButton";
 import { useGameDesign } from "@/context/game-design-context";
-import { SelectInput } from "../SchemaForm/SelectInput";
+import { SelectInput } from "../../SchemaForm/SelectInput";
 import { listIds } from "@/lib/util";
 import { DATA_TYPES_WITH_JSON } from "@/lib/editor-config";
 

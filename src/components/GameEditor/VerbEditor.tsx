@@ -11,7 +11,7 @@ import { StringInput } from "../SchemaForm/StringInput";
 import { DelayedStringInput } from "./DelayedStringInput";
 import { EditorBox } from "./EditorBox";
 import { EditorHeading } from "./EditorHeading";
-import { ItemEditorHeaderControls } from "./ItemEditorHeaderControls";
+import { ItemEditorHeaderControls } from "./game-item-components/ItemEditorHeaderControls";
 import { HelpButton } from "./HelpButton";
 
 

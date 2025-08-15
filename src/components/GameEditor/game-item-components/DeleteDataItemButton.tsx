@@ -1,7 +1,7 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { GameDataItem } from "@/definitions";
 import { DeleteIcon } from "@/components/GameEditor/material-icons";
-import { ButtonWithConfirm } from "./ButtonWithConfirm";
+import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { GameDataItemType } from "@/definitions/Game";
 import { ButtonProps } from "@mui/material";
 

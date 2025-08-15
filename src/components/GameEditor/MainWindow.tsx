@@ -11,7 +11,7 @@ import { Box } from "@mui/material";
 import { tabOrder } from "../../lib/editor-config";
 import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
-import { DataItemCreator } from "./DataItemCreator";
+import { DataItemCreator } from "./game-item-components/DataItemCreator";
 import { ImageAssetTool } from "./ImageAssetTool";
 import { InteractionEditor } from "./InteractionEditor";
 import { ItemEditor } from "./ItemEditor";

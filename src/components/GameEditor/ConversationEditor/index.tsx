@@ -8,7 +8,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack }
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { EditorHeading } from "../EditorHeading";
-import { ItemEditorHeaderControls } from "../ItemEditorHeaderControls";
+import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { SequenceEditor } from "../SequenceEditor";
 import { makeBlankConversationChoice } from "../defaults";
 import { ActorsInvolvedList } from "./ActorsInvolvedList";
