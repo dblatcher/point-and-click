@@ -1,17 +1,17 @@
-import { AddIcon, ClearIcon, UploadIcon } from "@/components/GameEditor/material-icons";
+import { AddIcon, UploadIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
 import { GameDataItem } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
 import { DATA_TYPES_WITH_JSON, tabIcons } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
-import { Alert, Box, Button, ButtonGroup, Grid, IconButton, Stack } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Grid, Stack } from "@mui/material";
 import { useState } from "react";
 import { ZodSchema } from "zod";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { DataItemCard } from "./DataItemCard";
 import { EditorHeading } from "./EditorHeading";
 import { formatIdInput, hasPreview } from "./helpers";
-import { StringInput } from "../SchemaForm/StringInput";
+import { SearchControl } from "./SearchControl";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -76,10 +76,7 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
     return (
         <Stack component={'article'} spacing={2} height={'100%'}>
             <EditorHeading heading={designProperty} icon={tabIcons[designProperty]} />
-            <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'}>
-                <StringInput notFullWidth label="search" value={searchInput} inputHandler={setSearchInput} />
-                <IconButton color="primary" title="clear search" onClick={() => setSearchInput('')} ><ClearIcon /></IconButton>
-            </Box>
+            <SearchControl searchInput={searchInput} setSearchInput={setSearchInput} />
             <Grid container spacing={2} maxWidth={'95%'} paddingBottom={4}>
                 {filteredItems.map(item => (
                     <Grid item key={item.id} xs={6} lg={4} xl={3}>

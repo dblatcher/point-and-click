@@ -5,8 +5,8 @@ import { FileAsset } from "@/services/assets";
 import { Box, IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
-import { StringInput } from "../SchemaForm/StringInput";
 import { EditorBox } from "./EditorBox";
+import { SearchControl } from "./SearchControl";
 
 interface Props {
     assetType: 'image' | 'sound'
@@ -29,11 +29,8 @@ export const FileAssetSelector = ({
     filterItems,
     currentSelection,
 }: Props) => {
-
     const [searchInput, setSearchInput] = useState('')
-
     const assets = useAssets()
-
     const all: FileAsset[] = assetType === 'image' ? assets.imageAssets : assets.soundAssets
     const deleteItem = assetType === 'image' ? assets.removeImageAsset : assets.removeSoundAsset
 
@@ -69,8 +66,8 @@ export const FileAssetSelector = ({
         case 'buttons':
         default:
             return (
-                <EditorBox title={legend}>
-                    <StringInput label="search" value={searchInput} inputHandler={setSearchInput} />
+                <EditorBox title={legend} contentBoxProps={{display:'flex', flexDirection:'column', alignItems:'stretch', minWidth:200}}>
+                    <SearchControl searchInput={searchInput} setSearchInput={setSearchInput} />
                     <List dense disablePadding>
                         {searchedItemsInFilter.map(({ id }) =>
                             <ListItem key={id} disablePadding disableGutters
