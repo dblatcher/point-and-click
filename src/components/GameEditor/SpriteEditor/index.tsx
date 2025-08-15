@@ -13,8 +13,9 @@ import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { AnimationDialog } from "./AnimationDialog";
 import { AnimationGrid } from "./AnimationGrid";
-import { NewAnimationForm } from "./NewAnimationForm";
 import { useAssets } from "@/context/asset-context";
+import { ButtonWithTextInput } from "../ButtonWithTextInput";
+import { AddIcon } from "../material-icons";
 
 
 type SpriteEditorProps = {
@@ -32,6 +33,11 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
     const [selectedRow, setSelectedRow] = useState<number>(0);
     const [selectedCol, setSelectedCol] = useState<number>(0);
     const [selectedSheetId, setSelectedSheetId] = useState<string | undefined>(undefined);
+
+    const { defaultDirection, animations, } = props.data
+    const sprite = new Sprite(props.data, getImageAsset)
+    const animationEntries = Object.entries(animations)
+    const existingKeys = Object.keys(animations);
 
     const updateFromPartial = (mod: Partial<SpriteData>, description?: string) => {
         applyModification(description ?? `update sprite ${props.data.id}`, { sprites: patchMember(props.data.id, mod, gameDesign.sprites) })
@@ -89,6 +95,9 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
     }
 
     const addAnimation = (animationKey: string) => {
+        if (existingKeys.includes(animationKey)) {
+            return
+        }
         const { animations, defaultDirection } = cloneData(props.data);
         const newAnimation: Animation = {}
         newAnimation[defaultDirection] = []
@@ -141,10 +150,6 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
         }
     }
 
-    const { defaultDirection, animations, } = props.data
-    const sprite = new Sprite(props.data, getImageAsset)
-    const animationEntries = Object.entries(animations)
-
     return <Stack component={'article'} spacing={1}>
         <EditorHeading heading="Sprite Editor" itemId={props.data?.id ?? '[new]'} >
             <ItemEditorHeaderControls
@@ -183,10 +188,25 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
                 </Grid>
             ))}
 
-            <Grid xs={4} md={3} item minWidth={260}>
-                <NewAnimationForm
-                    existingKeys={Object.keys(props.data.animations)}
-                    submit={addAnimation} />
+            <Grid xs={4} md={3} item minWidth={260} minHeight={190} display={'flex'}>
+                <ButtonWithTextInput
+                    buttonProps={{
+                        variant: 'outlined',
+                        fullWidth: true,
+                        startIcon: <AddIcon />
+                    }}
+                suggestions={Array.from(new Set(Object.values(Sprite.DEFAULT_ANIMATION)
+                    .filter(value => !existingKeys.includes(value))))}
+                clearOnOpen
+                getError={input => {
+                    if (existingKeys.includes(input)) {
+                        return `animation "${input}" already exists`
+                    }
+                    return undefined;
+                }}
+                label="add animation"
+                onEntry={addAnimation}
+                dialogTitle={"enter animation name"} />
             </Grid>
         </Grid>
 

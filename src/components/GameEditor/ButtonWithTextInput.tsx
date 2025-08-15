@@ -17,6 +17,7 @@ interface Props {
     keyboardShortcut?: string
     getError?: { (input: string): string | undefined }
     children?: ReactNode
+    clearOnOpen?: boolean
 }
 
 export const ButtonWithTextInput = ({
@@ -31,10 +32,16 @@ export const ButtonWithTextInput = ({
     keyboardShortcut,
     getError,
     children,
+    clearOnOpen,
 }: Props) => {
     const [showDialog, setShowDialog] = useState<boolean>(false)
     const [input, setInput] = useState<string>('')
-    const handleFirstButton = (): void => { setShowDialog(true) }
+    const handleFirstButton = (): void => { 
+                if (clearOnOpen) {
+            setInput('');
+        }
+        setShowDialog(true) 
+    }
     const handleInput = modifyInput ? (input: string) => setInput(modifyInput(input)) : setInput
     const errorMessage = getError?.(input);
 
@@ -42,7 +49,6 @@ export const ButtonWithTextInput = ({
         key: keyboardShortcut,
         handler: handleFirstButton,
     }] : [])
-
 
     return (
         <>
