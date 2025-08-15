@@ -1,27 +1,33 @@
+import { DeleteIcon } from "@/components/GameEditor/material-icons";
+import { useAssets } from "@/context/asset-context";
 import { findById, listIds } from "@/lib/util";
 import { FileAsset } from "@/services/assets";
-import { DeleteIcon } from "@/components/GameEditor/material-icons";
-import { Box, Grid, IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { Box, IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { StringInput } from "../SchemaForm/StringInput";
 import { EditorBox } from "./EditorBox";
-import { AssetCard } from "./asset-components/AssetCard";
-import { useAssets } from "@/context/asset-context";
 
 interface Props {
     assetType: 'image' | 'sound'
     legend: string;
     select: { (item: FileAsset): void };
     selectNone?: { (): void };
-    format?: 'buttons' | 'select' | 'folder';
+    format?: 'buttons' | 'select';
     selectedItemId?: string;
     filterItems?: { (item: FileAsset): boolean };
     currentSelection?: string;
 }
 
 export const FileAssetSelector = ({
-    assetType, select, selectNone, legend, format = 'buttons', selectedItemId = '', filterItems, currentSelection,
+    assetType,
+    select,
+    selectNone,
+    legend,
+    format = 'buttons',
+    selectedItemId = '',
+    filterItems,
+    currentSelection,
 }: Props) => {
 
     const [searchInput, setSearchInput] = useState('')
@@ -59,24 +65,6 @@ export const FileAssetSelector = ({
                         value={selectedItemId}
                         inputHandler={value => { handleSelect(value ?? '') }} />
                 </Box>
-            )
-        case 'folder':
-            return (
-                <EditorBox title={legend}>
-                    <Box>
-                        <StringInput label="search" value={searchInput} inputHandler={setSearchInput} />
-                    </Box>
-                    <Grid container spacing={1} flexWrap={'wrap'}>
-                        {searchedItemsInFilter.map(asset => (
-                            <Grid item key={asset.id}>
-                                <AssetCard
-                                    asset={asset}
-                                    handleClick={() => { handleSelect(asset.id) }}
-                                />
-                            </Grid>
-                        ))}
-                    </Grid>
-                </EditorBox>
             )
         case 'buttons':
         default:
