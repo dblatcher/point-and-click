@@ -16,6 +16,7 @@ import { AnimationGrid } from "./AnimationGrid";
 import { useAssets } from "@/context/asset-context";
 import { ButtonWithTextInput } from "../ButtonWithTextInput";
 import { AddIcon } from "../material-icons";
+import { SearchControl } from "../SearchControl";
 
 
 type SpriteEditorProps = {
@@ -28,16 +29,18 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
     const { applyModification, gameDesign } = useGameDesign()
     const { getImageAsset } = useAssets()
 
-    const [selectedAnimation, setSelectedAnimation] = useState<string | undefined>(undefined);
-    const [selectedDirection, setSelectedDirection] = useState<Direction | undefined>(undefined);
+    const [selectedAnimation, setSelectedAnimation] = useState<string>();
+    const [selectedDirection, setSelectedDirection] = useState<Direction>();
     const [selectedRow, setSelectedRow] = useState<number>(0);
     const [selectedCol, setSelectedCol] = useState<number>(0);
-    const [selectedSheetId, setSelectedSheetId] = useState<string | undefined>(undefined);
+    const [selectedSheetId, setSelectedSheetId] = useState<string>();
+    const [searchInput, setSearchInput] = useState('');
 
     const { defaultDirection, animations, } = props.data
     const sprite = new Sprite(props.data, getImageAsset)
     const animationEntries = Object.entries(animations)
     const existingKeys = Object.keys(animations);
+    const filteredAnimationEntries = searchInput.length === 0 ? animationEntries : animationEntries.filter(([key]) => key.toLowerCase().includes(searchInput.toLowerCase()))
 
     const updateFromPartial = (mod: Partial<SpriteData>, description?: string) => {
         applyModification(description ?? `update sprite ${props.data.id}`, { sprites: patchMember(props.data.id, mod, gameDesign.sprites) })
@@ -158,7 +161,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
                 itemTypeName="sprite"
             />
         </EditorHeading>
-        <Stack direction={'row'} spacing={2}>
+        <Stack direction={'row'} spacing={4}>
             <Box minWidth={100}>
                 <SelectInput
                     label="default direction"
@@ -167,11 +170,11 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
                     inputHandler={(choice) => { changeValue('defaultDirection', choice as Direction) }}
                 />
             </Box>
-
+            <SearchControl searchInput={searchInput} setSearchInput={setSearchInput} />
         </Stack>
 
         <Grid container spacing={1}>
-            {animationEntries.map(([animationKey, animation]) => (
+            {filteredAnimationEntries.map(([animationKey, animation]) => (
                 <Grid xs={4} md={3} item key={animationKey} minWidth={260}>
                     <AnimationGrid
                         {...{ animationKey, animation, defaultDirection, sprite }}
@@ -181,7 +184,6 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
                             setSelectedDirection(selectedDirection)
                         }}
                         copyAnimation={(newName, animationKey) => {
-                            console.log('rename', newName, animationKey)
                             copyAnimation(newName, animationKey)
                         }}
                     />
@@ -195,18 +197,18 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
                         fullWidth: true,
                         startIcon: <AddIcon />
                     }}
-                suggestions={Array.from(new Set(Object.values(Sprite.DEFAULT_ANIMATION)
-                    .filter(value => !existingKeys.includes(value))))}
-                clearOnOpen
-                getError={input => {
-                    if (existingKeys.includes(input)) {
-                        return `animation "${input}" already exists`
-                    }
-                    return undefined;
-                }}
-                label="add animation"
-                onEntry={addAnimation}
-                dialogTitle={"enter animation name"} />
+                    suggestions={Array.from(new Set(Object.values(Sprite.DEFAULT_ANIMATION)
+                        .filter(value => !existingKeys.includes(value))))}
+                    clearOnOpen
+                    getError={input => {
+                        if (existingKeys.includes(input)) {
+                            return `animation "${input}" already exists`
+                        }
+                        return undefined;
+                    }}
+                    label="add animation"
+                    onEntry={addAnimation}
+                    dialogTitle={"enter animation name"} />
             </Grid>
         </Grid>
 
