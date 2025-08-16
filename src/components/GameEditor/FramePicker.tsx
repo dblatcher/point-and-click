@@ -5,18 +5,19 @@ import { FileAsset, ImageAsset } from "@/services/assets";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 import { FileAssetSelector } from "./FileAssetSelector";
-import { EditorBox } from "./EditorBox";
 import { FramePreview } from "./FramePreview";
+import { SpriteFrame } from "@/definitions";
 
 interface Props {
     row: number;
     col: number;
     imageId?: string;
-    pickFrame: { (row: number, col: number, imageId?: string): void };
+    setLocalFrame: { (row: number, col: number, imageId?: string): void };
     fixedSheet?: boolean;
     noOptions?: boolean;
-    forDialog?: boolean;
     imageFilter?: { (item: FileAsset): boolean }
+    handleSelection: { (frame: SpriteFrame): void };
+    quickPicking?: boolean
 }
 
 interface FrameButtonProps {
@@ -34,6 +35,7 @@ const FrameButton = ({ image, row, col, onClick, isSelected, frameSize }: FrameB
         <Button
             size="small"
             onClick={onClick} variant={isSelected ? 'contained' : 'outlined'}
+            title={`[${col}, ${row}]`}
         >
             <FramePreview
                 height={frameSize * widthScale}
@@ -54,12 +56,23 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
     }
 }
 
-const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFrame, fixedSheet = false, noOptions = false, imageFilter }) => {
+export const FramePicker: FunctionComponent<Props> = ({
+    row,
+    col,
+    imageId,
+    setLocalFrame,
+    fixedSheet = false,
+    noOptions = false,
+    imageFilter,
+    handleSelection,
+    quickPicking,
+}) => {
     const { getImageAsset } = useAssets()
     const [showInOneRow, setShowInOneRow] = useState(false)
     const [buttonSize, setButtonSize] = useState<ButtonSize>('medium')
     const image = imageId ? getImageAsset(imageId) : undefined;
     const frameSize = frameSizeFromButtonSize(buttonSize)
+
 
     const buttonPropsGrid: FrameButtonProps[][] = []
     if (image) {
@@ -68,12 +81,14 @@ const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFra
             for (let c = 0; c < (image.cols || 1); c++) {
                 buttonPropsGrid[r].push(
                     {
-                        isSelected: r === row && c === col,
+                        isSelected: quickPicking ? false : r === row && c === col,
                         row: r,
                         col: c,
                         image,
                         frameSize,
-                        onClick: () => { pickFrame(r, c, imageId) }
+                        onClick: quickPicking
+                            ? () => handleSelection({ row: r, col: c, imageId: image.id })
+                            : () => { setLocalFrame(r, c, imageId) }
                     }
                 )
             }
@@ -89,11 +104,13 @@ const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFra
                         format="select"
                         selectedItemId={imageId}
                         filterItems={imageFilter}
-                        select={(item): void => { pickFrame(0, 0, item.id) }} />
+                        select={(item): void => { setLocalFrame(0, 0, item.id) }} />
                 )}
-                <Typography variant='h6'>
-                    {imageId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
-                </Typography>
+                {!quickPicking && (
+                    <Typography variant='h6'>
+                        {imageId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
+                    </Typography>
+                )}
             </Stack>
 
             {image && (<>
@@ -132,17 +149,5 @@ const FramePickerInner: FunctionComponent<Props> = ({ row, col, imageId, pickFra
                 </Stack>
             )}
         </>
-    )
-}
-
-export const FramePicker: FunctionComponent<Props> = ({ forDialog, ...props }) => {
-    if (forDialog) {
-        return <FramePickerInner {...props} />
-    }
-
-    return (
-        <EditorBox title="Pick frame">
-            <FramePickerInner {...props} />
-        </EditorBox>
     )
 }

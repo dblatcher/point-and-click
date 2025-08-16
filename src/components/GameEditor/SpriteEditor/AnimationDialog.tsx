@@ -1,11 +1,12 @@
 
 import { ActorData, Direction, SpriteData, SpriteFrame } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { useState } from "react";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
+import { FileAssetSelector } from "../FileAssetSelector";
 import { SpritePreview } from "../SpritePreview";
 import { AnimationFrameList } from "./AnimationFrameList";
-import { FramePicker } from "../FramePicker";
 
 interface Props {
     selectedDirection?: Direction
@@ -13,55 +14,91 @@ interface Props {
     overrideSprite: Sprite
     actorData?: ActorData
     spriteData: SpriteData
-
-    selectedRow: number;
-    selectedCol: number;
-    selectedSheetId?: string;
-
     editCycle: { (animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined): void };
-    pickFrame: { (row: number, col: number, imageId?: string): void };
     close: { (): void };
+}
+
+const getDefaultingMessage = (
+    animationSet: Record<string, SpriteFrame[] | undefined> | undefined,
+    animationSetForDirection: SpriteFrame[] | undefined,
+    defaultDirection: Direction,
+    selectedDirection: Direction,
+) => {
+
+    const noFramesForDirection = !animationSetForDirection?.length;
+    const noFrameForDefault = !animationSet || !animationSet[defaultDirection]?.length;
+    const isDefault = selectedDirection === defaultDirection;
+
+    if (isDefault) {
+        if (noFrameForDefault) {
+            return (
+                <Alert severity="info" sx={{ maxWidth: 200 }}>
+                    No frames are set for {selectedDirection}, so the default animation is shown.
+                </Alert>
+            )
+        }
+    } else if (noFramesForDirection) {
+        if (noFrameForDefault) {
+            return <Alert severity="info" sx={{ maxWidth: 200 }}>
+                No frames are set for {selectedDirection} or the sprites default direction ({defaultDirection}), so the default animation is shown.
+            </Alert>
+        }
+        return <Alert severity="info" sx={{ maxWidth: 200 }}>
+            No frames for {selectedDirection}, so the default direction ({defaultDirection}) is used.
+        </Alert>
+    }
+    return null
 }
 
 export const AnimationDialog = ({
     selectedAnimation,
     selectedDirection,
     overrideSprite,
-    selectedRow,
-    selectedCol,
-    selectedSheetId,
     spriteData,
     actorData,
     editCycle,
-    pickFrame,
     close,
 }: Props) => {
-
+    const [selectedSheetId, setSelectedSheetId] = useState<string>();
     const { defaultDirection, animations } = spriteData
-
     const animationSet = selectedAnimation ? animations[selectedAnimation] : undefined;
     const animationSetForDirection = animationSet && selectedDirection ? animationSet[selectedDirection] : undefined;
 
     return (
-
-        <Dialog fullWidth maxWidth={'xl'}
+        <Dialog maxWidth={'xl'}
             scroll="paper"
             open={!!selectedAnimation && !!selectedDirection}
-            onClose={close}>
+            onClose={close}
+            PaperProps={{
+                sx: { height: 'calc(100% - 64px)' }
+            }}
+        >
 
             {(selectedAnimation && selectedDirection && actorData) && (<>
-
                 <DialogTitle>
-                    {selectedAnimation}/{selectedDirection}{selectedDirection === defaultDirection && <span>(default)</span>}
+                    Set Frames: {selectedAnimation}/{selectedDirection}{selectedDirection === defaultDirection && <span>(default)</span>}
                 </DialogTitle>
 
-                <DialogContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <DialogContent sx={{ display: 'flex', gap: 4, minHeight: 'calc(100% - 164px)' }}>
                     <Box position={'sticky'} top={1} overflow={'auto'}>
-                        <FramePicker
-                            pickFrame={pickFrame}
-                            imageId={selectedSheetId}
-                            row={selectedRow}
-                            col={selectedCol} />
+                        <FileAssetSelector assetType="image"
+                            legend="sprite sheet"
+                            format="select"
+                            filterItems={(item) => item.category === 'spriteSheet' || item.category === 'any'}
+                            selectedItemId={selectedSheetId}
+                            select={(asset): void => { setSelectedSheetId(asset.id) }} />
+                        <SpritePreview
+                            noBaseLine
+                            scale={2}
+                            overrideSprite={overrideSprite}
+                            data={actorData}
+                        />
+                        {getDefaultingMessage(
+                            animationSet,
+                            animationSetForDirection,
+                            defaultDirection,
+                            selectedDirection,
+                        )}
                     </Box>
 
                     {(animationSet) && (
@@ -70,25 +107,11 @@ export const AnimationDialog = ({
                             direction={selectedDirection}
                             animation={animationSet}
                             editCycle={editCycle}
-                            pickFrame={pickFrame}
-                            selectedFrame={selectedSheetId ? {
-                                row: selectedRow,
-                                col: selectedCol,
-                                imageId: selectedSheetId,
-                            } : undefined}
+                            setSelectedSheetId={setSelectedSheetId}
+                            imageId={selectedSheetId}
                         />
                     )}
-
-                    <Box position={'sticky'} top={1}>
-                        <SpritePreview
-                            noBaseLine
-                            scale={2}
-                            overrideSprite={overrideSprite}
-                            data={actorData}
-                        />
-                    </Box>
                 </DialogContent>
-
                 <DialogActions>
                     {(animationSetForDirection && selectedDirection !== defaultDirection) && (
                         <ButtonWithConfirm

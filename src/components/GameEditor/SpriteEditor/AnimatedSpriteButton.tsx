@@ -16,8 +16,7 @@ interface Props {
 export const AnimatedSpriteButton = ({
     direction, sprite, animationKey, animation, onClick, isDefault
 }: Props) => {
-    const directionSet = !!animation[direction]
-
+    const hasFrames = animation[direction] && animation[direction].length > 0
     return (
         <Button
             variant="outlined"
@@ -25,7 +24,7 @@ export const AnimatedSpriteButton = ({
             sx={{ minWidth: 80, minHeight: 80, padding: 0 }}
             onClick={onClick}
         >
-            {directionSet ?
+            {hasFrames ?
                 <SpritePreview noBaseLine scale={.8}
                     overrideSprite={sprite}
                     data={buildActorData(sprite, animationKey, direction)}

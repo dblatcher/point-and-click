@@ -1,7 +1,11 @@
 import { Direction, SpriteFrame } from "@/definitions";
-import { Alert, Button, Stack } from "@mui/material";
+import { insertAt } from "@/lib/util";
+import { Button } from "@mui/material";
+import { Dispatch, SetStateAction } from "react";
 import { ArrayControl } from "../ArrayControl";
+import { FramePickDialogButton } from "../FramePickDialogButton";
 import { FramePreview } from "../FramePreview";
+import { AddIcon } from "../material-icons";
 
 interface Props {
     animKey: string;
@@ -9,48 +13,68 @@ interface Props {
     direction: Direction;
     animation: Partial<Record<Direction, SpriteFrame[]>>;
     editCycle: { (animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined): void };
-    selectedFrame?: SpriteFrame;
-    pickFrame: { (row: number, col: number, imageId?: string): void };
+    imageId?: string;
+    setSelectedSheetId: Dispatch<SetStateAction<string | undefined>>
 }
 
 export const AnimationFrameList = ({
-    animKey, animation,
-    editCycle, pickFrame,
-    selectedFrame,
+    animKey,
+    animation,
+    editCycle,
+    setSelectedSheetId,
+    imageId,
     direction
 }: Props) => {
-    const animationInDirection = animation[direction]
-    const noFramesYet = !animationInDirection || animationInDirection.length === 0;
+    const animationInDirection = animation[direction] ?? []
 
     return (
-        <Stack>
-            {!selectedFrame && <Alert severity='info'>Pick a frame to insert</Alert>}
-            {noFramesYet && <Alert severity='info'>Add the first frame</Alert>}
-            {animationInDirection &&
-                <ArrayControl
-                    list={animationInDirection}
-                    insertText="insert frame"
-                    mutateList={newlist => {
-                        return editCycle(animKey, direction, newlist)
+        <ArrayControl
+            list={animationInDirection}
+            insertText="insert frame"
+            mutateList={newList => {
+                return editCycle(animKey, direction, newList)
+            }}
+            describeItem={(frame) => (
+                <Button
+                    fullWidth
+                    variant="outlined"
+                    sx={{ display: 'flex', justifyContent: 'space-between', marginY: 1, paddingY: 0 }}
+                    onClick={() => { setSelectedSheetId(frame.imageId) }}
+                >
+                    <FramePreview
+                        height={60}
+                        width={60}
+                        frame={frame} />
+                    <div>
+                        <p>{frame.imageId}</p>
+                        <p>[{frame.col}, {frame.row}]</p>
+                    </div>
+                </Button>
+            )}
+            customCreateButton={(index) =>
+                <FramePickDialogButton
+                    buttonProps={{
+                        startIcon: <AddIcon />
                     }}
-                    describeItem={(frame) => (
-                        <Button
-                            fullWidth
-                            variant="outlined"
-                            sx={{ display: 'flex', justifyContent: 'space-between', marginY: 1, paddingY: 0 }}
-                            onClick={() => { pickFrame(frame.row, frame.col, frame.imageId) }}
-                        >
-                            <FramePreview
-                                height={60}
-                                width={60}
-                                frame={frame} />
-                            <p>{frame.imageId}</p>
-                            <p>[{frame.col}, {frame.row}]</p>
-                        </Button>
-                    )}
-                    createItem={selectedFrame ? () => ({ ...selectedFrame }) : undefined}
+                    buttonLabel="Insert frame"
+                    quickPicking
+                    noOptions
+                    defaultState={{ imageId, row: 0, col: 0 }}
+                    pickFrame={(row, col, imageId) => {
+                        const newFrame = imageId ? { row, col, imageId } : undefined;
+                        if (!newFrame) {
+                            return
+                        }
+                        setSelectedSheetId(newFrame.imageId)
+                        const newList = insertAt(index, newFrame, animationInDirection);
+                        return editCycle(animKey, direction, newList)
+                    }}
                 />
             }
-        </Stack>
+            stackProps={{
+                minWidth: 250,
+                minHeight: 180
+            }}
+        />
     )
 }

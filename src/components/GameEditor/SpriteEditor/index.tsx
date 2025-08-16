@@ -31,9 +31,6 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
 
     const [selectedAnimation, setSelectedAnimation] = useState<string>();
     const [selectedDirection, setSelectedDirection] = useState<Direction>();
-    const [selectedRow, setSelectedRow] = useState<number>(0);
-    const [selectedCol, setSelectedCol] = useState<number>(0);
-    const [selectedSheetId, setSelectedSheetId] = useState<string>();
     const [searchInput, setSearchInput] = useState('');
 
     const { defaultDirection, animations, } = props.data
@@ -44,42 +41,6 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
 
     const updateFromPartial = (mod: Partial<SpriteData>, description?: string) => {
         applyModification(description ?? `update sprite ${props.data.id}`, { sprites: patchMember(props.data.id, mod, gameDesign.sprites) })
-    }
-
-    const pickFrame = (newSelectedRow: number, newSelectedCol: number, newSelectedSheetId = selectedSheetId) => {
-        if (
-            newSelectedSheetId &&
-            newSelectedSheetId === selectedSheetId &&
-            newSelectedRow === selectedRow &&
-            newSelectedCol === selectedCol
-        ) {
-            return appendFrame(newSelectedRow, newSelectedCol, newSelectedSheetId)
-        }
-        setSelectedCol(newSelectedCol)
-        setSelectedRow(newSelectedRow)
-        if (newSelectedSheetId) {
-            setSelectedSheetId(newSelectedSheetId)
-        }
-    }
-
-    const appendFrame = (newSelectedRow: number, newSelectedCol: number, newSelectedSheetId: string) => {
-        const newFrame = {
-            row: newSelectedRow,
-            col: newSelectedCol,
-            imageId: newSelectedSheetId,
-        }
-        const animations = cloneData(props.data.animations)
-        const animation = selectedAnimation && animations[selectedAnimation]
-        if (!animation) {
-            return
-        }
-        const cycle = animation[selectedDirection ?? props.data.defaultDirection]
-        if (!cycle) {
-            animation[selectedDirection ?? props.data.defaultDirection] = [newFrame]
-        } else {
-            cycle?.push(newFrame)
-        }
-        updateFromPartial({ animations })
     }
 
     const changeValue = (propery: keyof SpriteData, newValue: string) => {
@@ -217,14 +178,11 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
                 selectedAnimation,
                 selectedDirection,
                 overrideSprite: sprite,
-                selectedRow,
-                selectedCol,
-                selectedSheetId,
+
             }}
             spriteData={props.data}
             actorData={(selectedAnimation && selectedDirection) ? buildActorData(selectedAnimation, selectedDirection) : undefined}
             editCycle={editCycle}
-            pickFrame={pickFrame}
             close={() => {
                 setSelectedAnimation(undefined)
                 setSelectedDirection(undefined)

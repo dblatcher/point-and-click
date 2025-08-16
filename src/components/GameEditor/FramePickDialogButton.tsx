@@ -12,9 +12,17 @@ interface Props {
     buttonProps?: ButtonProps
     filterAssets?: { (asset: FileAsset): boolean }
     showRemoveButton?: boolean;
+    defaultState?: PickerState;
+    quickPicking?: boolean;
+    noOptions?: boolean;
 }
 
-const defaultState = () => ({ row: 0, col: 0, imageId: undefined })
+
+type PickerState = {
+    row: number; col: number; imageId?: string
+}
+
+const emptyState = (): PickerState => ({ row: 0, col: 0, imageId: undefined })
 
 export const FramePickDialogButton: React.FunctionComponent<Props> = ({
     title = 'pick frame',
@@ -24,17 +32,19 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
     buttonContent,
     buttonProps,
     filterAssets = (item) => item.category === 'spriteSheet' || item.category === 'any',
-    showRemoveButton
+    showRemoveButton,
+    defaultState,
+    quickPicking,
+    noOptions,
 }: Props) => {
     const [dialogOpen, setDialogOpen] = useState(false)
-    const [localFrame, setLocalFrame] = useState<{
-        row: number;
-        col: number;
-        imageId?: string;
-    }>(defaultState())
+    const [localFrame, setLocalFrame] = useState(emptyState())
 
-    const handleSelect = () => {
-        const { row, col, imageId } = localFrame
+    const handleSelection = (frame: PickerState) => {
+        const { row, col, imageId } = frame
+        if (!imageId) {
+            return
+        }
         pickFrame(row, col, imageId)
         setDialogOpen(false)
     }
@@ -44,27 +54,39 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
         setDialogOpen(false)
     }
 
+    const handleOpen = () => {
+        if (defaultState) {
+            setLocalFrame(defaultState)
+        }
+        setDialogOpen(true)
+    }
+
     return <>
         <Button aria-label={buttonLabel}
             variant="outlined"
             {...buttonProps}
             disabled={disabled}
-            onClick={() => setDialogOpen(true)}
+            onClick={handleOpen}
         >{buttonContent ?? buttonLabel}</Button>
 
         <Dialog open={dialogOpen} onClose={() => { setDialogOpen(false) }} fullWidth>
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>
-                <FramePicker forDialog
+                <FramePicker
                     imageFilter={filterAssets}
-                    pickFrame={(row, col, imageId) => setLocalFrame({ row, col, imageId })}
+                    setLocalFrame={(row, col, imageId) => setLocalFrame({ row, col, imageId })}
+                    quickPicking={quickPicking}
+                    noOptions={noOptions}
+                    handleSelection={handleSelection}
                     {...localFrame} />
             </DialogContent>
             <DialogActions>
-                <ButtonGroup  variant="contained">
+                <ButtonGroup variant="contained">
                     <Button variant="outlined" onClick={() => setDialogOpen(false)}>cancel</Button>
                     {showRemoveButton && <Button onClick={remove}>remove</Button>}
-                    <Button onClick={handleSelect}>pick frame</Button>
+                    {!quickPicking &&
+                        <Button onClick={() => handleSelection(localFrame)}>pick frame</Button>
+                    }
                 </ButtonGroup>
             </DialogActions>
         </Dialog>

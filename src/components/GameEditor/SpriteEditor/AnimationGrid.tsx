@@ -20,9 +20,7 @@ interface Props {
 
 
 export const AnimationGrid = ({ animation, animationKey, sprite, defaultDirection, deleteAnimation, copyAnimation, selectAnimationAndDirection }: Props) => {
-
     const renderedButtons: Partial<Record<Direction, JSX.Element>> = {}
-
     {
         directions.forEach(direction => {
             renderedButtons[direction] = <AnimatedSpriteButton key={direction}
