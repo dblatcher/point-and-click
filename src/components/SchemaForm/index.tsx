@@ -47,16 +47,19 @@ export function SchemaForm<T extends z.ZodRawShape>({
             type = zod._def.typeName
         }
 
+        const enumOptions= zod._def.typeName === 'ZodEnum' 
+            ? zod._def.values 
+            : zod.isOptional() &&  zod._def.innerType._def.typeName === 'ZodEnum' ? zod._def.innerType._def.values :  undefined;
+
         fields.push({
             key,
             alias: fieldAliases[key],
             optional: zod.isOptional(),
             type,
             value: data[key],
-            enumOptions: zod._def.typeName === 'ZodEnum' ? zod._def.values : undefined,
+            enumOptions,
         })
     }
-
 
 
     return <Stack component={'article'} {...containerProps}  >

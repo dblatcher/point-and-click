@@ -3,6 +3,9 @@ import { FieldDef, FieldValue } from "./types";
 function fieldValueIsRightType(value: FieldValue, field: FieldDef): boolean {
 
     if (field.type === 'ZodEnum') {
+        if (typeof value === 'undefined') {
+            return field.optional
+        }
         return field.enumOptions?.includes(value as string) || false
     }
     switch (typeof value) {

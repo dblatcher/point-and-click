@@ -103,8 +103,8 @@ export function SchemaField<T extends z.ZodRawShape>({
         }
     }
 
-    if (type === 'ZodEnum' && !optional && field.enumOptions) {
-        if ((typeof value === 'string')) {
+    if (type === 'ZodEnum' && field.enumOptions) {
+        if ((typeof value === 'string' || (field.optional && typeof value === 'undefined'))) {
             return <SelectInput label={alias ?? key}
                 value={value}
                 inputHandler={value => change(value, field)}
