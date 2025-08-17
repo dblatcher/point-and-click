@@ -1,9 +1,10 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { CommandTarget, ItemData, Verb } from "@/definitions";
-import { Box, Card, Fade, IconButton, Typography } from "@mui/material";
-import React, { ReactElement, useEffect, useState } from "react";
+import { Box, ButtonGroup, Card, Fade, IconButton, Typography } from "@mui/material";
+import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import { ItemButton } from "./ItemButton";
-import { VerbButton } from "./VerbButton";
+import { canUseIcons, VerbButton } from "./VerbButton";
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface Props {
     target?: CommandTarget,
@@ -28,6 +29,7 @@ const FadeAndPosition = ({ x, y, isShowing, children }: Pick<Props, 'x' | 'y' | 
 
 }
 
+const TextButtonBox = ({children}:{children:ReactNode}) => <Box display={'flex'} justifyContent={'space-around'} alignItems={'center'} flexWrap={'wrap'}>{children}</Box>
 
 export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove, x, y, isShowing }) => {
     const { gameProps, updateGameState } = useGameState()
@@ -85,6 +87,9 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
         ? `${activeItemVerb.label} ... ${activeItemVerb.preposition ?? 'with'} ${target.name ?? target.id}`
         : target.name ?? target.id
 
+    const useIcons = canUseIcons(verbs);
+    const ButtonContainer = useIcons? ButtonGroup : TextButtonBox;
+
     return (
         <FadeAndPosition x={x} y={y} isShowing={isShowing}>
             <Box
@@ -96,25 +101,29 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
             >
                 <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                     <Typography>{command}</Typography>
-                    <IconButton onClick={remove} size="small">x</IconButton>
+                    <IconButton onClick={remove} size="small"><ClearIcon /></IconButton>
                 </Box>
 
                 {!activeItemVerb ? (<>
-                    <Box display={'flex'} justifyContent={'space-around'} alignItems={'center'} flexWrap={'wrap'}>
+                    <ButtonContainer>
                         {directVerbs.map(verb => (
                             <VerbButton key={verb.id} tiny
                                 verb={verb}
-                                handleClick={(verb) => handleDirectVerbClick(verb)} />
+                                handleClick={(verb) => handleDirectVerbClick(verb)}
+                                useIcons={useIcons}
+                            />
                         ))}
-                    </Box >
-                    <Box display={'flex'} justifyContent={'space-around'} alignItems={'center'} flexWrap={'wrap'}>
+                    </ButtonContainer>
+                    <ButtonContainer>
                         {itemVerbs.map(verb => (
                             <VerbButton key={verb.id} tiny prepositionLabel
                                 verb={verb}
                                 disabled={inventory.length === 0}
-                                handleClick={(verb) => handleItemVerbClick(verb)} />
+                                handleClick={(verb) => handleItemVerbClick(verb)}
+                                useIcons={useIcons}
+                            />
                         ))}
-                    </Box>
+                    </ButtonContainer>
                 </>) : (
                     <Box display={'flex'} flexWrap={'wrap'}>
                         {inventory.map(item => (

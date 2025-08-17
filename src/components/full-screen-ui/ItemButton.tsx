@@ -16,6 +16,7 @@ interface Props {
 export const ItemButton: React.FunctionComponent<Props> = ({ item, isActive, handleClick, handleContextClick, disabled, tiny }: Props) => {
 
     return <Button size="small" key={item.id}
+        title={item.name ?? item.id}
         disabled={disabled}
         variant={isActive ? 'contained' : 'outlined'}
         onClick={(event) => {

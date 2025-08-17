@@ -2,13 +2,14 @@ import { useGameState } from "@/context/game-state-context";
 import { Verb } from "@/definitions";
 import { Box } from "@mui/material";
 import React from "react";
-import { VerbButton } from "./VerbButton";
+import { canUseIcons, VerbButton } from "./VerbButton";
 
 interface Props {
     activeVerbId?: string,
     selectVerb: { (verb: Verb): void },
     disabled?: boolean
 }
+
 
 
 export const InventoryVerbList: React.FunctionComponent<Props> = ({ activeVerbId, selectVerb, disabled }) => {
@@ -23,6 +24,7 @@ export const InventoryVerbList: React.FunctionComponent<Props> = ({ activeVerbId
                     disabled={disabled}
                     verb={verb}
                     isActive={verb.id === activeVerbId}
+                    useIcons={canUseIcons(relevantVerbs)}
                     handleClick={selectVerb} />
             ))}
         </Box>

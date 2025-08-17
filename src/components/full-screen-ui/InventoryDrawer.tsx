@@ -1,6 +1,7 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { ItemData, Verb } from "@/definitions";
 import { findById } from "@/lib/util";
+import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Card, Fade, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { ItemButton } from "./ItemButton";
@@ -88,7 +89,7 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove, isShow
                 <Box component={Card} padding={2} maxWidth={500}>
                     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                         <Typography>Inventory</Typography>
-                        <IconButton onClick={closeAndReset} size="small">x</IconButton>
+                        <IconButton onClick={closeAndReset} size="small"><ClearIcon/></IconButton>
                     </Box>
                     <Box display='flex' flexWrap={'wrap'}>
                         {inventory.map(item => (

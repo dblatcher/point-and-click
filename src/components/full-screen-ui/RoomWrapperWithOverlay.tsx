@@ -14,7 +14,7 @@ import { InteractionCoin } from "./InteractionCoin";
 import { InventoryDrawer } from "./InventoryDrawer";
 import { TargetLabel } from "./TargetLabel";
 import { matchInteraction } from "@/lib/commandFunctions";
-
+import InventoryIcon from '@mui/icons-material/Inventory2Outlined';
 
 const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {
     return gameState.hoverTarget?.type === 'actor' || gameState.hoverTarget?.type === 'hotspot'
@@ -169,6 +169,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                                 bottom: 0,
                             }}>
                                 <Button variant="contained"
+                                    startIcon={<InventoryIcon />}
                                     disabled={inventory.length === 0}
                                     onClick={() => {
                                         setClickedTarget(undefined)
