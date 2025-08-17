@@ -95,7 +95,8 @@ export const VerbEditor = ({ verb }: Props) => {
                         defaultResponseWithItem: true,
                     })}
                     fieldAliases={{
-                        isNotForItems: 'cannot use on inventory',
+                        isNotForItems: 'cannot target items',
+                        requiresItem: 'must have an item',
                         isMoveVerb: 'is "move" verb',
                         isLookVerb: 'is "look" verb',
                     }}

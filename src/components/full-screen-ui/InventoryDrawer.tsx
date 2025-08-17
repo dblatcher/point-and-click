@@ -4,7 +4,7 @@ import { findById } from "@/lib/util";
 import { Box, Card, Fade, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { ItemButton } from "./ItemButton";
-import { VerbList } from "./VerbList";
+import { InventoryVerbList } from "./VerbList";
 
 interface Props {
     remove: { (): void }
@@ -99,7 +99,7 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove, isShow
                                 handleContextClick={examineItem} />
                         ))}
                     </Box>
-                    <VerbList activeVerbId={activeVerbId} selectVerb={selectVerb} disabled={!activeItemId} />
+                    <InventoryVerbList activeVerbId={activeVerbId} selectVerb={selectVerb} disabled={!activeItemId} />
                     <Typography>{command}</Typography>
                 </Box>
             </div>

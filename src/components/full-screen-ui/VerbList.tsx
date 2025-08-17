@@ -1,6 +1,6 @@
 import { useGameState } from "@/context/game-state-context";
 import { Verb } from "@/definitions";
-import { Box, ButtonGroup } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 import { VerbButton } from "./VerbButton";
 
@@ -11,8 +11,7 @@ interface Props {
 }
 
 
-export const VerbList: React.FunctionComponent<Props> = ({ activeVerbId, selectVerb, disabled }) => {
-
+export const InventoryVerbList: React.FunctionComponent<Props> = ({ activeVerbId, selectVerb, disabled }) => {
     const { gameProps, } = useGameState()
     const { verbs } = gameProps
     const relevantVerbs = verbs.filter(verb => !verb.isMoveVerb && !verb.isNotForItems);
