@@ -4,6 +4,7 @@ import { ImageAsset } from "@/services/assets";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { HandleHoverFunction } from "../game/types";
 import { useAssets } from "@/context/asset-context";
+import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
 
 
 interface Props {
@@ -20,19 +21,6 @@ interface Props {
     status?: string;
 }
 
-
-const getFrameStyle = (frame: { row: number, col: number }, asset: ImageAsset, filter?: string) => {
-    const { href, cols = 1, rows = 1 } = asset
-    return {
-        backgroundImage: `url(${href})`,
-        backgroundPositionX: `${-100 * frame.col}%`,
-        backgroundPositionY: `${-100 * frame.row}%`,
-        backgroundSize: `${100 * cols}% ${100 * rows}%`,
-        width: '100%',
-        height: '100%',
-        filter,
-    }
-}
 const getPlaceholderStyle = (filter?: string): CSSProperties => {
     return {
         backgroundImage: 'repeating-linear-gradient(45deg, yellow 0px, yellow 5px, transparent 5px, transparent 10px )',
@@ -69,7 +57,14 @@ const FrameContents = (props: { actorData: ActorData, widthAdjustedByScale: numb
     const { actorData, widthAdjustedByScale, heightAdjustedByScale, filter } = props
     const assetAndFrame = getAssetAndFrame(actorData, getImageAsset)
     const divStyle = assetAndFrame
-        ? getFrameStyle(assetAndFrame.frame, assetAndFrame.asset, filter)
+        ? getBackgroundStyle(
+            // defaulting cols and rows (optional) to 1 so single frame assets are styled
+            // to fill the container, not be contained at natural dims.
+            { ...assetAndFrame.asset, cols: assetAndFrame.asset.cols || 1, rows: assetAndFrame.asset.rows || 1 },
+            assetAndFrame.frame.col,
+            assetAndFrame.frame.row,
+            filter
+        )
         : getPlaceholderStyle(filter)
 
 

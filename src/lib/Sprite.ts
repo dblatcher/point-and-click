@@ -1,5 +1,6 @@
 import { SpriteData, Direction, SpriteFrame, Animation } from "../definitions/SpriteSheet"
 import { ImageAsset } from "@/services/assets";
+import { getBackgroundStyle } from "./image-frame-backgrounds";
 
 
 interface ImageWithFrame {
@@ -75,18 +76,6 @@ export class Sprite {
     public getStyle(animationName = 'default', frameIndex = 0, direction?: Direction) {
         const frame = this.getFrame(animationName, frameIndex, direction) || this.getFrame('default', 0, this.data.defaultDirection)
         if (!frame) { return {} }
-
-        const { href, cols = 1, rows = 1 } = frame.image
-
-        return {
-            backgroundImage: `url(${href})`,
-            backgroundPositionX: `${-100 * frame.col}%`,
-            backgroundPositionY: `${-100 * frame.row}%`,
-            backgroundSize: `${100 * cols}% ${100 * rows}%`,
-            width: '100%',
-            height: '100%',
-            filter: undefined
-        }
-
+        return getBackgroundStyle(frame.image, frame.col, frame.row)
     }
 }

@@ -6,6 +6,7 @@ import { ImageAsset } from "@/services/assets";
 import { Avatar, Button, Grid, Typography } from "@mui/material";
 import { CSSProperties, memo } from "react";
 import { ItemMenuProps, itemMenuPropsAreEqual } from "../game/uiComponentSet";
+import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
 
 
 export const ItemMenu = () => {
@@ -23,34 +24,14 @@ const buildBackground = (
     itemData: ItemData,
     getAsset: { (id: string): ImageAsset | undefined }
 ): CSSProperties | undefined => {
-
     const { imageId, row = 0, col = 0 } = itemData
-
     if (!imageId) { return undefined }
     const asset = getAsset(imageId);
     if (!asset) { return undefined }
-
-    const { href: imageUrl, cols, rows } = asset
-
-    const common = {
-        backgroundImage: `url(${imageUrl})`,
-    }
-
-    if (typeof cols === 'undefined' && typeof rows === 'undefined') {
-        return {
-            ...common,
-            backgroundPosition: 'center',
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat',
-        }
-    }
-
-    return {
-        ...common,
-        backgroundPositionX: `${-100 * col}%`,
-        backgroundPositionY: `${-100 * row}%`,
-        backgroundSize: `${100 * (cols || 1)}% ${100 * (rows || 1)}%`,
-    }
+    const style = getBackgroundStyle(asset, col, row);
+    delete style.height;
+    delete style.width;
+    return style;
 }
 
 
