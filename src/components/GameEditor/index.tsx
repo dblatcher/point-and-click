@@ -51,9 +51,8 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
             return false
         }
 
-        // TO DO - handle time formats for undefined
-        const date = new Date(timestamp ?? 0);
-        console.log(`retrieved ${sourceIdentifier} from ${date.toLocaleDateString()},  ${date.toLocaleTimeString()}`)
+        const dateString = timestamp ? `${new Date(timestamp).toLocaleDateString()},  ${new Date(timestamp).toLocaleTimeString()}` : 'unknown time';
+        console.log(`retrieved ${sourceIdentifier} from ${dateString}`)
 
         const { gameDesign, failureMessage, updated, sourceVersion } = parseAndUpgrade(design);
 

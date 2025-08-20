@@ -11,7 +11,6 @@ import { useRef, useState } from "react"
 
 const maxHistoryLength = 20
 
-// TO DO - needs to be disabled when UI should be disabled
 export const TextPrompt = () => {
     const { gameState, gameProps, updateGameState } = useGameState();
     const { inventory, isGameEnded, player, currentConversation: conversation, isSequenceRunning } = useGameStateDerivations()

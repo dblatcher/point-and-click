@@ -40,6 +40,7 @@ export const OrderDialog = ({ sequence, stage, index, actorId, close, changeOrde
             <DialogContent>
                 {order && (
                     <OrderForm
+                        actorId={actorId}
                         data={order}
                         animationSuggestions={getStatusSuggestions(actorId, gameDesign)}
                         targetIdOptions={targetIdsWithoutItems}

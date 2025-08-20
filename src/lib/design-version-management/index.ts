@@ -71,9 +71,6 @@ const migrateV3Design = (v3Design: V3GameDesign): GameDesign => {
         return convertEndingToStoryBoard(ending, maybeSuffixedId)
     })
 
-    // TO DO - find all ending consequences in interactions, sequences and conversations
-    // convert to storyboard consequences using id map
-
     const convertConsequenceIfEnding = (consequence: ConsequenceWithDeprecated): Consequence => {
         if (consequence.type !== 'ending') {
             return consequence

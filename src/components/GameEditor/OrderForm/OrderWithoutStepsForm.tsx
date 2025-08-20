@@ -1,17 +1,31 @@
 
 import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm";
 import { GotoOrder, GotoOrderSchema, SayOrder, SayOrderSchema } from "@/definitions/Order";
+import { excludeByIndex } from "@/lib/util";
 import { Component, ReactNode } from "react";
 
 
 type OrderWithoutSteps = SayOrder | GotoOrder
 
 interface Props {
+    actorId?: string;
     data: OrderWithoutSteps;
     animationSuggestions: string[];
     targetIdOptions: string[];
     targetIdDescriptions: ReactNode[];
     updateData: { (data: OrderWithoutSteps): void };
+}
+
+const excludeActor = (actorId: string | undefined, targetIdOptions: string[], targetIdDescriptions: ReactNode[]) => {
+    const indexOfActorDoingOrder = actorId ? targetIdOptions.indexOf(actorId) : -1;
+
+    if (indexOfActorDoingOrder === -1) {
+        return { targetIdOptions, targetIdDescriptions }
+    }
+    return {
+        targetIdOptions: excludeByIndex(indexOfActorDoingOrder, targetIdOptions),
+        targetIdDescriptions: excludeByIndex(indexOfActorDoingOrder, targetIdDescriptions)
+    }
 }
 
 export class OrderWithoutStepsForm extends Component<Props> {
@@ -29,7 +43,8 @@ export class OrderWithoutStepsForm extends Component<Props> {
 
     render() {
         const { type } = this.props.data
-        const { animationSuggestions, targetIdOptions, targetIdDescriptions } = this.props
+        const { animationSuggestions, targetIdOptions, targetIdDescriptions, actorId } = this.props
+        const withoutActor = excludeActor(actorId, targetIdOptions, targetIdDescriptions);
 
         return (
             <>
@@ -51,12 +66,11 @@ export class OrderWithoutStepsForm extends Component<Props> {
                         suggestions={{
                             animation: animationSuggestions,
                         }}
-                        // to do - exclude the id and description for the order's actorId
                         options={{
-                            targetId: targetIdOptions,
+                            targetId: withoutActor.targetIdOptions,
                         }}
                         optionDescriptions={{
-                            targetId: targetIdDescriptions
+                            targetId: withoutActor.targetIdDescriptions
                         }}
                     />
                 )}

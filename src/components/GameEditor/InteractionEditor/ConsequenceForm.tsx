@@ -123,6 +123,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                         describeItem={(order, index) =>
                             <EditorBox title={`${order.type} order`} themePalette="secondary">
                                 <OrderForm
+                                    actorId={consequence.actorId} // consequence has orders, it should have actorId
                                     animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
                                     targetIdOptions={targetIdsWithoutItems}
                                     targetIdDescriptions={targetDescriptionsWithoutItems}

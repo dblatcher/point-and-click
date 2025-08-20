@@ -9,7 +9,7 @@ import { VerbSchema } from "../Verb"
 import { ConversationSchemaWithDeprecatedConsequences, EndingSchema, InteractionSchemaWithDeprecatedConsequences, SequenceSchemaWithDeprecatedConsequences } from "./deprecated-schemas"
 
 const GameContentsDataSchema = z.object({
-    schemaVersion: z.undefined(),
+    schemaVersion: z.number().optional(),
     rooms: RoomDataSchema.array(),
     items: ItemDataSchema.array(),
     actors: ActorDataSchema.array(),

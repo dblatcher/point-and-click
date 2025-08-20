@@ -53,3 +53,7 @@ export function deduplicateStringArray(list: string[]): string[] {
 export function insertAt<T>(index: number, item: T, list: T[]): T[] {
     return [...list.slice(0, index), item, ...list.slice(index)]
 }
+
+export function excludeByIndex<T>(index: number, list: T[]): T[] {
+    return [...list.slice(0, index), ...list.slice(index + 1)]
+}

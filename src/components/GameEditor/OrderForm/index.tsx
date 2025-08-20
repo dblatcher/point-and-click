@@ -10,6 +10,7 @@ import { ReactNode } from "react";
 
 
 interface Props {
+    actorId?: string;
     data: Order;
     animationSuggestions: string[];
     targetIdOptions: string[];
@@ -17,7 +18,7 @@ interface Props {
     updateData: { (data: Order): void };
 }
 
-export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetIdDescriptions, updateData }: Props) => {
+export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetIdDescriptions, updateData, actorId }: Props) => {
 
     const updateNarrative = (newNarrative: Narrative | undefined) => {
         updateData({ ...data, narrative: newNarrative })
@@ -40,6 +41,7 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
             case "say":
             case "goTo":
                 return <OrderWithoutStepsForm
+                    actorId={actorId}
                     data={data}
                     animationSuggestions={animationSuggestions}
                     targetIdOptions={targetIdOptions}
@@ -52,7 +54,6 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
     return (
         <Box component={'article'} sx={{ flex: 1, minWidth: 400, paddingY: 2 }}>
             {buildForm()}
-
             <Box display={'flex'} gap={2}>
                 {(data.type !== 'move' && data.type !== 'goTo') && (
                     <SelectInput label="start direction"

@@ -21,6 +21,11 @@ interface Props {
     status?: string;
 }
 
+type AssetAndFrame = {
+    asset: ImageAsset,
+    frame: { row: number, col: number }
+};
+
 const getPlaceholderStyle = (filter?: string): CSSProperties => {
     return {
         backgroundImage: 'repeating-linear-gradient(45deg, yellow 0px, yellow 5px, transparent 5px, transparent 10px )',
@@ -30,11 +35,10 @@ const getPlaceholderStyle = (filter?: string): CSSProperties => {
     }
 }
 
-// TO DO - why do I call this twice instead of passing the result to the subcomponent?
 const getAssetAndFrame = (
     actorData: ActorData,
     getAsset: { (id: string): ImageAsset | undefined }
-) => {
+): AssetAndFrame | undefined => {
     const { defaultFrame, status, statusFrames } = actorData
     const frameForStatus = status ? statusFrames?.[status] : undefined
     const frameToUse = frameForStatus ?? defaultFrame;
@@ -51,11 +55,14 @@ const getAssetAndFrame = (
 }
 
 
-const FrameContents = (props: { actorData: ActorData, widthAdjustedByScale: number, heightAdjustedByScale: number, filter?: string }) => {
-
-    const { getImageAsset } = useAssets()
-    const { actorData, widthAdjustedByScale, heightAdjustedByScale, filter } = props
-    const assetAndFrame = getAssetAndFrame(actorData, getImageAsset)
+const FrameContents = (props: {
+    actorData: ActorData,
+    widthAdjustedByScale: number,
+    heightAdjustedByScale: number,
+    filter?: string,
+    assetAndFrame?: AssetAndFrame,
+}) => {
+    const { actorData, widthAdjustedByScale, heightAdjustedByScale, filter, assetAndFrame } = props
     const divStyle = assetAndFrame
         ? getBackgroundStyle(
             // defaulting cols and rows (optional) to 1 so single frame assets are styled
@@ -107,6 +114,7 @@ export const FrameShape: FunctionComponent<Props> = ({
             x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngle, roomData)}
             y={roomData.height - y - heightAdjustedByScale} >
             <FrameContents {...{
+                assetAndFrame,
                 actorData,
                 filter,
                 widthAdjustedByScale,

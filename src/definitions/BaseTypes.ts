@@ -29,7 +29,6 @@ export const PositionSchema = z.object({
 })
 export type Position = z.infer<typeof PositionSchema>
 
-// TO DO - re-use in inventory Items schema?
 export const StaticFrameParamsSchema = z.object({
     imageId: z.string(),
     col: z.number().optional(),

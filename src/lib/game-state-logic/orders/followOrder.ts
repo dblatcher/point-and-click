@@ -89,8 +89,6 @@ const orderIsFinished = (order: Order): boolean => {
  */
 export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: Order[] | undefined, state: GameState, sprite?: Sprite, instantMode = false, orderSpeed = 1): boolean {
     if (!orders || orders.length === 0) { return false }
-    // TO DO - for instantMode, should emit all the order reports here
-    // one order per cycle is not really instant
     const [nextOrder] = orders
 
     if (!nextOrder._started) {
