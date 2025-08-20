@@ -6,6 +6,7 @@ import { Box, Card, Fade, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { ItemButton } from "./ItemButton";
 import { InventoryVerbList } from "./VerbList";
+import { matchInteraction } from "@/lib/commandFunctions";
 
 interface Props {
     remove: { (): void }
@@ -14,7 +15,7 @@ interface Props {
 
 
 export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove, isShowing }) => {
-    const { updateGameState, gameProps } = useGameState()
+    const { updateGameState, gameProps, gameState } = useGameState()
     const { inventory, lookVerb } = useGameStateDerivations()
 
     const [activeItemId, setActiveItemId] = useState<string | undefined>(undefined)
@@ -58,12 +59,16 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove, isShow
     }
 
     const selectVerb = (verb: Verb) => {
-        if (!verb.preposition) {
-            const item = findById(activeItemId, inventory)
-            if (item) {
-                closeAndReset()
-                updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item } })
-            }
+        const item = findById(activeItemId, inventory)
+        const currentRoom = findById(gameState.currentRoomId, gameState.rooms);
+        if (!item) { return }
+
+        const isCompleteInteraction = !verb.preposition ||
+            (currentRoom && matchInteraction({ verb, target: item }, currentRoom, gameState.interactions, gameState));
+
+        if (isCompleteInteraction) {
+            closeAndReset()
+            updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item } })
             setActiveVerbId(undefined)
             return
         }
@@ -82,14 +87,14 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove, isShow
             <div style={{
                 position: 'absolute',
                 inset: 0,
-                display:'flex',
+                display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
             }} onClick={closeAndReset}>
                 <Box component={Card} padding={2} maxWidth={500}>
                     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                         <Typography>Inventory</Typography>
-                        <IconButton onClick={closeAndReset} size="small"><ClearIcon/></IconButton>
+                        <IconButton onClick={closeAndReset} size="small"><ClearIcon /></IconButton>
                     </Box>
                     <Box display='flex' flexWrap={'wrap'}>
                         {inventory.map(item => (

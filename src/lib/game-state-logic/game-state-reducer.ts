@@ -14,6 +14,7 @@ import { cloneData } from "@/lib/clone"
 import { generateCellMatrix } from "@/lib/pathfinding/cells"
 import { GameEventEmitter } from "@/lib/game-event-emitter"
 import { DB_VERSION } from "../indexed-db";
+import { matchInteraction } from "../commandFunctions";
 
 
 export type GameStateAction =
@@ -104,9 +105,16 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 }
             }
 
-            // TO DO - handle 'USE $ITEM' as target with no other $ITEM
-            // could check interactions
             if (target.type === 'item' && !gameState.currentItemId && verb.preposition) {
+                const nonPrepositionalItemInteraction = matchInteraction(
+                    { verb, target }, currentRoom, gameState.interactions, gameState
+                );
+                if (nonPrepositionalItemInteraction) {
+                    return {
+                        ...gameState,
+                        ...handleCommand({ verb, target }, action.props)(gameState)
+                    }
+                }
                 return {
                     ...gameState,
                     currentItemId: target.id
