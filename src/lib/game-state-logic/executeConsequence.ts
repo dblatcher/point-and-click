@@ -131,7 +131,7 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 state.currentConversationId = end ? undefined : conversationId
                 conseqeunceSuccess = true
 
-                // TO DO - how to make sure this only happens after any previous consequences have finished?
+                // TO DO[text-based] - how to make sure this only happens after any previous consequences have finished?
                 reportConversationBranch(state)
                 break;
             }

@@ -81,7 +81,7 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         }
         ids.forEach(id => {
             if (id in this.data) {
-                // TO DO - revoking the object URL here works, but messes up the 
+                // TO DO[object url] - revoking the object URL here works, but messes up the 
                 // asset tools. Need to think about the UI
                 // if (this.data[id]?.href) { URL.revokeObjectURL(this.data[id].href) }
                 delete this.data[id]

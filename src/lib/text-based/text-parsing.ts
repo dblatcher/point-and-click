@@ -53,7 +53,7 @@ const findTargetInRemainingWords = (
     const matchingItem = inventory.find(_ => combinedWords.includes((_.name ?? _.id).toLowerCase()))
     const matchingHotspot = hotspots.find(_ => combinedWords.includes((_.name ?? _.id).toLowerCase()))
 
-    // to do - handle ambiguities - duplicate names
+    // TO DO[text-based] - handle ambiguities - duplicate names
     return matchingActor || matchingItem || matchingHotspot
 }
 

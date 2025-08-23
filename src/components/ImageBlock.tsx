@@ -29,6 +29,13 @@ const getAspectRatioStyle = (aspectRatio?: AspectRatio, fitHeight = false) => {
     }
 }
 
+/**
+ * Renders a figure with the aspect ratio scaled to be contained by its parent, with the sprite
+ * frame as its image background.
+ * 
+ * If the frame has no row and col specified, the image background will display at the image's
+ * natural aspect ratio, not be stretch to fill the figure.
+ */
 export const ImageBlock: React.FunctionComponent<Props> = ({ frame, aspectRatio, filter, fitHeight }) => {
     const { getImageAsset } = useAssets()
     const asset = getImageAsset(frame.imageId)
@@ -36,8 +43,6 @@ export const ImageBlock: React.FunctionComponent<Props> = ({ frame, aspectRatio,
         return null
     }
 
-    // TO DO? aspect ratio not set on 'single frame' assets, which display in natural dims
-    // because size == 'contain' - is that what's best? 
     return <figure role="img" style={getAspectRatioStyle(aspectRatio, fitHeight)}>
         <div style={{
             ...getBackgroundStyle(asset, frame.col, frame.row, filter),

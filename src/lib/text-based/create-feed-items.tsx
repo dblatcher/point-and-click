@@ -11,7 +11,7 @@ const stringToFeedItem = (message: string) => ({
     message
 });
 
-// TO DO - proper sentence grammar!
+// TO DO[text-based] - proper sentence grammar!
 const orderReportToFeedLine = (orderReport: OrderReport, state: GameState): FeedItem[] => {
     const { actor, order } = orderReport;
 
