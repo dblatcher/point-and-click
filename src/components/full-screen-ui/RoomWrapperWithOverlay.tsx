@@ -60,10 +60,9 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const [clickEvent, setClickEvent] = useState<PointerEvent>();
     const [inventoryOpen, setInventoryOpen] = useState(false);
     const { gameProps, gameState, updateGameState } = useGameState()
-    const { isConversationRunning, isSequenceRunning, inventory, lookVerb, moveVerb } = useGameStateDerivations()
-    const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
+    const { isConversationRunning, isSequenceRunning, inventory, lookVerb, moveVerb, currentStoryBoard } = useGameStateDerivations()
+    const { viewAngle, isPaused, roomHeight, roomWidth } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
-    const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards)
 
 
     useEffect(() => {

@@ -13,7 +13,7 @@ const maxHistoryLength = 20
 
 export const TextPrompt = () => {
     const { gameState, gameProps, updateGameState } = useGameState();
-    const { inventory, isGameEnded, player, currentConversation: conversation, isSequenceRunning } = useGameStateDerivations()
+    const { inventory, currentStoryBoard, player, currentConversation: conversation, isSequenceRunning } = useGameStateDerivations()
     const { verbs } = gameProps
     const [promptText, setPromptText] = useState('')
     const [historyIndex, setHistoryIndex] = useState<number | undefined>(undefined)
@@ -38,9 +38,8 @@ export const TextPrompt = () => {
     }
 
     const handleSubmit = () => {
-        if (gameState.currentStoryBoardId) {
-            const storyboard = findById(gameState.currentStoryBoardId, gameProps.storyBoards)
-            updateGameState(getStoryboardCloseAction(storyboard?.isEndOfGame))
+        if (currentStoryBoard) {
+            updateGameState(getStoryboardCloseAction(currentStoryBoard.isEndOfGame))
             return
         }
         if (isSequenceRunning) {
@@ -88,7 +87,7 @@ export const TextPrompt = () => {
 
     const interpretPromptAsCommand = () => {
         const command = promptToCommand(promptText, verbs, inventory, gameState)
-        if (isGameEnded) {
+        if (currentStoryBoard?.isEndOfGame) {
             return gameState.emitter.emit('prompt-feedback', { message: standard.GAME_OVER_CANNOT_COMMAND, type: 'system' })
         }
         if (!command) {

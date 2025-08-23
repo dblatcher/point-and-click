@@ -65,7 +65,7 @@ export const useGameState = () => {
 
 export const useGameStateDerivations = () => {
     const { gameState, gameProps } = useContext(gameStateContext)
-    const { currentConversationId, conversations, sequenceRunning, items, currentItemId, actors } = gameState
+    const { currentStoryBoardId, currentConversationId, conversations, sequenceRunning, items, currentItemId, actors } = gameState
 
     const player = actors.find(actor => actor.isPlayer)
     const inventory = items.filter(item => item.actorId === player?.id)
@@ -77,7 +77,7 @@ export const useGameStateDerivations = () => {
     return {
         currentConversation,
         isConversationRunning: !!currentConversation,
-        isGameEnded: false, //  TO DO - see if this is valuable, if so derive from storyboard
+        currentStoryBoard: findById(currentStoryBoardId, gameProps.storyBoards),
         isSequenceRunning: !!sequenceRunning,
         currentItem: findById(currentItemId, items),
         player,

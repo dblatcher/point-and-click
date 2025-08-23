@@ -1,20 +1,20 @@
-import { useGameState } from "@/context/game-state-context";
+import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
+import { CommandTarget } from "@/definitions";
 import { findById } from "@/lib/util";
 import React from "react";
-import { Room } from "../svg/Room";
-import { CommandTarget } from "@/definitions";
-import { buildContentsList } from "./put-contents-in-order";
 import { PersistentSound } from "../sound/PersistentSound";
+import { Room } from "../svg/Room";
+import { buildContentsList } from "./put-contents-in-order";
 
 
 // use true for debugging only- slows program!
 const renderCells = false
 
 export const RoomWrapper: React.FunctionComponent = () => {
-    const { gameProps, gameState, updateGameState } = useGameState()
-    const { viewAngle, isPaused, roomHeight, roomWidth, currentStoryBoardId } = gameState
+    const { gameState, updateGameState } = useGameState()
+    const { currentStoryBoard } = useGameStateDerivations()
+    const { viewAngle, isPaused, roomHeight, roomWidth } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
-    const currentStoryBoard = findById(currentStoryBoardId, gameProps.storyBoards)
 
     const handleTargetClick = (target: CommandTarget) => {
         updateGameState({ type: 'TARGET-CLICK', target })
