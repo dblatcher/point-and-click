@@ -1,6 +1,6 @@
 import { FullScreenLayout } from "../full-screen-ui/FullScreenLayout";
 import { MaterialLayout } from "../game-mui-ux/Layout";
-import { SimpleLayout } from "../game-ui/Layout";
+import { SimpleLayout } from "../game-simple-ui/Layout";
 import { TextBasedLayout } from "../text-based/TextBasedLayout";
 import { UiComponentSet } from "./uiComponentSet";
 

@@ -1,9 +1,9 @@
-import { SoundToggle } from "@/components/game-ui/SoundToggle";
+import { SaveMenu } from "@/components/game-simple-ui/SaveMenu";
+import { SoundToggle } from "@/components/game-simple-ui/SoundToggle";
 import { useGameState } from "@/context/game-state-context";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import { SaveMenu } from "../game-ui/SaveMenu";
 import { RoomWrapper } from "../game/RoomWrapper";
 import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { NarrativeFeed } from "./NarrativeFeed";

@@ -1,5 +1,5 @@
 
-import uiStyles from '@/components/game-ui/uiStyles.module.css';
+import uiStyles from './uiStyles.module.css';
 import { ItemMenuProps, itemMenuPropsAreEqual } from '@/components/game/uiComponentSet';
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { memo } from "react";

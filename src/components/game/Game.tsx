@@ -4,7 +4,7 @@ import { gameStateReducer, getInitialGameState, makeDispatcherWithProps } from "
 import { findById } from "@/lib/util";
 import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";
-import { SimpleLayout } from "../game-ui/Layout";
+import { SimpleLayout } from "../game-simple-ui/Layout";
 import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 import { GameProps } from "./types";
 
