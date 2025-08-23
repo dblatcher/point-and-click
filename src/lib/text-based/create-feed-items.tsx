@@ -114,7 +114,31 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
             }
             return [{ message: standard.CONVERSATION_START, type: 'system' }]
         case "toggleZone":
-        // TO DO - how to describe a zone toggle?
+            const { roomId, ref, on, zoneType } = consequence
+            const room = findById(roomId, state.rooms);
+            const locationClause = roomId === state.currentItemId ? '' : ` in the ${roomId}`
+            switch (zoneType) {
+                case 'hotspot': {
+                    const hotspot = room?.hotspots?.find(h => h.id === ref);
+                    if (on) {
+                        return [stringToFeedItem(`You notice a ${hotspot?.name || ref}${locationClause}.`)]
+                    }
+                    return []
+                }
+                case "obstacle":
+                    if (on) {
+                        return [stringToFeedItem(`a way is blocked${locationClause}.`)]
+                    } else {
+                        return [stringToFeedItem(`a way is opened${locationClause}.`)]
+                    }
+                case "walkable":
+                    if (!on) {
+                        return [stringToFeedItem(`a way is blocked${locationClause}.`)]
+                    } else {
+                        return [stringToFeedItem(`a way is opened${locationClause}.`)]
+                    }
+            }
+
         case "storyBoardConsequence":
         case "soundEffect":
         case "flag":
