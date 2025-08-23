@@ -10,7 +10,7 @@ import { SaveMenu } from "./SaveMenu";
 import { RoomWrapper } from "../game/RoomWrapper";
 
 
-export const Layout = () => {
+export const SimpleLayout = () => {
     const { updateGameState } = useGameState()
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
     const { roomWidth, roomHeight } = useGameState().gameState

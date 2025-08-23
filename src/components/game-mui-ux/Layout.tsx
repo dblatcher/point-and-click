@@ -11,7 +11,7 @@ import { DialogSaveMenu } from "./DialogSaveMenu";
 import { RoomWrapper } from "../game/RoomWrapper";
 
 
-export const Layout = () => {
+export const MaterialLayout = () => {
     const theme = useTheme()
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
 

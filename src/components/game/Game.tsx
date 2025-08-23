@@ -4,7 +4,7 @@ import { gameStateReducer, getInitialGameState, makeDispatcherWithProps } from "
 import { findById } from "@/lib/util";
 import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";
-import { Layout } from "../game-ui/Layout";
+import { SimpleLayout } from "../game-ui/Layout";
 import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 import { GameProps } from "./types";
 
@@ -13,7 +13,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     const [gameState, dispatch] = useReducer(gameStateReducer, getInitialGameState(props))
     const { showDebugLog, uiComponents = {}, timerInterval = 10 } = props
     const {
-        GameLayoutComponent = Layout,
+        GameLayoutComponent = SimpleLayout,
     } = uiComponents
     const { currentStoryBoardId } = gameState
 

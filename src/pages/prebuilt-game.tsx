@@ -1,6 +1,6 @@
 import { GameDesignPlayer } from '@/components/GameDesignPlayer'
 import { PageLayout } from '@/components/PageLayout'
-import { bigLayoutSet } from '@/components/game-mui-ux'
+import { BigLayout } from '@/components/game-mui-ux/BigLayout'
 import { DesignAndAssets, getGameFromApi } from '@/lib/api-usage'
 import { useEffect, useState } from 'react'
 
@@ -30,7 +30,9 @@ export default function GameLoaderPage() {
           gameDesign={data.gameDesign}
           imageAssets={data.imageAssets}
           soundAssets={data.soundAssets}
-          uiComponents={bigLayoutSet}
+          uiComponents={{
+            GameLayoutComponent: BigLayout,
+          }}
         /> : null}
     </PageLayout>
   )

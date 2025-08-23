@@ -1,13 +1,13 @@
-import { materialUiComponents } from "../game-mui-ux";
-import { Layout as SimpleLayout } from "../game-ui/Layout";
-import { UiComponentSet } from "./uiComponentSet";
-import { TextBasedLayout } from "../text-based/TextBasedLayout";
 import { FullScreenLayout } from "../full-screen-ui/FullScreenLayout";
+import { MaterialLayout } from "../game-mui-ux/Layout";
+import { SimpleLayout } from "../game-ui/Layout";
+import { TextBasedLayout } from "../text-based/TextBasedLayout";
+import { UiComponentSet } from "./uiComponentSet";
 
 
 export const layouts = {
-    fullScreen: {GameLayoutComponent: FullScreenLayout},
-    material: materialUiComponents,
+    fullScreen: { GameLayoutComponent: FullScreenLayout },
+    material: { GameLayoutComponent: MaterialLayout },
     textBased: { GameLayoutComponent: TextBasedLayout },
     simple: { GameLayoutComponent: SimpleLayout },
 } satisfies Record<string, UiComponentSet>
