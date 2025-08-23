@@ -35,4 +35,5 @@ export type SaveMenuProps = {
 
 export type UiComponentSet = {
     GameLayoutComponent?: FunctionComponent;
+    title?: string
 }

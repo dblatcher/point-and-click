@@ -5,12 +5,13 @@ import { TextBasedLayout } from "../text-based/TextBasedLayout";
 import { UiComponentSet } from "./uiComponentSet";
 
 
-export const layouts = {
-    fullScreen: { GameLayoutComponent: FullScreenLayout },
-    material: { GameLayoutComponent: MaterialLayout },
-    textBased: { GameLayoutComponent: TextBasedLayout },
-    simple: { GameLayoutComponent: SimpleLayout },
-} satisfies Record<string, UiComponentSet>
+export type LayoutOption = "fullScreen" | "material" | "textBased" | "simple"
 
-export type LayoutOption = keyof typeof layouts;
+export const layouts: Record<LayoutOption, UiComponentSet> = {
+    fullScreen: { GameLayoutComponent: FullScreenLayout, title: "full screen" },
+    material: { GameLayoutComponent: MaterialLayout },
+    textBased: { GameLayoutComponent: TextBasedLayout, title: "text-venture" },
+    simple: { GameLayoutComponent: SimpleLayout },
+}
+
 export const layoutOptions = Object.keys(layouts) as LayoutOption[]
