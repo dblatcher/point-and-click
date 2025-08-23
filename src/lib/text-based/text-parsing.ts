@@ -115,6 +115,11 @@ export const promptToHelpFeedback = (
             }
         case 'I':
         case 'INVENTORY':
+            if (inventory.length === 0) {
+                return {
+                    message: 'You are carrying nothing.'
+                }
+            }
             return {
                 message: `You have:`,
                 list: inventory.map(item => item.name ?? item.id),

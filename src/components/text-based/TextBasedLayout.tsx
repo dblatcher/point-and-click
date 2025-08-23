@@ -1,9 +1,5 @@
-import { CommandLine } from "@/components/game-ui/CommandLine";
-import { ConversationMenu } from "@/components/game-ui/ConversationMenu";
-import { ItemMenu } from "@/components/game-ui/ItemMenu";
 import { SoundToggle } from "@/components/game-ui/SoundToggle";
-import { VerbMenu } from "@/components/game-ui/VerbMenu";
-import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
+import { useGameState } from "@/context/game-state-context";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -18,7 +14,6 @@ import { TextPrompt } from "./TextPrompt";
 export const TextBasedLayout = () => {
     const { updateGameState } = useGameState()
     const [initialResizeDone, setInitialResizeDone] = useState(false)
-    const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
 
     useEffect(() => {
         if (initialResizeDone) { return }
@@ -27,7 +22,7 @@ export const TextBasedLayout = () => {
     }, [initialResizeDone, setInitialResizeDone, updateGameState])
 
     return (<main>
-        <SaveMenuWrapper SaveMenuComponent={SaveMenu}/>
+        <SaveMenuWrapper SaveMenuComponent={SaveMenu} />
         <SoundToggle />
 
         <Box display={'flex'} minHeight={300} padding={1}>
@@ -40,21 +35,10 @@ export const TextBasedLayout = () => {
             </Box>
         </Box>
 
-        <Box display={'flex'}>
+        <Box display={'flex'} component={'aside'}>
             <figure role='img'>
-                <RoomWrapper />
+                <RoomWrapper noInteraction />
             </figure>
-            {isConversationRunning ? (
-                <div>
-                    {!isSequenceRunning && <ConversationMenu />}
-                </div>
-            ) : (
-                <div>
-                    <CommandLine />
-                    <VerbMenu />
-                    <ItemMenu />
-                </div>
-            )}
         </Box>
     </main>)
 }

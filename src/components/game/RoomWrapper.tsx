@@ -7,18 +7,22 @@ import { Room } from "../svg/Room";
 import { buildContentsList } from "./put-contents-in-order";
 
 
-// use true for debugging only- slows program!
-const renderCells = false
+interface Props {
+    noInteraction?: boolean;
+    renderCells?: boolean; // use true for debugging only- slows program!
+}
 
-export const RoomWrapper: React.FunctionComponent = () => {
+export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, renderCells }) => {
     const { gameState, updateGameState } = useGameState()
     const { currentStoryBoard } = useGameStateDerivations()
     const { viewAngle, isPaused, roomHeight, roomWidth } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
 
-    const handleTargetClick = (target: CommandTarget) => {
+    const handleTargetClick = noInteraction ? () => { } : (target: CommandTarget) => {
         updateGameState({ type: 'TARGET-CLICK', target })
     }
+
+    const handleRoomClick = noInteraction ? () => { } : (x: number, y: number) => { updateGameState({ type: 'ROOM-CLICK', x, y }) };
 
     const contentList = buildContentsList(
         gameState,
@@ -33,7 +37,7 @@ export const RoomWrapper: React.FunctionComponent = () => {
                 maxHeight={roomHeight}
                 isPaused={isPaused}
                 viewAngle={viewAngle}
-                handleRoomClick={(x, y) => { updateGameState({ type: 'ROOM-CLICK', x, y }) }}
+                handleRoomClick={handleRoomClick}
                 handleHotspotClick={handleTargetClick}
                 handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
                     updateGameState({ type: 'HANDLE-HOVER', event, target })
