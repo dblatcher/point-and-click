@@ -1,28 +1,55 @@
-import { Box, Card, Grid, Stack } from "@mui/material"
-import { MarkDown } from "./MarkDown"
-import content from "@/content/homepage.md";
 import featuresAndDetails from "@/content/featuresAndDetails.md";
-import { LinkButton } from "./LinkButton";
+import content from "@/content/homepage.md";
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
+import { Box, Card, Grid, Typography } from "@mui/material";
+import { LinkCard } from "./LinkCard";
+import { MarkDown } from "./MarkDown";
 
 export const Homepage = () => {
 
     return <>
+
+        <Box padding={2}>
+            <Card sx={{
+                padding: 2,
+            }}>
+                <Typography variant="h2">This is Point and Click</Typography>
+                <MarkDown content={content} />
+            </Card>
+        </Box>
+
+
         <Grid container spacing={2} padding={2}
             justifyContent="center"
-            alignItems="center">
-            <Grid item xs={6}>
-                <Card sx={{
-                    padding: 2,
-                }}>
-                    <MarkDown content={content} />
-                </Card>
+            
+        >
+            <Grid item xs={12} sm={6} md={4}>
+                <LinkCard
+                    title="Game Loader"
+                    href="./game-loader"
+                    Icon={PlayCircleOutlineOutlinedIcon}
+                >
+                    <Typography>Play your own games or load someone else&apos;s.</Typography>
+                </LinkCard>
             </Grid>
-            <Grid item xs={6}>
-                <Stack gap={2}>
-                    <LinkButton href="./game-loader" variant='contained'>game loader</LinkButton>
-                    <LinkButton href="./prebuilt-game" variant='contained'>prebuilt game</LinkButton>
-                    <LinkButton href="./editor" variant='contained'>game designer</LinkButton>
-                </Stack>
+            <Grid item xs={12} sm={6} md={4}>
+                <LinkCard
+                    title="Game Designer"
+                    href="./editor"
+                    Icon={DesignServicesIcon}
+                    >
+                    <Typography>Create your own adventure game.</Typography>
+                </LinkCard>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+                <LinkCard
+                    title="Prebuilt Game"
+                    href="./prebuilt-game"
+                    Icon={PlayCircleOutlineOutlinedIcon}
+                >
+                    <Typography>Try the pre-built demo game.</Typography>
+                </LinkCard>
             </Grid>
         </Grid>
 

@@ -16,7 +16,15 @@ export const redTheme = createTheme({
         },
     },
     typography: {
-        fontFamily: 'arial'
+        fontFamily: 'arial',
+        h2: {
+            fontWeight:700,
+            fontSize: 26,
+            marginBottom: 12,
+        },
+        h3: {
+            fontSize: 20,   
+        },
     }
 })
 
