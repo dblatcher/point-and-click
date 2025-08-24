@@ -16,11 +16,11 @@ interface Props {
 export const GameLoaderDesignItem = ({ title, downloadUrl, imageUrl, content, loadGame, downloadFunction }: Props) => {
 
     const downloadAction = downloadUrl
-        ? <IconButton href={downloadUrl} download title={`download ${title}`}>
+        ? <IconButton edge='end' href={downloadUrl} download title={`download ${title}`}>
             <DownloadIcon fontSize="large" color={'primary'} />
         </IconButton>
         : downloadFunction
-            ? <IconButton onClick={downloadFunction} title={`download ${title}`}>
+            ? <IconButton edge='end' onClick={downloadFunction} title={`download ${title}`}>
                 <DownloadIcon fontSize="large" color={'primary'} />
             </IconButton>
             : undefined

@@ -1,6 +1,9 @@
-On this page you can upload a game to play from a **.game.zip** file, play the pre-built sample games or play the games you have saved from the editor. 
+Use this page to load an play a game design. You can:
+ - upload a game from a **.game.zip** file
+ - play one of the games you built in the game editor on this browser
+ - try the sample games
 
-Use the layout options to choose how the game designs are presented.  
+Use the layout options to choose which user interface the game design will use.
 
 The sample games can be downloaded and uploaded in the editor.
 

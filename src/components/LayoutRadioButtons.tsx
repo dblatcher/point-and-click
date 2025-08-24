@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
+import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import { LayoutOption, layoutOptions, layouts } from "./game/layouts";
 
@@ -10,9 +10,13 @@ interface Props {
 
 export const LayoutRadioButtons: React.FunctionComponent<Props> = ({ layoutOption, setLayoutOption }: Props) => {
 
+    const theme= useTheme()
+    const mediumOrBelow = useMediaQuery(theme.breakpoints.down('md'));
+
     return <FormControl>
         <FormLabel id="layout-radio-buttons-group-label">Layout</FormLabel>
-        <RadioGroup row
+        <RadioGroup
+            row = {mediumOrBelow}
             aria-labelledby="layout-radio-buttons-group-label"
             name="layout-radio-buttons-group"
             value={layoutOption}
