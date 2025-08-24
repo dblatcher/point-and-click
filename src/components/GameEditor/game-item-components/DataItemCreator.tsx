@@ -2,7 +2,7 @@ import { AddIcon, UploadIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
 import { GameDataItem } from "@/definitions";
 import { GameDataItemType } from "@/definitions/Game";
-import { DATA_TYPES_WITH_JSON, tabIcons } from "@/lib/editor-config";
+import { DATA_TYPES_WITH_JSON, tabIcons, tabOrder } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
 import { Alert, Box, Button, ButtonGroup, Grid, Stack } from "@mui/material";
 import { useState } from "react";
@@ -12,6 +12,8 @@ import { DataItemCard } from "./DataItemCard";
 import { EditorHeading } from "../EditorHeading";
 import { formatIdInput, hasPreview } from "../helpers";
 import { SearchControl } from "../SearchControl";
+import { supportedHelpTopic } from "../HelpText";
+import { findById } from "@/lib/util";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -73,9 +75,12 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
         return undefined
     }
 
+    const helpTopic = supportedHelpTopic.safeParse(designProperty).data;
+    const title = findById(designProperty, tabOrder)?.label ?? designProperty;
+
     return (
         <Stack component={'article'} spacing={2} height={'100%'}>
-            <EditorHeading heading={designProperty} icon={tabIcons[designProperty]} />
+            <EditorHeading heading={title} icon={tabIcons[designProperty]} helpTopic={helpTopic} />
             <SearchControl searchInput={searchInput} setSearchInput={setSearchInput} />
             <Grid container spacing={2} maxWidth={'95%'} paddingBottom={4}>
                 {filteredItems.map(item => (

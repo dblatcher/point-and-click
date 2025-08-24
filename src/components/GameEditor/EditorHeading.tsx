@@ -2,11 +2,12 @@ import { Box, Stack, Typography } from "@mui/material";
 import { FunctionComponent, ReactNode } from "react";
 import { HelpButton } from "./HelpButton";
 import { IconComponent } from "./material-icons";
+import { SupportedHelpTopic } from "./HelpText";
 
 interface Props {
     heading: string;
     itemId?: string;
-    helpTopic?: string;
+    helpTopic?: SupportedHelpTopic;
     level?: 2 | 3;
     children?: ReactNode;
     icon?: IconComponent;

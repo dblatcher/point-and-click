@@ -1,10 +1,10 @@
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, IconButtonProps } from "@mui/material";
 import { FunctionComponent, useState } from "react";
-import { HelpText } from "./HelpText";
+import { HelpText, SupportedHelpTopic } from "./HelpText";
 import { HelpIcon } from "./material-icons";
 
 interface Props {
-    helpTopic: string;
+    helpTopic: SupportedHelpTopic;
     buttonProps?: IconButtonProps
     fontSize?: "small" | "inherit" | "large" | "medium"
 }

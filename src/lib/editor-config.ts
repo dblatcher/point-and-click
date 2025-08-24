@@ -1,3 +1,4 @@
+import { supportedHelpTopic, SupportedHelpTopic } from "@/components/GameEditor/HelpText";
 import {
     ActorIcon, ConversationIcon, ExclamationIcon,
     IconComponent, ImageIcon, InteractionIcon,
@@ -12,7 +13,7 @@ export type EditorTab = {
     id: TabId,
     label?: string,
     itemType?: GameDataItemType,
-    helpTopic?: string
+    helpTopic?: SupportedHelpTopic
 }
 
 const validateItemType = (id: TabId): GameDataItemType | undefined => {
@@ -24,10 +25,9 @@ const buildTab = (id: TabId, label?: string): EditorTab => ({
     id,
     label,
     itemType: validateItemType(id),
-    helpTopic: [
-        'items', 'rooms', 'verb menu', 'actors'
-    ].includes(id) ? id : undefined
+    helpTopic: supportedHelpTopic.safeParse(id)?.data
 })
+
 
 export const tabIcons: Record<TabId, IconComponent | undefined> = {
     main: undefined,
@@ -52,7 +52,7 @@ export const tabOrder: EditorTab[] = [
     buildTab('items', 'Inventory Items',),
     buildTab('storyBoards', 'Story Boards'),
     buildTab('conversations'),
-    buildTab('sequences', ),
+    buildTab('sequences',),
     buildTab('verbs',),
     buildTab('interactions'),
     buildTab('images', 'image assets',),

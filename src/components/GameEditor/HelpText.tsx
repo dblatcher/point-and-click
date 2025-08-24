@@ -1,23 +1,47 @@
+import actorsHelp from "@/content/editor-help/actors.md";
+import choiceSequences from "@/content/editor-help/conversation-choice-sequences.md";
+import defaultResponses from "@/content/editor-help/default-responses.md";
+import flagsConditionHelp from "@/content/editor-help/flag-conditions-help.md";
+import flagsHelp from "@/content/editor-help/flags.md";
+import itemsHelp from "@/content/editor-help/items.md";
+import narrativeHelp from "@/content/editor-help/narrative.md";
+import roomSoundsHelp from "@/content/editor-help/room-sounds-help.md";
+import spritesHelp from "@/content/editor-help/sprites.md";
+import storyBoardHelp from "@/content/editor-help/storyBoards.md";
+import conversationsHelp from "@/content/editor-help/conversations.md";
 import { FunctionComponent } from "react";
+import { z } from "zod";
 import { MarkDown } from "../MarkDown";
-import itemsHelp from "@/content/editor-help/items.md"
-import actorsHelp from "@/content/editor-help/actors.md"
-import narrativeHelp from "@/content/editor-help/narrative.md"
-import choiceSequences from "@/content/editor-help/conversation-choice-sequences.md"
-import flagsHelp from "@/content/editor-help/flags.md"
-import flagsConditionHelp from "@/content/editor-help/flag-conditions-help.md"
-import roomSoundsHelp from "@/content/editor-help/room-sounds-help.md"
-import defaultResponses from "@/content/editor-help/default-responses.md"
 
 interface Props {
-    topic: string;
+    topic: SupportedHelpTopic;
 }
+
+export const supportedHelpTopic = z.enum([
+    'conversations',
+    'items',
+    'rooms',
+    'actors',
+    'storyBoards',
+    'sprites',
+
+    'flags',
+    'verb menu',
+    'narrative',
+    'conversation choice sequences',
+    'flag-conditions',
+    'room sounds',
+    'default responses',
+])
+export type SupportedHelpTopic = z.infer<typeof supportedHelpTopic>
 
 export const HelpText: FunctionComponent<Props> = ({
     topic
-}: Props) => {
+}) => {
 
     switch (topic) {
+        case 'conversations':
+            return <MarkDown content={conversationsHelp} />
         case 'items':
             return <MarkDown content={itemsHelp} />
         case 'rooms':
@@ -44,6 +68,10 @@ export const HelpText: FunctionComponent<Props> = ({
                     </dl>
                 </article>
             )
+        case "sprites":
+            return <MarkDown content={spritesHelp} />
+        case "storyBoards":
+            return <MarkDown content={storyBoardHelp} />
         case 'verb menu':
             return (
                 <article>
