@@ -1,6 +1,7 @@
 import { supportedHelpTopic, SupportedHelpTopic } from "@/components/GameEditor/HelpText";
 import {
     ActorIcon, ConversationIcon, ExclamationIcon,
+    DesignServicesIcon,
     IconComponent, ImageIcon, InteractionIcon,
     InventoryIcon, RoomIcon, SequenceIcon,
     SlideshowIcon, SoundIcon, SpriteIcon
@@ -30,7 +31,7 @@ const buildTab = (id: TabId, label?: string): EditorTab => ({
 
 
 export const tabIcons: Record<TabId, IconComponent | undefined> = {
-    main: undefined,
+    main: DesignServicesIcon,
     images: ImageIcon,
     sounds: SoundIcon,
     interactions: InteractionIcon,
@@ -47,14 +48,14 @@ export const tabIcons: Record<TabId, IconComponent | undefined> = {
 export const tabOrder: EditorTab[] = [
     buildTab('main', 'overview'),
     buildTab('rooms'),
-    buildTab('sprites'),
     buildTab('actors'),
     buildTab('items', 'Inventory Items',),
-    buildTab('storyBoards', 'Story Boards'),
-    buildTab('conversations'),
-    buildTab('sequences',),
-    buildTab('verbs',),
     buildTab('interactions'),
+    buildTab('sequences',),
+    buildTab('conversations'),
+    buildTab('verbs',),
+    buildTab('storyBoards', 'Story Boards'),
+    buildTab('sprites'),
     buildTab('images', 'image assets',),
     buildTab('sounds', 'audio assets',),
 ]

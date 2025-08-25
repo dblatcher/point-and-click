@@ -6,15 +6,15 @@ import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography 
 export const TabButtonList: React.FunctionComponent = () => {
     const { openInEditor, tabOpen } = useGameDesign()
     return (
-        <List disablePadding>
+        <List >
             {tabOrder.map((tab, index) => {
                 const { label, id } = tab
                 const displayTitle = label ?? id;
                 const Icon = tabIcons[id];
                 return (
-                    <ListItem key={index} disableGutters disablePadding>
+                    <ListItem key={index} disablePadding>
                         <ListItemButton
-                            sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}
+                            sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, paddingY: 2 }}
                             onClick={() => { openInEditor(tab.id, undefined) }}
                             selected={tab.id === tabOpen}
                         >
