@@ -1,12 +1,13 @@
-import { Direction, directions, Narrative } from "@/definitions/BaseTypes";
+import { SelectInput } from "@/components/SchemaForm/SelectInput";
+import { Direction, directions } from "@/definitions/BaseTypes";
 import { Order } from "@/definitions/Order";
 import { Box } from "@mui/material";
+import { ReactNode } from "react";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { ActOrderForm } from "./ActOrderForm";
+import { GoToOrderForm } from "./GoToOrderForm";
 import { MoveOrderForm } from "./MoveOrderForm";
-import { OrderWithoutStepsForm } from "./OrderWithoutStepsForm";
-import { SelectInput } from "@/components/SchemaForm/SelectInput";
-import { ReactNode } from "react";
+import { SayOrderForm } from "./SayOrderForm";
 
 
 interface Props {
@@ -20,40 +21,37 @@ interface Props {
 
 export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetIdDescriptions, updateData, actorId }: Props) => {
 
-    const updateNarrative = (newNarrative: Narrative | undefined) => {
-        updateData({ ...data, narrative: newNarrative })
-    }
-
-    const buildForm = () => {
-        switch (data.type) {
-            case "move":
-                return <MoveOrderForm
+    return (
+        <Box component={'article'} sx={{ flex: 1, minWidth: 400, paddingY: 2 }}>
+            {data.type === 'act' && (
+                <ActOrderForm
                     data={data}
                     animationSuggestions={animationSuggestions}
-                    updateData={updateData}
-                />
-            case "act":
-                return <ActOrderForm
-                    data={data}
-                    animationSuggestions={animationSuggestions}
-                    updateData={updateData}
-                />
-            case "say":
-            case "goTo":
-                return <OrderWithoutStepsForm
+                    updateData={updateData} />
+            )}
+            {data.type === 'goTo' && (
+                <GoToOrderForm
                     actorId={actorId}
                     data={data}
                     animationSuggestions={animationSuggestions}
                     targetIdOptions={targetIdOptions}
                     targetIdDescriptions={targetIdDescriptions}
-                    updateData={updateData}
-                />
-        }
-    }
+                    updateData={updateData} />
+            )}
+            {data.type === 'move' && (
+                <MoveOrderForm
+                    data={data}
+                    animationSuggestions={animationSuggestions}
+                    updateData={updateData} />
+            )}
+            {data.type === 'say' && (
+                <SayOrderForm
+                    actorId={actorId}
+                    data={data}
+                    animationSuggestions={animationSuggestions}
+                    updateData={updateData} />
+            )}
 
-    return (
-        <Box component={'article'} sx={{ flex: 1, minWidth: 400, paddingY: 2 }}>
-            {buildForm()}
             <Box display={'flex'} gap={2}>
                 {(data.type !== 'move' && data.type !== 'goTo') && (
                     <SelectInput label="start direction"
@@ -62,7 +60,7 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
                         options={directions}
                         optional
                         value={data.startDirection}
-                        inputHandler={(startDirection) => { updateData({ ...data, startDirection: startDirection as Direction }) }}
+                        inputHandler={startDirection => updateData({ ...data, startDirection: startDirection as Direction })}
                     />
                 )}
                 <SelectInput label="end direction"
@@ -71,9 +69,12 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
                     options={directions}
                     optional
                     value={data.endDirection}
-                    inputHandler={(endDirection) => { updateData({ ...data, endDirection: endDirection as Direction }) }}
+                    inputHandler={endDirection => updateData({ ...data, endDirection: endDirection as Direction })}
                 />
-                <NarrativeEditor narrative={data.narrative} update={updateNarrative} />
+                <NarrativeEditor
+                    narrative={data.narrative}
+                    update={newNarrative => updateData({ ...data, narrative: newNarrative })}
+                />
             </Box>
         </Box>
     )
