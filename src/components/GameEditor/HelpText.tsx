@@ -9,6 +9,9 @@ import roomSoundsHelp from "@/content/editor-help/room-sounds-help.md";
 import spritesHelp from "@/content/editor-help/sprites.md";
 import storyBoardHelp from "@/content/editor-help/storyBoards.md";
 import conversationsHelp from "@/content/editor-help/conversations.md";
+import sequencesHelp from "@/content/editor-help/sequences.md";
+import verbsHelp from "@/content/editor-help/verbs.md";
+import interactionsHelp from "@/content/editor-help/interactions.md"
 import { FunctionComponent } from "react";
 import { z } from "zod";
 import { MarkDown } from "../MarkDown";
@@ -18,12 +21,15 @@ interface Props {
 }
 
 export const supportedHelpTopic = z.enum([
+    'actors',
     'conversations',
+    'interactions',
     'items',
     'rooms',
-    'actors',
+    'sequences',
     'storyBoards',
     'sprites',
+    'verbs',
 
     'flags',
     'verb menu',
@@ -44,6 +50,8 @@ export const HelpText: FunctionComponent<Props> = ({
             return <MarkDown content={conversationsHelp} />
         case 'items':
             return <MarkDown content={itemsHelp} />
+        case 'interactions':
+            return <MarkDown content= {interactionsHelp} />
         case 'rooms':
             return (
                 <article>
@@ -68,10 +76,14 @@ export const HelpText: FunctionComponent<Props> = ({
                     </dl>
                 </article>
             )
+        case "sequences":
+            return <MarkDown content={sequencesHelp} />
         case "sprites":
             return <MarkDown content={spritesHelp} />
         case "storyBoards":
             return <MarkDown content={storyBoardHelp} />
+        case 'verbs': 
+            return <MarkDown content={verbsHelp} />
         case 'verb menu':
             return (
                 <article>

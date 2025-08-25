@@ -1,0 +1,3 @@
+**Sequences** describes cutscenes where the **Actors** follow sets of **Orders**. During **Sequences** the player cannot take any actions.
+
+A **Sequence** is made up of a set of *Stages*. In each *Stage* you can define sets of **Orders** for **Actors** to carry out. Only when all **Actors** have finished all their **Orders**, will the next *Stage* begin. You can also specify **Consequences** to happen at any *Stage*.

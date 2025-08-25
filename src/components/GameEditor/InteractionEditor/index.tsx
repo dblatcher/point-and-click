@@ -89,7 +89,7 @@ export const InteractionEditor: React.FunctionComponent = () => {
 
     return (
         <article>
-            <EditorHeading icon={InteractionIcon} heading="Interactions" />
+            <EditorHeading icon={InteractionIcon} heading="Interactions" helpTopic="interactions" />
             <TableContainer component={Paper}>
                 <Table size="small" padding="normal" sx={{ captionSide: 'top' }}>
                     <caption>
