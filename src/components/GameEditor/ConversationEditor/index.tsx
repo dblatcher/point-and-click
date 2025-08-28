@@ -1,6 +1,5 @@
 
 import { useGameDesign } from "@/context/game-design-context";
-import { Sequence } from "@/definitions";
 import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice } from "@/definitions/Conversation";
 import { cloneData } from "@/lib/clone";
 import { findById, listIds } from "@/lib/util";
@@ -11,7 +10,6 @@ import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { SequenceEditor } from "../SequenceEditor";
 import { makeBlankConversationChoice } from "../defaults";
-import { ActorsInvolvedList } from "./ActorsInvolvedList";
 import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ConversationFlow } from "./ConversationFlow";
@@ -27,7 +25,6 @@ export const ConversationEditor = (props: Props) => {
     const [activeChoiceIndex, setActiveChoiceIndex] = useState<number | undefined>(0)
     const [externalSequenceDialogOpen, setExternalSequenceDialogOpen] = useState<boolean>(false)
     const [editOrderDialogBranchId, setEditOrderDialogBranchId] = useState<string | undefined>(undefined)
-    const [actorsInvolved, setActorsInvolved] = useState<string[]>([])
 
     const { gameDesign, applyModification } = useGameDesign()
     const { conversations } = gameDesign
@@ -148,7 +145,9 @@ export const ConversationEditor = (props: Props) => {
     const { choice } = getBranchAndChoice()
     const branchInOrderDialog = editOrderDialogBranchId ? conversation.branches[editOrderDialogBranchId] : undefined
     const externalSequenceForCurrentChoice = choice && findById(choice.sequence, gameDesign.sequences)
-    const actorIdsForSequences = actorsInvolved.length === 0 ? gameDesign.actors.filter(a => a.isPlayer).map(a => a.id) : actorsInvolved
+    const actorIdsForSequences = gameDesign.actors
+        .filter(a => a.isPlayer)
+        .map(a => a.id);
 
     return (
         <Stack component={'article'} spacing={2} >
@@ -191,13 +190,6 @@ export const ConversationEditor = (props: Props) => {
                     }}
                     addNewBranch={addNewBranchAndOpenIt}
                 />
-
-                <ActorsInvolvedList boxProps={{
-                    position: 'absolute',
-                    top: 0
-                }}
-                    setActorsInvolved={setActorsInvolved}
-                    actorsInvolved={actorsInvolved} />
             </Box>
 
             <Dialog open={!!editOrderDialogBranchId}
