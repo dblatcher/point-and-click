@@ -54,7 +54,8 @@ export const AnimationFrameList = ({
             customCreateButton={(index) =>
                 <FramePickDialogButton
                     buttonProps={{
-                        startIcon: <AddIcon />
+                        startIcon: <AddIcon />,
+                        sx: { alignSelf: 'center' }
                     }}
                     buttonLabel="Insert frame"
                     quickPicking
