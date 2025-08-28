@@ -68,7 +68,8 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
 
     return (
         <>
-            <ArrayControl frame='PLAIN'
+            <ArrayControl
+                stackProps={{ gap: 4 }}
                 list={sequence.stages}
                 describeItem={(stage, stageIndex) => (
                     <StageFlow key={stageIndex}
@@ -89,7 +90,7 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
                     <Button
                         sx={{ marginX: 2 }}
                         startIcon={<AddIcon />}
-                        variant="outlined"
+                        variant="contained"
                         onClick={() => changeStages(insertAt(index, makeBlankStage(), sequence.stages))}
                     >New stage</Button>
                 )}

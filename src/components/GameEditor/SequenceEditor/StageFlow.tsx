@@ -9,7 +9,7 @@ import { EditorBox } from "../EditorBox";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { OrderTypeButtons } from "../OrderTypeButtons";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
-import { ClearOutlinedIcon } from "../material-icons";
+import { AddIcon, ClearOutlinedIcon } from "../material-icons";
 import { ConsequenceCard } from "./ConsequenceCard";
 import { OrderCard } from "./OrderCard";
 
@@ -51,9 +51,17 @@ export const StageFlow = ({
         <Box>
             <Grid container>
                 <Grid item display={'flex'}>
-                    <EditorBox title="consequences" boxProps={{ minWidth: 280 }}>
-                        <Stack spacing={0} paddingY={2}>
-                            <ArrayControl
+                    <EditorBox boxProps={{ minWidth: 280 }} contentBoxProps={{ paddingY: 3, paddingX: 1 }}>
+                        {!stage.immediateConsequences?.length
+                            ? <Button
+                                color="secondary"
+                                variant="contained"
+                                fullWidth
+                                startIcon={<AddIcon />}
+                                onClick={() => setInsertConsequenceDialogIndex(0)}
+                            >Add Consequences</Button>
+                            : <ArrayControl
+                                stackProps={{ paddingTop: 8 }}
                                 list={stage.immediateConsequences ?? []}
                                 describeItem={(consequence, consequenceIndex) => (
                                     <ConsequenceCard
@@ -64,7 +72,7 @@ export const StageFlow = ({
                                                 index: consequenceIndex,
                                             })
                                         }}
-                                        width={230}
+                                        width={250}
                                     />
                                 )}
                                 mutateList={(newList) => {
@@ -77,8 +85,13 @@ export const StageFlow = ({
                                 noMoveButtons
                                 color="secondary"
                             />
-
-                        </Stack>
+                        }
+                        <NarrativeEditor
+                            buttonProps={{
+                                sx: { marginTop: 4 }
+                            }}
+                            narrative={stage.narrative}
+                            update={(newNarrative) => changeConsequenceNarrative(newNarrative, stageIndex)} />
                     </EditorBox>
                 </Grid>
 
@@ -146,14 +159,14 @@ export const StageFlow = ({
                     </Grid>
                 ))}
 
-                <Grid item display={'flex'} flexDirection={'column'} justifyContent={'flex-end'} padding={2} gap={5}>
+                <Grid item display={'flex'} flexDirection={'column'} justifyContent={'center'} padding={2} gap={5}>
                     <Button variant="outlined"
+                        startIcon={<AddIcon />}
                         onClick={() => { setAddActorParams({ stage: stageIndex }) }}>
                         other actor
                     </Button>
-                    <NarrativeEditor narrative={stage.narrative} update={(newNarrative) => changeConsequenceNarrative(newNarrative, stageIndex)} />
                 </Grid>
             </Grid>
-        </Box>
+        </Box >
     )
 }

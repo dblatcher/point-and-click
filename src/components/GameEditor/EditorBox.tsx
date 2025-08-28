@@ -11,6 +11,15 @@ interface Props {
     leftContent?: ReactNode;
 }
 
+const shouldUseDefaultPadding = (contentBoxProps?: BoxProps) => {
+    if (!contentBoxProps) {
+        return true
+    }
+    const { sx, padding, paddingBottom, paddingTop, paddingX, paddingY } = contentBoxProps;
+
+    return !sx && [padding, paddingBottom, paddingTop, paddingX, paddingY].every(prop => typeof (prop) === 'undefined')
+}
+
 export const EditorBox = ({
     title,
     children,
@@ -23,6 +32,8 @@ export const EditorBox = ({
 
     const theme = useTheme()
     const colorScheme = theme.palette[themePalette]
+
+    const useDefaultContentPadding = shouldUseDefaultPadding(contentBoxProps)
 
     return (
         <Box component={'section'}
@@ -52,11 +63,10 @@ export const EditorBox = ({
                 </Box>
             )}
             <Box component={'section'}
-                {...contentBoxProps}
-                sx={contentBoxProps?.sx ?? {
+                sx={useDefaultContentPadding ? {
                     padding: 1,
-
-                }}
+                } : undefined}
+                {...contentBoxProps}
             >
                 {children}
             </Box>

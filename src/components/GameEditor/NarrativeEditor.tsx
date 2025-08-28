@@ -1,7 +1,7 @@
 import { DescriptionOutlinedIcon } from '@/components/GameEditor/material-icons';
 import { Narrative } from "@/definitions/BaseTypes";
 import { cloneData } from "@/lib/clone";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Button, ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography, useTheme } from "@mui/material";
 import React, { useState } from "react";
 import { ArrayControl } from "./ArrayControl";
 import { DelayedStringInput } from './DelayedStringInput';
@@ -12,6 +12,7 @@ interface Props {
     update: { (newNarrative: Narrative | undefined): void }
     noDialog?: boolean
     isRequired?: boolean
+    buttonProps?: ButtonProps
 }
 
 const makeEmptyNarrative = () => ({ text: [""] })
@@ -44,7 +45,13 @@ const TextControl = ({ narrative, updateText, updateLine }: {
     )
 }
 
-export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, update, noDialog, isRequired }) => {
+export const NarrativeEditor: React.FunctionComponent<Props> = ({ 
+    narrative, 
+    update, 
+    noDialog, 
+    isRequired,
+    buttonProps,
+}) => {
     const { palette } = useTheme()
     const [dialogOpen, setDialogOpen] = useState(false)
     const buttonLabel = !!narrative ? 'edit narrative' : 'add narrative'
@@ -79,8 +86,9 @@ export const NarrativeEditor: React.FunctionComponent<Props> = ({ narrative, upd
     return <>
         <Button
             variant="contained"
-            onClick={() => setDialogOpen(true)}
             startIcon={<DescriptionOutlinedIcon />}
+            {...buttonProps}
+            onClick={() => setDialogOpen(true)}
         >{buttonLabel}</Button>
         <Dialog
             open={dialogOpen}
