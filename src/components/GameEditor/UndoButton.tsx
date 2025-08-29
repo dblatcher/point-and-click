@@ -23,7 +23,7 @@ export const UndoAndRedoButtons: FunctionComponent<Props> = ({
           <IconButton aria-label={undoLabel} disabled={history.length === 0}
             onClick={() => dispatchDesignUpdate({ type: 'undo' })}>
             <Badge badgeContent={history.length} color='primary'>
-              <UndoIcon fontSize="large" />
+              <UndoIcon/>
             </Badge>
           </IconButton>
         </span>
@@ -34,7 +34,7 @@ export const UndoAndRedoButtons: FunctionComponent<Props> = ({
             onClick={() => dispatchDesignUpdate({ type: 'redo' })}
           >
             <Badge badgeContent={undoneHistory.length} color='primary'>
-              <RedoIcon fontSize="large" />
+              <RedoIcon/>
             </Badge>
           </IconButton>
         </span>

@@ -120,62 +120,57 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
 
 
     return (
-        <ThemeProvider theme={editorTheme}>
-            <GameDesignProvider input={
-                {
-                    gameDesign: gameEditorState.gameDesign,
-                    tabOpen: gameEditorState.tabOpen,
-                    gameItemIds: gameEditorState.gameItemIds,
-                    upgradeInfo: gameEditorState.upgradeInfo,
-                    dispatchDesignUpdate,
-                    handleIncomingDesign,
-                }
-            }>
-                <AssetsProvider soundService={soundService} imageService={imageService}>
-                    <SpritesProvider value={sprites}>
 
-                        <Container component={'main'}
-                            maxWidth='xl'
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                overflow: 'hidden',
-                                flex: 1,
-                                gap: 5,
-                                background: 'white',
-                            }}>
+        <GameDesignProvider input={
+            {
+                gameDesign: gameEditorState.gameDesign,
+                tabOpen: gameEditorState.tabOpen,
+                gameItemIds: gameEditorState.gameItemIds,
+                upgradeInfo: gameEditorState.upgradeInfo,
+                dispatchDesignUpdate,
+                handleIncomingDesign,
+            }
+        }>
+            <AssetsProvider soundService={soundService} imageService={imageService}>
+                <SpritesProvider value={sprites}>
 
-                            <Stack component={'nav'}
-                                spacing={1}
-                                width={160}
-                            >
-                                <ButtonGroup sx={{ marginTop: 3 }} orientation="horizontal" >
-                                    <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />
-                                    <ZipFileButtons />
-                                    {gameEditorState.db &&
-                                        <SavedDesignDialogButton db={gameEditorState.db} />
-                                    }
-                                </ButtonGroup>
+                    <Box component={'main'}
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            overflow: 'hidden',
+                            flex: 1,
+                        }}>
 
-                                <TabButtonList />
-                                <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}>
-                                    <TestGameDialog />
-                                </div>
-                            </Stack>
+                        <Stack component={'nav'}>
+                            <ButtonGroup orientation="horizontal" >
+                                <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />
+                                <ZipFileButtons />
+                                {gameEditorState.db &&
+                                    <SavedDesignDialogButton db={gameEditorState.db} />
+                                }
+                            </ButtonGroup>
 
-                            <Box component={'section'}
-                                flex={1}
-                                padding={1}
-                                sx={{ overflowY: 'auto' }}
-                            >
+                            <TabButtonList />
+                            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}>
+                                <TestGameDialog />
+                            </div>
+                        </Stack>
+                        <Box component={'section'}
+                            flex={1}
+                            paddingX={1}
+                            margin={1}
+                            sx={{ overflowY: 'auto', background: 'white', }}
+                        >
+                            <ThemeProvider theme={editorTheme}>
                                 <MainWindow />
-                                <UpgradeNotice />
-                            </Box>
-                        </Container>
-                    </SpritesProvider>
-                </AssetsProvider>
-            </GameDesignProvider>
-        </ThemeProvider >
+                            </ThemeProvider>
+                            <UpgradeNotice />
+                        </Box>
+                    </Box>
+                </SpritesProvider>
+            </AssetsProvider>
+        </GameDesignProvider>
     )
 }
 

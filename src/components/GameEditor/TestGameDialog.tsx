@@ -2,7 +2,7 @@ import { Game } from "@/components/game/Game";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from "@mui/material";
+import { Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, IconButton, ThemeProvider } from "@mui/material";
 import { useState } from "react";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
@@ -10,6 +10,7 @@ import { RangeInput } from "./RangeInput";
 import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
 import { GameDesign } from "@/definitions";
 import { cloneData } from "@/lib/clone";
+import { editorTheme } from "@/theme";
 
 
 export const TestGameDialog = () => {
@@ -45,46 +46,49 @@ export const TestGameDialog = () => {
             >
                 <PlayCircleFilledOutlinedIcon sx={{ fontSize: 100 }} />
             </IconButton>
-            <Dialog
-                fullScreen
-                open={gameTestDialogOpen}
-                onClose={close}
-            >
-                <DialogActions>
-                    <DialogContentText sx={{ marginRight: 'auto' }}>Test: {gameDesign.id}</DialogContentText>
-                    <RangeInput label="game speed"
-                        min={.5} max={10} step={.25}
-                        value={gameSpeed}
-                        labelProps={{ minWidth: 50 }}
-                        formattedValue={gameSpeed === 1 ? 'normal' : `${((gameSpeed * 100)).toFixed(0)}%`}
-                        onChange={event => setGameSpeed(Number(event.target.value))}
-                    />
-                    <BooleanInput value={showDebugLog} inputHandler={setShowDebugLog} label="debug log" />
-                    <ButtonGroup>
-                        <Button onClick={reset} >reset</Button>
-                        <ChangeGameStateDialog sendModifiedDesign={handleModifiedDesign} />
-                        <Button onClick={close} >close</Button>
-                    </ButtonGroup>
-                </DialogActions>
-                <DialogContent sx={{
-                    position: 'relative',
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}>
-                    {haveStartedTests && (
-                        <Game
-                            key={resetTimeStamp}
-                            {...modifiedGameDesign} actorOrders={{}}
-                            gameNotBegun
-                            showDebugLog={showDebugLog}
-                            _sprites={sprites}
-                            soundService={soundService}
-                            timerInterval={10}
-                            orderSpeed={gameSpeed}
+
+            <ThemeProvider theme={editorTheme}>
+                <Dialog
+                    fullScreen
+                    open={gameTestDialogOpen}
+                    onClose={close}
+                >
+                    <DialogActions>
+                        <DialogContentText sx={{ marginRight: 'auto' }}>Test: {gameDesign.id}</DialogContentText>
+                        <RangeInput label="game speed"
+                            min={.5} max={10} step={.25}
+                            value={gameSpeed}
+                            labelProps={{ minWidth: 50 }}
+                            formattedValue={gameSpeed === 1 ? 'normal' : `${((gameSpeed * 100)).toFixed(0)}%`}
+                            onChange={event => setGameSpeed(Number(event.target.value))}
                         />
-                    )}
-                </DialogContent>
-            </Dialog>
+                        <BooleanInput value={showDebugLog} inputHandler={setShowDebugLog} label="debug log" />
+                        <ButtonGroup>
+                            <Button onClick={reset} >reset</Button>
+                            <ChangeGameStateDialog sendModifiedDesign={handleModifiedDesign} />
+                            <Button onClick={close} >close</Button>
+                        </ButtonGroup>
+                    </DialogActions>
+                    <DialogContent sx={{
+                        position: 'relative',
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}>
+                        {haveStartedTests && (
+                            <Game
+                                key={resetTimeStamp}
+                                {...modifiedGameDesign} actorOrders={{}}
+                                gameNotBegun
+                                showDebugLog={showDebugLog}
+                                _sprites={sprites}
+                                soundService={soundService}
+                                timerInterval={10}
+                                orderSpeed={gameSpeed}
+                            />
+                        )}
+                    </DialogContent>
+                </Dialog>
+            </ThemeProvider>
         </>
     )
 }

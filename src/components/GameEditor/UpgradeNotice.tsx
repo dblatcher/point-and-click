@@ -32,15 +32,14 @@ export const UpgradeNotice: FunctionComponent = () => {
                             subheader={<ListSubheader component="div">Version {item.schemaVersion}</ListSubheader>}
                         >
                             {item.changes.map((change, index2) =>
-                                <ListItem  key={index2}>
-                                    <ListItemText sx={{ pl: 4 }} primary={change.description} />
+                                <ListItem key={index2}>
+                                    <ListItemText primary={change.description} />
                                 </ListItem>
                             )}
-                        </List >
+                        </List>
                     ))}
                 </DialogContent>
-            )
-            }
+            )}
 
             <DialogActions>
                 <Button onClick={() => dispatchDesignUpdate({ type: 'set-upgrade-info', data: undefined })}>ok</Button>

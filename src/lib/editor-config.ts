@@ -6,7 +6,8 @@ import {
     InventoryIcon, RoomIcon, SequenceIcon,
     SlideshowIcon, SoundIcon, SpriteIcon
 } from "@/components/GameEditor/material-icons";
-import { GameDataItemType, GameDataItemTypeEnum } from "@/definitions/Game";
+import { GameDataItemType, GameDataItemTypeEnum, GameDesign } from "@/definitions/Game";
+import { ImageAsset, SoundAsset } from "@/services/assets";
 
 export type NonItemEditorType = 'main' | 'images' | 'sounds' | 'interactions';
 export type TabId = NonItemEditorType | GameDataItemType
@@ -63,3 +64,20 @@ export const tabOrder: EditorTab[] = [
 export const DATA_TYPES_WITH_JSON: GameDataItemType[] = [
     'rooms', 'actors', 'conversations', 'sprites',
 ]
+
+export const countItemsFunction = (gameDesign: GameDesign, soundAssets: SoundAsset[], imageAssets: ImageAsset[]) => (tab: EditorTab) => {
+
+    if (tab.itemType) {
+        return gameDesign[tab.itemType].length
+    }
+    switch (tab.id) {
+        case "images":
+            return imageAssets.length
+        case "sounds":
+            return soundAssets.length
+        case "interactions":
+            return gameDesign.interactions.length
+        default:
+            return undefined
+    }
+}

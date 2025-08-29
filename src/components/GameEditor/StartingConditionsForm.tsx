@@ -2,7 +2,7 @@ import { useGameDesign } from "@/context/game-design-context";
 import { listIds } from "@/lib/util";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { EditorBox } from "./EditorBox";
-import { Button, Tooltip } from "@mui/material";
+import { Box, Button, Tooltip } from "@mui/material";
 
 
 export const StartingConditionsForm = () => {
@@ -20,7 +20,7 @@ export const StartingConditionsForm = () => {
             : undefined
 
     return (
-        <EditorBox title="starting conditions" contentBoxProps={{ minWidth: 160, display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Box minWidth={ 160} display={'flex'} flexDirection={'column'} gap={3} >
             <SelectInput optional label='Starting Room'
                 value={gameDesign.currentRoomId}
                 inputHandler={currentRoomId => applyModification(`Change starting room to ${currentRoomId}`, { currentRoomId })}
@@ -44,6 +44,6 @@ export const StartingConditionsForm = () => {
                     </Button>
                 </span>
             </Tooltip>
-        </EditorBox>
+        </Box>
     )
 }

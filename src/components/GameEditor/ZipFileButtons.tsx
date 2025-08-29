@@ -54,7 +54,7 @@ export const ZipFileButtons: FunctionComponent = () => {
         aria-label={saveLabel}
         onClick={downloadAll}
       >
-        <DownloadIcon fontSize="large" />
+        <DownloadIcon />
       </IconButton>
     </Tooltip>
     <Snackbar open={!!downloadAllError} autoHideDuration={5000} onClose={() => setDownloadAllError(undefined)}>
@@ -66,7 +66,7 @@ export const ZipFileButtons: FunctionComponent = () => {
         aria-label={loadLabel}
         onClick={uploadAll}
       >
-        <UploadIcon fontSize="large" />
+        <UploadIcon />
       </IconButton>
     </Tooltip>
     <Snackbar open={!!uploadAllError} autoHideDuration={5000} onClose={() => setUploadAllError(undefined)}>

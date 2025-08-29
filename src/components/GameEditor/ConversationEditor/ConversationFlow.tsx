@@ -92,6 +92,7 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
     return (
         <div data-branch-identifier={branchKey}>
             <EditorBox
+                boxProps={{minWidth:175}}
                 leftContent={
                     <>
                         <Checkbox
@@ -170,9 +171,10 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
     const { current: containerElement } = containerRef
 
     return (
-        <Box
-            ref={containerRef} position={'relative'}
-        >
+        <Box ref={containerRef}
+            marginX={'auto'}
+            position={'relative'}
+            maxWidth={'lg'} >
             {containerElement && (
                 <Fragment key={JSON.stringify(conversation)}>
                     {nodePairs.map((pair, index) => (
@@ -209,7 +211,7 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                     </Stack>
                 ))}
             </Stack>
-            <Box display={'flex'} justifyContent={'flex-end'} paddingTop={2}>
+            <Box display={'flex'} justifyContent={'center'} paddingTop={4}>
                 <ButtonWithTextInput
                     label="Add Branch"
                     onEntry={(entry) => { addNewBranch(entry) }}
@@ -217,6 +219,7 @@ export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openO
                     modifyInput={formatIdInput}
                     buttonProps={{
                         size: 'large',
+                        sx:{padding:20},
                         variant: "contained",
                         startIcon: (< AddIcon />),
                     }}
