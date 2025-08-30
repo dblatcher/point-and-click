@@ -1,11 +1,8 @@
-import { AssetContextProps, useAssets } from "@/context/asset-context"
 import { cloneData } from "@/lib/clone"
 import { fileToObjectUrl, makeDownloadFile, uploadFile, urlToBlob } from "@/lib/files"
 import { buildAssetZipBlob, ZipReadResult } from "@/lib/zipFiles"
 import { FileAsset } from "@/services/assets"
 import { FileAssetService } from "@/services/FileAssetService"
-import { ImageService } from "@/services/imageService"
-import { SoundService } from "@/services/soundService"
 import { Alert, Grid } from "@mui/material"
 import { FunctionComponent, useRef, useState } from "react"
 import { EditorHeading } from "../EditorHeading"
@@ -35,16 +32,9 @@ type Props<AssetType extends FileAsset> = {
     assetType: 'sound' | 'image';
     validateZipFile: { (file: Blob): Promise<ZipReadResult<AssetType[]>> }
     validateAsset: { (asset: unknown): asset is AssetType }
+    service: FileAssetService<AssetType>;
 }
 
-const getServiceAndAssets = <AssetType extends FileAsset>(assetType: 'sound' | 'image', context: AssetContextProps): FileAssetService<AssetType> => {
-    switch (assetType) {
-        case "sound":
-            return context.soundService as unknown as FileAssetService<AssetType>
-        case "image":
-            return context.imageService as unknown as FileAssetService<AssetType>
-    }
-}
 
 const icons = {
     sound: SoundIcon,
@@ -57,6 +47,7 @@ export const AssetManager = <AssetType extends FileAsset>({
     assetType,
     validateZipFile,
     validateAsset,
+    service,
 }: Props<AssetType>) => {
 
     const [asset, setAsset] = useState<Partial<AssetType>>({})
@@ -64,8 +55,6 @@ export const AssetManager = <AssetType extends FileAsset>({
     const [saveWarning, setSaveWarning] = useState<string>()
     const [uploadWarning, setUploadWarning] = useState<string>()
     const fileRef = useRef<File | Blob | null>(null)
-    const assetContext = useAssets();
-    const service = getServiceAndAssets(assetType, assetContext)
 
     const openFromService = (asset: FileAsset) => {
         const assetCopy = cloneData(asset as AssetType);
@@ -111,7 +100,7 @@ export const AssetManager = <AssetType extends FileAsset>({
             <ZipFileControl
                 zipAssets={async () => {
                     const blobName = assetType === 'image' ? 'images' : 'sounds';
-                    const result = await buildAssetZipBlob(blobName, service as ImageService | SoundService);
+                    const result = await buildAssetZipBlob(blobName, service);
                     if (result.success === false) {
                         setSaveWarning(result.error)
                         return

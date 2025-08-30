@@ -7,6 +7,7 @@ import { GameDesign } from "../definitions";
 import { parseAndUpgrade } from "./design-version-management";
 import { dataToBlob, fileToObjectUrl } from "./files";
 import { MaybeDesignAndAssets } from "@/lib/indexed-db"
+import { FileAssetService } from "@/services/FileAssetService";
 
 type ZipActionFailure = {
   success: false;
@@ -61,7 +62,7 @@ const extractJsonFile = async (
 
 const prepareAssetZipFromService = async (
   type: 'images' | 'sounds',
-  service: ImageService | SoundService,
+  service: FileAssetService<any>,
   existingZip?: JSZip,
 ): Promise<JSZip> => {
   const zip = existingZip || new JSZip();
@@ -124,7 +125,7 @@ const prepareAssetZipFromAssets = async (
 
 export const buildAssetZipBlob = async (
   type: 'images' | 'sounds',
-  service: ImageService | SoundService
+  service: FileAssetService<any>
 ): Promise<ZipBuildResult> => {
   try {
     const zip = await prepareAssetZipFromService(type, service);
