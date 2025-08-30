@@ -24,7 +24,7 @@ type ZipReadSucess<T> = {
 };
 
 type ZipBuildResult = ZipActionFailure | ZipBuildSucess;
-type ZipReadResult<T> = ZipActionFailure | ZipReadSucess<T>;
+export type ZipReadResult<T> = ZipActionFailure | ZipReadSucess<T>;
 
 const FILENAMES = {
   game: "game.json",

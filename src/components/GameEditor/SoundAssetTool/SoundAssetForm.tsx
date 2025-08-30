@@ -1,7 +1,8 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import {
-    SoundAsset, soundAssetCategories
+    SoundAsset, soundAssetCategories,
+    SoundAssetCategory
 } from "@/services/assets";
 import { Box, Button, Checkbox, Stack, Typography } from "@mui/material";
 import { EditorBox } from "../EditorBox";
@@ -10,8 +11,8 @@ import { LinkIcon, UploadIcon } from "../material-icons";
 import { ButtonWithTextInput } from "../ButtonWithTextInput";
 
 interface Props {
-    soundAsset: Partial<SoundAsset>;
-    changeValue: { (propery: keyof SoundAsset, newValue: string | number | undefined): void }
+    asset: Partial<SoundAsset>;
+    changeValue: { (mod: Partial<SoundAsset>): void }
     loadFile: { (): Promise<void> }
     loadUrl: { (input: string): Promise<void> }
     isNewAsset: boolean
@@ -21,19 +22,19 @@ interface Props {
 }
 
 
-export const SoundAssetForm = ({ soundAsset, changeValue, loadFile, isNewAsset, saveAssetChanges, saveWarning, loadUrl, hasFile }: Props) => {
+export const SoundAssetForm = ({ asset: soundAsset, changeValue, loadFile, isNewAsset, saveAssetChanges, saveWarning, loadUrl, hasFile }: Props) => {
     return (
         <EditorBox title="Asset Properties" boxProps={{ marginBottom: 1 }}>
             <Stack spacing={2}>
                 <StringInput
                     value={soundAsset.id ?? ''}
                     label="ID"
-                    inputHandler={(value) => { changeValue('id', value) }}
+                    inputHandler={(value) => { changeValue({ 'id': value }) }}
                 />
                 <SelectInput optional
                     value={soundAsset.category}
                     label="category"
-                    inputHandler={(value) => { changeValue('category', value) }}
+                    inputHandler={(value) => { changeValue({ 'category': value as SoundAssetCategory | undefined }) }}
                     options={soundAssetCategories}
                 />
             </Stack>

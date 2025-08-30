@@ -6,11 +6,12 @@ import { EditorBox } from "../EditorBox";
 import { HideImageOutlinedIcon } from "../material-icons";
 
 interface Props {
-    imageAsset: ImageAsset;
-    canvasScale: number;
+    asset: Partial<ImageAsset>;
 }
 
-export const ImageAssetPreview: FunctionComponent<Props> = ({ imageAsset, canvasScale }: Props) => {
+const canvasScale = 300
+
+export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset }: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const imageRef = useRef<HTMLImageElement>(null)
 

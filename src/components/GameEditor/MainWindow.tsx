@@ -11,19 +11,19 @@ import { Box } from "@mui/material";
 import { tabOrder } from "../../lib/editor-config";
 import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
+import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb, makeEmptyStoryBoard } from "./defaults";
 import { DataItemCreator } from "./game-item-components/DataItemCreator";
-import { ImageAssetTool } from "./ImageAssetTool";
 import { InteractionEditor } from "./InteractionEditor";
 import { ItemEditor } from "./ItemEditor";
 import { Overview } from "./Overview";
 import { RoomEditor } from "./RoomEditor";
 import { SequenceEditor } from "./SequenceEditor";
-import { SoundAssetTool } from "./SoundAssetTool";
+import { SoundAssetManager } from './SoundAssetTool/SoundAssetManager';
 import { SpriteEditor } from "./SpriteEditor";
 import { StoryBoardEditor } from './StoryBoardEditor/StoryBoardEditor';
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb, makeEmptyStoryBoard } from "./defaults";
+import { ImageAssetManager } from './ImageAssetTool/ImageAssetManager';
 
 export const MainWindow = () => {
     const { gameDesign, tabOpen, openInEditor, gameItemIds } = useGameDesign()
@@ -134,9 +134,9 @@ export const MainWindow = () => {
                     <VerbMenuEditor />
                 </>
         case 'images':
-            return <ImageAssetTool imageService={imageService} />
+            return <ImageAssetManager />
         case 'sounds':
-            return <SoundAssetTool soundService={soundService} />
+            return <SoundAssetManager />
         case 'storyBoards':
             return currentStoryBoard ? <StoryBoardEditor storyBoard={currentStoryBoard} /> : <DataItemCreator
                 createBlank={makeEmptyStoryBoard}

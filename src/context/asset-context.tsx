@@ -4,7 +4,7 @@ import { SoundService } from '@/services/soundService';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 
 
-type AssetContextProps = {
+export type AssetContextProps = {
     getImageAsset(id: string): ImageAsset | undefined;
     removeImageAsset(id: string): void;
     imageAssets: ImageAsset[];

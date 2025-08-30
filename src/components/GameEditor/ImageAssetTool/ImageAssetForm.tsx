@@ -1,7 +1,7 @@
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
-import { ImageAsset, imageAssetCategories } from "@/services/assets";
+import { ImageAsset, imageAssetCategories, ImageAssetCategory } from "@/services/assets";
 import { Box, Button, Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
 import { SaveButtonsAndWarning } from "../asset-components/SaveButtonsAndWarning";
@@ -9,8 +9,8 @@ import { LinkIcon, UploadIcon } from "../material-icons";
 import { ButtonWithTextInput } from "../ButtonWithTextInput";
 
 interface Props {
-    imageAsset: Partial<ImageAsset>;
-    changeValue: { (propery: keyof ImageAsset, newValue: string | number | undefined): void }
+    asset: Partial<ImageAsset>;
+    changeValue: { (mod: Partial<ImageAsset>): void }
     loadFile: { (): Promise<void> }
     loadUrl: { (input: string): Promise<void> }
     isNewAsset: boolean
@@ -19,32 +19,32 @@ interface Props {
 }
 
 
-export const ImageAssetForm = ({ imageAsset, changeValue, loadFile, isNewAsset, saveAssetChanges, saveWarning, loadUrl }: Props) => {
+export const ImageAssetForm = ({ asset: imageAsset, changeValue, loadFile, isNewAsset, saveAssetChanges, saveWarning, loadUrl }: Props) => {
     return (
         <EditorBox title="Asset Properties" boxProps={{ marginBottom: 1 }}>
             <Stack spacing={2}>
                 <StringInput
                     value={imageAsset.id ?? ''}
                     label="ID"
-                    inputHandler={(value) => { changeValue('id', value) }}
+                    inputHandler={(value) => { changeValue({ 'id': value }) }}
                 />
                 <SelectInput optional
                     value={imageAsset.category}
                     label="category"
-                    inputHandler={(value) => { changeValue('category', value) }}
+                    inputHandler={(value) => { changeValue({ 'category': value as ImageAssetCategory }) }}
                     options={imageAssetCategories}
                 />
                 <Stack direction={'row'}>
                     <OptionalNumberInput
                         value={imageAsset.rows}
                         label="rows"
-                        inputHandler={(value) => { changeValue('rows', value) }}
+                        inputHandler={(rows) => { changeValue({ rows }) }}
                         min={1}
                     />
                     <OptionalNumberInput
                         value={imageAsset.cols}
                         label="cols"
-                        inputHandler={(value) => { changeValue('cols', value) }}
+                        inputHandler={(cols) => { changeValue({ cols }) }}
                         min={1}
                     />
                 </Stack>
@@ -52,13 +52,13 @@ export const ImageAssetForm = ({ imageAsset, changeValue, loadFile, isNewAsset, 
                     <OptionalNumberInput
                         value={imageAsset.widthScale}
                         label="widthScale"
-                        inputHandler={(value) => { changeValue('widthScale', value) }}
+                        inputHandler={(widthScale) => { changeValue({widthScale}) }}
                         step={.1}
                     />
                     <OptionalNumberInput
                         value={imageAsset.heightScale}
                         label="heightScale"
-                        inputHandler={(value) => { changeValue('heightScale', value) }}
+                        inputHandler={(heightScale) => { changeValue({heightScale}) }}
                         step={.1}
                     />
                 </Stack>
@@ -75,8 +75,8 @@ export const ImageAssetForm = ({ imageAsset, changeValue, loadFile, isNewAsset, 
                         variant: "outlined",
                         startIcon: < LinkIcon />
                     }}
-                    label="get image from URL" 
-                    onEntry={(input) => { loadUrl(input) }} 
+                    label="get image from URL"
+                    onEntry={(input) => { loadUrl(input) }}
                     dialogTitle="enter image url" />
             </Box>
 
