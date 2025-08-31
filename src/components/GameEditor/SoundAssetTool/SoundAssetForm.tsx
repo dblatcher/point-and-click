@@ -4,25 +4,17 @@ import {
     SoundAsset, soundAssetCategories,
     SoundAssetCategory
 } from "@/services/assets";
-import { Box, Button, Checkbox, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { EditorBox } from "../EditorBox";
-import { SaveButtonsAndWarning } from "../asset-components/SaveButtonsAndWarning";
-import { LinkIcon, UploadIcon } from "../material-icons";
-import { ButtonWithTextInput } from "../ButtonWithTextInput";
 
 interface Props {
     asset: Partial<SoundAsset>;
     changeValue: { (mod: Partial<SoundAsset>): void }
-    loadFile: { (): Promise<void> }
-    loadUrl: { (input: string): Promise<void> }
-    isNewAsset: boolean
-    saveAssetChanges: { (): void }
-    saveWarning?: string
     hasFile: boolean;
 }
 
 
-export const SoundAssetForm = ({ asset: soundAsset, changeValue, loadFile, isNewAsset, saveAssetChanges, saveWarning, loadUrl, hasFile }: Props) => {
+export const SoundAssetForm = ({ asset: soundAsset, changeValue, hasFile }: Props) => {
     return (
         <EditorBox title="Asset Properties" boxProps={{ marginBottom: 1 }}>
             <Stack spacing={2}>
@@ -38,34 +30,6 @@ export const SoundAssetForm = ({ asset: soundAsset, changeValue, loadFile, isNew
                     options={soundAssetCategories}
                 />
             </Stack>
-
-
-            <Box display={'flex'} justifyContent={'flex-end'} paddingTop={2}>
-                <Box display={'flex'} marginRight={'auto'} alignItems={'center'}>
-                    <Typography>file:</Typography>
-                    <Checkbox checked={hasFile} readOnly />
-                </Box>
-
-                <Button variant="outlined"
-                    startIcon={<UploadIcon />}
-                    onClick={loadFile}>
-                    upload sound file
-                </Button>
-                <ButtonWithTextInput
-                    buttonProps={{
-                        variant: "outlined",
-                        startIcon: < LinkIcon />
-                    }}
-                    label="get audio from URL"
-                    onEntry={(input) => { loadUrl(input) }}
-                    dialogTitle="enter audio url" />
-            </Box>
-
-            <SaveButtonsAndWarning {...{
-                isNewAsset,
-                saveAssetChanges,
-                saveWarning
-            }} />
         </EditorBox>
     )
 }

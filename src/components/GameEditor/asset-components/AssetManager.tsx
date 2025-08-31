@@ -3,22 +3,19 @@ import { fileToObjectUrl, makeDownloadFile, uploadFile, urlToBlob } from "@/lib/
 import { buildAssetZipBlob, ZipReadResult } from "@/lib/zipFiles"
 import { FileAsset } from "@/services/assets"
 import { FileAssetService } from "@/services/FileAssetService"
-import { Alert, Grid } from "@mui/material"
+import { Alert, Box, Button, ButtonGroup, Grid, Snackbar, Typography } from "@mui/material"
 import { FunctionComponent, useRef, useState } from "react"
 import { EditorHeading } from "../EditorHeading"
 import { FileAssetSelector } from "../FileAssetSelector"
-import { ImageIcon, SoundIcon } from "../material-icons"
+import { AddIcon, ImageIcon, SoundIcon } from "../material-icons"
 import { ZipFileControl } from "./ZipFileControl"
+import { UploadAssetButtons } from "./UploadAssetButtons"
+import { SaveButtons } from "./SaveButtons"
 
 
 type AssetFormProps<AssetType extends FileAsset> = {
     asset: Partial<AssetType>;
     changeValue: { (mod: Partial<AssetType>): void }
-    loadFile: { (): Promise<void> }
-    loadUrl: { (input: string): Promise<void> }
-    isNewAsset: boolean
-    saveAssetChanges: { (): void }
-    saveWarning?: string
     hasFile: boolean;
 }
 
@@ -74,6 +71,8 @@ export const AssetManager = <AssetType extends FileAsset>({
             window.URL.revokeObjectURL(fileObjectUrl);
         }
 
+        // to do - should this happen?
+        // cannot change the file on an asset without changing id
         setAsset({
             id: file.name ?? asset.id,
             originalFileName: file.name,
@@ -93,87 +92,105 @@ export const AssetManager = <AssetType extends FileAsset>({
         setNewFile(blob)
     };
 
+    const loadFile = async () => {
+        const file = await uploadFile();
+        if (!file) {
+            setUploadWarning(`failed to upload ${assetType} file`)
+            return;
+        }
+        setNewFile(file)
+    }
+
+    const saveAssetChanges = () => {
+        const newHref = fileRef.current ? fileToObjectUrl(fileRef.current) : undefined;
+        if (!newHref && !asset.href) {
+            setSaveWarning('no file')
+            return
+        }
+        const copy = {
+            ...asset,
+            href: asset.href ?? newHref
+        }
+        const isValid = validateAsset(copy);
+        if (!isValid) {
+            setSaveWarning('invalid data')
+            return
+        }
+        setSaveWarning(undefined)
+        service.add(copy)
+        setAsset(copy)
+    }
+
+    const fileState = !!fileObjectUrl ? 'temp file uploaded' : asset.href ? 'file in service' : 'no file'
 
     return (
         <article>
             <EditorHeading heading={`${assetType} asset tool`} icon={icons[assetType]} />
-            <ZipFileControl
-                zipAssets={async () => {
-                    const blobName = assetType === 'image' ? 'images' : 'sounds';
-                    const result = await buildAssetZipBlob(blobName, service);
-                    if (result.success === false) {
-                        setSaveWarning(result.error)
-                        return
-                    }
-                    makeDownloadFile(`${blobName}.zip`, result.blob);
-                }}
-                loadFromZipFile={async () => {
-                    setUploadWarning(undefined)
+            <ButtonGroup sx={{ marginY: 2 }}>
+                <ZipFileControl
+                    zipAssets={async () => {
+                        const blobName = assetType === 'image' ? 'images' : 'sounds';
+                        const result = await buildAssetZipBlob(blobName, service);
+                        if (result.success === false) {
+                            setSaveWarning(result.error)
+                            return
+                        }
+                        makeDownloadFile(`${blobName}.zip`, result.blob);
+                    }}
+                    loadFromZipFile={async () => {
+                        setUploadWarning(undefined)
+                        const file = await uploadFile();
+                        if (!file) {
+                            return;
+                        }
+                        const result = await validateZipFile(file);
+                        if (!result.success) {
+                            setUploadWarning(result.error)
+                            return
+                        }
+                        service.add(result.data)
+                    }}
+                />
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={() => {
+                        if (fileObjectUrl && typeof window !== undefined) {
+                            window.URL.revokeObjectURL(fileObjectUrl);
+                        }
+                        fileRef.current = null
+                        setFileObjectUrl(undefined)
+                        setAsset({})
+                    }}>
+                    build new asset
+                </Button>
 
-                    const file = await uploadFile();
-                    if (!file) {
-                        return;
-                    }
-                    const result = await validateZipFile(file);
-                    if (!result.success) {
-                        setUploadWarning(result.error)
-                        return
-                    }
-                    service.add(result.data)
-
-                }}
-                clearForm={() => {
-                    if (fileObjectUrl && typeof window !== undefined) {
-                        window.URL.revokeObjectURL(fileObjectUrl);
-                    }
-                    fileRef.current = null
-                    setFileObjectUrl(undefined)
-                    setAsset({})
-                }}
-                clearWarning={() => setSaveWarning(undefined)}
-            />
+            </ButtonGroup>
 
             <Grid container spacing={1} justifyContent={'space-between'}>
                 <Grid item>
-                    {!!saveWarning && <Alert severity="warning">{saveWarning}</Alert>}
-                    {!!uploadWarning && <Alert severity="warning">{uploadWarning}</Alert>}
-
                     <FormComponent
                         asset={asset}
                         changeValue={(mod) => {
                             setAsset((asset) => ({ ...asset, ...mod }))
                         }}
-                        loadFile={async () => {
-                            const file = await uploadFile();
-                            if (!file) {
-                                setUploadWarning(`failed to upload ${assetType} file`)
-                                return;
-                            }
-                            setNewFile(file)
-                        }}
-                        loadUrl={loadUrl}
-                        isNewAsset={asset.id ? !service.list().includes(asset.id) : true}
-                        saveAssetChanges={() => {
-                            const newHref = fileRef.current ? fileToObjectUrl(fileRef.current) : undefined;
-                            if (!newHref) {
-                                setSaveWarning('no file')
-                                return
-                            }
-                            const copy = {
-                                ...asset,
-                                href: newHref
-                            }
-                            const isValid = validateAsset(copy);
-                            if (!isValid) {
-                                setSaveWarning('invalid data')
-                                return
-                            }
-                            setSaveWarning(undefined)
-                            service.add(copy)
+                        hasFile={!!fileObjectUrl}
+                    />
+                    <ButtonGroup orientation="vertical">
+                        <SaveButtons
+                            isNewAsset={asset.id ? !service.list().includes(asset.id) : true}
+                            saveAssetChanges={saveAssetChanges}
+                        />
+                        <UploadAssetButtons
+                            fileDescription={assetType}
+                            loadFile={loadFile}
+                            loadUrl={loadUrl} />
+                    </ButtonGroup>
 
-                        }}
-                        hasFile={!!fileObjectUrl} />
-                    <PreviewComponent asset={{ href: fileObjectUrl, ...asset, }} />
+                    <Typography>{fileState}</Typography>
+                </Grid>
+                <Grid item>
+                    <PreviewComponent asset={asset} temporarySrc={fileObjectUrl} />
                 </Grid>
                 <Grid item>
                     <FileAssetSelector assetType={assetType}
@@ -181,8 +198,14 @@ export const AssetManager = <AssetType extends FileAsset>({
                         currentSelection={asset?.id}
                         select={openFromService} />
                 </Grid>
-
             </Grid>
-        </article>
+
+            <Snackbar open={!!uploadWarning} autoHideDuration={5000} onClose={() => setUploadWarning(undefined)}>
+                <Alert severity="error">{uploadWarning}</Alert>
+            </Snackbar>
+            <Snackbar open={!!saveWarning} autoHideDuration={5000} onClose={() => setSaveWarning(undefined)}>
+                <Alert severity="error">{saveWarning}</Alert>
+            </Snackbar>
+        </article >
     )
 }

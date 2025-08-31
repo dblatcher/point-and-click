@@ -7,11 +7,13 @@ import { HideImageOutlinedIcon } from "../material-icons";
 
 interface Props {
     asset: Partial<ImageAsset>;
+    temporarySrc?: string
+    temporaryFileName?: string
 }
 
 const canvasScale = 300
 
-export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset }: Props) => {
+export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset, temporarySrc }: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const imageRef = useRef<HTMLImageElement>(null)
 
@@ -51,6 +53,7 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset 
 
     }, [imageAsset, canvasScale])
 
+    const imageSourceToUse = temporarySrc ?? imageAsset.href;
 
     return (
         <EditorBox title="Image Preview">
@@ -61,8 +64,8 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset 
                     overflow: 'hidden',
                 }}
             >
-                {imageAsset.href ? (
-                    <img src={imageAsset.href}
+                {imageSourceToUse ? (
+                    <img src={imageSourceToUse}
                         ref={imageRef}
                         alt='sprite preview'
                         style={{
