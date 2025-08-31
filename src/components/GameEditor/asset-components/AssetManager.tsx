@@ -38,6 +38,8 @@ const icons = {
     image: ImageIcon
 }
 
+enum Mode { EDIT = 'edit', CREATE = 'create' }
+
 export const AssetManager = <AssetType extends FileAsset>({
     PreviewComponent,
     FormComponent,
@@ -47,8 +49,10 @@ export const AssetManager = <AssetType extends FileAsset>({
     service,
 }: Props<AssetType>) => {
 
+    const [mode, setMode] = useState<Mode>(Mode.CREATE)
     const [asset, setAsset] = useState<Partial<AssetType>>({})
     const [fileObjectUrl, setFileObjectUrl] = useState<string>()
+    const [fileName, setFileName] = useState<string>()
     const [saveWarning, setSaveWarning] = useState<string>()
     const [uploadWarning, setUploadWarning] = useState<string>()
 
@@ -60,19 +64,24 @@ export const AssetManager = <AssetType extends FileAsset>({
     }
 
     const openFromService = (asset: FileAsset) => {
+        setMode(Mode.EDIT)
         revokeAndSetFileObjectUrl(undefined)
         setAsset(cloneData(asset as AssetType))
     }
 
-    const setNewFile = (file: Blob | File) => {
-        // to do - should this happen?
-        // cannot change the file on an asset without changing id
-        setAsset({
-            id: file.name ?? asset.id,
-            originalFileName: file.name,
-        } as Partial<AssetType>)        
+    const setNewFile = (file: Blob | File, newFileName: string) => {
+        const shouldReplaceId = mode === Mode.CREATE && (!asset.id || asset.id === fileName)
         revokeAndSetFileObjectUrl(fileToObjectUrl(file));
+        setFileName(newFileName)
         setSaveWarning(undefined)
+        if (shouldReplaceId) {
+            setAsset(({ ...asset, id: newFileName }))
+        }
+    }
+
+    const clearFile = () => {
+        revokeAndSetFileObjectUrl(undefined)
+        setFileName(undefined)
     }
 
     const loadUrl = async (url: string) => {
@@ -82,7 +91,7 @@ export const AssetManager = <AssetType extends FileAsset>({
             setUploadWarning(`failed to load ${assetType} URL: ${failure ?? ''}`)
             return
         }
-        setNewFile(blob)
+        setNewFile(blob, url.split('/').pop() ?? url)
     };
 
     const loadFile = async () => {
@@ -91,7 +100,14 @@ export const AssetManager = <AssetType extends FileAsset>({
             setUploadWarning(`failed to upload ${assetType} file`)
             return;
         }
-        setNewFile(file)
+        setNewFile(file, file.name)
+    }
+
+    const startNewAsset = () => {
+        revokeAndSetFileObjectUrl(undefined);
+        setFileName(undefined)
+        setMode(Mode.CREATE)
+        setAsset({})
     }
 
     const saveAssetChanges = () => {
@@ -101,10 +117,9 @@ export const AssetManager = <AssetType extends FileAsset>({
             setSaveWarning('no file')
             return
         }
-        const copy = {
-            ...asset,
-            href: asset.href ?? fileObjectUrl
-        }
+        const copy = fileObjectUrl
+            ? { ...asset, href: fileObjectUrl, originalFileName: fileName }
+            : { ...asset }
         const isValid = validateAsset(copy);
         if (!isValid) {
             setSaveWarning('invalid data')
@@ -112,6 +127,8 @@ export const AssetManager = <AssetType extends FileAsset>({
         }
         service.add(copy)
         setAsset(copy)
+        setMode(Mode.EDIT)
+        setFileName(undefined)
         if (copy.href === fileObjectUrl) {
             setFileObjectUrl(undefined)
         } else {
@@ -119,11 +136,11 @@ export const AssetManager = <AssetType extends FileAsset>({
         }
     }
 
-    const fileState = !!fileObjectUrl ? 'temp file uploaded' : asset.href ? 'file in service' : 'no file'
+    const fileState = !!fileObjectUrl ? `temp file uploaded: ${fileName}` : asset.href ? 'file in service' : 'no file'
 
     return (
         <article>
-            <EditorHeading heading={`${assetType} asset tool`} icon={icons[assetType]} />
+            <EditorHeading heading={`${assetType} asset tool (${mode})`} icon={icons[assetType]} />
             <ButtonGroup sx={{ marginY: 2 }}>
                 <ZipFileControl
                     zipAssets={async () => {
@@ -152,10 +169,7 @@ export const AssetManager = <AssetType extends FileAsset>({
                 <Button
                     variant="contained"
                     startIcon={<AddIcon />}
-                    onClick={() => {
-                        revokeAndSetFileObjectUrl(undefined);
-                        setAsset({})
-                    }}>
+                    onClick={startNewAsset}>
                     build new asset
                 </Button>
 
@@ -179,12 +193,15 @@ export const AssetManager = <AssetType extends FileAsset>({
                             fileDescription={assetType}
                             loadFile={loadFile}
                             loadUrl={loadUrl} />
+                        <Button
+                            disabled={!fileObjectUrl}
+                            onClick={clearFile}
+                        >clear file</Button>
                     </ButtonGroup>
-
-                    <Typography>{fileState}</Typography>
                 </Grid>
                 <Grid item>
-                    <PreviewComponent asset={asset} temporarySrc={fileObjectUrl} />
+                    <Typography>{fileState}</Typography>
+                    <PreviewComponent asset={asset} temporarySrc={fileObjectUrl} temporaryFileName={fileName} />
                 </Grid>
                 <Grid item>
                     <FileAssetSelector assetType={assetType}

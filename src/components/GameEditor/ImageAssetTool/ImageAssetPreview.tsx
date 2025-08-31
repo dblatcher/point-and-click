@@ -13,19 +13,12 @@ interface Props {
 
 const canvasScale = 300
 
-export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset, temporarySrc }: Props) => {
+export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset, temporarySrc, temporaryFileName }: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const imageRef = useRef<HTMLImageElement>(null)
 
     const [naturalHeight, setNaturalHeight] = useState<number | undefined>()
     const [naturalWidth, setNaturalWidth] = useState<number | undefined>()
-
-    const handleLoadEvent = () => {
-        const img = imageRef.current
-        if (!img) { return }
-        setNaturalHeight(img.naturalHeight)
-        setNaturalWidth(img.naturalWidth)
-    }
 
     useEffect(() => {
         const canvas = canvasRef.current
@@ -53,10 +46,28 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset,
 
     }, [imageAsset, canvasScale])
 
+    const handleLoadEvent = () => {
+        const img = imageRef.current
+        if (!img) { return }
+        setNaturalHeight(img.naturalHeight)
+        setNaturalWidth(img.naturalWidth)
+    }
+
     const imageSourceToUse = temporarySrc ?? imageAsset.href;
+
+    const getLabel = () => {
+        if (temporaryFileName) {
+            return temporaryFileName
+        }
+        if (imageAsset.originalFileName) {
+            return imageAsset.originalFileName
+        }
+        return imageSourceToUse ? '[unnamed]' : '[no image file]';
+    }
 
     return (
         <EditorBox title="Image Preview">
+            <Typography textAlign={'center'}>{getLabel()}</Typography>
             <Box component='figure'
                 width={400}
                 position={'relative'}
@@ -85,7 +96,6 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset,
                         <HideImageOutlinedIcon sx={{
                             width: 100, height: 100
                         }} />
-                        <Typography>no image file</Typography>
                     </Box>
                 )}
                 <canvas ref={canvasRef}

@@ -10,21 +10,29 @@ interface Props {
 }
 
 
+
 export const SoundPreview: React.FunctionComponent<Props> = ({ asset, temporarySrc, temporaryFileName }: Props) => {
-    const { href, id, category } = asset
+    const { href, category } = asset
+    const audioSource = temporarySrc ?? href;
 
-    const usingAsset = !!(href && id)
-    const label = usingAsset ? id : temporarySrc ? temporaryFileName ?? '[no name]' : '[no sound file]'
+    const getLabel = () => {
+        if (temporaryFileName) {
+            return temporaryFileName
+        }
+        if (asset.originalFileName) {
+            return asset.originalFileName
+        }
+        return audioSource ? '[unnamed]' : '[no file]';
+    }
 
-    const audioSource = href ?? temporarySrc
-
-    return <EditorBox title="play sound" contentBoxProps={{display:'flex', flexDirection:'column'}}>
-        <Box display='flex' gap={2} alignItems={'center'}>
-            <Typography variant="overline" >{usingAsset ? 'asset:' : 'file:'}</Typography>
-            <Typography fontWeight={'bold'}>{label}</Typography>
-        </Box>
-        <Typography variant="overline" >category: {category ?? 'unset'}</Typography>
-        <audio controls key={audioSource} src={audioSource} controlsList="nodownload noplaybackrate"></audio>
-    </EditorBox>
-
+    return (
+        <EditorBox
+            title="play sound"
+            contentBoxProps={{ display: 'flex', flexDirection: 'column' }}
+        >
+            <Typography textAlign={'center'}>{getLabel()}</Typography>
+            <Typography variant="overline" >category: {category ?? 'unset'}</Typography>
+            <audio controls key={audioSource} src={audioSource} controlsList="nodownload noplaybackrate"></audio>
+        </EditorBox>
+    )
 }
