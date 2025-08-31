@@ -3,14 +3,14 @@ import { fileToObjectUrl, makeDownloadFile, uploadFile, urlToBlob } from "@/lib/
 import { buildAssetZipBlob, ZipReadResult } from "@/lib/zipFiles"
 import { FileAsset } from "@/services/assets"
 import { FileAssetService } from "@/services/FileAssetService"
-import { Alert, Box, Button, ButtonGroup, Grid, Snackbar, Typography } from "@mui/material"
-import { FunctionComponent, useRef, useState } from "react"
+import { Alert, Button, ButtonGroup, Grid, Snackbar, Typography } from "@mui/material"
+import { FunctionComponent, useState } from "react"
 import { EditorHeading } from "../EditorHeading"
 import { FileAssetSelector } from "../FileAssetSelector"
 import { AddIcon, ImageIcon, SoundIcon } from "../material-icons"
-import { ZipFileControl } from "./ZipFileControl"
-import { UploadAssetButtons } from "./UploadAssetButtons"
 import { SaveButtons } from "./SaveButtons"
+import { UploadAssetButtons } from "./UploadAssetButtons"
+import { ZipFileControl } from "./ZipFileControl"
 
 
 type AssetFormProps<AssetType extends FileAsset> = {
@@ -51,35 +51,28 @@ export const AssetManager = <AssetType extends FileAsset>({
     const [fileObjectUrl, setFileObjectUrl] = useState<string>()
     const [saveWarning, setSaveWarning] = useState<string>()
     const [uploadWarning, setUploadWarning] = useState<string>()
-    const fileRef = useRef<File | Blob | null>(null)
 
-    const openFromService = (asset: FileAsset) => {
-        const assetCopy = cloneData(asset as AssetType);
-        fileRef.current = null
+    const revokeAndSetFileObjectUrl = (newUrl: string | undefined) => {
         if (fileObjectUrl && typeof window !== undefined) {
             window.URL.revokeObjectURL(fileObjectUrl);
         }
-        setFileObjectUrl(undefined)
-        setAsset(assetCopy)
+        setFileObjectUrl(newUrl);
+    }
+
+    const openFromService = (asset: FileAsset) => {
+        revokeAndSetFileObjectUrl(undefined)
+        setAsset(cloneData(asset as AssetType))
     }
 
     const setNewFile = (file: Blob | File) => {
-        fileRef.current = file
-        const newUrl = fileToObjectUrl(file);
-
-        if (fileObjectUrl && typeof window !== undefined) {
-            window.URL.revokeObjectURL(fileObjectUrl);
-        }
-
         // to do - should this happen?
         // cannot change the file on an asset without changing id
         setAsset({
             id: file.name ?? asset.id,
             originalFileName: file.name,
-        } as Partial<AssetType>)
-
+        } as Partial<AssetType>)        
+        revokeAndSetFileObjectUrl(fileToObjectUrl(file));
         setSaveWarning(undefined)
-        setFileObjectUrl(newUrl)
     }
 
     const loadUrl = async (url: string) => {
@@ -102,23 +95,28 @@ export const AssetManager = <AssetType extends FileAsset>({
     }
 
     const saveAssetChanges = () => {
-        const newHref = fileRef.current ? fileToObjectUrl(fileRef.current) : undefined;
-        if (!newHref && !asset.href) {
+        setSaveWarning(undefined)
+
+        if (!fileObjectUrl && !asset.href) {
             setSaveWarning('no file')
             return
         }
         const copy = {
             ...asset,
-            href: asset.href ?? newHref
+            href: asset.href ?? fileObjectUrl
         }
         const isValid = validateAsset(copy);
         if (!isValid) {
             setSaveWarning('invalid data')
             return
         }
-        setSaveWarning(undefined)
         service.add(copy)
         setAsset(copy)
+        if (copy.href === fileObjectUrl) {
+            setFileObjectUrl(undefined)
+        } else {
+            revokeAndSetFileObjectUrl(undefined)
+        }
     }
 
     const fileState = !!fileObjectUrl ? 'temp file uploaded' : asset.href ? 'file in service' : 'no file'
@@ -155,11 +153,7 @@ export const AssetManager = <AssetType extends FileAsset>({
                     variant="contained"
                     startIcon={<AddIcon />}
                     onClick={() => {
-                        if (fileObjectUrl && typeof window !== undefined) {
-                            window.URL.revokeObjectURL(fileObjectUrl);
-                        }
-                        fileRef.current = null
-                        setFileObjectUrl(undefined)
+                        revokeAndSetFileObjectUrl(undefined);
                         setAsset({})
                     }}>
                     build new asset
