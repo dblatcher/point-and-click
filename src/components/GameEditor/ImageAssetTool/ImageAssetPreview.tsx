@@ -44,7 +44,7 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset,
             ctx.stroke()
         }
 
-    }, [imageAsset, canvasScale])
+    }, [imageAsset])
 
     const handleLoadEvent = () => {
         const img = imageRef.current

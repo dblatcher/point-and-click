@@ -1,28 +1,36 @@
 import { AddIcon, SaveIcon } from "@/components/GameEditor/material-icons";
 import { Button } from "@mui/material";
 
+enum Mode { EDIT = 'edit', CREATE = 'create' }
+
 interface Props {
-    isNewAsset: boolean
-    saveAssetChanges: { (): void }
+    idIsValid: boolean;
+    idIsAlreadyTaken: boolean;
+    saveAssetChanges: { (): void };
+    mode: Mode;
 }
 
+export const SaveButtons = ({ saveAssetChanges, idIsAlreadyTaken, idIsValid, mode }: Props) => {
 
-export const SaveButtons = ({ saveAssetChanges, isNewAsset }: Props) => {
-    return (
-        <>
-            {isNewAsset ? (
-                <Button variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={saveAssetChanges}>
-                    Save New Asset
-                </Button>
-            ) : (
-                <Button variant="contained"
-                    startIcon={<SaveIcon />}
-                    onClick={saveAssetChanges}>
-                    Save Changes
-                </Button>
-            )}
-        </>
-    )
+    if (mode === 'edit') {
+        return <Button variant="contained"
+            fullWidth
+            startIcon={<SaveIcon />}
+            onClick={saveAssetChanges}>
+            Save Changes
+        </Button>
+    }
+
+    return <Button variant="contained"
+        fullWidth
+        disabled={!idIsValid || idIsAlreadyTaken}
+        startIcon={<AddIcon />}
+        onClick={() => {
+            if (!idIsValid || idIsAlreadyTaken) {
+                return
+            }
+            saveAssetChanges()
+        }}>
+        Save New Asset
+    </Button>
 }

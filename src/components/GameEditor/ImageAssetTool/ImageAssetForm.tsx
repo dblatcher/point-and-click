@@ -1,9 +1,7 @@
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
-import { StringInput } from "@/components/SchemaForm/StringInput";
 import { ImageAsset, imageAssetCategories, ImageAssetCategory } from "@/services/assets";
 import { Stack } from "@mui/material";
-import { EditorBox } from "../EditorBox";
 
 interface Props {
     asset: Partial<ImageAsset>;
@@ -13,13 +11,8 @@ interface Props {
 
 export const ImageAssetForm = ({ asset: imageAsset, changeValue}: Props) => {
     return (
-        <EditorBox title="Asset Properties" boxProps={{ marginBottom: 1 }}>
+        <>
             <Stack spacing={2}>
-                <StringInput
-                    value={imageAsset.id ?? ''}
-                    label="ID"
-                    inputHandler={(value) => { changeValue({ 'id': value }) }}
-                />
                 <SelectInput optional
                     value={imageAsset.category}
                     label="category"
@@ -55,6 +48,6 @@ export const ImageAssetForm = ({ asset: imageAsset, changeValue}: Props) => {
                     />
                 </Stack>
             </Stack>
-        </EditorBox>
+        </>
     )
 }
