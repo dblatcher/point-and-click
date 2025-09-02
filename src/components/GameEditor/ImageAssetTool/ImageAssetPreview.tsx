@@ -4,6 +4,7 @@ import { ImageAsset } from "@/services/assets";
 import { Box, Typography } from "@mui/material";
 import { EditorBox } from "../EditorBox";
 import { HideImageOutlinedIcon } from "../material-icons";
+import { clamp } from "@/lib/util";
 
 interface Props {
     asset: Partial<ImageAsset>;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const canvasScale = 300
+const maxWidth = 300
 
 export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset, temporarySrc, temporaryFileName }: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -65,12 +67,20 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset,
         return imageSourceToUse ? '[unnamed]' : '[no image file]';
     }
 
+    const aspect = naturalHeight && naturalWidth ? (naturalHeight / naturalWidth) : 1;
+    const displayWidth = clamp(naturalWidth ?? maxWidth, maxWidth);
+    const displayHeight = displayWidth * aspect
+
     return (
-        <EditorBox title="Image Preview">
+        <EditorBox title="Image Preview" contentBoxProps={{
+            minWidth: maxWidth
+        }}>
             <Typography textAlign={'center'}>{getLabel()}</Typography>
             <Box component='figure'
-                width={400}
+                width={displayWidth}
+                height={displayHeight}
                 position={'relative'}
+                margin={'0 auto'}
                 sx={{
                     overflow: 'hidden',
                 }}
