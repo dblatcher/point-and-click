@@ -1,55 +1,57 @@
+import { AddIcon } from "@/components/GameEditor/material-icons";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
-import { BackgroundLayer } from "@/definitions";
+import { BackgroundLayer, RoomData } from "@/definitions";
 import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
-import {AddIcon} from "@/components/GameEditor/material-icons";
-import { Box, IconButton, Stack } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { useState } from "react";
 import { BackDrop } from "./Backdrop";
+import { BackgroundLayerControl } from "./BackgroundLayerControl";
 
 interface Props {
     imageAssets: Readonly<ImageAsset>[];
     addNewLayer: { (backgroundLayer: BackgroundLayer): void };
+    roomData: RoomData
 }
 
 
-export function BackgroundLayerForm({ imageAssets, addNewLayer }: Props) {
-    const [imageId, setImageId] = useState<string | undefined>(undefined);
-    const [parallax, setParallax] = useState<number>(0);
+export function BackgroundLayerForm({ imageAssets, addNewLayer, roomData }: Props) {
+
+    const [newLayer, setNewLayer] = useState<BackgroundLayer>({
+        imageId: '',
+        parallax: 0,
+    })
+
+    const addLayerAndClearForm = () => {
+        if (!newLayer.imageId) { return }
+        addNewLayer(newLayer)
+        setNewLayer({
+            imageId: '',
+            parallax: 0,
+        })
+    }
+
+
     return (
-        <Stack direction="row" spacing={2} flex={1} alignSelf={'stretch'}>
-            <Box width={46} />
-            <Box minWidth={200}>
-                <SelectInput
-                    value={imageId}
-                    options={listIds(imageAssets)}
-                    inputHandler={setImageId}
-                    optional
-                />
-            </Box>
-            <Box maxWidth={100}>
-                <NumberInput value={parallax}
-                    inputHandler={setParallax}
-                    label="parallax"
-                    max={2} min={0} step={.05}
-                />
-            </Box>
-            <Box position={'relative'} height={50} width={100} border={'1px solid'}>
-                {imageId && <BackDrop layer={{ imageId, parallax }} />}
-            </Box>
+        <Box display={'flex'} flex={1} alignItems={'center'}>
+            <Box width={47} />
+            <BackgroundLayerControl
+                layer={newLayer}
+                roomData={roomData}
+                imageAssets={imageAssets}
+                index={-1}
+                change={(_index, mod) => {
+                    setNewLayer({ ...newLayer, ...mod })
+                }}
+            />
             <IconButton
-                size="small"
+                size="large"
                 color="primary"
                 sx={{ flexShrink: 0 }}
-                disabled={!imageId}
-                onClick={() => {
-                    if (!imageId) { return }
-                    addNewLayer({ imageId, parallax })
-                    setParallax(0)
-                    setImageId('')
-                }}
-            ><AddIcon /></IconButton>
-        </Stack>
+                disabled={!newLayer.imageId}
+                onClick={addLayerAndClearForm}
+            ><AddIcon fontSize="large" /></IconButton>
+        </Box>
     )
 }

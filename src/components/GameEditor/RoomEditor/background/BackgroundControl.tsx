@@ -17,7 +17,7 @@ export const BackgroundControl = ({ room }: Props) => {
     const { modifyRoom } = useGameDesign()
     const { imageAssets } = useAssets()
     const updateRoom = (mod: Partial<RoomData>, description?: string) => {
-        const base  =`change background, room ${room.id}`;
+        const base = `change background, room ${room.id}`;
         modifyRoom(description ? `${base}: ${description}` : base, room.id, mod)
     }
 
@@ -44,22 +44,21 @@ export const BackgroundControl = ({ room }: Props) => {
                 setValue={backgroundColor => updateRoom({ backgroundColor }, `set background color to ${backgroundColor}`)}
             />
             <ArrayControl
-                stackProps={{
-                    maxWidth: 500,
-                    sx: {},
-                }}
+                stackProps={{ sx: {} }}
                 list={room.background}
                 buttonSize='large'
                 horizontalMoveButtons
                 mutateList={(background) => { updateRoom({ background }) }}
                 describeItem={(layer, index) => (
                     <BackgroundLayerControl index={index}
+                        roomData={room}
                         imageAssets={backgroundImageAssets}
                         layer={layer}
                         change={changeBackgroundLayer} />
                 )}
             />
             <BackgroundLayerForm
+                roomData={room}
                 imageAssets={backgroundImageAssets}
                 addNewLayer={addBackground} />
         </Stack>

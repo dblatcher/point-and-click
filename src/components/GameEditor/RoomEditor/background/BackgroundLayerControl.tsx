@@ -1,23 +1,25 @@
-import { ImageAsset } from "@/services/assets";
-import { BackgroundLayer } from "@/definitions";
-import { clamp, listIds } from "@/lib/util";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
-import { Box, Stack } from "@mui/material";
+import { BackgroundLayer, RoomData } from "@/definitions";
+import { clamp, listIds } from "@/lib/util";
+import { ImageAsset } from "@/services/assets";
+import { Box } from "@mui/material";
 import { BackDrop } from "./Backdrop";
 
 
 interface Props {
     index: number;
     layer: BackgroundLayer;
+    roomData: RoomData;
     imageAssets: Readonly<ImageAsset>[];
     change: { (index: number, mod: Partial<BackgroundLayer>, description?: string): void };
 }
 
-export function BackgroundLayerControl({ layer, index, imageAssets, change }: Props) {
-    const { parallax, imageId } = layer
 
-    return <Stack direction="row" spacing={2} flex={1} alignItems={'center'}>
+export function BackgroundLayerControl({ layer, index, imageAssets, change, roomData }: Props) {
+    const { parallax, imageId, placement } = layer
+
+    return <Box display={'flex'} alignItems={'center'} gap={2}>
         <Box minWidth={200}>
             <SelectInput
                 value={imageId}
@@ -37,8 +39,8 @@ export function BackgroundLayerControl({ layer, index, imageAssets, change }: Pr
                 max={2} min={0} step={.05}
             />
         </Box>
-        <Box position={'relative'} height={50} width={100} border={'1px solid'}>
-            <BackDrop layer={layer} />
-        </Box>
-    </Stack>
+        <BackDrop.frame roomData={roomData} frameHeight={60} >
+            <BackDrop layer={layer} roomData={roomData} />
+        </BackDrop.frame >
+    </Box>
 }

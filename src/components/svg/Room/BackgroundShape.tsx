@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function BackgroundShape({ layer, roomData, viewAngle }: Props) {
-    const { parallax, imageId } = layer
+    const { parallax, imageId, placement } = layer
     const { frameWidth, height: roomHeight } = roomData
 
     const { getImageAsset } = useAssets()
@@ -20,6 +20,15 @@ export default function BackgroundShape({ layer, roomData, viewAngle }: Props) {
 
     const center = (frameWidth / 2) + getShift(viewAngle, parallax, roomData)
     const left = center - layerWidth / 2
+
+    if (placement) {
+        return <svg x={left} y={0} style={{ overflow: 'visible', pointerEvents: 'none' }}>
+        <image 
+            {...placement}
+            href={imageUrl} 
+            preserveAspectRatio='none' />
+    </svg>
+    }
 
     return <svg x={left} y={0} style={{ overflow: 'visible', pointerEvents: 'none' }}>
         <image width={layerWidth} height={roomHeight} href={imageUrl} preserveAspectRatio='none' />
