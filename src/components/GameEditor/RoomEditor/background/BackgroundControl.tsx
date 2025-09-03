@@ -16,31 +16,32 @@ interface Props {
 export const BackgroundControl = ({ room }: Props) => {
     const { modifyRoom } = useGameDesign()
     const { imageAssets } = useAssets()
-    const updateRoom = (mod: Partial<RoomData>) => {
-        modifyRoom(`change background, room ${room.id}`, room.id, mod)
+    const updateRoom = (mod: Partial<RoomData>, description?: string) => {
+        const base  =`change background, room ${room.id}`;
+        modifyRoom(description ? `${base}: ${description}` : base, room.id, mod)
     }
 
     const backgroundImageAssets = imageAssets.filter(image => ['background', 'any'].includes(image.category))
 
-    const changeBackground = (index: number, mod: Partial<BackgroundLayer>) => {
+    const changeBackgroundLayer = (index: number, mod: Partial<BackgroundLayer>, description?: string) => {
         const background = cloneData(room.background)
         const layer = background[index];
         if (!layer) {
             return
         }
         background[index] = { ...layer, ...mod };
-        updateRoom({ background })
+        updateRoom({ background }, description)
     }
     const addBackground = (newLayer: BackgroundLayer) => {
         const { background } = room
-        updateRoom({ background: [...background, newLayer] })
+        updateRoom({ background: [...background, newLayer] }, `add layer`)
     }
 
     return (
         <Stack spacing={0}>
             <ColorInput label="backdrop color"
                 value={room.backgroundColor ?? '#ffffff'}
-                setValue={backgroundColor => updateRoom({ backgroundColor })}
+                setValue={backgroundColor => updateRoom({ backgroundColor }, `set background color to ${backgroundColor}`)}
             />
             <ArrayControl
                 stackProps={{
@@ -55,7 +56,7 @@ export const BackgroundControl = ({ room }: Props) => {
                     <BackgroundLayerControl index={index}
                         imageAssets={backgroundImageAssets}
                         layer={layer}
-                        change={changeBackground} />
+                        change={changeBackgroundLayer} />
                 )}
             />
             <BackgroundLayerForm
