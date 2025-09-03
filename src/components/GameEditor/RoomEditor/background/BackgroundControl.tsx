@@ -15,28 +15,20 @@ interface Props {
 
 export const BackgroundControl = ({ room }: Props) => {
     const { modifyRoom } = useGameDesign()
-    const { imageAssets} = useAssets()
+    const { imageAssets } = useAssets()
     const updateRoom = (mod: Partial<RoomData>) => {
         modifyRoom(`change background, room ${room.id}`, room.id, mod)
     }
 
     const backgroundImageAssets = imageAssets.filter(image => ['background', 'any'].includes(image.category))
 
-    const changeBackground = (index: number, propery: keyof BackgroundLayer, newValue: string | number) => {
+    const changeBackground = (index: number, mod: Partial<BackgroundLayer>) => {
         const background = cloneData(room.background)
-        const layer = background[index]
-        switch (propery) {
-            case 'parallax':
-                if (typeof newValue === 'number') {
-                    layer[propery] = newValue
-                }
-                break;
-            case 'imageId':
-                if (typeof newValue === 'string') {
-                    layer[propery] = newValue
-                }
-                break;
+        const layer = background[index];
+        if (!layer) {
+            return
         }
+        background[index] = { ...layer, ...mod };
         updateRoom({ background })
     }
     const addBackground = (newLayer: BackgroundLayer) => {

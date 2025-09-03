@@ -11,7 +11,7 @@ interface Props {
     index: number;
     layer: BackgroundLayer;
     imageAssets: Readonly<ImageAsset>[];
-    change: { (index: number, propery: keyof BackgroundLayer, newValue: string | number): void };
+    change: { (index: number, mod: Partial<BackgroundLayer>): void };
 }
 
 export function BackgroundLayerControl({ layer, index, imageAssets, change }: Props) {
@@ -22,15 +22,15 @@ export function BackgroundLayerControl({ layer, index, imageAssets, change }: Pr
             <SelectInput
                 value={imageId}
                 options={listIds(imageAssets)}
-                inputHandler={(value) => {
-                    if (!value) { return }
-                    change(index, 'imageId', value)
+                inputHandler={(imageId) => {
+                    if (!imageId) { return }
+                    change(index, { imageId })
                 }}
             />
         </Box>
         <Box maxWidth={100}>
             <NumberInput value={parallax}
-                inputHandler={(value) => { change(index, 'parallax', clamp(value, 2, 0)) }}
+                inputHandler={(value) => { change(index, { parallax: clamp(value, 2, 0) }) }}
                 label="parallax"
                 max={2} min={0} step={.05}
             />
