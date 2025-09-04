@@ -57,8 +57,8 @@ export class Preview extends Component<Props, State> {
         this.state = {
             viewAngle: 0,
             maxWidth: 500,
-            renderAllZones: true,
-            highlightHotspots: true,
+            renderAllZones: false,
+            highlightHotspots: false,
             showScaleLines: false,
             showRealActors: true,
         }

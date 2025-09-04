@@ -4,7 +4,7 @@ import { BackgroundLayer, RoomData } from "@/definitions";
 import { clamp, listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
 import { Box, Button } from "@mui/material";
-import { BackDrop } from "./Backdrop";
+import { BackDrop, BackDropFrame } from "./Backdrop";
 import { XYControl } from "../../XYControl";
 import { WidthHeightControl } from "../../WidthHeightControl";
 
@@ -57,9 +57,9 @@ export function BackgroundLayerControl({ layer, index, imageAssets, change, room
             />
             <Button sx={{ minWidth: 100 }} onClick={togglePlacement}>{placement ? 'placed' : 'full size'}</Button>
         </Box>
-        <BackDrop.frame roomData={roomData} frameHeight={60} >
+        <BackDropFrame roomData={roomData} frameHeight={60} >
             <BackDrop layer={layer} roomData={roomData} />
-        </BackDrop.frame >
+        </BackDropFrame >
         <Box minWidth={120}>
             {placement && <>
                 <XYControl point={placement} changePosition={(_, mod) => change(index, { placement: { ...placement, ...mod } })} />

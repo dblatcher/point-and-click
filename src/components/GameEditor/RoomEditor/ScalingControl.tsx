@@ -140,9 +140,9 @@ export const ScalingControl = ({ room }: Props) => {
                         ))}
                     </Room>
                 </div>
-                <Box>
+                <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
                     <ViewAngleSlider viewAngle={viewAngle} setViewAngle={setViewAngle} />
-                    <NumberInput label="preview scale" value={scale}
+                    <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>
             </Grid>

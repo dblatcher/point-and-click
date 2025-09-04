@@ -1,5 +1,5 @@
 import { RoomData, ZoneType } from "@/definitions";
-import { Stack, Tab, Tabs } from "@mui/material";
+import { Box, Stack, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import { EditorHeading } from "../EditorHeading";
 import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
@@ -70,10 +70,10 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
 
         {tabOpen === RoomEditorTab.NameAndDescription && <RoomDescriptionControl room={data} />}
         {tabOpen === RoomEditorTab.BackgroundAndDimension && (
-            <>
+            <Box display={'flex'} flexWrap={'wrap'}>
                 <DimensionControl room={data} />
                 <BackgroundControl room={data} />
-            </>
+            </Box>
         )}
         {zoneType && (
             <ZoneFeaturesControl room={data} zoneType={zoneType} />

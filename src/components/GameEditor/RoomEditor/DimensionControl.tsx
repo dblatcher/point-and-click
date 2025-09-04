@@ -94,7 +94,7 @@ export const DimensionControl = ({ room }: Props) => {
                     <ViewAngleSlider viewAngle={viewAngle} setViewAngle={setViewAngle} />
                 </Box>
                 <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
-                    <NumberInput label="preview scale" value={scale}
+                    <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={1} min={.5} step={.05} />
                 </Box>
             </RightGridCell>

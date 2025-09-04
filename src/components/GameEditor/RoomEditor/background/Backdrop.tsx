@@ -39,12 +39,15 @@ export const BackDrop = ({ layer, filter, roomData }: { layer: BackgroundLayer, 
     }}></div>
 }
 
-BackDrop.frame = ({ children, frameHeight, roomData }: { frameHeight: number, children: ReactNode, roomData: RoomData }) => (
+export const BackDropFrame = ({ children, frameHeight, roomData }: { frameHeight: number, children: ReactNode, roomData: RoomData }) => (
     <Box
         position={'relative'}
         minWidth={roomData.width * (frameHeight / roomData.height)}
         height={frameHeight}
         width={roomData.width * (frameHeight / roomData.height)}
         border={'1px solid'}
+        sx={{
+            backgroundColor: roomData.backgroundColor
+        }}
     >{children}</Box>
 )
