@@ -32,7 +32,7 @@ const LeftGridCell = ({ children }: { children?: ReactNode }) => <Grid
 
 export const DimensionControl = ({ room }: Props) => {
     const { modifyRoom } = useGameDesign()
-    const [scale, setScale] = useState(.75)
+    const [scale, setScale] = useState(1)
     const [viewAngle, setViewAngle] = useState(0)
     const updateRoom = (mod: Record<string, FieldValue>) => {
         modifyRoom(`change dimension on room ${room.id}`, room.id, mod)
@@ -40,7 +40,7 @@ export const DimensionControl = ({ room }: Props) => {
     const frameCenter = (room.width * .5) - (room.frameWidth * .5)
     const viewBoxLeft = frameCenter - (viewAngle * frameCenter);
 
-    return <Box>
+    return <Box width={room.width * scale * (12 / 11)} padding={2}>
         <Grid container>
             <LeftGridCell />
             <RightGridCell row>
@@ -95,7 +95,7 @@ export const DimensionControl = ({ room }: Props) => {
                 </Box>
                 <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
                     <NumberInput label="preview scale" value={scale} notFullWidth
-                        inputHandler={setScale} max={1} min={.5} step={.05} />
+                        inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>
             </RightGridCell>
         </Grid>

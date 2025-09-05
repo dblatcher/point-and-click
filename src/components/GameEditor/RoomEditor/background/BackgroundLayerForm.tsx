@@ -1,12 +1,8 @@
 import { AddIcon } from "@/components/GameEditor/material-icons";
-import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { BackgroundLayer, RoomData } from "@/definitions";
-import { listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
 import { Box, IconButton } from "@mui/material";
 import { useState } from "react";
-import { BackDrop } from "./Backdrop";
 import { BackgroundLayerControl } from "./BackgroundLayerControl";
 
 interface Props {
@@ -34,8 +30,16 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer, roomData }: Prop
 
 
     return (
-        <Box display={'flex'} flex={1} alignItems={'center'}>
-            <Box width={47} />
+        <Box display={'flex'} alignItems={'center'}>
+            <Box width={47} >
+                <IconButton
+                    size="large"
+                    color="primary"
+                    sx={{ flexShrink: 0 }}
+                    disabled={!newLayer.imageId}
+                    onClick={addLayerAndClearForm}
+                ><AddIcon fontSize="large" /></IconButton>
+            </Box>
             <BackgroundLayerControl
                 layer={newLayer}
                 roomData={roomData}
@@ -45,13 +49,6 @@ export function BackgroundLayerForm({ imageAssets, addNewLayer, roomData }: Prop
                     setNewLayer({ ...newLayer, ...mod })
                 }}
             />
-            <IconButton
-                size="large"
-                color="primary"
-                sx={{ flexShrink: 0 }}
-                disabled={!newLayer.imageId}
-                onClick={addLayerAndClearForm}
-            ><AddIcon fontSize="large" /></IconButton>
         </Box>
     )
 }

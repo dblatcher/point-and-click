@@ -38,7 +38,7 @@ export const BackgroundControl = ({ room }: Props) => {
     }
 
     return (
-        <Stack spacing={0}>
+        <Stack spacing={0} justifyContent={'flex-start'}>
             <ColorInput label="backdrop color"
                 value={room.backgroundColor ?? '#ffffff'}
                 setValue={backgroundColor => updateRoom({ backgroundColor }, `set background color to ${backgroundColor}`)}

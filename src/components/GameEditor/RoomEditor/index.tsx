@@ -43,7 +43,7 @@ const tabToZoneType = (tab: RoomEditorTab): ZoneType | undefined => {
 
 export const RoomEditor = ({ data }: RoomEditorProps) => {
 
-    const [tabOpen, setTabOpen] = useState(RoomEditorTab.BackgroundAndDimension)
+    const [tabOpen, setTabOpen] = useState(RoomEditorTab.NameAndDescription)
     const { id } = data
     const zoneType = tabToZoneType(tabOpen)
 
@@ -70,7 +70,7 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
 
         {tabOpen === RoomEditorTab.NameAndDescription && <RoomDescriptionControl room={data} />}
         {tabOpen === RoomEditorTab.BackgroundAndDimension && (
-            <Box display={'flex'} flexWrap={'wrap'}>
+            <Box display={'flex'} flexWrap={'wrap'} gap={4}>
                 <DimensionControl room={data} />
                 <BackgroundControl room={data} />
             </Box>
