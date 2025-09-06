@@ -25,12 +25,12 @@ export const PUT_OUT_FIRE: Sequence = {
                     {
                         type: 'act', steps: [{
                             duration: 200, animation: 'fade'
-                        }]
+                        }], endStatus: 'out'
                     }
                 ]
             },
             immediateConsequences: [
-                { type: 'changeStatus', targetId: 'FIRE', status: 'out', targetType: 'actor' }
+                // { type: 'changeStatus', targetId: 'FIRE', status: 'out', targetType: 'actor' }
             ]
         },
         {

@@ -89,23 +89,26 @@ const orderIsFinished = (order: Order): boolean => {
  */
 export function followOrder(subject: ActorData, cellMatrix: CellMatrix, orders: Order[] | undefined, state: GameState, sprite?: Sprite, instantMode = false, orderSpeed = 1): boolean {
     if (!orders || orders.length === 0) { return false }
-    const [nextOrder] = orders
+    const [currentOrder] = orders
 
-    if (!nextOrder._started) {
-        state.emitter.emit('in-game-event', { type: 'order', order: nextOrder, actor: subject })
-        if (nextOrder.startDirection) {
-            subject.direction = nextOrder.startDirection
+    if (!currentOrder._started) {
+        state.emitter.emit('in-game-event', { type: 'order', order: currentOrder, actor: subject })
+        if (currentOrder.startDirection) {
+            subject.direction = currentOrder.startDirection
         }
-        nextOrder._started = true
+        currentOrder._started = true
     }
-    executeOrder(nextOrder, subject, cellMatrix, state, orders, sprite, instantMode, orderSpeed);
+    executeOrder(currentOrder, subject, cellMatrix, state, orders, sprite, instantMode, orderSpeed);
 
-    if (orderIsFinished(nextOrder)) {
-        if (nextOrder.endDirection) {
-            subject.direction = nextOrder.endDirection
+    if (orderIsFinished(currentOrder)) {
+        if (currentOrder.endDirection) {
+            subject.direction = currentOrder.endDirection
+        }
+        if (currentOrder.endStatus) {
+            subject.status = currentOrder.endStatus
         }
         orders.shift()
-        if (nextOrder.type === 'move' && nextOrder.doPendingInteractionWhenFinished) {
+        if (currentOrder.type === 'move' && currentOrder.doPendingInteractionWhenFinished) {
             return true
         }
     }

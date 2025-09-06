@@ -91,10 +91,10 @@ export const ActorFigure: FunctionComponent<Props> = ({
     const intermittentSoundValues = soundValues.filter(sv => typeof sv.frameIndex === 'number')
 
     const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
-    const frames = spriteObject?.getFrames(animationName, direction) || []
     const spriteScale = getScale(y, roomData.scaling)
-
+    
     const updateFrame = (): void => {
+        const frames = spriteObject?.getFrames(animationName, direction) || []
         if (!frames || isPaused) { return }
         if (currentOrder?.type === 'act') {
             const [currentAction] = currentOrder.steps

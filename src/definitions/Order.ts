@@ -6,6 +6,7 @@ const orderBase = {
     narrative: NarrativeSchema.optional(),
     startDirection: DirectionEnum.optional(),
     endDirection: DirectionEnum.optional(),
+    endStatus: z.string().optional(),
 }
 
 const moveStepSchema = z.object({
@@ -17,31 +18,28 @@ const moveStepSchema = z.object({
 export type MoveStep = z.infer<typeof moveStepSchema>
 
 export const MoveOrderSchema = z.object({
-    ...orderBase,
     type: z.literal('move'),
     roomId: z.string().optional(),
     pathIsSet: z.optional(z.boolean()),
     doPendingInteractionWhenFinished: z.optional(z.boolean()),
     steps: z.array(moveStepSchema),
-})
+}).extend(orderBase)
 export type MoveOrder = z.infer<typeof MoveOrderSchema>
 
 export const GotoOrderSchema = z.object({
-    ...orderBase,
     type: z.literal('goTo'),
     animation: z.optional(z.string()),
     speed: z.optional(z.number()),
     targetId: z.string(),
-})
+}).extend(orderBase)
 export type GotoOrder = z.infer<typeof GotoOrderSchema>
 
 export const SayOrderSchema = z.object({
-    ...orderBase,
     type: z.literal('say'),
     animation: z.optional(z.string()),
     text: z.string(),
     time: z.number(),
-})
+}).extend(orderBase)
 export type SayOrder = z.infer<typeof SayOrderSchema>
 
 
@@ -54,10 +52,9 @@ const actStepSchema = z.object({
 export type ActStep = z.infer<typeof actStepSchema>
 
 export const ActOrderSchema = z.object({
-    ...orderBase,
     type: z.literal('act'),
     steps: z.array(actStepSchema),
-})
+}).extend(orderBase)
 export type ActOrder = z.infer<typeof ActOrderSchema>
 
 export const orderSchema = z.union([MoveOrderSchema, ActOrderSchema, SayOrderSchema, GotoOrderSchema])

@@ -2,17 +2,16 @@ import { SchemaForm, getModification } from "@/components/SchemaForm";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { AnyConsequence, Consequence, GameDesign, Order } from "@/definitions";
-import { Narrative } from "@/definitions/BaseTypes";
 import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findById, insertAt, listIds } from "@/lib/util";
 import { Box } from "@mui/material";
+import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
-import { EditorBox } from "../EditorBox";
-import { NarrativeEditor } from "../NarrativeEditor";
-import { OrderForm } from "../OrderForm";
 import { OrderTypeButtons } from "../OrderTypeButtons";
+import { OrderCard } from "../SequenceEditor/OrderCard";
+import { OrderDialog } from "../SequenceEditor/OrderDialog";
 import { SoundPreview } from "../SoundAssetTool/SoundPreview";
 import { SpritePreview } from "../SpritePreview";
 import { getDefaultOrder } from "../defaults";
@@ -40,8 +39,8 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
 export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) => {
     const { gameDesign } = useGameDesign()
     const { soundAssets, soundService } = useAssets()
-    const { ids: targetIds} = getTargetLists(gameDesign)
-    const { ids: targetIdsWithoutItems, descriptions: targetDescriptionsWithoutItems } = getTargetLists(gameDesign, true)
+    const [orderIndexDialog, setDialogOrderIndex] = useState<number>()
+    const { ids: targetIds } = getTargetLists(gameDesign)
 
     const { branchIdList, choiceRefList } = getBranchIdAndChoiceRefOptions(consequence.conversationId, consequence.branchId, gameDesign)
     const optionListIds = {
@@ -76,10 +75,6 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         const ordersCopy = [...(consequence.orders || [])]
         ordersCopy.splice(index, 1, newOrder)
         updateProperty('orders', ordersCopy)
-    }
-
-    const updateNarrative = (newNarrative: Narrative | undefined) => {
-        update({ ...consequence, narrative: newNarrative })
     }
 
     const actor = findById(consequence.actorId, gameDesign.actors)
@@ -121,15 +116,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                     <ArrayControl color="secondary"
                         list={consequence.orders}
                         describeItem={(order, index) =>
-                            <EditorBox title={`${order.type} order`} themePalette="secondary">
-                                <OrderForm
-                                    actorId={consequence.actorId} // consequence has orders, it should have actorId
-                                    animationSuggestions={getStatusSuggestions(consequence.actorId, gameDesign)}
-                                    targetIdOptions={targetIdsWithoutItems}
-                                    targetIdDescriptions={targetDescriptionsWithoutItems}
-                                    updateData={(newOrder) => { editOrder(newOrder, index) }}
-                                    data={order} key={index} />
-                            </EditorBox>
+                            <OrderCard order={order} handleEditButton={() => setDialogOrderIndex(index)} />
                         }
                         createItem={() => getDefaultOrder('say')}
                         customCreateButton={index => (
@@ -142,7 +129,6 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                         mutateList={newList => { updateProperty('orders', newList) }}
                     />
                 )}
-                <NarrativeEditor narrative={consequence.narrative} update={updateNarrative} />
             </Box>
 
             {needsRoomPreview && <Box paddingY={2} paddingLeft={2}>
@@ -156,6 +142,15 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                 <Box paddingY={2} paddingLeft={2}>
                     <SpritePreview data={actor} noBaseLine />
                 </Box>
+            )}
+            {typeof orderIndexDialog === 'number' && (
+                <OrderDialog
+                    order={consequence.orders?.[orderIndexDialog]}
+                    actorId={consequence.actorId}
+                    index={orderIndexDialog}
+                    close={() => setDialogOrderIndex(undefined)}
+                    changeOrder={(newOrder) => { editOrder(newOrder, orderIndexDialog) }}
+                />
             )}
         </Box>
     )

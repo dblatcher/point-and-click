@@ -8,7 +8,7 @@ export const LIGHT_FIRE: Sequence = {
             actorOrders: {
                 PLAYER: [
                     {
-                        roomId:'OUTSIDE',
+                        roomId: 'OUTSIDE',
                         type: 'move', steps: [{
                             x: 240, y: 10
                         }]
@@ -31,7 +31,7 @@ export const LIGHT_FIRE: Sequence = {
                 ],
                 FIRE: [
                     {
-                        type: 'act', steps: [{
+                        type: 'act', endStatus: 'burning', steps: [{
                             duration: 200, animation: 'fade', reverse: true
                         }]
                     },
@@ -45,13 +45,12 @@ export const LIGHT_FIRE: Sequence = {
                 ]
             },
             immediateConsequences: [
-                { type: 'changeStatus', targetId: 'FIRE', status: 'burning', targetType: 'actor' }
             ]
         },
         {
-            immediateConsequences:[
+            immediateConsequences: [
                 {
-                    type:'storyBoardConsequence',
+                    type: 'storyBoardConsequence',
                     storyBoardId: 'part-two'
                 }
             ]

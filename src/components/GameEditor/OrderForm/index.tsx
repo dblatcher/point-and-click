@@ -1,9 +1,9 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
+import { StringInput } from "@/components/SchemaForm/StringInput";
 import { Direction, directions } from "@/definitions/BaseTypes";
 import { Order } from "@/definitions/Order";
 import { Box } from "@mui/material";
 import { ReactNode } from "react";
-import { NarrativeEditor } from "../NarrativeEditor";
 import { ActOrderForm } from "./ActOrderForm";
 import { GoToOrderForm } from "./GoToOrderForm";
 import { MoveOrderForm } from "./MoveOrderForm";
@@ -71,9 +71,13 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
                     value={data.endDirection}
                     inputHandler={endDirection => updateData({ ...data, endDirection: endDirection as Direction })}
                 />
-                <NarrativeEditor
-                    narrative={data.narrative}
-                    update={newNarrative => updateData({ ...data, narrative: newNarrative })}
+                <StringInput label="status when done"
+                    notFullWidth
+                    minWidth={100}
+                    optional
+                    suggestions={animationSuggestions}
+                    value={data.endStatus ?? ''}
+                    inputHandler={endStatus => updateData({ ...data, endStatus })}
                 />
             </Box>
         </Box>

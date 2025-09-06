@@ -109,7 +109,7 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
 
             {orderParams && (
                 <OrderDialog
-                    sequence={sequence}
+                    order={sequence?.stages[orderParams.stage].actorOrders?.[orderParams.actorId]?.[orderParams.index]}
                     {...orderParams}
                     changeOrder={(newOrder) => { changeOrder(newOrder, orderParams.stage, orderParams.actorId, orderParams.index) }}
                     close={() => { setOrderParams(undefined) }}

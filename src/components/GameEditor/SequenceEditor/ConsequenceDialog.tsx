@@ -2,6 +2,7 @@ import { Consequence } from "@/definitions";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, useTheme } from "@mui/material";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";
+import { NarrativeEditor } from "../NarrativeEditor";
 
 interface Props {
     consequence: Consequence
@@ -33,6 +34,7 @@ export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence,
                 )}
             </DialogContent>
             <DialogActions>
+                <NarrativeEditor narrative={consequence.narrative} update={narrative => handleConsequenceUpdate({ ...consequence, narrative })} />
                 <Button onClick={close}>done</Button>
             </DialogActions>
         </Dialog>

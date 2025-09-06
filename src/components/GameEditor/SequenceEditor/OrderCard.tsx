@@ -26,12 +26,19 @@ const getDescription = (order: Order): string => {
     }
 }
 
+const getTitle = (order: Order): string => {
+    if (order.endStatus) {
+        return `${order.type} > ${order.endStatus}`
+    }
+    return order.type
+}
+
 export const OrderCard = ({ order, handleEditButton, width }: Props) => (
     <TextConceptCard
         Icon={getOrderIcon(order.type)}
         handleClick={handleEditButton}
         text={getDescription(order)}
-        title={order.type}
+        title={getTitle(order)}
         narrative={order.narrative}
         width={width}
     />
