@@ -9,6 +9,15 @@ const orderBase = {
     endStatus: z.string().optional(),
 }
 
+export const orderBaseOmits = {
+    _started: true,
+    narrative: true,
+    startDirection: true,
+    endDirection: true,
+    endStatus: true,
+    type: true,
+} satisfies Record<string, true>
+
 const moveStepSchema = z.object({
     animation: z.optional(z.string()),
     x: z.number(),

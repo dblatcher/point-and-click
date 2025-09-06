@@ -2,7 +2,7 @@ import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import { Direction, directions } from "@/definitions/BaseTypes";
 import { Order } from "@/definitions/Order";
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { ReactNode } from "react";
 import { ActOrderForm } from "./ActOrderForm";
 import { GoToOrderForm } from "./GoToOrderForm";
@@ -52,11 +52,12 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
                     updateData={updateData} />
             )}
 
-            <Box display={'flex'} gap={2}>
+            <Stack gap={2}>
                 {(data.type !== 'move' && data.type !== 'goTo') && (
                     <SelectInput label="start direction"
                         notFullWidth
-                        minWidth={100}
+                        minWidth={150}
+                        maxWidth={150}
                         options={directions}
                         optional
                         value={data.startDirection}
@@ -65,7 +66,8 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
                 )}
                 <SelectInput label="end direction"
                     notFullWidth
-                    minWidth={100}
+                    minWidth={150}
+                    maxWidth={150}
                     options={directions}
                     optional
                     value={data.endDirection}
@@ -73,13 +75,14 @@ export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetI
                 />
                 <StringInput label="status when done"
                     notFullWidth
-                    minWidth={100}
+                    minWidth={150}
+                    maxWidth={150}
                     optional
                     suggestions={animationSuggestions}
                     value={data.endStatus ?? ''}
                     inputHandler={endStatus => updateData({ ...data, endStatus })}
                 />
-            </Box>
+            </Stack>
         </Box>
     )
 }

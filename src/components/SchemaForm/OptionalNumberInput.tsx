@@ -15,10 +15,9 @@ export const OptionalNumberInput: FunctionComponent<
         max?: number;
         min?: number;
         step?: number;
-        minWidth?: number;
     }
 > = (props) => {
-    const { value, label, min, max, minWidth = 150 } = props;
+    const { value, label, min, max, minWidth = 150, maxWidth } = props;
     const [storedNumber, setStoredNumber] = useState(value ?? min ?? 0);
 
     const sendNumberValue: FormEventHandler<HTMLInputElement> = (event) => {
@@ -45,7 +44,7 @@ export const OptionalNumberInput: FunctionComponent<
     const labelText = isDefined ? label : `${label}[unset]`
 
     return (
-        <Stack direction='row' alignItems={'center'} spacing={1} minWidth={minWidth} maxWidth={minWidth}>
+        <Stack direction='row' alignItems={'center'} spacing={1} minWidth={minWidth} maxWidth={maxWidth ?? minWidth}>
             <TextField
                 label={labelText}
                 size='small'

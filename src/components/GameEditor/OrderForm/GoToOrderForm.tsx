@@ -1,6 +1,6 @@
 
 import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm";
-import { GotoOrder, GotoOrderSchema } from "@/definitions/Order";
+import { GotoOrder, GotoOrderSchema, orderBaseOmits } from "@/definitions/Order";
 import { excludeByIndex } from "@/lib/util";
 import { ReactNode } from "react";
 
@@ -44,7 +44,7 @@ export const GoToOrderForm = ({
 
     return <SchemaForm
         textInputDelay={1000}
-        schema={GotoOrderSchema.omit({ _started: true })}
+        schema={GotoOrderSchema.omit(orderBaseOmits)}
         data={data}
         changeValue={handleSchemaFormChange}
         suggestions={{

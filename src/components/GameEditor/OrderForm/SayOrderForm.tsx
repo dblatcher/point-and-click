@@ -1,6 +1,6 @@
 
 import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm";
-import { SayOrder, SayOrderSchema } from "@/definitions/Order";
+import { orderBaseOmits, SayOrder, SayOrderSchema } from "@/definitions/Order";
 
 
 interface Props {
@@ -23,7 +23,7 @@ export const SayOrderForm = ({
 
     return <SchemaForm
         textInputDelay={5000}
-        schema={SayOrderSchema.omit({ _started: true })}
+        schema={SayOrderSchema.omit(orderBaseOmits)}
         data={data}
         changeValue={handleSchemaFormChange}
         suggestions={{ animation: animationSuggestions }}

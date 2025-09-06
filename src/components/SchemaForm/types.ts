@@ -21,4 +21,5 @@ export type FieldProps = {
     readOnly?: boolean;
     notFullWidth?: boolean;
     minWidth?: number;
+    maxWidth?: number;
 };

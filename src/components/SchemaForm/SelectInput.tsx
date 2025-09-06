@@ -14,7 +14,7 @@ export const SelectInput: FunctionComponent<
         descriptions?: ReactNode[];
     }
 > = (props) => {
-    const { value, optional, options, inputHandler, label, descriptions, minWidth } = props;
+    const { value, optional, options, inputHandler, label, descriptions, minWidth, maxWidth } = props;
     const handleChange = (event: SelectChangeEvent<string>) => {
         if (event.target.value === EMPTY_STRING) {
             return inputHandler(undefined);
@@ -24,7 +24,7 @@ export const SelectInput: FunctionComponent<
     const valueAsString = value ?? EMPTY_STRING;
 
     return (
-        <FormControl fullWidth={!props.notFullWidth} sx={{ minWidth: minWidth }}>
+        <FormControl fullWidth={!props.notFullWidth} sx={{ minWidth, maxWidth }}>
             {label && (
                 <InputLabel id={`select-input-label-${label}-${options.toString()}`}>
                     {label}
