@@ -14,6 +14,27 @@ interface Props {
 
 const canvasScale = 300
 const maxWidth = 300
+const maxHeight = 300
+
+const getDisplayDimensions = (naturalHeight?: number, naturalWidth?: number): { displayWidth: number, displayHeight: number } => {
+    if (!naturalHeight || !naturalWidth) {
+        return {
+            displayWidth: 150,
+            displayHeight: 150,
+        }
+    }
+    const displayWidth = clamp(naturalWidth, maxWidth);
+    const displayHeight = displayWidth * (naturalHeight / naturalWidth);
+
+    if (displayHeight > maxHeight) {
+        return {
+            displayHeight: maxHeight,
+            displayWidth: displayWidth * maxHeight / displayHeight
+        }
+    }
+
+    return { displayHeight, displayWidth }
+}
 
 export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset, temporarySrc, temporaryFileName }: Props) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -23,11 +44,17 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset,
     const [naturalWidth, setNaturalWidth] = useState<number | undefined>()
 
     useEffect(() => {
+        const { rows = 1, cols = 1, id } = imageAsset
+
+        if (!id) {
+            setNaturalHeight(undefined)
+            setNaturalWidth(undefined)
+        }
+
         const canvas = canvasRef.current
         if (!canvas) { return }
         const ctx = canvas.getContext('2d')
         if (!ctx) { return }
-        const { rows = 1, cols = 1 } = imageAsset
 
         ctx.clearRect(0, 0, canvasScale, canvasScale)
         ctx.lineWidth = 3;
@@ -50,7 +77,11 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset,
 
     const handleLoadEvent = () => {
         const img = imageRef.current
-        if (!img) { return }
+        if (!img) {
+            setNaturalHeight(undefined)
+            setNaturalWidth(undefined)
+            return
+        }
         setNaturalHeight(img.naturalHeight)
         setNaturalWidth(img.naturalWidth)
     }
@@ -67,9 +98,7 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset,
         return imageSourceToUse ? '[unnamed]' : '[no image file]';
     }
 
-    const aspect = naturalHeight && naturalWidth ? (naturalHeight / naturalWidth) : 1;
-    const displayWidth = clamp(naturalWidth ?? maxWidth, maxWidth);
-    const displayHeight = displayWidth * aspect
+    const { displayHeight, displayWidth } = getDisplayDimensions(naturalHeight, naturalWidth)
 
     return (
         <EditorBox title="Image Preview" contentBoxProps={{

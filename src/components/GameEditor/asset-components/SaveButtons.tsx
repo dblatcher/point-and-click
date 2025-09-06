@@ -1,5 +1,5 @@
 import { AddIcon, SaveIcon } from "@/components/GameEditor/material-icons";
-import { Button } from "@mui/material";
+import { Button, ButtonProps } from "@mui/material";
 
 enum Mode { EDIT = 'edit', CREATE = 'create' }
 
@@ -10,21 +10,28 @@ interface Props {
     mode: Mode;
 }
 
+const buttonDefaults: ButtonProps = {
+    variant: "contained",
+    fullWidth: true,
+    size: 'medium',
+    sx: {
+        marginY: 2
+    }
+}
+
 export const SaveButtons = ({ saveAssetChanges, idIsAlreadyTaken, idIsValid, mode }: Props) => {
 
     if (mode === 'edit') {
-        return <Button variant="contained"
-            fullWidth
+        return <Button {...buttonDefaults}
             startIcon={<SaveIcon />}
             onClick={saveAssetChanges}>
             Save Changes
         </Button>
     }
 
-    return <Button variant="contained"
-        fullWidth
-        disabled={!idIsValid || idIsAlreadyTaken}
+    return <Button {...buttonDefaults}
         startIcon={<AddIcon />}
+        disabled={!idIsValid || idIsAlreadyTaken}
         onClick={() => {
             if (!idIsValid || idIsAlreadyTaken) {
                 return
