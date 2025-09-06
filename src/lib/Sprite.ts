@@ -50,12 +50,10 @@ export class Sprite {
     }
 
 
-    public getFrame(animationName: string, frameIndex: number, direction: Direction = this.data.defaultDirection): ImageWithFrame | undefined {
-
+    public getFrame(animationName: string, frameIndex: number, direction: Direction = this.data.defaultDirection, reverseCycle = false): ImageWithFrame | undefined {
         const frames = this.getFrames(animationName, direction);
         if (!frames) { return undefined }
-
-        const frame = frames[frameIndex]
+        const frame = frames[reverseCycle ? frames.length - 1 - frameIndex : frameIndex]
 
         if (!frame) { return undefined }
         const imageAsset = this.getImageAsset(frame.imageId)
@@ -73,8 +71,8 @@ export class Sprite {
         return [frame.image?.widthScale || 1, frame.image?.heightScale || 1]
     }
 
-    public getStyle(animationName = 'default', frameIndex = 0, direction?: Direction) {
-        const frame = this.getFrame(animationName, frameIndex, direction) || this.getFrame('default', 0, this.data.defaultDirection)
+    public getStyle(animationName = 'default', frameIndex = 0, direction?: Direction, reverseCycle = false) {
+        const frame = this.getFrame(animationName, frameIndex, direction, reverseCycle) || this.getFrame('default', 0, this.data.defaultDirection, reverseCycle)
         if (!frame) { return {} }
         return getBackgroundStyle(frame.image, frame.col, frame.row)
     }

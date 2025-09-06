@@ -1,4 +1,4 @@
-import { FunctionComponent, useLayoutEffect, useState } from "react";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
 
 import { ActorData, Order, RoomData } from "@/definitions";
 import { getScale } from "@/lib/getScale";
@@ -74,7 +74,6 @@ export const ActorFigure: FunctionComponent<Props> = ({
 }: Props) => {
     const { gameProps } = useGameState()
     const animationRate = 200 / (gameProps.orderSpeed ?? 1)
-    const [frameIndex, setFrameIndex] = useState<number>(0)
     const sprites = useSprites()
 
     const {
@@ -84,7 +83,11 @@ export const ActorFigure: FunctionComponent<Props> = ({
     } = data
     const spriteObject = overrideSprite || findById(spriteId, sprites)
     const currentOrder: Order | undefined = orders[0]
-    const animationName = getAnimationName(currentOrder, data.status, spriteObject)
+    const currentAnimation = getAnimationName(currentOrder, status, spriteObject)
+
+    const [animationName, setAnimationName] = useState(currentAnimation)
+    const [frameIndex, setFrameIndex] = useState<number>(0)
+    const [reverseCycle, setReverseCycle] = useState(false)
 
     const soundValues = getSoundValues(currentOrder, status, soundEffectMap)
     const persistentSoundValues = soundValues.filter(sv => typeof sv.frameIndex === 'undefined')
@@ -92,23 +95,24 @@ export const ActorFigure: FunctionComponent<Props> = ({
 
     const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
     const spriteScale = getScale(y, roomData.scaling)
-    
-    const updateFrame = (): void => {
-        const frames = spriteObject?.getFrames(animationName, direction) || []
+
+    const updateFrame = useCallback((): void => {
+        const frames = spriteObject?.getFrames(getAnimationName(currentOrder, status, spriteObject), direction) || []
         if (!frames || isPaused) { return }
         if (currentOrder?.type === 'act') {
             const [currentAction] = currentOrder.steps
             if (!currentAction) { return }
-            const { timeElapsed = 0, duration, reverse } = currentAction
-            const frame = reverse
-                ? Math.floor(frames.length * ((duration - timeElapsed) / duration))
-                : Math.floor(frames.length * (timeElapsed / duration))
+            const { timeElapsed = 0, duration, reverse = false } = currentAction
+            const frame = Math.floor(frames.length * (timeElapsed / duration))
             setFrameIndex(frame)
+            setReverseCycle(reverse)
+            setAnimationName(getAnimationName(currentOrder, status, spriteObject))
         } else {
-            const nextFrameIndex = frameIndex + 1 < frames.length ? frameIndex + 1 : 0
-            setFrameIndex(nextFrameIndex)
+            setFrameIndex(frameIndex => frameIndex + 1 < frames.length ? frameIndex + 1 : 0)
+            setReverseCycle(false)
+            setAnimationName(getAnimationName(currentOrder, status, spriteObject))
         }
-    }
+    }, [currentOrder, status, direction, isPaused, spriteObject])
 
     const processClick: MouseEventHandler<SVGElement> | undefined = clickHandler
         ? (event): void => {
@@ -127,12 +131,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
         }
         : undefined
 
-    // need to set frameIndex to zero when animation or direction changes
-    // to avoid 'flash of missing frame' before next updateFrame
-    useLayoutEffect(() => {
-        setFrameIndex(0)
-    }, [animationName, direction])
-
+    useEffect(updateFrame, [updateFrame, direction, currentAnimation])
     useInterval(updateFrame, animationRate)
 
     if (spriteObject) {
@@ -143,6 +142,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
                     animationName={animationName}
                     direction={direction}
                     frameIndex={frameIndex}
+                    reverseCycle={reverseCycle}
                     // works - the Event definitions don't match, but stopPropagation is the only event method needed
                     clickHandler={processClick}
                     contextClickHandler={processContextClick}
@@ -151,7 +151,8 @@ export const ActorFigure: FunctionComponent<Props> = ({
                     roomData={roomData}
                     viewAngle={viewAngle}
                     x={x} y={y}
-                    height={height * spriteScale} width={width * spriteScale}
+                    height={height * spriteScale} 
+                    width={width * spriteScale}
                     filter={filter}
                     status={data.status}
                 />

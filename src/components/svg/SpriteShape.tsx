@@ -22,15 +22,17 @@ interface Props {
     handleHover?: HandleHoverFunction;
     hoverData?: ActorData;
     status?: string;
+    reverseCycle?: boolean;
 }
 
 
 export const SpriteShape: FunctionComponent<Props> = ({
     roomData, viewAngle, x, y, height = 50, width = 50, animationName, frameIndex, spriteObject, direction, filter,
     clickHandler, contextClickHandler, handleHover, hoverData, status,
+    reverseCycle
 }: Props) => {
     const [widthScale, heightScale] = spriteObject.getFrameScale(animationName, frameIndex, direction);
-    const divStyle = Object.assign(spriteObject.getStyle(animationName, frameIndex, direction), { filter });
+    const divStyle = Object.assign(spriteObject.getStyle(animationName, frameIndex, direction, reverseCycle), { filter });
 
     const svgStyle: CSSProperties = {
         overflow: 'hidden',
