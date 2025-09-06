@@ -50,6 +50,7 @@ import SoundIcon from '@mui/icons-material/VolumeUp';
 import ImageIcon from '@mui/icons-material/Image';
 import SpriteIcon from '@mui/icons-material/AutoAwesomeMotion';
 import SlideshowIcon from '@mui/icons-material/Slideshow';
+import SearchIcon from '@mui/icons-material/Search';
 
 export type IconComponent = typeof ActorIcon;
 
@@ -94,6 +95,7 @@ export {
     PlayCircleOutlineOutlinedIcon,
     RepeatOneIcon,
     SaveIcon,
+    SearchIcon,
     SlideshowIcon,
     SortIcon,
     SpriteIcon,
