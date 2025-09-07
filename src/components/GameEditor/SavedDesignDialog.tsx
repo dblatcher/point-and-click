@@ -5,7 +5,7 @@ import { DesignListing, GameEditorDatabase, SavedDesignKey, deleteSavedDesign, r
 import { retrieveDesignAndAssets, storeDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
 import SaveIcon from '@mui/icons-material/Save';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, List } from "@mui/material";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import { DescriptionWithSaveTime, DesignListItem } from "../DesignListItem";
 import { ButtonWithConfirm } from "./ButtonWithConfirm";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
@@ -13,20 +13,23 @@ import { ClearIcon, DeleteIcon } from "./material-icons";
 
 interface Props {
     db: GameEditorDatabase
+    isOpen: boolean
+    setIsOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) => {
+export const SavedDesignDialog: React.FunctionComponent<Props> = ({ db, isOpen, setIsOpen }) => {
     const { gameDesign, dispatchDesignUpdate, handleIncomingDesign } = useGameDesign()
     const { imageService, soundService } = useAssets()
-    const [isOpen, setIsOpen] = useState(false)
     const [designList, setDesignList] = useState<DesignListing[]>([])
 
-    const refreshList = () => retrieveAllSavedDesigns(db)().then(setDesignList)
+    const refreshList = useCallback(() => retrieveAllSavedDesigns(db)().then(setDesignList), [db])
 
-    const openAndFetch = () => {
-        setIsOpen(true)
-        refreshList()
-    }
+    useEffect(() => {
+        if (isOpen) {
+            refreshList()
+        }
+    }, [db, isOpen, refreshList])
+
     const handleNewSaveInput = (name: string) => {
         const savedDesignKey: SavedDesignKey = `SAVE_${name.toUpperCase()}`
         if (designList.some(design => design.key === savedDesignKey)) {
@@ -59,11 +62,7 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
         })
     }
 
-    return <>
-        <IconButton disabled={!db} onClick={openAndFetch}>
-            <SaveIcon />
-        </IconButton>
-
+    return (
         <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
             <DialogTitle sx={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
                 <span>Saved designs</span>
@@ -126,5 +125,5 @@ export const SavedDesignDialogButton: React.FunctionComponent<Props> = ({ db }) 
                 />
             </DialogActions>
         </Dialog>
-    </>
+    )
 }

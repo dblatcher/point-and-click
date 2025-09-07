@@ -29,8 +29,8 @@ export function AppHeader({ position, children }: Props) {
                 <IconButton onClick={() => { setDrawerOpen(!drawerOpen) }}>
                     <MenuIcon htmlColor='white' />
                 </IconButton>
-                <Box>
-                    <Typography component="div" sx={{ flexGrow: 1 }}>
+                <Box display={'flex'} flexDirection={'column'} flex={1}>
+                    <Typography component="div">
                         Point and Click
                     </Typography>
                     {children}

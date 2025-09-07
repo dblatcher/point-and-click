@@ -1,5 +1,6 @@
 import { AssetsProvider } from '@/context/asset-context';
 import { GameDesignProvider } from '@/context/game-design-context';
+import { usePageMeta } from '@/context/page-meta-context';
 import { SpritesProvider } from '@/context/sprite-context';
 import { parseAndUpgrade } from '@/lib/design-version-management';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
@@ -13,18 +14,18 @@ import { ImageService } from '@/services/imageService';
 import { populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
 import { editorTheme } from '@/theme';
-import { Box, ButtonGroup, Stack, ThemeProvider, Typography } from '@mui/material';
+import { Avatar, Box, ButtonGroup, IconButton, Stack, ThemeProvider, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { GameEditorSkeleton } from '../GameEditorSkeleton';
 import { MainWindow } from './MainWindow';
-import { SavedDesignDialogButton } from './SavedDesignDialogButton';
+import { DesignServicesIcon, SaveIcon } from './material-icons';
+import { SavedDesignDialog } from './SavedDesignDialog';
 import { TabButtonList } from './TabButtonList';
 import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
-import { usePageMeta } from '@/context/page-meta-context';
-import { DesignServicesIcon } from './material-icons';
+import { TemplateDesignDialog } from './TemplateDesignDialog';
 
 
 export type { GameEditorProps };
@@ -32,6 +33,8 @@ export type { GameEditorProps };
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame }) => {
     const [soundService] = useState(new SoundService())
     const [imageService] = useState(new ImageService())
+    const [saveMenuOpen, setSaveMenuOpen] = useState(false)
+    const [templateMenuOpen, setTemplateMenuOpen] = useState(false)
     const [waitingForDesignFromDb, setWaitingforDesignFromDb] = useState(!usePrebuiltGame)
     const { setHeaderContent } = usePageMeta();
 
@@ -84,8 +87,10 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         console.log(`DB opened, version ${db.version}`)
 
         const designAndAssets = await retrieveDesignAndAssets(db)('quit-save')
-        handleIncomingDesign('quit-save', designAndAssets)
-
+        const wasQuitSave = handleIncomingDesign('quit-save', designAndAssets)
+        if (!wasQuitSave) {
+            setTemplateMenuOpen(true)
+        }
     }, [usePrebuiltGame, handleIncomingDesign])
 
     useEffect(() => {
@@ -117,16 +122,39 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
 
     useEffect(() => {
         setHeaderContent(
-            <Stack direction={'row'}>
-                <DesignServicesIcon />
+            <Box display={'flex'} alignItems={'center'}>
                 {!waitingForDesignFromDb && (
-                    <Typography variant="h2" noWrap sx={{ fontSize: '120%', margin: 0 }}>
+                    <Typography noWrap sx={{ fontSize: '120%', margin: 0, }}>
                         {gameDesign.id}
                     </Typography>
                 )}
-            </Stack>
+                <Box
+                    display={'flex'}
+                    marginLeft={'auto'}
+                    marginTop={-2}
+                    gap={1}
+                >
+                    <Avatar sx={{ backgroundColor: 'primary.contrastText' }}>
+                        <IconButton
+                            title='design menu'
+                            onClick={() => setTemplateMenuOpen(true)}
+                        >
+                            <DesignServicesIcon color='primary' />
+                        </IconButton>
+                    </Avatar>
+                    <Avatar sx={{ backgroundColor: 'primary.contrastText' }}>
+                        <IconButton
+                            disabled={waitingForDesignFromDb || !gameEditorState.db}
+                            title='save menu'
+                            onClick={() => setSaveMenuOpen(true)}
+                        >
+                            <SaveIcon color='primary' />
+                        </IconButton>
+                    </Avatar>
+                </ Box>
+            </Box>
         )
-    }, [waitingForDesignFromDb, gameDesign.id, setHeaderContent])
+    }, [waitingForDesignFromDb, gameDesign.id, setHeaderContent, gameEditorState.db, saveMenuOpen])
 
     if (waitingForDesignFromDb) {
         return <GameEditorSkeleton />
@@ -160,9 +188,6 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                             <ButtonGroup orientation="horizontal" >
                                 <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />
                                 <ZipFileButtons />
-                                {gameEditorState.db &&
-                                    <SavedDesignDialogButton db={gameEditorState.db} />
-                                }
                             </ButtonGroup>
 
                             <TabButtonList />
@@ -182,6 +207,11 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                             <UpgradeNotice />
                         </Box>
                     </Box>
+
+                    {gameEditorState.db &&
+                        <SavedDesignDialog db={gameEditorState.db} isOpen={saveMenuOpen} setIsOpen={setSaveMenuOpen} />
+                    }
+                    <TemplateDesignDialog isOpen={templateMenuOpen} setIsOpen={setTemplateMenuOpen} />
                 </SpritesProvider>
             </AssetsProvider>
         </GameDesignProvider>
