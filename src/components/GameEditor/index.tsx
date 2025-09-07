@@ -13,7 +13,7 @@ import { ImageService } from '@/services/imageService';
 import { populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
 import { editorTheme } from '@/theme';
-import { Box, ButtonGroup, Container, Stack, ThemeProvider } from '@mui/material';
+import { Box, ButtonGroup, Stack, ThemeProvider, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { GameEditorSkeleton } from '../GameEditorSkeleton';
 import { MainWindow } from './MainWindow';
@@ -23,6 +23,8 @@ import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
+import { usePageMeta } from '@/context/page-meta-context';
+import { DesignServicesIcon } from './material-icons';
 
 
 export type { GameEditorProps };
@@ -31,6 +33,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
     const [soundService] = useState(new SoundService())
     const [imageService] = useState(new ImageService())
     const [waitingForDesignFromDb, setWaitingforDesignFromDb] = useState(!usePrebuiltGame)
+    const { setHeaderContent } = usePageMeta();
 
     const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer,
         {
@@ -110,17 +113,28 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         }
     }, [usePrebuiltGame, imageService, soundService, gameEditorState.db])
 
+    const { gameDesign, history, undoneHistory } = gameEditorState;
+
+    useEffect(() => {
+        setHeaderContent(
+            <Stack direction={'row'}>
+                <DesignServicesIcon />
+                {!waitingForDesignFromDb && (
+                    <Typography variant="h2" noWrap sx={{ fontSize: '120%', margin: 0 }}>
+                        {gameDesign.id}
+                    </Typography>
+                )}
+            </Stack>
+        )
+    }, [waitingForDesignFromDb, gameDesign.id, setHeaderContent])
 
     if (waitingForDesignFromDb) {
         return <GameEditorSkeleton />
     }
 
-    const { gameDesign, history, undoneHistory } = gameEditorState
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
 
-
     return (
-
         <GameDesignProvider input={
             {
                 gameDesign: gameEditorState.gameDesign,

@@ -1,9 +1,5 @@
-import { DesignServicesIcon } from '@/components/GameEditor/material-icons';
-import { useAssets } from '@/context/asset-context';
 import { useGameDesign } from "@/context/game-design-context";
-import { usePageMeta } from "@/context/page-meta-context";
-import { Box, Stack, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { Box, Stack } from "@mui/material";
 import { tabOrder } from "../../lib/editor-config";
 import { DelayedStringInput } from './DelayedStringInput';
 import { EditorBox } from "./EditorBox";
@@ -15,20 +11,8 @@ import { StartingInventory } from './StartingInventory';
 
 export const Overview = () => {
   const { gameDesign, applyModification } = useGameDesign();
-  const { setHeaderContent } = usePageMeta();
 
   const mainTab = tabOrder.find(tab => tab.id === 'main')
-
-  useEffect(() => {
-    setHeaderContent(
-      <Stack direction={'row'}>
-        <DesignServicesIcon />
-        <Typography variant="h2" noWrap sx={{ fontSize: '120%', margin: 0 }}>
-          {gameDesign.id}
-        </Typography>
-      </Stack>
-    )
-  }, [gameDesign.id, setHeaderContent])
 
   return (
     <Stack gap={2}>

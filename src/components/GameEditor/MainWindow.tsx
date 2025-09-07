@@ -1,4 +1,3 @@
-import { useAssets } from '@/context/asset-context';
 import { useGameDesign } from '@/context/game-design-context';
 import { ActorDataSchema } from "@/definitions/ActorData";
 import { ConversationSchema } from "@/definitions/Conversation";
@@ -13,6 +12,7 @@ import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
 import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb, makeEmptyStoryBoard } from "./defaults";
 import { DataItemCreator } from "./game-item-components/DataItemCreator";
+import { ImageAssetManager } from './ImageAssetTool/ImageAssetManager';
 import { InteractionEditor } from "./InteractionEditor";
 import { ItemEditor } from "./ItemEditor";
 import { Overview } from "./Overview";
@@ -23,11 +23,9 @@ import { SpriteEditor } from "./SpriteEditor";
 import { StoryBoardEditor } from './StoryBoardEditor/StoryBoardEditor';
 import { VerbEditor } from "./VerbEditor";
 import { VerbMenuEditor } from "./VerbMenuEditor";
-import { ImageAssetManager } from './ImageAssetTool/ImageAssetManager';
 
 export const MainWindow = () => {
     const { gameDesign, tabOpen, openInEditor, gameItemIds } = useGameDesign()
-    const { imageService, soundService } = useAssets()
 
     useKeyBoard([
         {
