@@ -2,8 +2,7 @@ import { ImageService } from "./imageService";
 import { SoundService } from "./soundService";
 import { SoundAsset, ImageAsset } from "./assets";
 
-import { imageAssets, } from "../data/images";
-import { soundAssets } from "../data/sounds";
+import { imageAssets, soundAssets } from "../data/fullGame";
 import { GameDesign } from "../definitions/Game";
 import { UpdateSource } from "./FileAssetService";
 

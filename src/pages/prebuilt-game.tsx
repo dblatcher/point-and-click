@@ -10,7 +10,7 @@ export default function GameLoaderPage() {
   const [loadError, setLoadError] = useState<string | undefined>()
 
   useEffect(() => {
-    getGameFromApi().then(result => {
+    getGameFromApi('test').then(result => {
       if (!result.success) {
         return setLoadError(result.failureMessage)
       }

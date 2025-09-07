@@ -41,7 +41,7 @@ const loadGameFromApi = (
     onLoad: Props['onLoad'],
     onError: Props['onError'],
 ) => async () => {
-    const result = await getGameFromApi();
+    const result = await getGameFromApi('test');
     if (!result.success) {
         onError(`failed to load: ${result.failureMessage}`)
         return
@@ -53,7 +53,7 @@ const loadGameFromApi = (
 const downloadFromApi = (
     onError: Props['onError'],
 ) => async () => {
-    const result = await getGameFromApi();
+    const result = await getGameFromApi('test');
     if (!result.success) {
         onError(`download failed: ${result.failureMessage}`)
         return

@@ -1,8 +1,6 @@
 import { GameDesignPlayer } from '@/components/GameDesignPlayer'
 import { usePageMeta } from '@/context/page-meta-context'
-import { prebuiltGameDesign } from '@/data/fullGame'
-import { imageAssets } from '@/data/images'
-import { soundAssets } from '@/data/sounds'
+import { prebuiltGameDesign, imageAssets, soundAssets } from '@/data/fullGame'
 import { useEffect } from 'react'
 import { TextBasedLayout } from './TextBasedLayout'
 

@@ -15,8 +15,13 @@ const designAndAssetsSchema = z.object({
   imageAssets: ImageAssetSchema.array(),
   soundAssets: SoundAssetSchema.array(),
 })
-
 export type DesignAndAssets = z.infer<typeof designAndAssetsSchema>
+
+const validGameId = z.enum([
+  'test',
+]);
+export type ValidGameId = z.infer<typeof validGameId>;
+
 
 type ApiGameResult = {
   success: true,
@@ -29,9 +34,9 @@ type ApiGameResult = {
 }
 
 
-const fetchOkJson = async (input: RequestInfo | URL, init?: RequestInit): Promise<unknown | undefined> => {
+const fetchGameJson = async (gameId: ValidGameId): Promise<unknown | undefined> => {
   try {
-    const response = await fetch(input, init);
+    const response = await fetch(`/api/game/${gameId}`);
     if (!response.ok) {
       console.error(`fetch json got ${response.status} (${response.statusText}) response`);
       return undefined
@@ -43,9 +48,16 @@ const fetchOkJson = async (input: RequestInfo | URL, init?: RequestInit): Promis
   }
 }
 
-export const getGameFromApi = async (): Promise<ApiGameResult> => {
+export const getGameFromApi = async (gameId: ValidGameId): Promise<ApiGameResult> => {
 
-  const json = await fetchOkJson('/api/game');
+  if (!validGameId.safeParse(gameId).success) {
+    return {
+      success: false,
+      failureMessage: `invalid game id`
+    }
+  }
+
+  const json = await fetchGameJson(gameId);
   if (!json) {
     return {
       success: false,
