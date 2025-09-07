@@ -5,10 +5,10 @@ import { verbs } from './verbs';
 import { interactions } from './interactions';
 import { sequences } from './sequences';
 import { conversations } from './conversations';
-import { spriteDataList } from './sprites'
+import { spriteDataList } from '../sprites'
 import { flagMap } from './flags'
 import { storyBoards } from './storyBoards'
-import { GameDesign } from "../definitions/Game";
+import { GameDesign } from "../../definitions/Game";
 
 export { imageAssets } from "./images"
 export { soundAssets } from "./sounds"

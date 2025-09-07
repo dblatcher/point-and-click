@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { prebuiltGameDesign, imageAssets, soundAssets } from '@/data/fullGame'
+import { prebuiltGameDesign, imageAssets, soundAssets } from '@/data/test-game'
 import type { DesignAndAssets, ValidGameId } from '@/lib/api-usage'
 import type { NextApiRequest, NextApiResponse } from 'next'
 

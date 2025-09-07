@@ -1,5 +1,5 @@
 import { getBlankRoom, defaultVerbs1 } from "@/components/GameEditor/defaults";
-import { prebuiltGameDesign } from "@/data/fullGame";
+import { prebuiltGameDesign } from "@/data/test-game";
 import { GameDesign } from "@/definitions";
 import { DB_VERSION } from "../indexed-db";
 
