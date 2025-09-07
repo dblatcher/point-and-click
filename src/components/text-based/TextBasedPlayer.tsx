@@ -1,6 +1,6 @@
 import { GameDesignPlayer } from '@/components/GameDesignPlayer'
 import { usePageMeta } from '@/context/page-meta-context'
-import { prebuiltGameDesign, imageAssets, soundAssets } from '@/data/test-game'
+import { gameDesign, imageAssets, soundAssets } from '@/data/test-game'
 import { useEffect } from 'react'
 import { TextBasedLayout } from './TextBasedLayout'
 
@@ -17,7 +17,7 @@ export const TextBasedPlayer = () => {
 
     return (
         <GameDesignPlayer
-            gameDesign={prebuiltGameDesign}
+            gameDesign={gameDesign}
             imageAssets={imageAssets}
             soundAssets={soundAssets}
             uiComponents={{

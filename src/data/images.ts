@@ -29,6 +29,7 @@ const imageAssets: ImageAsset[] = [
     buildAsset("indoors.png", backgroundPath, 'background'),
     buildAsset("sky.png", backgroundPath, 'background'),
     buildAsset("trees.png", backgroundPath, 'background'),
+    buildAsset("beach-s.png", backgroundPath, 'background'),
 ]
 
 export { imageAssets }
