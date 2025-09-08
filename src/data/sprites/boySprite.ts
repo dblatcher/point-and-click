@@ -1,6 +1,6 @@
 import { SpriteData } from "@/definitions/SpriteSheet";
 
-export const data: SpriteData = {
+export const boySprite: SpriteData = {
     id: 'boy',
     defaultDirection: 'down',
     animations: {

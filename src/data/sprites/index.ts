@@ -1,12 +1,12 @@
-import * as skinnerSprite from "./skinnerSprite";
-import * as marioSprite from "./marioSprite";
-import * as fireSprite from "./fireSprite";
-import * as boySprite from "./boySprite";
+import { skinnerSprite } from "./skinnerSprite";
+import { marioSprite } from "./marioSprite";
+import { fireSprite } from "./fireSprite";
+import { boySprite } from "./boySprite";
 import { SpriteData } from "@/definitions";
 
-export const spriteDataList: SpriteData[] = [
-  skinnerSprite.data,
-  marioSprite.data,
-  fireSprite.data,
-  boySprite.data,
+export const allSprites: SpriteData[] = [
+  skinnerSprite,
+  marioSprite,
+  fireSprite,
+  boySprite,
 ];

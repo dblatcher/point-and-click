@@ -1,6 +1,6 @@
 import { SpriteData } from '@/definitions/SpriteSheet'
 
-export const data: SpriteData = {
+export const skinnerSprite: SpriteData = {
     id: 'skinner',
     defaultDirection: 'right',
     animations: {

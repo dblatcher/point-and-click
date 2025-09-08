@@ -1,9 +1,9 @@
 import { SoundAsset } from "@/services/assets";
 import { GameDesign } from "../../definitions/Game";
 import { imageAssets as allImageAssets } from "../images";
-import { spriteDataList } from '../sprites';
-import { detailedVerbSet } from '../verbs';
 import { beach, npc, player } from "../shared";
+import { boySprite } from "../sprites/boySprite";
+import { detailedVerbSet } from '../verbs';
 
 export const gameDesign: GameDesign = {
     id: "DETAILED",
@@ -21,7 +21,7 @@ export const gameDesign: GameDesign = {
     sequences: [],
     currentRoomId: 'room-1',
     conversations: [],
-    sprites: spriteDataList,
+    sprites: [boySprite],
     flagMap: {},
     openingSequenceId: undefined,
     openingStoryboardId: undefined,
@@ -36,3 +36,4 @@ const imageAssets = allImageAssets.filter(asset => [
 ].includes(asset.id))
 
 export { imageAssets };
+

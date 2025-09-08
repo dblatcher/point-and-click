@@ -1,6 +1,6 @@
 import { SpriteData } from "@/definitions";
 
-export const data: SpriteData = {
+export const marioSprite: SpriteData = {
     id: 'mario',
     defaultDirection: 'right',
     animations: {
