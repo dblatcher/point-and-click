@@ -18,7 +18,9 @@ const designAndAssetsSchema = z.object({
 export type DesignAndAssets = z.infer<typeof designAndAssetsSchema>
 
 const validGameId = z.enum([
-  'test','simple-template'
+  'test',
+  'simple-template',
+  'detailed-template',
 ]);
 export type ValidGameId = z.infer<typeof validGameId>;
 

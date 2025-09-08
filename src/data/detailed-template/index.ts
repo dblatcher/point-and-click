@@ -1,15 +1,15 @@
 import { SoundAsset } from "@/services/assets";
 import { GameDesign } from "../../definitions/Game";
-import { spriteDataList } from '../sprites';
-import { minimalVerbSet } from '../verbs';
 import { imageAssets as allImageAssets } from "../images";
+import { spriteDataList } from '../sprites';
+import { detailedVerbSet } from '../verbs';
 import { beach, npc, player } from "../shared";
 
 export const gameDesign: GameDesign = {
-    id: "SIMPLE",
+    id: "DETAILED",
     schemaVersion: 4,
     rooms: [
-        beach,
+        beach
     ],
     actors: [
         player,
@@ -17,7 +17,7 @@ export const gameDesign: GameDesign = {
     ],
     interactions: [],
     items: [],
-    verbs: minimalVerbSet,
+    verbs: detailedVerbSet,
     sequences: [],
     currentRoomId: 'room-1',
     conversations: [],
@@ -35,4 +35,4 @@ const imageAssets = allImageAssets.filter(asset => [
     'beach-s.png',
 ].includes(asset.id))
 
-export { imageAssets }
+export { imageAssets };
