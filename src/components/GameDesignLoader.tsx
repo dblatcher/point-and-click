@@ -72,27 +72,31 @@ export const GameDesignLoader: React.FunctionComponent = () => {
         }} />
         {!design && (
             <Box sx={{ overflowY: 'auto' }}>
-                <Box padding={2} paddingBottom={0}>
-                    <Card sx={{ padding: 1 }}>
-                        <Typography variant="h2">
-                            Game Loader
-                        </Typography>
-                        <MarkDown content={selectADesignContent} />
-                    </Card>
-                </Box>
+
                 <Grid container spacing={2} padding={2}>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={4} display={'flex'} flexDirection={'column'} gap={2}>
                         <Card sx={{ padding: 1 }}>
-                                <LayoutRadioButtons
-                                    layoutOption={layoutOption}
-                                    setLayoutOption={setLayoutOption}
-                                />
+                            <Typography variant="h2">
+                                Game Loader
+                            </Typography>
+                            <MarkDown content={selectADesignContent} />
+                        </Card>
+                        <Card sx={{ padding: 1 }}>
+                            <LayoutRadioButtons
+                                layoutOption={layoutOption}
+                                setLayoutOption={setLayoutOption}
+                            />
                         </Card>
                     </Grid>
 
                     <Grid item xs={12} md={8} >
                         <Card sx={{ padding: 1 }}>
-                            <Box mb={2} justifyContent={'center'} display={'flex'}> 
+                            <Typography>Sample Games</Typography>
+                            <GameList
+                                onLoad={loadGameDesign}
+                                onError={handleLoadFail}
+                            />
+                            <Box mb={2} justifyContent={'center'} display={'flex'}>
                                 <LoadDesignButton
                                     onLoad={loadGameDesign}
                                     onError={handleLoadFail} />
@@ -105,11 +109,6 @@ export const GameDesignLoader: React.FunctionComponent = () => {
                                     onError={handleLoadFail} />
                             </>
                             )}
-                            <Typography>Sample Games</Typography>
-                            <GameList
-                                onLoad={loadGameDesign}
-                                onError={handleLoadFail}
-                            />
                         </Card>
                     </Grid>
                 </Grid>
@@ -125,7 +124,6 @@ export const GameDesignLoader: React.FunctionComponent = () => {
                 uiComponents={layouts[layoutOption]}
             />
         )}
-
 
         <Snackbar open={!!loadingSuccessMessage} autoHideDuration={6000} onClose={handleMessageClose}>
             <Alert onClose={handleMessageClose} severity="success" sx={{ width: '100%' }}>

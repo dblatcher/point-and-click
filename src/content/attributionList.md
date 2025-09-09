@@ -1,6 +1,6 @@
 ## Attribution
 
-### opengameart.orf
+### opengameart.org
 
 Image assets used in the 'Castle Life' demo game:
 - [https://opengameart.org/content/rpgmaker-style-doors](https://opengameart.org/content/rpgmaker-style-doors)
