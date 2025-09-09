@@ -5,7 +5,6 @@ import { DesignListItem } from './DesignListItem';
 
 interface Props {
     title: string,
-    downloadUrl?: string,
     downloadFunction?: { (): Promise<void> }
     imageUrl?: string,
     content?: ReactNode,
@@ -13,17 +12,13 @@ interface Props {
 }
 
 
-export const GameLoaderDesignItem = ({ title, downloadUrl, imageUrl, content, loadGame, downloadFunction }: Props) => {
+export const GameLoaderDesignItem = ({ title, imageUrl, content, loadGame, downloadFunction }: Props) => {
 
-    const downloadAction = downloadUrl
-        ? <IconButton edge='end' href={downloadUrl} download title={`download ${title}`}>
+    const downloadAction = downloadFunction
+        ? <IconButton edge='end' onClick={downloadFunction} title={`download ${title}`}>
             <DownloadIcon fontSize="large" color={'primary'} />
         </IconButton>
-        : downloadFunction
-            ? <IconButton edge='end' onClick={downloadFunction} title={`download ${title}`}>
-                <DownloadIcon fontSize="large" color={'primary'} />
-            </IconButton>
-            : undefined
+        : undefined
 
     return (
         <DesignListItem

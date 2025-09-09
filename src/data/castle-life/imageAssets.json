@@ -1,0 +1,202 @@
+[
+  {
+    "id": "kitchen-room.png",
+    "href": "",
+    "category": "background",
+    "originalFileName": "kitchen-room.png"
+  },
+  {
+    "id": "courtyard.png",
+    "href": "",
+    "category": "background",
+    "originalFileName": "courtyard.png"
+  },
+  {
+    "id": "SKY",
+    "href": "",
+    "category": "background",
+    "originalFileName": "sky1.png"
+  },
+  {
+    "id": "DARKSKY",
+    "href": "",
+    "category": "background",
+    "originalFileName": "sky2.png"
+  },
+  {
+    "id": "outline.png",
+    "href": "",
+    "category": "background",
+    "originalFileName": "outline.png"
+  },
+  {
+    "id": "banners.png",
+    "href": "",
+    "category": "background",
+    "originalFileName": "banners.png"
+  },
+  {
+    "id": "hillside.png",
+    "href": "",
+    "category": "background",
+    "originalFileName": "hillside.png"
+  },
+  {
+    "id": "kitchen.png",
+    "href": "",
+    "category": "background",
+    "originalFileName": "kitchen.png"
+  },
+  {
+    "id": "pan.png",
+    "href": "",
+    "category": "item",
+    "originalFileName": "pan.png"
+  },
+  {
+    "id": "pan-fat.png",
+    "href": "",
+    "category": "item",
+    "originalFileName": "pan-fat.png"
+  },
+  {
+    "id": "SQUIRE",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "tomi_48x64-swen.png",
+    "rows": 4,
+    "cols": 3
+  },
+  {
+    "id": "SQUIRE-TALK",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "tomi_48x64-swen-talk.png",
+    "rows": 4,
+    "cols": 3
+  },
+  {
+    "id": "BUCKET",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "bucket.png"
+  },
+  {
+    "id": "DOORS",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "door.png",
+    "rows": 3,
+    "cols": 5
+  },
+  {
+    "id": "DOUBLE_DOORS",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "animatedcastledoors.png",
+    "cols": 6
+  },
+  {
+    "id": "COOK-TALK",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "Townfolk-Adult-M-006 light-talk.png",
+    "rows": 4,
+    "cols": 3
+  },
+  {
+    "id": "COOK",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "Townfolk-Adult-M-006 light.png",
+    "rows": 4,
+    "cols": 3
+  },
+  {
+    "id": "FIRE",
+    "href": "",
+    "category": "any",
+    "originalFileName": "CampFireFinished.png",
+    "cols": 5
+  },
+  {
+    "id": "MEAT",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "roasting-meat.png",
+    "rows": 2,
+    "cols": 2
+  },
+  {
+    "id": "KNIGHT",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "Fighter-M-01 light.png",
+    "rows": 4,
+    "cols": 3
+  },
+  {
+    "id": "BARRELL",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "barrell.png"
+  },
+  {
+    "id": "BARRELL-LID",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "barrell-lid.png"
+  },
+  {
+    "id": "smashed.png",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "smashed.png"
+  },
+  {
+    "id": "helmet.png",
+    "href": "",
+    "category": "any",
+    "originalFileName": "helmet.png"
+  },
+  {
+    "id": "armour-stand.png",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "armour-stand.png",
+    "rows": 6
+  },
+  {
+    "id": "wall-shield.png",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "wall-shield.png",
+    "cols": 2
+  },
+  {
+    "id": "shield-sheet.png",
+    "href": "",
+    "category": "any",
+    "originalFileName": "shield-sheet.png",
+    "cols": 4
+  },
+  {
+    "id": "chest.png",
+    "href": "",
+    "category": "spriteSheet",
+    "originalFileName": "chest.png",
+    "rows": 3
+  },
+  {
+    "id": "sword.png",
+    "href": "",
+    "category": "item",
+    "originalFileName": "sword.png"
+  },
+  {
+    "id": "key.png",
+    "href": "",
+    "category": "item",
+    "originalFileName": "key.png"
+  }
+]

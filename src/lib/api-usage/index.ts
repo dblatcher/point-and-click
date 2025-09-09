@@ -21,6 +21,7 @@ const validGameId = z.enum([
   'test',
   'simple-template',
   'detailed-template',
+  'castle-life',
 ]);
 export type ValidGameId = z.infer<typeof validGameId>;
 

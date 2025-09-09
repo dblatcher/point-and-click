@@ -1,0 +1,32 @@
+[
+  {
+    "id": "fire.mp3",
+    "href": "",
+    "category": "sfx",
+    "originalFileName": "fire.mp3"
+  },
+  {
+    "id": "qubodup-DoorClose01.ogg",
+    "href": "",
+    "category": "sfx",
+    "originalFileName": "qubodup-DoorClose01.ogg"
+  },
+  {
+    "id": "qubodup-DoorOpen01.ogg",
+    "href": "",
+    "category": "sfx",
+    "originalFileName": "qubodup-DoorOpen01.ogg"
+  },
+  {
+    "id": "qubodup-DoorClose02.ogg",
+    "href": "",
+    "category": "sfx",
+    "originalFileName": "qubodup-DoorClose02.ogg"
+  },
+  {
+    "id": "qubodup-DoorOpen03.ogg",
+    "href": "",
+    "category": "sfx",
+    "originalFileName": "qubodup-DoorOpen03.ogg"
+  }
+]

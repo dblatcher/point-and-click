@@ -52,6 +52,10 @@ export const TemplateDesignDialog: React.FunctionComponent<Props> = ({ isOpen, s
                     title="Template - detailed"
                     description={'A template game using a detailed set of verbs'}
                     onClick={() => loadGame('detailed-template')} />
+                <DesignListItem
+                    title="Castle life"
+                    description={'A sample game'}
+                    onClick={() => loadGame('castle-life')} />
             </List>
         </DialogContent>
     </Dialog>

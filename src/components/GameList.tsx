@@ -1,47 +1,23 @@
 import castleLifeBlurb from "@/content/castleLifeBlurb.md";
 import { GameDesign } from "@/definitions";
-import { buildGameZipBlobFromAssets, readParseAndUpdateGameFromZipFile } from "@/lib/zipFiles";
+import { getGameFromApi, ValidGameId } from "@/lib/api-usage";
+import { makeDownloadFile } from "@/lib/files";
+import { buildGameZipBlobFromAssets } from "@/lib/zipFiles";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { List } from "@mui/material";
 import { GameLoaderDesignItem } from "./GameLoaderDesignItem";
-import { getGameFromApi } from "@/lib/api-usage";
-import { makeDownloadFile } from "@/lib/files";
 
 interface Props {
     onLoad: { (design: GameDesign, imageAssets: ImageAsset[], soundAssets: SoundAsset[]): void }
     onError: { (message: string): void }
 }
 
-const loadGameFromZipFileUrl = (
-    downloadUrl: string,
-    onLoad: Props['onLoad'],
-    onError: Props['onError'],
-) => async (
-    ) => {
-        if (!downloadUrl) {
-            return
-        }
-        try {
-            const response = await fetch(downloadUrl);
-            const blob = await response.blob()
-            const game = await readParseAndUpdateGameFromZipFile(blob)
-            if (game.success) {
-                onLoad(game.data.gameDesign, game.data.imageAssets, game.data.soundAssets)
-            } else {
-                onError(`Invalid game file from: ${downloadUrl}`)
-            }
-        } catch (err) {
-            console.warn(err)
-            onError(`Failed to load game from: ${downloadUrl}`)
-        }
-    }
-
-
 const loadGameFromApi = (
+    gameId: ValidGameId,
     onLoad: Props['onLoad'],
     onError: Props['onError'],
 ) => async () => {
-    const result = await getGameFromApi('test');
+    const result = await getGameFromApi(gameId);
     if (!result.success) {
         onError(`failed to load: ${result.failureMessage}`)
         return
@@ -51,9 +27,10 @@ const loadGameFromApi = (
 }
 
 const downloadFromApi = (
+    gameId: ValidGameId,
     onError: Props['onError'],
 ) => async () => {
-    const result = await getGameFromApi('test');
+    const result = await getGameFromApi(gameId);
     if (!result.success) {
         onError(`download failed: ${result.failureMessage}`)
         return
@@ -73,16 +50,16 @@ export const GameList = ({ onError, onLoad }: Props) => {
     return (
         <List dense>
             <GameLoaderDesignItem title="Castle Life"
-                downloadUrl="/assets/castle-life.game.zip"
+                downloadFunction={downloadFromApi('castle-life', onError)}
                 imageUrl="/assets/sword.png"
-                loadGame={loadGameFromZipFileUrl("/assets/castle-life.game.zip", onLoad, onError)}
+                loadGame={loadGameFromApi('castle-life', onLoad, onError)}
                 content={
                     castleLifeBlurb
                 } />
             <GameLoaderDesignItem title="Test Game"
-                downloadFunction={downloadFromApi(onError)}
+                downloadFunction={downloadFromApi('test', onError)}
                 imageUrl="/assets/things/tube.png"
-                loadGame={loadGameFromApi(onLoad, onError)}
+                loadGame={loadGameFromApi('test', onLoad, onError)}
                 content={
                     'A test game to illustrate how some of the features work.'
                 } />

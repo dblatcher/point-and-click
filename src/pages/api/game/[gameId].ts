@@ -2,6 +2,7 @@
 import * as testGame from '@/data/test-game'
 import * as simpleTemplate from '@/data/simple-template'
 import * as detailedTemplate from '@/data/detailed-template'
+import * as castleLife from '@/data/castle-life'
 import type { DesignAndAssets, ValidGameId } from '@/lib/api-usage'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -9,6 +10,7 @@ const gameDataMap: Record<string, DesignAndAssets | undefined> = {
     test: testGame,
     "simple-template": simpleTemplate,
     "detailed-template": detailedTemplate,
+    'castle-life': castleLife,
 } satisfies Record<ValidGameId, DesignAndAssets>
 
 export default function handler(
