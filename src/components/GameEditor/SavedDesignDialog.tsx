@@ -1,8 +1,8 @@
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { getInitalDesign } from "@/lib/game-design-logic/initial-design";
-import { DesignListing, GameEditorDatabase, SavedDesignKey, deleteSavedDesign, retrieveAllSavedDesigns } from "@/lib/indexed-db";
-import { retrieveDesignAndAssets, storeDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
+import { DesignListingWithThumbnail, GameEditorDatabase, SavedDesignKey, deleteSavedDesign } from "@/lib/indexed-db";
+import { retrieveAllDesignSummariesAndThumbnails, retrieveDesignAndAssets, storeDesignAndAllAssetsToDb } from "@/lib/indexed-db/complex-transactions";
 import SaveIcon from '@mui/icons-material/Save';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, List } from "@mui/material";
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
@@ -20,15 +20,15 @@ interface Props {
 export const SavedDesignDialog: React.FunctionComponent<Props> = ({ db, isOpen, setIsOpen }) => {
     const { gameDesign, dispatchDesignUpdate, handleIncomingDesign } = useGameDesign()
     const { imageService, soundService } = useAssets()
-    const [designList, setDesignList] = useState<DesignListing[]>([])
+    const [designList, setDesignList] = useState<DesignListingWithThumbnail[]>([])
 
-    const refreshList = useCallback(() => retrieveAllSavedDesigns(db)().then(setDesignList), [db])
+    const refreshList = useCallback(() => retrieveAllDesignSummariesAndThumbnails(db)().then(setDesignList), [db])
 
     useEffect(() => {
         if (isOpen) {
             refreshList()
         }
-    }, [db, isOpen, refreshList])
+    }, [isOpen, refreshList])
 
     const handleNewSaveInput = (name: string) => {
         const savedDesignKey: SavedDesignKey = `SAVE_${name.toUpperCase()}`
@@ -73,15 +73,16 @@ export const SavedDesignDialog: React.FunctionComponent<Props> = ({ db, isOpen, 
                     Database V{db.version}, {designList.length} saved designs
                 </DialogContentText>
                 <List dense>
-                    {designList.map(({ key, design, timestamp }) => (
+                    {designList.map(({ key, designSummary, timestamp, thumbnail }) => (
                         <DesignListItem key={key}
                             onClick={() => loadFile(key)}
-                            title={`${design.id} [${key}]`}
-                            schemaVersion={design.schemaVersion}
-                            description={<DescriptionWithSaveTime timestamp={timestamp} gameDesign={design} />}
+                            imageUrl={thumbnail?.href}
+                            title={`${designSummary.id} [${key}]`}
+                            schemaVersion={designSummary.schemaVersion}
+                            description={<DescriptionWithSaveTime timestamp={timestamp} designSummary={designSummary} />}
                             secondaryAction={
                                 <>
-                                    {gameDesign.id === design.id && (
+                                    {gameDesign.id === designSummary.id && (
                                         <IconButton onClick={() => saveOverFile(key)} title={`save over ${key}`}>
                                             <SaveIcon fontSize="large" />
                                         </IconButton>

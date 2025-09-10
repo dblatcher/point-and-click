@@ -70,8 +70,8 @@ export const storeDesignAndAllAssetsToDb = (db: GameEditorDatabase) => async (
 }
 
 const summarise = (design: GameDesign | V2GameDesign): DesignSummary => {
-    const { id, description, thumbnailAsset } = design
-    return { id, description, thumbnailAsset }
+    const { id, description, thumbnailAsset, schemaVersion } = design
+    return { id, description, thumbnailAsset, schemaVersion }
 }
 
 const getPopulatedThumbnail = (db: GameEditorDatabase) => async ({ key, assetId }: {
