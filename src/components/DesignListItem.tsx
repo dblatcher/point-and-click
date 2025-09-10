@@ -1,6 +1,4 @@
-import { GameDesign } from '@/definitions';
-import { V2GameDesign } from '@/definitions/old-versions/v2';
-import { DB_VERSION } from '@/lib/indexed-db';
+import { DB_VERSION, DesignSummary } from '@/lib/indexed-db';
 import DesignServicesOutlinedIcon from '@mui/icons-material/DesignServicesOutlined';
 import { Avatar, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import { ReactNode } from "react";
@@ -15,8 +13,8 @@ interface Props {
 }
 
 
-export const DescriptionWithSaveTime = ({ timestamp, gameDesign }: { timestamp: number, gameDesign: GameDesign | V2GameDesign }) => {
-    const { description } = gameDesign
+export const DescriptionWithSaveTime = ({ timestamp, designSummary }: { timestamp: number, designSummary: DesignSummary }) => {
+    const { description } = designSummary
     const date = new Date(timestamp).toLocaleString();
     return <><b>{date}</b>{' '}{description}</>
 }

@@ -1,8 +1,8 @@
 import { GameDesign } from "@/definitions";
 import { parseAndUpgrade } from "@/lib/design-version-management";
 import { makeDownloadFile } from "@/lib/files";
-import { DesignListing, GameEditorDatabase, retrieveAllSavedDesigns, SavedDesignKey } from "@/lib/indexed-db";
-import { retrieveDesignAndAssets } from "@/lib/indexed-db/complex-transactions";
+import { GameEditorDatabase, SavedDesignKey, DesignListingWithThumbnail } from "@/lib/indexed-db";
+import { retrieveAllDesignSummariesAndThumbnails, retrieveDesignAndAssets } from "@/lib/indexed-db/complex-transactions";
 import { buildGameZipBlobFromAssets } from "@/lib/zipFiles";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { List } from "@mui/material";
@@ -17,11 +17,9 @@ interface Props {
 }
 
 export const DbGameList = ({ onLoad, onError, db }: Props) => {
-
-    const [designList, setDesignList] = useState<DesignListing[]>([])
-
+    const [designList, setDesignList] = useState<DesignListingWithThumbnail[]>([])
     useEffect(() => {
-        retrieveAllSavedDesigns(db)().then(setDesignList)
+        retrieveAllDesignSummariesAndThumbnails(db)().then(setDesignList);
     }, [db, setDesignList])
 
     const loadGameFromDb = async (key: SavedDesignKey) => {
@@ -45,16 +43,20 @@ export const DbGameList = ({ onLoad, onError, db }: Props) => {
 
     return (
         <List dense>
-            {designList.map(({ design, key, timestamp }, index) => (
+            {designList.map(({ designSummary, key, timestamp, thumbnail }, index) => (
                 <GameLoaderDesignItem key={index}
-                    title={`${design.id} [${key}]`}
-                    content={<DescriptionWithSaveTime timestamp={timestamp} gameDesign={design} />}
+                    title={`${designSummary.id} [${key}]`}
+                    imageUrl={thumbnail?.href}
+                    content={<DescriptionWithSaveTime timestamp={timestamp} designSummary={designSummary} />}
                     loadGame={() => loadGameFromDb(key)}
                     downloadFunction={async () => {
-                        const { imageAssets, soundAssets } = await retrieveDesignAndAssets(db)(key)
-                        const zipResult = await buildGameZipBlobFromAssets(design, imageAssets, soundAssets)
+                        const { design, imageAssets, soundAssets } = await retrieveDesignAndAssets(db)(key)
+                        if (!design) {
+                            return onError(`download failed`)
+                        }
+                        const zipResult = await buildGameZipBlobFromAssets(design as GameDesign, imageAssets, soundAssets)
                         if (zipResult.success) {
-                            makeDownloadFile(`${design.id}.game.zip`, zipResult.blob);
+                            makeDownloadFile(`${designSummary.id}.game.zip`, zipResult.blob);
                         } else {
                             onError(`download failed`)
                         }
