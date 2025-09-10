@@ -8,6 +8,8 @@ import { FlagMapControl } from "./FlagMapControl";
 import { HelpButton } from "./HelpButton";
 import { StartingConditionsForm } from './StartingConditionsForm';
 import { StartingInventory } from './StartingInventory';
+import { FileAssetSelector } from "./FileAssetSelector";
+import { ImageBlock } from "../ImageBlock";
 
 export const Overview = () => {
   const { gameDesign, applyModification } = useGameDesign();
@@ -31,6 +33,23 @@ export const Overview = () => {
             inputHandler={(description) => {
               applyModification(`Change description to "${description}"`, { description })
             }} />
+          <FileAssetSelector
+            selectedItemId={gameDesign.thumbnailAsset}
+            format="select"
+            assetType="image"
+            legend="thumbnail"
+            selectNone={() => {
+              applyModification(`Unset Thumbnail}`, { thumbnailAsset: undefined })
+            }}
+            select={(asset) => {
+              applyModification(`Set thumbnail asset to ${asset.id}`, { thumbnailAsset: asset.id })
+            }} />
+
+          {gameDesign.thumbnailAsset && (
+            <Box height={50}>
+              <ImageBlock frame={{ imageId: gameDesign.thumbnailAsset }} />
+            </Box>
+          )}
         </div>
         <StartingConditionsForm />
       </EditorBox>
