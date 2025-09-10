@@ -44,3 +44,12 @@ export type MaybeDesignAndAssets = {
     imageAssets: ImageAsset[],
     soundAssets: SoundAsset[]
 }
+
+export type DesignSummary = Pick<GameDesign, 'id' | 'description' | 'thumbnailAsset'>
+
+export type DesignListingWithThumbnail = {
+    thumbnail?: ImageAsset;
+    key: SavedDesignKey;
+    designSummary: DesignSummary
+    timestamp: number;
+};

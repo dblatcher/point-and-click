@@ -35,7 +35,7 @@ export const retrieveImageAssets = (db: GameEditorDatabase) => (savedDesign: Sav
     return db.getAllFromIndex('image-assets', 'by-design-key', savedDesign)
 }
 
-export const storeSoundAsset = (db: GameEditorDatabase) => async (asset: SoundAsset, file: File,savedDesign: SavedDesignKey = 'quit-save') => {
+export const storeSoundAsset = (db: GameEditorDatabase) => async (asset: SoundAsset, file: File, savedDesign: SavedDesignKey = 'quit-save') => {
     const copyOfAsset = { ...asset };
     return db.put('sound-assets', {
         savedDesign,
@@ -62,4 +62,8 @@ export const deleteAllSoundAssets = (db: GameEditorDatabase) => async (savedDesi
 
 export const retrieveSoundAssets = (db: GameEditorDatabase) => (savedDesign: SavedDesignKey = 'quit-save') => {
     return db.getAllFromIndex('sound-assets', 'by-design-key', savedDesign)
+}
+
+export const retrieveImageAsset = (db: GameEditorDatabase) => (savedDesign: SavedDesignKey, assetId: string) => {
+    return db.get('image-assets', makeAssetRecordKey(savedDesign, assetId))
 }
