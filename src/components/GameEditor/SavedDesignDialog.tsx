@@ -6,10 +6,11 @@ import { retrieveAllDesignSummariesAndThumbnails, retrieveDesignAndAssets, store
 import SaveIcon from '@mui/icons-material/Save';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, List } from "@mui/material";
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
-import { DescriptionWithSaveTime, DesignListItem } from "../DesignListItem";
+import { DesignListItem } from "../DesignListItem";
 import { ButtonWithConfirm } from "./ButtonWithConfirm";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";
 import { ClearIcon, DeleteIcon } from "./material-icons";
+import { displaySaveKey, formatTimestamp } from "@/lib/util";
 
 interface Props {
     db: GameEditorDatabase
@@ -77,9 +78,9 @@ export const SavedDesignDialog: React.FunctionComponent<Props> = ({ db, isOpen, 
                         <DesignListItem key={key}
                             onClick={() => loadFile(key)}
                             imageUrl={thumbnail?.href}
-                            title={`${designSummary.id} [${key}]`}
+                            title={displaySaveKey(key)}
                             schemaVersion={designSummary.schemaVersion}
-                            description={<DescriptionWithSaveTime timestamp={timestamp} designSummary={designSummary} />}
+                            description={<><b>{designSummary.id}</b> - {formatTimestamp(timestamp)}</>}
                             secondaryAction={
                                 <>
                                     {gameDesign.id === designSummary.id && (

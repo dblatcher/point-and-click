@@ -7,8 +7,8 @@ import { buildGameZipBlobFromAssets } from "@/lib/zipFiles";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { List } from "@mui/material";
 import { useEffect, useState } from "react";
-import { DescriptionWithSaveTime } from "./DesignListItem";
 import { GameLoaderDesignItem } from "./GameLoaderDesignItem";
+import { displaySaveKey, formatTimestamp } from "@/lib/util";
 
 interface Props {
     onLoad: { (design: GameDesign, imageAssets: ImageAsset[], soundAssets: SoundAsset[]): void }
@@ -45,9 +45,9 @@ export const DbGameList = ({ onLoad, onError, db }: Props) => {
         <List dense>
             {designList.map(({ designSummary, key, timestamp, thumbnail }, index) => (
                 <GameLoaderDesignItem key={index}
-                    title={`${designSummary.id} [${key}]`}
+                    title={displaySaveKey(key)}
                     imageUrl={thumbnail?.href}
-                    content={<DescriptionWithSaveTime timestamp={timestamp} designSummary={designSummary} />}
+                    content={<><b>{designSummary.id}</b> - {formatTimestamp(timestamp)}</>}
                     loadGame={() => loadGameFromDb(key)}
                     downloadFunction={async () => {
                         const { design, imageAssets, soundAssets } = await retrieveDesignAndAssets(db)(key)

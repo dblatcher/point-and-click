@@ -12,13 +12,6 @@ interface Props {
     schemaVersion?: number
 }
 
-
-export const DescriptionWithSaveTime = ({ timestamp, designSummary }: { timestamp: number, designSummary: DesignSummary }) => {
-    const { description } = designSummary
-    const date = new Date(timestamp).toLocaleString();
-    return <><b>{date}</b>{' '}{description}</>
-}
-
 export const DesignListItem = ({ title, imageUrl, description, onClick, secondaryAction, schemaVersion }: Props) => {
 
     const avatar = imageUrl
