@@ -70,8 +70,8 @@ export const storeDesignAndAllAssetsToDb = (db: GameEditorDatabase) => async (
 }
 
 const summarise = (design: GameDesign | V2GameDesign): DesignSummary => {
-    const { id, description, thumbnailAsset, schemaVersion } = design
-    return { id, description, thumbnailAsset, schemaVersion }
+    const { id, description, thumbnailAssetId, schemaVersion } = design
+    return { id, description, thumbnailAssetId, schemaVersion }
 }
 
 const getPopulatedThumbnail = (db: GameEditorDatabase) => async ({ key, assetId }: {
@@ -96,7 +96,7 @@ export const retrieveAllDesignSummariesAndThumbnails = (db: GameEditorDatabase) 
     const keysAndAssetids = designResults.map(result => {
         return {
             key: result.key,
-            assetId: result.design.thumbnailAsset
+            assetId: result.design.thumbnailAssetId
         }
     })
     const thumbnails = await Promise.all(keysAndAssetids.map(getPopulatedThumbnail(db)))

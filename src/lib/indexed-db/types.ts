@@ -43,7 +43,7 @@ export type MaybeDesignAndAssets = {
     soundAssets: SoundAsset[]
 }
 
-export type DesignSummary = Pick<GameDesign, 'id' | 'description' | 'thumbnailAsset'> & { schemaVersion?: number }
+export type DesignSummary = Pick<GameDesign, 'id' | 'description' | 'thumbnailAssetId'> & { schemaVersion?: number }
 
 export type DesignListingWithThumbnail = {
     thumbnail?: ImageAsset;

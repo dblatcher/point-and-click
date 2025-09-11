@@ -4,7 +4,7 @@ import { GameEditorDatabase, openDataBaseConnection } from "@/lib/indexed-db";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { Alert, Box, Card, Grid, Snackbar, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { DbGameList } from "./DbGameList ";
+import { DbGameList } from "./DbGameList";
 import { LayoutOption, layoutOptions, layouts } from "./game/layouts";
 import { GameDesignPlayer } from "./GameDesignPlayer";
 import { GameList } from "./GameList";

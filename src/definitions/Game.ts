@@ -33,7 +33,7 @@ export const GameContentsDataSchema = z.object({
     currentRoomId: z.string(),
     id: z.string(),
     description: z.string().optional().describe('a short description of your game'),
-    thumbnailAsset: z.string().optional(),
+    thumbnailAssetId: z.string().optional(),
 })
 
 

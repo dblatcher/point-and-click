@@ -34,20 +34,20 @@ export const Overview = () => {
               applyModification(`Change description to "${description}"`, { description })
             }} />
           <FileAssetSelector
-            selectedItemId={gameDesign.thumbnailAsset}
+            selectedItemId={gameDesign.thumbnailAssetId}
             format="select"
             assetType="image"
             legend="thumbnail"
             selectNone={() => {
-              applyModification(`Unset Thumbnail}`, { thumbnailAsset: undefined })
+              applyModification(`Unset Thumbnail}`, { thumbnailAssetId: undefined })
             }}
             select={(asset) => {
-              applyModification(`Set thumbnail asset to ${asset.id}`, { thumbnailAsset: asset.id })
+              applyModification(`Set thumbnail asset to ${asset.id}`, { thumbnailAssetId: asset.id })
             }} />
 
-          {gameDesign.thumbnailAsset && (
+          {gameDesign.thumbnailAssetId && (
             <Box height={50}>
-              <ImageBlock frame={{ imageId: gameDesign.thumbnailAsset }} />
+              <ImageBlock frame={{ imageId: gameDesign.thumbnailAssetId }} />
             </Box>
           )}
         </div>
