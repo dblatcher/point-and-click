@@ -10,6 +10,8 @@ import { StartingConditionsForm } from './StartingConditionsForm';
 import { StartingInventory } from './StartingInventory';
 import { FileAssetSelector } from "./FileAssetSelector";
 import { ImageBlock } from "../ImageBlock";
+import { ImageAsset } from "@/services/assets";
+import { HideImageOutlinedIcon } from "./material-icons";
 
 export const Overview = () => {
   const { gameDesign, applyModification } = useGameDesign();
@@ -33,23 +35,33 @@ export const Overview = () => {
             inputHandler={(description) => {
               applyModification(`Change description to "${description}"`, { description })
             }} />
-          <FileAssetSelector
-            selectedItemId={gameDesign.thumbnailAssetId}
-            format="select"
-            assetType="image"
-            legend="thumbnail"
-            selectNone={() => {
-              applyModification(`Unset Thumbnail}`, { thumbnailAssetId: undefined })
-            }}
-            select={(asset) => {
-              applyModification(`Set thumbnail asset to ${asset.id}`, { thumbnailAssetId: asset.id })
-            }} />
 
-          {gameDesign.thumbnailAssetId && (
-            <Box height={50}>
-              <ImageBlock frame={{ imageId: gameDesign.thumbnailAssetId }} />
+          <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+
+            <FileAssetSelector
+              selectedItemId={gameDesign.thumbnailAssetId}
+              format="select"
+              filterItems={(asset) => {
+                const imageAsset = asset as ImageAsset;
+                return !imageAsset.cols && !imageAsset.rows;
+              }}
+              assetType="image"
+              legend="thumbnail"
+              selectNone={() => {
+                applyModification(`Unset Thumbnail}`, { thumbnailAssetId: undefined })
+              }}
+              select={(asset) => {
+                applyModification(`Set thumbnail asset to ${asset.id}`, { thumbnailAssetId: asset.id })
+              }} />
+
+            <Box height={50} width={50} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+              {gameDesign.thumbnailAssetId ? (
+                <ImageBlock frame={{ imageId: gameDesign.thumbnailAssetId }} fitHeight />
+              ) : (
+                <HideImageOutlinedIcon sx={{ width: 40, height: 40 }} />
+              )}
             </Box>
-          )}
+          </Box>
         </div>
         <StartingConditionsForm />
       </EditorBox>
