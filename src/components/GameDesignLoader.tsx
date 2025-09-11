@@ -64,8 +64,10 @@ export const GameDesignLoader: React.FunctionComponent = () => {
         setLoadingErrorMessage(undefined)
     };
 
+    const thumbnailUrl = imageAssets?.find(asset => asset.id === design?.thumbnailAssetId)?.href;
+
     return <>
-        <PlayerHeaderContent design={design} eject={() => {
+        <PlayerHeaderContent design={design} thumbnailUrl={thumbnailUrl} eject={() => {
             setDesign(undefined)
             setImageAssets(undefined)
             setSoundAssets(undefined)
