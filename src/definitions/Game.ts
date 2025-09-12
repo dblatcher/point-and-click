@@ -46,18 +46,16 @@ export const FixedGameInfoSchema = z.object({
     storyBoards: StoryBoardSchema.array(),
 })
 export const GameDataSchema = GameContentsDataSchema.and(GameHappeningsSchema)
-const GameConditionSchema = GameContentsDataSchema.and(GameHappeningsSchema).and(FixedGameInfoSchema)
 export const GameDesignSchema = GameContentsDataSchema.and(FixedGameInfoSchema).describe('The game schema')
 
-//                  GameData GameCondition GameDesign GameContents
-// GameHappenings  |   x    |   x        |           |
-// GameContentsData|   x    |   x        |  x        |  x
-// FixedGameInfo   |        |   x        |  x        |
+//                 |GameData |GameDesign |GameContents
+// GameHappenings  |   x     |           |
+// GameContentsData|   x     |  x        |  x
+// FixedGameInfo   |         |  x        |
 
 export type GameContents = z.infer<typeof GameContentsDataSchema>
 export type GameData = z.infer<typeof GameDataSchema>
 export type FixedGameInfo = z.infer<typeof FixedGameInfoSchema>
-export type GameCondition = z.infer<typeof GameConditionSchema>
 export type GameDesign = z.infer<typeof GameDesignSchema>
 
 export type GameDataItem = ActorData | ItemData | Conversation | RoomData | SpriteData | Sequence | Verb | StoryBoard

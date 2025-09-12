@@ -48,8 +48,6 @@ const gameStateContext = createContext<{
             storyBoards: [],
             flagMap: {},
             currentRoomId: '',
-            actorOrders: {},
-            gameNotBegun: false,
             verbs: [],
             sequences: [],
             sprites: [],

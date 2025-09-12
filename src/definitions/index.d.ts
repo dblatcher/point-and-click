@@ -2,7 +2,7 @@ import { Narrative } from "./BaseTypes";
 
 export type Point = { x: number; y: number }
 
-export type { GameData, GameCondition, GameDataItem, GameDesign, GameContents } from "./Game";
+export type { GameData, GameDataItem, GameDesign, GameContents } from "./Game";
 export type { ItemData } from "./ItemData"
 export type { CommandTarget, Command } from "./Command";
 export type { Verb } from "./Verb";
