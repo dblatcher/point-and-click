@@ -22,7 +22,6 @@ export function AppHeader({ position, children }: Props) {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const router = useRouter()
     const { pathname } = router
-console.log(children)
     return (
         <AppBar component='header' position={position}>
             <Toolbar>
