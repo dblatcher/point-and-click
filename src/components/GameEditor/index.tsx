@@ -124,14 +124,13 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
         setHeaderContent(
             <Box display={'flex'} alignItems={'center'}>
                 {!waitingForDesignFromDb && (
-                    <Typography noWrap sx={{ fontSize: '120%', margin: 0, }}>
-                        {gameDesign.id}
+                    <Typography sx={{ fontSize: '120%', margin: 0, }}>
+                        Game Designer
                     </Typography>
                 )}
                 <Box
                     display={'flex'}
                     marginLeft={'auto'}
-                    marginTop={-2}
                     gap={1}
                 >
                     <Avatar sx={{ backgroundColor: 'primary.contrastText' }}>

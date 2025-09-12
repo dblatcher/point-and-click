@@ -22,7 +22,7 @@ export function AppHeader({ position, children }: Props) {
     const [drawerOpen, setDrawerOpen] = useState(false)
     const router = useRouter()
     const { pathname } = router
-
+console.log(children)
     return (
         <AppBar component='header' position={position}>
             <Toolbar>
@@ -30,9 +30,7 @@ export function AppHeader({ position, children }: Props) {
                     <MenuIcon htmlColor='white' />
                 </IconButton>
                 <Box display={'flex'} flexDirection={'column'} flex={1}>
-                    <Typography component="div">
-                        Point and Click
-                    </Typography>
+                    {!children && <Typography component="div">Point and Click</Typography>}
                     {children}
                 </Box>
             </Toolbar>

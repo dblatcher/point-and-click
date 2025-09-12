@@ -13,12 +13,12 @@ export const PlayerHeaderContent: React.FunctionComponent<Props> = ({ design, ej
     const { setHeaderContent } = usePageMeta()
     useEffect(() => {
         if (!design) {
-            return setHeaderContent(<></>)
+            return setHeaderContent(null)
         }
         setHeaderContent(
             <Stack direction={'row'} alignItems={'center'} gap={2}>
+                {thumbnailUrl && <Avatar src={thumbnailUrl} sx={{backgroundColor:'grey'}} />}
                 <Typography>{design?.id}</Typography>
-                {thumbnailUrl && <Avatar src={thumbnailUrl} sx={{marginTop:-1}} />}
                 <Button color="secondary" variant="contained" onClick={eject}>exit game</Button>
             </Stack>)
     }, [design, design?.id, setHeaderContent, eject, thumbnailUrl])
