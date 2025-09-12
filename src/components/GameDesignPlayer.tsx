@@ -1,8 +1,8 @@
 import { Game } from "@/components/game/Game";
 import { AssetsProvider } from "@/context/asset-context";
 import { SpritesProvider } from "@/context/sprite-context";
-import { GameCondition, GameData, GameDesign } from "@/definitions";
-import { cloneData } from "@/lib/clone";
+import { GameData, GameDesign } from "@/definitions";
+import { GameDataSchema } from "@/definitions/Game";
 import { Sprite } from "@/lib/Sprite";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { ImageService } from "@/services/imageService";
@@ -10,7 +10,6 @@ import { populateServices } from "@/services/populateServices";
 import { SoundService } from "@/services/soundService";
 import React from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
-import { GameDataSchema } from "@/definitions/Game";
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
 const SAVED_GAME_DELIMITER = "//"
@@ -24,8 +23,7 @@ type Props = {
 }
 
 type State = {
-  gameCondition?: GameCondition;
-  timestamp: number;
+  ready: boolean
 }
 
 export class GameDesignPlayer extends React.Component<Props, State> {
@@ -37,7 +35,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      timestamp: Date.now(),
+      ready: false
     }
     this.save = this.save.bind(this)
     this.load = this.load.bind(this)
@@ -55,12 +53,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data, imageService.get.bind(imageService))))
     populateServices(gameDesign, imageAssets, soundAssets, imageService, soundService)
     this.setState({
-      gameCondition: {
-        ...cloneData(this.props.gameDesign),
-        gameNotBegun: true,
-        actorOrders: {},
-      },
-      timestamp: Date.now(),
+      ready: true
     });
   }
 
@@ -125,19 +118,18 @@ export class GameDesignPlayer extends React.Component<Props, State> {
 
   render() {
     const { soundService, imageService } = this
-    const { gameCondition, timestamp } = this.state
-    const { uiComponents, instantMode } = this.props
+    const { ready } = this.state
+    const { uiComponents, instantMode, gameDesign } = this.props
     return (
       <AssetsProvider imageService={imageService} soundService={soundService}>
         <SpritesProvider value={this.sprites}>
-          {gameCondition && (
+          {ready && (
             <Game
-              {...gameCondition}
+              {...gameDesign}
               load={this.load}
               save={this.save}
               deleteSave={this.deleteSave}
               listSavedGames={this.listSavedGames}
-              key={timestamp}
               _sprites={this.sprites}
               uiComponents={uiComponents}
               instantMode={instantMode}

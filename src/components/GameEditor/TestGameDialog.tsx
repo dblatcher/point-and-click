@@ -77,8 +77,7 @@ export const TestGameDialog = () => {
                         {haveStartedTests && (
                             <Game
                                 key={resetTimeStamp}
-                                {...modifiedGameDesign} actorOrders={{}}
-                                gameNotBegun
+                                {...modifiedGameDesign}
                                 showDebugLog={showDebugLog}
                                 _sprites={sprites}
                                 soundService={soundService}

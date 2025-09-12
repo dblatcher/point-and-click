@@ -218,7 +218,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
         }
 
         case "HANDLE-LOAD": {
-            const roomData = findById( action.data.currentRoomId, action.props.rooms);
+            const roomData = findById(action.data.currentRoomId, action.props.rooms);
             const cellMatrix = roomData ? generateCellMatrix(roomData, CELL_SIZE) : gameState.cellMatrix;
             return {
                 ...gameState,
@@ -239,20 +239,24 @@ export const getInitialGameState = (props: GameProps, existingEmitter?: GameEven
     const items = props.items.map(cloneData);
     const conversations = props.conversations.map(cloneData);
     const interactions = props.interactions.map(cloneData);
-    const actorOrders = cloneData(props.actorOrders);
     const flagMap = cloneData(props.flagMap);
 
     const openingSequenceInProps = findById(props.openingSequenceId, props.sequences)
-    const openingSequenceCopy = (openingSequenceInProps && props.gameNotBegun)
+    const sequenceRunning = (openingSequenceInProps)
         ? cloneData(openingSequenceInProps)
-        : undefined
-    const sequenceRunning = props.sequenceRunning ? cloneData(props.sequenceRunning) : openingSequenceCopy;
+        : undefined;
+    const currentStoryBoardId = props.openingStoryboardId;
 
-    const currentStoryBoardId = props.gameNotBegun ? props.openingStoryboardId : props.currentStoryBoardId
     const currentRoom = findById(props.currentRoomId, rooms)
     const cellMatrix = currentRoom ? generateCellMatrix(currentRoom, CELL_SIZE) : undefined
 
     return {
+        sequenceRunning,
+        currentStoryBoardId,
+        actorOrders: {},
+        currentConversationId: undefined,
+        gameNotBegun: false,
+
         schemaVersion: DB_VERSION,
         viewAngle: 0,
         isPaused: props.startPaused || false,
@@ -263,15 +267,10 @@ export const getInitialGameState = (props: GameProps, existingEmitter?: GameEven
         currentVerbId: props.verbs[0].id,
         interactions: interactions,
         items,
-        sequenceRunning,
-        actorOrders,
         conversations,
-        currentConversationId: props.currentConversationId,
         flagMap,
-        gameNotBegun: false,
-        currentStoryBoardId,
-        roomHeight: 400,
-        roomWidth: 800,
+        roomHeight: currentRoom?.height ?? 400,
+        roomWidth: currentRoom?.width ?? 800,
         emitter: existingEmitter ?? new GameEventEmitter(),
         cellMatrix,
     }

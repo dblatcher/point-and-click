@@ -1,4 +1,4 @@
-import { ActorData, CommandTarget, GameCondition, GameData, Order } from "@/definitions";
+import { ActorData, CommandTarget, GameCondition, GameData, GameDesign, Order } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
 import { SoundService } from "@/services/soundService";
 import { UiComponentSet } from "./uiComponentSet";
@@ -17,7 +17,7 @@ export type GameProps = Readonly<{
     soundService: SoundService;
     timerInterval?: number;
     orderSpeed?: number;
-} & GameCondition>
+} & GameDesign>
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
 export type HandleClickFunction<T extends CommandTarget> = { (target: T, event: PointerEvent): void };
