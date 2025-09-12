@@ -39,7 +39,6 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     this.state = {
       timestamp: Date.now(),
     }
-    this.reset = this.reset.bind(this)
     this.save = this.save.bind(this)
     this.load = this.load.bind(this)
     this.listSavedGames = this.listSavedGames.bind(this)
@@ -50,9 +49,24 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     this.imageService = new ImageService()
   }
 
+  componentDidMount(): void {
+    const { soundService, imageService } = this
+    const { gameDesign, imageAssets, soundAssets } = this.props
+    this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data, imageService.get.bind(imageService))))
+    populateServices(gameDesign, imageAssets, soundAssets, imageService, soundService)
+    this.setState({
+      gameCondition: {
+        ...cloneData(this.props.gameDesign),
+        gameNotBegun: true,
+        actorOrders: {},
+      },
+      timestamp: Date.now(),
+    });
+  }
+
   getStorageKey(fileName: string): string | undefined {
-    const { gameCondition } = this.state;
-    return gameCondition ? [SAVED_GAME_PREFIX, gameCondition.id, fileName].join(SAVED_GAME_DELIMITER) : undefined;
+    const { gameDesign } = this.props;
+    return [SAVED_GAME_PREFIX, gameDesign.id, fileName].join(SAVED_GAME_DELIMITER);
   }
 
   save(data: GameData, fileName = 'saved-game') {
@@ -64,11 +78,8 @@ export class GameDesignPlayer extends React.Component<Props, State> {
   }
 
   listSavedGames(): string[] {
-    const { gameCondition } = this.state;
-    if (!gameCondition) {
-      return []
-    }
-    const prefixAndIdAndTrailingDelimiter = [SAVED_GAME_PREFIX, gameCondition.id, ''].join(SAVED_GAME_DELIMITER)
+    const { gameDesign } = this.props;
+    const prefixAndIdAndTrailingDelimiter = [SAVED_GAME_PREFIX, gameDesign.id, ''].join(SAVED_GAME_DELIMITER)
     return Object.keys(localStorage)
       .filter(key => key.startsWith(prefixAndIdAndTrailingDelimiter))
       .map(key => key.substring(prefixAndIdAndTrailingDelimiter.length))
@@ -82,7 +93,7 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     }
   }
 
-  load(fileName = 'saved-game') {
+  load(callback: { (data: GameData): void }, fileName = 'saved-game') {
     const storageKey = this.getStorageKey(fileName)
     if (!storageKey) {
       return;
@@ -104,44 +115,11 @@ export class GameDesignPlayer extends React.Component<Props, State> {
       if (gameDataparseResult.data.id !== this.props.gameDesign.id) {
         throw new Error('Not from the right game - ids do not match')
       }
-      const loadedConditions = {
-        ...this.state.gameCondition,
-        ...gameDataparseResult.data,
-      }
-      this.setState({
-        timestamp: Date.now(),
-        gameCondition: loadedConditions as GameCondition,
-      });
+      callback(gameDataparseResult.data)
+
     } catch (error) {
       console.error(error);
     }
-  }
-
-  reset() {
-    this.setState({
-      gameCondition: this.getInitialGameCondition(),
-      timestamp: Date.now(),
-    });
-  }
-
-  componentDidMount(): void {
-    const { soundService, imageService } = this
-    const { gameDesign, imageAssets, soundAssets } = this.props
-    this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data, imageService.get.bind(imageService))))
-    populateServices(gameDesign, imageAssets, soundAssets, imageService, soundService)
-    this.reset()
-  }
-
-  getInitialGameCondition(): GameCondition | undefined {
-    const loadedGameDesign = this.props.gameDesign
-    if (loadedGameDesign) {
-      return {
-        ...cloneData(loadedGameDesign),
-        gameNotBegun: true,
-        actorOrders: {},
-      };
-    }
-    return undefined;
   }
 
 

@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { SaveMenuProps } from "../game/uiComponentSet";
 import { StringInput } from '../SchemaForm/StringInput';
 import { SoundToggle } from './SoundToggle';
+import { GameData } from '@/definitions';
 
 
 export const DialogSaveMenu = ({ save, load, isPaused, setIsPaused, listSavedGames, deleteSave }: SaveMenuProps) => {
@@ -30,9 +31,9 @@ export const DialogSaveMenu = ({ save, load, isPaused, setIsPaused, listSavedGam
         deleteSave?.(saveName)
         setSavedGameNames(listSavedGames?.() ?? [])
     }
+    const handleLoad = (data: GameData) => updateGameState({ type: 'HANDLE-LOAD', data })
 
     return <>
-
         <SoundToggle buttonType='IconButton' />
         <IconButton onClick={() => { setIsPaused(true) }} aria-label='settings' size='large'>
             <SettingsIcon fontSize='large' />
@@ -61,7 +62,7 @@ export const DialogSaveMenu = ({ save, load, isPaused, setIsPaused, listSavedGam
                         >
                             {savedGameNames.map((saveName, index) => (
                                 <ListItem key={index} disablePadding>
-                                    <IconButton onClick={() => load(saveName)}>
+                                    <IconButton onClick={() => load(handleLoad, saveName)}>
                                         <LoadIcon />
                                     </IconButton>
                                     <ListItemText primary={saveName} />

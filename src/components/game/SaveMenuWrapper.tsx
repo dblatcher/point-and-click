@@ -9,7 +9,6 @@ interface Props {
 export const SaveMenuWrapper = ({ SaveMenuComponent }: Props) => {
 
     const { gameProps, gameState, updateGameState } = useGameState()
-
     const { deleteSave, save, load, listSavedGames } = gameProps
 
     return (

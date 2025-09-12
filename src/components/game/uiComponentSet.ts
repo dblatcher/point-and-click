@@ -1,6 +1,6 @@
 import { ItemData, Verb } from "@/definitions";
 import { FunctionComponent } from "react";
-import { HandleHoverFunction } from "./types";
+import { GameProps, HandleHoverFunction } from "./types";
 
 
 export type VerbMenuProps = {
@@ -27,7 +27,7 @@ export type SaveMenuProps = {
     save?: { (fileName?: string): void };
     deleteSave?: { (fileName: string): void }
     listSavedGames?: { (): string[] }
-    load?: { (fileName?: string): void };
+    load?: GameProps['load'];
     isPaused: boolean;
     setIsPaused: { (isPaused: boolean): void };
 }

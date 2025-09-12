@@ -1,4 +1,4 @@
-import { Verb, ConversationChoice, CommandTarget, Command } from "@/definitions"
+import { Verb, ConversationChoice, CommandTarget, Command, GameData } from "@/definitions"
 import { locateClickInWorld, getViewAngleCenteredOn } from "@/lib/roomFunctions"
 import { findById } from "@/lib/util"
 import { Reducer } from "react"
@@ -29,6 +29,7 @@ export type GameStateAction =
     | { type: 'TICK-UPDATE', props: GameProps }
     | { type: 'CLEAR-STORYBOARD' }
     | { type: 'RESTART', props: GameProps }
+    | { type: 'HANDLE-LOAD', data: GameData, props: GameProps }
 
 export type ActionWithoutProp =
     | { type: 'SEND-COMMAND', command: Command }
@@ -36,6 +37,7 @@ export type ActionWithoutProp =
     | { type: 'CONVERSATION-CHOICE', choice: ConversationChoice }
     | { type: 'TICK-UPDATE' }
     | { type: 'RESTART' }
+    | { type: 'HANDLE-LOAD', data: GameData }
 
 export const makeDispatcherWithProps =
     (dispatch: React.Dispatch<GameStateAction>, props: GameProps) =>
@@ -46,6 +48,7 @@ export const makeDispatcherWithProps =
                 case "CONVERSATION-CHOICE":
                 case "TICK-UPDATE":
                 case "RESTART":
+                case "HANDLE-LOAD":
                     return dispatch({ ...action, props })
                 case "SET-PAUSED":
                 case "VERB-SELECT":
@@ -212,6 +215,20 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
         case "RESTART": {
             gameState.emitter.emit('prompt-feedback', { message: 'GAME RESTARTED', type: 'system' })
             return getInitialGameState(action.props, gameState.emitter)
+        }
+
+        case "HANDLE-LOAD": {
+            const roomData = findById( action.data.currentRoomId, action.props.rooms);
+            const cellMatrix = roomData ? generateCellMatrix(roomData, CELL_SIZE) : gameState.cellMatrix;
+            return {
+                ...gameState,
+                ...action.data,
+                sequenceRunning: action.data.sequenceRunning,
+                currentStoryBoardId: action.data.currentStoryBoardId,
+                currentConversationId: action.data.currentConversationId,
+                pendingInteraction: action.data.pendingInteraction,
+                cellMatrix
+            }
         }
     }
 }
