@@ -1,4 +1,4 @@
-import { ActorData, CommandTarget, GameData, GameDesign, Order } from "@/definitions";
+import { ActorData, CommandTarget, GameDesign, Order } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
 import { SoundService } from "@/services/soundService";
 import { UiComponentSet } from "./uiComponentSet";
@@ -13,6 +13,7 @@ export type GameProps = Readonly<{
     soundService: SoundService;
     timerInterval?: number;
     orderSpeed?: number;
+    allowLocalSaves?: boolean;
 } & GameDesign>
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };

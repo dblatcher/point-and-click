@@ -1,6 +1,5 @@
 import { Game } from "@/components/game/Game";
 import { AssetsProvider } from "@/context/asset-context";
-import { SavedGameContext } from "@/context/saved-game-context";
 import { SpritesProvider } from "@/context/sprite-context";
 import { GameDesign } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
@@ -56,19 +55,18 @@ export class GameDesignPlayer extends React.Component<Props, State> {
     const { uiComponents, instantMode, gameDesign } = this.props
     return (
       <AssetsProvider imageService={imageService} soundService={soundService}>
-        <SavedGameContext.Provider value={{ gameId: gameDesign.id }}>
-          <SpritesProvider value={this.sprites}>
-            {ready && (
-              <Game
-                {...gameDesign}
-                _sprites={this.sprites}
-                uiComponents={uiComponents}
-                instantMode={instantMode}
-                soundService={soundService}
-              />
-            )}
-          </SpritesProvider>
-        </SavedGameContext.Provider>
+        <SpritesProvider value={this.sprites}>
+          {ready && (
+            <Game
+              {...gameDesign}
+              _sprites={this.sprites}
+              uiComponents={uiComponents}
+              instantMode={instantMode}
+              soundService={soundService}
+              allowLocalSaves
+            />
+          )}
+        </SpritesProvider>
       </AssetsProvider>
     )
   }

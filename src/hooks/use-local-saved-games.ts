@@ -1,10 +1,8 @@
 import { useGameState } from "@/context/game-state-context"
-import { SavedGameContext } from "@/context/saved-game-context"
 import { GameData } from "@/definitions"
 import { GameDataSchema } from "@/definitions/Game"
 import { getSaveData } from "@/lib/game-state-logic/state-to-save-data"
 import { GameState } from "@/lib/game-state-logic/types"
-import { useContext } from "react"
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
 const SAVED_GAME_DELIMITER = "//"
@@ -64,23 +62,24 @@ const load = (gameId: string) => (callback: { (data: GameData): void }, fileName
 }
 
 export const useLocalSavedGame = () => {
-    const { gameId } = useContext(SavedGameContext);
-    const { updateGameState, gameState } = useGameState();
+    const { updateGameState, gameState, gameProps: { allowLocalSaves } } = useGameState();
     const restart = () => updateGameState({ type: 'RESTART' });
 
-    if (!gameId) { return {
-        restart
-    } }
+    if (!allowLocalSaves) {
+        return {
+            restart
+        }
+    }
 
-    const saveGame = (fileName?: string) => save(gameId)(gameState, fileName);
+    const saveGame = (fileName?: string) => save(gameState.id)(gameState, fileName);
     const loadCallback = (data: GameData) => updateGameState({ type: 'HANDLE-LOAD', data });
-    const loadGame = (fileName?: string) => load(gameId)(loadCallback, fileName);
+    const loadGame = (fileName?: string) => load(gameState.id)(loadCallback, fileName);
 
     return {
         saveGame,
         loadGame,
-        listSavedGames: listSavedGames(gameId),
-        deleteSave: deleteSave(gameId),
+        listSavedGames: listSavedGames(gameState.id),
+        deleteSave: deleteSave(gameState.id),
         restart
     }
 }
