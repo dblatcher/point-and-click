@@ -6,7 +6,6 @@ import { CommandLine } from "./CommandLine";
 import { VerbMenu } from "./VerbMenu";
 import { ConversationMenu } from "./ConversationMenu";
 import { ItemMenu } from "./ItemMenu";
-import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { DialogSaveMenu } from "./DialogSaveMenu";
 import { RoomWrapper } from "../game/RoomWrapper";
 
@@ -18,7 +17,7 @@ export const MaterialLayout = () => {
     return (
         <Container maxWidth={'md'} sx={{ paddingY: .5, marginY: 2 }}>
             <Box position={'fixed'} top={0} right={0}>
-                <SaveMenuWrapper SaveMenuComponent={DialogSaveMenu} />
+                <DialogSaveMenu />
             </Box>
             <FullScreenWrapper iconButtonProps={{
                 sx: {

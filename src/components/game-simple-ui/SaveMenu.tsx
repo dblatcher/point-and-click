@@ -1,18 +1,19 @@
 import { useGameState } from "@/context/game-state-context";
-import { SaveMenuProps } from "../game/uiComponentSet";
-import { GameData } from "@/definitions";
+import { useLocalSavedGame } from "@/hooks/use-local-saved-games";
 
-export const SaveMenu = ({ save, load, isPaused, setIsPaused }: SaveMenuProps) => {
-    const { updateGameState } = useGameState();
-    const handleLoad = (data: GameData) => updateGameState({ type: 'HANDLE-LOAD', data })
+export const SaveMenu = () => {
+    const { updateGameState, gameState } = useGameState();
+    const { isPaused } = gameState
+    const { saveGame, loadGame, restart } = useLocalSavedGame()
+    const setIsPaused = (isPaused: boolean) => { updateGameState({ type: 'SET-PAUSED', isPaused }) }
 
     return <>
-        {!!save &&
-            <button onClick={() => save()}>SAVE</button>
+        {!!saveGame &&
+            <button onClick={() => saveGame()}>SAVE</button>
         }
-        <button onClick={() => updateGameState({ type: 'RESTART' })}>RESET</button>
-        {!!load &&
-            <button onClick={() => load(handleLoad)}>LOAD</button>
+        <button onClick={restart}>RESET</button>
+        {!!loadGame &&
+            <button onClick={() => loadGame()}>LOAD</button>
         }
         <button onClick={() => { setIsPaused(!isPaused) }}>{isPaused ? 'resume' : 'pause'}</button>
     </>

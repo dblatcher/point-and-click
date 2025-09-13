@@ -1,9 +1,8 @@
 import { useGameStateDerivations } from "@/context/game-state-context";
+import { FullScreenWrapper } from "../FullScreenWrapper";
 import { DialogSaveMenu } from "../game-mui-ux/DialogSaveMenu";
 import { ConversationMenu } from "../game-simple-ui/ConversationMenu";
-import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { RoomWrapperWithOverlay } from "./RoomWrapperWithOverlay";
-import { FullScreenWrapper } from "../FullScreenWrapper";
 
 export const FullScreenLayout = () => {
     const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
@@ -21,7 +20,7 @@ export const FullScreenLayout = () => {
                     top: 0,
                     right: 0
                 }}>
-                    <SaveMenuWrapper SaveMenuComponent={DialogSaveMenu} />
+                    <DialogSaveMenu />
                 </div>
                 <RoomWrapperWithOverlay />
                 {!isSequenceRunning && (

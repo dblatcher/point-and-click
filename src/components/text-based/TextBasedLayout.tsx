@@ -5,7 +5,6 @@ import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { RoomWrapper } from "../game/RoomWrapper";
-import { SaveMenuWrapper } from "../game/SaveMenuWrapper";
 import { NarrativeFeed } from "./NarrativeFeed";
 import { RoomDescription } from "./RoomDescription";
 import { TextPrompt } from "./TextPrompt";
@@ -22,7 +21,7 @@ export const TextBasedLayout = () => {
     }, [initialResizeDone, setInitialResizeDone, updateGameState])
 
     return (<main>
-        <SaveMenuWrapper SaveMenuComponent={SaveMenu} />
+        <SaveMenu />
         <SoundToggle />
 
         <Box display={'flex'} minHeight={300} padding={1}>

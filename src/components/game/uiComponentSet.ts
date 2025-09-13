@@ -1,6 +1,6 @@
 import { ItemData, Verb } from "@/definitions";
 import { FunctionComponent } from "react";
-import { GameProps, HandleHoverFunction } from "./types";
+import { HandleHoverFunction } from "./types";
 
 
 export type VerbMenuProps = {
@@ -21,15 +21,6 @@ export type ItemMenuProps = {
 const itemsToIdString = (items: ItemData[]): string => items.map(item => item.id).join()
 export const itemMenuPropsAreEqual = (prevProps: ItemMenuProps, nextProps: ItemMenuProps): boolean => {
     return prevProps.currentItemId === nextProps.currentItemId && itemsToIdString(prevProps.items) === itemsToIdString(nextProps.items)
-}
-
-export type SaveMenuProps = {
-    save?: { (fileName?: string): void };
-    deleteSave?: { (fileName: string): void }
-    listSavedGames?: { (): string[] }
-    load?: GameProps['load'];
-    isPaused: boolean;
-    setIsPaused: { (isPaused: boolean): void };
 }
 
 

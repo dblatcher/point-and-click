@@ -1,4 +1,5 @@
 import { useGameState } from '@/context/game-state-context';
+import { useLocalSavedGame } from '@/hooks/use-local-saved-games';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -7,23 +8,24 @@ import SaveIcon from '@mui/icons-material/Save';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from "@mui/material";
 import { useState } from 'react';
-import { SaveMenuProps } from "../game/uiComponentSet";
 import { StringInput } from '../SchemaForm/StringInput';
 import { SoundToggle } from './SoundToggle';
-import { GameData } from '@/definitions';
 
 
-export const DialogSaveMenu = ({ save, load, isPaused, setIsPaused, listSavedGames, deleteSave }: SaveMenuProps) => {
+export const DialogSaveMenu = () => {
+    const { updateGameState, gameState } = useGameState();
+    const { isPaused } = gameState
+    const { deleteSave, saveGame, loadGame, listSavedGames, restart } = useLocalSavedGame()
+    const setIsPaused = (isPaused: boolean) => { updateGameState({ type: 'SET-PAUSED', isPaused }) }
 
-    const { updateGameState } = useGameState();
     const [newSaveName, setNewSaveName] = useState('')
     const [savedGameNames, setSavedGameNames] = useState(listSavedGames?.() ?? [])
 
     const saveNewGame = () => {
-        if (!save || !newSaveName) {
+        if (!saveGame || !newSaveName) {
             return
         }
-        save(newSaveName)
+        saveGame(newSaveName)
         setNewSaveName('')
         setSavedGameNames(listSavedGames?.() ?? [])
     }
@@ -31,7 +33,6 @@ export const DialogSaveMenu = ({ save, load, isPaused, setIsPaused, listSavedGam
         deleteSave?.(saveName)
         setSavedGameNames(listSavedGames?.() ?? [])
     }
-    const handleLoad = (data: GameData) => updateGameState({ type: 'HANDLE-LOAD', data })
 
     return <>
         <SoundToggle buttonType='IconButton' />
@@ -48,13 +49,13 @@ export const DialogSaveMenu = ({ save, load, isPaused, setIsPaused, listSavedGam
                             <ListItemIcon><PlayIcon /></ListItemIcon>
                             <ListItemText primary="Continue" />
                         </ListItemButton>
-                        <ListItemButton onClick={() => updateGameState({ type: 'RESTART' })}>
+                        <ListItemButton onClick={restart}>
                             <ListItemIcon><RestartAltIcon /></ListItemIcon>
                             <ListItemText primary="Restart" />
                         </ListItemButton>
                     </List>
 
-                    {(!!load && !!save) && (
+                    {(!!loadGame && !!saveGame) && (
                         <List dense
                             subheader={
                                 <ListSubheader disableGutters component="div">Saved Games</ListSubheader>
@@ -62,14 +63,14 @@ export const DialogSaveMenu = ({ save, load, isPaused, setIsPaused, listSavedGam
                         >
                             {savedGameNames.map((saveName, index) => (
                                 <ListItem key={index} disablePadding>
-                                    <IconButton onClick={() => load(handleLoad, saveName)}>
+                                    <IconButton onClick={() => loadGame(saveName)}>
                                         <LoadIcon />
                                     </IconButton>
                                     <ListItemText primary={saveName} />
                                     <IconButton onClick={() => deleteGameAndUpdateList(saveName)}>
                                         <DeleteIcon color='warning' />
                                     </IconButton>
-                                    <IconButton onClick={() => save(saveName)}>
+                                    <IconButton onClick={() => saveGame(saveName)}>
                                         <SaveIcon />
                                     </IconButton>
                                 </ListItem>
