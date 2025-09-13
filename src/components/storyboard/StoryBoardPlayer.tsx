@@ -61,16 +61,18 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
 
     useEffect(() => {
         setPageNumber(0);
-        if (storyBoard.sound) {
+    }, [storyBoard])
+
+    useEffect(() => {
+        if (storyBoard.sound && !sound) {
             const soundControl = soundService.play(storyBoard.sound.soundId, {
                 volume: storyBoard.sound.volume,
             })
             if (soundControl) {
                 const { sourceNode } = soundControl;
                 const duration = getDuration(sourceNode)
-
                 if (storyBoard.progression === 'sound') {
-                    if (duration) {
+                    if (duration && storyBoard.pages.length > 1) {
                         schedulePageTurns(setPageNumber, duration, storyBoard.pages.length)
                     }
                     soundControl.whenEnded.then(() => {
@@ -78,13 +80,16 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
                     })
                 }
                 setSound(soundControl)
+                soundControl.whenEnded.then(() => setSound(undefined))
             }
         }
-    }, [setPageNumber, storyBoard, soundService, setSound, updateGameState])
 
-    useEffect(() => {
-        return () => sound?.stop()
-    }, [sound])
+        return () => {
+            sound?.stop()
+            
+        }
+    }, [setPageNumber, storyBoard, soundService, setSound, updateGameState, sound])
+
 
     const currentPage = storyBoard.pages[pageNumber]
     const onLastPage = pageNumber === storyBoard.pages.length - 1;

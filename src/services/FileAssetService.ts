@@ -46,8 +46,9 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         this.reportUpdate('add', items.map(item => item.id), source)
     }
 
-    protected postAdd(items: FileAssetType[]) {
+    protected postAdd(items: FileAssetType[]):Promise<void> {
         console.log('postAdd', items)
+        return Promise.resolve()
     }
 
     async getWithFile(id: string) {
@@ -106,7 +107,7 @@ export class FileAssetService<FileAssetType extends FileAsset> extends TypedEmit
         this.getAll().map(asset => asset.href).map(href => URL.revokeObjectURL(href))
         this.data = {}
         items.forEach(item => this.data[item.id] = item)
-        this.postAdd(items)
         this.reportUpdate('populate', items.map(item => item.id), source)
+        return this.postAdd(items)
     }
 }

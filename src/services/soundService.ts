@@ -14,13 +14,14 @@ export class SoundService extends FileAssetService<SoundAsset> {
         this.setMaxListeners(20)
     }
 
-    protected postAdd(items: SoundAsset[]): void {
-        items.forEach(soundAsset =>
-            this.soundDeck?.defineSampleBuffer(soundAsset.id, soundAsset.href)
-                .then(success => {
-                    this.emit('load', soundAsset.id, success)
-                })
-        )
+    protected postAdd(items: SoundAsset[]): Promise<void> {
+        return Promise.all(
+            items.map(soundAsset =>
+                this.soundDeck?.defineSampleBuffer(soundAsset.id, soundAsset.href)
+                    .then(success => {
+                        this.emit('load', soundAsset.id, success)
+                    }))
+        ).then(() => { })
     }
 
     play(soundId: string, playOptions?: {

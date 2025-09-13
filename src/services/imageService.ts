@@ -10,11 +10,14 @@ export class ImageService extends FileAssetService<ImageAsset> {
             .map(asset => (asset as Readonly<ImageAsset>))
     }
 
-    protected postAdd(items: ImageAsset[]): void {
-        items.forEach(imageAsset =>
-            this.loadImg(imageAsset)
-                .catch(err => console.error('load image failed', err, imageAsset))
-        )
+    protected postAdd(items: ImageAsset[]) {
+        return Promise.all(
+            items.map(imageAsset =>
+                this.loadImg(imageAsset)
+                    .catch(err => console.error('load image failed', err, imageAsset))
+            )
+        ).then(() => {})
+
     }
 
     async loadImg(asset: ImageAsset) {

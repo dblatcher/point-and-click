@@ -5,10 +5,10 @@ import { GameDesign } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { ImageService } from "@/services/imageService";
-import { populateServices } from "@/services/populateServices";
 import { SoundService } from "@/services/soundService";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
+import { Box, Skeleton } from "@mui/material";
 
 type Props = {
   gameDesign: GameDesign;
@@ -18,56 +18,57 @@ type Props = {
   instantMode?: boolean;
 }
 
-type State = {
-  ready: boolean
-}
+export const GameDesignPlayer = ({
+  uiComponents,
+  instantMode,
+  gameDesign,
+  imageAssets,
+  soundAssets
+}: Props) => {
+  const soundServiceRef = useRef(new SoundService())
+  const imageServiceRef = useRef(new ImageService())
+  const [ready, setReady] = useState(false)
+  const [sprites, setSprites] = useState<Sprite[]>([])
 
-export class GameDesignPlayer extends React.Component<Props, State> {
+  useEffect(() => {
+    const { current: soundService } = soundServiceRef;
+    const { current: imageService } = imageServiceRef;
+    setSprites([...gameDesign.sprites.map((data) => new Sprite(data, imageService.get.bind(imageService)))]);
 
-  sprites: Sprite[]
-  soundService: SoundService
-  imageService: ImageService
+    Promise.all([
+      soundService.populate(soundAssets),
+      imageService.populate(imageAssets),
+    ])
+      .then(() => {
+        setReady(true)
+      })
 
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      ready: false
+    return () => {
+      soundService.populate([]);
+      imageService.populate([]);
+      setReady(false)
     }
+  }, [gameDesign, imageAssets, soundAssets])
 
-    this.sprites = []
-    this.soundService = new SoundService()
-    this.imageService = new ImageService()
-  }
-
-  componentDidMount(): void {
-    const { soundService, imageService } = this
-    const { gameDesign, imageAssets, soundAssets } = this.props
-    this.sprites.push(...gameDesign.sprites.map((data) => new Sprite(data, imageService.get.bind(imageService))))
-    populateServices(gameDesign, imageAssets, soundAssets, imageService, soundService)
-    this.setState({
-      ready: true
-    });
-  }
-
-  render() {
-    const { soundService, imageService } = this
-    const { ready } = this.state
-    const { uiComponents, instantMode, gameDesign } = this.props
-    return (
-      <AssetsProvider imageService={imageService} soundService={soundService}>
-        <SpritesProvider value={this.sprites}>
-          {ready && (
-            <Game
-              {...gameDesign}
-              _sprites={this.sprites}
-              uiComponents={uiComponents}
-              instantMode={instantMode}
-              soundService={soundService}
-              allowLocalSaves
-            />
-          )}
-        </SpritesProvider>
-      </AssetsProvider>
-    )
-  }
+  return (
+    <AssetsProvider imageService={imageServiceRef.current} soundService={soundServiceRef.current}>
+      <SpritesProvider value={sprites}>
+        {(ready) ? (
+          <Game
+            {...gameDesign}
+            _sprites={sprites}
+            uiComponents={uiComponents}
+            instantMode={instantMode}
+            soundService={soundServiceRef.current}
+            allowLocalSaves
+          />
+        ) : (
+          <Box padding={3} flex={1} display={'flex'} flexDirection={'column'} gap={1}>
+            <Skeleton variant="rectangular" sx={{ flex: 3 }}></Skeleton>
+            <Skeleton variant="rectangular" sx={{ flex: 1 }}></Skeleton>
+          </Box>
+        )}
+      </SpritesProvider>
+    </AssetsProvider>
+  )
 }
