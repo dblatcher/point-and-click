@@ -16,7 +16,6 @@ interface Props<T extends z.ZodRawShape> {
     optionDescriptions?: Partial<Record<keyof T, ReactNode[]>>;
     suggestions?: Partial<Record<keyof T, string[]>>;
     numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
-    containerProps?: Partial<StackProps>
     fieldWrapperProps?: Omit<Partial<StackProps>, 'component' | 'children' | 'ref'>
     textInputDelay?: number
 }
@@ -30,7 +29,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
     schema, data,
     changeValue,
     options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {}, fieldAliases = {},
-    containerProps: containerProps = {}, fieldWrapperProps = {},
+    fieldWrapperProps = {},
     textInputDelay,
 }: Props<T>) {
 
@@ -45,9 +44,9 @@ export function SchemaForm<T extends z.ZodRawShape>({
             type = zod._def.typeName
         }
 
-        const enumOptions= zod._def.typeName === 'ZodEnum' 
-            ? zod._def.values 
-            : zod.isOptional() &&  zod._def.innerType._def.typeName === 'ZodEnum' ? zod._def.innerType._def.values :  undefined;
+        const enumOptions = zod._def.typeName === 'ZodEnum'
+            ? zod._def.values
+            : zod.isOptional() && zod._def.innerType._def.typeName === 'ZodEnum' ? zod._def.innerType._def.values : undefined;
 
         fields.push({
             key,
@@ -60,21 +59,19 @@ export function SchemaForm<T extends z.ZodRawShape>({
     }
 
 
-    return <Stack component={'article'} {...containerProps}  >
-        <Stack spacing={1} {...fieldWrapperProps}>
-            {fields.map(field =>
-                <SchemaField key={field.key}
-                    noTriState
-                    options={options[field.key]}
-                    optionDescriptions={optionDescriptions[field.key]}
-                    suggestions={suggestions[field.key]}
-                    numberInputSettings={numberConfig[field.key]}
-                    change={changeValue}
-                    field={field}
-                    stringInputType={field.key === 'text' ? 'textArea' : undefined}
-                    textInputDelay={textInputDelay}
-                />
-            )}
-        </Stack>
+    return <Stack spacing={1} {...fieldWrapperProps}>
+        {fields.map(field =>
+            <SchemaField key={field.key}
+                noTriState
+                options={options[field.key]}
+                optionDescriptions={optionDescriptions[field.key]}
+                suggestions={suggestions[field.key]}
+                numberInputSettings={numberConfig[field.key]}
+                change={changeValue}
+                field={field}
+                stringInputType={field.key === 'text' ? 'textArea' : undefined}
+                textInputDelay={textInputDelay}
+            />
+        )}
     </Stack>
 }
