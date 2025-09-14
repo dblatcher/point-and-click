@@ -19,6 +19,6 @@ export const MarkDown = ({ content, style = {} }: Props) => {
     }
 
     return (
-        <div style={combinedStyle} dangerouslySetInnerHTML={{ __html }} />
+        <div className="markdown-block" style={combinedStyle} dangerouslySetInnerHTML={{ __html }} />
     )
 }

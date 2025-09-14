@@ -1,14 +1,13 @@
-import { z } from "zod"
-import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
-import { SchemaField } from "./SchemaField"
-import { Stack, Typography, StackProps, TypographyProps, } from "@mui/material"
+import { Stack, StackProps } from "@mui/material"
 import { ReactNode } from "react"
+import { z } from "zod"
+import { SchemaField } from "./SchemaField"
+import type { FieldDef, FieldValue, NumberInputSettings } from "./types"
 
-export type { FieldValue, FieldDef, NumberInputSettings }
 export { getModification } from "./getModification"
+export type { FieldDef, FieldValue, NumberInputSettings }
 
 interface Props<T extends z.ZodRawShape> {
-    formLegend?: string
     schema: z.ZodObject<T>;
     data: Record<string, unknown>;
     changeValue: { (value: FieldValue, field: FieldDef): void };
@@ -18,7 +17,6 @@ interface Props<T extends z.ZodRawShape> {
     suggestions?: Partial<Record<keyof T, string[]>>;
     numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
     containerProps?: Partial<StackProps>
-    legendProps?: Omit<Partial<TypographyProps>, 'component' | 'children' | 'ref'>
     fieldWrapperProps?: Omit<Partial<StackProps>, 'component' | 'children' | 'ref'>
     textInputDelay?: number
 }
@@ -29,10 +27,10 @@ interface Props<T extends z.ZodRawShape> {
  * and required string enums.
  */
 export function SchemaForm<T extends z.ZodRawShape>({
-    formLegend, schema, data,
+    schema, data,
     changeValue,
     options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {}, fieldAliases = {},
-    containerProps: containerProps = {}, legendProps = {}, fieldWrapperProps = {},
+    containerProps: containerProps = {}, fieldWrapperProps = {},
     textInputDelay,
 }: Props<T>) {
 
@@ -63,7 +61,6 @@ export function SchemaForm<T extends z.ZodRawShape>({
 
 
     return <Stack component={'article'} {...containerProps}  >
-        {formLegend && <Typography variant='h5' component={'legend'} {...legendProps}>{formLegend}</Typography>}
         <Stack spacing={1} {...fieldWrapperProps}>
             {fields.map(field =>
                 <SchemaField key={field.key}

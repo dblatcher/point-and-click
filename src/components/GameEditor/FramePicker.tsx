@@ -107,7 +107,7 @@ export const FramePicker: FunctionComponent<Props> = ({
                         select={(item): void => { setLocalFrame(0, 0, item.id) }} />
                 )}
                 {!quickPicking && (
-                    <Typography variant='h6'>
+                    <Typography>
                         {imageId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
                     </Typography>
                 )}
