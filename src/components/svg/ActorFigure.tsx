@@ -19,6 +19,7 @@ import { useGameState } from "@/context/game-state-context";
 interface Props {
     roomData: RoomData;
     viewAngleX: number;
+    viewAngleY: number;
     data: ActorData;
     clickHandler?: HandleClickFunction<ActorData>;
     contextClickHandler?: HandleClickFunction<ActorData>;
@@ -66,6 +67,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
     data,
     roomData,
     viewAngleX,
+    viewAngleY,
     isPaused,
     clickHandler, handleHover, contextClickHandler,
     orders = [],
@@ -150,6 +152,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
                     hoverData={data}
                     roomData={roomData}
                     viewAngleX={viewAngleX}
+                    viewAngleY={viewAngleY}
                     x={x} y={y}
                     height={height * spriteScale} 
                     width={width * spriteScale}
@@ -184,6 +187,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
             actorData={data}
             roomData={roomData}
             viewAngleX={viewAngleX}
+            viewAngleY={viewAngleY}
             x={x} y={y}
             height={height * spriteScale} width={width * spriteScale}
             filter={filter}

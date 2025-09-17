@@ -12,6 +12,7 @@ interface Props {
     frameIndex?: number;
     roomData: RoomData;
     viewAngleX: number;
+    viewAngleY: number;
     x: number;
     y: number;
     height?: number;
@@ -27,7 +28,7 @@ interface Props {
 
 
 export const SpriteShape: FunctionComponent<Props> = ({
-    roomData, viewAngleX, x, y, height = 50, width = 50, animationName, frameIndex, spriteObject, direction, filter,
+    roomData, viewAngleX, viewAngleY, x, y, height = 50, width = 50, animationName, frameIndex, spriteObject, direction, filter,
     clickHandler, contextClickHandler, handleHover, hoverData, status,
     reverseCycle
 }: Props) => {

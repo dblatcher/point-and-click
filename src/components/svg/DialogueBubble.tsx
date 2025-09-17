@@ -17,6 +17,7 @@ export const DialogueBubble: FunctionComponent<{
     actorData: ActorData;
     orders?: Order[];
     viewAngleX: number;
+    viewAngleY: number;
     fontFamily?: string;
 }> = (props) => {
     const { roomData, roomScale, orders, actorData, viewAngleX, fontFamily } = props

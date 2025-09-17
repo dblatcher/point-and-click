@@ -3,7 +3,7 @@ import { DialogueBubble } from "@/components/svg/DialogueBubble";
 import ZoneSvg from "@/components/svg/ZoneSvg";
 import { HotspotZone, RoomData } from "@/definitions";
 import { CellMatrix } from "@/lib/pathfinding/cells";
-import { getXShift } from "@/lib/roomFunctions";
+import { getXShift, getYShift } from "@/lib/roomFunctions";
 import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode } from "react";
 import { HandleHoverFunction, RoomContentItem } from "../../game/types";
 import BackgroundShape from "./BackgroundShape";
@@ -89,8 +89,11 @@ export const Room: FunctionComponent<Props> = ({
         backgroundColor: data.backgroundColor,
     }
 
-    const center = (frameWidth / 2) + getXShift(viewAngleX, 1, data)
-    const left = center - data.width / 2
+    const centerX = (frameWidth / 2) + getXShift(viewAngleX, 1, data)
+    const left = centerX - data.width / 2
+
+    const centerY = (frameHeight / 2) + getYShift(viewAngleY, 1, data)
+    const top = centerY - data.height / 2
 
     return (
         <figure
@@ -115,13 +118,14 @@ export const Room: FunctionComponent<Props> = ({
                     )}
 
                 {obstacleCells &&
-                    <ObstacleCellOverlay roomData={data} viewAngleX={viewAngleX} cellMatrix={obstacleCells} />
+                    <ObstacleCellOverlay roomData={data} viewAngleX={viewAngleX} viewAngleY={viewAngleY} cellMatrix={obstacleCells} />
                 }
 
                 {hotspots.map((zone, index) =>
                     <Hotspot key={index}
                         zone={zone}
                         viewAngleX={viewAngleX}
+                        viewAngleY={viewAngleY}
                         roomData={data}
                         highlight={highlightHotspots}
                         clickHandler={handleHotspotClick}
@@ -142,6 +146,7 @@ export const Room: FunctionComponent<Props> = ({
                         contextClickHandler={entry.contextClickHandler}
                         roomData={data}
                         viewAngleX={viewAngleX}
+                        viewAngleY={viewAngleY}
                         roomScale={scale}
                         handleHover={handleHover}
                         overrideSprite={entry.overrideSprite}
@@ -164,6 +169,7 @@ export const Room: FunctionComponent<Props> = ({
                         actorData={entry.data}
                         orders={entry.orders || []}
                         viewAngleX={viewAngleX}
+                        viewAngleY={viewAngleY}
                         roomData={data} roomScale={scale}
                         fontFamily={fontFamily}
                     />
@@ -178,7 +184,7 @@ export const Room: FunctionComponent<Props> = ({
                         stopPropagation={false}
                         zone={zone}
                         x={zone.x + left}
-                        y={data.height - zone.y}
+                        y={data.height - zone.y + top}
                         markVertices={markWalkableVertices.includes(index)}
                     />
                 })}
@@ -192,7 +198,7 @@ export const Room: FunctionComponent<Props> = ({
                         stopPropagation={false}
                         zone={zone}
                         x={zone.x + left}
-                        y={data.height - zone.y}
+                        y={data.height - zone.y + top}
                         markVertices={markObstacleVertices.includes(index)}
                     />
                 })}

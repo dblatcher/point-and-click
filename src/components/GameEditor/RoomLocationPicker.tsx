@@ -106,6 +106,7 @@ export const RoomLocationPicker = ({
                 <Hotspot
                     zone={hotspotInFocus}
                     viewAngleX={viewAngleX}
+                    viewAngleY={0}
                     roomData={roomData}
                     flash={true}
                 />

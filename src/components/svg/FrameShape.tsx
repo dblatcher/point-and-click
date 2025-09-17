@@ -10,6 +10,7 @@ import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
 interface Props {
     roomData: RoomData;
     viewAngleX: number;
+    viewAngleY: number;
     x: number;
     y: number;
     height?: number;
