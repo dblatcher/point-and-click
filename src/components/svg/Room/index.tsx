@@ -17,6 +17,7 @@ interface Props {
     maxWidth?: number;
     maxHeight?: number;
     viewAngleX: number;
+    viewAngleY?: number;
     handleRoomClick: { (x: number, y: number): void };
     handleRoomContextClick?: { (x: number, y: number): void };
     handleHotspotClick?: { (zone: HotspotZone, event: PointerEvent): void };
@@ -62,11 +63,11 @@ export const Room: FunctionComponent<Props> = ({
     fontFamily,
     children,
 }: Props) => {
-    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [] } = data;
+    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], frameHeight = height } = data;
 
     const scale = Math.min(
         maxWidth / frameWidth,
-        maxHeight / height
+        maxHeight / frameHeight
     )
 
     const processRoomClick: MouseEventHandler<HTMLElement> = (event) => {
@@ -82,7 +83,7 @@ export const Room: FunctionComponent<Props> = ({
 
     const figureInlineStyle: CSSProperties = {
         width: `${frameWidth * scale}px`,
-        height: `${height * scale}px`,
+        height: `${frameHeight * scale}px`,
         margin: noMargin ? 0 : undefined,
         backgroundColor: data.backgroundColor,
     }
@@ -99,7 +100,7 @@ export const Room: FunctionComponent<Props> = ({
         >
             <svg xmlns="http://www.w3.org/2000/svg"
                 className={styles.roomSvg}
-                viewBox={`0 0 ${frameWidth} ${height}`}>
+                viewBox={`0 0 ${frameWidth} ${frameHeight}`}>
 
                 {background
                     .filter(layer => layer.parallax <= 1)

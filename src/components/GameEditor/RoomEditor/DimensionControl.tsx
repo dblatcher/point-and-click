@@ -7,6 +7,7 @@ import { Alert, Box, Grid, Stack } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { ViewAngleSlider } from "./ViewAngleSlider";
 import { BackDrop } from "./background/Backdrop";
+import zIndex from "@mui/material/styles/zIndex";
 
 interface Props {
     room: RoomData
@@ -38,8 +39,11 @@ export const DimensionControl = ({ room }: Props) => {
     const updateRoom = (mod: Record<string, FieldValue>) => {
         modifyRoom(`change dimension on room ${room.id}`, room.id, mod)
     }
-    const frameCenter = (room.width * .5) - (room.frameWidth * .5)
-    const viewBoxLeft = frameCenter - (viewAngleX * frameCenter);
+    const frameCenterX = (room.width * .5) - (room.frameWidth * .5);
+    const viewBoxLeft = frameCenterX - (viewAngleX * frameCenterX);
+
+    const frameCenterY = (room.height * .5) - ((room.frameHeight ?? room.height) * .5);
+    const viewBoxTop = frameCenterY - (viewAngleY * frameCenterY);
 
     return <Box width={room.width * scale * (12 / 10)} padding={2}>
         <Grid container>
@@ -65,15 +69,17 @@ export const DimensionControl = ({ room }: Props) => {
             <LeftGridCell>
                 <NumberInput label="height" value={room.height}
                     inputHandler={(height) => { updateRoom({ height }) }} />
+                <NumberInput label="frameHeight" value={room.frameHeight ?? room.height}
+                    inputHandler={(frameHeight) => { updateRoom({ frameHeight }) }} />
             </LeftGridCell>
             <RightGridCell>
-                <Box bgcolor={room.backgroundColor ?? 'white'} width={room.width * scale} height={room.height * scale} position={'relative'}>
+                <Box bgcolor={room.backgroundColor ?? 'white'} width={room.width * scale} height={(room.height) * scale} position={'relative'}>
                     {room.background.map((layer, index) => <BackDrop key={index} roomData={room} layer={layer} filter='saturate(.15) brightness(.4)' />)}
                     <Box
                         boxSizing={'border-box'}
                         height={room.height * scale}
                         width={room.frameWidth * scale}
-                        top={0}
+                        top={viewBoxTop * scale}
                         left={viewBoxLeft * scale}
                         position={'absolute'}>
 
@@ -88,14 +94,15 @@ export const DimensionControl = ({ room }: Props) => {
             </RightGridCell>
         </Grid>
 
-        <Grid container>
+{/* TO DO - fix the image over lapping with the controls */}
+        <Grid sx={{paddingTop:100}}> 
             <LeftGridCell />
             <RightGridCell>
                 <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
                     X: <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} />
                 </Box>
                 <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
-                   Y:  <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} />
+                    Y:  <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} />
                 </Box>
                 <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
                     <NumberInput label="preview scale" value={scale} notFullWidth

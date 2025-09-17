@@ -21,6 +21,7 @@ export type ScaleLevel = z.infer<typeof ScaleLevelSchema>
 export const RoomDataSchema = z.object({
     id: z.string(),
     frameWidth: z.number(),
+    frameHeight: z.number().optional(),
     width: z.number(),
     height: z.number(),
     background: BackgroundLayerSchema.array(),
