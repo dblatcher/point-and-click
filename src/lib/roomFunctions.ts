@@ -20,6 +20,18 @@ export function calculateScreenX(xPosition: number, viewAngleX: number, roomData
     return (frameWidth / 2) + (xPosition - width / 2) + shift
 }
 
+export function getLayerHeight(parallax: number, roomData: RoomData) {
+    const { height, frameHeight = height } = roomData
+    return frameHeight + (parallax * (height - frameHeight))
+}
+
+export function getYShift(viewAngleY: number, parallax: number, roomData: RoomData) {
+    const { height, frameHeight = height } = roomData
+    const layerHeight = getLayerHeight(parallax, roomData)
+    const shiftRange = (layerHeight - frameHeight) / 2
+    return viewAngleY * shiftRange
+}
+
 export function locateClickInWorld(clickXPosition: number, clickYposition: number, viewAngleX: number, roomData: RoomData) {
     const { width, frameWidth, height } = roomData
     const shift = getXShift(viewAngleX, 1, roomData)

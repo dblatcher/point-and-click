@@ -1,5 +1,5 @@
 import { BackgroundLayer, RoomData } from "@/definitions"
-import { getLayerWidth, getXShift } from "@/lib/roomFunctions";
+import { getLayerHeight, getLayerWidth, getXShift, getYShift } from "@/lib/roomFunctions";
 import { useAssets } from "@/context/asset-context";
 
 interface Props {
@@ -11,29 +11,30 @@ interface Props {
 
 export default function BackgroundShape({ layer, roomData, viewAngleX, viewAngleY }: Props) {
     const { parallax, imageId, placement } = layer
-    const { frameWidth, height: roomHeight } = roomData
+    const { frameWidth, height: roomHeight, frameHeight = roomHeight } = roomData
 
     const { getImageAsset } = useAssets()
 
     const imageUrl = getImageAsset(imageId)?.href;
 
     const layerWidth = getLayerWidth(parallax, roomData)
-
     const centerX = (frameWidth / 2) + getXShift(viewAngleX, parallax, roomData)
     const left = centerX - layerWidth / 2
 
-
+    const layerHeight = getLayerHeight(parallax, roomData)
+    const centerY = (frameHeight / 2) + getYShift(viewAngleY, parallax, roomData)
+    const top = centerY - layerHeight / 2
 
     if (placement) {
-        return <svg x={left} y={0} style={{ overflow: 'visible', pointerEvents: 'none' }}>
-        <image 
-            {...placement}
-            href={imageUrl} 
-            preserveAspectRatio='none' />
-    </svg>
+        return <svg x={left} y={top} style={{ overflow: 'visible', pointerEvents: 'none' }}>
+            <image
+                {...placement}
+                href={imageUrl}
+                preserveAspectRatio='none' />
+        </svg>
     }
 
-    return <svg x={left} y={0} style={{ overflow: 'visible', pointerEvents: 'none' }}>
-        <image width={layerWidth} height={roomHeight} href={imageUrl} preserveAspectRatio='none' />
+    return <svg x={left} y={top} style={{ overflow: 'visible', pointerEvents: 'none' }} data-y={viewAngleY}>
+        <image width={layerWidth} height={layerHeight} href={imageUrl} preserveAspectRatio='none' />
     </svg>
 }

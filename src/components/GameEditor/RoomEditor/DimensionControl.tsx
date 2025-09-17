@@ -7,7 +7,6 @@ import { Alert, Box, Grid, Stack } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { ViewAngleSlider } from "./ViewAngleSlider";
 import { BackDrop } from "./background/Backdrop";
-import zIndex from "@mui/material/styles/zIndex";
 
 interface Props {
     room: RoomData
@@ -73,7 +72,13 @@ export const DimensionControl = ({ room }: Props) => {
                     inputHandler={(frameHeight) => { updateRoom({ frameHeight }) }} />
             </LeftGridCell>
             <RightGridCell>
-                <Box bgcolor={room.backgroundColor ?? 'white'} width={room.width * scale} height={(room.height) * scale} position={'relative'}>
+                <Box 
+                    bgcolor={room.backgroundColor ?? 'white'} 
+                    width={room.width * scale} 
+                    height={(room.height) * scale} 
+                    position={'relative'}
+                    overflow={'clip'}
+                >
                     {room.background.map((layer, index) => <BackDrop key={index} roomData={room} layer={layer} filter='saturate(.15) brightness(.4)' />)}
                     <Box
                         boxSizing={'border-box'}
@@ -85,6 +90,7 @@ export const DimensionControl = ({ room }: Props) => {
 
                         <Room data={room} noSound
                             viewAngleX={viewAngleX}
+                            viewAngleY={viewAngleY}
                             handleRoomClick={() => { }}
                             maxHeight={room.height * scale}
                             maxWidth={room.frameWidth * scale}
@@ -94,8 +100,7 @@ export const DimensionControl = ({ room }: Props) => {
             </RightGridCell>
         </Grid>
 
-{/* TO DO - fix the image over lapping with the controls */}
-        <Grid sx={{paddingTop:100}}> 
+        <Grid> 
             <LeftGridCell />
             <RightGridCell>
                 <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>

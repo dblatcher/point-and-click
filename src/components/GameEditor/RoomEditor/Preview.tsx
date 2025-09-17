@@ -170,6 +170,7 @@ export class Preview extends Component<Props, State> {
                             maxWidth={maxWidth}
                             maxHeight={Math.min(roomData.height * 2, 600)}
                             viewAngleX={viewAngleX}
+                            viewAngleY={viewAngleY}
                             contents={contents}
                             handleRoomClick={processClick}
                             highlightHotspots={highlightHotspots}
