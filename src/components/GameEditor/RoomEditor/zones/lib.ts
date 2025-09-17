@@ -1,6 +1,6 @@
 import { HotspotZone, RoomData, SupportedZoneShape, Zone } from "@/definitions";
 import { ClickEffect } from "../ClickEffect";
-import { getShift, locateClickInWorld } from "@/lib/roomFunctions";
+import { getXShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { cloneData } from "@/lib/clone";
 import { Polygon } from "@/definitions/Zone";
 
@@ -74,7 +74,7 @@ const getTargetPoint = (
         return locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngleX, room)
     }
     return {
-        x: roundedPoint.x - getShift(viewAngleX, parallax, room),
+        x: roundedPoint.x - getXShift(viewAngleX, parallax, room),
         y: room.height - roundedPoint.y
     }
 }

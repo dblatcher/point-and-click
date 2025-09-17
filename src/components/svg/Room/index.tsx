@@ -3,7 +3,7 @@ import { DialogueBubble } from "@/components/svg/DialogueBubble";
 import ZoneSvg from "@/components/svg/ZoneSvg";
 import { HotspotZone, RoomData } from "@/definitions";
 import { CellMatrix } from "@/lib/pathfinding/cells";
-import { getShift } from "@/lib/roomFunctions";
+import { getXShift } from "@/lib/roomFunctions";
 import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode } from "react";
 import { HandleHoverFunction, RoomContentItem } from "../../game/types";
 import BackgroundShape from "./BackgroundShape";
@@ -44,6 +44,7 @@ export const Room: FunctionComponent<Props> = ({
     maxWidth = 300,
     maxHeight = 200,
     viewAngleX,
+    viewAngleY = 0,
     handleRoomClick,
     handleRoomContextClick,
     handleHotspotClick,
@@ -88,7 +89,7 @@ export const Room: FunctionComponent<Props> = ({
         backgroundColor: data.backgroundColor,
     }
 
-    const center = (frameWidth / 2) + getShift(viewAngleX, 1, data)
+    const center = (frameWidth / 2) + getXShift(viewAngleX, 1, data)
     const left = center - data.width / 2
 
     return (
@@ -108,6 +109,7 @@ export const Room: FunctionComponent<Props> = ({
                         <BackgroundShape key={index}
                             layer={layer}
                             viewAngleX={viewAngleX}
+                            viewAngleY={viewAngleY}
                             roomData={data}
                         />
                     )}
@@ -152,6 +154,7 @@ export const Room: FunctionComponent<Props> = ({
                         <BackgroundShape key={index}
                             layer={layer}
                             viewAngleX={viewAngleX}
+                            viewAngleY={viewAngleY}
                             roomData={data}
                         />
                     )}

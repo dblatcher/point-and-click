@@ -1,5 +1,5 @@
 import { RoomData } from "@/definitions";
-import { getShift } from "@/lib/roomFunctions";
+import { getXShift } from "@/lib/roomFunctions";
 import { FunctionComponent, ReactNode } from "react";
 
 export interface ParallaxPlaceProps {
@@ -14,7 +14,7 @@ export const ParallaxPlace: FunctionComponent<ParallaxPlaceProps & { children?: 
     x, y, parallax, roomData, viewAngleX, children
 }) => {
 
-    const displayX = x + getShift(viewAngleX, parallax, roomData)
+    const displayX = x + getXShift(viewAngleX, parallax, roomData)
     const displayY = roomData.height - y
 
     return (

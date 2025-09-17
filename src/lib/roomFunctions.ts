@@ -8,7 +8,7 @@ export function getLayerWidth(parallax: number, roomData: RoomData) {
     return frameWidth + (parallax * (width - frameWidth))
 }
 
-export function getShift(viewAngleX: number, parallax: number, roomData: RoomData) {
+export function getXShift(viewAngleX: number, parallax: number, roomData: RoomData) {
     const layerWidth = getLayerWidth(parallax, roomData)
     const shiftRange = (layerWidth - roomData.frameWidth) / 2
     return viewAngleX * shiftRange
@@ -16,13 +16,13 @@ export function getShift(viewAngleX: number, parallax: number, roomData: RoomDat
 
 export function calculateScreenX(xPosition: number, viewAngleX: number, roomData: RoomData) {
     const { width, frameWidth } = roomData
-    const shift = getShift(viewAngleX, 1, roomData)
+    const shift = getXShift(viewAngleX, 1, roomData)
     return (frameWidth / 2) + (xPosition - width / 2) + shift
 }
 
 export function locateClickInWorld(clickXPosition: number, clickYposition: number, viewAngleX: number, roomData: RoomData) {
     const { width, frameWidth, height } = roomData
-    const shift = getShift(viewAngleX, 1, roomData)
+    const shift = getXShift(viewAngleX, 1, roomData)
     const offCenterInPoints = (clickXPosition - frameWidth / 2)
     const centerOfScreenXPosition = (width / 2) - shift
     const x = offCenterInPoints + centerOfScreenXPosition

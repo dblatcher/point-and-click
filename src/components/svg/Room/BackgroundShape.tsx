@@ -1,14 +1,15 @@
 import { BackgroundLayer, RoomData } from "@/definitions"
-import { getLayerWidth, getShift } from "@/lib/roomFunctions";
+import { getLayerWidth, getXShift } from "@/lib/roomFunctions";
 import { useAssets } from "@/context/asset-context";
 
 interface Props {
     layer: BackgroundLayer;
     roomData: RoomData;
     viewAngleX: number;
+    viewAngleY: number;
 }
 
-export default function BackgroundShape({ layer, roomData, viewAngleX }: Props) {
+export default function BackgroundShape({ layer, roomData, viewAngleX, viewAngleY }: Props) {
     const { parallax, imageId, placement } = layer
     const { frameWidth, height: roomHeight } = roomData
 
@@ -18,8 +19,10 @@ export default function BackgroundShape({ layer, roomData, viewAngleX }: Props) 
 
     const layerWidth = getLayerWidth(parallax, roomData)
 
-    const center = (frameWidth / 2) + getShift(viewAngleX, parallax, roomData)
-    const left = center - layerWidth / 2
+    const centerX = (frameWidth / 2) + getXShift(viewAngleX, parallax, roomData)
+    const left = centerX - layerWidth / 2
+
+
 
     if (placement) {
         return <svg x={left} y={0} style={{ overflow: 'visible', pointerEvents: 'none' }}>

@@ -1,6 +1,6 @@
 import ZoneSvg from "@/components/svg/ZoneSvg";
 import { HotspotZone, RoomData } from "@/definitions";
-import { getShift } from "@/lib/roomFunctions";
+import { getXShift } from "@/lib/roomFunctions";
 import { FunctionComponent } from "react";
 import { HandleClickFunction, HandleHoverFunction } from "../../game/types";
 import { hotpotClassNames } from "./zoneCssClasses";
@@ -27,7 +27,7 @@ const Hotspot: FunctionComponent<Props> = ({
         <>
             <ZoneSvg
                 className={hotpotClassNames({ markVertices, highlight, flash })}
-                x={x + getShift(viewAngleX, parallax, roomData)}
+                x={x + getXShift(viewAngleX, parallax, roomData)}
                 y={roomData.height - y}
                 clickHandler={clickHandler}
                 contextClickHandler={contextClickHandler}

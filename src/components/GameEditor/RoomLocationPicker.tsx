@@ -2,7 +2,7 @@ import { RoomContentItem } from "@/components/game/types";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { Point, RoomData } from "@/definitions";
-import { calculateScreenX, getShift, locateClickInWorld } from "@/lib/roomFunctions";
+import { calculateScreenX, getXShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { Pin } from "../svg/Pin";
@@ -40,7 +40,7 @@ export const RoomLocationPicker = ({
     const walkableInFocus = walkableRefToFocus ? roomData.walkableAreas?.find(z => z.ref === walkableRefToFocus) : undefined
     const hotspotInFocus = hotspotIdToFocus ? roomData.hotspots?.find(z => z.id === hotspotIdToFocus) : undefined
 
-    const center = (roomData.frameWidth / 2) + getShift(viewAngleX, 1, roomData)
+    const center = (roomData.frameWidth / 2) + getXShift(viewAngleX, 1, roomData)
     const left = center - roomData.width / 2
 
     return <Box
