@@ -23,6 +23,7 @@ interface Props {
 export const ScalingControl = ({ room }: Props) => {
     const [scale, setScale] = useState(1.5)
     const [viewAngleX, setViewAngleX] = useState(0)
+    const [viewAngleY, setViewAngleY] = useState(0)
     const [testSpriteX, setTestSpriteX] = useState(100)
     const [testSpriteY, setTestSpriteY] = useState(100)
     const [testActor, setTestActor] = useState<ActorData | undefined>(undefined)
@@ -142,6 +143,7 @@ export const ScalingControl = ({ room }: Props) => {
                 </div>
                 <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
                     <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} />
+                    <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} />
                     <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>

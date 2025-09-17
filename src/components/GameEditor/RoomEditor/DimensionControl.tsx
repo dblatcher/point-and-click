@@ -13,7 +13,7 @@ interface Props {
 }
 
 const RightGridCell = ({ children, row }: { children?: ReactNode, row?: boolean }) => <Grid
-    item xs={11}
+    item xs={10}
     padding={1}
     flexDirection={row ? 'row' : 'column'}
     display={'flex'}
@@ -22,7 +22,7 @@ const RightGridCell = ({ children, row }: { children?: ReactNode, row?: boolean 
     alignItems={row ? 'center' : 'flex-start'}>
     {children}</Grid>
 const LeftGridCell = ({ children }: { children?: ReactNode }) => <Grid
-    item xs={1}
+    item xs={2}
     padding={1}
     flexDirection={'column'}
     justifyContent={'center'}
@@ -34,13 +34,14 @@ export const DimensionControl = ({ room }: Props) => {
     const { modifyRoom } = useGameDesign()
     const [scale, setScale] = useState(1)
     const [viewAngleX, setViewAngleX] = useState(0)
+    const [viewAngleY, setViewAngleY] = useState(0)
     const updateRoom = (mod: Record<string, FieldValue>) => {
         modifyRoom(`change dimension on room ${room.id}`, room.id, mod)
     }
     const frameCenter = (room.width * .5) - (room.frameWidth * .5)
     const viewBoxLeft = frameCenter - (viewAngleX * frameCenter);
 
-    return <Box width={room.width * scale * (12 / 11)} padding={2}>
+    return <Box width={room.width * scale * (12 / 10)} padding={2}>
         <Grid container>
             <LeftGridCell />
             <RightGridCell row>
@@ -91,7 +92,10 @@ export const DimensionControl = ({ room }: Props) => {
             <LeftGridCell />
             <RightGridCell>
                 <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
-                    <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} />
+                    X: <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} />
+                </Box>
+                <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
+                   Y:  <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} />
                 </Box>
                 <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
                     <NumberInput label="preview scale" value={scale} notFullWidth

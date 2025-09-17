@@ -19,6 +19,7 @@ type BooleanState = {
 
 type State = BooleanState & {
     viewAngleX: number;
+    viewAngleY: number;
     maxWidth: number;
 };
 
@@ -56,6 +57,7 @@ export class Preview extends Component<Props, State> {
         super(props)
         this.state = {
             viewAngleX: 0,
+            viewAngleY: 0,
             maxWidth: 500,
             renderAllZones: false,
             highlightHotspots: false,
@@ -122,7 +124,7 @@ export class Preview extends Component<Props, State> {
 
     render() {
         const {
-            viewAngleX, maxWidth, renderAllZones, highlightHotspots,
+            viewAngleX, viewAngleY, maxWidth, renderAllZones, highlightHotspots,
             showRealActors, showScaleLines,
         } = this.state
         const { roomData, handleRoomClick, clickEffect, actors, activeZoneIndex } = this.props
@@ -195,6 +197,7 @@ export class Preview extends Component<Props, State> {
                     </Box>
                     <Box>
                         <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={viewAngleX => this.setState({ viewAngleX })} />
+                        <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={viewAngleY => this.setState({ viewAngleY })} />
                         <Divider />
 
                         <Grid container>
