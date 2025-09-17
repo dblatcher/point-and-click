@@ -7,14 +7,14 @@ export interface ParallaxPlaceProps {
     y: number,
     parallax: number,
     roomData: RoomData;
-    viewAngle: number;
+    viewAngleX: number;
 }
 
 export const ParallaxPlace: FunctionComponent<ParallaxPlaceProps & { children?: ReactNode }> = ({
-    x, y, parallax, roomData, viewAngle, children
+    x, y, parallax, roomData, viewAngleX, children
 }) => {
 
-    const displayX = x + getShift(viewAngle, parallax, roomData)
+    const displayX = x + getShift(viewAngleX, parallax, roomData)
     const displayY = roomData.height - y
 
     return (

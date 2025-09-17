@@ -17,7 +17,7 @@ interface Props {
     contents?: RoomContentItem[],
     targetPoint?: Point,
     subPoints?: Point[],
-    viewAngle?: number,
+    viewAngleX?: number,
     previewWidth?: number,
     previewHeight?: number,
     onClick?: { (point: { x: number; y: number }): void };
@@ -29,18 +29,18 @@ interface Props {
 
 export const RoomLocationPicker = ({
     roomData, contents = [], targetPoint, subPoints,
-    viewAngle: viewAngleProp, previewWidth = 600, previewHeight = previewWidth,
+    viewAngleX: viewAngleXProp, previewWidth = 600, previewHeight = previewWidth,
     onClick, renderAllZones, obstacleRefToFocus, walkableRefToFocus, hotspotIdToFocus,
 }: Props) => {
 
-    const [viewAngleState, setViewAngleState] = useState(0)
-    const viewAngle = typeof viewAngleProp === 'number' ? viewAngleProp : viewAngleState;
+    const [viewAngleXState, setViewAngleXState] = useState(0)
+    const viewAngleX = typeof viewAngleXProp === 'number' ? viewAngleXProp : viewAngleXState;
 
     const obstacleInFocus = obstacleRefToFocus ? roomData.obstacleAreas?.find(z => z.ref === obstacleRefToFocus) : undefined
     const walkableInFocus = walkableRefToFocus ? roomData.walkableAreas?.find(z => z.ref === walkableRefToFocus) : undefined
     const hotspotInFocus = hotspotIdToFocus ? roomData.hotspots?.find(z => z.id === hotspotIdToFocus) : undefined
 
-    const center = (roomData.frameWidth / 2) + getShift(viewAngle, 1, roomData)
+    const center = (roomData.frameWidth / 2) + getShift(viewAngleX, 1, roomData)
     const left = center - roomData.width / 2
 
     return <Box
@@ -52,11 +52,11 @@ export const RoomLocationPicker = ({
         <Room
             data={roomData}
             contents={contents}
-            viewAngle={viewAngle}
+            viewAngleX={viewAngleX}
             renderAllZones={renderAllZones}
             handleRoomClick={(x, y) => {
                 if (onClick) {
-                    const point = locateClickInWorld(x, y, viewAngle, roomData)
+                    const point = locateClickInWorld(x, y, viewAngleX, roomData)
                     onClick({ x: Math.round(point.x), y: Math.round(point.y) })
                 }
             }}
@@ -68,7 +68,7 @@ export const RoomLocationPicker = ({
 
             {subPoints?.map((point, index) => (
                 <svg key={index}
-                    x={calculateScreenX(point.x, viewAngle, roomData)}
+                    x={calculateScreenX(point.x, viewAngleX, roomData)}
                     y={roomData.height - point.y}
                     style={{ overflow: 'visible' }}>
                     <Pin label={(index + 1).toString()}  />
@@ -78,7 +78,7 @@ export const RoomLocationPicker = ({
             {targetPoint && (
                 <MarkerShape
                     roomData={roomData}
-                    viewAngle={viewAngle}
+                    viewAngleX={viewAngleX}
                     color={'red'}
                     {...targetPoint}
                 />
@@ -105,14 +105,14 @@ export const RoomLocationPicker = ({
             {hotspotInFocus && (
                 <Hotspot
                     zone={hotspotInFocus}
-                    viewAngle={viewAngle}
+                    viewAngleX={viewAngleX}
                     roomData={roomData}
                     flash={true}
                 />
             )}
         </Room>
-        {typeof viewAngleProp === 'undefined' && (
-            <ViewAngleSlider viewAngle={viewAngleState} setViewAngle={setViewAngleState} />
+        {typeof viewAngleXProp === 'undefined' && (
+            <ViewAngleSlider viewAngle={viewAngleXState} setViewAngle={setViewAngleXState} />
         )}
     </Box>
 }

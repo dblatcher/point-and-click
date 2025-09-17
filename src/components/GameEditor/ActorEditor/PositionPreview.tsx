@@ -35,7 +35,7 @@ export const PositionPreview = ({ actorData, updateFromPartial, defaultPreviewWi
         ? gameDesign.actors.filter(actor => actor.room === roomData.id && actor.id !== actorData.id)
         : []
 
-    const viewAngle = (lockAngle && roomData) ? getViewAngleCenteredOn(actorData.x, roomData) : undefined
+    const viewAngleX = (lockAngle && roomData) ? getViewAngleCenteredOn(actorData.x, roomData) : undefined
 
     const contents = [...otherActors, actorData]
         .sort(putActorsInDisplayOrder)
@@ -106,7 +106,7 @@ export const PositionPreview = ({ actorData, updateFromPartial, defaultPreviewWi
                             roomData={roomData}
                             targetPoint={getTargetPoint(actorData, roomData)}
                             contents={contents}
-                            viewAngle={viewAngle}
+                            viewAngleX={viewAngleX}
                             previewWidth={previewWidth}
                             onClick={(point) => {
                                 handlePreviewClick(point, role)

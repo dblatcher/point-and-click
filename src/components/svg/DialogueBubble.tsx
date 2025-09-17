@@ -16,14 +16,14 @@ export const DialogueBubble: FunctionComponent<{
     roomScale: number;
     actorData: ActorData;
     orders?: Order[];
-    viewAngle: number;
+    viewAngleX: number;
     fontFamily?: string;
 }> = (props) => {
-    const { roomData, roomScale, orders, actorData, viewAngle, fontFamily } = props
+    const { roomData, roomScale, orders, actorData, viewAngleX, fontFamily } = props
 
     const spriteScale = getScale(actorData.y, roomData.scaling)
     const y = actorData.y + (actorData.height * spriteScale)
-    const x = calculateScreenX(actorData.x, viewAngle, roomData)
+    const x = calculateScreenX(actorData.x, viewAngleX, roomData)
 
     if (!orders) { return null }
 

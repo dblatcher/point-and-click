@@ -16,7 +16,7 @@ interface Props {
     data: RoomData;
     maxWidth?: number;
     maxHeight?: number;
-    viewAngle: number;
+    viewAngleX: number;
     handleRoomClick: { (x: number, y: number): void };
     handleRoomContextClick?: { (x: number, y: number): void };
     handleHotspotClick?: { (zone: HotspotZone, event: PointerEvent): void };
@@ -42,7 +42,7 @@ export const Room: FunctionComponent<Props> = ({
     data,
     maxWidth = 300,
     maxHeight = 200,
-    viewAngle,
+    viewAngleX,
     handleRoomClick,
     handleRoomContextClick,
     handleHotspotClick,
@@ -87,7 +87,7 @@ export const Room: FunctionComponent<Props> = ({
         backgroundColor: data.backgroundColor,
     }
 
-    const center = (frameWidth / 2) + getShift(viewAngle, 1, data)
+    const center = (frameWidth / 2) + getShift(viewAngleX, 1, data)
     const left = center - data.width / 2
 
     return (
@@ -106,19 +106,19 @@ export const Room: FunctionComponent<Props> = ({
                     .map((layer, index) =>
                         <BackgroundShape key={index}
                             layer={layer}
-                            viewAngle={viewAngle}
+                            viewAngleX={viewAngleX}
                             roomData={data}
                         />
                     )}
 
                 {obstacleCells &&
-                    <ObstacleCellOverlay roomData={data} viewAngle={viewAngle} cellMatrix={obstacleCells} />
+                    <ObstacleCellOverlay roomData={data} viewAngleX={viewAngleX} cellMatrix={obstacleCells} />
                 }
 
                 {hotspots.map((zone, index) =>
                     <Hotspot key={index}
                         zone={zone}
-                        viewAngle={viewAngle}
+                        viewAngleX={viewAngleX}
                         roomData={data}
                         highlight={highlightHotspots}
                         clickHandler={handleHotspotClick}
@@ -138,7 +138,7 @@ export const Room: FunctionComponent<Props> = ({
                         clickHandler={entry.clickHandler}
                         contextClickHandler={entry.contextClickHandler}
                         roomData={data}
-                        viewAngle={viewAngle}
+                        viewAngleX={viewAngleX}
                         roomScale={scale}
                         handleHover={handleHover}
                         overrideSprite={entry.overrideSprite}
@@ -150,7 +150,7 @@ export const Room: FunctionComponent<Props> = ({
                     .map((layer, index) =>
                         <BackgroundShape key={index}
                             layer={layer}
-                            viewAngle={viewAngle}
+                            viewAngleX={viewAngleX}
                             roomData={data}
                         />
                     )}
@@ -159,7 +159,7 @@ export const Room: FunctionComponent<Props> = ({
                     <DialogueBubble key={entry.data.id}
                         actorData={entry.data}
                         orders={entry.orders || []}
-                        viewAngle={viewAngle}
+                        viewAngleX={viewAngleX}
                         roomData={data} roomScale={scale}
                         fontFamily={fontFamily}
                     />

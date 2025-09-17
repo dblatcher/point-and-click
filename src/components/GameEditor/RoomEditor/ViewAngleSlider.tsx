@@ -6,7 +6,7 @@ interface Props {
     setViewAngle: { (value: number): void }
 }
 
-export const ViewAngleSlider = ({ viewAngle, setViewAngle }: Props) => {
+export const ViewAngleSlider = ({ viewAngle: viewAngle, setViewAngle }: Props) => {
     return (
         <RangeInput
             label="preview angle"

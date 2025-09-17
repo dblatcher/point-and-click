@@ -43,7 +43,7 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
     if (designProperty === 'rooms') {
         const roomData = item as RoomData
         return <Box {...previewBoxProps}>
-            <RoomLocationPicker roomData={roomData} previewHeight={PREVIEW_HEIGHT} viewAngle={0} previewWidth={PREVIEW_WIDTH} />
+            <RoomLocationPicker roomData={roomData} previewHeight={PREVIEW_HEIGHT} viewAngleX={0} previewWidth={PREVIEW_WIDTH} />
         </Box>
     }
     if (designProperty === 'actors') {

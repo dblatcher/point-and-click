@@ -18,7 +18,7 @@ type BooleanState = {
 }
 
 type State = BooleanState & {
-    viewAngle: number;
+    viewAngleX: number;
     maxWidth: number;
 };
 
@@ -26,7 +26,7 @@ type Props = {
     roomData: RoomData;
     actors: ActorData[];
     clickEffect?: ClickEffect;
-    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngle: number, clickEffect: ClickEffect): void };
+    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngleX: number, clickEffect: ClickEffect): void };
     activeZoneIndex?: number;
     zoneType: ZoneType
 }
@@ -55,7 +55,7 @@ export class Preview extends Component<Props, State> {
     constructor(props: Props) {
         super(props)
         this.state = {
-            viewAngle: 0,
+            viewAngleX: 0,
             maxWidth: 500,
             renderAllZones: false,
             highlightHotspots: false,
@@ -122,7 +122,7 @@ export class Preview extends Component<Props, State> {
 
     render() {
         const {
-            viewAngle, maxWidth, renderAllZones, highlightHotspots,
+            viewAngleX, maxWidth, renderAllZones, highlightHotspots,
             showRealActors, showScaleLines,
         } = this.state
         const { roomData, handleRoomClick, clickEffect, actors, activeZoneIndex } = this.props
@@ -130,7 +130,7 @@ export class Preview extends Component<Props, State> {
 
         const processClick = (x: number, y: number) => {
             if (clickEffect) {
-                handleRoomClick({ x, y }, viewAngle, clickEffect)
+                handleRoomClick({ x, y }, viewAngleX, clickEffect)
             }
         }
 
@@ -167,7 +167,7 @@ export class Preview extends Component<Props, State> {
                             renderAllZones={renderAllZones}
                             maxWidth={maxWidth}
                             maxHeight={Math.min(roomData.height * 2, 600)}
-                            viewAngle={viewAngle}
+                            viewAngleX={viewAngleX}
                             contents={contents}
                             handleRoomClick={processClick}
                             highlightHotspots={highlightHotspots}
@@ -185,7 +185,7 @@ export class Preview extends Component<Props, State> {
                             {this.hotspotToHaveMarkWalkToPoint && (
                                 <MarkerShape
                                     roomData={roomData}
-                                    viewAngle={viewAngle}
+                                    viewAngleX={viewAngleX}
                                     color={'red'}
                                     text={this.walkToPointLabel}
                                     {...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
@@ -194,7 +194,7 @@ export class Preview extends Component<Props, State> {
                         </Room>
                     </Box>
                     <Box>
-                        <ViewAngleSlider viewAngle={viewAngle} setViewAngle={viewAngle => this.setState({ viewAngle })} />
+                        <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={viewAngleX => this.setState({ viewAngleX })} />
                         <Divider />
 
                         <Grid container>

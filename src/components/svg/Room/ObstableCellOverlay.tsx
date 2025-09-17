@@ -6,13 +6,13 @@ import { getShift } from "@/lib/roomFunctions";
 
 interface Props {
     roomData: RoomData;
-    viewAngle: number;
+    viewAngleX: number;
     cellMatrix: CellMatrix;
 }
 
-export const ObstacleCellOverlay: FunctionComponent<Props> = ({ roomData, viewAngle, cellMatrix }: Props) => {
+export const ObstacleCellOverlay: FunctionComponent<Props> = ({ roomData, viewAngleX, cellMatrix }: Props) => {
     const { frameWidth, height: roomHeight } = roomData
-    const center = (frameWidth / 2) + getShift(viewAngle, 1, roomData)
+    const center = (frameWidth / 2) + getShift(viewAngleX, 1, roomData)
     const left = center - roomData.width / 2
     const cellSize = roomHeight / cellMatrix.length
 

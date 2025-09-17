@@ -5,10 +5,10 @@ import { useAssets } from "@/context/asset-context";
 interface Props {
     layer: BackgroundLayer;
     roomData: RoomData;
-    viewAngle: number;
+    viewAngleX: number;
 }
 
-export default function BackgroundShape({ layer, roomData, viewAngle }: Props) {
+export default function BackgroundShape({ layer, roomData, viewAngleX }: Props) {
     const { parallax, imageId, placement } = layer
     const { frameWidth, height: roomHeight } = roomData
 
@@ -18,7 +18,7 @@ export default function BackgroundShape({ layer, roomData, viewAngle }: Props) {
 
     const layerWidth = getLayerWidth(parallax, roomData)
 
-    const center = (frameWidth / 2) + getShift(viewAngle, parallax, roomData)
+    const center = (frameWidth / 2) + getShift(viewAngleX, parallax, roomData)
     const left = center - layerWidth / 2
 
     if (placement) {

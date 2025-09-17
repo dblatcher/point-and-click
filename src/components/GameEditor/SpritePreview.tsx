@@ -50,7 +50,7 @@ export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, max
             noSound
             noMargin
             maxWidth={maxWidth}
-            viewAngle={0}
+            viewAngleX={0}
             highlightHotspots={false}
             handleRoomClick={() => { }}
             contents={[{ overrideSprite, data: modifiedActorData, }]}

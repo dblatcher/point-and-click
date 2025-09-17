@@ -11,7 +11,7 @@ interface Props {
     direction: Direction;
     frameIndex?: number;
     roomData: RoomData;
-    viewAngle: number;
+    viewAngleX: number;
     x: number;
     y: number;
     height?: number;
@@ -27,7 +27,7 @@ interface Props {
 
 
 export const SpriteShape: FunctionComponent<Props> = ({
-    roomData, viewAngle, x, y, height = 50, width = 50, animationName, frameIndex, spriteObject, direction, filter,
+    roomData, viewAngleX, x, y, height = 50, width = 50, animationName, frameIndex, spriteObject, direction, filter,
     clickHandler, contextClickHandler, handleHover, hoverData, status,
     reverseCycle
 }: Props) => {
@@ -53,7 +53,7 @@ export const SpriteShape: FunctionComponent<Props> = ({
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             style={svgStyle}
-            x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngle, roomData)}
+            x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngleX, roomData)}
             y={roomData.height - y - heightAdjustedByScale} >
             <foreignObject x="0" y="0" width={widthAdjustedByScale} height={heightAdjustedByScale}>
                 <div style={divStyle} />

@@ -7,7 +7,7 @@ interface Props {
     x: number;
     y?: number;
     height?: number;
-    viewAngle: number;
+    viewAngleX: number;
     color: string;
     text?: string;
 }
@@ -15,12 +15,12 @@ interface Props {
 const CROSS_SIZE = 8
 
 export const MarkerShape: FunctionComponent<Props> = ({
-    roomData, x, viewAngle, color, y = 0, height = 50, text
+    roomData, x, viewAngleX, color, y = 0, height = 50, text
 }: Props) => {
 
     const textToDisplay = text || `${x.toFixed(0)},${y.toFixed(0)}`
     const displayY = roomData.height - y
-    const displayX = calculateScreenX(x, viewAngle, roomData)
+    const displayX = calculateScreenX(x, viewAngleX, roomData)
 
     return (
         <svg

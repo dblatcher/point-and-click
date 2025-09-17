@@ -57,7 +57,7 @@ export const ConsequenceFormRoom: React.FunctionComponent<Props> = ({ consequenc
             />
         case "toggleZone":
             return <RoomLocationPicker
-                viewAngle={typeof zoneX === 'number' ? getViewAngleCenteredOn(zoneX, roomData) : 0}
+                viewAngleX={typeof zoneX === 'number' ? getViewAngleCenteredOn(zoneX, roomData) : 0}
                 roomData={roomData}
                 previewWidth={300}
                 obstacleRefToFocus={consequence.zoneType === 'obstacle' ? consequence.ref : undefined}

@@ -9,7 +9,7 @@ import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
 
 interface Props {
     roomData: RoomData;
-    viewAngle: number;
+    viewAngleX: number;
     x: number;
     y: number;
     height?: number;
@@ -88,7 +88,7 @@ const FrameContents = (props: {
 
 
 export const FrameShape: FunctionComponent<Props> = ({
-    roomData, viewAngle, x, y, height = 50, width = 50, filter,
+    roomData, viewAngleX, x, y, height = 50, width = 50, filter,
     clickHandler, handleHover, actorData, status,
 }: Props) => {
     const { getImageAsset } = useAssets()
@@ -111,7 +111,7 @@ export const FrameShape: FunctionComponent<Props> = ({
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             style={svgStyle}
-            x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngle, roomData)}
+            x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngleX, roomData)}
             y={roomData.height - y - heightAdjustedByScale} >
             <FrameContents {...{
                 assetAndFrame,

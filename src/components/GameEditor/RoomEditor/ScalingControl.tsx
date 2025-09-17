@@ -22,7 +22,7 @@ interface Props {
 
 export const ScalingControl = ({ room }: Props) => {
     const [scale, setScale] = useState(1.5)
-    const [viewAngle, setViewAngle] = useState(0)
+    const [viewAngleX, setViewAngleX] = useState(0)
     const [testSpriteX, setTestSpriteX] = useState(100)
     const [testSpriteY, setTestSpriteY] = useState(100)
     const [testActor, setTestActor] = useState<ActorData | undefined>(undefined)
@@ -49,7 +49,7 @@ export const ScalingControl = ({ room }: Props) => {
     }
 
     const handleClick = (clickX: number, clickY: number) => {
-        const { x, y } = locateClickInWorld(clickX, clickY, viewAngle, room)
+        const { x, y } = locateClickInWorld(clickX, clickY, viewAngleX, room)
         setTestSpriteX(x)
         setTestSpriteY(y)
         if (testActor) {
@@ -126,7 +126,7 @@ export const ScalingControl = ({ room }: Props) => {
             <Grid item flex={1}>
                 <div style={{ cursor: 'crosshair' }}>
                     <Room data={room} noSound
-                        viewAngle={viewAngle}
+                        viewAngleX={viewAngleX}
                         handleRoomClick={handleClick}
                         maxHeight={room.height * scale}
                         maxWidth={room.frameWidth * scale}
@@ -141,7 +141,7 @@ export const ScalingControl = ({ room }: Props) => {
                     </Room>
                 </div>
                 <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-                    <ViewAngleSlider viewAngle={viewAngle} setViewAngle={setViewAngle} />
+                    <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} />
                     <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>

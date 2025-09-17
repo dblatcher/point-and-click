@@ -150,7 +150,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
             if (sequenceRunning) { return gameState }
             if (!player || !currentRoom) { return gameState }
 
-            const pointClicked = locateClickInWorld(action.x, action.y, gameState.viewAngle, currentRoom)
+            const pointClicked = locateClickInWorld(action.x, action.y, gameState.viewAngleX, currentRoom)
 
             return ({
                 ...gameState,
@@ -172,7 +172,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 return {
                     ...gameState,
                     ...continueSequence(gameState, action.props),
-                    viewAngle: viewAngleCenteredOnPlayer ?? gameState.viewAngle
+                    viewAngleX: viewAngleCenteredOnPlayer ?? gameState.viewAngleX
                 }
             }
 
@@ -201,7 +201,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
             return {
                 ...gameState,
                 ...makeActorsDoOrders(gameState),
-                viewAngle: viewAngleCenteredOnPlayer ?? gameState.viewAngle
+                viewAngleX: viewAngleCenteredOnPlayer ?? gameState.viewAngleX
             }
         }
 
@@ -258,7 +258,7 @@ export const getInitialGameState = (props: GameProps, existingEmitter?: GameEven
         gameNotBegun: false,
 
         schemaVersion: DB_VERSION,
-        viewAngle: 0,
+        viewAngleX: 0,
         isPaused: props.startPaused || false,
         id: props.id,
         currentRoomId: props.currentRoomId,

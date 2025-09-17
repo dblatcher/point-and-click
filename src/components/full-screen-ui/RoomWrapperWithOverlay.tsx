@@ -36,17 +36,17 @@ const getTargetPlace = (hoverTargetInRoom: ActorData | HotspotZone | undefined, 
             y: adjustedY,
             parallax: hoverTargetInRoom.parallax,
             roomData: currentRoom,
-            viewAngle: gameState.viewAngle,
+            viewAngleX: gameState.viewAngleX,
         }
         return labelProps
     }
 
     const labelProps: ParallaxPlaceProps = {
-        x: calculateScreenX(hoverTargetInRoom.x - (hoverTargetInRoom.width / 2), gameState.viewAngle, currentRoom),
+        x: calculateScreenX(hoverTargetInRoom.x - (hoverTargetInRoom.width / 2), gameState.viewAngleX, currentRoom),
         y: adjustedY,
         parallax: 0,
         roomData: currentRoom,
-        viewAngle: gameState.viewAngle,
+        viewAngleX: gameState.viewAngleX,
     }
     return labelProps
 }
@@ -61,7 +61,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const [inventoryOpen, setInventoryOpen] = useState(false);
     const { gameProps, gameState, updateGameState } = useGameState()
     const { isConversationRunning, isSequenceRunning, inventory, lookVerb, moveVerb, currentStoryBoard } = useGameStateDerivations()
-    const { viewAngle, isPaused, roomHeight, roomWidth } = gameState
+    const { viewAngleX, isPaused, roomHeight, roomWidth } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
 
 
@@ -126,7 +126,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                         maxWidth={roomWidth}
                         maxHeight={roomHeight}
                         isPaused={isPaused}
-                        viewAngle={viewAngle}
+                        viewAngleX={viewAngleX}
                         handleRoomClick={(x, y) => {
                             updateGameState({ type: 'ROOM-CLICK', x, y })
                             setClickedTarget(undefined)

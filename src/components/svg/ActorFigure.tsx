@@ -18,7 +18,7 @@ import { useGameState } from "@/context/game-state-context";
 
 interface Props {
     roomData: RoomData;
-    viewAngle: number;
+    viewAngleX: number;
     data: ActorData;
     clickHandler?: HandleClickFunction<ActorData>;
     contextClickHandler?: HandleClickFunction<ActorData>;
@@ -65,7 +65,7 @@ const getSoundValues = (
 export const ActorFigure: FunctionComponent<Props> = ({
     data,
     roomData,
-    viewAngle,
+    viewAngleX,
     isPaused,
     clickHandler, handleHover, contextClickHandler,
     orders = [],
@@ -149,7 +149,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
                     handleHover={processClick ? handleHover : undefined}
                     hoverData={data}
                     roomData={roomData}
-                    viewAngle={viewAngle}
+                    viewAngleX={viewAngleX}
                     x={x} y={y}
                     height={height * spriteScale} 
                     width={width * spriteScale}
@@ -183,7 +183,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
             handleHover={processClick ? handleHover : undefined}
             actorData={data}
             roomData={roomData}
-            viewAngle={viewAngle}
+            viewAngleX={viewAngleX}
             x={x} y={y}
             height={height * spriteScale} width={width * spriteScale}
             filter={filter}

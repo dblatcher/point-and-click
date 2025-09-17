@@ -3,7 +3,7 @@ import { GameEventEmitter } from "../game-event-emitter";
 import { CellMatrix } from "../pathfinding/cells";
 
 export type GameState = GameData & {
-    viewAngle: number;
+    viewAngleX: number;
     isPaused: boolean;
     timer?: number;
     cellMatrix?: CellMatrix;
