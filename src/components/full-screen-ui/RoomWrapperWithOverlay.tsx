@@ -61,7 +61,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const [inventoryOpen, setInventoryOpen] = useState(false);
     const { gameProps, gameState, updateGameState } = useGameState()
     const { isConversationRunning, isSequenceRunning, inventory, lookVerb, moveVerb, currentStoryBoard } = useGameStateDerivations()
-    const { viewAngleX, isPaused, roomHeight, roomWidth } = gameState
+    const { viewAngleX, viewAngleY, isPaused, roomHeight, roomWidth } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
 
 
@@ -127,6 +127,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                         maxHeight={roomHeight}
                         isPaused={isPaused}
                         viewAngleX={viewAngleX}
+                        viewAngleY={viewAngleY}
                         handleRoomClick={(x, y) => {
                             updateGameState({ type: 'ROOM-CLICK', x, y })
                             setClickedTarget(undefined)

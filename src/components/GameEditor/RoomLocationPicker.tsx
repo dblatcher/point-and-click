@@ -18,6 +18,7 @@ interface Props {
     targetPoint?: Point,
     subPoints?: Point[],
     viewAngleX?: number,
+    viewAngleY?: number,
     previewWidth?: number,
     previewHeight?: number,
     onClick?: { (point: { x: number; y: number }): void };
@@ -29,12 +30,16 @@ interface Props {
 
 export const RoomLocationPicker = ({
     roomData, contents = [], targetPoint, subPoints,
-    viewAngleX: viewAngleXProp, previewWidth = 600, previewHeight = previewWidth,
+    viewAngleX: viewAngleXProp, 
+    viewAngleY: viewAngleYProp, 
+    previewWidth = 600, previewHeight = previewWidth,
     onClick, renderAllZones, obstacleRefToFocus, walkableRefToFocus, hotspotIdToFocus,
 }: Props) => {
 
     const [viewAngleXState, setViewAngleXState] = useState(0)
+    const [viewAngleYState, setViewAngleYState] = useState(0)
     const viewAngleX = typeof viewAngleXProp === 'number' ? viewAngleXProp : viewAngleXState;
+    const viewAngleY = typeof viewAngleYProp === 'number' ? viewAngleYProp : viewAngleYState;
 
     const obstacleInFocus = obstacleRefToFocus ? roomData.obstacleAreas?.find(z => z.ref === obstacleRefToFocus) : undefined
     const walkableInFocus = walkableRefToFocus ? roomData.walkableAreas?.find(z => z.ref === walkableRefToFocus) : undefined
@@ -53,6 +58,7 @@ export const RoomLocationPicker = ({
             data={roomData}
             contents={contents}
             viewAngleX={viewAngleX}
+            viewAngleY={viewAngleY}
             renderAllZones={renderAllZones}
             handleRoomClick={(x, y) => {
                 if (onClick) {
@@ -114,6 +120,9 @@ export const RoomLocationPicker = ({
         </Room>
         {typeof viewAngleXProp === 'undefined' && (
             <ViewAngleSlider viewAngle={viewAngleXState} setViewAngle={setViewAngleXState} />
+        )}
+        {typeof viewAngleYProp === 'undefined' && (
+            <ViewAngleSlider viewAngle={viewAngleYState} setViewAngle={setViewAngleYState} />
         )}
     </Box>
 }

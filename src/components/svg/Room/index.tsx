@@ -17,7 +17,7 @@ interface Props {
     maxWidth?: number;
     maxHeight?: number;
     viewAngleX: number;
-    viewAngleY?: number;
+    viewAngleY: number;
     handleRoomClick: { (x: number, y: number): void };
     handleRoomContextClick?: { (x: number, y: number): void };
     handleHotspotClick?: { (zone: HotspotZone, event: PointerEvent): void };
@@ -44,7 +44,7 @@ export const Room: FunctionComponent<Props> = ({
     maxWidth = 300,
     maxHeight = 200,
     viewAngleX,
-    viewAngleY = 0,
+    viewAngleY,
     handleRoomClick,
     handleRoomContextClick,
     handleHotspotClick,

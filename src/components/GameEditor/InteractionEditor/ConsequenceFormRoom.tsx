@@ -1,6 +1,6 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { AnyConsequence, Consequence, HotspotZone, RoomData, Zone } from "@/definitions";
-import { getTargetPoint, getViewAngleXCenteredOn } from "@/lib/roomFunctions";
+import { getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
 import { Box, Typography } from "@mui/material";
 import React from "react";
@@ -44,6 +44,7 @@ export const ConsequenceFormRoom: React.FunctionComponent<Props> = ({ consequenc
 
     const zone = getZone(consequence, roomData)
     const zoneX = zone ? zone?.type === 'hotspot' ? getTargetPoint(zone as HotspotZone, roomData).x : zone.x : undefined
+    const zoneY = zone ? zone?.type === 'hotspot' ? getTargetPoint(zone as HotspotZone, roomData).y : zone.y : undefined
 
     switch (consequence.type) {
         case "changeRoom":
@@ -58,6 +59,7 @@ export const ConsequenceFormRoom: React.FunctionComponent<Props> = ({ consequenc
         case "toggleZone":
             return <RoomLocationPicker
                 viewAngleX={typeof zoneX === 'number' ? getViewAngleXCenteredOn(zoneX, roomData) : 0}
+                viewAngleY={typeof zoneY === 'number' ? getViewAngleYCenteredOn(zoneY, roomData) : 0}
                 roomData={roomData}
                 previewWidth={300}
                 obstacleRefToFocus={consequence.zoneType === 'obstacle' ? consequence.ref : undefined}
