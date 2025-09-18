@@ -46,7 +46,7 @@ export function locateClickInWorld(clickXPosition: number, clickYposition: numbe
     const x = offCenterXInPoints + centerOfScreenXPosition
 
 
-    const shiftY = getYShift(viewAngleX, 1, roomData)
+    const shiftY = getYShift(viewAngleY, 1, roomData)
     const offCenterYInPoints = (clickYposition - frameHeight / 2)
     const centerOfScreenYPosition = (height / 2) - shiftY
 
