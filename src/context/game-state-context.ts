@@ -15,6 +15,7 @@ const gameStateContext = createContext<{
     {
         gameState: {
             viewAngleX: 0,
+            viewAngleY: 0,
             schemaVersion: DB_VERSION,
             isPaused: false,
             id: '',

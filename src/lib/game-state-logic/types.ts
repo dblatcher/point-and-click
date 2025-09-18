@@ -4,6 +4,7 @@ import { CellMatrix } from "../pathfinding/cells";
 
 export type GameState = GameData & {
     viewAngleX: number;
+    viewAngleY: number;
     isPaused: boolean;
     timer?: number;
     cellMatrix?: CellMatrix;

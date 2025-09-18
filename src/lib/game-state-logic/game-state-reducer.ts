@@ -1,5 +1,5 @@
 import { Verb, ConversationChoice, CommandTarget, Command, GameData } from "@/definitions"
-import { locateClickInWorld, getViewAngleCenteredOn } from "@/lib/roomFunctions"
+import { locateClickInWorld, getViewAngleXCenteredOn, getViewAngleYCenteredOn } from "@/lib/roomFunctions"
 import { findById } from "@/lib/util"
 import { Reducer } from "react"
 import { GameState } from "@/lib/game-state-logic/types";
@@ -167,12 +167,14 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
         }
 
         case "TICK-UPDATE": {
-            const viewAngleCenteredOnPlayer = (player && currentRoom) ? getViewAngleCenteredOn(player.x, currentRoom) : undefined
+            const viewAngleXCenteredOnPlayer = (player && currentRoom) ? getViewAngleXCenteredOn(player.x, currentRoom) : undefined
+            const viewAngleYCenteredOnPlayer = (player && currentRoom) ? getViewAngleYCenteredOn(player.y, currentRoom) : undefined
             if (gameState.sequenceRunning) {
                 return {
                     ...gameState,
                     ...continueSequence(gameState, action.props),
-                    viewAngleX: viewAngleCenteredOnPlayer ?? gameState.viewAngleX
+                    viewAngleX: viewAngleXCenteredOnPlayer ?? gameState.viewAngleX,
+                    viewAngleY: viewAngleYCenteredOnPlayer ?? gameState.viewAngleY,
                 }
             }
 
@@ -201,7 +203,8 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
             return {
                 ...gameState,
                 ...makeActorsDoOrders(gameState),
-                viewAngleX: viewAngleCenteredOnPlayer ?? gameState.viewAngleX
+                viewAngleX: viewAngleXCenteredOnPlayer ?? gameState.viewAngleX,
+                viewAngleY: viewAngleYCenteredOnPlayer ?? gameState.viewAngleY,
             }
         }
 
@@ -259,6 +262,7 @@ export const getInitialGameState = (props: GameProps, existingEmitter?: GameEven
 
         schemaVersion: DB_VERSION,
         viewAngleX: 0,
+        viewAngleY: 0,
         isPaused: props.startPaused || false,
         id: props.id,
         currentRoomId: props.currentRoomId,

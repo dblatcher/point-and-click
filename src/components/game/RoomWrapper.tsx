@@ -15,7 +15,7 @@ interface Props {
 export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, renderCells }) => {
     const { gameState, updateGameState } = useGameState()
     const { currentStoryBoard } = useGameStateDerivations()
-    const { viewAngleX, isPaused, roomHeight, roomWidth } = gameState
+    const { viewAngleX, viewAngleY, isPaused, roomHeight, roomWidth } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
 
     const handleTargetClick = noInteraction ? () => { } : (target: CommandTarget) => {
@@ -37,6 +37,7 @@ export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, ren
                 maxHeight={roomHeight}
                 isPaused={isPaused}
                 viewAngleX={viewAngleX}
+                viewAngleY={viewAngleY}
                 handleRoomClick={handleRoomClick}
                 handleHotspotClick={handleTargetClick}
                 handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {

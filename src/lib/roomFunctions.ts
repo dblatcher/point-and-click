@@ -48,10 +48,16 @@ export function locateClickInWorld(clickXPosition: number, clickYposition: numbe
     return { x: Math.round(x), y: Math.round(y) }
 }
 
-export function getViewAngleCenteredOn(xPosition: number, roomData: RoomData) {
+export function getViewAngleXCenteredOn(xPosition: number, roomData: RoomData) {
     const { width } = roomData
     const offCenter = 2 * (xPosition - width / 2) / width
     return clamp(-offCenter * 2, 1, -1)
+}
+
+export function getViewAngleYCenteredOn(yPosition: number, roomData: RoomData) {
+    const { height } = roomData
+    const offCenter = 2 * (yPosition - height / 2) / height
+    return clamp(offCenter * 2, 1, -1)
 }
 
 export function getTargetPoint(target: ActorData | HotspotZone, roomData: RoomData): { x: number; y: number } {

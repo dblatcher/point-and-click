@@ -3,7 +3,7 @@ import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { ActorData, Point } from "@/definitions";
 import { Direction, directions } from "@/definitions/BaseTypes";
-import { getTargetPoint, getViewAngleCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
+import { getTargetPoint, getViewAngleXCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { findById, listIds } from "@/lib/util";
 import { Alert, Box, Slider, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -35,7 +35,7 @@ export const PositionPreview = ({ actorData, updateFromPartial, defaultPreviewWi
         ? gameDesign.actors.filter(actor => actor.room === roomData.id && actor.id !== actorData.id)
         : []
 
-    const viewAngleX = (lockAngle && roomData) ? getViewAngleCenteredOn(actorData.x, roomData) : undefined
+    const viewAngleX = (lockAngle && roomData) ? getViewAngleXCenteredOn(actorData.x, roomData) : undefined
 
     const contents = [...otherActors, actorData]
         .sort(putActorsInDisplayOrder)
