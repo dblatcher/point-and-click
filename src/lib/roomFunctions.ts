@@ -32,6 +32,12 @@ export function getYShift(viewAngleY: number, parallax: number, roomData: RoomDa
     return viewAngleY * shiftRange
 }
 
+export function calculateScreenY(yPosition: number, viewAngleY: number, roomData: RoomData) {
+    const { height, frameHeight = height } = roomData
+    const shift = getYShift(viewAngleY, 1, roomData)
+    return (frameHeight / 2) + (yPosition - height / 2) + shift
+}
+
 export function locateClickInWorld(clickXPosition: number, clickYposition: number, viewAngleX: number, roomData: RoomData) {
     const { width, frameWidth, height } = roomData
     const shift = getXShift(viewAngleX, 1, roomData)

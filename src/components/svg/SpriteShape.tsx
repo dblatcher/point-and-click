@@ -1,7 +1,7 @@
-import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
-import { RoomData, ActorData, Direction } from "@/definitions"
-import { calculateScreenX } from "@/lib/roomFunctions";
+import { ActorData, Direction, RoomData } from "@/definitions";
+import { calculateScreenX, getYShift } from "@/lib/roomFunctions";
 import { Sprite } from "@/lib/Sprite";
+import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { HandleHoverFunction } from "../game/types";
 
 
@@ -47,6 +47,11 @@ export const SpriteShape: FunctionComponent<Props> = ({
     const onMouseEnter = shouldReportHover ? (): void => { handleHover(hoverData, 'enter') } : undefined
     const onMouseLeave = shouldReportHover ? (): void => { handleHover(hoverData, 'leave') } : undefined
 
+    const shiftY = getYShift(viewAngleY, 1, roomData);
+    const oldY = roomData.height - y - heightAdjustedByScale;
+    const newY = oldY + shiftY
+
+
     return (
         <svg data-status={status}
             onClick={clickHandler}
@@ -55,7 +60,7 @@ export const SpriteShape: FunctionComponent<Props> = ({
             onMouseLeave={onMouseLeave}
             style={svgStyle}
             x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngleX, roomData)}
-            y={roomData.height - y - heightAdjustedByScale} >
+            y={newY} >
             <foreignObject x="0" y="0" width={widthAdjustedByScale} height={heightAdjustedByScale}>
                 <div style={divStyle} />
             </foreignObject>
