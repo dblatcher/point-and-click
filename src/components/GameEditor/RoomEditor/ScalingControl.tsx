@@ -50,7 +50,7 @@ export const ScalingControl = ({ room }: Props) => {
     }
 
     const handleClick = (clickX: number, clickY: number) => {
-        const { x, y } = locateClickInWorld(clickX, clickY, viewAngleX, room)
+        const { x, y } = locateClickInWorld(clickX, clickY, viewAngleX, viewAngleY, room)
         setTestSpriteX(x)
         setTestSpriteY(y)
         if (testActor) {

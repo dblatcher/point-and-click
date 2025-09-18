@@ -38,13 +38,19 @@ export function calculateScreenY(yPosition: number, viewAngleY: number, roomData
     return (frameHeight / 2) + (yPosition - height / 2) + shift
 }
 
-export function locateClickInWorld(clickXPosition: number, clickYposition: number, viewAngleX: number, roomData: RoomData) {
-    const { width, frameWidth, height } = roomData
-    const shift = getXShift(viewAngleX, 1, roomData)
-    const offCenterInPoints = (clickXPosition - frameWidth / 2)
-    const centerOfScreenXPosition = (width / 2) - shift
-    const x = offCenterInPoints + centerOfScreenXPosition
-    const y = height - clickYposition
+export function locateClickInWorld(clickXPosition: number, clickYposition: number, viewAngleX: number, viewAngleY: number, roomData: RoomData) {
+    const { width, frameWidth, height, frameHeight = height } = roomData
+    const shiftX = getXShift(viewAngleX, 1, roomData)
+    const offCenterXInPoints = (clickXPosition - frameWidth / 2)
+    const centerOfScreenXPosition = (width / 2) - shiftX
+    const x = offCenterXInPoints + centerOfScreenXPosition
+
+
+    const shiftY = getYShift(viewAngleX, 1, roomData)
+    const offCenterYInPoints = (clickYposition - frameHeight / 2)
+    const centerOfScreenYPosition = (height / 2) - shiftY
+
+    const y = height - (offCenterYInPoints + centerOfScreenYPosition)
     return { x: Math.round(x), y: Math.round(y) }
 }
 

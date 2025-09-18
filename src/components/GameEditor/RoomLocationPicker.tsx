@@ -62,7 +62,7 @@ export const RoomLocationPicker = ({
             renderAllZones={renderAllZones}
             handleRoomClick={(x, y) => {
                 if (onClick) {
-                    const point = locateClickInWorld(x, y, viewAngleX, roomData)
+                    const point = locateClickInWorld(x, y, viewAngleX, viewAngleY, roomData)
                     onClick({ x: Math.round(point.x), y: Math.round(point.y) })
                 }
             }}

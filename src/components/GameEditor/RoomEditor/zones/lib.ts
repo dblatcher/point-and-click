@@ -62,6 +62,7 @@ const getTargetPoint = (
     pointClicked: { x: number; y: number },
     clickEffect: ClickEffect,
     viewAngleX: number,
+    viewAngleY: number,
     room: RoomData,
     parallax: number,
 ): { x: number; y: number } => {
@@ -71,7 +72,7 @@ const getTargetPoint = (
     }
     const isForWalkableOrObstacle = clickEffect.type === 'HOTSPOT_WALKTO_POINT' ? true : clickEffect.zoneType !== 'hotspot'
     if (isForWalkableOrObstacle) {
-        return locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngleX, room)
+        return locateClickInWorld(roundedPoint.x, roundedPoint.y, viewAngleX, viewAngleY, room)
     }
     return {
         x: roundedPoint.x - getXShift(viewAngleX, parallax, room),
@@ -98,6 +99,7 @@ const changePolygonPoint = (polygon: Polygon, pointIndex: number, mod: Partial<P
 export const getChangesFromClick = (
     pointClicked: { x: number; y: number },
     viewAngleX: number,
+    viewAngleY: number,
     clickEffect: ClickEffect,
     room: RoomData,
     activeHotspotIndex?: number,
@@ -131,7 +133,7 @@ export const getChangesFromClick = (
         return 1
     }
 
-    const targetPoint = getTargetPoint(pointClicked, clickEffect, viewAngleX, room, getParallax())
+    const targetPoint = getTargetPoint(pointClicked, clickEffect, viewAngleX, viewAngleY, room, getParallax())
 
     switch (clickEffect.type) {
         case 'ADD_NEW':

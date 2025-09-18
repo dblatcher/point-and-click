@@ -94,10 +94,10 @@ export const ZoneFeaturesControl = ({
     }
 
     const handleRoomClick = (
-        pointClicked: { x: number; y: number }, viewAngleX: number, clickEffect: ClickEffect
+        pointClicked: { x: number; y: number }, viewAngleX: number, viewAngleY:number, clickEffect: ClickEffect
     ) => {
         const changesFromClick = getChangesFromClick(
-            pointClicked, viewAngleX, clickEffect,
+            pointClicked, viewAngleX, viewAngleY, clickEffect,
             room,
             activeHotspotIndex,
             activeObstacleIndex,

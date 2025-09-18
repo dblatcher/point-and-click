@@ -150,7 +150,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
             if (sequenceRunning) { return gameState }
             if (!player || !currentRoom) { return gameState }
 
-            const pointClicked = locateClickInWorld(action.x, action.y, gameState.viewAngleX, currentRoom)
+            const pointClicked = locateClickInWorld(action.x, action.y, gameState.viewAngleX, gameState.viewAngleY, currentRoom)
 
             return ({
                 ...gameState,
