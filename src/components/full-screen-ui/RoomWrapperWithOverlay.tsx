@@ -35,9 +35,6 @@ const getTargetPlace = (hoverTargetInRoom: ActorData | HotspotZone | undefined, 
             x: hoverTargetInRoom.x,
             y: adjustedY,
             parallax: hoverTargetInRoom.parallax,
-            roomData: currentRoom,
-            viewAngleX: gameState.viewAngleX,
-            viewAngleY: gameState.viewAngleY,
         }
         return labelProps
     }
@@ -46,9 +43,6 @@ const getTargetPlace = (hoverTargetInRoom: ActorData | HotspotZone | undefined, 
         x: calculateScreenX(hoverTargetInRoom.x - (hoverTargetInRoom.width / 2), gameState.viewAngleX, currentRoom),
         y: adjustedY,
         parallax: 0,
-        roomData: currentRoom,
-        viewAngleX: gameState.viewAngleX,
-        viewAngleY: gameState.viewAngleY,
     }
     return labelProps
 }

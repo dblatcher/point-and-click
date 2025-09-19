@@ -57,7 +57,7 @@ export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, max
             contents={[{ overrideSprite, data: modifiedActorData, }]}
         >
             {!noBaseLine && (
-                <HorizontalLine roomData={roomData} y={data.baseline || 0} />
+                <HorizontalLine y={data.baseline || 0} />
             )}
         </Room>
     )

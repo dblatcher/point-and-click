@@ -1,5 +1,6 @@
-import { ActorData, Direction, RoomData } from "@/definitions";
-import { calculateScreenX, getYShift } from "@/lib/roomFunctions";
+import { ActorData, Direction } from "@/definitions";
+import { useRoomRender } from "@/hooks/useRoomRender";
+import { calculateScreenX } from "@/lib/roomFunctions";
 import { Sprite } from "@/lib/Sprite";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { HandleHoverFunction } from "../game/types";
@@ -10,9 +11,6 @@ interface Props {
     animationName?: string;
     direction: Direction;
     frameIndex?: number;
-    roomData: RoomData;
-    viewAngleX: number;
-    viewAngleY: number;
     x: number;
     y: number;
     height?: number;
@@ -28,10 +26,11 @@ interface Props {
 
 
 export const SpriteShape: FunctionComponent<Props> = ({
-    roomData, viewAngleX, viewAngleY, x, y, height = 50, width = 50, animationName, frameIndex, spriteObject, direction, filter,
+    x, y, height = 50, width = 50, animationName, frameIndex, spriteObject, direction, filter,
     clickHandler, contextClickHandler, handleHover, hoverData, status,
     reverseCycle
 }: Props) => {
+    const {roomData, viewAngleX, surfaceYShift} = useRoomRender()
     const [widthScale, heightScale] = spriteObject.getFrameScale(animationName, frameIndex, direction);
     const divStyle = Object.assign(spriteObject.getStyle(animationName, frameIndex, direction, reverseCycle), { filter });
 
@@ -47,11 +46,6 @@ export const SpriteShape: FunctionComponent<Props> = ({
     const onMouseEnter = shouldReportHover ? (): void => { handleHover(hoverData, 'enter') } : undefined
     const onMouseLeave = shouldReportHover ? (): void => { handleHover(hoverData, 'leave') } : undefined
 
-    const shiftY = getYShift(viewAngleY, 1, roomData);
-    const oldY = roomData.height - y - heightAdjustedByScale;
-    const newY = oldY + shiftY
-
-
     return (
         <svg data-status={status}
             onClick={clickHandler}
@@ -60,7 +54,7 @@ export const SpriteShape: FunctionComponent<Props> = ({
             onMouseLeave={onMouseLeave}
             style={svgStyle}
             x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngleX, roomData)}
-            y={newY} >
+            y={roomData.height - y - heightAdjustedByScale + surfaceYShift} >
             <foreignObject x="0" y="0" width={widthAdjustedByScale} height={heightAdjustedByScale}>
                 <div style={divStyle} />
             </foreignObject>

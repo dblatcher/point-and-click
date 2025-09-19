@@ -182,14 +182,11 @@ export class Preview extends Component<Props, State> {
                                 <HorizontalLine key={index}
                                     y={yAndScale[0]}
                                     text={`scale: ${yAndScale[1]}`}
-                                    roomData={roomData} />
+                                />
                             ))}
 
                             {this.hotspotToHaveMarkWalkToPoint && (
                                 <MarkerShape
-                                    roomData={roomData}
-                                    viewAngleX={viewAngleX}
-                                    viewAngleY={viewAngleY}
                                     text={this.walkToPointLabel}
                                     {...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
                                 />

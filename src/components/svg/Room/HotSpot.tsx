@@ -4,12 +4,10 @@ import { getXShift, getYShift } from "@/lib/roomFunctions";
 import { FunctionComponent } from "react";
 import { HandleClickFunction, HandleHoverFunction } from "../../game/types";
 import { hotpotClassNames } from "./zoneCssClasses";
+import { useRoomRender } from "@/hooks/useRoomRender";
 
 interface Props {
     zone: HotspotZone;
-    roomData: RoomData;
-    viewAngleX: number;
-    viewAngleY: number;
     clickHandler?: HandleClickFunction<HotspotZone>;
     contextClickHandler?: HandleClickFunction<HotspotZone>;
     handleHover?: HandleHoverFunction;
@@ -20,16 +18,17 @@ interface Props {
 }
 
 const Hotspot: FunctionComponent<Props> = ({
-    zone: hotspot, roomData, viewAngleX, viewAngleY, highlight, markVertices, stopPropogation = true,
+    zone: hotspot, highlight, markVertices, stopPropogation = true,
     clickHandler, handleHover, contextClickHandler, flash = false,
 }: Props) => {
+    const { roomData, viewAngleX, viewAngleY } = useRoomRender()
     const { parallax, x, y } = hotspot
     return (
         <>
             <ZoneSvg
                 className={hotpotClassNames({ markVertices, highlight, flash })}
                 x={x + getXShift(viewAngleX, parallax, roomData)}
-                y={roomData.height - y + getYShift(viewAngleY,parallax,roomData)}
+                y={roomData.height - y + getYShift(viewAngleY, parallax, roomData)}
                 clickHandler={clickHandler}
                 contextClickHandler={contextClickHandler}
                 stopPropagation={stopPropogation}

@@ -1,16 +1,14 @@
-import { ActorData, RoomData } from "@/definitions";
-import { calculateScreenX, getYShift } from "@/lib/roomFunctions";
+import { useAssets } from "@/context/asset-context";
+import { ActorData } from "@/definitions";
+import { useRoomRender } from "@/hooks/useRoomRender";
+import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
+import { calculateScreenX } from "@/lib/roomFunctions";
 import { ImageAsset } from "@/services/assets";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { HandleHoverFunction } from "../game/types";
-import { useAssets } from "@/context/asset-context";
-import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
 
 
 interface Props {
-    roomData: RoomData;
-    viewAngleX: number;
-    viewAngleY: number;
     x: number;
     y: number;
     height?: number;
@@ -89,9 +87,10 @@ const FrameContents = (props: {
 
 
 export const FrameShape: FunctionComponent<Props> = ({
-    roomData, viewAngleX, viewAngleY, x, y, height = 50, width = 50, filter,
+    x, y, height = 50, width = 50, filter,
     clickHandler, handleHover, actorData, status,
 }: Props) => {
+    const {roomData, viewAngleX, surfaceYShift} = useRoomRender()
     const { getImageAsset } = useAssets()
     const assetAndFrame = getAssetAndFrame(actorData, getImageAsset)
     const { widthScale = 1, heightScale = 1 } = assetAndFrame?.asset ?? {};
@@ -113,7 +112,7 @@ export const FrameShape: FunctionComponent<Props> = ({
             onMouseLeave={onMouseLeave}
             style={svgStyle}
             x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngleX, roomData)}
-            y={roomData.height - y - heightAdjustedByScale + getYShift(viewAngleY, 1, roomData)} >
+            y={roomData.height - y - heightAdjustedByScale + surfaceYShift} >
             <FrameContents {...{
                 assetAndFrame,
                 actorData,

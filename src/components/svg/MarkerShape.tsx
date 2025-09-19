@@ -1,25 +1,22 @@
+import { useRoomRender } from "@/hooks/useRoomRender";
+import { calculateScreenX } from "@/lib/roomFunctions";
 import { FunctionComponent } from "react";
-import { RoomData } from "@/definitions"
-import { calculateScreenX, getYShift } from "@/lib/roomFunctions";
 
 interface Props {
-    roomData: RoomData;
     x: number;
     y?: number;
     height?: number;
-    viewAngleX: number;
-    viewAngleY: number;
     text?: string;
 }
 
 const CROSS_SIZE = 8
 
 export const MarkerShape: FunctionComponent<Props> = ({
-    roomData, x, viewAngleX, viewAngleY, y = 0, height = 50, text
+    x, y = 0, height = 50, text
 }: Props) => {
-
+    const { roomData, viewAngleX, surfaceYShift } = useRoomRender()
     const textToDisplay = text || `${x.toFixed(0)},${y.toFixed(0)}`
-    const displayY = roomData.height - y  + getYShift(viewAngleY, 1, roomData)
+    const displayY = roomData.height - y + surfaceYShift;
     const displayX = calculateScreenX(x, viewAngleX, roomData)
 
     return (

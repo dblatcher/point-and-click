@@ -15,11 +15,9 @@ import { HandleClickFunction, HandleHoverFunction } from "../game/types";
 import { FrameShape } from "./FrameShape";
 import { SpriteShape } from "./SpriteShape";
 import { useGameState } from "@/context/game-state-context";
+import { useRoomRender } from "@/hooks/useRoomRender";
 
 interface Props {
-    roomData: RoomData;
-    viewAngleX: number;
-    viewAngleY: number;
     data: ActorData;
     clickHandler?: HandleClickFunction<ActorData>;
     contextClickHandler?: HandleClickFunction<ActorData>;
@@ -65,15 +63,13 @@ const getSoundValues = (
 
 export const ActorFigure: FunctionComponent<Props> = ({
     data,
-    roomData,
-    viewAngleX,
-    viewAngleY,
     isPaused,
     clickHandler, handleHover, contextClickHandler,
     orders = [],
     overrideSprite,
     noSound,
 }: Props) => {
+    const { roomData } = useRoomRender()
     const { gameProps } = useGameState()
     const animationRate = 200 / (gameProps.orderSpeed ?? 1)
     const sprites = useSprites()
@@ -150,11 +146,8 @@ export const ActorFigure: FunctionComponent<Props> = ({
                     contextClickHandler={processContextClick}
                     handleHover={processClick ? handleHover : undefined}
                     hoverData={data}
-                    roomData={roomData}
-                    viewAngleX={viewAngleX}
-                    viewAngleY={viewAngleY}
                     x={x} y={y}
-                    height={height * spriteScale} 
+                    height={height * spriteScale}
                     width={width * spriteScale}
                     filter={filter}
                     status={data.status}
@@ -185,9 +178,6 @@ export const ActorFigure: FunctionComponent<Props> = ({
             clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
             handleHover={processClick ? handleHover : undefined}
             actorData={data}
-            roomData={roomData}
-            viewAngleX={viewAngleX}
-            viewAngleY={viewAngleY}
             x={x} y={y}
             height={height * spriteScale} width={width * spriteScale}
             filter={filter}

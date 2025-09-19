@@ -11,6 +11,7 @@ import Hotspot from "./HotSpot";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
 import styles from './styles.module.css';
 import { obstableClassNames, walkableClassNames } from "./zoneCssClasses";
+import { RoomRenderContext } from "@/context/room-render-context";
 
 interface Props {
     data: RoomData;
@@ -96,120 +97,108 @@ export const Room: FunctionComponent<Props> = ({
     const top = centerY - data.height / 2
 
     return (
-        <figure
-            className={styles.roomFigure}
-            style={figureInlineStyle}
-            onClick={processRoomClick}
-            onContextMenu={processRoomContextClick}
-        >
-            <svg xmlns="http://www.w3.org/2000/svg"
-                className={styles.roomSvg}
-                viewBox={`0 0 ${frameWidth} ${frameHeight}`}>
+        <RoomRenderContext.Provider value={{
+            roomData: data,
+            viewAngleX,
+            viewAngleY,
+        }}>
+            <figure
+                className={styles.roomFigure}
+                style={figureInlineStyle}
+                onClick={processRoomClick}
+                onContextMenu={processRoomContextClick}
+            >
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    className={styles.roomSvg}
+                    viewBox={`0 0 ${frameWidth} ${frameHeight}`}>
 
-                {background
-                    .filter(layer => layer.parallax <= 1)
-                    .map((layer, index) =>
-                        <BackgroundShape key={index}
-                            layer={layer}
-                            viewAngleX={viewAngleX}
-                            viewAngleY={viewAngleY}
-                            roomData={data}
+                    {background
+                        .filter(layer => layer.parallax <= 1)
+                        .map((layer, index) =>
+                            <BackgroundShape key={index} layer={layer} />
+                        )}
+
+                    {obstacleCells &&
+                        <ObstacleCellOverlay cellMatrix={obstacleCells} />
+                    }
+
+                    {hotspots.map((zone, index) =>
+                        <Hotspot key={index}
+                            zone={zone}
+                            highlight={highlightHotspots}
+                            clickHandler={handleHotspotClick}
+                            contextClickHandler={handleHotspotContextClick}
+                            stopPropogation={!!handleHotspotClick}
+                            handleHover={handleHover}
+                            markVertices={markHotspotVertices.includes(index)}
                         />
                     )}
 
-                {obstacleCells &&
-                    <ObstacleCellOverlay roomData={data} viewAngleX={viewAngleX} viewAngleY={viewAngleY} cellMatrix={obstacleCells} />
-                }
+                    {contents.map(entry => (
+                        <ActorFigure key={entry.data.id}
+                            isPaused={isPaused}
+                            noSound={noSound}
+                            data={entry.data}
+                            orders={entry.orders || []}
+                            clickHandler={entry.clickHandler}
+                            contextClickHandler={entry.contextClickHandler}
+                            roomScale={scale}
+                            handleHover={handleHover}
+                            overrideSprite={entry.overrideSprite}
+                        />
+                    ))}
 
-                {hotspots.map((zone, index) =>
-                    <Hotspot key={index}
-                        zone={zone}
-                        viewAngleX={viewAngleX}
-                        viewAngleY={viewAngleY}
-                        roomData={data}
-                        highlight={highlightHotspots}
-                        clickHandler={handleHotspotClick}
-                        contextClickHandler={handleHotspotContextClick}
-                        stopPropogation={!!handleHotspotClick}
-                        handleHover={handleHover}
-                        markVertices={markHotspotVertices.includes(index)}
-                    />
+                    {background
+                        .filter(layer => layer.parallax > 1)
+                        .map((layer, index) =>
+                            <BackgroundShape key={index} layer={layer} />
+                        )}
+
+                    {contents.map(entry => (
+                        <DialogueBubble key={entry.data.id}
+                            actorData={entry.data}
+                            orders={entry.orders || []}
+                            roomScale={scale}
+                            fontFamily={fontFamily}
+                        />
+                    ))}
+
+                    {walkableAreas.map((zone, index) => {
+                        if (!renderAllZones && !markWalkableVertices.includes(index)) {
+                            return null
+                        }
+                        return <ZoneSvg key={index}
+                            className={walkableClassNames({ disabled: zone.disabled })}
+                            stopPropagation={false}
+                            zone={zone}
+                            x={zone.x + left}
+                            y={data.height - zone.y + top}
+                            markVertices={markWalkableVertices.includes(index)}
+                        />
+                    })}
+
+                    {obstacleAreas.map((zone, index) => {
+                        if (!renderAllZones && !markObstacleVertices.includes(index)) {
+                            return null
+                        }
+                        return <ZoneSvg key={index}
+                            className={obstableClassNames({ disabled: zone.disabled })}
+                            stopPropagation={false}
+                            zone={zone}
+                            x={zone.x + left}
+                            y={data.height - zone.y + top}
+                            markVertices={markObstacleVertices.includes(index)}
+                        />
+                    })}
+
+                    {children}
+                </svg>
+
+                {showCaption && (
+                    <figcaption className={styles.roomCaption}>{id}</figcaption>
                 )}
-
-                {contents.map(entry => (
-                    <ActorFigure key={entry.data.id}
-                        isPaused={isPaused}
-                        noSound={noSound}
-                        data={entry.data}
-                        orders={entry.orders || []}
-                        clickHandler={entry.clickHandler}
-                        contextClickHandler={entry.contextClickHandler}
-                        roomData={data}
-                        viewAngleX={viewAngleX}
-                        viewAngleY={viewAngleY}
-                        roomScale={scale}
-                        handleHover={handleHover}
-                        overrideSprite={entry.overrideSprite}
-                    />
-                ))}
-
-                {background
-                    .filter(layer => layer.parallax > 1)
-                    .map((layer, index) =>
-                        <BackgroundShape key={index}
-                            layer={layer}
-                            viewAngleX={viewAngleX}
-                            viewAngleY={viewAngleY}
-                            roomData={data}
-                        />
-                    )}
-
-                {contents.map(entry => (
-                    <DialogueBubble key={entry.data.id}
-                        actorData={entry.data}
-                        orders={entry.orders || []}
-                        viewAngleX={viewAngleX}
-                        viewAngleY={viewAngleY}
-                        roomData={data} roomScale={scale}
-                        fontFamily={fontFamily}
-                    />
-                ))}
-
-                {walkableAreas.map((zone, index) => {
-                    if (!renderAllZones && !markWalkableVertices.includes(index)) {
-                        return null
-                    }
-                    return <ZoneSvg key={index}
-                        className={walkableClassNames({ disabled: zone.disabled })}
-                        stopPropagation={false}
-                        zone={zone}
-                        x={zone.x + left}
-                        y={data.height - zone.y + top}
-                        markVertices={markWalkableVertices.includes(index)}
-                    />
-                })}
-
-                {obstacleAreas.map((zone, index) => {
-                    if (!renderAllZones && !markObstacleVertices.includes(index)) {
-                        return null
-                    }
-                    return <ZoneSvg key={index}
-                        className={obstableClassNames({ disabled: zone.disabled })}
-                        stopPropagation={false}
-                        zone={zone}
-                        x={zone.x + left}
-                        y={data.height - zone.y + top}
-                        markVertices={markObstacleVertices.includes(index)}
-                    />
-                })}
-
-                {children}
-            </svg>
-
-            {showCaption && (
-                <figcaption className={styles.roomCaption}>{id}</figcaption>
-            )}
-        </figure>
+            </figure>
+        </RoomRenderContext.Provider>
     )
 
 }

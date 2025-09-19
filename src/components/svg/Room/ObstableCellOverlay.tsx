@@ -1,21 +1,18 @@
-import {  FunctionComponent } from "react";
+import { useRoomRender } from "@/hooks/useRoomRender";
 import { CellMatrix } from "@/lib/pathfinding/cells";
-import { RoomData } from "@/definitions"
-import { getXShift, getYShift } from "@/lib/roomFunctions";
+import { FunctionComponent } from "react";
 
 
 interface Props {
-    roomData: RoomData;
-    viewAngleX: number;
-    viewAngleY: number;
     cellMatrix: CellMatrix;
 }
 
-export const ObstacleCellOverlay: FunctionComponent<Props> = ({ roomData, viewAngleX, viewAngleY, cellMatrix }: Props) => {
-    const { frameWidth, height: roomHeight, frameHeight=roomHeight } = roomData
-    const centerX = (frameWidth / 2) + getXShift(viewAngleX, 1, roomData)
+export const ObstacleCellOverlay: FunctionComponent<Props> = ({ cellMatrix }: Props) => {
+    const { roomData, surfaceXShift, surfaceYShift } = useRoomRender()
+    const { frameWidth, height: roomHeight, frameHeight = roomHeight } = roomData
+    const centerX = (frameWidth / 2) + surfaceXShift
     const left = centerX - roomData.width / 2
-    const centerY = (frameHeight / 2) + getYShift(viewAngleY, 1, roomData)
+    const centerY = (frameHeight / 2) + surfaceYShift
     const top = centerY - roomData.height / 2
 
 

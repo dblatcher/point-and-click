@@ -137,7 +137,7 @@ export const ScalingControl = ({ room }: Props) => {
                             <HorizontalLine key={index}
                                 y={yAndScale[0]}
                                 text={`scale: ${yAndScale[1]}`}
-                                roomData={room} />
+                            />
                         ))}
                     </Room>
                 </div>

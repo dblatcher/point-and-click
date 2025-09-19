@@ -1,15 +1,14 @@
-import { BackgroundLayer, RoomData } from "@/definitions"
-import { getLayerHeight, getLayerWidth, getXShift, getYShift } from "@/lib/roomFunctions";
 import { useAssets } from "@/context/asset-context";
+import { BackgroundLayer } from "@/definitions";
+import { useRoomRender } from "@/hooks/useRoomRender";
+import { getLayerHeight, getLayerWidth, getXShift, getYShift } from "@/lib/roomFunctions";
 
 interface Props {
     layer: BackgroundLayer;
-    roomData: RoomData;
-    viewAngleX: number;
-    viewAngleY: number;
 }
 
-export default function BackgroundShape({ layer, roomData, viewAngleX, viewAngleY }: Props) {
+export default function BackgroundShape({ layer }: Props) {
+    const { roomData, viewAngleX, viewAngleY } = useRoomRender()
     const { parallax, imageId, placement } = layer
     const { frameWidth, height: roomHeight, frameHeight = roomHeight } = roomData
 

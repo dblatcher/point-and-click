@@ -82,12 +82,7 @@ export const RoomLocationPicker = ({
             ))}
 
             {targetPoint && (
-                <MarkerShape
-                    roomData={roomData}
-                    viewAngleX={viewAngleX}
-                    viewAngleY={viewAngleY}
-                    {...targetPoint}
-                />
+                <MarkerShape {...targetPoint} />
             )}
 
             {obstacleInFocus && (
@@ -111,9 +106,6 @@ export const RoomLocationPicker = ({
             {hotspotInFocus && (
                 <Hotspot
                     zone={hotspotInFocus}
-                    viewAngleX={viewAngleX}
-                    viewAngleY={viewAngleY}
-                    roomData={roomData}
                     flash={true}
                 />
             )}
