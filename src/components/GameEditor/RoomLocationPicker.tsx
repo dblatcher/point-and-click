@@ -2,7 +2,7 @@ import { RoomContentItem } from "@/components/game/types";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { Point, RoomData } from "@/definitions";
-import { calculateScreenX, getXShift, locateClickInWorld } from "@/lib/roomFunctions";
+import { calculateScreenX, getXShift, getYShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { Pin } from "../svg/Pin";
@@ -75,7 +75,7 @@ export const RoomLocationPicker = ({
             {subPoints?.map((point, index) => (
                 <svg key={index}
                     x={calculateScreenX(point.x, viewAngleX, roomData)}
-                    y={roomData.height - point.y}
+                    y={roomData.height - point.y + getYShift(viewAngleY, 1, roomData)}
                     style={{ overflow: 'visible' }}>
                     <Pin label={(index + 1).toString()}  />
                 </svg>
@@ -85,7 +85,7 @@ export const RoomLocationPicker = ({
                 <MarkerShape
                     roomData={roomData}
                     viewAngleX={viewAngleX}
-                    color={'red'}
+                    viewAngleY={viewAngleY}
                     {...targetPoint}
                 />
             )}
@@ -96,7 +96,7 @@ export const RoomLocationPicker = ({
                     stopPropagation={false}
                     zone={obstacleInFocus}
                     x={obstacleInFocus.x + left}
-                    y={roomData.height - obstacleInFocus.y}
+                    y={roomData.height - obstacleInFocus.y  + getYShift(viewAngleY, 1, roomData)}
                 />
             )}
             {walkableInFocus && (
@@ -112,7 +112,7 @@ export const RoomLocationPicker = ({
                 <Hotspot
                     zone={hotspotInFocus}
                     viewAngleX={viewAngleX}
-                    viewAngleY={0}
+                    viewAngleY={viewAngleY}
                     roomData={roomData}
                     flash={true}
                 />

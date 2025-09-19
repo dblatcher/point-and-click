@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import { RoomData } from "@/definitions"
-import { calculateScreenX } from "@/lib/roomFunctions";
+import { calculateScreenX, getYShift } from "@/lib/roomFunctions";
 
 interface Props {
     roomData: RoomData;
@@ -8,22 +8,22 @@ interface Props {
     y?: number;
     height?: number;
     viewAngleX: number;
-    color: string;
+    viewAngleY: number;
     text?: string;
 }
 
 const CROSS_SIZE = 8
 
 export const MarkerShape: FunctionComponent<Props> = ({
-    roomData, x, viewAngleX, color, y = 0, height = 50, text
+    roomData, x, viewAngleX, viewAngleY, y = 0, height = 50, text
 }: Props) => {
 
     const textToDisplay = text || `${x.toFixed(0)},${y.toFixed(0)}`
-    const displayY = roomData.height - y
+    const displayY = roomData.height - y  + getYShift(viewAngleY, 1, roomData)
     const displayX = calculateScreenX(x, viewAngleX, roomData)
 
     return (
-        <svg
+        <svg data-is="MarkerShape"
             style={{ overflow: 'visible' }}
             x={displayX}
             y={displayY - height} >

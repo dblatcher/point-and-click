@@ -16,12 +16,12 @@ export const ObstacleCellOverlay: FunctionComponent<Props> = ({ roomData, viewAn
     const centerX = (frameWidth / 2) + getXShift(viewAngleX, 1, roomData)
     const left = centerX - roomData.width / 2
     const centerY = (frameHeight / 2) + getYShift(viewAngleY, 1, roomData)
-    const top = centerY - roomData.width / 2
+    const top = centerY - roomData.height / 2
 
 
     const cellSize = roomHeight / cellMatrix.length
 
-    return <svg x={left} y={top} style={{ overflow: 'visible' }}>
+    return <svg x={left} y={top} style={{ overflow: 'visible' }} data-is="ObstacleCellOverlay">
 
         {cellMatrix.map((row, rowIndex) => (
             <g key={rowIndex}>

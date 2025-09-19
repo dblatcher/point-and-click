@@ -189,7 +189,7 @@ export class Preview extends Component<Props, State> {
                                 <MarkerShape
                                     roomData={roomData}
                                     viewAngleX={viewAngleX}
-                                    color={'red'}
+                                    viewAngleY={viewAngleY}
                                     text={this.walkToPointLabel}
                                     {...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
                                 />

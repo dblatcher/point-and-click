@@ -1,7 +1,7 @@
 import {  FunctionComponent } from "react"
 import { Order, RoomData, ActorData } from "@/definitions"
 import { getScale } from "@/lib/getScale"
-import { calculateScreenX } from "@/lib/roomFunctions"
+import { calculateScreenX, getYShift } from "@/lib/roomFunctions"
 import { clamp } from "@/lib/util"
 
 const bubbleStyle = {
@@ -20,7 +20,7 @@ export const DialogueBubble: FunctionComponent<{
     viewAngleY: number;
     fontFamily?: string;
 }> = (props) => {
-    const { roomData, roomScale, orders, actorData, viewAngleX, fontFamily } = props
+    const { roomData, roomScale, orders, actorData, viewAngleX, viewAngleY, fontFamily } = props
 
     const spriteScale = getScale(actorData.y, roomData.scaling)
     const y = actorData.y + (actorData.height * spriteScale)
@@ -47,6 +47,7 @@ export const DialogueBubble: FunctionComponent<{
     const aY = clamp(y + height, roomData.height, 0)
 
     const textAlign = aX > centerLeft ? 'left' : aX < centerLeft ? 'right' : 'center';
+    const shiftY = getYShift(viewAngleY, 1, roomData);
 
     return <svg
         style={{
@@ -54,7 +55,7 @@ export const DialogueBubble: FunctionComponent<{
             pointerEvents: 'none',
         }}
         x={aX}
-        y={roomData.height - aY} >
+        y={roomData.height - aY + shiftY} >
         <foreignObject x="0" y="0" width={width} height={height} style={{
             overflow: 'visible',
         }}>
