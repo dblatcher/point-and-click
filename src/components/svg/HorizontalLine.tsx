@@ -10,9 +10,9 @@ interface Props {
 const HorizontalLine: FunctionComponent<Props> = ({
     color = 'red', y = 0, text
 }: Props) => {
-    const { surfaceYShift, roomData } = useRoomRender()
+    const { plotSurfaceY, roomData } = useRoomRender()
     const textToDisplay = text || y.toFixed(0)
-    const plotY = roomData.height - y + surfaceYShift;
+    const plotY = plotSurfaceY(y);
 
     return (<>
         <line

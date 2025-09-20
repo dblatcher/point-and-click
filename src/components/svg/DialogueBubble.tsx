@@ -18,7 +18,7 @@ export const DialogueBubble: FunctionComponent<{
     orders?: Order[];
     fontFamily?: string;
 }> = (props) => {
-    const { surfaceYShift, viewAngleX, roomData } = useRoomRender()
+    const { plotSurfaceY, viewAngleX, roomData } = useRoomRender()
     const { roomScale, orders, actorData, fontFamily } = props
 
     const spriteScale = getScale(actorData.y, roomData.scaling)
@@ -53,7 +53,7 @@ export const DialogueBubble: FunctionComponent<{
             pointerEvents: 'none',
         }}
         x={aX}
-        y={roomData.height - aY + surfaceYShift} >
+        y={plotSurfaceY(aY)} >
         <foreignObject x="0" y="0" width={width} height={height} style={{
             overflow: 'visible',
         }}>

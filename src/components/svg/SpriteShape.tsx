@@ -30,7 +30,7 @@ export const SpriteShape: FunctionComponent<Props> = ({
     clickHandler, contextClickHandler, handleHover, hoverData, status,
     reverseCycle
 }: Props) => {
-    const {roomData, viewAngleX, surfaceYShift} = useRoomRender()
+    const { roomData, viewAngleX, plotSurfaceY } = useRoomRender()
     const [widthScale, heightScale] = spriteObject.getFrameScale(animationName, frameIndex, direction);
     const divStyle = Object.assign(spriteObject.getStyle(animationName, frameIndex, direction, reverseCycle), { filter });
 
@@ -54,7 +54,7 @@ export const SpriteShape: FunctionComponent<Props> = ({
             onMouseLeave={onMouseLeave}
             style={svgStyle}
             x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngleX, roomData)}
-            y={roomData.height - y - heightAdjustedByScale + surfaceYShift} >
+            y={plotSurfaceY(y + heightAdjustedByScale)} >
             <foreignObject x="0" y="0" width={widthAdjustedByScale} height={heightAdjustedByScale}>
                 <div style={divStyle} />
             </foreignObject>

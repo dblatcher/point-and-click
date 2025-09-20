@@ -8,8 +8,12 @@ export const useRoomRender = () => {
     const surfaceXShift = getXShift(viewAngleX, 1, roomData);
     const surfaceYShift = getYShift(viewAngleY, 1, roomData);
 
+    const plotSurfaceY = (y: number) => roomData.height - y + surfaceYShift;
+
     return {
         roomData, viewAngleX, viewAngleY,
         surfaceXShift, surfaceYShift,
+
+        plotSurfaceY,
     }
 };

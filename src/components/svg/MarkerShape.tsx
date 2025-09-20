@@ -14,16 +14,15 @@ const CROSS_SIZE = 8
 export const MarkerShape: FunctionComponent<Props> = ({
     x, y = 0, height = 50, text
 }: Props) => {
-    const { roomData, viewAngleX, surfaceYShift } = useRoomRender()
+    const { roomData, viewAngleX, plotSurfaceY } = useRoomRender()
     const textToDisplay = text || `${x.toFixed(0)},${y.toFixed(0)}`
-    const displayY = roomData.height - y + surfaceYShift;
     const displayX = calculateScreenX(x, viewAngleX, roomData)
 
     return (
         <svg data-is="MarkerShape"
             style={{ overflow: 'visible' }}
             x={displayX}
-            y={displayY - height} >
+            y={plotSurfaceY(y) - height} >
             <line
                 x1={0} x2={0} y1={0} y2={height}
                 stroke={'black'} strokeWidth={3} />
