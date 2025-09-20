@@ -83,8 +83,7 @@ export class Preview extends Component<Props, State> {
 
     get hotspotToHaveMarkWalkToPoint(): HotspotZone | undefined {
         const { activeZoneIndex: activeHotspotIndex, roomData } = this.props
-        const { highlightHotspots } = this.state
-        if (typeof activeHotspotIndex === 'undefined' || !highlightHotspots) { return undefined }
+        if (typeof activeHotspotIndex === 'undefined') { return undefined }
         const activeHotspot = roomData.hotspots ? roomData.hotspots[activeHotspotIndex] : undefined
         if (!activeHotspot) { return undefined }
         return activeHotspot
@@ -177,20 +176,21 @@ export class Preview extends Component<Props, State> {
                             markHotspotVertices={this.hotspotsToMark}
                             markObstacleVertices={this.obstaclesToMark}
                             markWalkableVertices={this.walkablesToMark}
-                            surfaceContent={showScaleLines && scaling.map((yAndScale, index) => (
-                                <HorizontalLine key={index}
-                                    y={yAndScale[0]}
-                                    text={`scale: ${yAndScale[1]}`}
-                                />
-                            ))}
-                        >
-                            {this.hotspotToHaveMarkWalkToPoint && (
-                                <MarkerShape
-                                    text={this.walkToPointLabel}
-                                    {...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
-                                />
-                            )}
-                        </Room>
+                            surfaceContent={<>
+                                {showScaleLines && scaling.map((yAndScale, index) => (
+                                    <HorizontalLine key={index}
+                                        y={yAndScale[0]}
+                                        text={`scale: ${yAndScale[1]}`}
+                                    />
+                                ))}
+                                {this.hotspotToHaveMarkWalkToPoint && (
+                                    <MarkerShape
+                                        text={this.walkToPointLabel}
+                                        {...getTargetPoint(this.hotspotToHaveMarkWalkToPoint, roomData)}
+                                    />
+                                )}
+                            </>}
+                        />
                     </Box>
                     <Box>
                         <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={viewAngleX => this.setState({ viewAngleX })} />

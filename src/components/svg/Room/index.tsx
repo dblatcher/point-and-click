@@ -113,6 +113,7 @@ export const Room: FunctionComponent<Props> = ({
                 onClick={processRoomClick}
                 onContextMenu={processRoomContextClick}
             >
+                {/* Background layers */}
                 <ParallaxFrame>
                     {background
                         .filter(layer => layer.parallax <= 1)

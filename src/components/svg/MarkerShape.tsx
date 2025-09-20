@@ -1,5 +1,4 @@
 import { useRoomRender } from "@/hooks/useRoomRender";
-import { calculateScreenX } from "@/lib/roomFunctions";
 import { FunctionComponent } from "react";
 
 interface Props {
@@ -14,15 +13,14 @@ const CROSS_SIZE = 8
 export const MarkerShape: FunctionComponent<Props> = ({
     x, y = 0, height = 50, text
 }: Props) => {
-    const { roomData, viewAngleX, plotSurfaceY } = useRoomRender()
+    const { roomData } = useRoomRender()
     const textToDisplay = text || `${x.toFixed(0)},${y.toFixed(0)}`
-    const displayX = calculateScreenX(x, viewAngleX, roomData)
 
     return (
         <svg data-is="MarkerShape"
             style={{ overflow: 'visible' }}
-            x={displayX}
-            y={plotSurfaceY(y) - height} >
+            x={x}
+            y={roomData.height - y - height} >
             <line
                 x1={0} x2={0} y1={0} y2={height}
                 stroke={'black'} strokeWidth={3} />

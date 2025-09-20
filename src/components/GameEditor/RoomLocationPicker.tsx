@@ -30,8 +30,8 @@ interface Props {
 
 export const RoomLocationPicker = ({
     roomData, contents = [], targetPoint, subPoints,
-    viewAngleX: viewAngleXProp, 
-    viewAngleY: viewAngleYProp, 
+    viewAngleX: viewAngleXProp,
+    viewAngleY: viewAngleYProp,
     previewWidth = 600, previewHeight = previewWidth,
     onClick, renderAllZones, obstacleRefToFocus, walkableRefToFocus, hotspotIdToFocus,
 }: Props) => {
@@ -70,20 +70,20 @@ export const RoomLocationPicker = ({
             maxHeight={previewHeight}
             noSound={true}
             noMargin={true}
+            surfaceContent={
+                targetPoint && (
+                    <MarkerShape {...targetPoint} />
+                )
+            }
         >
-
             {subPoints?.map((point, index) => (
                 <svg key={index}
                     x={calculateScreenX(point.x, viewAngleX, roomData)}
                     y={roomData.height - point.y + getYShift(viewAngleY, 1, roomData)}
                     style={{ overflow: 'visible' }}>
-                    <Pin label={(index + 1).toString()}  />
+                    <Pin label={(index + 1).toString()} />
                 </svg>
             ))}
-
-            {targetPoint && (
-                <MarkerShape {...targetPoint} />
-            )}
 
             {obstacleInFocus && (
                 <ZoneSvg
@@ -91,7 +91,7 @@ export const RoomLocationPicker = ({
                     stopPropagation={false}
                     zone={obstacleInFocus}
                     x={obstacleInFocus.x + left}
-                    y={roomData.height - obstacleInFocus.y  + getYShift(viewAngleY, 1, roomData)}
+                    y={roomData.height - obstacleInFocus.y + getYShift(viewAngleY, 1, roomData)}
                 />
             )}
             {walkableInFocus && (
