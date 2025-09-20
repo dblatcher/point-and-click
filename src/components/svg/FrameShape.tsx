@@ -90,7 +90,7 @@ export const FrameShape: FunctionComponent<Props> = ({
     x, y, height = 50, width = 50, filter,
     clickHandler, handleHover, actorData, status,
 }: Props) => {
-    const {roomData, viewAngleX, plotSurfaceY} = useRoomRender()
+    const { roomData, viewAngleX, plotSurfaceY } = useRoomRender()
     const { getImageAsset } = useAssets()
     const assetAndFrame = getAssetAndFrame(actorData, getImageAsset)
     const { widthScale = 1, heightScale = 1 } = assetAndFrame?.asset ?? {};
@@ -111,8 +111,8 @@ export const FrameShape: FunctionComponent<Props> = ({
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             style={svgStyle}
-            x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngleX, roomData)}
-            y={plotSurfaceY(y + heightAdjustedByScale)} >
+            x={x - (widthAdjustedByScale / 2)}
+            y={roomData.height - (y + heightAdjustedByScale)}  >
             <FrameContents {...{
                 assetAndFrame,
                 actorData,

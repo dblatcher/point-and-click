@@ -1,7 +1,6 @@
 import { ActorData, Order } from "@/definitions"
 import { useRoomRender } from "@/hooks/useRoomRender"
 import { getScale } from "@/lib/getScale"
-import { calculateScreenX } from "@/lib/roomFunctions"
 import { clamp } from "@/lib/util"
 import { FunctionComponent } from "react"
 
@@ -18,13 +17,12 @@ export const DialogueBubble: FunctionComponent<{
     orders?: Order[];
     fontFamily?: string;
 }> = (props) => {
-    const { plotSurfaceY, viewAngleX, roomData } = useRoomRender()
+    const { roomData } = useRoomRender()
     const { roomScale, orders, actorData, fontFamily } = props
 
     const spriteScale = getScale(actorData.y, roomData.scaling)
     const y = actorData.y + (actorData.height * spriteScale)
-    const x = calculateScreenX(actorData.x, viewAngleX, roomData)
-
+    const x = actorData.x
     if (!orders) { return null }
 
     const currentOrder: Order | undefined = orders[0]
@@ -43,7 +41,7 @@ export const DialogueBubble: FunctionComponent<{
 
     const centerLeft = x - width / 2
     const aX = clamp(centerLeft, roomData.frameWidth - width, 0)
-    const aY = clamp(y + height, roomData.height, 0)
+    const aY = roomData.height - clamp(y + height, roomData.height, 0)
 
     const textAlign = aX > centerLeft ? 'left' : aX < centerLeft ? 'right' : 'center';
 
@@ -53,7 +51,7 @@ export const DialogueBubble: FunctionComponent<{
             pointerEvents: 'none',
         }}
         x={aX}
-        y={plotSurfaceY(aY)} >
+        y={aY} >
         <foreignObject x="0" y="0" width={width} height={height} style={{
             overflow: 'visible',
         }}>

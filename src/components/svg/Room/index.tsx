@@ -143,7 +143,9 @@ export const Room: FunctionComponent<Props> = ({
                             markVertices={markHotspotVertices.includes(index)}
                         />
                     )}
+                </svg>
 
+                <SurfaceFrame>
                     {contents.map(entry => (
                         <ActorFigure key={entry.data.id}
                             isPaused={isPaused}
@@ -157,22 +159,17 @@ export const Room: FunctionComponent<Props> = ({
                             overrideSprite={entry.overrideSprite}
                         />
                     ))}
-                </svg>
+                </SurfaceFrame>
 
                 {/* Foreground and overlays*/}
                 <svg xmlns="http://www.w3.org/2000/svg"
                     className={styles.roomSvg}
-                    style={{
-                        pointerEvents: 'none'
-                    }}
                     viewBox={`0 0 ${frameWidth} ${frameHeight}`}>
                     {background
                         .filter(layer => layer.parallax > 1)
                         .map((layer, index) =>
                             <BackgroundShape key={index} layer={layer} />
                         )}
-
-
 
                     {walkableAreas.map((zone, index) => {
                         if (!renderAllZones && !markWalkableVertices.includes(index)) {
@@ -203,12 +200,14 @@ export const Room: FunctionComponent<Props> = ({
                     })}
                 </svg>
 
-                {/* Dialogue bubbles and children */}
                 <svg xmlns="http://www.w3.org/2000/svg"
                     className={styles.roomSvg}
                     viewBox={`0 0 ${frameWidth} ${frameHeight}`}
                 >
+                    {children}
+                </svg>
 
+                <SurfaceFrame>
                     {contents.map(entry => (
                         <DialogueBubble key={entry.data.id}
                             actorData={entry.data}
@@ -217,10 +216,6 @@ export const Room: FunctionComponent<Props> = ({
                             fontFamily={fontFamily}
                         />
                     ))}
-                    {children}
-                </svg>
-
-                <SurfaceFrame>
                     {surfaceContent}
                 </SurfaceFrame>
 
@@ -230,5 +225,4 @@ export const Room: FunctionComponent<Props> = ({
             </figure>
         </RoomRenderContext.Provider>
     )
-
 }

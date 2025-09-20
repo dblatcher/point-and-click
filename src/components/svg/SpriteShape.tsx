@@ -1,6 +1,5 @@
 import { ActorData, Direction } from "@/definitions";
 import { useRoomRender } from "@/hooks/useRoomRender";
-import { calculateScreenX } from "@/lib/roomFunctions";
 import { Sprite } from "@/lib/Sprite";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { HandleHoverFunction } from "../game/types";
@@ -30,7 +29,7 @@ export const SpriteShape: FunctionComponent<Props> = ({
     clickHandler, contextClickHandler, handleHover, hoverData, status,
     reverseCycle
 }: Props) => {
-    const { roomData, viewAngleX, plotSurfaceY } = useRoomRender()
+    const { roomData } = useRoomRender()
     const [widthScale, heightScale] = spriteObject.getFrameScale(animationName, frameIndex, direction);
     const divStyle = Object.assign(spriteObject.getStyle(animationName, frameIndex, direction, reverseCycle), { filter });
 
@@ -53,8 +52,8 @@ export const SpriteShape: FunctionComponent<Props> = ({
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             style={svgStyle}
-            x={calculateScreenX(x - (widthAdjustedByScale / 2), viewAngleX, roomData)}
-            y={plotSurfaceY(y + heightAdjustedByScale)} >
+            x={x - (widthAdjustedByScale / 2)}
+            y={roomData.height - (y + heightAdjustedByScale)} >
             <foreignObject x="0" y="0" width={widthAdjustedByScale} height={heightAdjustedByScale}>
                 <div style={divStyle} />
             </foreignObject>
