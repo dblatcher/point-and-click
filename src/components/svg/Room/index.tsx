@@ -13,6 +13,7 @@ import styles from './styles.module.css';
 import { obstableClassNames, walkableClassNames } from "./zoneCssClasses";
 import { RoomRenderContext } from "@/context/room-render-context";
 import { SurfaceFrame } from "./SurfaceFrame";
+import { ParallaxFrame } from "./ParallaxFrame";
 
 interface Props {
     data: RoomData;
@@ -68,7 +69,7 @@ export const Room: FunctionComponent<Props> = ({
     children,
     surfaceContent,
 }: Props) => {
-    const { id, frameWidth, height, width, background, hotspots = [], obstacleAreas = [], walkableAreas = [], frameHeight = height } = data;
+    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], frameHeight = height } = data;
 
     const scale = Math.min(
         maxWidth / frameWidth,
@@ -112,11 +113,7 @@ export const Room: FunctionComponent<Props> = ({
                 onClick={processRoomClick}
                 onContextMenu={processRoomContextClick}
             >
-                {/* Background layers */}
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    className={styles.roomSvg}
-                    viewBox={`0 0 ${frameWidth} ${frameHeight}`}>
-
+                <ParallaxFrame>
                     {background
                         .filter(layer => layer.parallax <= 1)
                         .map((layer, index) =>
@@ -125,13 +122,9 @@ export const Room: FunctionComponent<Props> = ({
                     {obstacleCells &&
                         <ObstacleCellOverlay cellMatrix={obstacleCells} />
                     }
-                </svg>
+                </ParallaxFrame>
 
-                {/* Contents */}
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    className={styles.roomSvgInteractive}
-                    viewBox={`0 0 ${frameWidth} ${frameHeight}`}>
-
+                <ParallaxFrame interactive>
                     {hotspots.map((zone, index) =>
                         <Hotspot key={index}
                             zone={zone}
@@ -143,7 +136,7 @@ export const Room: FunctionComponent<Props> = ({
                             markVertices={markHotspotVertices.includes(index)}
                         />
                     )}
-                </svg>
+                </ParallaxFrame>
 
                 <SurfaceFrame>
                     {contents.map(entry => (
@@ -162,9 +155,7 @@ export const Room: FunctionComponent<Props> = ({
                 </SurfaceFrame>
 
                 {/* Foreground and overlays*/}
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    className={styles.roomSvg}
-                    viewBox={`0 0 ${frameWidth} ${frameHeight}`}>
+                <ParallaxFrame>
                     {background
                         .filter(layer => layer.parallax > 1)
                         .map((layer, index) =>
@@ -198,14 +189,9 @@ export const Room: FunctionComponent<Props> = ({
                             markVertices={markObstacleVertices.includes(index)}
                         />
                     })}
-                </svg>
+                </ParallaxFrame>
 
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    className={styles.roomSvg}
-                    viewBox={`0 0 ${frameWidth} ${frameHeight}`}
-                >
-                    {children}
-                </svg>
+                <ParallaxFrame>{children}</ParallaxFrame>
 
                 <SurfaceFrame>
                     {contents.map(entry => (

@@ -1,10 +1,10 @@
 import ZoneSvg from "@/components/svg/ZoneSvg";
-import { HotspotZone, RoomData } from "@/definitions";
+import { HotspotZone } from "@/definitions";
+import { useRoomRender } from "@/hooks/useRoomRender";
 import { getXShift, getYShift } from "@/lib/roomFunctions";
 import { FunctionComponent } from "react";
 import { HandleClickFunction, HandleHoverFunction } from "../../game/types";
 import { hotpotClassNames } from "./zoneCssClasses";
-import { useRoomRender } from "@/hooks/useRoomRender";
 
 interface Props {
     zone: HotspotZone;
