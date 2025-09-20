@@ -195,6 +195,7 @@ export const Room: FunctionComponent<Props> = ({
                 <ParallaxFrame>{children}</ParallaxFrame>
 
                 <SurfaceFrame>
+                    {surfaceContent}
                     {contents.map(entry => (
                         <DialogueBubble key={entry.data.id}
                             actorData={entry.data}
@@ -203,7 +204,6 @@ export const Room: FunctionComponent<Props> = ({
                             fontFamily={fontFamily}
                         />
                     ))}
-                    {surfaceContent}
                 </SurfaceFrame>
 
                 {showCaption && (

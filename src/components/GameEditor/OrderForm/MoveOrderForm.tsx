@@ -80,7 +80,6 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
             steps: steps.map(step => ({ ...step, speed }))
         })
     }
-
     return (
         <Box>
             <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>

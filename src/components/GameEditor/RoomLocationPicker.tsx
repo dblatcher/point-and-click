@@ -2,7 +2,7 @@ import { RoomContentItem } from "@/components/game/types";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { Point, RoomData } from "@/definitions";
-import { calculateScreenX, getXShift, getYShift, locateClickInWorld } from "@/lib/roomFunctions";
+import { getXShift, getYShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { Pin } from "../svg/Pin";
@@ -70,21 +70,20 @@ export const RoomLocationPicker = ({
             maxHeight={previewHeight}
             noSound={true}
             noMargin={true}
-            surfaceContent={
-                targetPoint && (
+            surfaceContent={<>
+                {targetPoint && (
                     <MarkerShape {...targetPoint} />
-                )
-            }
+                )}
+                {subPoints?.map((point, index) => (
+                    <svg key={index}
+                        x={point.x}
+                        y={roomData.height - point.y}
+                        style={{ overflow: 'visible' }}>
+                        <Pin label={(index + 1).toString()} />
+                    </svg>
+                ))}
+            </>}
         >
-            {subPoints?.map((point, index) => (
-                <svg key={index}
-                    x={calculateScreenX(point.x, viewAngleX, roomData)}
-                    y={roomData.height - point.y + getYShift(viewAngleY, 1, roomData)}
-                    style={{ overflow: 'visible' }}>
-                    <Pin label={(index + 1).toString()} />
-                </svg>
-            ))}
-
             {obstacleInFocus && (
                 <ZoneSvg
                     className={obstableClassNames({ blink: true })}
