@@ -1,14 +1,22 @@
 .roomFigure {
     position: relative;
     margin: 0 auto;
+    overflow: hidden;
 }
 
 .roomSvg {
     position: absolute;
     width: 100%;
     height: 100%;
-    left: 0;
-    top: 0;
+    inset: 0;
+    pointer-events: none;
+}
+
+.roomSvgInteractive {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    inset: 0;
 }
 
 .roomCaption {
@@ -24,7 +32,7 @@
 .hotspot:hover {
     fill: rgba(0, 8, 245, 0.25);
     stroke: white;
-    stroke-dasharray: 1,1;
+    stroke-dasharray: 1, 1;
 }
 
 .highlightedHotspot {
@@ -36,24 +44,27 @@
     0% {
         fill: rgba(0, 8, 245, 0.5);
     }
+
     100% {
         fill: rgba(255, 8, 8, 0.5);
     }
-  }
+}
 
-  @keyframes blinking {
+@keyframes blinking {
     0% {
         filter: opacity(1)
     }
+
     100% {
         filter: opacity(0)
     }
-  }
+}
 
 .flash {
     fill: white;
     animation: .5s linear 1s infinite alternate flashing;
 }
+
 .blink {
     animation: 1s ease-in 0s infinite alternate blinking;
 }
@@ -65,7 +76,7 @@
 
 .obstacleArea.disabledZone {
     fill: rgba(255, 100, 100, .4);
-    stroke-dasharray: 1,3;
+    stroke-dasharray: 1, 3;
 }
 
 .walkableArea {
@@ -75,5 +86,5 @@
 
 .walkableArea.disabledZone {
     fill: rgba(100, 255, 100, .4);
-    stroke-dasharray: 1,3;
+    stroke-dasharray: 1, 3;
 }

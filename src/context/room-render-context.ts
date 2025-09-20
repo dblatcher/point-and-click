@@ -5,6 +5,7 @@ export const RoomRenderContext = createContext<{
     roomData: RoomData,
     viewAngleX: number,
     viewAngleY: number,
+    scale: number,
 }>({
     roomData: {
         id: "",
@@ -14,7 +15,8 @@ export const RoomRenderContext = createContext<{
         background: []
     },
     viewAngleX: 0,
-    viewAngleY: 0
+    viewAngleY: 0,
+    scale: 1,
 })
 
 

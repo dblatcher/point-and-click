@@ -55,11 +55,12 @@ export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, max
             highlightHotspots={false}
             handleRoomClick={() => { }}
             contents={[{ overrideSprite, data: modifiedActorData, }]}
-        >
-            {!noBaseLine && (
-                <HorizontalLine y={data.baseline || 0} />
-            )}
-        </Room>
+            surfaceContent={
+                !noBaseLine && (
+                    <HorizontalLine y={data.baseline || 0} />
+                )
+            }
+        />
     )
 }
 

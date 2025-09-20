@@ -12,6 +12,7 @@ import ObstacleCellOverlay from "./ObstableCellOverlay";
 import styles from './styles.module.css';
 import { obstableClassNames, walkableClassNames } from "./zoneCssClasses";
 import { RoomRenderContext } from "@/context/room-render-context";
+import { SurfaceFrame } from "./SurfaceFrame";
 
 interface Props {
     data: RoomData;
@@ -37,6 +38,7 @@ interface Props {
     noMargin?: boolean;
     fontFamily?: string;
     children?: ReactNode;
+    surfaceContent?: ReactNode;
 
 }
 
@@ -64,8 +66,9 @@ export const Room: FunctionComponent<Props> = ({
     noMargin = false,
     fontFamily,
     children,
+    surfaceContent,
 }: Props) => {
-    const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], frameHeight = height } = data;
+    const { id, frameWidth, height, width, background, hotspots = [], obstacleAreas = [], walkableAreas = [], frameHeight = height } = data;
 
     const scale = Math.min(
         maxWidth / frameWidth,
@@ -101,6 +104,7 @@ export const Room: FunctionComponent<Props> = ({
             roomData: data,
             viewAngleX,
             viewAngleY,
+            scale,
         }}>
             <figure
                 className={styles.roomFigure}
@@ -108,6 +112,7 @@ export const Room: FunctionComponent<Props> = ({
                 onClick={processRoomClick}
                 onContextMenu={processRoomContextClick}
             >
+                {/* Background layers */}
                 <svg xmlns="http://www.w3.org/2000/svg"
                     className={styles.roomSvg}
                     viewBox={`0 0 ${frameWidth} ${frameHeight}`}>
@@ -117,10 +122,15 @@ export const Room: FunctionComponent<Props> = ({
                         .map((layer, index) =>
                             <BackgroundShape key={index} layer={layer} />
                         )}
-
                     {obstacleCells &&
                         <ObstacleCellOverlay cellMatrix={obstacleCells} />
                     }
+                </svg>
+
+                {/* Contents */}
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    className={styles.roomSvgInteractive}
+                    viewBox={`0 0 ${frameWidth} ${frameHeight}`}>
 
                     {hotspots.map((zone, index) =>
                         <Hotspot key={index}
@@ -147,21 +157,22 @@ export const Room: FunctionComponent<Props> = ({
                             overrideSprite={entry.overrideSprite}
                         />
                     ))}
+                </svg>
 
+                {/* Foreground and overlays*/}
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    className={styles.roomSvg}
+                    style={{
+                        pointerEvents: 'none'
+                    }}
+                    viewBox={`0 0 ${frameWidth} ${frameHeight}`}>
                     {background
                         .filter(layer => layer.parallax > 1)
                         .map((layer, index) =>
                             <BackgroundShape key={index} layer={layer} />
                         )}
 
-                    {contents.map(entry => (
-                        <DialogueBubble key={entry.data.id}
-                            actorData={entry.data}
-                            orders={entry.orders || []}
-                            roomScale={scale}
-                            fontFamily={fontFamily}
-                        />
-                    ))}
+
 
                     {walkableAreas.map((zone, index) => {
                         if (!renderAllZones && !markWalkableVertices.includes(index)) {
@@ -190,9 +201,28 @@ export const Room: FunctionComponent<Props> = ({
                             markVertices={markObstacleVertices.includes(index)}
                         />
                     })}
+                </svg>
 
+                {/* Dialogue bubbles and children */}
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    className={styles.roomSvg}
+                    viewBox={`0 0 ${frameWidth} ${frameHeight}`}
+                >
+
+                    {contents.map(entry => (
+                        <DialogueBubble key={entry.data.id}
+                            actorData={entry.data}
+                            orders={entry.orders || []}
+                            roomScale={scale}
+                            fontFamily={fontFamily}
+                        />
+                    ))}
                     {children}
                 </svg>
+
+                <SurfaceFrame>
+                    {surfaceContent}
+                </SurfaceFrame>
 
                 {showCaption && (
                     <figcaption className={styles.roomCaption}>{id}</figcaption>

@@ -177,14 +177,13 @@ export class Preview extends Component<Props, State> {
                             markHotspotVertices={this.hotspotsToMark}
                             markObstacleVertices={this.obstaclesToMark}
                             markWalkableVertices={this.walkablesToMark}
-                        >
-                            {showScaleLines && scaling.map((yAndScale, index) => (
+                            surfaceContent={showScaleLines && scaling.map((yAndScale, index) => (
                                 <HorizontalLine key={index}
                                     y={yAndScale[0]}
                                     text={`scale: ${yAndScale[1]}`}
                                 />
                             ))}
-
+                        >
                             {this.hotspotToHaveMarkWalkToPoint && (
                                 <MarkerShape
                                     text={this.walkToPointLabel}

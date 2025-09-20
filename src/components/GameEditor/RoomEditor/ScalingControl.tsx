@@ -132,14 +132,16 @@ export const ScalingControl = ({ room }: Props) => {
                         maxHeight={room.height * scale}
                         maxWidth={room.frameWidth * scale}
                         contents={testActor ? [{ data: testActor }] : []}
-                    >
-                        {scaling.map((yAndScale, index) => (
-                            <HorizontalLine key={index}
-                                y={yAndScale[0]}
-                                text={`scale: ${yAndScale[1]}`}
-                            />
-                        ))}
-                    </Room>
+
+                        surfaceContent={
+                            scaling.map((yAndScale, index) => (
+                                <HorizontalLine key={index}
+                                    y={yAndScale[0]}
+                                    text={`scale: ${yAndScale[1]}`}
+                                />
+                            ))
+                        }
+                    />
                 </div>
                 <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
                     <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} />
