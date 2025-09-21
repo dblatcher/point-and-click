@@ -1,20 +1,19 @@
 
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
+import HorizontalLine from "@/components/svg/HorizontalLine";
+import { Room } from "@/components/svg/Room";
+import { useGameDesign } from "@/context/game-design-context";
 import { ActorData, RoomData, ScaleLevel } from "@/definitions";
 import { cloneData } from "@/lib/clone";
-import { clamp, eventToNumber, findById } from "@/lib/util";
-import { Alert, Box, Button, Grid, Stack, Typography } from "@mui/material";
-import { ArrayControl } from "../ArrayControl";
-import { useGameDesign } from "@/context/game-design-context";
-import { useState } from "react";
-import { Room } from "@/components/svg/Room";
-import HorizontalLine from "@/components/svg/HorizontalLine";
-import { RangeInput } from "../RangeInput";
 import { locateClickInWorld } from "@/lib/roomFunctions";
-import { ViewAngleSlider } from "./ViewAngleSlider";
+import { clamp, findById } from "@/lib/util";
+import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import { useState } from "react";
+import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { PickActorDialog } from "../PickActorDialog";
 import { XYControl } from "../XYControl";
+import { ViewAngleSlider } from "./ViewAngleSlider";
 
 interface Props {
     room: RoomData;
