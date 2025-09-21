@@ -44,9 +44,14 @@ export const DimensionControl = ({ room }: Props) => {
     const frameCenterY = (room.height * .5) - ((room.frameHeight ?? room.height) * .5);
     const viewBoxTop = frameCenterY - (viewAngleY * frameCenterY);
 
-    return <Box width={room.width * scale * (12 / 10)} padding={2}>
+    return <Box minWidth={300} width={room.width * scale * (12 / 10)} padding={2}>
         <Grid container>
-            <LeftGridCell />
+            <LeftGridCell >
+                  <Box>
+                    <NumberInput label="preview scale" value={scale} notFullWidth
+                        inputHandler={setScale} max={2} min={.5} step={.05} />
+                </Box>
+            </LeftGridCell>
             <RightGridCell row>
                 <Stack>
                     <Box>
@@ -54,7 +59,7 @@ export const DimensionControl = ({ room }: Props) => {
                             inputHandler={(width) => { updateRoom({ width }) }} />
                     </Box>
                     <Box display={'flex'} gap={2}>
-                        <NumberInput label="frameWidth" value={room.frameWidth}
+                        <NumberInput label="frameWidth" value={room.frameWidth} max={room.width}
                             inputHandler={(frameWidth) => { updateRoom({ frameWidth }) }} />
 
                     </Box>
@@ -98,22 +103,12 @@ export const DimensionControl = ({ room }: Props) => {
                     </Box>
 
                     <Box position={'absolute'} left={0} top={10}>
-                        <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} forY trackLength={(room.height * scale)-50}/>
+                        <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} forY trackLength={(room.height * scale) - 50} />
                     </Box>
 
                     <Box position={'absolute'} right={10} bottom={0}>
-                        <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} trackLength={(room.width * scale)-50}/>
+                        <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} trackLength={(room.width * scale) - 50} />
                     </Box>
-                </Box>
-            </RightGridCell>
-        </Grid>
-
-        <Grid>
-            <LeftGridCell />
-            <RightGridCell>
-                <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
-                    <NumberInput label="preview scale" value={scale} notFullWidth
-                        inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>
             </RightGridCell>
         </Grid>
