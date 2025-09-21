@@ -14,6 +14,7 @@ import { locateClickInWorld } from "@/lib/roomFunctions";
 import { ViewAngleSlider } from "./ViewAngleSlider";
 import { EditorBox } from "../EditorBox";
 import { PickActorDialog } from "../PickActorDialog";
+import { XYControl } from "../XYControl";
 
 interface Props {
     room: RoomData;
@@ -60,7 +61,7 @@ export const ScalingControl = ({ room }: Props) => {
     }
 
     return <>
-        <Grid container flexWrap={'nowrap'} spacing={1}>
+        <Grid container flexWrap={'nowrap'} spacing={2}>
             <Grid item xs={4}>
                 <Typography>Scale lines</Typography>
                 <ArrayControl
@@ -93,38 +94,37 @@ export const ScalingControl = ({ room }: Props) => {
                 />
 
                 <EditorBox title={`Test Sprite: ${testActor?.id ?? '[none]'}`}>
-                    <RangeInput stackProps={{ justifyContent: 'center' }}
-                        label="x"
-                        value={testSpriteX}
-                        max={room.width} min={0}
-                        onChange={event => {
-                            const x = eventToNumber(event.nativeEvent)
-                            setTestSpriteX(x)
+                    <XYControl point={{ x: testSpriteX, y: testSpriteY }} changePosition={(_, mod) => {
+                        if (typeof mod.x === 'number') {
+                            setTestSpriteX(mod.x)
                             if (testActor) {
-                                setTestActor({ ...testActor, x })
+                                setTestActor({ ...testActor, x: mod.x })
                             }
-                        }}
-                    />
-                    <RangeInput stackProps={{ justifyContent: 'center' }}
-                        label="y"
-                        value={testSpriteY}
-                        max={room.height} min={0}
-                        onChange={event => {
-                            const y = eventToNumber(event.nativeEvent)
-                            setTestSpriteY(y)
+                        }
+                        if (typeof mod.y === 'number') {
+                            setTestSpriteY(mod.y)
                             if (testActor) {
-                                setTestActor({ ...testActor, y })
+                                setTestActor({ ...testActor, y: mod.y })
                             }
-                        }}
-                    />
-                    <Alert>click room to position test sprite</Alert>
-                    <Button variant="contained" color="secondary"
-                        onClick={() => { setActorDialogOpen(true) }}
-                    >Pick Actor for test sprite</Button>
+                        }
+
+                    }} />
+                    <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                        <Button variant="contained" color="secondary"
+                            onClick={() => { setActorDialogOpen(true) }}
+                        >Pick Actor for test sprite</Button>
+                        {!!testActor && (
+                            <Typography>click room to move sprite</Typography>
+                        )}
+                    </Box>
                 </EditorBox>
             </Grid>
             <Grid item flex={1}>
-                <Box style={{ position: 'relative', display:'inline-block' }} component={'section'}>
+                <Box display={'flex'} flexDirection={'column'} alignItems={'flex-start'}>
+                    <NumberInput label="preview scale" value={scale} notFullWidth
+                        inputHandler={setScale} max={2} min={.5} step={.05} />
+                </Box>
+                <Box style={{ position: 'relative', display: 'inline-block', cursor: !!testActor ? 'crosshair' : undefined }} component={'section'}>
                     <Room data={room} noSound noMargin
                         viewAngleX={viewAngleX}
                         viewAngleY={viewAngleY}
@@ -148,10 +148,7 @@ export const ScalingControl = ({ room }: Props) => {
                         <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} trackLength={(room.frameWidth * scale) - 50} />
                     </Box>
                 </Box>
-                <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-                    <NumberInput label="preview scale" value={scale} notFullWidth
-                        inputHandler={setScale} max={2} min={.5} step={.05} />
-                </Box>
+
             </Grid>
         </Grid>
 
