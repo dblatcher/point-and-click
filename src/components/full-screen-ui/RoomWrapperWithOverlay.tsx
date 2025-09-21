@@ -142,13 +142,14 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                         }}
                         contents={contentList}
                         obstacleCells={renderCells ? gameState.cellMatrix : undefined}
-                    >
-                        {(hoverPlaceProps && hoverTargetInRoom) && (
-                            <ParallaxPlace {...hoverPlaceProps}>
-                                <TargetLabel target={hoverTargetInRoom} />
-                            </ParallaxPlace>
-                        )}
-                    </Room>
+                        parallaxContent={
+                            (hoverPlaceProps && hoverTargetInRoom) && (
+                                <ParallaxPlace {...hoverPlaceProps}>
+                                    <TargetLabel target={hoverTargetInRoom} />
+                                </ParallaxPlace>
+                            )
+                        }
+                    />
 
                     {(!isSequenceRunning && !isConversationRunning) && (
                         <>

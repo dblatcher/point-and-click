@@ -2,15 +2,13 @@ import { RoomContentItem } from "@/components/game/types";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { Point, RoomData } from "@/definitions";
-import { getXShift, getYShift, locateClickInWorld } from "@/lib/roomFunctions";
+import { locateClickInWorld } from "@/lib/roomFunctions";
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { Pin } from "../svg/Pin";
 import Hotspot from "../svg/Room/HotSpot";
-import { obstableClassNames, walkableClassNames } from "../svg/Room/zoneCssClasses";
-import ZoneSvg from "../svg/ZoneSvg";
-import { ViewAngleSlider } from "./RoomEditor/ViewAngleSlider";
 import { WalkableOrObstacle } from "../svg/Room/WalkableOrObstance";
+import { ViewAngleSlider } from "./RoomEditor/ViewAngleSlider";
 
 
 interface Props {
@@ -81,30 +79,31 @@ export const RoomLocationPicker = ({
                     </svg>
                 ))}
             </>}
-        >
-            {obstacleInFocus && (
-                <WalkableOrObstacle
-                    zone={obstacleInFocus}
-                    zoneType="obstacle"
-                    zoneOptions={{ blink: true }}
-                    markVertices={false}
-                />
-            )}
-            {walkableInFocus && (
-                <WalkableOrObstacle
-                    zone={walkableInFocus}
-                    zoneType="walkable"
-                    zoneOptions={{ blink: true }}
-                    markVertices={false}
-                />
-            )}
-            {hotspotInFocus && (
-                <Hotspot
-                    zone={hotspotInFocus}
-                    flash={true}
-                />
-            )}
-        </Room>
+            parallaxContent={<>
+                {obstacleInFocus && (
+                    <WalkableOrObstacle
+                        zone={obstacleInFocus}
+                        zoneType="obstacle"
+                        zoneOptions={{ blink: true }}
+                        markVertices={false}
+                    />
+                )}
+                {walkableInFocus && (
+                    <WalkableOrObstacle
+                        zone={walkableInFocus}
+                        zoneType="walkable"
+                        zoneOptions={{ blink: true }}
+                        markVertices={false}
+                    />
+                )}
+                {hotspotInFocus && (
+                    <Hotspot
+                        zone={hotspotInFocus}
+                        flash={true}
+                    />
+                )}
+            </>}
+        />
         {typeof viewAngleXProp === 'undefined' && (
             <ViewAngleSlider viewAngle={viewAngleXState} setViewAngle={setViewAngleXState} />
         )}

@@ -36,9 +36,8 @@ interface Props {
     noSound?: boolean;
     noMargin?: boolean;
     fontFamily?: string;
-    children?: ReactNode;
+    parallaxContent?: ReactNode;
     surfaceContent?: ReactNode;
-
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -64,7 +63,7 @@ export const Room: FunctionComponent<Props> = ({
     noSound = false,
     noMargin = false,
     fontFamily,
-    children,
+    parallaxContent,
     surfaceContent,
 }: Props) => {
     const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], frameHeight = height } = data;
@@ -105,7 +104,6 @@ export const Room: FunctionComponent<Props> = ({
                 onClick={processRoomClick}
                 onContextMenu={processRoomContextClick}
             >
-                {/* Background layers */}
                 <ParallaxFrame>
                     {background
                         .filter(layer => layer.parallax <= 1)
@@ -115,9 +113,6 @@ export const Room: FunctionComponent<Props> = ({
                     {obstacleCells &&
                         <ObstacleCellOverlay cellMatrix={obstacleCells} />
                     }
-                </ParallaxFrame>
-
-                <ParallaxFrame interactive>
                     {hotspots.map((zone, index) =>
                         <Hotspot key={index}
                             zone={zone}
@@ -147,7 +142,6 @@ export const Room: FunctionComponent<Props> = ({
                     ))}
                 </SurfaceFrame>
 
-                {/* Foreground and overlays*/}
                 <ParallaxFrame>
                     {background
                         .filter(layer => layer.parallax > 1)
@@ -178,9 +172,8 @@ export const Room: FunctionComponent<Props> = ({
                             zoneOptions={{ disabled: zone.disabled }}
                         />
                     })}
+                    {parallaxContent}
                 </ParallaxFrame>
-
-                <ParallaxFrame>{children}</ParallaxFrame>
 
                 <SurfaceFrame>
                     {surfaceContent}
