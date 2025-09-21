@@ -1,19 +1,17 @@
 import { ActorFigure } from "@/components/svg/ActorFigure";
 import { DialogueBubble } from "@/components/svg/DialogueBubble";
-import ZoneSvg from "@/components/svg/ZoneSvg";
+import { RoomRenderContext } from "@/context/room-render-context";
 import { HotspotZone, RoomData } from "@/definitions";
 import { CellMatrix } from "@/lib/pathfinding/cells";
-import { getXShift, getYShift } from "@/lib/roomFunctions";
 import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode } from "react";
 import { HandleHoverFunction, RoomContentItem } from "../../game/types";
 import BackgroundShape from "./BackgroundShape";
 import Hotspot from "./HotSpot";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
-import styles from './styles.module.css';
-import { obstableClassNames, walkableClassNames } from "./zoneCssClasses";
-import { RoomRenderContext } from "@/context/room-render-context";
-import { SurfaceFrame } from "./SurfaceFrame";
 import { ParallaxFrame } from "./ParallaxFrame";
+import styles from './styles.module.css';
+import { SurfaceFrame } from "./SurfaceFrame";
+import { WalkableOrObstacle } from "./WalkableOrObstance";
 
 interface Props {
     data: RoomData;
@@ -94,12 +92,6 @@ export const Room: FunctionComponent<Props> = ({
         backgroundColor: data.backgroundColor,
     }
 
-    const centerX = (frameWidth / 2) + getXShift(viewAngleX, 1, data)
-    const left = centerX - data.width / 2
-
-    const centerY = (frameHeight / 2) + getYShift(viewAngleY, 1, data)
-    const top = centerY - data.height / 2
-
     return (
         <RoomRenderContext.Provider value={{
             roomData: data,
@@ -167,13 +159,11 @@ export const Room: FunctionComponent<Props> = ({
                         if (!renderAllZones && !markWalkableVertices.includes(index)) {
                             return null
                         }
-                        return <ZoneSvg key={index}
-                            className={walkableClassNames({ disabled: zone.disabled })}
-                            stopPropagation={false}
+                        return <WalkableOrObstacle key={index}
                             zone={zone}
-                            x={zone.x + left}
-                            y={data.height - zone.y + top}
                             markVertices={markWalkableVertices.includes(index)}
+                            zoneType="walkable"
+                            zoneOptions={{ disabled: zone.disabled }}
                         />
                     })}
 
@@ -181,13 +171,11 @@ export const Room: FunctionComponent<Props> = ({
                         if (!renderAllZones && !markObstacleVertices.includes(index)) {
                             return null
                         }
-                        return <ZoneSvg key={index}
-                            className={obstableClassNames({ disabled: zone.disabled })}
-                            stopPropagation={false}
+                        return <WalkableOrObstacle key={index}
                             zone={zone}
-                            x={zone.x + left}
-                            y={data.height - zone.y + top}
                             markVertices={markObstacleVertices.includes(index)}
+                            zoneType="obstacle"
+                            zoneOptions={{ disabled: zone.disabled }}
                         />
                     })}
                 </ParallaxFrame>

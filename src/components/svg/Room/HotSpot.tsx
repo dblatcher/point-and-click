@@ -24,19 +24,17 @@ const Hotspot: FunctionComponent<Props> = ({
     const { roomData, viewAngleX, viewAngleY } = useRoomRender()
     const { parallax, x, y } = hotspot
     return (
-        <>
-            <ZoneSvg
-                className={hotpotClassNames({ markVertices, highlight, flash })}
-                x={x + getXShift(viewAngleX, parallax, roomData)}
-                y={roomData.height - y + getYShift(viewAngleY, parallax, roomData)}
-                clickHandler={clickHandler}
-                contextClickHandler={contextClickHandler}
-                stopPropagation={stopPropogation}
-                zone={hotspot}
-                markVertices={markVertices}
-                handleHover={handleHover}
-            />
-        </>
+        <ZoneSvg
+            className={hotpotClassNames({ markVertices, highlight, flash })}
+            x={x + getXShift(viewAngleX, parallax, roomData)}
+            y={roomData.height - y + getYShift(viewAngleY, parallax, roomData)}
+            clickHandler={clickHandler}
+            contextClickHandler={contextClickHandler}
+            stopPropagation={stopPropogation}
+            zone={hotspot}
+            markVertices={markVertices}
+            handleHover={handleHover}
+        />
     )
 }
 export default Hotspot

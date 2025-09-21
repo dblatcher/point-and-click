@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 
-interface ZoneOptions {
+export interface ZoneOptions {
     disabled?: boolean,
     flash?: boolean,
     blink?: boolean,

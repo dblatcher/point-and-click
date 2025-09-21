@@ -10,6 +10,7 @@ import Hotspot from "../svg/Room/HotSpot";
 import { obstableClassNames, walkableClassNames } from "../svg/Room/zoneCssClasses";
 import ZoneSvg from "../svg/ZoneSvg";
 import { ViewAngleSlider } from "./RoomEditor/ViewAngleSlider";
+import { WalkableOrObstacle } from "../svg/Room/WalkableOrObstance";
 
 
 interface Props {
@@ -44,9 +45,6 @@ export const RoomLocationPicker = ({
     const obstacleInFocus = obstacleRefToFocus ? roomData.obstacleAreas?.find(z => z.ref === obstacleRefToFocus) : undefined
     const walkableInFocus = walkableRefToFocus ? roomData.walkableAreas?.find(z => z.ref === walkableRefToFocus) : undefined
     const hotspotInFocus = hotspotIdToFocus ? roomData.hotspots?.find(z => z.id === hotspotIdToFocus) : undefined
-
-    const center = (roomData.frameWidth / 2) + getXShift(viewAngleX, 1, roomData)
-    const left = center - roomData.width / 2
 
     return <Box
         sx={{
@@ -85,21 +83,19 @@ export const RoomLocationPicker = ({
             </>}
         >
             {obstacleInFocus && (
-                <ZoneSvg
-                    className={obstableClassNames({ blink: true })}
-                    stopPropagation={false}
+                <WalkableOrObstacle
                     zone={obstacleInFocus}
-                    x={obstacleInFocus.x + left}
-                    y={roomData.height - obstacleInFocus.y + getYShift(viewAngleY, 1, roomData)}
+                    zoneType="obstacle"
+                    zoneOptions={{ blink: true }}
+                    markVertices={false}
                 />
             )}
             {walkableInFocus && (
-                <ZoneSvg
-                    className={walkableClassNames({ blink: true })}
-                    stopPropagation={false}
+                <WalkableOrObstacle
                     zone={walkableInFocus}
-                    x={walkableInFocus.x + left}
-                    y={roomData.height - walkableInFocus.y}
+                    zoneType="walkable"
+                    zoneOptions={{ blink: true }}
+                    markVertices={false}
                 />
             )}
             {hotspotInFocus && (
