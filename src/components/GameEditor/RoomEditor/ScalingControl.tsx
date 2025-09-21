@@ -124,12 +124,12 @@ export const ScalingControl = ({ room }: Props) => {
                 </EditorBox>
             </Grid>
             <Grid item flex={1}>
-                <div style={{ cursor: 'crosshair' }}>
-                    <Room data={room} noSound
+                <Box style={{ position: 'relative', display:'inline-block' }} component={'section'}>
+                    <Room data={room} noSound noMargin
                         viewAngleX={viewAngleX}
                         viewAngleY={viewAngleY}
                         handleRoomClick={handleClick}
-                        maxHeight={room.height * scale}
+                        maxHeight={(room.frameHeight || room.height) * scale}
                         maxWidth={room.frameWidth * scale}
                         orderedActors={testActor ? [{ data: testActor }] : []}
                         surfaceContent={
@@ -141,10 +141,14 @@ export const ScalingControl = ({ room }: Props) => {
                             ))
                         }
                     />
-                </div>
+                    <Box position={'absolute'} left={0} top={10}>
+                        <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} forY trackLength={((room.frameHeight || room.height) * scale) - 50} />
+                    </Box>
+                    <Box position={'absolute'} right={10} bottom={0}>
+                        <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} trackLength={(room.frameWidth * scale) - 50} />
+                    </Box>
+                </Box>
                 <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-                    <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} />
-                    <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} />
                     <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>

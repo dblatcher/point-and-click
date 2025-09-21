@@ -162,8 +162,9 @@ export class Preview extends Component<Props, State> {
 
                     <Box sx={{
                         position: 'relative',
-                        display: 'inline-block',
+                        display: 'inline-flex',
                     }}>
+                        <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={viewAngleY => this.setState({ viewAngleY })} forY trackLength={'100%'} />
                         <Room data={roomData} noSound noMargin
                             renderAllZones={renderAllZones}
                             maxWidth={maxWidth}
@@ -192,11 +193,15 @@ export class Preview extends Component<Props, State> {
                             </>}
                         />
                     </Box>
+                    <Box sx={{
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        paddingLeft: 20,
+                        paddingRight: 10
+                    }}>
+                        <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={viewAngleX => this.setState({ viewAngleX })} trackLength={'100%'} />
+                    </Box>
                     <Box>
-                        <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={viewAngleX => this.setState({ viewAngleX })} />
-                        <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={viewAngleY => this.setState({ viewAngleY })} />
-                        <Divider />
-
                         <Grid container>
                             <Grid item>
                                 {this.renderCheckBox('Show Obstacles', 'renderAllZones')}
@@ -211,7 +216,6 @@ export class Preview extends Component<Props, State> {
                                 {this.renderCheckBox('Show Actors', 'showRealActors')}
                             </Grid>
                         </Grid>
-
                     </Box>
 
                     {clickEffect && (

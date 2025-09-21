@@ -50,65 +50,91 @@ export const RoomLocationPicker = ({
             position: 'relative',
         }}
     >
-        <Room
-            data={roomData}
-            orderedActors={contents}
-            viewAngleX={viewAngleX}
-            viewAngleY={viewAngleY}
-            renderAllZones={renderAllZones}
-            handleRoomClick={(x, y) => {
-                if (onClick) {
-                    const point = locateClickInWorld(x, y, viewAngleX, viewAngleY, roomData)
-                    onClick({ x: Math.round(point.x), y: Math.round(point.y) })
-                }
-            }}
-            maxWidth={previewWidth}
-            maxHeight={previewHeight}
-            noSound={true}
-            noMargin={true}
-            surfaceContent={<>
-                {targetPoint && (
-                    <MarkerShape {...targetPoint} />
-                )}
-                {subPoints?.map((point, index) => (
-                    <svg key={index}
-                        x={point.x}
-                        y={roomData.height - point.y}
-                        style={{ overflow: 'visible' }}>
-                        <Pin label={(index + 1).toString()} />
-                    </svg>
-                ))}
-            </>}
-            parallaxContent={<>
-                {obstacleInFocus && (
-                    <WalkableOrObstacle
-                        zone={obstacleInFocus}
-                        zoneType="obstacle"
-                        zoneOptions={{ blink: true }}
-                        markVertices={false}
-                    />
-                )}
-                {walkableInFocus && (
-                    <WalkableOrObstacle
-                        zone={walkableInFocus}
-                        zoneType="walkable"
-                        zoneOptions={{ blink: true }}
-                        markVertices={false}
-                    />
-                )}
-                {hotspotInFocus && (
-                    <Hotspot
-                        zone={hotspotInFocus}
-                        flash={true}
-                    />
-                )}
-            </>}
-        />
-        {typeof viewAngleXProp === 'undefined' && (
-            <ViewAngleSlider viewAngle={viewAngleXState} setViewAngle={setViewAngleXState} />
-        )}
-        {typeof viewAngleYProp === 'undefined' && (
-            <ViewAngleSlider viewAngle={viewAngleYState} setViewAngle={setViewAngleYState} />
-        )}
+        <section style={{ position: 'relative', display: 'inline-block' }}>
+
+
+            <Room
+                data={roomData}
+                orderedActors={contents}
+                viewAngleX={viewAngleX}
+                viewAngleY={viewAngleY}
+                renderAllZones={renderAllZones}
+                handleRoomClick={(x, y) => {
+                    if (onClick) {
+                        const point = locateClickInWorld(x, y, viewAngleX, viewAngleY, roomData)
+                        onClick({ x: Math.round(point.x), y: Math.round(point.y) })
+                    }
+                }}
+                maxWidth={previewWidth}
+                maxHeight={previewHeight}
+                noSound={true}
+                noMargin={true}
+                surfaceContent={<>
+                    {targetPoint && (
+                        <MarkerShape {...targetPoint} />
+                    )}
+                    {subPoints?.map((point, index) => (
+                        <svg key={index}
+                            x={point.x}
+                            y={roomData.height - point.y}
+                            style={{ overflow: 'visible' }}>
+                            <Pin label={(index + 1).toString()} />
+                        </svg>
+                    ))}
+                </>}
+                parallaxContent={<>
+                    {obstacleInFocus && (
+                        <WalkableOrObstacle
+                            zone={obstacleInFocus}
+                            zoneType="obstacle"
+                            zoneOptions={{ blink: true }}
+                            markVertices={false}
+                        />
+                    )}
+                    {walkableInFocus && (
+                        <WalkableOrObstacle
+                            zone={walkableInFocus}
+                            zoneType="walkable"
+                            zoneOptions={{ blink: true }}
+                            markVertices={false}
+                        />
+                    )}
+                    {hotspotInFocus && (
+                        <Hotspot
+                            zone={hotspotInFocus}
+                            flash={true}
+                        />
+                    )}
+                </>}
+            />
+            {typeof viewAngleXProp === 'undefined' && (
+                <ViewAngleSlider viewAngle={viewAngleXState} setViewAngle={setViewAngleXState} trackLength={'100%'}
+                    boxProps={{
+                        sx: {
+                            position: 'absolute',
+                            right: 10,
+                            bottom: 0,
+                            paddingLeft: 20,
+                            boxSizing: 'border-box',
+                            width: '100%'
+                        }
+                    }}
+                />
+            )}
+            {typeof viewAngleYProp === 'undefined' && (
+                <ViewAngleSlider viewAngle={viewAngleYState} setViewAngle={setViewAngleYState} forY trackLength={'100%'}
+                    boxProps={{
+                        sx: {
+                            position: 'absolute',
+                            left: 0,
+                            top: 10,
+                            paddingBottom: 20,
+                            boxSizing: 'border-box',
+                            height: '100%'
+                        }
+                    }}
+                />
+            )}
+        </section>
     </Box>
 }

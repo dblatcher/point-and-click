@@ -1,4 +1,4 @@
-import { Stack, StackProps, Typography, TypographyProps } from "@mui/material";
+import { Slider, Stack, StackProps, Typography, TypographyProps } from "@mui/material";
 import { ChangeEventHandler } from "react";
 
 

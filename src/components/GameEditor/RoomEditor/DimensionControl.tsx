@@ -72,10 +72,10 @@ export const DimensionControl = ({ room }: Props) => {
                     inputHandler={(frameHeight) => { updateRoom({ frameHeight }) }} />
             </LeftGridCell>
             <RightGridCell>
-                <Box 
-                    bgcolor={room.backgroundColor ?? 'white'} 
-                    width={room.width * scale} 
-                    height={(room.height) * scale} 
+                <Box
+                    bgcolor={room.backgroundColor ?? 'white'}
+                    width={room.width * scale}
+                    height={(room.height) * scale}
                     position={'relative'}
                     overflow={'clip'}
                 >
@@ -96,19 +96,21 @@ export const DimensionControl = ({ room }: Props) => {
                             maxWidth={room.frameWidth * scale}
                         />
                     </Box>
+
+                    <Box position={'absolute'} left={0} top={10}>
+                        <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} forY trackLength={(room.height * scale)-50}/>
+                    </Box>
+
+                    <Box position={'absolute'} right={10} bottom={0}>
+                        <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} trackLength={(room.width * scale)-50}/>
+                    </Box>
                 </Box>
             </RightGridCell>
         </Grid>
 
-        <Grid> 
+        <Grid>
             <LeftGridCell />
             <RightGridCell>
-                <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
-                    X: <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} />
-                </Box>
-                <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
-                    Y:  <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} />
-                </Box>
                 <Box width={room.width * scale} display={'flex'} justifyContent={'center'}>
                     <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={2} min={.5} step={.05} />
