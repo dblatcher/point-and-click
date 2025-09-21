@@ -4,7 +4,7 @@ import { findById } from "@/lib/util";
 import React from "react";
 import { PersistentSound } from "../sound/PersistentSound";
 import { Room } from "../svg/Room";
-import { buildContentsList } from "./put-contents-in-order";
+import { buildActorListSortedForDisplay } from "./put-contents-in-order";
 
 
 interface Props {
@@ -24,7 +24,7 @@ export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, ren
 
     const handleRoomClick = noInteraction ? () => { } : (x: number, y: number) => { updateGameState({ type: 'ROOM-CLICK', x, y }) };
 
-    const contentList = buildContentsList(
+    const orderedActors = buildActorListSortedForDisplay(
         gameState,
         handleTargetClick
     )
@@ -43,7 +43,7 @@ export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, ren
                 handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
                     updateGameState({ type: 'HANDLE-HOVER', event, target })
                 }}
-                contents={contentList}
+                orderedActors={orderedActors}
                 obstacleCells={renderCells ? gameState.cellMatrix : undefined}
             />
         )}

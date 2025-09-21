@@ -4,7 +4,7 @@ import { RoomRenderContext } from "@/context/room-render-context";
 import { HotspotZone, RoomData } from "@/definitions";
 import { CellMatrix } from "@/lib/pathfinding/cells";
 import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode } from "react";
-import { HandleHoverFunction, RoomContentItem } from "../../game/types";
+import { HandleHoverFunction, ActorWithOrdersAndClickHandlers } from "../../game/types";
 import BackgroundShape from "./BackgroundShape";
 import Hotspot from "./HotSpot";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
@@ -32,7 +32,7 @@ interface Props {
     markWalkableVertices?: number[];
     showCaption?: boolean;
     isPaused?: boolean;
-    contents?: RoomContentItem[];
+    orderedActors?: ActorWithOrdersAndClickHandlers[];
     noSound?: boolean;
     noMargin?: boolean;
     fontFamily?: string;
@@ -51,7 +51,7 @@ export const Room: FunctionComponent<Props> = ({
     handleHotspotClick,
     handleHotspotContextClick,
     handleHover,
-    renderAllZones: renderAllZones,
+    renderAllZones,
     highlightHotspots,
     obstacleCells,
     markHotspotVertices = [],
@@ -59,7 +59,7 @@ export const Room: FunctionComponent<Props> = ({
     markWalkableVertices = [],
     showCaption = false,
     isPaused = false,
-    contents = [],
+    orderedActors = [],
     noSound = false,
     noMargin = false,
     fontFamily,
@@ -127,7 +127,7 @@ export const Room: FunctionComponent<Props> = ({
                 </ParallaxFrame>
 
                 <SurfaceFrame>
-                    {contents.map(entry => (
+                    {orderedActors.map(entry => (
                         <ActorFigure key={entry.data.id}
                             isPaused={isPaused}
                             noSound={noSound}
@@ -177,7 +177,7 @@ export const Room: FunctionComponent<Props> = ({
 
                 <SurfaceFrame>
                     {surfaceContent}
-                    {contents.map(entry => (
+                    {orderedActors.map(entry => (
                         <DialogueBubble key={entry.data.id}
                             actorData={entry.data}
                             orders={entry.orders || []}

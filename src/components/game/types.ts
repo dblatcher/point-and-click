@@ -18,7 +18,7 @@ export type GameProps = Readonly<{
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
 export type HandleClickFunction<T extends CommandTarget> = { (target: T, event: PointerEvent): void };
-export type RoomContentItem = {
+export type ActorWithOrdersAndClickHandlers = {
     data: ActorData;
     orders?: Order[];
     clickHandler?: HandleClickFunction<ActorData>;

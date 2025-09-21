@@ -135,7 +135,7 @@ export class Preview extends Component<Props, State> {
             }
         }
 
-        const contents = showRealActors
+        const actorsInRoom = showRealActors
             ? actors
                 .filter(actor => actor.room === roomData.id)
                 .sort(putActorsInDisplayOrder)
@@ -170,7 +170,7 @@ export class Preview extends Component<Props, State> {
                             maxHeight={Math.min(roomData.height * 2, 600)}
                             viewAngleX={viewAngleX}
                             viewAngleY={viewAngleY}
-                            contents={contents}
+                            orderedActors={actorsInRoom}
                             handleRoomClick={processClick}
                             highlightHotspots={highlightHotspots}
                             markHotspotVertices={this.hotspotsToMark}

@@ -1,22 +1,22 @@
 import { CommandTarget, GameDesign } from "@/definitions";
 import { GameState } from "@/lib/game-state-logic/types";
 import { putActorsInDisplayOrder } from "@/lib/roomFunctions";
-import { HandleClickFunction, RoomContentItem } from "./types";
+import { HandleClickFunction, ActorWithOrdersAndClickHandlers } from "./types";
 
-export const buildContentsList = (
+export const buildActorListSortedForDisplay = (
     state: GameState,
     clickHandler: HandleClickFunction<CommandTarget>,
     contextClickHandler?: HandleClickFunction<CommandTarget>
-): RoomContentItem[] => {
+): ActorWithOrdersAndClickHandlers[] => {
     const { actors, actorOrders, sequenceRunning, rooms, currentRoomId } = state
     const currentRoom = rooms.find(_ => _.id === currentRoomId)
     const actorOrderMap = sequenceRunning ? sequenceRunning.stages[0].actorOrders || {} : actorOrders;
 
-    const actorsInOrder = actors
+    const actorsInDisplayOrder = actors
         .filter(_ => _.room === currentRoom?.id)
         .sort(putActorsInDisplayOrder)
 
-    return actorsInOrder.map(data => ({
+    return actorsInDisplayOrder.map(data => ({
         data,
         orders: actorOrderMap[data.id],
         clickHandler: (data.isPlayer || data.noInteraction) ? undefined : clickHandler,
@@ -24,7 +24,7 @@ export const buildContentsList = (
     }))
 }
 
-export const buildContentForRoomInDesign = (roomId:string, gameDesign:GameDesign): RoomContentItem[] => {
+export const buildContentForRoomInDesign = (roomId:string, gameDesign:GameDesign): ActorWithOrdersAndClickHandlers[] => {
     const { actors } = gameDesign
     const actorsInOrder = actors
         .filter(_ => _.room === roomId)

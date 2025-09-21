@@ -1,4 +1,4 @@
-import { RoomContentItem } from "@/components/game/types";
+import { ActorWithOrdersAndClickHandlers } from "@/components/game/types";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { Point, RoomData } from "@/definitions";
@@ -13,7 +13,7 @@ import { ViewAngleSlider } from "./RoomEditor/ViewAngleSlider";
 
 interface Props {
     roomData: RoomData,
-    contents?: RoomContentItem[],
+    contents?: ActorWithOrdersAndClickHandlers[],
     targetPoint?: Point,
     subPoints?: Point[],
     viewAngleX?: number,
@@ -52,7 +52,7 @@ export const RoomLocationPicker = ({
     >
         <Room
             data={roomData}
-            contents={contents}
+            orderedActors={contents}
             viewAngleX={viewAngleX}
             viewAngleY={viewAngleY}
             renderAllZones={renderAllZones}

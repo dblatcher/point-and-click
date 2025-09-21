@@ -6,7 +6,7 @@ import { calculateScreenX } from "@/lib/roomFunctions";
 import { clamp, findById } from "@/lib/util";
 import { Box, Button } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { buildContentsList } from "../game/put-contents-in-order";
+import { buildActorListSortedForDisplay } from "../game/put-contents-in-order";
 import { ResizeWatcher } from "../ResizeWatcher";
 import { ParallaxPlace, ParallaxPlaceProps } from "../svg/ParallaxPlace";
 import { Room } from "../svg/Room";
@@ -94,7 +94,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     }
 
     const containerRef = useRef<HTMLDivElement>(null)
-    const contentList = buildContentsList(
+    const orderedActors = buildActorListSortedForDisplay(
         gameState,
         handleTargetClick,
         performDefaultInteraction,
@@ -140,7 +140,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                         handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
                             updateGameState({ type: 'HANDLE-HOVER', event, target })
                         }}
-                        contents={contentList}
+                        orderedActors={orderedActors}
                         obstacleCells={renderCells ? gameState.cellMatrix : undefined}
                         parallaxContent={
                             (hoverPlaceProps && hoverTargetInRoom) && (

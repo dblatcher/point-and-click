@@ -131,8 +131,7 @@ export const ScalingControl = ({ room }: Props) => {
                         handleRoomClick={handleClick}
                         maxHeight={room.height * scale}
                         maxWidth={room.frameWidth * scale}
-                        contents={testActor ? [{ data: testActor }] : []}
-
+                        orderedActors={testActor ? [{ data: testActor }] : []}
                         surfaceContent={
                             scaling.map((yAndScale, index) => (
                                 <HorizontalLine key={index}
