@@ -4,24 +4,11 @@ import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { ActorData, HotspotZone, RoomData, ZoneType } from "@/definitions";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
-import { eventToBoolean } from "@/lib/util";
 import { Box, Checkbox, Grid, Stack, Typography } from "@mui/material";
-import { ChangeEventHandler, Component } from "react";
+import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { ViewAngleSlider } from "./ViewAngleSlider";
 
-type BooleanState = {
-    renderAllZones: boolean;
-    highlightHotspots: boolean;
-    showScaleLines: boolean;
-    showRealActors: boolean;
-}
-
-type State = BooleanState & {
-    viewAngleX: number;
-    viewAngleY: number;
-    maxWidth: number;
-};
 
 type Props = {
     roomData: RoomData;
@@ -60,164 +47,154 @@ const getHotspotMarkerLabel = (hotspot: HotspotZone | undefined, roomData: RoomD
 
 type PreviewCheckboxProps = {
     label: string;
-    propery: keyof BooleanState
     value: boolean;
     setValue: {
-        (propery: keyof BooleanState, value: boolean): void
+        (value: boolean): void
     }
 }
-const PreviewCheckbox = ({ label, propery, value, setValue }: PreviewCheckboxProps) => {
+const PreviewCheckbox = ({ label, value, setValue }: PreviewCheckboxProps) => {
     return (
         <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
             <Typography component={'label'} variant="body2">{label}</Typography>
             <Checkbox checked={value} onChange={(_, value) => {
-                setValue(propery, value)
+                setValue(value)
             }} size="small" />
         </Stack>
     )
 }
 
 
+export const Preview = ({
+    roomData,
+    handleRoomClick,
+    clickEffect,
+    actors,
+    activeZoneIndex,
+    zoneType
+}: Props) => {
+    const [viewAngleX, setViewAngleX] = useState(0);
+    const [viewAngleY, setViewAngleY] = useState(0);
+    const [maxWidth, setMaxWidth] = useState(500);
+    const [renderAllZones, setRenderAllZones] = useState(false);
+    const [highlightHotspots, setHighlightHotspots] = useState(false);
+    const [showScaleLines, setShowScaleLines] = useState(false);
+    const [showRealActors, setShowRealActors] = useState(true);
 
-export class Preview extends Component<Props, State> {
+    const { scaling = [] } = roomData
 
-    constructor(props: Props) {
-        super(props)
-        this.state = {
-            viewAngleX: 0,
-            viewAngleY: 0,
-            maxWidth: 500,
-            renderAllZones: false,
-            highlightHotspots: false,
-            showScaleLines: false,
-            showRealActors: true,
+    const processClick = (x: number, y: number) => {
+        if (clickEffect) {
+            handleRoomClick({ x, y }, viewAngleX, viewAngleY, clickEffect)
         }
     }
 
-    render() {
-        const {
-            viewAngleX, viewAngleY, maxWidth, renderAllZones, highlightHotspots,
-            showRealActors, showScaleLines,
-        } = this.state
-        const { roomData, handleRoomClick, clickEffect, actors, activeZoneIndex, zoneType } = this.props
-        const { scaling = [] } = roomData
+    const actorsInRoom = showRealActors
+        ? actors
+            .filter(actor => actor.room === roomData.id)
+            .sort(putActorsInDisplayOrder)
+            .map(actor => ({ data: actor }))
+        : []
 
-        const processClick = (x: number, y: number) => {
-            if (clickEffect) {
-                handleRoomClick({ x, y }, viewAngleX, viewAngleY, clickEffect)
+    const hotspotToHaveMarkWalkToPoint = zoneType === 'hotspot' && typeof activeZoneIndex === 'number' ? roomData.hotspots?.[activeZoneIndex] : undefined
+
+
+    return (
+        <ResizeWatcher resizeHandler={() => {
+            const container = document.querySelector('.iwillreplacewitharef')
+            if (container) {
+                setMaxWidth(container.clientWidth - 50)
             }
-        }
-
-        const actorsInRoom = showRealActors
-            ? actors
-                .filter(actor => actor.room === roomData.id)
-                .sort(putActorsInDisplayOrder)
-                .map(actor => ({ data: actor }))
-            : []
-
-        const hotspotToHaveMarkWalkToPoint = zoneType === 'hotspot' && typeof activeZoneIndex === 'number' ? roomData.hotspots?.[activeZoneIndex] : undefined
-
-        const setBoolean = (propery: keyof BooleanState, value: boolean) => {
-            this.setState(state => ({ ...state, [propery]: value }))
-        }
-
-        return (
-            <ResizeWatcher resizeHandler={() => {
-                const container = document.querySelector('.iwillreplacewitharef')
-                if (container) {
-                    this.setState({ maxWidth: container.clientWidth - 50 })
-                }
-            }}>
-                <Box className="iwillreplacewitharef"
-                    display={'flex'}
-                    flexDirection={'column'}
-                    justifyContent={'flex-end'}
-                    alignItems={'center'}
-                    flexBasis={'100%'}
-                    position={'relative'}
-                    boxSizing={'border-box'}
-                    padding={1}
-                >
-                    <Box sx={{
-                        position: 'relative',
-                        display: 'inline-flex',
-                    }}>
-                        <ViewAngleSlider viewAngle={viewAngleY}
-                            disabled={roomData.height === roomData.frameHeight}
-                            setViewAngle={viewAngleY => this.setState({ viewAngleY })}
-                            forY
-                            trackLength={'100%'} />
-                        <Room data={roomData} noSound noMargin
-                            renderAllZones={renderAllZones}
-                            maxWidth={maxWidth}
-                            maxHeight={Math.min(roomData.height * 2, 600)}
-                            viewAngleX={viewAngleX}
-                            viewAngleY={viewAngleY}
-                            orderedActors={actorsInRoom}
-                            handleRoomClick={processClick}
-                            highlightHotspots={highlightHotspots}
-                            hotspotIndexToMark={zoneType === 'hotspot' ? activeZoneIndex : undefined}
-                            obstacleIndexToMark={zoneType === 'obstacle' ? activeZoneIndex : undefined}
-                            walkableIndexToMark={zoneType === 'walkable' ? activeZoneIndex : undefined}
-                            surfaceContent={<>
-                                {showScaleLines && scaling.map((yAndScale, index) => (
-                                    <HorizontalLine key={index}
-                                        y={yAndScale[0]}
-                                        text={`scale: ${yAndScale[1]}`}
-                                    />
-                                ))}
-                                {hotspotToHaveMarkWalkToPoint && (
-                                    <MarkerShape
-                                        text={getHotspotMarkerLabel(hotspotToHaveMarkWalkToPoint, roomData)}
-                                        {...getTargetPoint(hotspotToHaveMarkWalkToPoint, roomData)}
-                                    />
-                                )}
-                            </>}
-                        />
-                    </Box>
-                    <Box sx={{
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        paddingLeft: 20,
-                        paddingRight: 10
-                    }}>
-                        <ViewAngleSlider viewAngle={viewAngleX}
-                            setViewAngle={viewAngleX => this.setState({ viewAngleX })}
-                            disabled={roomData.width === roomData.frameWidth}
-                            trackLength={'100%'} />
-                    </Box>
-                    <Box>
-                        <Grid container>
-                            <Grid item>
-                                <PreviewCheckbox label="Show Obstacles" propery="renderAllZones" value={this.state.renderAllZones} setValue={setBoolean} />
-                            </Grid>
-                            <Grid item>
-                                <PreviewCheckbox label="Show hotspots" propery="highlightHotspots" value={this.state.highlightHotspots} setValue={setBoolean} />
-                            </Grid>
-                            <Grid item>
-                                <PreviewCheckbox label="Show Scale lines" propery="showScaleLines" value={this.state.showScaleLines} setValue={setBoolean} />
-                            </Grid>
-                            <Grid item>
-                                <PreviewCheckbox label="Show Actors" propery="showRealActors" value={this.state.showRealActors} setValue={setBoolean} />
-                            </Grid>
-                        </Grid>
-                    </Box>
-
-                    {clickEffect && (
-                        <Typography
-                            variant='overline'
-                            padding={1}
-                            sx={{
-                                position: 'absolute',
-                                right: 0, top: 0,
-                                color: 'white',
-                                backgroundColor: 'rgba(0,0,0,.5)'
-                            }}>{getClickCaption(clickEffect)}</Typography>
-                    )}
+        }}>
+            <Box className="iwillreplacewitharef"
+                display={'flex'}
+                flexDirection={'column'}
+                justifyContent={'flex-end'}
+                alignItems={'center'}
+                flexBasis={'100%'}
+                position={'relative'}
+                boxSizing={'border-box'}
+                padding={1}
+            >
+                <Box sx={{
+                    position: 'relative',
+                    display: 'inline-flex',
+                }}>
+                    <ViewAngleSlider viewAngle={viewAngleY}
+                        disabled={roomData.height === roomData.frameHeight}
+                        setViewAngle={setViewAngleY}
+                        forY
+                        trackLength={'100%'} />
+                    <Room data={roomData} noSound noMargin
+                        renderAllZones={renderAllZones}
+                        maxWidth={maxWidth}
+                        maxHeight={Math.min(roomData.height * 2, 600)}
+                        viewAngleX={viewAngleX}
+                        viewAngleY={viewAngleY}
+                        orderedActors={actorsInRoom}
+                        handleRoomClick={processClick}
+                        highlightHotspots={highlightHotspots}
+                        hotspotIndexToMark={zoneType === 'hotspot' ? activeZoneIndex : undefined}
+                        obstacleIndexToMark={zoneType === 'obstacle' ? activeZoneIndex : undefined}
+                        walkableIndexToMark={zoneType === 'walkable' ? activeZoneIndex : undefined}
+                        surfaceContent={<>
+                            {showScaleLines && scaling.map((yAndScale, index) => (
+                                <HorizontalLine key={index}
+                                    y={yAndScale[0]}
+                                    text={`scale: ${yAndScale[1]}`}
+                                />
+                            ))}
+                            {hotspotToHaveMarkWalkToPoint && (
+                                <MarkerShape
+                                    text={getHotspotMarkerLabel(hotspotToHaveMarkWalkToPoint, roomData)}
+                                    {...getTargetPoint(hotspotToHaveMarkWalkToPoint, roomData)}
+                                />
+                            )}
+                        </>}
+                    />
                 </Box>
-            </ResizeWatcher>
-        )
-    }
+                <Box sx={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    paddingLeft: 20,
+                    paddingRight: 10
+                }}>
+                    <ViewAngleSlider viewAngle={viewAngleX}
+                        setViewAngle={setViewAngleX}
+                        disabled={roomData.width === roomData.frameWidth}
+                        trackLength={'100%'} />
+                </Box>
+                <Box>
+                    <Grid container>
+                        <Grid item>
+                            <PreviewCheckbox label="Show Obstacles"  value={renderAllZones} setValue={setRenderAllZones} />
+                        </Grid>
+                        <Grid item>
+                            <PreviewCheckbox label="Show hotspots"  value={highlightHotspots} setValue={setHighlightHotspots} />
+                        </Grid>
+                        <Grid item>
+                            <PreviewCheckbox label="Show Scale lines" value={showScaleLines} setValue={setShowScaleLines} />
+                        </Grid>
+                        <Grid item>
+                            <PreviewCheckbox label="Show Actors" value={showRealActors} setValue={setShowRealActors} />
+                        </Grid>
+                    </Grid>
+                </Box>
+
+                {clickEffect && (
+                    <Typography
+                        variant='overline'
+                        padding={1}
+                        sx={{
+                            position: 'absolute',
+                            right: 0, top: 0,
+                            color: 'white',
+                            backgroundColor: 'rgba(0,0,0,.5)'
+                        }}>{getClickCaption(clickEffect)}</Typography>
+                )}
+            </Box>
+        </ResizeWatcher>
+    )
 }
+
 
 
