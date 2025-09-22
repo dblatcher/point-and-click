@@ -13,19 +13,10 @@ interface Props {
 
 export const WalkableOrObstacle = ({ zone, markVertices, zoneType, zoneOptions }: Props) => {
     const { roomData, surfaceXOffcenter, surfaceYOffcenter } = useRoomRender()
+    const className = zoneType === 'walkable' ? walkableClassNames(zoneOptions) : obstableClassNames(zoneOptions);
 
-    if (zoneType === 'walkable') {
-        return <ZoneSvg
-            className={walkableClassNames(zoneOptions)}
-            stopPropagation={false}
-            zone={zone}
-            x={zone.x + surfaceXOffcenter}
-            y={roomData.height - zone.y + surfaceYOffcenter}
-            markVertices={markVertices}
-        />
-    }
     return <ZoneSvg
-        className={obstableClassNames(zoneOptions)}
+        className={className}
         stopPropagation={false}
         zone={zone}
         x={zone.x + surfaceXOffcenter}
