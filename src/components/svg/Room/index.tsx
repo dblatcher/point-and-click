@@ -27,9 +27,9 @@ interface Props {
     renderAllZones?: boolean;
     highlightHotspots?: boolean;
     obstacleCells?: CellMatrix;
-    markHotspotVertices?: number[];
-    markObstacleVertices?: number[];
-    markWalkableVertices?: number[];
+    hotspotIndexToMark?: number;
+    obstacleIndexToMark?: number;
+    walkableIndexToMark?: number;
     showCaption?: boolean;
     isPaused?: boolean;
     orderedActors?: ActorWithOrdersAndClickHandlers[];
@@ -54,9 +54,9 @@ export const Room: FunctionComponent<Props> = ({
     renderAllZones,
     highlightHotspots,
     obstacleCells,
-    markHotspotVertices = [],
-    markObstacleVertices = [],
-    markWalkableVertices = [],
+    hotspotIndexToMark,
+    obstacleIndexToMark,
+    walkableIndexToMark,
     showCaption = false,
     isPaused = false,
     orderedActors = [],
@@ -121,7 +121,7 @@ export const Room: FunctionComponent<Props> = ({
                             contextClickHandler={handleHotspotContextClick}
                             stopPropogation={!!handleHotspotClick}
                             handleHover={handleHover}
-                            markVertices={markHotspotVertices.includes(index)}
+                            markVertices={hotspotIndexToMark === index}
                         />
                     )}
                 </ParallaxFrame>
@@ -150,24 +150,24 @@ export const Room: FunctionComponent<Props> = ({
                         )}
 
                     {walkableAreas.map((zone, index) => {
-                        if (!renderAllZones && !markWalkableVertices.includes(index)) {
+                        if (!renderAllZones && walkableIndexToMark !== index) {
                             return null
                         }
                         return <WalkableOrObstacle key={index}
                             zone={zone}
-                            markVertices={markWalkableVertices.includes(index)}
+                            markVertices={walkableIndexToMark == index}
                             zoneType="walkable"
                             zoneOptions={{ disabled: zone.disabled }}
                         />
                     })}
 
                     {obstacleAreas.map((zone, index) => {
-                        if (!renderAllZones && !markObstacleVertices.includes(index)) {
+                        if (!renderAllZones && obstacleIndexToMark !== index) {
                             return null
                         }
                         return <WalkableOrObstacle key={index}
                             zone={zone}
-                            markVertices={markObstacleVertices.includes(index)}
+                            markVertices={obstacleIndexToMark === index}
                             zoneType="obstacle"
                             zoneOptions={{ disabled: zone.disabled }}
                         />
