@@ -12,9 +12,8 @@ interface Props {
     y: number;
     className?: string;
     stopPropagation?: boolean;
-    // HotspotZone is a subtype of Zone but not assignable to Zone or (Zone|HotspotZone)
-    clickHandler?: HandleClickFunction<any>;
-    contextClickHandler?: HandleClickFunction<any>;
+    clickHandler?: HandleClickFunction<HotspotZone>;
+    contextClickHandler?: HandleClickFunction<HotspotZone>;
     handleHover?: HandleHoverFunction;
     markVertices?: boolean;
 }
@@ -24,11 +23,12 @@ const ZoneSvg: FunctionComponent<Props> = ({
     markVertices = false,
     clickHandler, contextClickHandler, handleHover,
 }: Props) => {
-    const { path, circle, rect, polygon } = zone
+    const { path, circle, rect, polygon, type } = zone
+    const hotspot = zone.type === 'hotspot' ? zone as HotspotZone : undefined;
 
     const processClick: MouseEventHandler<SVGElement> = (event) => {
         if (stopPropagation) { event.stopPropagation() }
-        if (clickHandler) { clickHandler(zone, event.nativeEvent as PointerEvent) }
+        if (clickHandler && hotspot) { clickHandler(hotspot, event.nativeEvent as PointerEvent) }
     }
 
     const processContextClick: MouseEventHandler<SVGElement> = (event) => {
@@ -36,12 +36,12 @@ const ZoneSvg: FunctionComponent<Props> = ({
         if (contextClickHandler) {
             event.preventDefault()
         }
-        if (contextClickHandler) { contextClickHandler(zone, event.nativeEvent as PointerEvent) }
+        if (contextClickHandler && hotspot) { contextClickHandler(hotspot, event.nativeEvent as PointerEvent) }
     }
 
-    const shouldReportHover = handleHover && zone.type === 'hotspot';
-    const onMouseEnter = shouldReportHover ? () => { handleHover(zone as HotspotZone, 'enter') } : undefined
-    const onMouseLeave = shouldReportHover ? () => { handleHover(zone as HotspotZone, 'leave') } : undefined
+    const shouldReportHover = !!(hotspot && handleHover);
+    const onMouseEnter = shouldReportHover ? () => { handleHover(hotspot, 'enter') } : undefined
+    const onMouseLeave = shouldReportHover ? () => { handleHover(hotspot, 'leave') } : undefined
 
     return (
         <svg x={x} y={y} style={{ overflow: 'visible' }}
