@@ -58,6 +58,27 @@ const getHotspotMarkerLabel = (hotspot: HotspotZone | undefined, roomData: RoomD
     return `${id}:[${x}, ${y}]`
 }
 
+type PreviewCheckboxProps = {
+    label: string;
+    propery: keyof BooleanState
+    value: boolean;
+    setValue: {
+        (propery: keyof BooleanState, value: boolean): void
+    }
+}
+const PreviewCheckbox = ({ label, propery, value, setValue }: PreviewCheckboxProps) => {
+    return (
+        <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+            <Typography component={'label'} variant="body2">{label}</Typography>
+            <Checkbox checked={value} onChange={(_, value) => {
+                setValue(propery, value)
+            }} size="small" />
+        </Stack>
+    )
+}
+
+
+
 export class Preview extends Component<Props, State> {
 
     constructor(props: Props) {
@@ -72,22 +93,6 @@ export class Preview extends Component<Props, State> {
             showRealActors: true,
         }
     }
-
-    renderCheckBox(label: string, propery: keyof BooleanState) {
-        const { state } = this
-        const setValue: ChangeEventHandler<HTMLInputElement> = (event) => {
-            const mod: Partial<BooleanState> = {}
-            mod[propery] = eventToBoolean(event.nativeEvent);
-            this.setState({ ...state, ...mod })
-        }
-        return (
-            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                <Typography component={'label'} variant="body2">{label}</Typography>
-                <Checkbox checked={!!state[propery]} onChange={setValue} size="small" />
-            </Stack>
-        )
-    }
-
 
     render() {
         const {
@@ -111,6 +116,10 @@ export class Preview extends Component<Props, State> {
             : []
 
         const hotspotToHaveMarkWalkToPoint = zoneType === 'hotspot' && typeof activeZoneIndex === 'number' ? roomData.hotspots?.[activeZoneIndex] : undefined
+
+        const setBoolean = (propery: keyof BooleanState, value: boolean) => {
+            this.setState(state => ({ ...state, [propery]: value }))
+        }
 
         return (
             <ResizeWatcher resizeHandler={() => {
@@ -180,16 +189,16 @@ export class Preview extends Component<Props, State> {
                     <Box>
                         <Grid container>
                             <Grid item>
-                                {this.renderCheckBox('Show Obstacles', 'renderAllZones')}
+                                <PreviewCheckbox label="Show Obstacles" propery="renderAllZones" value={this.state.renderAllZones} setValue={setBoolean} />
                             </Grid>
                             <Grid item>
-                                {this.renderCheckBox('Show hotspots', 'highlightHotspots')}
+                                <PreviewCheckbox label="Show hotspots" propery="highlightHotspots" value={this.state.highlightHotspots} setValue={setBoolean} />
                             </Grid>
                             <Grid item>
-                                {this.renderCheckBox('Show Scale lines', 'showScaleLines')}
+                                <PreviewCheckbox label="Show Scale lines" propery="showScaleLines" value={this.state.showScaleLines} setValue={setBoolean} />
                             </Grid>
                             <Grid item>
-                                {this.renderCheckBox('Show Actors', 'showRealActors')}
+                                <PreviewCheckbox label="Show Actors" propery="showRealActors" value={this.state.showRealActors} setValue={setBoolean} />
                             </Grid>
                         </Grid>
                     </Box>
