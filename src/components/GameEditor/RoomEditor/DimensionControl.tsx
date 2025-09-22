@@ -47,7 +47,7 @@ export const DimensionControl = ({ room }: Props) => {
     return <Box minWidth={300} width={room.width * scale * (12 / 10)} padding={2}>
         <Grid container>
             <LeftGridCell >
-                  <Box>
+                <Box>
                     <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>
@@ -82,7 +82,6 @@ export const DimensionControl = ({ room }: Props) => {
                     width={room.width * scale}
                     height={(room.height) * scale}
                     position={'relative'}
-                    overflow={'clip'}
                 >
                     {room.background.map((layer, index) => <BackDrop key={index} roomData={room} layer={layer} filter='saturate(.15) brightness(.4)' />)}
                     <Box
@@ -102,13 +101,30 @@ export const DimensionControl = ({ room }: Props) => {
                         />
                     </Box>
 
-                    <Box position={'absolute'} left={0} top={10}>
-                        <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} forY trackLength={(room.height * scale) - 50} />
-                    </Box>
+                    <ViewAngleSlider
+                        viewAngle={viewAngleY}
+                        setViewAngle={setViewAngleY}
+                        trackLength={(room.height * scale) - 50}
+                        boxProps={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 10
+                        }}
+                        disabled={room.height === room.frameHeight}
+                        forY
+                    />
 
-                    <Box position={'absolute'} right={10} bottom={0}>
-                        <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} trackLength={(room.width * scale) - 50} />
-                    </Box>
+                    <ViewAngleSlider
+                        viewAngle={viewAngleX}
+                        setViewAngle={setViewAngleX}
+                        trackLength={(room.width * scale) - 50}
+                        boxProps={{
+                            position: 'absolute',
+                            right: 10,
+                            bottom: 0,
+                        }}
+                        disabled={room.width === room.frameWidth}
+                    />
                 </Box>
             </RightGridCell>
         </Grid>

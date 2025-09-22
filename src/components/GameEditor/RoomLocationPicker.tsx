@@ -109,7 +109,8 @@ export const RoomLocationPicker = ({
             />
             {typeof viewAngleXProp === 'undefined' && (
                 <ViewAngleSlider viewAngle={viewAngleXState} setViewAngle={setViewAngleXState} trackLength={'100%'}
-                    boxProps={{
+                disabled={roomData.width === roomData.frameWidth}
+                boxProps={{
                         sx: {
                             position: 'absolute',
                             right: 10,
@@ -123,6 +124,7 @@ export const RoomLocationPicker = ({
             )}
             {typeof viewAngleYProp === 'undefined' && (
                 <ViewAngleSlider viewAngle={viewAngleYState} setViewAngle={setViewAngleYState} forY trackLength={'100%'}
+                    disabled={roomData.height === roomData.frameHeight}
                     boxProps={{
                         sx: {
                             position: 'absolute',

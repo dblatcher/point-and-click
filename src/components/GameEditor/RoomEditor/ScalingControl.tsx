@@ -140,14 +140,30 @@ export const ScalingControl = ({ room }: Props) => {
                             ))
                         }
                     />
-                    <Box position={'absolute'} left={0} top={10}>
-                        <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={setViewAngleY} forY trackLength={((room.frameHeight || room.height) * scale) - 50} />
-                    </Box>
-                    <Box position={'absolute'} right={10} bottom={0}>
-                        <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={setViewAngleX} trackLength={(room.frameWidth * scale) - 50} />
-                    </Box>
+                    <ViewAngleSlider
+                        viewAngle={viewAngleY}
+                        setViewAngle={setViewAngleY}
+                        forY
+                        disabled={room.height === room.frameHeight}
+                        trackLength={((room.frameHeight || room.height) * scale) - 50}
+                        boxProps={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 10,
+                        }}
+                    />
+                    <ViewAngleSlider
+                        viewAngle={viewAngleX}
+                        setViewAngle={setViewAngleX}
+                        disabled={room.width === room.frameWidth}
+                        trackLength={(room.frameWidth * scale) - 50}
+                        boxProps={{
+                            position: 'absolute',
+                            right: 10,
+                            bottom: 0,
+                        }}
+                    />
                 </Box>
-
             </Grid>
         </Grid>
 

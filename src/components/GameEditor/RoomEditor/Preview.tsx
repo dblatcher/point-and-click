@@ -164,7 +164,11 @@ export class Preview extends Component<Props, State> {
                         position: 'relative',
                         display: 'inline-flex',
                     }}>
-                        <ViewAngleSlider viewAngle={viewAngleY} setViewAngle={viewAngleY => this.setState({ viewAngleY })} forY trackLength={'100%'} />
+                        <ViewAngleSlider viewAngle={viewAngleY}
+                            disabled={roomData.height === roomData.frameHeight}
+                            setViewAngle={viewAngleY => this.setState({ viewAngleY })}
+                            forY
+                            trackLength={'100%'} />
                         <Room data={roomData} noSound noMargin
                             renderAllZones={renderAllZones}
                             maxWidth={maxWidth}
@@ -199,7 +203,10 @@ export class Preview extends Component<Props, State> {
                         paddingLeft: 20,
                         paddingRight: 10
                     }}>
-                        <ViewAngleSlider viewAngle={viewAngleX} setViewAngle={viewAngleX => this.setState({ viewAngleX })} trackLength={'100%'} />
+                        <ViewAngleSlider viewAngle={viewAngleX}
+                            setViewAngle={viewAngleX => this.setState({ viewAngleX })}
+                            disabled={roomData.width === roomData.frameWidth}
+                            trackLength={'100%'} />
                     </Box>
                     <Box>
                         <Grid container>
