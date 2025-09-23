@@ -79,7 +79,7 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
             <ZoneFeaturesControl room={data} zoneType={zoneType} />
         )}
         {tabOpen === RoomEditorTab.SpriteScaling && (
-            <ScalingControl room={data} />
+            <ScalingControl roomData={data} />
         )}
     </Stack>
 }

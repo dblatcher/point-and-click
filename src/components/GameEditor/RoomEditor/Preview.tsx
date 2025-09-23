@@ -1,3 +1,4 @@
+import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
@@ -6,8 +7,7 @@ import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { Box, Checkbox, Grid, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";
-import { ViewAngleSlider } from "./ViewAngleSlider";
-import { NumberInput } from "@/components/SchemaForm/NumberInput";
+import { RoomAngleFrame } from "./RoomAngleFrame";
 
 
 type Props = {
@@ -108,61 +108,41 @@ export const Preview = ({
                 display={'inline-block'}
                 position={'relative'}
                 boxSizing={'border-box'}
-                padding={1}
             >
-                <Box>
-                    <Box sx={{
-                        position: 'relative',
-                        display: 'inline-flex',
-                    }}>
-                        <ViewAngleSlider viewAngle={viewAngleY}
-                            disabled={roomData.height === roomData.frameHeight}
-                            setViewAngle={setViewAngleY}
-                            forY
-                            trackLength={'100%'} />
-                        <Room data={roomData} noSound noMargin
-                            renderAllZones={renderAllZones}
-                            maxHeight={(roomData.frameHeight || roomData.height) * scale}
-                            maxWidth={roomData.frameWidth * scale}
-                            viewAngleX={viewAngleX}
-                            viewAngleY={viewAngleY}
-                            orderedActors={actorsInRoom}
-                            handleRoomClick={processClick}
-                            highlightHotspots={highlightHotspots}
-                            hotspotIndexToMark={zoneType === 'hotspot' ? activeZoneIndex : undefined}
-                            obstacleIndexToMark={zoneType === 'obstacle' ? activeZoneIndex : undefined}
-                            walkableIndexToMark={zoneType === 'walkable' ? activeZoneIndex : undefined}
-                            surfaceContent={<>
-                                {showScaleLines && scaling.map((yAndScale, index) => (
-                                    <HorizontalLine key={index}
-                                        y={yAndScale[0]}
-                                        text={`scale: ${yAndScale[1]}`}
-                                    />
-                                ))}
-                                {hotspotToHaveMarkWalkToPoint && (
-                                    <MarkerShape
-                                        text={getHotspotMarkerLabel(hotspotToHaveMarkWalkToPoint, roomData)}
-                                        {...getTargetPoint(hotspotToHaveMarkWalkToPoint, roomData)}
-                                    />
-                                )}
-                            </>}
-                        />
-                    </Box>
+                <RoomAngleFrame roomData={roomData} 
+                    viewAngleX={viewAngleX} 
+                    viewAngleY={viewAngleY} 
+                    setViewAngleX={setViewAngleX} 
+                    setViewAngleY={setViewAngleY}>
+                    <Room data={roomData} noSound noMargin
+                        renderAllZones={renderAllZones}
+                        maxHeight={(roomData.frameHeight || roomData.height) * scale}
+                        maxWidth={roomData.frameWidth * scale}
+                        viewAngleX={viewAngleX}
+                        viewAngleY={viewAngleY}
+                        orderedActors={actorsInRoom}
+                        handleRoomClick={processClick}
+                        highlightHotspots={highlightHotspots}
+                        hotspotIndexToMark={zoneType === 'hotspot' ? activeZoneIndex : undefined}
+                        obstacleIndexToMark={zoneType === 'obstacle' ? activeZoneIndex : undefined}
+                        walkableIndexToMark={zoneType === 'walkable' ? activeZoneIndex : undefined}
+                        surfaceContent={<>
+                            {showScaleLines && scaling.map((yAndScale, index) => (
+                                <HorizontalLine key={index}
+                                    y={yAndScale[0]}
+                                    text={`scale: ${yAndScale[1]}`}
+                                />
+                            ))}
+                            {hotspotToHaveMarkWalkToPoint && (
+                                <MarkerShape
+                                    text={getHotspotMarkerLabel(hotspotToHaveMarkWalkToPoint, roomData)}
+                                    {...getTargetPoint(hotspotToHaveMarkWalkToPoint, roomData)}
+                                />
+                            )}
+                        </>}
+                    />
+                </RoomAngleFrame>
 
-                    <ViewAngleSlider
-                        boxProps={{
-                            sx: {
-                                width: '100%',
-                                boxSizing: 'border-box',
-                                paddingLeft: 20,
-                                paddingRight: 10
-                            }
-                        }}
-                        viewAngle={viewAngleX}
-                        setViewAngle={setViewAngleX}
-                        disabled={roomData.width === roomData.frameWidth}
-                        trackLength={'100%'} />
-                </Box>
                 {clickEffect && (
                     <Typography
                         variant='overline'

@@ -13,14 +13,14 @@ import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
 import { PickActorDialog } from "../PickActorDialog";
 import { XYControl } from "../XYControl";
-import { ViewAngleSlider } from "./ViewAngleSlider";
+import { RoomAngleFrame } from "./RoomAngleFrame";
 
 interface Props {
-    room: RoomData;
+    roomData: RoomData;
 }
 
 
-export const ScalingControl = ({ room }: Props) => {
+export const ScalingControl = ({ roomData: roomData }: Props) => {
     const [scale, setScale] = useState(1.5)
     const [viewAngleX, setViewAngleX] = useState(0)
     const [viewAngleY, setViewAngleY] = useState(0)
@@ -28,11 +28,11 @@ export const ScalingControl = ({ room }: Props) => {
     const [testSpriteY, setTestSpriteY] = useState(100)
     const [testActor, setTestActor] = useState<ActorData | undefined>(undefined)
     const [actorDialogOpen, setActorDialogOpen] = useState<boolean>(false)
-    const { scaling = [], height } = room
+    const { scaling = [], height } = roomData
     const { gameDesign, modifyRoom } = useGameDesign()
 
     const change = (scaling: ScaleLevel) => {
-        modifyRoom(`change scaling, room ${room.id}`, room.id, { scaling })
+        modifyRoom(`change scaling, room ${roomData.id}`, roomData.id, { scaling })
     }
 
     const handleAdjustment = (
@@ -50,7 +50,7 @@ export const ScalingControl = ({ room }: Props) => {
     }
 
     const handleClick = (clickX: number, clickY: number) => {
-        const { x, y } = locateClickInWorld(clickX, clickY, viewAngleX, viewAngleY, room)
+        const { x, y } = locateClickInWorld(clickX, clickY, viewAngleX, viewAngleY, roomData)
         setTestSpriteX(x)
         setTestSpriteY(y)
         if (testActor) {
@@ -123,46 +123,29 @@ export const ScalingControl = ({ room }: Props) => {
                     <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>
-                <Box style={{ position: 'relative', display: 'inline-block', cursor: !!testActor ? 'crosshair' : undefined }} component={'section'}>
-                    <Room data={room} noSound noMargin
+                <Box style={{ position: 'relative', display: 'inline-block', cursor: !!testActor ? 'crosshair' : undefined }}>
+                    <RoomAngleFrame roomData={roomData}
                         viewAngleX={viewAngleX}
                         viewAngleY={viewAngleY}
-                        handleRoomClick={handleClick}
-                        maxHeight={(room.frameHeight || room.height) * scale}
-                        maxWidth={room.frameWidth * scale}
-                        orderedActors={testActor ? [{ data: testActor }] : []}
-                        surfaceContent={
-                            scaling.map((yAndScale, index) => (
-                                <HorizontalLine key={index}
-                                    y={yAndScale[0]}
-                                    text={`scale: ${yAndScale[1]}`}
-                                />
-                            ))
-                        }
-                    />
-                    <ViewAngleSlider
-                        viewAngle={viewAngleY}
-                        setViewAngle={setViewAngleY}
-                        forY
-                        disabled={room.height === room.frameHeight}
-                        trackLength={((room.frameHeight || room.height) * scale) - 50}
-                        boxProps={{
-                            position: 'absolute',
-                            left: 0,
-                            top: 10,
-                        }}
-                    />
-                    <ViewAngleSlider
-                        viewAngle={viewAngleX}
-                        setViewAngle={setViewAngleX}
-                        disabled={room.width === room.frameWidth}
-                        trackLength={(room.frameWidth * scale) - 50}
-                        boxProps={{
-                            position: 'absolute',
-                            right: 10,
-                            bottom: 0,
-                        }}
-                    />
+                        setViewAngleX={setViewAngleX}
+                        setViewAngleY={setViewAngleY}>
+                        <Room data={roomData} noSound noMargin
+                            viewAngleX={viewAngleX}
+                            viewAngleY={viewAngleY}
+                            handleRoomClick={handleClick}
+                            maxHeight={(roomData.frameHeight || roomData.height) * scale}
+                            maxWidth={roomData.frameWidth * scale}
+                            orderedActors={testActor ? [{ data: testActor }] : []}
+                            surfaceContent={
+                                scaling.map((yAndScale, index) => (
+                                    <HorizontalLine key={index}
+                                        y={yAndScale[0]}
+                                        text={`scale: ${yAndScale[1]}`}
+                                    />
+                                ))
+                            }
+                        />
+                    </RoomAngleFrame>
                 </Box>
             </Grid>
         </Grid>
