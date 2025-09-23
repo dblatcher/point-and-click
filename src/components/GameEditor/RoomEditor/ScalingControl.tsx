@@ -119,7 +119,7 @@ export const ScalingControl = ({ roomData: roomData }: Props) => {
                 </EditorBox>
             </Grid>
             <Grid item flex={1}>
-                <Box display={'flex'} flexDirection={'column'} alignItems={'flex-start'}>
+                <Box>
                     <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={2} min={.5} step={.05} />
                 </Box>

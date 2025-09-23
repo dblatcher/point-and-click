@@ -4,7 +4,7 @@ import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { ActorData, HotspotZone, RoomData, ZoneType } from "@/definitions";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
-import { Box, Checkbox, Grid, Stack, Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { RoomAngleFrame } from "./RoomAngleFrame";
@@ -45,24 +45,6 @@ const getHotspotMarkerLabel = (hotspot: HotspotZone | undefined, roomData: RoomD
     return `${id}:[${x}, ${y}]`
 }
 
-type PreviewCheckboxProps = {
-    label: string;
-    value: boolean;
-    setValue: {
-        (value: boolean): void
-    }
-}
-const PreviewCheckbox = ({ label, value, setValue }: PreviewCheckboxProps) => {
-    return (
-        <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-            <Typography component={'label'} variant="body2">{label}</Typography>
-            <Checkbox checked={value} onChange={(_, value) => {
-                setValue(value)
-            }} size="small" />
-        </Stack>
-    )
-}
-
 
 export const Preview = ({
     roomData,
@@ -99,8 +81,8 @@ export const Preview = ({
 
 
     return (
-        <>
-            <Box display={'flex'} flexDirection={'column'} alignItems={'flex-start'}>
+        <Box>
+            <Box>
                 <NumberInput label="preview scale" value={scale} notFullWidth
                     inputHandler={setScale} max={2} min={.5} step={.05} />
             </Box>
@@ -109,10 +91,10 @@ export const Preview = ({
                 position={'relative'}
                 boxSizing={'border-box'}
             >
-                <RoomAngleFrame roomData={roomData} 
-                    viewAngleX={viewAngleX} 
-                    viewAngleY={viewAngleY} 
-                    setViewAngleX={setViewAngleX} 
+                <RoomAngleFrame roomData={roomData}
+                    viewAngleX={viewAngleX}
+                    viewAngleY={viewAngleY}
+                    setViewAngleX={setViewAngleX}
                     setViewAngleY={setViewAngleY}>
                     <Room data={roomData} noSound noMargin
                         renderAllZones={renderAllZones}
@@ -156,23 +138,42 @@ export const Preview = ({
                 )}
             </Box>
 
-            <Box>
-                <Grid container>
-                    <Grid item>
-                        <PreviewCheckbox label="Show Obstacles" value={renderAllZones} setValue={setRenderAllZones} />
-                    </Grid>
-                    <Grid item>
-                        <PreviewCheckbox label="Show hotspots" value={highlightHotspots} setValue={setHighlightHotspots} />
-                    </Grid>
-                    <Grid item>
-                        <PreviewCheckbox label="Show Scale lines" value={showScaleLines} setValue={setShowScaleLines} />
-                    </Grid>
-                    <Grid item>
-                        <PreviewCheckbox label="Show Actors" value={showRealActors} setValue={setShowRealActors} />
-                    </Grid>
-                </Grid>
-            </Box>
-        </>
+            <Stack paddingLeft={'30px'}>
+                <FormControlLabel
+                    label={"Show Obstacles"}
+                    control={
+                        <Checkbox
+                            checked={renderAllZones}
+                            onChange={(_, value) => setRenderAllZones(value)}
+                            size="small" />
+                    } />
+
+                <FormControlLabel
+                    label={"Show hotspots"}
+                    control={
+                        <Checkbox
+                            checked={highlightHotspots}
+                            onChange={(_, value) => setHighlightHotspots(value)}
+                            size="small" />
+                    } />
+                <FormControlLabel
+                    label={"Show Scale lines"}
+                    control={
+                        <Checkbox
+                            checked={showScaleLines}
+                            onChange={(_, value) => setShowScaleLines(value)}
+                            size="small" />
+                    } />
+                <FormControlLabel
+                    label={"Show Actors"}
+                    control={
+                        <Checkbox
+                            checked={showRealActors}
+                            onChange={(_, value) => setShowRealActors(value)}
+                            size="small" />
+                    } />
+            </Stack>
+        </Box>
     )
 }
 
