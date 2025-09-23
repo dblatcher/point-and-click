@@ -1,4 +1,3 @@
-import { ResizeWatcher } from "@/components/ResizeWatcher";
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
@@ -8,6 +7,7 @@ import { Box, Checkbox, Grid, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { ViewAngleSlider } from "./ViewAngleSlider";
+import { NumberInput } from "@/components/SchemaForm/NumberInput";
 
 
 type Props = {
@@ -72,9 +72,9 @@ export const Preview = ({
     activeZoneIndex,
     zoneType
 }: Props) => {
+    const [scale, setScale] = useState(1.5)
     const [viewAngleX, setViewAngleX] = useState(0);
     const [viewAngleY, setViewAngleY] = useState(0);
-    const [maxWidth, setMaxWidth] = useState(500);
     const [renderAllZones, setRenderAllZones] = useState(false);
     const [highlightHotspots, setHighlightHotspots] = useState(false);
     const [showScaleLines, setShowScaleLines] = useState(false);
@@ -99,87 +99,70 @@ export const Preview = ({
 
 
     return (
-        <ResizeWatcher resizeHandler={() => {
-            const container = document.querySelector('.iwillreplacewitharef')
-            if (container) {
-                setMaxWidth(container.clientWidth - 50)
-            }
-        }}>
-            <Box className="iwillreplacewitharef"
-                display={'flex'}
-                flexDirection={'column'}
-                justifyContent={'flex-end'}
-                alignItems={'center'}
-                flexBasis={'100%'}
+        <>
+            <Box display={'flex'} flexDirection={'column'} alignItems={'flex-start'}>
+                <NumberInput label="preview scale" value={scale} notFullWidth
+                    inputHandler={setScale} max={2} min={.5} step={.05} />
+            </Box>
+            <Box
+                display={'inline-block'}
                 position={'relative'}
                 boxSizing={'border-box'}
                 padding={1}
             >
-                <Box sx={{
-                    position: 'relative',
-                    display: 'inline-flex',
-                }}>
-                    <ViewAngleSlider viewAngle={viewAngleY}
-                        disabled={roomData.height === roomData.frameHeight}
-                        setViewAngle={setViewAngleY}
-                        forY
-                        trackLength={'100%'} />
-                    <Room data={roomData} noSound noMargin
-                        renderAllZones={renderAllZones}
-                        maxWidth={maxWidth}
-                        maxHeight={Math.min(roomData.height * 2, 600)}
-                        viewAngleX={viewAngleX}
-                        viewAngleY={viewAngleY}
-                        orderedActors={actorsInRoom}
-                        handleRoomClick={processClick}
-                        highlightHotspots={highlightHotspots}
-                        hotspotIndexToMark={zoneType === 'hotspot' ? activeZoneIndex : undefined}
-                        obstacleIndexToMark={zoneType === 'obstacle' ? activeZoneIndex : undefined}
-                        walkableIndexToMark={zoneType === 'walkable' ? activeZoneIndex : undefined}
-                        surfaceContent={<>
-                            {showScaleLines && scaling.map((yAndScale, index) => (
-                                <HorizontalLine key={index}
-                                    y={yAndScale[0]}
-                                    text={`scale: ${yAndScale[1]}`}
-                                />
-                            ))}
-                            {hotspotToHaveMarkWalkToPoint && (
-                                <MarkerShape
-                                    text={getHotspotMarkerLabel(hotspotToHaveMarkWalkToPoint, roomData)}
-                                    {...getTargetPoint(hotspotToHaveMarkWalkToPoint, roomData)}
-                                />
-                            )}
-                        </>}
-                    />
-                </Box>
-                <Box sx={{
-                    width: '100%',
-                    boxSizing: 'border-box',
-                    paddingLeft: 20,
-                    paddingRight: 10
-                }}>
-                    <ViewAngleSlider viewAngle={viewAngleX}
+                <Box>
+                    <Box sx={{
+                        position: 'relative',
+                        display: 'inline-flex',
+                    }}>
+                        <ViewAngleSlider viewAngle={viewAngleY}
+                            disabled={roomData.height === roomData.frameHeight}
+                            setViewAngle={setViewAngleY}
+                            forY
+                            trackLength={'100%'} />
+                        <Room data={roomData} noSound noMargin
+                            renderAllZones={renderAllZones}
+                            maxHeight={(roomData.frameHeight || roomData.height) * scale}
+                            maxWidth={roomData.frameWidth * scale}
+                            viewAngleX={viewAngleX}
+                            viewAngleY={viewAngleY}
+                            orderedActors={actorsInRoom}
+                            handleRoomClick={processClick}
+                            highlightHotspots={highlightHotspots}
+                            hotspotIndexToMark={zoneType === 'hotspot' ? activeZoneIndex : undefined}
+                            obstacleIndexToMark={zoneType === 'obstacle' ? activeZoneIndex : undefined}
+                            walkableIndexToMark={zoneType === 'walkable' ? activeZoneIndex : undefined}
+                            surfaceContent={<>
+                                {showScaleLines && scaling.map((yAndScale, index) => (
+                                    <HorizontalLine key={index}
+                                        y={yAndScale[0]}
+                                        text={`scale: ${yAndScale[1]}`}
+                                    />
+                                ))}
+                                {hotspotToHaveMarkWalkToPoint && (
+                                    <MarkerShape
+                                        text={getHotspotMarkerLabel(hotspotToHaveMarkWalkToPoint, roomData)}
+                                        {...getTargetPoint(hotspotToHaveMarkWalkToPoint, roomData)}
+                                    />
+                                )}
+                            </>}
+                        />
+                    </Box>
+
+                    <ViewAngleSlider
+                        boxProps={{
+                            sx: {
+                                width: '100%',
+                                boxSizing: 'border-box',
+                                paddingLeft: 20,
+                                paddingRight: 10
+                            }
+                        }}
+                        viewAngle={viewAngleX}
                         setViewAngle={setViewAngleX}
                         disabled={roomData.width === roomData.frameWidth}
                         trackLength={'100%'} />
                 </Box>
-                <Box>
-                    <Grid container>
-                        <Grid item>
-                            <PreviewCheckbox label="Show Obstacles"  value={renderAllZones} setValue={setRenderAllZones} />
-                        </Grid>
-                        <Grid item>
-                            <PreviewCheckbox label="Show hotspots"  value={highlightHotspots} setValue={setHighlightHotspots} />
-                        </Grid>
-                        <Grid item>
-                            <PreviewCheckbox label="Show Scale lines" value={showScaleLines} setValue={setShowScaleLines} />
-                        </Grid>
-                        <Grid item>
-                            <PreviewCheckbox label="Show Actors" value={showRealActors} setValue={setShowRealActors} />
-                        </Grid>
-                    </Grid>
-                </Box>
-
                 {clickEffect && (
                     <Typography
                         variant='overline'
@@ -192,7 +175,24 @@ export const Preview = ({
                         }}>{getClickCaption(clickEffect)}</Typography>
                 )}
             </Box>
-        </ResizeWatcher>
+
+            <Box>
+                <Grid container>
+                    <Grid item>
+                        <PreviewCheckbox label="Show Obstacles" value={renderAllZones} setValue={setRenderAllZones} />
+                    </Grid>
+                    <Grid item>
+                        <PreviewCheckbox label="Show hotspots" value={highlightHotspots} setValue={setHighlightHotspots} />
+                    </Grid>
+                    <Grid item>
+                        <PreviewCheckbox label="Show Scale lines" value={showScaleLines} setValue={setShowScaleLines} />
+                    </Grid>
+                    <Grid item>
+                        <PreviewCheckbox label="Show Actors" value={showRealActors} setValue={setShowRealActors} />
+                    </Grid>
+                </Grid>
+            </Box>
+        </>
     )
 }
 
