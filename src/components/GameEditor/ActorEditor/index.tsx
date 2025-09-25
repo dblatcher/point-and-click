@@ -87,8 +87,8 @@ export const ActorEditor = ({ data }: Props) => {
                             name: true,
                             status: true,
                             isPlayer: true,
-                            speed: true,
                             noInteraction: true,
+                            speed: true,
                         })}
                         suggestions={{
                             status: statusSuggestions,

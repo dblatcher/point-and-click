@@ -9,6 +9,7 @@ import { Alert, Box, Slider, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { WalkToControl, XYControl } from "../XYControl";
 import { RoomLocationPicker } from "../RoomLocationPicker";
+import { LayoutControls, LayoutHolder, LayoutPreview } from "../layout/SplitLayout";
 
 interface Props {
     actorData: ActorData;
@@ -59,14 +60,13 @@ export const PositionPreview = ({ actorData, updateFromPartial, defaultPreviewWi
     }
 
     return (
-        <Box display={'flex'} marginTop={2} gap={4}>
-            <Box flexBasis={250} flexShrink={0} component={'section'}>
+        <LayoutHolder>
+            <LayoutControls>
                 <SelectInput label="Starting room"
                     options={listIds(gameDesign.rooms)}
                     value={actorData.room || ''}
                     optional={true}
                     inputHandler={room => updateFromPartial({ room })} />
-
                 <XYControl
                     point={actorData}
                     changePosition={(index, mod) => updateFromPartial(mod)}
@@ -84,38 +84,36 @@ export const PositionPreview = ({ actorData, updateFromPartial, defaultPreviewWi
                     value={actorData.direction || 'left'}
                     options={directions}
                     inputHandler={(direction) => updateFromPartial({ direction: (direction ?? 'left') as Direction })} />
-            </Box>
+            </LayoutControls>
 
-            <Box flex={1} component={'section'} alignItems={'center'} padding={0} marginBottom={4}>
+            <LayoutPreview>
                 {roomData ? (<>
-                    <Box padding={1} maxWidth={'sm'}>
-                        <Box display={'inline-flex'} alignItems={'center'}>
-                            <Typography variant="caption">preview size</Typography>
-                            <Slider sx={{ width: 150 }}
-                                step={25}
-                                marks
-                                min={200}
-                                max={600}
-                                value={previewWidth}
-                                onChange={(e, v) => { setPreviewWidth(v as number) }}
-                            />
-                            <Typography variant="caption" minWidth={50}>{previewWidth}</Typography>
-                        </Box>
-                        <Box display={'inline-flex'} alignItems={'center'}>
-                            <Typography>center on {actorData.id}</Typography>
-                            <BooleanInput value={lockAngle} inputHandler={setLockAngle} />
-                        </Box>
-                        <RoomLocationPicker
-                            roomData={roomData}
-                            targetPoint={getTargetPoint(actorData, roomData)}
-                            contents={contents}
-                            fixedView={fixedView}
-                            previewWidth={previewWidth}
-                            onClick={(point) => {
-                                handlePreviewClick(point, role)
-                            }}
+                    <Box display={'inline-flex'} alignItems={'center'}>
+                        <Typography variant="caption">preview size</Typography>
+                        <Slider sx={{ width: 150 }}
+                            step={25}
+                            marks
+                            min={200}
+                            max={600}
+                            value={previewWidth}
+                            onChange={(e, v) => { setPreviewWidth(v as number) }}
                         />
+                        <Typography variant="caption" minWidth={50}>{previewWidth}</Typography>
                     </Box>
+                    <Box display={'inline-flex'} alignItems={'center'}>
+                        <Typography>center on {actorData.id}</Typography>
+                        <BooleanInput value={lockAngle} inputHandler={setLockAngle} />
+                    </Box>
+                    <RoomLocationPicker
+                        roomData={roomData}
+                        targetPoint={getTargetPoint(actorData, roomData)}
+                        contents={contents}
+                        fixedView={fixedView}
+                        previewWidth={previewWidth}
+                        onClick={(point) => {
+                            handlePreviewClick(point, role)
+                        }}
+                    />
 
                 </>) : (
                     <Stack padding={2} spacing={2}>
@@ -123,7 +121,7 @@ export const PositionPreview = ({ actorData, updateFromPartial, defaultPreviewWi
                         <Typography>If you want this Actor to have an initial position, select a starting room.</Typography>
                     </Stack>
                 )}
-            </Box >
-        </Box>
+            </LayoutPreview>
+        </LayoutHolder>
     )
 }
