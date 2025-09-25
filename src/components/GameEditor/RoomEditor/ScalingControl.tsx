@@ -7,10 +7,11 @@ import { ActorData, RoomData, ScaleLevel } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { locateClickInWorld } from "@/lib/roomFunctions";
 import { clamp, findById } from "@/lib/util";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../EditorBox";
+import { LayoutControls, LayoutHolder, LayoutPreview } from "./Layout";
 import { PickActorDialog } from "../PickActorDialog";
 import { XYControl } from "../XYControl";
 import { RoomAngleFrame } from "./RoomAngleFrame";
@@ -60,8 +61,8 @@ export const ScalingControl = ({ roomData: roomData }: Props) => {
     }
 
     return <>
-        <Grid container flexWrap={'nowrap'} spacing={2}>
-            <Grid item xs={4}>
+        <LayoutHolder>
+            <LayoutControls>
                 <Typography>Scale lines</Typography>
                 <ArrayControl
                     stackProps={{
@@ -117,8 +118,8 @@ export const ScalingControl = ({ roomData: roomData }: Props) => {
                         )}
                     </Box>
                 </EditorBox>
-            </Grid>
-            <Grid item flex={1}>
+            </LayoutControls>
+            <LayoutPreview>
                 <Box>
                     <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={2} min={.5} step={.05} />
@@ -147,8 +148,8 @@ export const ScalingControl = ({ roomData: roomData }: Props) => {
                         />
                     </RoomAngleFrame>
                 </Box>
-            </Grid>
-        </Grid>
+            </LayoutPreview>
+        </LayoutHolder>
 
         <PickActorDialog
             isOpen={actorDialogOpen}

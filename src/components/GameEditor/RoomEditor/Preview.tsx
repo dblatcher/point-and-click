@@ -32,8 +32,8 @@ function getClickCaption(clickEffect?: ClickEffect): string {
         case 'MOVE_POLYGON_POINT':
             return `Click to move point ${clickEffect.pointIndex + 1} of ${clickEffect.zoneType}`
         case 'ADD_NEW':
-            return `Click to add new ${clickEffect.shape} shaped ${clickEffect}`
-        default:
+            return `Click to add new ${clickEffect.shape} shaped ${clickEffect.zoneType}`
+        default:    
             return 'UNKNOWN!'
     }
 }

@@ -57,7 +57,7 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
         </EditorHeading>
 
         <Tabs value={tabOpen}
-            onChange={(event, tabOpen) => setTabOpen(tabOpen)}
+            onChange={(_event, tabOpen) => setTabOpen(tabOpen)}
             variant="scrollable"
             scrollButtons="auto">
             <Tab label="Name and description" value={RoomEditorTab.NameAndDescription} />
@@ -70,7 +70,7 @@ export const RoomEditor = ({ data }: RoomEditorProps) => {
 
         {tabOpen === RoomEditorTab.NameAndDescription && <RoomDescriptionControl room={data} />}
         {tabOpen === RoomEditorTab.BackgroundAndDimension && (
-            <Box display={'flex'} flexWrap={'wrap'} gap={4}>
+            <Box display={'flex'} flexWrap={'wrap'}>
                 <DimensionControl room={data} />
                 <BackgroundControl room={data} />
             </Box>

@@ -1,9 +1,9 @@
 import { useGameDesign } from "@/context/game-design-context"
 import { HotspotZone, RoomData, Zone, ZoneType } from "@/definitions"
 import { cloneData } from "@/lib/clone"
-import { Grid } from "@mui/material"
 import { useState } from "react"
 import { ClickEffect, RoomClickContext } from "../ClickEffect"
+import { LayoutControls, LayoutHolder, LayoutPreview } from "../Layout"
 import { Preview } from "../Preview"
 import { HotspotSetEditor } from "./HotspotSetEditor"
 import { ZoneSetEditor } from "./ZoneSetEditor"
@@ -136,8 +136,8 @@ export const ZoneFeaturesControl = ({
 
     return (
         <RoomClickContext.Provider value={{ clickEffect, setClickEffect }}>
-            <Grid container flexWrap={'nowrap'} spacing={1}>
-                <Grid item xs={4}>
+            <LayoutHolder>
+                <LayoutControls>
                     {zoneType !== 'hotspot' && (
                         <ZoneSetEditor
                             zones={getZones()}
@@ -158,19 +158,17 @@ export const ZoneFeaturesControl = ({
                             selectHotspot={selectHotspot}
                         />
                     )}
-                </Grid>
-                <Grid item flex={1}>
-                    <div style={{ position: 'sticky', top: 1 }}>
-                        <Preview
-                            actors={gameDesign.actors}
-                            roomData={room}
-                            clickEffect={clickEffect}
-                            activeZoneIndex={getActiveZoneIndex()}
-                            handleRoomClick={handleRoomClick}
-                            zoneType={zoneType} />
-                    </div>
-                </Grid>
-            </Grid>
+                </LayoutControls>
+                <LayoutPreview>
+                    <Preview
+                        actors={gameDesign.actors}
+                        roomData={room}
+                        clickEffect={clickEffect}
+                        activeZoneIndex={getActiveZoneIndex()}
+                        handleRoomClick={handleRoomClick}
+                        zoneType={zoneType} />
+                </LayoutPreview>
+            </LayoutHolder>
         </RoomClickContext.Provider>
     )
 }

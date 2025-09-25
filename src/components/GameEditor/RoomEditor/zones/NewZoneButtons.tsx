@@ -1,5 +1,5 @@
 import { AddIcon, ClickPointActiveIcon, ClickPointIcon } from "@/components/GameEditor/material-icons";
-import { Button, ButtonGroup, ButtonGroupProps } from "@mui/material";
+import { Button, ButtonGroup, ButtonGroupProps, useMediaQuery, useTheme } from "@mui/material";
 import { FunctionComponent } from "react";
 import { ClickEffect, useRoomClickEffect } from "../ClickEffect";
 import { SupportedZoneShape } from "@/definitions";
@@ -12,9 +12,10 @@ interface Props {
 
 export const NewZoneButtons: FunctionComponent<Props> = ({
     type,
-    orientation = 'horizontal'
+    orientation
 }: Props) => {
-
+    const theme = useTheme();
+    const isLgOrUp = useMediaQuery(theme.breakpoints.up('lg'));
     const { setClickEffect, clickEffect } = useRoomClickEffect()
 
     const clickEffectIsNewZone = (shapeToCheck: 'circle' | 'rect' | 'polygon'): boolean => {
@@ -32,16 +33,16 @@ export const NewZoneButtons: FunctionComponent<Props> = ({
     }
 
     return (
-        <ButtonGroup sx={{ paddingBottom: 1 }} size="small" orientation={orientation}>
+        <ButtonGroup sx={{ paddingBottom: 1 }} size="small" orientation={orientation ?? isLgOrUp ? 'horizontal' : 'vertical'}>
             {(['circle', 'rect', 'polygon'] as SupportedZoneShape[]).map(
                 (shape) => (
                     <Button key={shape}
-                    variant={clickEffectIsNewZone(shape) ? 'contained' : 'outlined'}
-                    startIcon={clickEffectIsNewZone(shape) ? <ClickPointActiveIcon /> : <ClickPointIcon />}
-                    endIcon={<AddIcon />}
-                    onClick={() => {
-                        setClickEffect(makeEffectForNew(shape))
-                    }}>{shape}</Button>
+                        variant={clickEffectIsNewZone(shape) ? 'contained' : 'outlined'}
+                        startIcon={clickEffectIsNewZone(shape) ? <ClickPointActiveIcon /> : <ClickPointIcon />}
+                        endIcon={<AddIcon />}
+                        onClick={() => {
+                            setClickEffect(makeEffectForNew(shape))
+                        }}>{shape}</Button>
                 )
             )}
         </ButtonGroup>
