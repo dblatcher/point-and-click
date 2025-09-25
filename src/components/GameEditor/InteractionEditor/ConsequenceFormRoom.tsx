@@ -46,6 +46,11 @@ export const ConsequenceFormRoom: React.FunctionComponent<Props> = ({ consequenc
     const zoneX = zone ? zone?.type === 'hotspot' ? getTargetPoint(zone as HotspotZone, roomData).x : zone.x : undefined
     const zoneY = zone ? zone?.type === 'hotspot' ? getTargetPoint(zone as HotspotZone, roomData).y : zone.y : undefined
 
+    const fixedView = {
+        x: typeof zoneX === 'number' ? getViewAngleXCenteredOn(zoneX, roomData) : 0,
+        y: typeof zoneY === 'number' ? getViewAngleYCenteredOn(zoneY, roomData) : 0
+    }
+
     switch (consequence.type) {
         case "changeRoom":
         case "teleportActor":
@@ -58,8 +63,7 @@ export const ConsequenceFormRoom: React.FunctionComponent<Props> = ({ consequenc
             />
         case "toggleZone":
             return <RoomLocationPicker
-                viewAngleX={typeof zoneX === 'number' ? getViewAngleXCenteredOn(zoneX, roomData) : 0}
-                viewAngleY={typeof zoneY === 'number' ? getViewAngleYCenteredOn(zoneY, roomData) : 0}
+                fixedView={fixedView}
                 roomData={roomData}
                 previewWidth={300}
                 obstacleRefToFocus={consequence.zoneType === 'obstacle' ? consequence.ref : undefined}

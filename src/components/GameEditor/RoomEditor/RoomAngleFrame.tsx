@@ -10,12 +10,11 @@ interface Props {
     viewAngleX: number;
     setViewAngleY: Dispatch<SetStateAction<number>>;
     setViewAngleX: Dispatch<SetStateAction<number>>;
-
 }
 
 
 export const RoomAngleFrame = ({ children, roomData, viewAngleX, viewAngleY, setViewAngleX, setViewAngleY }: Props) => {
-    return <Box component={'section'}>
+    return <Box component={'section'} display={'inline-block'}>
         <Box sx={{
             position: 'relative',
             display: 'inline-flex',
