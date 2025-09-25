@@ -5,7 +5,7 @@ import { findById } from "@/lib/util"
 import { Box, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
 import { StringInput } from "../SchemaForm/StringInput"
-import { PositionPreview } from "./ActorEditor/PositionPreview"
+import { DetailsAndStartPosition } from "./ActorEditor/DetailsAndStartPosition"
 import { ActorPositions } from "./ActorPositions"
 import { EditorBox } from "./layout/EditorBox"
 import { FlagMapControl } from "./FlagMapControl"
@@ -48,7 +48,7 @@ export const ChangeGameStateControls = () => {
                                     { actors: patchMember(actorToPosition.id, { status }, gameDesign.actors) }
                                 )}
                             />
-                            <PositionPreview actorData={actorToPosition}
+                            <DetailsAndStartPosition actorData={actorToPosition}
                                 defaultPreviewWidth={300}
                                 updateFromPartial={(mod) => {
                                     applyModification(

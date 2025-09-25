@@ -78,7 +78,7 @@ export const MainWindow = () => {
                 />
         case 'actors':
             return currentActor
-                ? <ActorEditor data={currentActor} />
+                ? <ActorEditor actorData={currentActor} />
                 : <DataItemCreator
                     createBlank={makeBlankActor}
                     schema={ActorDataSchema}
