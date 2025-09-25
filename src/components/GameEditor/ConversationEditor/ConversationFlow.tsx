@@ -5,7 +5,7 @@ import Checkbox from '@mui/material/Checkbox'
 import { Fragment, useEffect, useRef, useState } from "react"
 import { ButtonWithConfirm } from "../ButtonWithConfirm"
 import { ButtonWithTextInput } from "../ButtonWithTextInput"
-import { EditorBox } from "../EditorBox"
+import { EditorBox } from "../layout/EditorBox"
 import { formatIdInput } from "../helpers"
 import { ChoiceDescription } from "./ChoiceDescription"
 import { LineBetweenNodes } from "./LineBetweenNodes"

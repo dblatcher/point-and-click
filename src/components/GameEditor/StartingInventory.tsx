@@ -2,7 +2,7 @@ import { useGameDesign } from "@/context/game-design-context";
 import { ItemData } from "@/definitions";
 import { patchMember } from "@/lib/update-design";
 import { List, ListItem, ListItemText, Switch } from "@mui/material";
-import { EditorBox } from "./EditorBox";
+import { EditorBox } from "./layout/EditorBox";
 
 
 export const StartingInventory = () => {

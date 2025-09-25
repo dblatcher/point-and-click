@@ -1,6 +1,6 @@
 import { SoundAsset } from "@/services/assets";
 import React from "react";
-import { EditorBox } from "../EditorBox";
+import { EditorBox } from "../layout/EditorBox";
 import { Box, Typography } from "@mui/material";
 
 interface Props {

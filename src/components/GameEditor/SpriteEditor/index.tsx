@@ -9,7 +9,7 @@ import { patchMember } from "@/lib/update-design";
 import { findById } from "@/lib/util";
 import { Box, Grid, Stack } from "@mui/material";
 import { useState } from "react";
-import { EditorHeading } from "../EditorHeading";
+import { EditorHeading } from "../layout/EditorHeading";
 import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { AnimationDialog } from "./AnimationDialog";
 import { AnimationGrid } from "./AnimationGrid";

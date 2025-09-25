@@ -1,8 +1,8 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { FunctionComponent, ReactNode } from "react";
-import { HelpButton } from "./HelpButton";
-import { IconComponent } from "./material-icons";
-import { SupportedHelpTopic } from "./HelpText";
+import { HelpButton } from "../HelpButton";
+import { IconComponent } from "../material-icons";
+import { SupportedHelpTopic } from "../HelpText";
 
 interface Props {
     heading: string;

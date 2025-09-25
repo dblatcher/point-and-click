@@ -9,8 +9,8 @@ import { Box, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { StringInput } from "../SchemaForm/StringInput";
 import { DelayedStringInput } from "./DelayedStringInput";
-import { EditorBox } from "./EditorBox";
-import { EditorHeading } from "./EditorHeading";
+import { EditorBox } from "./layout/EditorBox";
+import { EditorHeading } from "./layout/EditorHeading";
 import { ItemEditorHeaderControls } from "./game-item-components/ItemEditorHeaderControls";
 import { HelpButton } from "./HelpButton";
 

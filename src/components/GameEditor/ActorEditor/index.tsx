@@ -9,7 +9,7 @@ import { patchMember } from "@/lib/update-design";
 import { Box, Stack, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import { ColorInput } from "../ColorInput";
-import { EditorHeading } from "../EditorHeading";
+import { EditorHeading } from "../layout/EditorHeading";
 import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { ActorAppearanceControl } from "./ActorAppearanceControl";

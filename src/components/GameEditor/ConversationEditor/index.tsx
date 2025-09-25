@@ -6,7 +6,7 @@ import { findById, listIds } from "@/lib/util";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
-import { EditorHeading } from "../EditorHeading";
+import { EditorHeading } from "../layout/EditorHeading";
 import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { SequenceEditor } from "../SequenceEditor";
 import { makeBlankConversationChoice } from "../defaults";

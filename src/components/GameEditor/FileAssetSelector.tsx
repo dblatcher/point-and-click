@@ -5,7 +5,7 @@ import { FileAsset } from "@/services/assets";
 import { Box, IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { useState } from "react";
 import { SelectInput } from "../SchemaForm/SelectInput";
-import { EditorBox } from "./EditorBox";
+import { EditorBox } from "./layout/EditorBox";
 import { SearchControl } from "./SearchControl";
 
 interface Props {

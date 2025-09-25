@@ -5,7 +5,7 @@ import { listIds } from "@/lib/util";
 import { Box, Stack, Typography } from "@mui/material";
 import { SelectInput } from "../SchemaForm/SelectInput";
 import { DelayedStringInput } from "./DelayedStringInput";
-import { EditorHeading } from "./EditorHeading";
+import { EditorHeading } from "./layout/EditorHeading";
 import { FramePickDialogButton } from "./FramePickDialogButton";
 import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "./game-item-components/ItemEditorHeaderControls";

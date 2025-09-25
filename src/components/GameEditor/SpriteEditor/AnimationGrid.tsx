@@ -2,7 +2,7 @@ import { Animation } from "@/definitions";
 import { Direction, directions } from "@/definitions/BaseTypes";
 import { Stack } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
-import { EditorBox } from "../EditorBox";
+import { EditorBox } from "../layout/EditorBox";
 import { AnimatedSpriteButton } from "./AnimatedSpriteButton";
 import { Sprite } from "@/lib/Sprite";
 import { ButtonWithTextInput } from "../ButtonWithTextInput";

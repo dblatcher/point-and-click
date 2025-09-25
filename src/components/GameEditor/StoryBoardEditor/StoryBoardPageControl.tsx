@@ -7,7 +7,7 @@ import { ArrayControl } from "../ArrayControl";
 import { ColorInput } from "../ColorInput";
 import { makeEmptyStoryBoardPagePicture } from "../defaults";
 import { DelayedStringInput } from "../DelayedStringInput";
-import { EditorBox } from "../EditorBox";
+import { EditorBox } from "../layout/EditorBox";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { PagePictureControl } from "./PagePictureControl";
 

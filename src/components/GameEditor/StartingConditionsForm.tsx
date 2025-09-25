@@ -1,7 +1,7 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { listIds } from "@/lib/util";
 import { SelectInput } from "../SchemaForm/SelectInput";
-import { EditorBox } from "./EditorBox";
+import { EditorBox } from "./layout/EditorBox";
 import { Box, Button, Tooltip } from "@mui/material";
 
 

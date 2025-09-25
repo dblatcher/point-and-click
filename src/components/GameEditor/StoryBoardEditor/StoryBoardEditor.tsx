@@ -3,11 +3,11 @@ import { BoardFontSchema, BoardProgression, BoardProgressionSchema, StoryBoard }
 import { patchMember } from "@/lib/update-design";
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
-import { EditorHeading } from "../EditorHeading";
+import { EditorHeading } from "../layout/EditorHeading";
 import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { PageMenu } from "./PageMenu";
 
-import { EditorBox } from "../EditorBox";
+import { EditorBox } from "../layout/EditorBox";
 import { EnumSelectInput } from "../EnumSelectInput";
 import { AmbientSoundControl } from "../RoomEditor/AmbientSoundControl";
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";

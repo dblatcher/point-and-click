@@ -10,7 +10,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, S
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { ButtonWithConfirm } from '../ButtonWithConfirm';
-import { EditorBox } from "../EditorBox";
+import { EditorBox } from "../layout/EditorBox";
 import { ConsequenceCard } from "../SequenceEditor/ConsequenceCard";
 import { ConsequenceDialog } from "../SequenceEditor/ConsequenceDialog";
 import { makeNewConsequence } from "../defaults";

@@ -2,7 +2,7 @@ import { useGameDesign } from "@/context/game-design-context";
 import { tabIcons } from "@/lib/editor-config";
 import { Stack, Typography } from "@mui/material";
 import { ArrayControl } from "./ArrayControl";
-import { EditorHeading } from "./EditorHeading";
+import { EditorHeading } from "./layout/EditorHeading";
 
 
 export const VerbMenuEditor = () => {

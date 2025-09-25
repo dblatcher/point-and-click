@@ -6,7 +6,7 @@ import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Fragment, ReactNode, useState } from "react";
-import { EditorHeading } from "../EditorHeading";
+import { EditorHeading } from "../layout/EditorHeading";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { InteractionDialog } from "./InteractionDialog";
 import { InteractionTableHeaders } from "./InteractionTableHeaders";

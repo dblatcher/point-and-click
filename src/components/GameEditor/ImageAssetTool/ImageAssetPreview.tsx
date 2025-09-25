@@ -2,7 +2,7 @@
 import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { ImageAsset } from "@/services/assets";
 import { Box, Typography } from "@mui/material";
-import { EditorBox } from "../EditorBox";
+import { EditorBox } from "../layout/EditorBox";
 import { HideImageOutlinedIcon } from "../material-icons";
 import { clamp } from "@/lib/util";
 

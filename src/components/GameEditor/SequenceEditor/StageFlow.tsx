@@ -5,7 +5,7 @@ import { Box, Button, Dialog, DialogContent, Grid, IconButton, Stack } from "@mu
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { PickConsequenceTypeDialogue } from "../PickConsequenceTypeDialogue";
-import { EditorBox } from "../EditorBox";
+import { EditorBox } from "../layout/EditorBox";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { OrderTypeButtons } from "../OrderTypeButtons";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";

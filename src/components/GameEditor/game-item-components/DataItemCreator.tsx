@@ -9,7 +9,7 @@ import { useState } from "react";
 import { ZodSchema } from "zod";
 import { ButtonWithTextInput } from "../ButtonWithTextInput";
 import { DataItemCard } from "./DataItemCard";
-import { EditorHeading } from "../EditorHeading";
+import { EditorHeading } from "../layout/EditorHeading";
 import { formatIdInput, hasPreview } from "../helpers";
 import { SearchControl } from "../SearchControl";
 import { supportedHelpTopic } from "../HelpText";

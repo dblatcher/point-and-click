@@ -6,7 +6,7 @@ import { cloneData } from "@/lib/clone";
 import { patchMember } from "@/lib/update-design";
 import { Grid } from "@mui/material";
 import { DelayedStringInput } from "../DelayedStringInput";
-import { EditorHeading } from "../EditorHeading";
+import { EditorHeading } from "../layout/EditorHeading";
 import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
 import { SequenceFlow } from "./SequenceFlow";
 

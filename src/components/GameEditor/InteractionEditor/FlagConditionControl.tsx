@@ -2,7 +2,7 @@ import { useGameDesign } from "@/context/game-design-context";
 import { Interaction } from "@/definitions";
 import { Divider, Stack } from "@mui/material";
 import React from "react";
-import { EditorBox } from "../EditorBox";
+import { EditorBox } from "../layout/EditorBox";
 import { HelpButton } from "../HelpButton";
 import { MultipleSelectChip } from "../MultipleSelectChip";
 
