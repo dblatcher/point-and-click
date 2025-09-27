@@ -1,31 +1,25 @@
-import { Checkbox, FormLabel, Stack } from '@mui/material';
-import type { FormEventHandler, FunctionComponent } from 'react';
+import { Checkbox, FormControlLabel, FormControlLabelProps } from '@mui/material';
+import type { FunctionComponent } from 'react';
 import type { FieldProps } from './types';
-import { eventToBoolean } from './util';
 
 export const BooleanInput: FunctionComponent<
     FieldProps & {
-        value: boolean;
+        value?: boolean;
         inputHandler: { (value: boolean): void };
-        title?: string
+        sx?: FormControlLabelProps['sx']
     }
 > = (props) => {
-    const sendValue: FormEventHandler<HTMLInputElement> = (event) => {
-        props.inputHandler(eventToBoolean(event));
-    };
+
 
     return (
-        <Stack direction='row' alignItems={'center'} spacing={1}>
-            <FormLabel>{props.label}</FormLabel>
-            <Checkbox
-                checked={props.value}
-                required={!props.optional}
-                disabled={props.readOnly}
-                onChange={sendValue}
-                inputProps={{
-                    title: props.title ?? ""
-                }}
-            />
-        </Stack>
-    );
+        <FormControlLabel
+            sx={props.sx}
+            label={props.label}
+            control={
+                <Checkbox
+                    checked={props.value}
+                    onChange={(_, value) => props.inputHandler(value)}
+                    size="small" />
+            } />
+    )
 };

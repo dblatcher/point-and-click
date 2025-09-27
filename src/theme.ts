@@ -118,6 +118,15 @@ export const editorTheme = createTheme({
             }
         },
 
+        MuiFormControlLabel: {
+            styleOverrides: {
+                root: {
+                    marginLeft: 0,
+                    marginRight: 0
+                }
+            }
+        },
+
         MuiAccordionSummary: {
             styleOverrides: {
                 root: {

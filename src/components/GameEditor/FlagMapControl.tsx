@@ -91,9 +91,6 @@ const FlagCard = ({ id, flag, forModifier }: { id: string, flag: Flag, forModifi
                     <Typography variant='subtitle1'>{id}</Typography>
                 </Box>
                 <FormControlLabel
-                    style={{
-                        margin: 0
-                    }}
                     label={`starts ${flag.value ? 'on' : 'off'}`}
                     labelPlacement="start"
                     control={<Switch

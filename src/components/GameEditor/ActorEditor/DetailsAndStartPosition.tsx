@@ -7,15 +7,15 @@ import { Direction, directions } from "@/definitions/BaseTypes";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { findById, listIds } from "@/lib/util";
-import { Alert, Box, Checkbox, FormControlLabel, Slider, Stack, Typography } from "@mui/material";
+import { Alert, Box, Slider, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { ColorInput } from "../ColorInput";
 import { DelayedStringInput } from "../DelayedStringInput";
+import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
 import { RoomLocationPicker } from "../RoomLocationPicker";
 import { WalkToControl, XYControl } from "../XYControl";
 import { EditorBox } from "../layout/EditorBox";
 import { LayoutControls, LayoutHolder, LayoutPreview } from "../layout/SplitLayout";
-import { ColorInput } from "../ColorInput";
-import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
 
 interface Props {
     actorData: ActorData;
@@ -85,22 +85,12 @@ export const DetailsAndStartPosition = ({ actorData, updateFromPartial, defaultP
                         inputHandler={speed => updateFromPartial({ speed })}
                     />
                     <Stack alignItems={'flex-start'}>
-                        <FormControlLabel labelPlacement="start"
-                            label={"Is player Actor"}
-                            control={
-                                <Checkbox
-                                    checked={actorData.isPlayer}
-                                    onChange={(_, isPlayer) => updateFromPartial({ isPlayer })}
-                                    size="small" />
-                            } />
-                        <FormControlLabel labelPlacement="start"
-                            label={"Cannot interact with"}
-                            control={
-                                <Checkbox
-                                    checked={actorData.noInteraction}
-                                    onChange={(_, noInteraction) => updateFromPartial({ noInteraction })}
-                                    size="small" />
-                            } />
+                        <BooleanInput label="Is player Actor"
+                            value={actorData.isPlayer}
+                            inputHandler={isPlayer => updateFromPartial({ isPlayer })} />
+                        <BooleanInput label="Cannot interact with"
+                            value={actorData.noInteraction}
+                            inputHandler={noInteraction => updateFromPartial({ noInteraction })} />
                     </Stack>
                     <Box display={'flex'} justifyContent={'space-between'}>
                         <ColorInput

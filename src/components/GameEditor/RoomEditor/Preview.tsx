@@ -1,10 +1,11 @@
+import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
 import { ActorData, HotspotZone, RoomData, ZoneType } from "@/definitions";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
-import { Box, Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { RoomAngleFrame } from "./RoomAngleFrame";
@@ -33,7 +34,7 @@ function getClickCaption(clickEffect?: ClickEffect): string {
             return `Click to move point ${clickEffect.pointIndex + 1} of ${clickEffect.zoneType}`
         case 'ADD_NEW':
             return `Click to add new ${clickEffect.shape} shaped ${clickEffect.zoneType}`
-        default:    
+        default:
             return 'UNKNOWN!'
     }
 }
@@ -138,41 +139,14 @@ export const Preview = ({
                 )}
             </Box>
 
-            <Stack paddingLeft={'30px'}>
-                <FormControlLabel
-                    label={"Show Obstacles"}
-                    control={
-                        <Checkbox
-                            checked={renderAllZones}
-                            onChange={(_, value) => setRenderAllZones(value)}
-                            size="small" />
-                    } />
-
-                <FormControlLabel
-                    label={"Show hotspots"}
-                    control={
-                        <Checkbox
-                            checked={highlightHotspots}
-                            onChange={(_, value) => setHighlightHotspots(value)}
-                            size="small" />
-                    } />
-                <FormControlLabel
-                    label={"Show Scale lines"}
-                    control={
-                        <Checkbox
-                            checked={showScaleLines}
-                            onChange={(_, value) => setShowScaleLines(value)}
-                            size="small" />
-                    } />
-                <FormControlLabel
-                    label={"Show Actors"}
-                    control={
-                        <Checkbox
-                            checked={showRealActors}
-                            onChange={(_, value) => setShowRealActors(value)}
-                            size="small" />
-                    } />
-            </Stack>
+            <Box gap={4} display={'flex'}>
+                <BooleanInput sx={{ minWidth: 125 }} label={"Show Obstacles"} value={renderAllZones} inputHandler={setRenderAllZones} />
+                <BooleanInput label={"Show hotspots"} value={highlightHotspots} inputHandler={setHighlightHotspots} />
+            </Box>
+            <Box gap={4} display={'flex'}>
+                <BooleanInput sx={{ minWidth: 125 }} label={"Show Scale lines"} value={showScaleLines} inputHandler={setShowScaleLines} />
+                <BooleanInput label={"Show Actors"} value={showRealActors} inputHandler={setShowRealActors} />
+            </Box>
         </Box>
     )
 }
