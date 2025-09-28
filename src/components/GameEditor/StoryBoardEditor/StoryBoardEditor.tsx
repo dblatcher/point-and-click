@@ -86,7 +86,6 @@ export const StoryBoardEditor: React.FunctionComponent<Props> = ({ storyBoard })
                 <BooleanInput
                     label="is end of game"
                     value={storyBoard.isEndOfGame ?? false}
-                    title="is end of game"
                     inputHandler={(isEndOfGame) => update(`set ${storyBoard.id} to ${isEndOfGame ? 'be' : 'not be'} the end of the game`, { isEndOfGame })} />
             </Box>
         </EditorBox>
