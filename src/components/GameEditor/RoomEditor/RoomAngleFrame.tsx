@@ -20,7 +20,7 @@ export const RoomAngleFrame = ({ children, roomData, viewAngleX, viewAngleY, set
             display: 'inline-flex',
         }}>
             <ViewAngleSlider viewAngle={viewAngleY}
-                disabled={roomData.height === roomData.frameHeight}
+                disabled={!roomData.frameHeight || roomData.height === roomData.frameHeight}
                 setViewAngle={setViewAngleY}
                 forY
                 trackLength={'100%'}
