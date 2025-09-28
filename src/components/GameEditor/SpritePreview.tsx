@@ -1,7 +1,10 @@
-import HorizontalLine from "@/components/svg/HorizontalLine";
-import { Room } from "@/components/svg/Room";
-import { ActorData, Direction, RoomData } from "@/definitions";
+import { RoomRenderContext } from "@/context/room-render-context";
+import { ActorData, Direction } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
+import { Box } from "@mui/material";
+import { ActorFigure } from "../svg/ActorFigure";
+import HorizontalLine from "../svg/HorizontalLine";
+import { SurfaceFrame } from "../svg/Room/SurfaceFrame";
 
 type Props = {
     data: ActorData;
@@ -13,54 +16,76 @@ type Props = {
     direction?: Direction;
 }
 
-const makeRoomData = (data: ActorData, scale: number): RoomData => ({
-    height: (scale * data.height),
-    width: (scale * data.width * 1.5) + 10,
-    frameWidth: (scale * data.width * 1.5) + 10,
-    id: '',
-    background: []
-})
 
-const getscale = (actor: ActorData, scale: number, maxHeight?: number) => {
-    if (!maxHeight || !actor.height) {
+const getActorScale = (height: number, scale: number, maxHeight?: number) => {
+    if (!maxHeight || height === 0) {
         return scale
     }
-    return maxHeight / actor.height
+    return maxHeight / height
+}
+
+const getRoomScale = (scale: number, roomWidth: number, roomHeight: number, maxHeight?: number) => {
+    const effectiveMaxWidth = maxHeight ? roomWidth : 100 * scale
+    const effectiveMaxHeight = maxHeight ?? 200;
+    return Math.min(
+        effectiveMaxWidth / roomWidth,
+        effectiveMaxHeight / roomHeight
+    )
 }
 
 export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, maxHeight, animation, direction }: Props) => {
 
-    const effectiveScale = getscale(data, scale, maxHeight)
-    const roomData = makeRoomData(data, effectiveScale)
+    const actorScale = getActorScale(data.height, scale, maxHeight)
+    const roomWidth = actorScale * data.width;
+    const roomHeight = actorScale * data.height;
+    const roomScale = getRoomScale(scale, roomWidth, roomHeight, maxHeight)
 
-    const modifiedActorData: ActorData = {
-        ...data,
-        width: effectiveScale * data.width,
-        height: effectiveScale * data.height,
-        x: roomData.width / 2,
-        status: animation ?? data.status,
-        direction: direction ?? data.direction,
-        y: 0
-    }
-
-    const maxWidth = maxHeight ? roomData.width : 100 * scale
     return (
-        <Room data={roomData}
-            renderAllZones={false}
-            noSound
-            noMargin
-            maxWidth={maxWidth}
-            viewAngleX={0}
-            viewAngleY={0}
-            highlightHotspots={false}
-            handleRoomClick={() => { }}
-            orderedActors={[{ overrideSprite, data: modifiedActorData, }]}
-            surfaceContent={
-                !noBaseLine && (
-                    <HorizontalLine y={data.baseline || 0} />
-                )
-            }
-        />
+        <RoomRenderContext.Provider value={{
+            roomData: {
+                height: roomHeight,
+                width: roomWidth,
+                frameWidth: roomWidth,
+                id: '',
+                background: []
+            },
+            viewAngleX: 0,
+            viewAngleY: 0,
+            scale: roomScale,
+        }}>
+            <Box component={'figure'}
+                sx={{
+                    margin: 0,
+                    position: 'relative',
+                    overflow: 'hidden',
+                }}
+                style={{
+                    width: roomWidth * roomScale,
+                    height: roomHeight * roomScale,
+                }}
+            >
+                <SurfaceFrame>
+                    <ActorFigure
+                        isPaused={false}
+                        noSound
+                        data={{
+                            ...data,
+                            width: roomWidth,
+                            height: roomHeight,
+                            x: roomWidth / 2,
+                            status: animation ?? data.status,
+                            direction: direction ?? data.direction,
+                            y: 0
+                        }}
+                        roomScale={roomScale}
+                        overrideSprite={overrideSprite}
+                    />
+                    {!noBaseLine && (
+                        <HorizontalLine y={data.baseline || 0} />
+                    )}
+                </SurfaceFrame>
+            </Box>
+        </RoomRenderContext.Provider>
     )
 }
 
