@@ -16,7 +16,7 @@ export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'TALK', label: 'talk to' },
 ]
 
-export const makeBlankVerb: { (): Verb } = () => ({ id: "NEW_VERB", label: "****" })
+export const makeBlankVerb: { (id?:string): Verb } = (id = "NEW_VERB") => ({ id, label: "****" })
 
 export const getBlankRoom: { (): RoomData } = () => ({
     id: '_NEW_ROOM',

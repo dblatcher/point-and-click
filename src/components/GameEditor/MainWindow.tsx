@@ -6,11 +6,10 @@ import { RoomDataSchema } from "@/definitions/RoomData";
 import { SpriteDataSchema } from "@/definitions/SpriteSheet";
 import { useKeyBoard } from '@/hooks/use-keyboard';
 import { findById } from "@/lib/util";
-import { Box } from "@mui/material";
 import { tabOrder } from "../../lib/editor-config";
 import { ActorEditor } from "./ActorEditor";
 import { ConversationEditor } from "./ConversationEditor";
-import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankItem, makeBlankSequence, makeBlankSprite, makeBlankVerb, makeEmptyStoryBoard } from "./defaults";
+import { getBlankRoom, makeBlankActor, makeBlankConversation, makeBlankItem, makeBlankSequence, makeBlankSprite, makeEmptyStoryBoard } from "./defaults";
 import { DataItemCreator } from "./game-item-components/DataItemCreator";
 import { ImageAssetManager } from './ImageAssetTool/ImageAssetManager';
 import { InteractionEditor } from "./InteractionEditor";
@@ -21,8 +20,8 @@ import { SequenceEditor } from "./SequenceEditor";
 import { SoundAssetManager } from './SoundAssetTool/SoundAssetManager';
 import { SpriteEditor } from "./SpriteEditor";
 import { StoryBoardEditor } from './StoryBoardEditor/StoryBoardEditor';
-import { VerbEditor } from "./VerbEditor";
-import { VerbMenuEditor } from "./VerbMenuEditor";
+import { VerbEditor } from "./verbs/VerbEditor";
+import { VerbSetControl } from './verbs/VerbSetControl';
 
 export const MainWindow = () => {
     const { gameDesign, tabOpen, openInEditor, gameItemIds } = useGameDesign()
@@ -49,7 +48,6 @@ export const MainWindow = () => {
     ])
 
     const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
-    const currentVerb = findById(gameItemIds.verbs, gameDesign.verbs)
     const currentRoom = findById(gameItemIds.rooms, gameDesign.rooms)
     const currentSprite = findById(gameItemIds.sprites, gameDesign.sprites)
     const currentItem = findById(gameItemIds.items, gameDesign.items)
@@ -118,19 +116,7 @@ export const MainWindow = () => {
                     itemTypeName="sequence"
                 />
         case 'verbs':
-            return currentVerb
-                ? <VerbEditor verb={currentVerb}
-                />
-                : <>
-                    <Box marginBottom={2}>
-                        <DataItemCreator
-                            createBlank={makeBlankVerb}
-                            designProperty="verbs"
-                            itemTypeName="verb"
-                        />
-                    </Box>
-                    <VerbMenuEditor />
-                </>
+            return <VerbSetControl />
         case 'images':
             return <ImageAssetManager />
         case 'sounds':

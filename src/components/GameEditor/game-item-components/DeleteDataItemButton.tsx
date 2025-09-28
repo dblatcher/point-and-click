@@ -10,19 +10,22 @@ type Props = {
     itemType: GameDataItemType;
     itemTypeName: string;
     buttonProps?: ButtonProps
+    useIconButton?: boolean
 }
 
-export const DeleteDataItemButton = ({ dataItem, itemType, itemTypeName, buttonProps }: Props) => {
+export const DeleteDataItemButton = ({ dataItem, itemType, itemTypeName, buttonProps, useIconButton }: Props) => {
     const { gameDesign, deleteArrayItem } = useGameDesign()
 
     return (
         <ButtonWithConfirm
             confirmationText={`Are you sure you want to delete ${itemTypeName} "${dataItem.id}"?`}
             label="delete"
-            buttonProps={{ 
-                startIcon: <DeleteIcon />, 
-                color: 'warning', 
-                ...buttonProps 
+            useIconButton
+            icon={useIconButton ? <DeleteIcon /> : undefined}
+            buttonProps={{
+                startIcon: <DeleteIcon />,
+                color: 'warning',
+                ...buttonProps
             }}
             onClick={() => {
                 const items = gameDesign[itemType];

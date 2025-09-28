@@ -36,18 +36,20 @@ export const ButtonWithTextInput = ({
 }: Props) => {
     const [showDialog, setShowDialog] = useState<boolean>(false)
     const [input, setInput] = useState<string>('')
-    const handleFirstButton = (): void => { 
-                if (clearOnOpen) {
+    const handleFirstButton = (): void => {
+        if (clearOnOpen) {
             setInput('');
         }
-        setShowDialog(true) 
+        setShowDialog(true)
     }
     const handleInput = modifyInput ? (input: string) => setInput(modifyInput(input)) : setInput
     const errorMessage = getError?.(input);
 
     useKeyBoard(keyboardShortcut ? [{
         key: keyboardShortcut,
-        handler: handleFirstButton,
+        handler: () => {
+            if (!showDialog) { handleFirstButton() }
+        },
     }] : [])
 
     return (

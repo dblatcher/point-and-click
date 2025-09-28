@@ -9,3 +9,6 @@ export const LayoutPreview = ({ children }: { children: ReactNode }) => <Grid it
         {children}
     </div>
 </Grid>
+export const LayoutItem = ({ children }: { children: ReactNode }) => <Grid item xs={8}>
+    {children}
+</Grid>
