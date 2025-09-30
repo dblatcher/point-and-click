@@ -13,24 +13,24 @@ import { Sprite } from '@/lib/Sprite';
 import { ImageService } from '@/services/imageService';
 import { populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
-import { editorTheme } from '@/theme';
-import { Avatar, Box, ButtonGroup, IconButton, Stack, ThemeProvider, Typography } from '@mui/material';
+import { Avatar, Box, ButtonGroup, IconButton, Stack, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { GameEditorSkeleton } from '../GameEditorSkeleton';
 import { MainWindow } from './MainWindow';
 import { DesignServicesIcon, SaveIcon } from './material-icons';
 import { SavedDesignDialog } from './SavedDesignDialog';
 import { TabButtonList } from './TabButtonList';
+import { TemplateDesignDialog } from './TemplateDesignDialog';
 import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
-import { TemplateDesignDialog } from './TemplateDesignDialog';
+import { TutorialWindow } from './tutorial/TutorialWindow';
 
 
 export type { GameEditorProps };
 
-const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame }) => {
+const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame, tutorial }) => {
     const [soundService] = useState(new SoundService())
     const [imageService] = useState(new ImageService())
     const [saveMenuOpen, setSaveMenuOpen] = useState(false)
@@ -196,13 +196,14 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame 
                         </Stack>
                         <Box component={'section'}
                             flex={1}
-                            paddingX={1}
                             margin={1}
-                            sx={{ overflowY: 'auto', background: 'white', }}
+                            display={'flex'}
+                            sx={{ overflowY: 'auto', backgroundColor:'white' }}
                         >
-                            <ThemeProvider theme={editorTheme}>
-                                <MainWindow />
-                            </ThemeProvider>
+                            <MainWindow />
+                            {tutorial && (
+                                <TutorialWindow tutorial={tutorial} />
+                            )}
                             <UpgradeNotice />
                         </Box>
                     </Box>

@@ -20,10 +20,11 @@ import { SequenceEditor } from "./SequenceEditor";
 import { SoundAssetManager } from './SoundAssetTool/SoundAssetManager';
 import { SpriteEditor } from "./SpriteEditor";
 import { StoryBoardEditor } from './StoryBoardEditor/StoryBoardEditor';
-import { VerbEditor } from "./verbs/VerbEditor";
 import { VerbSetControl } from './verbs/VerbSetControl';
+import { Box, ThemeProvider } from '@mui/material';
+import { editorTheme } from '@/theme';
 
-export const MainWindow = () => {
+const MainWindowInner = () => {
     const { gameDesign, tabOpen, openInEditor, gameItemIds } = useGameDesign()
 
     useKeyBoard([
@@ -130,4 +131,38 @@ export const MainWindow = () => {
         case 'main':
             return <Overview />
     }
+}
+
+export const MainWindow = () => {
+
+    const { openInEditor } = useGameDesign()
+
+    useKeyBoard([
+        {
+            key: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+            handler: ({ key }) => {
+                const tabId = tabOrder[Number(key) - 1]?.id
+                if (!tabId) { return }
+                openInEditor(tabId)
+            }
+        },
+        {
+            key: ['0', '-', '='],
+            handler: ({ key }) => {
+                switch (key) {
+                    case '0': return openInEditor(tabOrder[9].id)
+                    case '-': return openInEditor(tabOrder[10].id)
+                    case '=': return openInEditor(tabOrder[11].id)
+                }
+            }
+        }
+    ])
+
+    return (
+        <ThemeProvider theme={editorTheme}>
+            <Box flex={2}>
+                <MainWindowInner />
+            </Box>
+        </ThemeProvider>
+    )
 }

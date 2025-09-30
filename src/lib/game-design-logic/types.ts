@@ -3,9 +3,13 @@ import { GameDataItem, GameDataItemType } from "@/definitions/Game";
 import { TabId } from "../editor-config";
 import { GameEditorDatabase } from "../indexed-db";
 
+export type Tutorial = {
+    title: string;
+}
 
 export type GameEditorProps = {
     usePrebuiltGame?: boolean;
+    tutorial?: Tutorial;
 }
 
 type OpenInEditorAction = {

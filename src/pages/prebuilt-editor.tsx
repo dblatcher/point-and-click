@@ -4,7 +4,7 @@ import { PageLayout } from '@/components/PageLayout'
 export default function GameEditorPage() {
   return (
     <PageLayout noPageScroll>
-        <EditorLoader usePrebuiltGame />
+        <EditorLoader usePrebuiltGame tutorial={{title: 'test tutorial'}}/>
     </PageLayout>
   )
 }
