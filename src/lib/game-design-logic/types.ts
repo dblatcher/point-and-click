@@ -2,9 +2,11 @@ import { GameDesign, Interaction } from "@/definitions";
 import { GameDataItem, GameDataItemType } from "@/definitions/Game";
 import { TabId } from "../editor-config";
 import { GameEditorDatabase } from "../indexed-db";
+import { ValidGameId } from "../api-usage";
 
 export type Tutorial = {
     title: string;
+    designId?: ValidGameId
 }
 
 export type GameEditorProps = {

@@ -26,6 +26,7 @@ import { UndoAndRedoButtons } from './UndoButton';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
 import { TutorialWindow } from './tutorial/TutorialWindow';
+import { getGameFromApi } from '@/lib/api-usage';
 
 
 export type { GameEditorProps };
@@ -85,13 +86,23 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
         }
         dispatchDesignUpdate({ type: 'set-db-instance', db })
         console.log(`DB opened, version ${db.version}`)
+        if (tutorial?.designId) {
+            const loadResult = await getGameFromApi(tutorial.designId);
+            if (!loadResult.success) {
+                alert('failed to load tutorial')
+                return
+            }
+            const { gameDesign, imageAssets, soundAssets } = loadResult.data
+            handleIncomingDesign('tutorial', { design: gameDesign, imageAssets, soundAssets })
+            return
+        }
 
         const designAndAssets = await retrieveDesignAndAssets(db)('quit-save')
         const wasQuitSave = handleIncomingDesign('quit-save', designAndAssets)
         if (!wasQuitSave) {
             setTemplateMenuOpen(true)
         }
-    }, [usePrebuiltGame, handleIncomingDesign])
+    }, [usePrebuiltGame, handleIncomingDesign, tutorial?.designId])
 
     useEffect(() => {
         openDataBaseConnection().then(handleDBOpen).catch(err => {
@@ -198,7 +209,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
                             flex={1}
                             margin={1}
                             display={'flex'}
-                            sx={{ overflowY: 'auto', backgroundColor:'white' }}
+                            sx={{ overflowY: 'auto', backgroundColor: 'white' }}
                         >
                             <MainWindow />
                             {tutorial && (
