@@ -4,9 +4,21 @@ import { TabId } from "../editor-config";
 import { GameEditorDatabase } from "../indexed-db";
 import { ValidGameId } from "../api-usage";
 
+export type Task = {
+    title: string;
+    detail?: string;
+    test: { (state: Omit<GameEditorState, 'history' | 'undoneHistory'>): boolean }
+}
+
 export type Tutorial = {
     title: string;
-    designId?: ValidGameId
+    designId?: ValidGameId;
+
+    stages: {
+        intro: string;
+        tasks: Task[];
+        confirmation: string;
+    }[]
 }
 
 export type GameEditorProps = {
