@@ -3,6 +3,7 @@ import { GameDataItem, GameDataItemType } from "@/definitions/Game";
 import { TabId } from "../editor-config";
 import { GameEditorDatabase } from "../indexed-db";
 import { ValidGameId } from "../api-usage";
+import { ReactNode } from "react";
 
 export type Task = {
     title: string;
@@ -15,9 +16,10 @@ export type Tutorial = {
     designId?: ValidGameId;
 
     stages: {
-        intro: string;
+        subtitle?: string
+        intro: ReactNode;
         tasks: Task[];
-        confirmation: string;
+        confirmation: ReactNode;
     }[]
 }
 
