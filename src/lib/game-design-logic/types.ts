@@ -20,7 +20,7 @@ export type TutorialStage = {
 
 export type Tutorial = {
     title: string;
-    designId?: ValidGameId;
+    designId: ValidGameId;
     stages: TutorialStage[]
 }
 

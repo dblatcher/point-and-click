@@ -25,7 +25,6 @@ import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
-import { TutorialContent } from './tutorial/TutorialContent';
 import { getGameFromApi } from '@/lib/api-usage';
 import { TutorialContainer } from './tutorial/TutorialContainer';
 
@@ -37,7 +36,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
     const [imageService] = useState(new ImageService())
     const [saveMenuOpen, setSaveMenuOpen] = useState(false)
     const [templateMenuOpen, setTemplateMenuOpen] = useState(false)
-    const [waitingForDesignFromDb, setWaitingforDesignFromDb] = useState(!usePrebuiltGame)
+    const [isWaitingForDesign, setIsWaitingforDesign] = useState(true)
     const { setHeaderContent } = usePageMeta();
 
     const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer,
@@ -52,13 +51,10 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
 
     const handleIncomingDesign = useCallback((sourceIdentifier: string, designAndAssets: MaybeDesignAndAssets): boolean => {
         const { design, timestamp, imageAssets, soundAssets } = designAndAssets;
-
         if (!design) {
             console.log(`no design ${sourceIdentifier} found`);
-            setWaitingforDesignFromDb(false)
             return false
         }
-
         const dateString = timestamp ? `${new Date(timestamp).toLocaleDateString()},  ${new Date(timestamp).toLocaleTimeString()}` : 'unknown time';
         console.log(`retrieved ${sourceIdentifier} from ${dateString}`)
 
@@ -66,7 +62,6 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
 
         if (!gameDesign) {
             alert(`Could not parse ${sourceIdentifier}: ${failureMessage ?? 'UNKNOWN'}`);
-            setWaitingforDesignFromDb(false);
             return false
         }
         if (updated) {
@@ -76,48 +71,54 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
         imageService.populate(imageAssets, 'DB')
         soundService.populate(soundAssets, 'DB')
         dispatchDesignUpdate({ type: 'load-new', gameDesign })
-        setWaitingforDesignFromDb(false)
         return true
     }, [imageService, soundService])
 
     // when DB opens, load the quit save and populate file asset services
     const handleDBOpen = useCallback(async ({ db }: { db: GameEditorDatabase }) => {
-        if (usePrebuiltGame) {
-            return
-        }
         dispatchDesignUpdate({ type: 'set-db-instance', db })
         console.log(`DB opened, version ${db.version}`)
-        if (tutorial?.designId) {
-            const loadResult = await getGameFromApi(tutorial.designId);
-            if (!loadResult.success) {
-                alert('failed to load tutorial')
-                return
-            }
-            const { gameDesign, imageAssets, soundAssets } = loadResult.data
-            handleIncomingDesign('tutorial', { design: gameDesign, imageAssets, soundAssets })
-            return
-        }
 
         const designAndAssets = await retrieveDesignAndAssets(db)('quit-save')
+        setIsWaitingforDesign(false)
         const wasQuitSave = handleIncomingDesign('quit-save', designAndAssets)
         if (!wasQuitSave) {
             setTemplateMenuOpen(true)
         }
-    }, [usePrebuiltGame, handleIncomingDesign, tutorial?.designId])
+    }, [handleIncomingDesign])
 
+    // load the initial design for the tutorial or prebuilt game, 
+    // or open DB and load quit-save
     useEffect(() => {
-        openDataBaseConnection().then(handleDBOpen).catch(err => {
-            console.error('OPEN DB FAILED!!', err)
-            setWaitingforDesignFromDb(false)
-        })
-    }, [handleDBOpen, setWaitingforDesignFromDb])
+        if (tutorial) {
+            getGameFromApi(tutorial.designId).then(loadResult => {
+                setIsWaitingforDesign(false)
+                if (!loadResult.success) {
+                    alert('failed to load tutorial')
+                    return
+                }
+                const { gameDesign, imageAssets, soundAssets } = loadResult.data
+                setIsWaitingforDesign(false)
+                handleIncomingDesign('tutorial', { design: gameDesign, imageAssets, soundAssets })
+            })
+            return
+        }
 
-    // populate assets if usePrebuiltGame
-    // if not, listen to updaets from services and store in the quit save
-    useEffect(() => {
         if (usePrebuiltGame) {
             populateServicesForPreBuiltGame(imageService, soundService)
+            setIsWaitingforDesign(false)
+            return
         }
+
+        openDataBaseConnection().then(handleDBOpen).catch(err => {
+            console.error('OPEN DB FAILED!!', err)
+            setIsWaitingforDesign(false)
+        })
+    }, [handleDBOpen, setIsWaitingforDesign, tutorial, usePrebuiltGame])
+
+    // if using db, listen to updates from services and store in the quit save
+    useEffect(() => {
+        if (!gameEditorState.db) { return }
 
         const handleImageServiceUpdate = handleImageUpdateFunction(imageService, gameEditorState.db)
         const handleSoundServiceUpdate = handleSoundUpdateFunction(soundService, gameEditorState.db)
@@ -128,14 +129,14 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
             imageService.off('update', handleImageServiceUpdate)
             soundService.off('update', handleSoundServiceUpdate)
         }
-    }, [usePrebuiltGame, imageService, soundService, gameEditorState.db])
+    }, [imageService, soundService, gameEditorState.db])
 
     const { gameDesign, history, undoneHistory } = gameEditorState;
 
     useEffect(() => {
         setHeaderContent(
             <Box display={'flex'} alignItems={'center'}>
-                {!waitingForDesignFromDb && (
+                {!isWaitingForDesign && (
                     <Typography sx={{ fontSize: '120%', margin: 0, }}>
                         Game Designer
                     </Typography>
@@ -153,21 +154,23 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
                             <DesignServicesIcon color='primary' />
                         </IconButton>
                     </Avatar>
-                    <Avatar sx={{ backgroundColor: 'primary.contrastText' }}>
-                        <IconButton
-                            disabled={waitingForDesignFromDb || !gameEditorState.db}
-                            title='save menu'
-                            onClick={() => setSaveMenuOpen(true)}
-                        >
-                            <SaveIcon color='primary' />
-                        </IconButton>
-                    </Avatar>
+                    {gameEditorState.db && (
+                        <Avatar sx={{ backgroundColor: 'primary.contrastText' }}>
+                            <IconButton
+                                disabled={isWaitingForDesign}
+                                title='save menu'
+                                onClick={() => setSaveMenuOpen(true)}
+                            >
+                                <SaveIcon color='primary' />
+                            </IconButton>
+                        </Avatar>
+                    )}
                 </ Box>
             </Box>
         )
-    }, [waitingForDesignFromDb, gameDesign.id, setHeaderContent, gameEditorState.db, saveMenuOpen])
+    }, [isWaitingForDesign, gameDesign.id, setHeaderContent, gameEditorState.db, saveMenuOpen])
 
-    if (waitingForDesignFromDb) {
+    if (isWaitingForDesign) {
         return <GameEditorSkeleton />
     }
 
