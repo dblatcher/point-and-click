@@ -4,7 +4,6 @@ import { Box, Button, Grid, List, ListItem, ListItemIcon, ListItemText, Typograp
 import { CheckBoxIcon, CheckBoxOutlineBlankIcon } from "../material-icons"
 
 interface Props {
-
     currentStage: TutorialStage
     onLastStage: boolean
     progressToNextStage: { (): void }
@@ -20,7 +19,7 @@ export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage
             <Grid container>
                 <Grid item xs={12} lg={4}>
                     {currentStage.subtitle && <Typography variant="h3">{currentStage.subtitle}</Typography>}
-                    {currentStage.intro}
+                    <Typography fontSize={'small'}>{currentStage.intro}</Typography>
                 </Grid>
                 <Grid item xs={12} lg={8}>
                     <List dense disablePadding>
@@ -39,7 +38,7 @@ export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage
         ) : (
             <Box>
                 {currentStage.subtitle && <Typography variant="h3">{currentStage.subtitle}</Typography>}
-                {currentStage.intro}
+                <Typography>{currentStage.intro}</Typography>
             </Box>
         )}
         <Box>

@@ -1,4 +1,3 @@
-import { Typography } from "@mui/material"
 import { Tutorial } from "../game-design-logic/types"
 import { HelpIcon, InteractionIcon, PlayCircleFilledOutlinedIcon } from "@/components/GameEditor/material-icons"
 
@@ -7,14 +6,14 @@ export const basicTutorial: Tutorial = {
     designId: 'detailed-template',
     stages: [
         {
-            subtitle:'Welcome to Point and Click',
+            subtitle: 'Welcome to Point and Click',
             intro: (<>
-                <Typography>
-                    To get you started, the game already has already a room with your player character and an NPC, but if you test the game with the Play Button <PlayCircleFilledOutlinedIcon fontSize="inherit"/> and try to talk to them, the game will just give you a default response.
-                </Typography>
-                <Typography>
-                    Our first task will be adding an INTERACTION <InteractionIcon fontSize="inherit"/> so something happens when you talk to the NPC. Not sure what an INTERACTION is? Try clicking the help icon <HelpIcon fontSize="inherit"/> on the Interactions screen.
-                </Typography>
+                <p>
+                    To get you started, the game already has already a room with your player character and an NPC, but if you test the game with the Play Button <PlayCircleFilledOutlinedIcon fontSize="inherit" /> and try to talk to them, the game will just give you a default response.
+                </p>
+                <p>
+                    Our first task will be adding an INTERACTION <InteractionIcon fontSize="inherit" /> so something happens when you talk to the NPC. Not sure what an INTERACTION is? Try clicking the help icon <HelpIcon fontSize="inherit" /> on the Interactions screen.
+                </p>
             </>),
             tasks: [
                 {
@@ -36,30 +35,28 @@ export const basicTutorial: Tutorial = {
                 },
                 {
                     title: 'Give the PLAYER something to say',
-                    detail:'open your INTERACTION with the edit button, add an "order" CONSEQUENCE, select "PLAYER" as the ACTOR and create a "say" order. You can then click on the box to edit the text.',
+                    detail: 'open your INTERACTION with the edit button, add an "order" CONSEQUENCE, select "PLAYER" as the ACTOR and create a "say" order. You can then click on the box to edit the text.',
                     test(state) {
                         return state.gameDesign.interactions.some(
                             interaction => interaction.targetId === 'NPC' &&
                                 interaction.verbId === 'TALK' &&
-                                interaction.consequences.some(consequence => 
-                                    consequence.type === 'order' && 
+                                interaction.consequences.some(consequence =>
+                                    consequence.type === 'order' &&
                                     consequence.orders.some(order => order.type === 'say'
-                                ))
+                                    ))
                         )
                     }
                 }
             ],
             confirmation: (<>
-                <Typography>Well done - you've created your first INTERACTION.</Typography>
-                <Typography>
-                    Before going to the next task, try running the game with the play button and talk to the NPC!"
-                </Typography>
+                <p>Well done - you've created your first INTERACTION.</p>
+                <p>Before going to the next task, try running the game with the play button and talk to the NPC!</p>
             </>)
         },
         {
-            intro: <Typography>This is the end of the tutorial</Typography>,
+            intro: <p>This is the end of the tutorial</p>,
             tasks: [],
-            confirmation: <Typography>Well done for doing all the tasks.</Typography>,
+            confirmation: <p>Well done for doing all the tasks.</p>,
         }
     ]
 }

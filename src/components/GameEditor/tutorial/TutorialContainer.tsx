@@ -6,6 +6,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import { useState } from "react";
 import { TutorialContent } from "./TutorialContent";
+import { SchoolIcon } from "../material-icons";
 
 interface Props {
     tutorial: Tutorial
@@ -30,9 +31,10 @@ export const TutorialContainer = ({ tutorial }: Props) => {
                 expandIcon={<ExpandMoreIcon htmlColor="white" />}
                 sx={{
                     backgroundColor: 'secondary.dark',
-                    color: 'secondary.contrastText'
+                    color: 'secondary.contrastText',
                 }}
             >
+                <SchoolIcon sx={{ marginRight: 1 }} />
                 <Typography component="span">Tutorial: {tutorial.title}</Typography>
             </AccordionSummary>
             <AccordionDetails>

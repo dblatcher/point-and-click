@@ -51,6 +51,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import SpriteIcon from '@mui/icons-material/AutoAwesomeMotion';
 import SlideshowIcon from '@mui/icons-material/Slideshow';
 import SearchIcon from '@mui/icons-material/Search';
+import SchoolIcon from '@mui/icons-material/School';
 
 export type IconComponent = typeof ActorIcon;
 
@@ -98,6 +99,7 @@ export {
     SearchIcon,
     SlideshowIcon,
     SortIcon,
+    SchoolIcon,
     SpriteIcon,
     SpeakerNotesOffIcon,
     StarOutlineIcon,
