@@ -11,7 +11,6 @@ import { GameEditorDatabase, MaybeDesignAndAssets, openDataBaseConnection } from
 import { retrieveDesignAndAssets } from '@/lib/indexed-db/complex-transactions';
 import { Sprite } from '@/lib/Sprite';
 import { ImageService } from '@/services/imageService';
-import { populateServicesForPreBuiltGame } from '@/services/populateServices';
 import { SoundService } from '@/services/soundService';
 import { Avatar, Box, ButtonGroup, IconButton, Stack, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
@@ -41,7 +40,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
 
     const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer,
         {
-            gameDesign: getInitalDesign(usePrebuiltGame),
+            gameDesign: getInitalDesign(),
             history: [],
             undoneHistory: [],
             tabOpen: 'main',
@@ -105,8 +104,16 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
         }
 
         if (usePrebuiltGame) {
-            populateServicesForPreBuiltGame(imageService, soundService)
-            setIsWaitingforDesign(false)
+            getGameFromApi('test').then(loadResult => {
+                setIsWaitingforDesign(false)
+                if (!loadResult.success) {
+                    alert('failed to load test game')
+                    return
+                }
+                const { gameDesign, imageAssets, soundAssets } = loadResult.data
+                setIsWaitingforDesign(false)
+                handleIncomingDesign('test-game', { design: gameDesign, imageAssets, soundAssets })
+            })
             return
         }
 
