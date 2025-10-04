@@ -2,6 +2,7 @@ import { AssetsProvider } from '@/context/asset-context';
 import { GameDesignProvider } from '@/context/game-design-context';
 import { usePageMeta } from '@/context/page-meta-context';
 import { SpritesProvider } from '@/context/sprite-context';
+import { getGameFromApi } from '@/lib/api-usage';
 import { parseAndUpgrade } from '@/lib/design-version-management';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
@@ -21,11 +22,10 @@ import { SavedDesignDialog } from './SavedDesignDialog';
 import { TabButtonList } from './TabButtonList';
 import { TemplateDesignDialog } from './TemplateDesignDialog';
 import { TestGameDialog } from './TestGameDialog';
+import { TutorialContainer } from './tutorial/TutorialContainer';
 import { UndoAndRedoButtons } from './UndoButton';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
-import { getGameFromApi } from '@/lib/api-usage';
-import { TutorialContainer } from './tutorial/TutorialContainer';
 
 
 export type { GameEditorProps };
