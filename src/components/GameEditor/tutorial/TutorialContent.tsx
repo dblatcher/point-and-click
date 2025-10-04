@@ -15,16 +15,15 @@ export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage
     const editorState = useGameDesign()
     const stageComplete = currentStage.tasks.every(task => task.test(editorState))
 
-    return <Box padding={1}>
+    return <Box>
         {currentStage.tasks.length > 0 ? (
-
             <Grid container>
                 <Grid item xs={12} lg={4}>
                     {currentStage.subtitle && <Typography variant="h3">{currentStage.subtitle}</Typography>}
                     {currentStage.intro}
                 </Grid>
                 <Grid item xs={12} lg={8}>
-                    <List>
+                    <List dense disablePadding>
                         {currentStage.tasks.map((task, index) => (
                             <ListItem key={index}>
                                 <ListItemText primary={task.title} secondary={task.detail} />
