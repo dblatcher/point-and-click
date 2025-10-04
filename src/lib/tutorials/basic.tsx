@@ -34,7 +34,7 @@ export const basicTutorial: Tutorial = {
                     },
                 },
                 {
-                    title: 'create a consequence for the interaction - give the PLAYER and ORDER to say something - anything you like!',
+                    title: 'create a consequence for the interaction - give the PLAYER an ORDER to say something - anything you like!',
                     test(state) {
                         return state.gameDesign.interactions.some(
                             interaction => interaction.targetId === 'NPC' &&

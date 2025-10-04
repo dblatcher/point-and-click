@@ -11,16 +11,17 @@ export type Task = {
     test: { (state: Omit<GameEditorState, 'history' | 'undoneHistory'>): boolean }
 }
 
+export type TutorialStage = {
+    subtitle?: string
+    intro: ReactNode;
+    tasks: Task[];
+    confirmation: ReactNode;
+}
+
 export type Tutorial = {
     title: string;
     designId?: ValidGameId;
-
-    stages: {
-        subtitle?: string
-        intro: ReactNode;
-        tasks: Task[];
-        confirmation: ReactNode;
-    }[]
+    stages: TutorialStage[]
 }
 
 export type GameEditorProps = {

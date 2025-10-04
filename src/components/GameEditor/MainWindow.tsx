@@ -160,7 +160,7 @@ export const MainWindow = () => {
 
     return (
         <ThemeProvider theme={editorTheme}>
-            <Box flex={2}>
+            <Box flex={1}>
                 <MainWindowInner />
             </Box>
         </ThemeProvider>

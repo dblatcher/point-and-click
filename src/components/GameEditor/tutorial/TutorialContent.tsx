@@ -1,29 +1,21 @@
 import { useGameDesign } from "@/context/game-design-context"
-import { Tutorial } from "@/lib/game-design-logic/types"
+import { TutorialStage } from "@/lib/game-design-logic/types"
 import { Box, Button, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
 import { CheckBoxIcon, CheckBoxOutlineBlankIcon } from "../material-icons"
-import { useState } from "react"
 
 interface Props {
-    tutorial: Tutorial
+
+    currentStage: TutorialStage
+    onLastStage: boolean
+    progressToNextStage: { (): void }
 }
 
-export const TutorialWindow = ({ tutorial }: Props) => {
+export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage }: Props) => {
 
     const editorState = useGameDesign()
-    const [stageIndex, setStageIndex] = useState(0)
-    const progressToNextStage = () => {
-        setStageIndex(index => index + 1)
-    }
-
-    const currentStage = tutorial.stages[stageIndex];
     const stageComplete = currentStage.tasks.every(task => task.test(editorState))
-    const onLastStage = stageIndex + 1 === tutorial.stages.length;
 
-    return <Box flex={1.5} padding={1} sx={{transform:'scale(.75)', transformOrigin:'top left'}}>
-        <Typography variant="h2">
-            {tutorial.title}
-        </Typography>
+    return <Box padding={1}>
         {currentStage && (
 
             <Box>

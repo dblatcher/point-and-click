@@ -25,8 +25,9 @@ import { TestGameDialog } from './TestGameDialog';
 import { UndoAndRedoButtons } from './UndoButton';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
-import { TutorialWindow } from './tutorial/TutorialWindow';
+import { TutorialContent } from './tutorial/TutorialContent';
 import { getGameFromApi } from '@/lib/api-usage';
+import { TutorialContainer } from './tutorial/TutorialContainer';
 
 
 export type { GameEditorProps };
@@ -208,12 +209,14 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
                         <Box component={'section'}
                             flex={1}
                             margin={1}
+                            paddingX={1}
                             display={'flex'}
+                            flexDirection={'column-reverse'}
                             sx={{ overflowY: 'auto', backgroundColor: 'white' }}
                         >
                             <MainWindow />
                             {tutorial && (
-                                <TutorialWindow tutorial={tutorial} />
+                                <TutorialContainer tutorial={tutorial} />
                             )}
                             <UpgradeNotice />
                         </Box>
