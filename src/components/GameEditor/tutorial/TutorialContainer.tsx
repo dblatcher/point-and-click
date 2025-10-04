@@ -23,7 +23,7 @@ export const TutorialContainer = ({ tutorial }: Props) => {
     const onLastStage = stageIndex + 1 === tutorial.stages.length;
 
     return <div>
-        <Accordion defaultExpanded>
+        <Accordion defaultExpanded disableGutters>
             <AccordionSummary
                 id="tutorial-header"
                 aria-controls="tutorial-content"
