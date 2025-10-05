@@ -19,7 +19,7 @@ export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage
             <Grid container>
                 <Grid item xs={12} lg={4}>
                     {currentStage.subtitle && <Typography variant="h3">{currentStage.subtitle}</Typography>}
-                    <Typography fontSize={'small'}>{currentStage.intro}</Typography>
+                    <Typography component={'div'} fontSize={'small'}>{currentStage.intro}</Typography>
                 </Grid>
                 <Grid item xs={12} lg={8}>
                     <List dense disablePadding>
@@ -38,13 +38,13 @@ export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage
         ) : (
             <Box>
                 {currentStage.subtitle && <Typography variant="h3">{currentStage.subtitle}</Typography>}
-                <Typography>{currentStage.intro}</Typography>
+                <Typography component={'div'} fontSize={'small'}>{currentStage.intro}</Typography>
             </Box>
         )}
         <Box>
             {stageComplete && (
                 <Box>
-                    <Typography>{currentStage.confirmation}</Typography>
+                    <Typography component={'div'} fontSize={'small'}>{currentStage.confirmation}</Typography>
                     {!onLastStage && (
                         <Button onClick={progressToNextStage}>next</Button>
                     )}
