@@ -33,6 +33,7 @@ const imageAssets = allImageAssets.filter(asset => [
     'boy.png',
     'sky.png',
     'beach-s.png',
+    'tube.png',
 ].includes(asset.id))
 
 export { imageAssets };

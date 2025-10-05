@@ -24,11 +24,11 @@ export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage
                 <Grid item xs={12} lg={8}>
                     <List dense disablePadding>
                         {currentStage.tasks.map((task, index) => (
-                            <ListItem key={index}>
-                                <ListItemText primary={task.title} secondary={task.detail} />
-                                <ListItemIcon>
-                                    {task.test(editorState) ? <CheckBoxIcon />
-                                        : <CheckBoxOutlineBlankIcon />}
+                            <ListItem key={index} >
+                                <ListItemText primary={task.title} secondary={task.detail} sx={{ margin: 0 }} />
+                                <ListItemIcon >
+                                    {task.test(editorState) ? <CheckBoxIcon color="secondary" />
+                                        : <CheckBoxOutlineBlankIcon color="secondary" />}
                                 </ListItemIcon>
                             </ListItem>
                         ))}
@@ -43,10 +43,10 @@ export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage
         )}
         <Box>
             {stageComplete && (
-                <Box>
+                <Box display={'flex'} justifyContent={'space-between'} alignItems={'flex-end'}>
                     <Typography component={'div'} fontSize={'small'}>{currentStage.confirmation}</Typography>
                     {!onLastStage && (
-                        <Button onClick={progressToNextStage}>next</Button>
+                        <Button onClick={progressToNextStage}>next stage</Button>
                     )}
                 </Box>
             )}
