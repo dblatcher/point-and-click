@@ -11,7 +11,7 @@ import { FunctionComponent, useState } from "react";
 
 
 export const ZipFileButtons: FunctionComponent = () => {
-  const { gameDesign, dispatchDesignUpdate, handleIncomingDesign } = useGameDesign()
+  const { gameDesign, handleIncomingDesign } = useGameDesign()
   const { imageService, soundService } = useAssets()
   const [downloadAllError, setDownloadAllError] = useState<string | undefined>(
     undefined
@@ -42,7 +42,7 @@ export const ZipFileButtons: FunctionComponent = () => {
       return;
     }
 
-    handleIncomingDesign(file.name, { ...result.data, timestamp: file.lastModified })
+    handleIncomingDesign(file.name, { ...result.data, timestamp: file.lastModified }, 'ZIP')
   };
 
   const saveLabel = 'Save game to zip file'

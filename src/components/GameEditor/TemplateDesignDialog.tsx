@@ -20,9 +20,7 @@ export const TemplateDesignDialog: React.FunctionComponent<Props> = ({ isOpen, s
             return
         }
         const { gameDesign: design, soundAssets, imageAssets } = result.data
-        const success = handleIncomingDesign('template', {
-            design, soundAssets, imageAssets
-        });
+        const success = handleIncomingDesign('template', { design, soundAssets, imageAssets }, 'API');
         if (success) {
             setIsOpen(false)
         }

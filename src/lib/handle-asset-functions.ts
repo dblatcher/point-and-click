@@ -4,10 +4,9 @@ import { ImageService } from '@/services/imageService';
 import { SoundService } from '@/services/soundService';
 
 
-export const handleImageUpdateFunction = (imageService: ImageService, db?: GameEditorDatabase) => (update: AssetServiceUpdate) => {
-    if (!db) { return }
+export const storeImageUpdateToQuitSaveFunction = (imageService: ImageService, db: GameEditorDatabase) => (update: AssetServiceUpdate) => {
 
-    if (update.source === 'DB') {
+    if (update.source === 'DB_QUIT_SAVE') {
         return
     }
 
@@ -40,10 +39,9 @@ export const handleImageUpdateFunction = (imageService: ImageService, db?: GameE
     }
 }
 
-export const handleSoundUpdateFunction = (soundService: SoundService, db?: GameEditorDatabase) => (update: AssetServiceUpdate) => {
-    if (!db) { return }
+export const handleSoundUpdateToQuitSaveFunction = (soundService: SoundService, db: GameEditorDatabase) => (update: AssetServiceUpdate) => {
 
-    if (update.source === 'DB') {
+    if (update.source === 'DB_QUIT_SAVE') {
         return
     }
 

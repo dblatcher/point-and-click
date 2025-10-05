@@ -3,7 +3,7 @@ import { TypedEmitter } from "tiny-typed-emitter";
 import { assetToFile } from "./assets";
 
 type UpdateAction = 'add' | 'remove' | 'populate'
-export type UpdateSource = 'DB' | 'ZIP'
+export type UpdateSource = 'DB' | 'ZIP' | 'API' | 'DB_QUIT_SAVE'
 
 export type AssetServiceUpdate = {
     count: number,

@@ -53,7 +53,7 @@ export const SavedDesignDialog: React.FunctionComponent<Props> = ({ db, isOpen, 
     }
     const loadFile = (savedDesignKey: SavedDesignKey) => {
         retrieveDesignAndAssets(db)(savedDesignKey).then((designAndAssets) => {
-            const success = handleIncomingDesign(savedDesignKey, designAndAssets)
+            const success = handleIncomingDesign(savedDesignKey, designAndAssets, 'DB')
             if (!success) {
                 alert(`could not load ${savedDesignKey}`)
                 return undefined

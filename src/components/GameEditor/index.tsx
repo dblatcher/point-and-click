@@ -7,10 +7,11 @@ import { parseAndUpgrade } from '@/lib/design-version-management';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
-import { handleImageUpdateFunction, handleSoundUpdateFunction } from '@/lib/handle-asset-functions';
+import { handleSoundUpdateToQuitSaveFunction, storeImageUpdateToQuitSaveFunction } from '@/lib/handle-asset-functions';
 import { GameEditorDatabase, MaybeDesignAndAssets, openDataBaseConnection } from '@/lib/indexed-db';
 import { retrieveDesignAndAssets } from '@/lib/indexed-db/complex-transactions';
 import { Sprite } from '@/lib/Sprite';
+import { UpdateSource } from '@/services/FileAssetService';
 import { ImageService } from '@/services/imageService';
 import { SoundService } from '@/services/soundService';
 import { Avatar, Box, ButtonGroup, IconButton, Stack, Typography } from '@mui/material';
@@ -48,14 +49,14 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
         }
     )
 
-    const handleIncomingDesign = useCallback((sourceIdentifier: string, designAndAssets: MaybeDesignAndAssets): boolean => {
+    const handleIncomingDesign = useCallback((sourceIdentifier: string, designAndAssets: MaybeDesignAndAssets, updateSource: UpdateSource): boolean => {
         const { design, timestamp, imageAssets, soundAssets } = designAndAssets;
         if (!design) {
             console.log(`no design ${sourceIdentifier} found`);
             return false
         }
-        const dateString = timestamp ? `${new Date(timestamp).toLocaleDateString()},  ${new Date(timestamp).toLocaleTimeString()}` : 'unknown time';
-        console.log(`retrieved ${sourceIdentifier} from ${dateString}`)
+        const dateString = timestamp ? `[${new Date(timestamp).toLocaleDateString()},  ${new Date(timestamp).toLocaleTimeString()}]` : '';
+        console.log(`retrieved ${sourceIdentifier} from ${updateSource} ${dateString}`)
 
         const { gameDesign, failureMessage, updated, sourceVersion } = parseAndUpgrade(design);
 
@@ -67,8 +68,8 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
             console.log(`Updated from version ${sourceVersion}`);
             dispatchDesignUpdate({ type: 'set-upgrade-info', data: { sourceIdentifier, sourceVersion } });
         }
-        imageService.populate(imageAssets, 'DB')
-        soundService.populate(soundAssets, 'DB')
+        imageService.populate(imageAssets, updateSource)
+        soundService.populate(soundAssets, updateSource)
         dispatchDesignUpdate({ type: 'load-new', gameDesign })
         return true
     }, [imageService, soundService])
@@ -80,8 +81,8 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
 
         const designAndAssets = await retrieveDesignAndAssets(db)('quit-save')
         setIsWaitingforDesign(false)
-        const wasQuitSave = handleIncomingDesign('quit-save', designAndAssets)
-        if (!wasQuitSave) {
+        const wasQuitSaveSuccessfullyLoaded = handleIncomingDesign('quit-save', designAndAssets, 'DB_QUIT_SAVE')
+        if (!wasQuitSaveSuccessfullyLoaded) {
             setTemplateMenuOpen(true)
         }
     }, [handleIncomingDesign])
@@ -98,7 +99,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
                 }
                 const { gameDesign, imageAssets, soundAssets } = loadResult.data
                 setIsWaitingforDesign(false)
-                handleIncomingDesign('tutorial', { design: gameDesign, imageAssets, soundAssets })
+                handleIncomingDesign('tutorial-design', { design: gameDesign, imageAssets, soundAssets }, 'API')
             })
             return
         }
@@ -112,7 +113,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
                 }
                 const { gameDesign, imageAssets, soundAssets } = loadResult.data
                 setIsWaitingforDesign(false)
-                handleIncomingDesign('test-game', { design: gameDesign, imageAssets, soundAssets })
+                handleIncomingDesign('test-game', { design: gameDesign, imageAssets, soundAssets }, 'API')
             })
             return
         }
@@ -126,15 +127,14 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
     // if using db, listen to updates from services and store in the quit save
     useEffect(() => {
         if (!gameEditorState.db) { return }
-
-        const handleImageServiceUpdate = handleImageUpdateFunction(imageService, gameEditorState.db)
-        const handleSoundServiceUpdate = handleSoundUpdateFunction(soundService, gameEditorState.db)
-        imageService.on('update', handleImageServiceUpdate)
-        soundService.on('update', handleSoundServiceUpdate)
+        const updateQuitSaveImages = storeImageUpdateToQuitSaveFunction(imageService, gameEditorState.db)
+        const updateQuitSaveSounds = handleSoundUpdateToQuitSaveFunction(soundService, gameEditorState.db)
+        imageService.on('update', updateQuitSaveImages)
+        soundService.on('update', updateQuitSaveSounds)
 
         return () => {
-            imageService.off('update', handleImageServiceUpdate)
-            soundService.off('update', handleSoundServiceUpdate)
+            imageService.off('update', updateQuitSaveImages)
+            soundService.off('update', updateQuitSaveSounds)
         }
     }, [imageService, soundService, gameEditorState.db])
 
