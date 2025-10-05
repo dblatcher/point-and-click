@@ -29,8 +29,6 @@ import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
 
 
-export type { GameEditorProps };
-
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame, tutorial }) => {
     const [soundService] = useState(new SoundService())
     const [imageService] = useState(new ImageService())
@@ -39,15 +37,13 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
     const [isWaitingForDesign, setIsWaitingforDesign] = useState(true)
     const { setHeaderContent } = usePageMeta();
 
-    const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer,
-        {
-            gameDesign: getInitalDesign(),
-            history: [],
-            undoneHistory: [],
-            tabOpen: 'main',
-            gameItemIds: {},
-        }
-    )
+    const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer, {
+        gameDesign: getInitalDesign(),
+        history: [],
+        undoneHistory: [],
+        tabOpen: 'main',
+        gameItemIds: {},
+    })
 
     const handleIncomingDesign = useCallback((sourceIdentifier: string, designAndAssets: MaybeDesignAndAssets, updateSource: UpdateSource): boolean => {
         const { design, timestamp, imageAssets, soundAssets } = designAndAssets;
@@ -59,7 +55,6 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
         console.log(`retrieved ${sourceIdentifier} from ${updateSource} ${dateString}`)
 
         const { gameDesign, failureMessage, updated, sourceVersion } = parseAndUpgrade(design);
-
         if (!gameDesign) {
             alert(`Could not parse ${sourceIdentifier}: ${failureMessage ?? 'UNKNOWN'}`);
             return false
@@ -184,19 +179,16 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
     const sprites = [...gameDesign.sprites.map(data => new Sprite(data, imageService.get.bind(imageService)))]
 
     return (
-        <GameDesignProvider input={
-            {
-                gameDesign: gameEditorState.gameDesign,
-                tabOpen: gameEditorState.tabOpen,
-                gameItemIds: gameEditorState.gameItemIds,
-                upgradeInfo: gameEditorState.upgradeInfo,
-                dispatchDesignUpdate,
-                handleIncomingDesign,
-            }
-        }>
+        <GameDesignProvider input={{
+            gameDesign: gameEditorState.gameDesign,
+            tabOpen: gameEditorState.tabOpen,
+            gameItemIds: gameEditorState.gameItemIds,
+            upgradeInfo: gameEditorState.upgradeInfo,
+            dispatchDesignUpdate,
+            handleIncomingDesign,
+        }}>
             <AssetsProvider soundService={soundService} imageService={imageService}>
                 <SpritesProvider value={sprites}>
-
                     <Box component={'main'}
                         sx={{
                             display: 'flex',
