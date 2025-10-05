@@ -8,7 +8,7 @@ import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
 import { handleSoundUpdateToQuitSaveFunction, storeImageUpdateToQuitSaveFunction } from '@/lib/handle-asset-functions';
-import { GameEditorDatabase, MaybeDesignAndAssets, openDataBaseConnection } from '@/lib/indexed-db';
+import { MaybeDesignAndAssets, openDataBaseConnection } from '@/lib/indexed-db';
 import { retrieveDesignAndAssets } from '@/lib/indexed-db/complex-transactions';
 import { Sprite } from '@/lib/Sprite';
 import { UpdateSource } from '@/services/FileAssetService';
@@ -74,18 +74,6 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
         return true
     }, [imageService, soundService])
 
-    // when DB opens, load the quit save and populate file asset services
-    const handleDBOpen = useCallback(async ({ db }: { db: GameEditorDatabase }) => {
-        dispatchDesignUpdate({ type: 'set-db-instance', db })
-        console.log(`DB opened, version ${db.version}`)
-
-        const designAndAssets = await retrieveDesignAndAssets(db)('quit-save')
-        setIsWaitingforDesign(false)
-        const wasQuitSaveSuccessfullyLoaded = handleIncomingDesign('quit-save', designAndAssets, 'DB_QUIT_SAVE')
-        if (!wasQuitSaveSuccessfullyLoaded) {
-            setTemplateMenuOpen(true)
-        }
-    }, [handleIncomingDesign])
 
     // load the initial design for the tutorial or prebuilt game, 
     // or open DB and load quit-save
@@ -118,11 +106,23 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
             return
         }
 
-        openDataBaseConnection().then(handleDBOpen).catch(err => {
-            console.error('OPEN DB FAILED!!', err)
-            setIsWaitingforDesign(false)
-        })
-    }, [handleDBOpen, setIsWaitingforDesign, tutorial, usePrebuiltGame])
+        openDataBaseConnection()
+            .then(async ({ db }) => {
+                dispatchDesignUpdate({ type: 'set-db-instance', db })
+                console.log(`DB opened, version ${db.version}`)
+
+                const designAndAssets = await retrieveDesignAndAssets(db)('quit-save')
+                setIsWaitingforDesign(false)
+                const wasQuitSaveSuccessfullyLoaded = handleIncomingDesign('quit-save', designAndAssets, 'DB_QUIT_SAVE')
+                if (!wasQuitSaveSuccessfullyLoaded) {
+                    setTemplateMenuOpen(true)
+                }
+            })
+            .catch(err => {
+                console.error('OPEN DB FAILED!!', err)
+                setIsWaitingforDesign(false)
+            })
+    }, [dispatchDesignUpdate, handleIncomingDesign, setIsWaitingforDesign, tutorial, usePrebuiltGame])
 
     // if using db, listen to updates from services and store in the quit save
     useEffect(() => {
