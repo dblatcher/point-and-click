@@ -2,6 +2,7 @@ import { useGameDesign } from "@/context/game-design-context"
 import { TutorialStage } from "@/lib/game-design-logic/types"
 import { Box, Button, Grid, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
 import { CheckBoxIcon, CheckBoxOutlineBlankIcon } from "../material-icons"
+import { Forward } from "@mui/icons-material"
 
 interface Props {
     currentStage: TutorialStage
@@ -46,7 +47,11 @@ export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage
                 <Box display={'flex'} justifyContent={'space-between'} alignItems={'flex-end'}>
                     <Typography component={'div'} fontSize={'small'}>{currentStage.confirmation}</Typography>
                     {!onLastStage && (
-                        <Button onClick={progressToNextStage}>next stage</Button>
+                        <Button
+                            size="large"
+                            endIcon={<Forward />}
+                            color="secondary"
+                            onClick={progressToNextStage}>next stage</Button>
                     )}
                 </Box>
             )}
