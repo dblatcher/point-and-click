@@ -1,5 +1,6 @@
 import { Tutorial, TutorialStage } from "../game-design-logic/types"
 import { HelpIcon, InteractionIcon, PlayCircleFilledOutlinedIcon } from "@/components/GameEditor/material-icons"
+import { findById } from "../util";
 
 const addInteraction: TutorialStage = {
     subtitle: 'Welcome to Point and Click',
@@ -56,7 +57,7 @@ const createActor: TutorialStage = {
             Let's add a new object in the game world. Anything that can be placed in a room in the game world - people, robots, inanimate objects etc - are described as ACTORS.
         </p>
         <p>
-            ACTORS can use SPRITEs to be fully animated, but for now, let's make a simple ACTOR represented with a static image of a white tube.   
+            ACTORS can use SPRITEs to be fully animated, but for now, let's make a simple ACTOR represented with a static image of a white tube.
         </p>
     </>,
     tasks: [
@@ -71,7 +72,7 @@ const createActor: TutorialStage = {
             title: 'add a new ACTOR and start it in room-1',
             detail: 'Click the "Add" button and enter "TUBE" as the id. Select "room-1" from the "starting room drop-down"',
             test(state) {
-                const newActor = state.gameDesign.actors[2];
+                const newActor = findById('TUBE', state.gameDesign.actors);
                 return newActor?.room === 'room-1'
             },
         },
@@ -79,7 +80,7 @@ const createActor: TutorialStage = {
             title: 'pick a spot in the room to place your new ACTOR',
             detail: 'click a point on the preview of the room',
             test(state) {
-                const newActor = state.gameDesign.actors[2];
+                const newActor = findById('TUBE', state.gameDesign.actors)
                 return newActor?.room === 'room-1' &&
                     newActor.x !== 0 &&
                     newActor.y !== 0
@@ -89,7 +90,7 @@ const createActor: TutorialStage = {
             title: 'set the image to represent your ACTOR',
             detail: 'go to the "images" tab of the Actor Editor and click "pick default frame" and choose the image from the "tube.png" sprite sheet',
             test(state) {
-                const newActor = state.gameDesign.actors[2];
+                const newActor = findById('TUBE', state.gameDesign.actors)
                 return !!newActor?.defaultFrame
             },
         }
@@ -100,14 +101,67 @@ const createActor: TutorialStage = {
     </>
 };
 
+const inventory: TutorialStage = {
+    intro: <>
+        <p>What if our player character wanted to pick up the tube and carry it around?</p>
+        <p>We can create INVENTORY ITEMS to represent things that the player can carry and use in INTERACTIONS. Let's create onr for the tube.</p>
+        <p>We will also need to add an INTERACTION to allow the player to pick up the ACTOR represening the TUBE</p>
+    </>,
+    tasks: [
+        {
+            title: 'Add a new inventory item with the ID "TUBE_ITEM"',
+            test(state) {
+                const tubeItem = findById('TUBE_ITEM', state.gameDesign.items);
+                return !!tubeItem;
+            },
+        },
+        {
+            title: 'Pick an icon for the INVENTORY ITEM - you can use the same image we used for the tube ACTOR',
+            test(state) {
+                const tubeItem = findById('TUBE_ITEM', state.gameDesign.items);
+                return !!tubeItem?.imageId;
+            },
+        },
+        {
+            title: 'Create an INTERACTION with the TUBE actor as the target and "TAKE" as the verb.',
+            detail: 'You can create INTERACTIONS from the ACTOR screen, or from the main Interactions screen',
+            test(state) {
+                return state.gameDesign.interactions.some(interaction => interaction.targetId === 'TUBE' && interaction.verbId === 'TAKE')
+            },
+        },
+        {
+            title: "Add consequences to the INTERACTION - it should remove the ACTOR and add the INVENTORY ITEM to the player's inventory",
+            detail: "You need a 'remove actor' consequence and an 'inventory' consequence",
+            test(state) {
+                return state.gameDesign.interactions.some(interaction =>
+                    interaction.targetId === 'TUBE' && interaction.verbId === 'TAKE' &&
+                    interaction.consequences.some(consequence => consequence.type === 'removeActor' && consequence.actorId === 'TUBE') &&
+                    interaction.consequences.some(consequence => consequence.type === 'inventory' && consequence.addOrRemove === 'ADD' && consequence.itemId === 'TUBE_ITEM')
+                )
+            },
+        }
+    ],
+    confirmation: <>
+        <p>Great! try running the game again and pick up the tube!</p>
+        <p>You should see the item in the player's inventory.</p>
+    </>
+}
+
 export const basicTutorial: Tutorial = {
     title: 'Learning the basics',
     designId: 'detailed-template',
     stages: [
         addInteraction,
         createActor,
+        inventory,
+        // TO DO :add stages about: 
+        //  - setting the "must reach target" flag on interactions
+        //  - interactions using items
         {
-            intro: <p>This is the end of the tutorial</p>,
+            intro: <>
+                <p>This is the end of the tutorial.</p>
+                <p>There are more features to discover, which may be covered by longer tutorials in future.</p>
+            </>,
             tasks: [],
             confirmation: <p>Well done for doing all the tasks.</p>,
         }
