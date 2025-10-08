@@ -1,6 +1,7 @@
 import { Tutorial, TutorialStage } from "../game-design-logic/types"
 import { HelpIcon, InteractionIcon, PlayCircleFilledOutlinedIcon } from "@/components/GameEditor/material-icons"
 import { findById } from "../util";
+import Link from "next/link";
 
 const addInteraction: TutorialStage = {
     subtitle: 'Welcome to Point and Click',
@@ -157,7 +158,7 @@ const mustReachAndName: TutorialStage = {
         <p>There's an option for that - under the Conditions for an INTERACTION, you can set "Must reach target first" to on/checked.</p>
         <p>
             Did you also notice that "TUBE", the ACTOR's id appears in the command bar in the game ui?
-            You can customise the text used in-game to refer to ACTORs and INVENTORY_ITEMS by giving them a 'name'.
+            You can customise the text used in-game to refer to ACTORs and INVENTORY_ITEMS by giving them a &lsquo;name&rsquo;.
         </p>
     </>,
     tasks: [
@@ -245,7 +246,7 @@ const conclution: TutorialStage = {
         <p>There are more features to discover. Every screen in the editor has a help icon <HelpIcon fontSize="inherit" /> to explain what they are for.</p>
     </>,
     tasks: [],
-    confirmation: <p>Good luck! <a href='/editor'>Ready to start building your own game in the Editor?</a></p>,
+    confirmation: <p>Good luck! <Link href='/editor'>Ready to start building your own game in the Editor?</Link></p>,
 }
 
 export const basicTutorial: Tutorial = {
