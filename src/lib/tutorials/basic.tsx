@@ -59,6 +59,7 @@ const createActor: TutorialStage = {
         <p>
             ACTORS can use SPRITEs to be fully animated, but for now, let's make a simple ACTOR represented with a static image of a white tube.
         </p>
+        <p>ACTORS, and most things you add to the game need a unique "id" to identify them in the engine. Let's give our new ACTOR the id "TUBE".</p>
     </>,
     tasks: [
         {
@@ -147,6 +148,106 @@ const inventory: TutorialStage = {
     </>
 }
 
+const mustReachAndName: TutorialStage = {
+    intro: <>
+        <p>
+            If you ran the game and picked up the tube, you probably noticed that the player character didn't move and the consequences happened immediately.
+            Sometimes, that's what you want, but wouldn't it be better for the player character to have to get close enough to pick up the tube?
+        </p>
+        <p>There's an option for that - under the Conditions for an INTERACTION, you can set "Must reach target first" to on/checked.</p>
+        <p>
+            Did you also notice that "TUBE", the ACTOR's id appears in the command bar in the game ui?
+            You can customise the text used in-game to refer to ACTORs and INVENTORY_ITEMS by giving them a 'name'.
+        </p>
+    </>,
+    tasks: [
+        {
+            title: 'Open the "PICK UP TUBE" INTERACTION and set "Must reach target first" to on',
+            test(state) {
+                return state.gameDesign.interactions.some(interaction =>
+                    interaction.targetId === 'TUBE' && interaction.verbId === 'TAKE' &&
+                    interaction.consequences.some(consequence => consequence.type === 'removeActor' && consequence.actorId === 'TUBE') &&
+                    interaction.consequences.some(consequence => consequence.type === 'inventory' && consequence.addOrRemove === 'ADD' && consequence.itemId === 'TUBE_ITEM') &&
+                    interaction.mustReachFirst === true
+                )
+            },
+        },
+        {
+            title: 'Set a name for the "TUBE" ACTOR',
+            detail: 'This can be anything you like, but pick something that will describe it for the player.',
+            test(state) {
+                return !!findById('TUBE', state.gameDesign.actors)?.name
+            },
+        }
+    ],
+    confirmation: <>
+        <p>Try running the game again and pick up the tube - the consequences won't happen until the player character reaches the target.</p>
+        <p>If the player character cannot reach the target, the INTERACTION will fail and the player character will say the default response.</p>
+    </>
+}
+
+const interactionUsingItem: TutorialStage = {
+    intro: <>
+        <p>Now the player can pick up the tube - let's give them something to do with it!</p>
+        <p>INTERACTIONS need a verb and a target, but they can also have an INVENTORY_ITEM if the verb supports it. In this game, the "USE" and "GIVE" verbs support INVENTORY ITEMS</p>
+        <p>To try that out, let's make something happen when we give the tube to the NPC.</p>
+    </>,
+    tasks: [
+        {
+            title: 'create an INTERACTION for GIVE TUBE_ITEM TO NPC',
+            test(state) {
+                return state.gameDesign.interactions.some(interaction =>
+                    interaction.verbId === 'GIVE' &&
+                    interaction.targetId === 'NPC' &&
+                    interaction.itemId === 'TUBE_ITEM'
+                )
+            },
+        },
+        {
+            title: "add a consequence to remove the item from the player's inventory",
+            test(state) {
+                return state.gameDesign.interactions.some(interaction =>
+                    interaction.verbId === 'GIVE' &&
+                    interaction.targetId === 'NPC' &&
+                    interaction.itemId === 'TUBE_ITEM' &&
+                    interaction.consequences.some(consequence =>
+                        consequence.type === 'inventory' &&
+                        consequence.itemId === 'TUBE_ITEM' &&
+                        consequence.addOrRemove === 'REMOVE'
+                    )
+                )
+            }
+        },
+        {
+            title: "add a consequence to the INTERACTION give an order to the NPC to say something (anything you like!)",
+            test(state) {
+                return state.gameDesign.interactions.some(interaction =>
+                    interaction.verbId === 'GIVE' &&
+                    interaction.targetId === 'NPC' &&
+                    interaction.itemId === 'TUBE_ITEM' &&
+                    interaction.consequences.some(consequence =>
+                        consequence.type === 'order' &&
+                        consequence.actorId === 'NPC' &&
+                        consequence.orders.some(order => order.type === 'say')
+                    )
+                )
+            }
+        },
+    ],
+    confirmation: <>
+        <p>That's it - run the game and give it a go!</p>
+    </>
+}
+
+const conclution: TutorialStage = {
+    intro: <>
+        <p>This is the end of the tutorial. I hope it helped you get an understanding of ACTORS, INVENTORY_ITEMS and INTERACTIONS.</p>
+        <p>There are more features to discover. Every screen in the editor has a help icon <HelpIcon fontSize="inherit" /> to explain what they are for.</p>
+    </>,
+    tasks: [],
+    confirmation: <p>Good luck! <a href='/editor'>Ready to start building your own game in the Editor?</a></p>,
+}
+
 export const basicTutorial: Tutorial = {
     title: 'Learning the basics',
     designId: 'detailed-template',
@@ -154,16 +255,8 @@ export const basicTutorial: Tutorial = {
         addInteraction,
         createActor,
         inventory,
-        // TO DO :add stages about: 
-        //  - setting the "must reach target" flag on interactions
-        //  - interactions using items
-        {
-            intro: <>
-                <p>This is the end of the tutorial.</p>
-                <p>There are more features to discover, which may be covered by longer tutorials in future.</p>
-            </>,
-            tasks: [],
-            confirmation: <p>Well done for doing all the tasks.</p>,
-        }
+        mustReachAndName,
+        interactionUsingItem,
+        conclution,
     ]
 }
