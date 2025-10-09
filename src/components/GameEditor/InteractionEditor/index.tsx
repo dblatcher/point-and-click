@@ -1,5 +1,4 @@
 import { AddIcon, InteractionIcon } from "@/components/GameEditor/material-icons";
-import { SelectInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
 import { Interaction } from "@/definitions";
 import { cloneData } from "@/lib/clone";
@@ -11,6 +10,7 @@ import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { InteractionDialog } from "./InteractionDialog";
 import { InteractionTableHeaders } from "./InteractionTableHeaders";
 import { InteractionTableRow } from "./InteractionTableRow";
+import { TableFilter } from "./TableFilter";
 
 
 const doesMatchFilters = (
@@ -56,10 +56,10 @@ export const InteractionEditor: React.FunctionComponent = () => {
     const { gameDesign, changeOrAddInteraction, applyModification, deleteInteraction } = useGameDesign()
     const { interactions, verbs, items, rooms } = gameDesign
 
-    const [verbFilter, setVerbFilter] = useState('')
-    const [itemFilter, setItemFilter] = useState('')
-    const [targetFilter, setTargetFilter] = useState('')
-    const [roomFilter, setRoomFilter] = useState('')
+    const [verbFilter, setVerbFilter] = useState<string>()
+    const [itemFilter, setItemFilter] = useState<string>()
+    const [targetFilter, setTargetFilter] = useState<string>()
+    const [roomFilter, setRoomFilter] = useState<string>()
 
     const [interactionUnderConstruction, setInteractionUnderConstruction] = useState<Partial<Interaction> | undefined>(undefined)
     const [edittedIndex, setEdittedIndex] = useState<number | undefined>(undefined)
@@ -100,42 +100,24 @@ export const InteractionEditor: React.FunctionComponent = () => {
                         <TableRow>
                             <TableCell>
                                 <Box minWidth={80}>
-                                    <SelectInput
-                                        optional
-                                        inputHandler={verbFilter => setVerbFilter(verbFilter ?? '')}
-                                        value={verbFilter}
-                                        options={listIds(verbs)} />
+                                    <TableFilter value={verbFilter} options={listIds(verbs)} setValue={setVerbFilter} />
                                 </Box>
                             </TableCell>
                             <TableCell>
-                                <Box minWidth={80}>
-                                    <SelectInput
-                                        optional
-                                        inputHandler={targetFilter => setTargetFilter(targetFilter ?? '')}
-                                        value={targetFilter}
-                                        options={filteredTargets.ids}
-                                        descriptions={filteredTargets.descriptions}
-                                    />
-                                </Box>
+                                <TableFilter value={targetFilter} options={filteredTargets.ids} descriptions={filteredTargets.descriptions} setValue={setTargetFilter} />
                             </TableCell>
                             <TableCell>
-                                <Box minWidth={80}>
-                                    <SelectInput
-                                        optional
-                                        inputHandler={itemFilter => setItemFilter(itemFilter ?? '')}
-                                        value={itemFilter}
-                                        options={listIds(items)}
-                                        descriptions={getItemDescriptions(gameDesign)} />
-                                </Box>
+                                <TableFilter
+                                    value={itemFilter}
+                                    setValue={setItemFilter}
+                                    options={listIds(items)}
+                                    descriptions={getItemDescriptions(gameDesign)} />
                             </TableCell>
                             <TableCell>
-                                <Box minWidth={80}>
-                                    <SelectInput
-                                        optional
-                                        inputHandler={roomFilter => setRoomFilter(roomFilter ?? '')}
-                                        value={roomFilter}
-                                        options={listIds(rooms)} />
-                                </Box>
+                                <TableFilter
+                                    value={roomFilter}
+                                    setValue={setRoomFilter}
+                                    options={listIds(rooms)} />
                             </TableCell>
                         </TableRow>
                     </TableHead>
