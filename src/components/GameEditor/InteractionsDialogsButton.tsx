@@ -50,8 +50,8 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({
 
         {(interactionDialogOpen) &&
             <InteractionDialog
-                initialState={typeof interactionIndex === 'number' ? gameDesign.interactions[interactionIndex] : newPartial}
-                cancelFunction={() => { setInteractionDialogOpen(false) }}
+                initialInteraction={typeof interactionIndex === 'number' ? gameDesign.interactions[interactionIndex] : newPartial}
+                cancel={() => { setInteractionDialogOpen(false) }}
                 confirm={(interaction) => {
                     setInteractionDialogOpen(false)
                     changeOrAddInteraction(interaction, interactionIndex)

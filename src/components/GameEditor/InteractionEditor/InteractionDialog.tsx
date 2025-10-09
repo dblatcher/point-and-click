@@ -3,50 +3,102 @@ import { useGameDesign } from "@/context/game-design-context";
 import { Consequence, Interaction } from "@/definitions";
 import { InteractionSchema } from "@/definitions/Interaction";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
-import { cloneData } from "@/lib/clone";
 import { findTarget } from "@/lib/commandFunctions";
 import { insertAt, listIds } from "@/lib/util";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, Typography } from "@mui/material";
+import { useReducer, useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { ButtonWithConfirm } from '../ButtonWithConfirm';
+import { makeNewConsequence } from "../defaults";
 import { EditorBox } from "../layout/EditorBox";
+import { ClearIcon, InteractionIcon, UndoIcon } from "../material-icons";
+import { MultipleSelectChip } from "../MultipleSelectChip";
+import { PickConsequenceTypeDialogue } from "../PickConsequenceTypeDialogue";
 import { ConsequenceCard } from "../SequenceEditor/ConsequenceCard";
 import { ConsequenceDialog } from "../SequenceEditor/ConsequenceDialog";
-import { makeNewConsequence } from "../defaults";
-import { InteractionIcon } from "../material-icons";
-import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { FlagConditionControl } from "./FlagConditionControl";
-import { PickConsequenceTypeDialogue } from "../PickConsequenceTypeDialogue";
-import { MultipleSelectChip } from "../MultipleSelectChip";
+import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 
 interface Props {
-    initialState: Partial<Interaction>;
+    initialInteraction: Partial<Interaction>;
     confirm: { (interaction: Interaction): void };
-    cancelFunction: { (): void }
+    cancel: { (): void }
 }
 
-export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Props) => {
-    const [interaction, setInteraction] = useState<Partial<Interaction>>(cloneData(
+type Action = {
+    type: 'reset'
+} | {
+    type: 'update',
+    mod: Partial<Interaction>
+} | {
+    type: 'update-consequence',
+    consequence: Consequence,
+    index: number,
+}
+
+type State = {
+    interaction: Partial<Interaction> & { consequences: Interaction['consequences'] },
+    initialValue: Partial<Interaction> & { consequences: Interaction['consequences'] },
+    hasChanges: boolean
+};
+
+const reducer = (state: State, action: Action): State => {
+    switch (action.type) {
+        case 'reset':
+            return {
+                ...state,
+                hasChanges: false,
+                interaction: state.initialValue,
+            }
+        case "update":
+            return {
+                ...state,
+                hasChanges: true,
+                interaction: {
+                    ...state.interaction,
+                    ...action.mod,
+                }
+            }
+        case "update-consequence":
+            const { index, consequence } = action;
+            const { consequences } = state.interaction;
+            return {
+                ...state,
+                hasChanges: true,
+                interaction: {
+                    ...state.interaction,
+                    consequences: [
+                        ...consequences.slice(0, index),
+                        consequence,
+                        ...consequences.slice(index + 1)
+                    ]
+                }
+            }
+    }
+};
+
+
+export const InteractionDialog = ({ initialInteraction, confirm, cancel }: Props) => {
+
+    const [state, dispatch] = useReducer(
+        reducer,
         {
-            ...initialState,
-            consequences: initialState.consequences ?? []
-        }))
+            hasChanges: false,
+            interaction: { ...initialInteraction, consequences: initialInteraction.consequences ?? [] },
+            initialValue: { ...initialInteraction, consequences: initialInteraction.consequences ?? [] }
+        }
+    )
+    const { interaction, hasChanges } = state;
+
     const [activeConsequenceIndex, setActiveConsequenceIndex] = useState<number | undefined>(undefined)
     const [insertConsequenceDialogIndex, setInsertConsequenceDialogIndex] = useState<number | undefined>(undefined)
+    const [showExitDialog, setShowExitDialog] = useState(false)
     const { gameDesign } = useGameDesign()
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
-    const activeConsequence = typeof activeConsequenceIndex === 'number' ? interaction.consequences?.[activeConsequenceIndex] : undefined
+    const activeConsequence = typeof activeConsequenceIndex === 'number' ? interaction.consequences[activeConsequenceIndex] : undefined
 
     const updateInteraction = (mod: Partial<Interaction>) => {
-        console.log('update', mod)
-        setInteraction({ ...interaction, ...mod })
-    }
-
-    const updateConsequence = (consequence: Consequence, index: number) => {
-        const { consequences = [] } = interaction
-        consequences.splice(index, 1, consequence)
-        setInteraction({ ...interaction, consequences })
+        dispatch({ type: 'update', mod })
     }
 
     const handleConfirm = () => {
@@ -56,11 +108,11 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
         }
     }
 
-    const handleReset = () => {
-        setInteraction(cloneData({
-            ...initialState,
-            consequences: initialState.consequences ?? []
-        }))
+    const handleClose = () => {
+        if (!hasChanges) {
+            return cancel()
+        }
+        setShowExitDialog(true)
     }
 
     const dialogTitle = () => {
@@ -81,7 +133,7 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
     }
 
     return (
-        <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'}>
+        <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'} onClose={handleClose}>
             <DialogTitle sx={{ alignItems: 'center', display: 'flex' }}>
                 <InteractionIcon />
                 Edit Interaction: {dialogTitle()}
@@ -171,15 +223,13 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                                     </Box>
                                 )}
                                 mutateList={consequences => updateInteraction({ consequences })}
-                                customInsertFunction={(index) => {
-                                    setInsertConsequenceDialogIndex(index)
-                                }}
+                                customInsertFunction={setInsertConsequenceDialogIndex}
                             />
                         </EditorBox>
                         {activeConsequence && (
                             <ConsequenceDialog close={() => { setActiveConsequenceIndex(undefined) }}
                                 consequence={activeConsequence}
-                                handleConsequenceUpdate={(consequence) => { updateConsequence(consequence, activeConsequenceIndex ?? 0) }}
+                                handleConsequenceUpdate={(consequence) => dispatch({ type: 'update-consequence', consequence, index: activeConsequenceIndex ?? 0 })}
                             />
                         )}
                     </Grid>
@@ -187,15 +237,27 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
             </DialogContent >
 
             <DialogActions>
-                <ButtonWithConfirm label="Cancel Changes" confirmationText="really cancel changes?"
-                    onClick={cancelFunction}
+                <ButtonWithConfirm
+                    buttonProps={{
+                        startIcon: <ClearIcon />,
+                        disabled: !hasChanges && parseResult.success
+                    }}
+                    label="Cancel Changes"
+                    confirmationText="really cancel changes?"
+                    onClick={cancel}
                 />
-                <Button onClick={handleReset}>RESET CHANGES</Button>
+                <Button onClick={() => dispatch({ type: 'reset' })}
+                    disabled={!hasChanges}
+                    startIcon={<UndoIcon />}
+                >reset</Button>
                 <Button
                     onClick={handleConfirm}
+                    variant="contained"
                     disabled={!parseResult.success}
                     title={(!parseResult.success && parseResult.error.message) || ''}
-                >SAVE CHANGES</Button>
+                >
+                    save changes
+                </Button>
             </DialogActions>
 
             <PickConsequenceTypeDialogue
@@ -209,6 +271,17 @@ export const InteractionDialog = ({ initialState, confirm, cancelFunction }: Pro
                     setInsertConsequenceDialogIndex(undefined)
                 }} />
 
+            <Dialog open={showExitDialog} onClose={() => setShowExitDialog(false)}>
+                <DialogContent>
+                    <DialogContentText>
+                        You have made edits to this Interaction
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions sx={{ justifyContent: 'space-around' }}>
+                    <Button onClick={cancel}>Cancel changes</Button>
+                    <Button onClick={handleConfirm}>Save changes</Button>
+                </DialogActions>
+            </Dialog>
         </Dialog >
     )
 }

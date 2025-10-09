@@ -175,8 +175,8 @@ export const InteractionEditor: React.FunctionComponent = () => {
             {interactionUnderConstruction &&
                 <InteractionDialog key={edittedIndex}
                     confirm={saveInteraction}
-                    initialState={interactionUnderConstruction}
-                    cancelFunction={() => {
+                    initialInteraction={interactionUnderConstruction}
+                    cancel={() => {
                         setEdittedIndex(undefined)
                         setInteractionUnderConstruction(undefined)
                     }}
