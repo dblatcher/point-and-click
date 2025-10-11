@@ -4,68 +4,50 @@ import { Interaction } from "@/definitions";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import { Fragment, ReactNode, useState } from "react";
+import { Fragment, useState } from "react";
 import { EditorHeading } from "../layout/EditorHeading";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { InteractionDialog } from "./InteractionDialog";
-import { InteractionTableHeaders } from "./InteractionTableHeaders";
 import { InteractionTableRow } from "./InteractionTableRow";
-import { TableFilter } from "./TableFilter";
+import { HeadingCellWithFilter } from "./HeadingCellWithFilter";
 
 
 const doesMatchFilters = (
-    verbFilter?: string,
-    itemFilter?: string,
-    targetFilter?: string,
-    roomFilter?: string
+    verbFilter: string[],
+    itemFilter: string[],
+    targetFilter: string[],
+    roomFilter: string[]
 ) => (interaction: Interaction): boolean => {
-    if (verbFilter && interaction.verbId !== verbFilter) {
+    if (verbFilter.length > 0 && !(verbFilter.includes(interaction.verbId))) {
         return false
     }
-    if (itemFilter && interaction.itemId !== itemFilter) {
+    if (itemFilter.length > 0 && (!interaction.itemId || !(itemFilter.includes(interaction.itemId)))) {
         return false
     }
-    if (targetFilter && interaction.targetId !== targetFilter) {
+    if (targetFilter.length > 0 && !(targetFilter.includes(interaction.targetId))) {
         return false
     }
-    if (roomFilter && interaction.roomId !== roomFilter) {
+    if (roomFilter.length > 0 && (!interaction.roomId || !(roomFilter.includes(interaction.roomId)))) {
         return false
     }
     return true
-}
-
-const getFilteredTargets = (
-    filteredInteractions: Interaction[],
-    targetLists: { ids: string[]; descriptions: ReactNode[]; }
-): {
-    ids: string[]; descriptions: ReactNode[];
-} => {
-    const ids: string[] = []
-    const descriptions: ReactNode[] = []
-
-    targetLists.ids.forEach((id, index) => {
-        if (filteredInteractions.some(interaction => interaction.targetId === id)) {
-            ids.push(id)
-            descriptions.push(targetLists.descriptions[index])
-        }
-    })
-    return { ids, descriptions }
 }
 
 export const InteractionEditor: React.FunctionComponent = () => {
     const { gameDesign, changeOrAddInteraction, applyModification, deleteInteraction } = useGameDesign()
     const { interactions, verbs, items, rooms } = gameDesign
 
-    const [verbFilter, setVerbFilter] = useState<string>()
-    const [itemFilter, setItemFilter] = useState<string>()
-    const [targetFilter, setTargetFilter] = useState<string>()
-    const [roomFilter, setRoomFilter] = useState<string>()
+    const [verbFilter, setVerbFilter] = useState<string[]>([])
+    const [itemFilter, setItemFilter] = useState<string[]>([])
+    const [targetFilter, setTargetFilter] = useState<string[]>([])
+    const [roomFilter, setRoomFilter] = useState<string[]>([])
 
     const [interactionUnderConstruction, setInteractionUnderConstruction] = useState<Partial<Interaction> | undefined>(undefined)
     const [edittedIndex, setEdittedIndex] = useState<number | undefined>(undefined)
 
     const filteredInteractions = interactions.filter(doesMatchFilters(verbFilter, itemFilter, targetFilter, roomFilter))
-    const filteredTargets = getFilteredTargets(filteredInteractions, getTargetLists(gameDesign))
+
+    const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign);
 
     const saveInteraction = (interaction: Interaction) => {
         changeOrAddInteraction(interaction, edittedIndex)
@@ -89,36 +71,45 @@ export const InteractionEditor: React.FunctionComponent = () => {
 
     return (
         <article>
-            <EditorHeading icon={InteractionIcon} heading="Interactions" helpTopic="interactions" />
+            <EditorHeading icon={InteractionIcon} heading="Interactions" helpTopic="interactions" >
+                <Button
+                    sx={{ marginLeft: 2 }}
+                    size="large"
+                    onClick={() => {
+                        setInteractionUnderConstruction({})
+                        setEdittedIndex(undefined)
+                    }}
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                >
+                    Add new Interaction
+                </Button>
+            </EditorHeading>
             <TableContainer component={Paper}>
                 <Table size="small" padding="normal" sx={{ captionSide: 'top' }}>
                     <caption>
                         <Typography>Showing {filteredInteractions.length}/{interactions.length} interactions</Typography>
                     </caption>
                     <TableHead>
-                        <InteractionTableHeaders />
-                        <TableRow>
-                            <TableCell>
-                                <Box minWidth={80}>
-                                    <TableFilter value={verbFilter} options={listIds(verbs)} setValue={setVerbFilter} />
-                                </Box>
-                            </TableCell>
-                            <TableCell>
-                                <TableFilter value={targetFilter} options={filteredTargets.ids} descriptions={filteredTargets.descriptions} setValue={setTargetFilter} />
-                            </TableCell>
-                            <TableCell>
-                                <TableFilter
-                                    value={itemFilter}
-                                    setValue={setItemFilter}
-                                    options={listIds(items)}
-                                    descriptions={getItemDescriptions(gameDesign)} />
-                            </TableCell>
-                            <TableCell>
-                                <TableFilter
-                                    value={roomFilter}
-                                    setValue={setRoomFilter}
-                                    options={listIds(rooms)} />
-                            </TableCell>
+                        <TableRow sx={{ verticalAlign: 'top' }}>
+                            <HeadingCellWithFilter label="Verb"
+                                list={verbFilter} options={listIds(verbs)} setList={setVerbFilter} />
+                            <HeadingCellWithFilter label="Target" list={targetFilter}
+                                options={targetIds}
+                                descriptions={targetDescriptions}
+                                setList={setTargetFilter}
+                            />
+                            <HeadingCellWithFilter label="Item"
+                                list={itemFilter}
+                                setList={setItemFilter}
+                                options={listIds(items)}
+                                descriptions={getItemDescriptions(gameDesign)} />
+                            <HeadingCellWithFilter label="Room"
+                                list={roomFilter}
+                                setList={setRoomFilter}
+                                options={listIds(rooms)} />
+                            <TableCell>Consequences</TableCell>
+                            <TableCell>Conditions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

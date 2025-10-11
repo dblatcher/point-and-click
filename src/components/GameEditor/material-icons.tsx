@@ -52,6 +52,9 @@ import SpriteIcon from '@mui/icons-material/AutoAwesomeMotion';
 import SlideshowIcon from '@mui/icons-material/Slideshow';
 import SearchIcon from '@mui/icons-material/Search';
 import SchoolIcon from '@mui/icons-material/School';
+import FilterListIcon from "@mui/icons-material/FilterList";
+import FilterListOffIcon from "@mui/icons-material/FilterListOff";
+
 
 export type IconComponent = typeof ActorIcon;
 
@@ -80,6 +83,8 @@ export {
     EditIcon,
     ExpandMoreIcon,
     ExclamationIcon,
+    FilterListIcon,
+    FilterListOffIcon,
     FlagCircleIcon,
     FlagOutlinedIcon,
     FlagFilledIcon,
