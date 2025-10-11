@@ -50,7 +50,7 @@ export const HeadingCellWithFilter = ({ label, list, setList, options, descripti
     return (
 
         <TableCell>
-            <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+            <Box display={'flex'} alignItems={'center'} gap={2}>
                 <span>{label}</span>
                 <IconButton color='secondary'
                     title='clear filter'
@@ -59,33 +59,30 @@ export const HeadingCellWithFilter = ({ label, list, setList, options, descripti
                     <FilterListOffIcon />
                 </IconButton>
             </Box>
-            <Box display={'flex'} alignItems={'center'}>
-                <FormControl sx={{ width: 180, paddingY: 1 }} title={list.join("; ")}>
-                    <InputLabel id={`table-filter-${label}-label`}>filter</InputLabel>
-                    <Select
-                        labelId={`table-filter-${label}-label`}
-                        id={`table-filter-${label}`}
-                        multiple
-                        value={list}
-                        onChange={handleChange}
-                        input={<OutlinedInput color='secondary' label={`${label} filter`} size='small' />}
-                        MenuProps={MenuProps}
-                        IconComponent={FilterListIcon}
-                    >
-                        {options.map((id, index) => (
-                            <MenuItem
-                                key={index}
-                                value={id}
-                                sx={{ fontSize: 'small' }}
-                                style={getStyles(id, list, theme)}
-                            >
-                                {descriptions?.[index] ?? id}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-            </Box>
+            <FormControl fullWidth sx={{ minWidth: 180, paddingY: 1 }} title={list.join("; ")}>
+                <InputLabel id={`table-filter-${label}-label`}>filter</InputLabel>
+                <Select
+                    labelId={`table-filter-${label}-label`}
+                    id={`table-filter-${label}`}
+                    multiple
+                    value={list}
+                    onChange={handleChange}
+                    input={<OutlinedInput color='secondary' label={`${label} filter`} size='small' />}
+                    MenuProps={MenuProps}
+                    IconComponent={FilterListIcon}
+                >
+                    {options.map((id, index) => (
+                        <MenuItem
+                            key={index}
+                            value={id}
+                            sx={{ fontSize: 'small' }}
+                            style={getStyles(id, list, theme)}
+                        >
+                            {descriptions?.[index] ?? id}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
         </TableCell>
     );
 }
