@@ -1,7 +1,6 @@
-import { Narrative } from '@/definitions/BaseTypes';
 import { Box, Card, CardActionArea, CardActions, Typography } from "@mui/material";
-import { DescriptionOutlinedIcon, IconComponent } from './material-icons';
 import { ReactNode } from 'react';
+import { IconComponent } from './material-icons';
 
 interface Props {
     Icon?: IconComponent;
@@ -34,23 +33,4 @@ export const ConceptCard = ({ Icon, handleClick, title, width, children, palette
             {!!actions && <CardActions disableSpacing >{actions}</CardActions>}
         </Card >
     )
-}
-
-type TextProps = Omit<Props, 'children'> & {
-    text: string;
-    narrative?: Narrative
-}
-
-export const TextConceptCard = ({ text, narrative, ...rest }: TextProps) => {
-    return <ConceptCard {...rest}>
-        <Box
-            display={'flex'}
-            justifyContent={'space-between'}
-            maxWidth={rest.width}
-            sx={{ paddingX: 1, paddingY: .25 }}
-        >
-            <Typography >{text}</Typography>
-            {narrative && <DescriptionOutlinedIcon />}
-        </Box>
-    </ConceptCard>
 }

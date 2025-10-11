@@ -1,13 +1,14 @@
-import { TextConceptCard } from "@/components/GameEditor/ConceptCard";
 import { Order } from "@/definitions";
 import { getOrderIcon } from "./get-order-details";
+import { Box, Card, CardActionArea, Typography } from "@mui/material";
 
 interface Props {
     order: Order;
-    handleEditButton: { (): void }
+    handleEditButton?: { (): void }
     width?: number
 }
 
+const truncate = (text: string, limit = 35) => text.length > limit ? text.substring(0, limit - 3) + "..." : text;
 
 const getDescription = (order: Order): string => {
     switch (order.type) {
@@ -15,31 +16,29 @@ const getDescription = (order: Order): string => {
             return `${order.steps.length}x steps`
         case "act": {
             const actions = order.steps.map(step => step.animation);
-            return `animations: ${actions.join()}`
+            if (actions.length > 3) {
+                return `${actions.length}x actions`
+            }
+            return truncate(actions.join())
         }
         case "say": {
-            const text = order.text.length > 35 ? order.text.substring(0, 32) + "..." : order.text
-            return `"${text}"`
+            return `"${truncate(order.text)}"`
         }
         case "goTo":
-            return order.targetId || '[UNSET]'
+            return `go to: ${order.targetId || '[UNSET]'}`
     }
 }
 
-const getTitle = (order: Order): string => {
-    if (order.endStatus) {
-        return `${order.type} > ${order.endStatus}`
-    }
-    return order.type
-}
+export const OrderCard = ({ order, handleEditButton, width }: Props) => {
+    const Wrapper = handleEditButton ? CardActionArea : 'div';
+    const Icon = getOrderIcon(order.type);
 
-export const OrderCard = ({ order, handleEditButton, width }: Props) => (
-    <TextConceptCard
-        Icon={getOrderIcon(order.type)}
-        handleClick={handleEditButton}
-        text={getDescription(order)}
-        title={getTitle(order)}
-        narrative={order.narrative}
-        width={width}
-    />
-)
+    return <Card title={handleEditButton ? `edit ${order.type} order` : undefined} sx={{ width }}>
+        <Wrapper onClick={handleEditButton}>
+            <Box display={'inline-flex'} alignItems={'center'} paddingX={2}>
+                <Icon color={'secondary'} />
+                <Typography>{getDescription(order)}</Typography>
+            </Box>
+        </Wrapper>
+    </Card>
+}

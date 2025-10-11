@@ -216,7 +216,7 @@ export const InteractionDialog = ({ initialInteraction, confirm, cancel }: Props
                                 noMoveButtons={true}
                                 describeItem={(consequence, index) => (
                                     <Box paddingBottom={1}>
-                                        <ConsequenceCard
+                                        <ConsequenceCard detailed
                                             consequence={consequence}
                                             handleEditButton={() => { setActiveConsequenceIndex(index) }}
                                         />

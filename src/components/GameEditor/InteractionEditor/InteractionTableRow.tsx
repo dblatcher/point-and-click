@@ -2,7 +2,7 @@ import { Interaction } from "@/definitions";
 import { IconButton, Stack, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon, FlagFilledIcon, FlagOutlinedIcon, InventoryIcon } from "../material-icons";
-import { ConsequenceIcon } from "../SequenceEditor/ConsequenceCard";
+import { ConsequenceIconWithDescription } from "../SequenceEditor/get-order-details";
 
 interface Props {
     index: number;
@@ -34,7 +34,7 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
                 <Typography>{roomId}</Typography>
             </TableCell>
             <TableCell>
-                {consequences.map((consequence, index) => <ConsequenceIcon key={index} consequence={consequence} />)}
+                {consequences.map((consequence, index) => <ConsequenceIconWithDescription key={index} consequence={consequence} />)}
             </TableCell>
             <TableCell>
                 {flagsThatMustBeTrue.map((flagKey, index) => (

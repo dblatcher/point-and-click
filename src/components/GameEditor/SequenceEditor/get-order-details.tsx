@@ -1,17 +1,18 @@
 import { Consequence, ConsequenceType, Order } from "@/definitions";
 import AnimationIcon from '@mui/icons-material/Animation';
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import CameraIndoorOutlinedIcon from '@mui/icons-material/CameraIndoorOutlined';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
-import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
+import MusicNote from "@mui/icons-material/MusicNote";
 import PersonOffOutlinedIcon from '@mui/icons-material/PersonOffOutlined';
 import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
 import PictureInPictureAltOutlinedIcon from '@mui/icons-material/PictureInPictureAltOutlined';
 import PlaceIcon from '@mui/icons-material/Place';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import RouteIcon from '@mui/icons-material/Route';
-import MusicNote from "@mui/icons-material/MusicNote";
 import SurroundSoundIcon from '@mui/icons-material/SurroundSound';
+import { Tooltip } from "@mui/material";
 import { ConversationIcon, ExclamationIcon, FlagCircleIcon, SequenceIcon, SoundIcon } from "../material-icons";
 
 export const getOrderIcon = (orderType?: Order['type']): typeof ChatOutlinedIcon => {
@@ -61,6 +62,11 @@ export const getConsequenceIcon = (type: ConsequenceType): typeof ChatOutlinedIc
         default:
             return ExclamationIcon
     }
+}
+
+export const ConsequenceIconWithDescription = (props: { consequence: Consequence }) => {
+    const Icon = getConsequenceIcon(props.consequence.type)
+    return <Tooltip title={getConsequenceDescription(props.consequence)} ><Icon /></Tooltip>
 }
 
 const UNSET = '[UNSET]'
