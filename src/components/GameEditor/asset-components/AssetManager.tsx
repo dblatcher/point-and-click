@@ -178,7 +178,7 @@ export const AssetManager = <AssetType extends FileAsset>({
             </ButtonGroup>
 
             <Grid container spacing={1} justifyContent={'space-between'}>
-                <Grid item display={'flex'} flexWrap={'wrap'}>
+                <Grid item display={'flex'} flexWrap={'wrap'} alignItems={'flex-start'}>
                     <div>
                         <EditorBox title="Asset Properties">
                             <StringInput label="id"

@@ -70,26 +70,30 @@ export const InteractionEditor: React.FunctionComponent = () => {
     }
 
     return (
-        <article>
+        <article style={{
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+            maxHeight: '80vh' // TO DO - any way to avoid this while preserving the sticky header?
+        }}>
             <EditorHeading icon={InteractionIcon} heading="Interactions" helpTopic="interactions" >
-                <Button
-                    sx={{ marginLeft: 2 }}
-                    size="large"
-                    onClick={() => {
-                        setInteractionUnderConstruction({})
-                        setEdittedIndex(undefined)
-                    }}
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                >
-                    Add new Interaction
-                </Button>
+                <Box display='flex' justifyContent='flex-end' paddingY={2} alignItems={'center'} gap={2}>
+                    <Typography>Showing {filteredInteractions.length}/{interactions.length} interactions</Typography>
+                    <Button
+                        size="large"
+                        onClick={() => {
+                            setInteractionUnderConstruction({})
+                            setEdittedIndex(undefined)
+                        }}
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                    >
+                        Add new Interaction
+                    </Button>
+                </Box>
             </EditorHeading>
-            <TableContainer component={Paper}>
-                <Table size="small" padding="normal" sx={{ captionSide: 'top' }}>
-                    <caption>
-                        <Typography>Showing {filteredInteractions.length}/{interactions.length} interactions</Typography>
-                    </caption>
+            <TableContainer sx={{ flex: 1 }}>
+                <Table size="small" padding="normal" stickyHeader>
                     <TableHead>
                         <TableRow sx={{ verticalAlign: 'top' }}>
                             <HeadingCellWithFilter label="Verb"
@@ -110,6 +114,7 @@ export const InteractionEditor: React.FunctionComponent = () => {
                                 options={listIds(rooms)} />
                             <TableCell>Consequences</TableCell>
                             <TableCell>Conditions</TableCell>
+                            <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -129,21 +134,6 @@ export const InteractionEditor: React.FunctionComponent = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-
-
-            <Box display='flex' justifyContent='flex-end' paddingY={2}>
-                <Button
-                    size="large"
-                    onClick={() => {
-                        setInteractionUnderConstruction({})
-                        setEdittedIndex(undefined)
-                    }}
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                >
-                    Add new Interaction
-                </Button>
-            </Box>
 
             {interactionUnderConstruction &&
                 <InteractionDialog key={edittedIndex}
