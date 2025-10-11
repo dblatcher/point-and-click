@@ -5,18 +5,16 @@ import { Verb } from "@/definitions";
 import { VerbSchema } from "@/definitions/Verb";
 import { wildCard } from "@/lib/commandFunctions";
 import { patchMember } from "@/lib/update-design";
-import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Alert, Box, Stack } from "@mui/material";
 import { useState } from "react";
 import { DelayedStringInput } from "../DelayedStringInput";
 import { HelpButton } from "../HelpButton";
 import { EditorBox } from "../layout/EditorBox";
 import { FallbackText } from "./FallbackText";
 
-
 type Props = {
     verb: Verb,
 }
-
 
 export const VerbEditor = ({ verb }: Props) => {
     const { applyModification, gameDesign } = useGameDesign()
@@ -95,20 +93,10 @@ export const VerbEditor = ({ verb }: Props) => {
                     reportLocalChange={setLocalDefaultResponseCannotReach}
                 />
 
-                <Box display={'flex'} alignItems={'flex-start'}>
-                    <TableContainer sx={{flexBasis:200}}>
-                        <Typography component={'caption'}>Wildcards</Typography>
-                        <Table>
-                            <TableBody>
-                                {Object.entries(wildCard).map(([key, value]) => (
-                                    <TableRow key={key}>
-                                        <TableCell variant="head">{key}</TableCell>
-                                        <TableCell>{value}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                <Box display={'flex'} alignItems={'center'} justifyContent={'space-around'} flexWrap={'wrap'}>
+                    <Alert severity='info' sx={{ flexBasis: 400 }}>
+                        Use "{wildCard.VERB}", "{wildCard.TARGET}" and "{wildCard.ITEM}" in the templates and they will be replaced by the corresponding name
+                    </Alert>
                     <FallbackText verb={{
                         ...verb,
                         defaultResponseCannotReach: localDefaultResponseCannotReach,

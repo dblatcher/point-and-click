@@ -5,11 +5,19 @@ import { EditorHeading } from "../layout/EditorHeading"
 import { LayoutControls, LayoutHolder, LayoutItem } from "../layout/SplitLayout"
 import { VerbEditor } from "./VerbEditor"
 import { VerbListControl } from "./VerbListControl"
+import { useEffect } from "react"
 
 
 export const VerbSetControl = () => {
-    const { gameItemIds: { verbs: currentVerbId }, gameDesign: { verbs } } = useGameDesign()
+    const { dispatchDesignUpdate, gameItemIds: { verbs: currentVerbId }, gameDesign: { verbs } } = useGameDesign()
     const currentVerb = findById(currentVerbId, verbs)
+
+    useEffect(() => {
+        if (!currentVerbId) {
+            dispatchDesignUpdate({ type: 'open-in-editor', tabId: 'verbs', itemId: verbs[0]?.id })
+        }
+    }, [])
+
     return (
         <>
             <EditorHeading heading={'Verbs'} icon={tabIcons.verbs} helpTopic={'verbs'} />
