@@ -19,6 +19,10 @@ interface Props<T extends z.ZodRawShape> {
     textInputDelay?: number
 }
 
+// if this fails becuase of version/import hell when
+// making definitions a package, switch to accessing the typeName
+// zod._def.innerType._def.typeName === 'ZodEnum'
+// zod._def.typeName === 'ZodEnum'
 const getType = (zodExtract: unknown): FieldDef['type'] => {
     if (zodExtract instanceof z.ZodString) {
         return 'ZodString'
@@ -33,7 +37,6 @@ const getType = (zodExtract: unknown): FieldDef['type'] => {
         return 'ZodNumber'
     }
 }
-
 
 /**
  * Creates a form for the schema, Supports only primitives, optional primitives
