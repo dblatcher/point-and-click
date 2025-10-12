@@ -54,6 +54,15 @@ export const ConversationConsequenceSchema = z.object({
     narrative: NarrativeSchema.optional(),
 })
 
+export const ConversationChoiceConsequenceSchema = z.object({
+    type: z.literal('conversationChoice'),
+    on: z.boolean(),
+    conversationId: z.string(),
+    branchId: z.string(),
+    choiceRef: z.string(),
+    narrative: NarrativeSchema.optional(),
+})
+
 export const TeleportActorConsequenceSchema = z.object({
     type: z.literal('teleportActor'),
     actorId: z.string(),
@@ -100,15 +109,6 @@ export const FlagConsequenceSchema = z.object({
     type: z.literal('flag'),
     on: z.boolean(),
     flag: z.string(),
-    narrative: NarrativeSchema.optional(),
-})
-
-export const ConversationChoiceConsequenceSchema = z.object({
-    type: z.literal('conversationChoice'),
-    on: z.boolean(),
-    conversationId: z.string(),
-    branchId: z.string(),
-    choiceRef: z.string(),
     narrative: NarrativeSchema.optional(),
 })
 
