@@ -12,10 +12,11 @@ import { ReactNode } from "react";
 // noTriState is set by default in SchemaForm, so no implementation of the
 // TriStateInput is currently needed
 
-interface SchemaFieldProps<T> {
+interface SchemaFieldProps<T extends z.ZodRawShape> {
     field: FieldDef;
+    schema: z.ZodObject<T>;
     noTriState?: boolean;
-    change: { (value: FieldValue, field: FieldDef): void };
+    change: { (mod: Partial<T>): void };
     options?: string[];
     optionDescriptions?: ReactNode[];
     suggestions?: string[];
@@ -32,6 +33,7 @@ export function SchemaField<T extends z.ZodRawShape>({
     showUnsupported = false,
     numberInputSettings = {},
     textInputDelay,
+    schema,
 }: SchemaFieldProps<T>) {
     const { key, optional, type, value, alias } = field;
     const isSupported = ['ZodString', 'ZodBoolean', 'ZodNumber', 'ZodEnum'].includes(type)
@@ -45,11 +47,20 @@ export function SchemaField<T extends z.ZodRawShape>({
             safeValue = value;
     }
 
+    const inputHandler = (value: unknown) => {
+        const parseMod = schema.partial().safeParse({ [key]: value })
+        if (!parseMod.success) {
+            console.error('Bad SchemaField input mod', { [key]: value }, parseMod.error.issues)
+            return
+        }
+        return change(parseMod.data);
+    }
+
     if (type === 'ZodString' && (typeof value === 'string' || typeof value === 'undefined')) {
         if (options) {
             return <SelectInput label={alias ?? key}
                 value={value || ''}
-                inputHandler={value => change(value, field)}
+                inputHandler={inputHandler}
                 options={options}
                 optional={optional}
                 descriptions={optionDescriptions}
@@ -61,14 +72,14 @@ export function SchemaField<T extends z.ZodRawShape>({
                 value={value || ''}
                 type={stringInputType}
                 suggestions={suggestions}
-                inputHandler={(value) => { change(value, field) }}
+                inputHandler={inputHandler}
                 delayAfterEdits={textInputDelay}
             />
             : <StringInput label={alias ?? key}
                 value={value || ''}
                 type={stringInputType}
                 suggestions={suggestions}
-                inputHandler={(value) => { change(value, field) }}
+                inputHandler={inputHandler}
             />
     }
 
@@ -76,12 +87,12 @@ export function SchemaField<T extends z.ZodRawShape>({
         if (noTriState || !optional) {
             return <BooleanInput label={alias ?? key}
                 value={value ?? false}
-                inputHandler={(value): void => { change(value, field) }}
+                inputHandler={inputHandler}
             />
         }
         return <TriStateInput label={alias ?? key}
             value={value}
-            inputHandler={(value): void => { change(value, field) }}
+            inputHandler={inputHandler}
         />
     }
 
@@ -91,13 +102,13 @@ export function SchemaField<T extends z.ZodRawShape>({
                 <OptionalNumberInput label={alias ?? key}
                     {...numberInputSettings}
                     value={value}
-                    inputHandler={(value) => { change(value, field) }}
+                    inputHandler={inputHandler}
                 />
             ) : (
                 <NumberInput label={alias ?? key}
                     {...numberInputSettings}
                     value={value || 0}
-                    inputHandler={(value) => { change(value, field) }}
+                    inputHandler={inputHandler}
                 />
             )
         }
@@ -107,7 +118,7 @@ export function SchemaField<T extends z.ZodRawShape>({
         if ((typeof value === 'string' || (field.optional && typeof value === 'undefined'))) {
             return <SelectInput label={alias ?? key}
                 value={value}
-                inputHandler={value => change(value, field)}
+                inputHandler={inputHandler}
                 options={field.enumOptions}
                 optional={optional}
                 descriptions={optionDescriptions}

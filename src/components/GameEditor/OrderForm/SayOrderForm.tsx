@@ -1,5 +1,5 @@
 
-import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm";
+import { SchemaForm } from "@/components/SchemaForm";
 import { orderBaseOmits, SayOrder, SayOrderSchema } from "@/definitions/Order";
 
 
@@ -16,8 +16,7 @@ export const SayOrderForm = ({
     updateData,
 }: Props) => {
 
-    const handleSchemaFormChange = (value: FieldValue, field: FieldDef) => {
-        const mod = getModification(value, field)
+    const handleSchemaFormChange = (mod: Partial<SayOrder>) => {
         updateData({ ...data, ...mod })
     }
 
@@ -25,7 +24,7 @@ export const SayOrderForm = ({
         textInputDelay={2000}
         schema={SayOrderSchema.omit(orderBaseOmits)}
         data={data}
-        changeValue={handleSchemaFormChange}
+        changeValue={(mod) => handleSchemaFormChange(mod as Partial<SayOrder>)}
         suggestions={{ animation: animationSuggestions }}
     />
 }

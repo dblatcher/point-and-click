@@ -1,5 +1,5 @@
 
-import { FieldDef, FieldValue, SchemaForm, getModification } from "@/components/SchemaForm";
+import { SchemaForm } from "@/components/SchemaForm";
 import { useGameDesign } from "@/context/game-design-context";
 import { Verb } from "@/definitions";
 import { VerbSchema } from "@/definitions/Verb";
@@ -23,15 +23,17 @@ export const VerbEditor = ({ verb }: Props) => {
     const [localDefaultResponseNoItem, setLocalDefaultResponseNoItem] = useState(verb.defaultResponseNoItem)
     const [localDefaultResponseWithItem, setLocalDefaultResponseWithItem] = useState(verb.defaultResponseWithItem)
 
-    const handleUpdate = (value: FieldValue, field: FieldDef): void => {
-        const property = field.key as keyof Verb;
-        const mod = getModification(value, field) as Partial<Verb>
-        if (property !== 'id') {
-            applyModification(
-                `change ${field.key} on verb ${verb.id}`,
-                { verbs: patchMember(verb.id, mod, gameDesign.verbs) }
-            )
+    const handleUpdate = (mod: Partial<Verb>): void => {
+        console.log({mod})
+        const keys = Object.keys(mod);
+        if (keys.includes('id')) {
+            console.error('no id changes', mod)
+            return
         }
+        applyModification(
+            `change ${keys.join()} on verb ${verb.id}`,
+            { verbs: patchMember(verb.id, mod, gameDesign.verbs) }
+        )
     }
 
     return (
@@ -52,7 +54,7 @@ export const VerbEditor = ({ verb }: Props) => {
                         isMoveVerb: 'is "move" verb',
                         isLookVerb: 'is "look" verb',
                     }}
-                    changeValue={(value, field) => { handleUpdate(value, field) }}
+                    changeValue={(mod) => { handleUpdate(mod as Partial<Verb>) }}
                 />
             </EditorBox>
             <EditorBox

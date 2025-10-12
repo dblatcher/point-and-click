@@ -1,5 +1,5 @@
 
-import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm";
+import { SchemaForm } from "@/components/SchemaForm";
 import { GotoOrder, GotoOrderSchema, orderBaseOmits } from "@/definitions/Order";
 import { excludeByIndex } from "@/lib/util";
 import { ReactNode } from "react";
@@ -35,8 +35,7 @@ export const GoToOrderForm = ({
     updateData,
 }: Props) => {
 
-    const handleSchemaFormChange = (value: FieldValue, field: FieldDef) => {
-        const mod = getModification(value, field)
+    const handleSchemaFormChange = (mod: Partial<GotoOrder>) => {
         updateData({ ...data, ...mod })
     }
 
@@ -46,7 +45,7 @@ export const GoToOrderForm = ({
         textInputDelay={1000}
         schema={GotoOrderSchema.omit(orderBaseOmits)}
         data={data}
-        changeValue={handleSchemaFormChange}
+        changeValue={mod=>handleSchemaFormChange(mod as Partial<GotoOrder>)}
         suggestions={{
             animation: animationSuggestions,
         }}

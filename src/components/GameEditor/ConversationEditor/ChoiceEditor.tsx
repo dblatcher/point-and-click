@@ -1,4 +1,4 @@
-import { FieldDef, FieldValue, getModification, SchemaForm } from "@/components/SchemaForm"
+import { SchemaForm } from "@/components/SchemaForm"
 import { SelectInput } from "@/components/SchemaForm/SelectInput"
 import { useGameDesign } from "@/context/game-design-context"
 import { SayOrder, Sequence } from "@/definitions"
@@ -7,11 +7,11 @@ import { listIds } from "@/lib/util"
 import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Stack, Typography } from "@mui/material"
 import { useState } from "react"
 import { ButtonWithConfirm } from "../ButtonWithConfirm"
+import { HelpButton } from "../HelpButton"
 import { SequenceEditor } from "../SequenceEditor"
 import { DEFAULT_TALK_TIME, makeBlankSequence } from "../defaults"
 import { DeleteIcon } from "../material-icons"
 import { ChoiceListControl } from "./ChoiceListControl"
-import { HelpButton } from "../HelpButton"
 
 
 interface Props {
@@ -65,8 +65,8 @@ export const ChoiceEditor = ({
                 'sequence': true
             })}
             data={choice}
-            changeValue={(value, field) => {
-                handleChoiceUpdate(getModification(value, field) as Partial<ConversationChoice>)
+            changeValue={(mod) => {
+                handleChoiceUpdate(mod as Partial<ConversationChoice>)
             }}
             options={{
                 nextBranch: Object.keys(branches),

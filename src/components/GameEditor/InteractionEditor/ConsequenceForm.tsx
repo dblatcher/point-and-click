@@ -1,8 +1,8 @@
-import { SchemaForm, getModification } from "@/components/SchemaForm";
+import { SchemaForm } from "@/components/SchemaForm";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { AnyConsequence, Consequence, GameDesign, Order } from "@/definitions";
-import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
+import { consequenceMap, ConsequenceSchema, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findById, insertAt, listIds } from "@/lib/util";
@@ -87,9 +87,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
     return (
         <Box display={'flex'}>
             <Box paddingY={2}>
-                {/* doesn't use andy free text fields, but include delay incase schema changes */}
                 <SchemaForm
-                    // textInputDelay={2000}
                     schema={consequenceMap[consequence.type] as any}
                     numberConfig={{
                         time: { min: 0 },
@@ -105,11 +103,16 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                         status: getStatusSuggestions(consequence.targetId, gameDesign)
                     }}
                     data={consequence}
-                    changeValue={(value, field) => {
-                        update({
+                    changeValue={mod => {
+                        const parsed = ConsequenceSchema.safeParse({
                             ...consequence,
-                            ...getModification(value, field)
+                            ...(mod as unknown as Partial<Consequence>)
                         })
+                        if (!parsed.success) {
+                            console.error('failed consequence update', parsed.error.issues)
+                            return
+                        }
+                        update(parsed.data)
                     }}
                 />
                 {consequence.orders && (

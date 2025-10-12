@@ -4,13 +4,12 @@ import { z } from "zod"
 import { SchemaField } from "./SchemaField"
 import type { FieldDef, FieldValue, NumberInputSettings } from "./types"
 
-export { getModification } from "./getModification"
 export type { FieldDef, FieldValue, NumberInputSettings }
 
 interface Props<T extends z.ZodRawShape> {
     schema: z.ZodObject<T>;
     data: Record<string, unknown>;
-    changeValue: { (value: FieldValue, field: FieldDef): void };
+    changeValue: { (mod:Partial<T>): void };
     options?: Partial<Record<keyof T, string[]>>;
     fieldAliases?: Partial<Record<keyof T, string>>;
     optionDescriptions?: Partial<Record<keyof T, ReactNode[]>>;
@@ -36,7 +35,6 @@ export function SchemaForm<T extends z.ZodRawShape>({
     const fields: FieldDef[] = []
     for (const key in schema.shape) {
         const zod = schema.shape[key]
-
         let type: string;
         if (zod.isOptional()) {
             type = zod._def.innerType._def.typeName
@@ -71,6 +69,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
                 field={field}
                 stringInputType={field.key === 'text' ? 'textArea' : undefined}
                 textInputDelay={textInputDelay}
+                schema={schema}
             />
         )}
     </Stack>
