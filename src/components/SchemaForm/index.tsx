@@ -9,7 +9,7 @@ export type { FieldDef, FieldValue, NumberInputSettings }
 interface Props<T extends z.ZodRawShape> {
     schema: z.ZodObject<T>;
     data: Record<string, unknown>;
-    changeValue: { (mod:Partial<T>): void };
+    changeValue: { (mod: Partial<T>): void };
     options?: Partial<Record<keyof T, string[]>>;
     fieldAliases?: Partial<Record<keyof T, string>>;
     optionDescriptions?: Partial<Record<keyof T, ReactNode[]>>;
@@ -17,6 +17,21 @@ interface Props<T extends z.ZodRawShape> {
     numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
     fieldWrapperProps?: Omit<Partial<StackProps>, 'component' | 'children' | 'ref'>
     textInputDelay?: number
+}
+
+const getType = (zodExtract: unknown): FieldDef['type'] => {
+    if (zodExtract instanceof z.ZodString) {
+        return 'ZodString'
+    }
+    if (zodExtract instanceof z.ZodBoolean) {
+        return 'ZodBoolean'
+    }
+    if (zodExtract instanceof z.ZodEnum) {
+        return 'ZodEnum'
+    }
+    if (zodExtract instanceof z.ZodNumber) {
+        return 'ZodNumber'
+    }
 }
 
 
@@ -34,22 +49,19 @@ export function SchemaForm<T extends z.ZodRawShape>({
 
     const fields: FieldDef[] = []
     for (const key in schema.shape) {
-        const zod = schema.shape[key]
-        let type: string;
-        if (zod.isOptional()) {
-            type = zod._def.innerType._def.typeName
-        } else {
-            type = zod._def.typeName
-        }
-
-        const enumOptions = zod._def.typeName === 'ZodEnum'
-            ? zod._def.values
-            : zod.isOptional() && zod._def.innerType._def.typeName === 'ZodEnum' ? zod._def.innerType._def.values : undefined;
+        const zod = schema.shape[key];
+        const optional = zod.isOptional();
+        const type = optional ? getType(zod._def.innerType) : getType(zod)
+        const enumOptions = type === 'ZodEnum'
+            ? optional 
+                ? zod._def.innerType._def.values 
+                : zod._def.values
+            : undefined;
 
         fields.push({
             key,
             alias: fieldAliases[key],
-            optional: zod.isOptional(),
+            optional,
             type,
             value: data[key],
             enumOptions,

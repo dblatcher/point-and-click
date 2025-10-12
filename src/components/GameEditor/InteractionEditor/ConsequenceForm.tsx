@@ -17,6 +17,7 @@ import { SpritePreview } from "../SpritePreview";
 import { getDefaultOrder } from "../defaults";
 import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
 import { getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
+import { ZodObject } from "zod";
 
 interface Props {
     consequence: AnyConsequence;
@@ -88,7 +89,11 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         <Box display={'flex'}>
             <Box paddingY={2}>
                 <SchemaForm
-                    schema={consequenceMap[consequence.type] as any}
+                    schema={(consequenceMap[consequence.type] as unknown as ZodObject<any>).omit({
+                        type: true,
+                        narrative: true,
+                        orders: true,
+                    })}
                     numberConfig={{
                         time: { min: 0 },
                         volume: {

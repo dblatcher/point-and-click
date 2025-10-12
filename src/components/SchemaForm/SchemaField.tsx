@@ -1,5 +1,5 @@
 import { z } from "zod"
-import type { FieldValue, FieldDef, NumberInputSettings } from "./types"
+import { type FieldValue, type FieldDef, type NumberInputSettings, supportedTypes } from "./types"
 import { TriStateInput } from "./TristateInput";
 import { StringInput } from "./StringInput";
 import { BooleanInput } from "./BooleanInput";
@@ -36,7 +36,7 @@ export function SchemaField<T extends z.ZodRawShape>({
     schema,
 }: SchemaFieldProps<T>) {
     const { key, optional, type, value, alias } = field;
-    const isSupported = ['ZodString', 'ZodBoolean', 'ZodNumber', 'ZodEnum'].includes(type)
+    const isSupported = supportedTypes.includes(type)
     if (!isSupported && !showUnsupported) { return null }
 
     let safeValue: FieldValue
