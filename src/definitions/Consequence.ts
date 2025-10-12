@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { Narrative, NarrativeSchema } from "./BaseTypes"
+import { Narrative } from "./BaseTypes"
 import { AmbientNoiseConsequenceSchema, BackgroundMusicConsequenceSchema, ChangeRoomConsequenceSchema, ChangeStatusConsequenceSchema, ConversationChoiceConsequenceSchema, ConversationConsequenceSchema, FlagConsequenceSchema, InventoryConsequenceSchema, OrderConsequenceSchema, RemoveActorConsequenceSchema, SequenceConsequenceSchema, SoundEffectConsequenceSchema, StoryBoardConsequenceSchema, TeleportActorConsequenceSchema, ToggleZoneConsequenceSchema } from "./consequence-subtypes"
 import { Order } from "./Order"
 
@@ -29,7 +29,7 @@ export const ConsequenceSchema = z.union([
 
 const ConsequenceTypeEnum = z.enum([
     'conversation', 'sequence', 'changeStatus', 'backgroundMusic', 'ambientNoise',
-    'removeActor', 'inventory', 'changeRoom', 'order',
+    'removeActor', 'inventory', 'changeRoom', 'order', 
     'teleportActor', 'toggleZone', 'soundEffect', 'flag', 'conversationChoice', 'storyBoardConsequence'
 ])
 export type ConsequenceType = z.infer<typeof ConsequenceTypeEnum>
@@ -55,26 +55,36 @@ export const consequenceMap = {
 
 export type Consequence = z.infer<typeof ConsequenceSchema>
 
-const anyConsequenceSchema = z.object({
-    type: ConsequenceTypeEnum,
-})
-    .extend(ConversationConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(SequenceConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(ChangeStatusConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(RemoveActorConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(InventoryConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(ChangeRoomConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(OrderConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(TeleportActorConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(ToggleZoneConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(FlagConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(ConversationChoiceConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(BackgroundMusicConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(AmbientNoiseConsequenceSchema.partial().omit({ type: true }).shape)
-    .extend(StoryBoardConsequenceSchema.partial().omit({ type: true }).shape)
+export type AnyConsequence = Consequence & {
+    conversationId?: string;
+    sequence?: string;
+    targetId?: string;
+    itemId?: string;
+    status?: string;
+    actorId?: string;
+    roomId?: string;
+    text?: string;
+    targetType?: string;
+    addOrRemove?: string;
+    end?: boolean;
+    takePlayer?: boolean;
+    replaceCurrentOrders?: boolean;
+    x?: number;
+    y?: number;
+    orders?: Order[];
 
-export type AnyConsequence = z.infer<typeof anyConsequenceSchema>
+    on?: boolean;
+    ref?: string;
+    zoneType?: ZoneType;
 
+    sound?: string;
+    volume?: number;
+    flag?: string;
+    branchId?: string;
+    choiceRef?: string;
+    storyBoardId?: string;
+    narrative?: Narrative;
+}
 
 export const ImmediateConsequenceSchema = z.union([
     RemoveActorConsequenceSchema,
