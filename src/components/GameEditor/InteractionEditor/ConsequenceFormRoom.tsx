@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { AnyConsequence, Consequence, HotspotZone, RoomData, Zone } from "@/definitions";
+import { AnyConsequence, Consequence, HotspotZone, Point, RoomData, Zone } from "@/definitions";
 import { getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
 import { Box, Typography } from "@mui/material";
@@ -7,24 +7,24 @@ import React from "react";
 import { RoomLocationPicker } from "../RoomLocationPicker";
 
 interface Props {
-    consequence: AnyConsequence
-    update: { (consequence: Consequence): void };
+    consequence: Consequence
+    setPoint: { (point: Point): void };
 }
 
-const getZone = (consequence: AnyConsequence, roomData?: RoomData): Zone | undefined => {
-    const { type, ref } = consequence
-    if (type !== 'toggleZone' || !ref || !roomData) {
+const getZone = (consequence: Consequence, roomData?: RoomData): Zone | undefined => {
+    if (consequence.type !== 'toggleZone' || !consequence.ref || !roomData) {
         return undefined
     }
-    const hotspot = roomData.hotspots?.find(zone => zone.id === ref)
-    const obstacle = roomData.obstacleAreas?.find(zone => zone.ref === ref);
-    const walkable = roomData.walkableAreas?.find(zone => zone.ref === ref);
+    const hotspot = roomData.hotspots?.find(zone => zone.id === consequence.ref)
+    const obstacle = roomData.obstacleAreas?.find(zone => zone.ref === consequence.ref);
+    const walkable = roomData.walkableAreas?.find(zone => zone.ref === consequence.ref);
     return hotspot ?? obstacle ?? walkable
 }
 
-export const ConsequenceFormRoom: React.FunctionComponent<Props> = ({ consequence, update }: Props) => {
+export const ConsequenceFormRoom: React.FunctionComponent<Props> = ({ consequence, setPoint }: Props) => {
     const { gameDesign } = useGameDesign()
-    const roomData = findById(consequence.roomId, gameDesign.rooms);
+    const { roomId } = consequence as AnyConsequence;
+    const roomData = findById(roomId, gameDesign.rooms);
     if (!roomData) {
         return (
             <Box sx={{
@@ -59,7 +59,7 @@ export const ConsequenceFormRoom: React.FunctionComponent<Props> = ({ consequenc
                 renderAllZones={true}
                 previewWidth={300}
                 targetPoint={{ x: consequence.x ?? 0, y: consequence.y ?? 0 }}
-                onClick={point => update({ ...consequence, ...point })}
+                onClick={setPoint}
             />
         case "toggleZone":
             return <RoomLocationPicker

@@ -2,7 +2,7 @@ import { SchemaForm } from "@/components/SchemaForm";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { AnyConsequence, Consequence, GameDesign, Order } from "@/definitions";
-import { consequenceMap, consequenceTypes, immediateConsequenceTypes, OrderConsequence, zoneTypes } from "@/definitions/Consequence";
+import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { findById, insertAt, listIds } from "@/lib/util";
 import { Box } from "@mui/material";
@@ -19,13 +19,16 @@ import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
 import { getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
 
 interface Props {
-    consequence: AnyConsequence;
+    consequence: Consequence;
     update: { (consequence: Consequence): void };
     immediateOnly?: boolean;
 }
 
 
-const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, branchId: string | undefined, gameDesign: GameDesign) => {
+const getBranchIdAndChoiceRefOptions = (consequence: Consequence, gameDesign: GameDesign) => {
+    const conversationId = consequence.type === 'conversation' || consequence.type === 'conversationChoice' ? consequence.conversationId : undefined;
+    const branchId = consequence.type === 'conversationChoice' ? consequence.branchId : undefined;
+
     const conversation = findById(conversationId, gameDesign.conversations)
     const branch = conversation && branchId ? conversation.branches[branchId] : undefined;
     const branchIdList = Object.keys(conversation?.branches || {})
@@ -37,12 +40,13 @@ const getBranchIdAndChoiceRefOptions = (conversationId: string | undefined, bran
 }
 
 export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) => {
+    const { roomId, zoneType, actorId, sound, targetId } = consequence as AnyConsequence;
     const { gameDesign } = useGameDesign()
     const { soundAssets, soundService } = useAssets()
     const [orderIndexDialog, setDialogOrderIndex] = useState<number>()
     const { ids: targetIds } = getTargetLists(gameDesign)
 
-    const { branchIdList, choiceRefList } = getBranchIdAndChoiceRefOptions(consequence.conversationId, consequence.branchId, gameDesign)
+    const { branchIdList, choiceRefList } = getBranchIdAndChoiceRefOptions(consequence, gameDesign)
     const optionListIds = {
         type: immediateOnly ? immediateConsequenceTypes : consequenceTypes,
         conversationId: listIds(gameDesign.conversations),
@@ -53,7 +57,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         addOrRemove: ['ADD', 'REMOVE'],
         sequence: listIds(gameDesign.sequences),
         zoneType: zoneTypes,
-        ref: getZoneRefsOrIds(gameDesign, consequence.roomId || '', consequence.zoneType),
+        ref: getZoneRefsOrIds(gameDesign, roomId, zoneType),
         sound: soundAssets.map(_ => _.id),
         flag: Object.keys(gameDesign.flagMap),
         branchId: branchIdList,
@@ -66,23 +70,24 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
             return
         }
         update({
-            ...consequence as OrderConsequence,
+            ...consequence,
             orders: orders
         })
     }
 
     const editOrder = (newOrder: Order, index: number): void => {
-        const ordersCopy = [...(consequence.orders || [])]
+        if (consequence.type !== 'order') {
+            return
+        }
+        const ordersCopy = [...consequence.orders]
         ordersCopy.splice(index, 1, newOrder)
         updateOrders(ordersCopy)
     }
 
-    const actor = findById(consequence.actorId, gameDesign.actors)
-
+    const actor = findById(actorId, gameDesign.actors)
     const needsRoomPreview = ['changeRoom', 'teleportActor', 'toggleZone'].includes(consequence.type)
-    const needsSoundPreview = ['soundEffect'].includes(consequence.type)
-    const soundAsset = consequence.sound ? soundService.get(consequence.sound) : undefined
-
+    const needsSoundPreview = ['soundEffect', 'backgroundMusic', 'ambientNoise'].includes(consequence.type)
+    const soundAsset = sound ? soundService.get(sound) : undefined
 
     return (
         <Box display={'flex'}>
@@ -103,7 +108,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                     options={optionListIds}
                     suggestions={{
                         targetId: targetIds,
-                        status: getStatusSuggestions(consequence.targetId, gameDesign)
+                        status: getStatusSuggestions(targetId, gameDesign)
                     }}
                     data={consequence}
                     changeValue={mod => {
@@ -118,7 +123,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                         update(parsed.data)
                     }}
                 />
-                {consequence.orders && (
+                {(consequence.type === 'order') && (
                     <ArrayControl color="secondary"
                         list={consequence.orders}
                         describeItem={(order, index) =>
@@ -139,7 +144,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
             </Box>
 
             {needsRoomPreview && <Box paddingY={2} paddingLeft={2}>
-                <ConsequenceFormRoom update={update} consequence={consequence} />
+                <ConsequenceFormRoom setPoint={point => update({ ...consequence, ...point })} consequence={consequence} />
             </Box>}
             {needsSoundPreview && <Box paddingY={2} paddingLeft={2}>
                 <SoundPreview asset={soundAsset ?? {}} />
@@ -150,7 +155,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                     <SpritePreview data={actor} noBaseLine />
                 </Box>
             )}
-            {typeof orderIndexDialog === 'number' && (
+            {(consequence.type === 'order' && typeof orderIndexDialog === 'number') && (
                 <OrderDialog
                     order={consequence.orders?.[orderIndexDialog]}
                     actorId={consequence.actorId}
