@@ -1,4 +1,3 @@
-import { FieldValue } from "@/components/SchemaForm";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { Room } from "@/components/svg/Room";
 import { useGameDesign } from "@/context/game-design-context";
@@ -35,7 +34,7 @@ export const DimensionControl = ({ room }: Props) => {
     const [scale, setScale] = useState(1)
     const [viewAngleX, setViewAngleX] = useState(0)
     const [viewAngleY, setViewAngleY] = useState(0)
-    const updateRoom = (mod: Record<string, FieldValue>) => {
+    const updateRoom = (mod: Partial<RoomData>) => {
         modifyRoom(`change dimension on room ${room.id}`, room.id, mod)
     }
     const frameCenterX = (room.width * .5) - (room.frameWidth * .5);

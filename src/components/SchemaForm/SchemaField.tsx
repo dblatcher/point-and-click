@@ -1,13 +1,13 @@
-import { objectOutputType, ZodObject, ZodRawShape, ZodTypeAny } from "zod"
-import { type FieldValue, type FieldDef, type NumberInputSettings, supportedTypes } from "./types"
-import { TriStateInput } from "./TristateInput";
-import { StringInput } from "./StringInput";
+import { ReactNode } from "react";
+import { objectOutputType, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
+import { DelayedStringInput } from "../GameEditor/DelayedStringInput";
 import { BooleanInput } from "./BooleanInput";
-import { SelectInput } from "./SelectInput";
 import { NumberInput } from "./NumberInput";
 import { OptionalNumberInput } from "./OptionalNumberInput";
-import { DelayedStringInput } from "../GameEditor/DelayedStringInput";
-import { ReactNode } from "react";
+import { SelectInput } from "./SelectInput";
+import { StringInput } from "./StringInput";
+import { TriStateInput } from "./TristateInput";
+import { type FieldDef, type NumberInputSettings } from "./types";
 
 // noTriState is set by default in SchemaForm, so no implementation of the
 // TriStateInput is currently needed
@@ -26,6 +26,26 @@ interface SchemaFieldProps<DataShape extends ZodRawShape> {
     numberInputSettings?: NumberInputSettings;
 }
 
+const describeUnknown = (value: unknown) => {
+    switch (typeof value) {
+        case 'string':
+        case 'boolean':
+        case 'number':
+        case "bigint":
+            return `${typeof value}:[${value.toString()}]`
+        case "function":
+            return `function:${[value.name]}`
+        case "object":
+            if (!value) {
+                return "[null]"
+            }
+            return `${typeof value}:[${value.toString()}]`
+        case "undefined":
+        case "symbol":
+            return `[${typeof value}]`
+    }
+}
+
 export function SchemaField<DataShape extends ZodRawShape>({
     field, changeValue: change, noTriState,
     options, optionDescriptions,
@@ -36,16 +56,6 @@ export function SchemaField<DataShape extends ZodRawShape>({
     schema,
 }: SchemaFieldProps<DataShape>) {
     const { key, optional, type, value, alias } = field;
-    const isSupported = supportedTypes.includes(type)
-    if (!isSupported && !showUnsupported) { return null }
-
-    let safeValue: FieldValue
-    switch (typeof value) {
-        case 'string':
-        case 'boolean':
-        case 'number':
-            safeValue = value;
-    }
 
     const inputHandler = (value: unknown) => {
         const parseMod = schema.partial().safeParse({ [key]: value })
@@ -129,9 +139,13 @@ export function SchemaField<DataShape extends ZodRawShape>({
     if (showUnsupported) {
         return (
             <div key={key}>
-                <b>UNSUPPORTED | </b>
-                {key} |{type}
-                <b>{safeValue?.toString()}</b>
+                <div>
+                    <span>{key}: </span>
+                    <b>{describeUnknown(value)}</b>
+                </div>
+                <div>
+                    {type ? 'INVALID FIELD TYPE' : 'UNSUPPORTED VALUE'}
+                </div>
             </div>
         )
     }

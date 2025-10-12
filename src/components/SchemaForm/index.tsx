@@ -2,9 +2,7 @@ import { Stack, StackProps } from "@mui/material"
 import { ReactNode } from "react"
 import { objectOutputType, ZodTypeAny, ZodRawShape, ZodBoolean, ZodEnum, ZodNumber, ZodObject, ZodString } from "zod"
 import { SchemaField } from "./SchemaField"
-import type { FieldDef, FieldValue, NumberInputSettings } from "./types"
-
-export type { FieldDef, FieldValue, NumberInputSettings }
+import type { FieldDef, NumberInputSettings } from "./types"
 
 interface Props<DataShape extends ZodRawShape> {
     schema: ZodObject<DataShape>;
@@ -55,8 +53,8 @@ export function SchemaForm<DataShape extends ZodRawShape>({
         const optional = zod.isOptional();
         const type = optional ? getType(zod._def.innerType) : getType(zod)
         const enumOptions = type === 'ZodEnum'
-            ? optional 
-                ? zod._def.innerType._def.values 
+            ? optional
+                ? zod._def.innerType._def.values
                 : zod._def.values
             : undefined;
 

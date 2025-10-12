@@ -6,9 +6,6 @@ export interface FieldDef {
     value: unknown;
     enumOptions?: string[];
 }
-export type FieldValue = string | number | boolean | undefined;
-
-export const supportedTypes:FieldDef['type'][] = ['ZodString', 'ZodBoolean', 'ZodNumber', 'ZodEnum']
 
 export type NumberInputSettings = {
     min?: number;
