@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { objectOutputType, ZodObject, ZodRawShape, ZodTypeAny } from "zod"
 import { type FieldValue, type FieldDef, type NumberInputSettings, supportedTypes } from "./types"
 import { TriStateInput } from "./TristateInput";
 import { StringInput } from "./StringInput";
@@ -12,29 +12,29 @@ import { ReactNode } from "react";
 // noTriState is set by default in SchemaForm, so no implementation of the
 // TriStateInput is currently needed
 
-interface SchemaFieldProps<T extends z.ZodRawShape> {
+interface SchemaFieldProps<DataShape extends ZodRawShape> {
+    schema: ZodObject<DataShape>;
+    changeValue: { (mod: Partial<objectOutputType<DataShape, ZodTypeAny>>): void };
+    textInputDelay?: number;
     field: FieldDef;
-    schema: z.ZodObject<T>;
     noTriState?: boolean;
-    change: { (mod: Partial<T>): void };
     options?: string[];
     optionDescriptions?: ReactNode[];
     suggestions?: string[];
     stringInputType?: string;
     showUnsupported?: boolean;
     numberInputSettings?: NumberInputSettings;
-    textInputDelay?: number;
 }
 
-export function SchemaField<T extends z.ZodRawShape>({
-    field, change, noTriState,
+export function SchemaField<DataShape extends ZodRawShape>({
+    field, changeValue: change, noTriState,
     options, optionDescriptions,
     suggestions, stringInputType,
     showUnsupported = false,
     numberInputSettings = {},
     textInputDelay,
     schema,
-}: SchemaFieldProps<T>) {
+}: SchemaFieldProps<DataShape>) {
     const { key, optional, type, value, alias } = field;
     const isSupported = supportedTypes.includes(type)
     if (!isSupported && !showUnsupported) { return null }

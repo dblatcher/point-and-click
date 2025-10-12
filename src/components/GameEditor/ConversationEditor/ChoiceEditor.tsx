@@ -62,12 +62,13 @@ export const ChoiceEditor = ({
         <SchemaForm
             textInputDelay={2000}
             schema={ConversationChoiceSchema.omit({
-                'sequence': true
+                'sequence': true,
+                'enablesChoices': true,
+                'disablesChoices': true,
+                'choiceSequence': true
             })}
             data={choice}
-            changeValue={(mod) => {
-                handleChoiceUpdate(mod as Partial<ConversationChoice>)
-            }}
+            changeValue={handleChoiceUpdate}
             options={{
                 nextBranch: Object.keys(branches),
             }}

@@ -24,7 +24,7 @@ export const SayOrderForm = ({
         textInputDelay={2000}
         schema={SayOrderSchema.omit(orderBaseOmits)}
         data={data}
-        changeValue={(mod) => handleSchemaFormChange(mod as Partial<SayOrder>)}
+        changeValue={handleSchemaFormChange}
         suggestions={{ animation: animationSuggestions }}
     />
 }

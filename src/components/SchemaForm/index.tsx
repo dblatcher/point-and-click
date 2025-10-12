@@ -1,22 +1,22 @@
 import { Stack, StackProps } from "@mui/material"
 import { ReactNode } from "react"
-import { z } from "zod"
+import { objectOutputType, ZodTypeAny, ZodRawShape, ZodBoolean, ZodEnum, ZodNumber, ZodObject, ZodString } from "zod"
 import { SchemaField } from "./SchemaField"
 import type { FieldDef, FieldValue, NumberInputSettings } from "./types"
 
 export type { FieldDef, FieldValue, NumberInputSettings }
 
-interface Props<T extends z.ZodRawShape> {
-    schema: z.ZodObject<T>;
-    data: Record<string, unknown>;
-    changeValue: { (mod: Partial<T>): void };
-    options?: Partial<Record<keyof T, string[]>>;
-    fieldAliases?: Partial<Record<keyof T, string>>;
-    optionDescriptions?: Partial<Record<keyof T, ReactNode[]>>;
-    suggestions?: Partial<Record<keyof T, string[]>>;
-    numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
-    fieldWrapperProps?: Omit<Partial<StackProps>, 'component' | 'children' | 'ref'>
+interface Props<DataShape extends ZodRawShape> {
+    schema: ZodObject<DataShape>;
+    changeValue: { (mod: Partial<objectOutputType<DataShape, ZodTypeAny>>): void };
     textInputDelay?: number
+    data: objectOutputType<DataShape, ZodTypeAny>;
+    options?: Partial<Record<keyof DataShape, string[]>>;
+    fieldAliases?: Partial<Record<keyof DataShape, string>>;
+    optionDescriptions?: Partial<Record<keyof DataShape, ReactNode[]>>;
+    suggestions?: Partial<Record<keyof DataShape, string[]>>;
+    numberConfig?: Partial<Record<keyof DataShape, NumberInputSettings>>;
+    fieldWrapperProps?: Omit<Partial<StackProps>, 'component' | 'children' | 'ref'>
 }
 
 // if this fails becuase of version/import hell when
@@ -24,16 +24,16 @@ interface Props<T extends z.ZodRawShape> {
 // zod._def.innerType._def.typeName === 'ZodEnum'
 // zod._def.typeName === 'ZodEnum'
 const getType = (zodExtract: unknown): FieldDef['type'] => {
-    if (zodExtract instanceof z.ZodString) {
+    if (zodExtract instanceof ZodString) {
         return 'ZodString'
     }
-    if (zodExtract instanceof z.ZodBoolean) {
+    if (zodExtract instanceof ZodBoolean) {
         return 'ZodBoolean'
     }
-    if (zodExtract instanceof z.ZodEnum) {
+    if (zodExtract instanceof ZodEnum) {
         return 'ZodEnum'
     }
-    if (zodExtract instanceof z.ZodNumber) {
+    if (zodExtract instanceof ZodNumber) {
         return 'ZodNumber'
     }
 }
@@ -42,14 +42,13 @@ const getType = (zodExtract: unknown): FieldDef['type'] => {
  * Creates a form for the schema, Supports only primitives, optional primitives
  * and required string enums.
  */
-export function SchemaForm<T extends z.ZodRawShape>({
+export function SchemaForm<DataShape extends ZodRawShape>({
     schema, data,
     changeValue,
     options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {}, fieldAliases = {},
     fieldWrapperProps = {},
     textInputDelay,
-}: Props<T>) {
-
+}: Props<DataShape>) {
     const fields: FieldDef[] = []
     for (const key in schema.shape) {
         const zod = schema.shape[key];
@@ -80,7 +79,7 @@ export function SchemaForm<T extends z.ZodRawShape>({
                 optionDescriptions={optionDescriptions[field.key]}
                 suggestions={suggestions[field.key]}
                 numberInputSettings={numberConfig[field.key]}
-                change={changeValue}
+                changeValue={changeValue}
                 field={field}
                 stringInputType={field.key === 'text' ? 'textArea' : undefined}
                 textInputDelay={textInputDelay}

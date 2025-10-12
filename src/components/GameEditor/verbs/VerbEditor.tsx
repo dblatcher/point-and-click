@@ -54,7 +54,7 @@ export const VerbEditor = ({ verb }: Props) => {
                         isMoveVerb: 'is "move" verb',
                         isLookVerb: 'is "look" verb',
                     }}
-                    changeValue={(mod) => { handleUpdate(mod as Partial<Verb>) }}
+                    changeValue={handleUpdate}
                 />
             </EditorBox>
             <EditorBox

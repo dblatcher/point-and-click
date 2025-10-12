@@ -45,7 +45,7 @@ export const GoToOrderForm = ({
         textInputDelay={1000}
         schema={GotoOrderSchema.omit(orderBaseOmits)}
         data={data}
-        changeValue={mod=>handleSchemaFormChange(mod as Partial<GotoOrder>)}
+        changeValue={handleSchemaFormChange}
         suggestions={{
             animation: animationSuggestions,
         }}
