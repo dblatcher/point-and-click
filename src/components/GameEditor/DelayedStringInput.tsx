@@ -11,39 +11,36 @@ export const DelayedStringInput: React.FunctionComponent<
 
     const inputRef = useRef<HTMLInputElement>()
     const [localvalue, setLocalValue] = useState(value)
-    const [timerId, setTimerId] = useState<NodeJS.Timeout | undefined>(undefined)
+    const timerIdRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
     useEffect(() => {
         setLocalValue(value)
         reportLocalChange?.(value)
     }, [value, setLocalValue, reportLocalChange])
 
-    const updatePropValue = useCallback(() => {
-        if (localvalue !== value) {
-            inputHandler(localvalue)
+    const updatePropIfDifferent = useCallback((changedValue = localvalue) => {
+        if (timerIdRef.current) {
+            clearTimeout(timerIdRef.current)
+            timerIdRef.current = undefined
+        }
+        if (changedValue !== value) {
+            inputHandler(changedValue)
         }
     }, [localvalue, value, inputHandler])
-
-    useEffect(() => {
-        const inputElement = inputRef.current
-        inputElement?.addEventListener('blur', updatePropValue)
-        return () => {
-            inputElement?.removeEventListener('blur', updatePropValue)
-        }
-    }, [inputRef, updatePropValue])
 
     const localInputHandler = (newLocalValue: string) => {
         setLocalValue(newLocalValue);
         reportLocalChange?.(newLocalValue);
-        if (timerId) {
-            clearTimeout(timerId)
+        if (timerIdRef.current) {
+            clearTimeout(timerIdRef.current)
         }
-        setTimerId(setTimeout(() => inputHandler(newLocalValue), delayAfterEdits))
+        timerIdRef.current = setTimeout(() => updatePropIfDifferent(newLocalValue), delayAfterEdits)
     }
 
     return <StringInput
         inputRef={inputRef}
         inputHandler={localInputHandler}
         handleSuggestion={inputHandler}
+        onBlur={() => updatePropIfDifferent()}
         value={localvalue} {...props} />
 }

@@ -89,7 +89,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
             <Box paddingY={2}>
                 {/* doesn't use andy free text fields, but include delay incase schema changes */}
                 <SchemaForm
-                    textInputDelay={2000}
+                    // textInputDelay={2000}
                     schema={consequenceMap[consequence.type] as any}
                     numberConfig={{
                         time: { min: 0 },
@@ -123,6 +123,7 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                             <OrderTypeButtons
                                 handler={(type) => () => {
                                     updateProperty('orders', insertAt(index, getDefaultOrder(type), consequence.orders ?? []))
+                                    setDialogOrderIndex(index)
                                 }}
                             />
                         )}

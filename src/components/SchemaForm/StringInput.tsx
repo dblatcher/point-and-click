@@ -11,10 +11,11 @@ export type StringInputProps = FieldProps & {
     inputRef?: Ref<any>;
     /**callback used to report that that user selected an option */
     handleSuggestion?: { (value: string): void };
+    onBlur?: TextFieldProps['onBlur']
 }
 
 export const StringInput: FunctionComponent<StringInputProps> = (props) => {
-    const { type = 'text', suggestions, label, error, optional, readOnly, inputRef, handleSuggestion } = props;
+    const { type = 'text', suggestions, label, error, optional, readOnly, inputRef, handleSuggestion, onBlur } = props;
 
     const sendValue: FormEventHandler<HTMLInputElement> = (event) => {
         props.inputHandler(eventToString(event));
@@ -38,6 +39,7 @@ export const StringInput: FunctionComponent<StringInputProps> = (props) => {
                 <TextField inputRef={inputRef}
                     value={props.value}
                     onInput={sendValue}
+                    onBlur={onBlur}
                     {...commonProps}
                     sx={{ maxWidth: 150, paddingRight: 1 }}
                 />
@@ -67,6 +69,7 @@ export const StringInput: FunctionComponent<StringInputProps> = (props) => {
                 sx={props.minWidth ? {
                     minWidth: props.minWidth
                 } : undefined}
+                onBlur={onBlur}
                 {...params}
                 {...commonProps}
             />}
@@ -86,6 +89,7 @@ export const StringInput: FunctionComponent<StringInputProps> = (props) => {
             } : undefined}
             value={props.value}
             onInput={sendValue}
+            onBlur={onBlur}
             {...commonProps}
         />
     );

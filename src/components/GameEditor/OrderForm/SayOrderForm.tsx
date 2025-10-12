@@ -22,7 +22,7 @@ export const SayOrderForm = ({
     }
 
     return <SchemaForm
-        textInputDelay={5000}
+        textInputDelay={2000}
         schema={SayOrderSchema.omit(orderBaseOmits)}
         data={data}
         changeValue={handleSchemaFormChange}
