@@ -2,12 +2,12 @@ import { SchemaForm } from "@/components/SchemaForm";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { AnyConsequence, Consequence, GameDesign, Order } from "@/definitions";
-import { consequenceMap, ConsequenceSchema, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
+import { consequenceMap, consequenceTypes, immediateConsequenceTypes, OrderConsequence, zoneTypes } from "@/definitions/Consequence";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
-import { cloneData } from "@/lib/clone";
 import { findById, insertAt, listIds } from "@/lib/util";
 import { Box } from "@mui/material";
 import { useState } from "react";
+import { ZodObject } from "zod";
 import { ArrayControl } from "../ArrayControl";
 import { OrderTypeButtons } from "../OrderTypeButtons";
 import { OrderCard } from "../SequenceEditor/OrderCard";
@@ -17,7 +17,6 @@ import { SpritePreview } from "../SpritePreview";
 import { getDefaultOrder } from "../defaults";
 import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
 import { getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
-import { ZodObject } from "zod";
 
 interface Props {
     consequence: AnyConsequence;
@@ -62,20 +61,20 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
         storyBoardId: listIds(gameDesign.storyBoards)
     }
 
-    // for properties not handled by the Schema form
-    const updateProperty = (property: 'orders', value: unknown): void => {
-        const copy = cloneData(consequence)
-        switch (property) {
-            case 'orders':
-                copy[property] = value as Order[]
+    const updateOrders = (orders: Order[]): void => {
+        if (consequence.type !== 'order') {
+            return
         }
-        update(copy)
+        update({
+            ...consequence as OrderConsequence,
+            orders: orders
+        })
     }
 
     const editOrder = (newOrder: Order, index: number): void => {
         const ordersCopy = [...(consequence.orders || [])]
         ordersCopy.splice(index, 1, newOrder)
-        updateProperty('orders', ordersCopy)
+        updateOrders(ordersCopy)
     }
 
     const actor = findById(consequence.actorId, gameDesign.actors)
@@ -95,7 +94,6 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                         orders: true,
                     })}
                     numberConfig={{
-                        time: { min: 0 },
                         volume: {
                             step: .1,
                             max: 2,
@@ -109,9 +107,9 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                     }}
                     data={consequence}
                     changeValue={mod => {
-                        const parsed = ConsequenceSchema.safeParse({
+                        const parsed = consequenceMap[consequence.type].safeParse({
                             ...consequence,
-                            ...(mod as unknown as Partial<Consequence>)
+                            ...mod
                         })
                         if (!parsed.success) {
                             console.error('failed consequence update', parsed.error.issues)
@@ -130,12 +128,12 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                         customCreateButton={index => (
                             <OrderTypeButtons
                                 handler={(type) => () => {
-                                    updateProperty('orders', insertAt(index, getDefaultOrder(type), consequence.orders ?? []))
+                                    updateOrders(insertAt(index, getDefaultOrder(type), consequence.orders ?? []))
                                     setDialogOrderIndex(index)
                                 }}
                             />
                         )}
-                        mutateList={newList => { updateProperty('orders', newList) }}
+                        mutateList={newList => { updateOrders(newList) }}
                     />
                 )}
             </Box>
