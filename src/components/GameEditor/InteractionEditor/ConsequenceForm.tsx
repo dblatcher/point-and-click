@@ -90,8 +90,8 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
     const soundAsset = sound ? soundService.get(sound) : undefined
 
     return (
-        <Box display={'flex'}>
-            <Box paddingY={2}>
+        <Box display={'flex'} paddingY={2} gap={2}>
+            <Box flexBasis={200}>
                 <SchemaForm
                     schema={(consequenceMap[consequence.type] as unknown as ZodObject<any>).omit({
                         type: true,
@@ -143,17 +143,14 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                 )}
             </Box>
 
-            {needsRoomPreview && <Box paddingY={2} paddingLeft={2}>
+            {needsRoomPreview &&
                 <ConsequenceFormRoom setPoint={point => update({ ...consequence, ...point })} consequence={consequence} />
-            </Box>}
-            {needsSoundPreview && <Box paddingY={2} paddingLeft={2}>
+            }
+            {needsSoundPreview &&
                 <SoundPreview asset={soundAsset ?? {}} />
-            </Box>}
-
+            }
             {actor && (
-                <Box paddingY={2} paddingLeft={2}>
-                    <SpritePreview data={actor} noBaseLine />
-                </Box>
+                <SpritePreview data={actor} noBaseLine />
             )}
             {(consequence.type === 'order' && typeof orderIndexDialog === 'number') && (
                 <OrderDialog
