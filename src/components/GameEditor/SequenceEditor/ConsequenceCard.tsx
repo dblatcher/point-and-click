@@ -19,6 +19,9 @@ const DetailedDescription = ({ consequence, detailed }: Pick<Props, 'consequence
         const { orders } = consequence;
         return <Box display={'flex'} gap={2} flexWrap={'wrap'} paddingY={1}>
             {orders.map((order, index) => <OrderCard key={index} order={order} />)}
+            {orders.length===0 && (
+                <Typography>[no orders]</Typography>
+            )}
         </Box>
 
     }
