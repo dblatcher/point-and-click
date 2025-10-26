@@ -76,7 +76,7 @@ const figureOutOldAndNewIndexes = (id: string, index: number, ordering: Ordering
     return [oldI, newI]
 }
 
-export const AnimatedContainer = <DataType,>({
+export const AnimatedContainerWithIdents = <DataType,>({
     list,
     getIdent,
     represent,

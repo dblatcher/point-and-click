@@ -1,7 +1,7 @@
 import { Box, ButtonGroup, IconButton, Paper, Stack, StackProps } from "@mui/material";
 import { Fragment, ReactNode, useState } from "react";
 import { AddIcon, ArrowUpwardIcon, ArrowLeftIcon, ArrowRightIcon, ArrowDownwardIcon, DeleteIcon, ClearIcon } from "./material-icons";
-import { AnimatedContainer } from "./animated-lists/AnimatedContainer";
+import { AnimatedContainerWithIdents } from "./animated-lists/AnimatedContainerWithIdents";
 import { AnimatedContainerWithIndexList } from "./animated-lists/AnimatedContainerWithIndexlist";
 import { excludeByIndex, insertAt } from "@/lib/util";
 
@@ -170,7 +170,7 @@ const CardsFormat = <T,>({
 
     if (getIdent) {
         return <Box display={'flex'} gap={2} flexWrap={'wrap'}>
-            <AnimatedContainer nonUniqueIdents={nonUniqueIdents} getIdent={getIdent} represent={renderItemListing} list={list} />
+            <AnimatedContainerWithIdents nonUniqueIdents={nonUniqueIdents} getIdent={getIdent} represent={renderItemListing} list={list} />
             {maybeInsertButtonAtEnd}
         </Box>
     }
@@ -245,7 +245,7 @@ const StackFormat = <T,>({
 
     if (getIdent) {
         return <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }} {...stackProps}>
-            <AnimatedContainer nonUniqueIdents={nonUniqueIdents} getIdent={getIdent} represent={renderItemListing} list={list} />
+            <AnimatedContainerWithIdents nonUniqueIdents={nonUniqueIdents} getIdent={getIdent} represent={renderItemListing} list={list} />
             {
                 renderCreateButton(list.length)
             }
