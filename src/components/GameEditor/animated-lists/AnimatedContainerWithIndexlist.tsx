@@ -7,12 +7,14 @@ type Props<DataType> = {
     list: DataType[];
     represent: { (item: DataType, index: number): ReactNode };
     oldPositions: number[];
+    transitionDuration?: number;
 };
 
 export const AnimatedContainerWithIndexList = <DataType,>({
     list,
     represent,
-    oldPositions
+    oldPositions,
+    transitionDuration = 300
 }: Props<DataType>) => {
     const { transformsOn, updatePositions, containerRef, positionRef } = useTransformTransition()
 
@@ -37,7 +39,7 @@ export const AnimatedContainerWithIndexList = <DataType,>({
                 return (
                     <div
                         key={index}
-                        style={getInlineTransition(transformsOn, oldPlace === -1, wasAt, nowAt)}
+                        style={getInlineTransition(transitionDuration, transformsOn, oldPlace === -1, wasAt, nowAt)}
                     >
                         {represent(item, index)}
                     </div>

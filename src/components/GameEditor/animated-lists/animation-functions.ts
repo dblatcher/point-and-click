@@ -7,13 +7,14 @@ export type ItemPosition = {
     height: number;
 };
 
-const baseStyle: CSSProperties = {
-    transition: 'transform .3s ease-in-out',
+const baseStyle = (transitionDuration: number): CSSProperties => ({
+    transition: `transform ${transitionDuration}ms ease-in-out`,
     transformOrigin: 'center',
     transformBox: 'border-box',
-}
+})
 
 export const getInlineTransition = (
+    duration: number,
     transitionsOn: boolean,
     isNew: boolean,
     wasAt?: ItemPosition,
@@ -21,12 +22,12 @@ export const getInlineTransition = (
 ): CSSProperties => {
 
     if (!transitionsOn) {
-        return baseStyle
+        return baseStyle(duration)
     }
 
     if (isNew) {
         return {
-            ...baseStyle,
+            ...baseStyle(duration),
             transform: 'scaleX(0%)',
             transition: 'transform 0s',
         };
@@ -36,14 +37,14 @@ export const getInlineTransition = (
         const xShift = wasAt.left - nowAt.left;
         const yShift = wasAt.top - nowAt.top;
         if (!xShift && !yShift) {
-            return baseStyle;
+            return baseStyle(duration);
         }
         return {
-            ...baseStyle,
+            ...baseStyle(duration),
             transform: `translateX(${xShift}px) translateY(${yShift}px) `,
             transition: 'transform 0s',
         };
     }
 
-    return baseStyle;
+    return baseStyle(duration);
 };

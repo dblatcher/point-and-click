@@ -7,6 +7,7 @@ type Props<DataType> = {
     list: DataType[];
     represent: { (item: DataType, index: number): ReactNode };
     getIdent: { (item: DataType): string };
+    transitionDuration?: number;
 };
 
 type Ordering = {
@@ -19,6 +20,7 @@ export const AnimatedContainerWithIdents = <DataType,>({
     list,
     getIdent,
     represent,
+    transitionDuration = 500
 }: Props<DataType>) => {
 
     const { transformsOn, updatePositions, containerRef, positionRef } = useTransformTransition()
@@ -53,7 +55,7 @@ export const AnimatedContainerWithIdents = <DataType,>({
                 return (
                     <div
                         key={`${index}_${ident}`}
-                        style={getInlineTransition(transformsOn, oldPlace === -1, wasAt, nowAt)}
+                        style={getInlineTransition(transitionDuration, transformsOn, oldPlace === -1, wasAt, nowAt)}
                     >
                         {represent(item, index)}
                     </div>
