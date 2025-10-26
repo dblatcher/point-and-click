@@ -1,7 +1,6 @@
 import { Box, ButtonGroup, IconButton, Paper, Stack, StackProps } from "@mui/material";
 import { Fragment, ReactNode, useState } from "react";
 import { AddIcon, ArrowUpwardIcon, ArrowLeftIcon, ArrowRightIcon, ArrowDownwardIcon, DeleteIcon, ClearIcon } from "./material-icons";
-import { AnimatedContainerWithIdents } from "./animated-lists/AnimatedContainerWithIdents";
 import { AnimatedContainerWithIndexList } from "./animated-lists/AnimatedContainerWithIndexlist";
 import { excludeByIndex, insertAt } from "@/lib/util";
 
@@ -13,7 +12,7 @@ type ButtonSize = "small" | "medium" | "large"
 interface Props<T> {
     list: T[];
     describeItem: { (item: T, index: number): ReactNode };
-    getIdent?: { (item: T): string }
+    noAnimation?: boolean;
     mutateList: { (newList: T[]): void };
     createItem?: { (): T | undefined };
     customCreateButton?: { (index: number): ReactNode }
@@ -123,7 +122,7 @@ const CardsFormat = <T,>({
     handleInsert,
     handleMove,
     handleDelete,
-    getIdent,
+    noAnimation,
     oldPositions,
 }: FormatProps<T>) => {
 
@@ -166,9 +165,9 @@ const CardsFormat = <T,>({
         <AddIcon />
     </IconButton> : null
 
-    if (getIdent) {
+    if (noAnimation) {
         return <Box display={'flex'} gap={2} flexWrap={'wrap'}>
-            <AnimatedContainerWithIdents getIdent={getIdent} represent={renderItemListing} list={list} />
+            {list.map(renderItemListing)}
             {maybeInsertButtonAtEnd}
         </Box>
     }
@@ -191,7 +190,7 @@ const StackFormat = <T,>({
     handleInsert,
     handleMove,
     handleDelete,
-    getIdent,
+    noAnimation,
     oldPositions,
 }: FormatProps<T>) => {
 
@@ -240,9 +239,9 @@ const StackFormat = <T,>({
         </Fragment>
     );
 
-    if (getIdent) {
+    if (noAnimation) {
         return <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }} {...stackProps}>
-            <AnimatedContainerWithIdents getIdent={getIdent} represent={renderItemListing} list={list} />
+            {list.map(renderItemListing)}
             {
                 renderCreateButton(list.length)
             }
