@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { ItemPosition } from "./animation-functions";
 
 
-export const useTransformTransition = (delay = 300) => {
+export const useTransformTransition = (delay = 1) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const positionRef = useRef<ItemPosition[]>([]);
     const [transformsOn, setTransformsOn] = useState(false);
@@ -20,6 +20,8 @@ export const useTransformTransition = (delay = 300) => {
             positionRef.current = items.map((el) => ({
                 left: el.offsetLeft,
                 top: el.offsetTop,
+                width: el.offsetWidth,
+                height: el.offsetHeight,
             }));
         }
         runTransforms();

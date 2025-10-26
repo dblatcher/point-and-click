@@ -14,7 +14,6 @@ interface Props<T> {
     list: T[];
     describeItem: { (item: T, index: number): ReactNode };
     getIdent?: { (item: T): string }
-    nonUniqueIdents?: boolean
     mutateList: { (newList: T[]): void };
     createItem?: { (): T | undefined };
     customCreateButton?: { (index: number): ReactNode }
@@ -57,7 +56,7 @@ const MoveButton = ({ role, index, handleMove, color, horizontal }: {
         ? (role === 'UP' ? ArrowLeftIcon : ArrowRightIcon)
         : (role === 'UP' ? ArrowUpwardIcon : ArrowDownwardIcon);
     return (
-        <IconButton size='small'
+        <IconButton size='small' disableTouchRipple
             title={role}
             color={color}
             onClick={() => { handleMove(index, role) }}
@@ -125,7 +124,6 @@ const CardsFormat = <T,>({
     handleMove,
     handleDelete,
     getIdent,
-    nonUniqueIdents,
     oldPositions,
 }: FormatProps<T>) => {
 
@@ -170,7 +168,7 @@ const CardsFormat = <T,>({
 
     if (getIdent) {
         return <Box display={'flex'} gap={2} flexWrap={'wrap'}>
-            <AnimatedContainerWithIdents nonUniqueIdents={nonUniqueIdents} getIdent={getIdent} represent={renderItemListing} list={list} />
+            <AnimatedContainerWithIdents getIdent={getIdent} represent={renderItemListing} list={list} />
             {maybeInsertButtonAtEnd}
         </Box>
     }
@@ -194,7 +192,6 @@ const StackFormat = <T,>({
     handleMove,
     handleDelete,
     getIdent,
-    nonUniqueIdents,
     oldPositions,
 }: FormatProps<T>) => {
 
@@ -245,7 +242,7 @@ const StackFormat = <T,>({
 
     if (getIdent) {
         return <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }} {...stackProps}>
-            <AnimatedContainerWithIdents nonUniqueIdents={nonUniqueIdents} getIdent={getIdent} represent={renderItemListing} list={list} />
+            <AnimatedContainerWithIdents getIdent={getIdent} represent={renderItemListing} list={list} />
             {
                 renderCreateButton(list.length)
             }

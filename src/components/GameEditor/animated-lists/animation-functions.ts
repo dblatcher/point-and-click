@@ -1,6 +1,11 @@
 import { CSSProperties } from "react";
 
-export type ItemPosition = { left: number; top: number };
+export type ItemPosition = {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+};
 
 const baseStyle: CSSProperties = {
     transition: 'transform .3s ease-in-out',
