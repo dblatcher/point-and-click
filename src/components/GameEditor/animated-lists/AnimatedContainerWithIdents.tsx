@@ -23,7 +23,7 @@ export const AnimatedContainerWithIdents = <DataType,>({
     transitionDuration = 500
 }: Props<DataType>) => {
 
-    const { transformsOn, updatePositions, containerRef, positionRef } = useTransformTransition()
+    const { transformsOn, updatePositions, containerRef, positions, positionBefore } = useTransformTransition()
     const [ordering, setOrdering] = useState<Ordering>(() => ({
         last: list.map(getIdent),
         now: list.map(getIdent),
@@ -50,8 +50,8 @@ export const AnimatedContainerWithIdents = <DataType,>({
                 const oldPlace = ordering.last.indexOf(ident);
                 const newPlace = ordering.now.indexOf(ident);
 
-                const wasAt = positionRef.current[oldPlace];
-                const nowAt = positionRef.current[newPlace];
+                const wasAt = positionBefore[oldPlace];
+                const nowAt = positions[newPlace];
                 return (
                     <div
                         key={`${index}_${ident}`}

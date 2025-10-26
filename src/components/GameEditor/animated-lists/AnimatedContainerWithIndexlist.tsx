@@ -16,7 +16,8 @@ export const AnimatedContainerWithIndexList = <DataType,>({
     oldPositions,
     transitionDuration = 300
 }: Props<DataType>) => {
-    const { transformsOn, updatePositions, containerRef, positionRef } = useTransformTransition()
+    const { transformsOn, updatePositions, containerRef, positions, positionBefore } = useTransformTransition()
+
 
     useLayoutEffect(() => {
         // TO DO - after updating the positions - somehow clear the oldPositions prop
@@ -34,8 +35,8 @@ export const AnimatedContainerWithIndexList = <DataType,>({
         >
             {list.map((item, index) => {
                 const oldPlace = oldPositions[index]
-                const wasAt = positionRef.current[oldPlace];
-                const nowAt = positionRef.current[index];
+                const wasAt = positionBefore[oldPlace];
+                const nowAt = positions[index];
                 return (
                     <div
                         key={index}
