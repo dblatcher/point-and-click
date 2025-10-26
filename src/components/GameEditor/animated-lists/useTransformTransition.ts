@@ -12,8 +12,7 @@ export const useTransformTransition = (delay = 1) => {
         setTimeout(() => setTransformsOn(false), delay);
     }, [delay]);
 
-
-    const updatePositions = useCallback(() => {
+    const storePositioning = () => {
         const { current: container } = containerRef;
         if (container) {
             const items = Array.from(container.children) as HTMLDivElement[];
@@ -24,6 +23,10 @@ export const useTransformTransition = (delay = 1) => {
                 height: el.offsetHeight,
             }));
         }
+    }
+
+    const updatePositions = useCallback(() => {
+        storePositioning();
         runTransforms();
     }, [runTransforms])
 
