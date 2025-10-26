@@ -1,7 +1,9 @@
 import { Box, ButtonGroup, IconButton, Paper, Stack, StackProps } from "@mui/material";
-import { Fragment, ReactNode } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import { AddIcon, ArrowUpwardIcon, ArrowLeftIcon, ArrowRightIcon, ArrowDownwardIcon, DeleteIcon, ClearIcon } from "./material-icons";
-import { AnimatedContainer } from "./AnimatedContainer";
+import { AnimatedContainer } from "./animated-lists/AnimatedContainer";
+import { AnimatedContainerWithIndexList } from "./animated-lists/AnimatedContainerWithIndexlist";
+import { excludeByIndex, insertAt } from "@/lib/util";
 
 
 type Color = "success" | "primary" | "secondary" | "error" | "info" | "warning"
@@ -41,6 +43,7 @@ type FormatProps<T> = Props<T> & {
     handleDelete: {
         (index: number): void;
     };
+    oldPositions: number[]
 }
 
 const MoveButton = ({ role, index, handleMove, color, horizontal }: {
@@ -123,6 +126,7 @@ const CardsFormat = <T,>({
     handleDelete,
     getIdent,
     nonUniqueIdents,
+    oldPositions,
 }: FormatProps<T>) => {
 
     const renderItemListing = (item: T, index: number) => (
@@ -172,7 +176,7 @@ const CardsFormat = <T,>({
     }
 
     return <Box display={'flex'} gap={2} flexWrap={'wrap'}>
-        {list.map(renderItemListing)}
+        <AnimatedContainerWithIndexList represent={renderItemListing} list={list} oldPositions={oldPositions} />
         {maybeInsertButtonAtEnd}
     </Box>
 }
@@ -191,6 +195,7 @@ const StackFormat = <T,>({
     handleDelete,
     getIdent,
     nonUniqueIdents,
+    oldPositions,
 }: FormatProps<T>) => {
 
     const renderCreateButton = (index: number): ReactNode => {
@@ -249,7 +254,7 @@ const StackFormat = <T,>({
 
     return (
         <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }} {...stackProps}>
-            {list.map(renderItemListing)}
+            <AnimatedContainerWithIndexList represent={renderItemListing} list={list} oldPositions={oldPositions} />
             {
                 renderCreateButton(list.length)
             }
@@ -258,29 +263,42 @@ const StackFormat = <T,>({
 }
 
 export const ArrayControl = <T,>({
-    list, describeItem, createItem, createButtonPlacement, noMoveButtons, noDeleteButtons,
+    list,
+    createItem,
+    createButtonPlacement,
     mutateList,
-    customCreateButton,
     color = 'primary',
     frame = 'NONE',
     buttonSize = 'large',
-    horizontalMoveButtons,
-    stackProps,
     deleteIcon = 'delete',
     format = 'stack',
     customInsertFunction,
-    getIdent,
-    nonUniqueIdents,
+    ...rest
 }: Props<T>) => {
+
+    const [oldPositions, setOldPositions] = useState(() => {
+        return list.map((_i, index) => index)
+    })
 
     const handleDelete = (index: number) => {
         const listCopy = [...list]
         listCopy.splice(index, 1)
         mutateList(listCopy)
+        setOldPositions(() => {
+            const before = list.map((_i, index) => index)
+            const newArray = excludeByIndex(index, before)
+            return newArray
+        })
     }
 
     const handleInsert = customInsertFunction
-        ? customInsertFunction
+        ? (index: number) => {
+            customInsertFunction(index)
+            setOldPositions(() => {
+                const before = list.map((_i, index) => index)
+                return insertAt(index, -1, before)
+            })
+        }
         : createItem
             ? (index: number) => {
                 if (!createItem) { return }
@@ -289,6 +307,11 @@ export const ArrayControl = <T,>({
                 if (typeof newItem === 'undefined') { return }
                 listCopy.splice(index, 0, newItem)
                 mutateList(listCopy)
+                setOldPositions(() => {
+                    const before = list.map((_i, index) => index)
+                    const newArray = insertAt(index, -1, before)
+                    return newArray
+                })
             }
             : undefined
 
@@ -299,24 +322,30 @@ export const ArrayControl = <T,>({
         const [itemToMove] = listCopy.splice(index, 1)
         listCopy.splice(reinsertIndex, 0, itemToMove)
         mutateList(listCopy)
+
+        setOldPositions(() => {
+            const before = list.map((_i, index) => index)
+            const newArray = insertAt(reinsertIndex, index, excludeByIndex(index, before))
+            return newArray
+        })
+
     }
 
-    const formatProps = {
-        list, describeItem, createItem, createButton: createButtonPlacement, noMoveButtons, noDeleteButtons,
+    const formatProps: FormatProps<T> = {
+        list,
+        createItem,
+        createButtonPlacement,
         mutateList,
         color,
         frame,
         buttonSize,
-        horizontalMoveButtons,
-        stackProps,
         deleteIcon,
         format,
         handleDelete,
         handleMove,
         handleInsert,
-        customCreateButton,
-        getIdent,
-        nonUniqueIdents,
+        oldPositions,
+        ...rest,
     }
 
     if (format === 'cards') {

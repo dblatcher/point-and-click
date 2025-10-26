@@ -28,7 +28,6 @@ export const VerbListControl = () => {
         <Stack spacing={4}>
             <ArrayControl noDeleteButtons horizontalMoveButtons
                 list={verbs}
-                getIdent={verb => verb.id}
                 mutateList={(verbs) => applyModification('change verb order', { verbs })}
                 stackProps={{ flex: 1 }}
                 describeItem={(verb) => (
