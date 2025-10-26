@@ -1,6 +1,7 @@
 import { Box, ButtonGroup, IconButton, Paper, Stack, StackProps } from "@mui/material";
 import { Fragment, ReactNode } from "react";
 import { AddIcon, ArrowUpwardIcon, ArrowLeftIcon, ArrowRightIcon, ArrowDownwardIcon, DeleteIcon, ClearIcon } from "./material-icons";
+import { AnimatedContainer } from "./AnimatedContainer";
 
 
 type Color = "success" | "primary" | "secondary" | "error" | "info" | "warning"
@@ -10,6 +11,8 @@ type ButtonSize = "small" | "medium" | "large"
 interface Props<T> {
     list: T[];
     describeItem: { (item: T, index: number): ReactNode };
+    getIdent?: { (item: T): string }
+    nonUniqueIdents?: boolean
     mutateList: { (newList: T[]): void };
     createItem?: { (): T | undefined };
     customCreateButton?: { (index: number): ReactNode }
@@ -118,51 +121,59 @@ const CardsFormat = <T,>({
     handleInsert,
     handleMove,
     handleDelete,
+    getIdent,
+    nonUniqueIdents,
 }: FormatProps<T>) => {
 
-    return <Box display={'flex'} gap={2} flexWrap={'wrap'}>
-        {list.map((item, index) => (
-            <Fragment key={index}>
-                {(!!handleInsert && createButton !== 'END') && (
-                    <IconButton size={buttonSize}
-                        title="insert"
-                        color={color}
-                        onClick={() => { handleInsert(index) }}
-                    >
-                        <AddIcon />
-                    </IconButton>
-                )}
-
-                <Box display={'flex'} flexDirection={'column'}>
-                    <Stack direction={'row'} justifyContent={'space-between'}>
-                        {!noMoveButtons && (
-                            <ButtonGroup orientation={horizontalMoveButtons ? 'horizontal' : 'vertical'} component={'aside'}>
-                                <MoveButton horizontal handleMove={handleMove} index={index} role="UP" color={color} />
-                                <MoveButton horizontal handleMove={handleMove} index={index} role="DOWN" color={color} />
-                            </ButtonGroup>
-                        )}
-                        {!noDeleteButtons &&
-                            <DeleteButton handleDelete={handleDelete} index={index} deleteIcon={deleteIcon} color={color} />
-                        }
-                    </Stack>
-                    <Box>
-                        {describeItem(item, index)}
-                    </Box>
-                </Box>
-            </Fragment>
-        ))}
-
-        {
-            !!handleInsert && (
+    const renderItemListing = (item: T, index: number) => (
+        <Fragment key={index}>
+            {(!!handleInsert && createButton !== 'END') && (
                 <IconButton size={buttonSize}
                     title="insert"
                     color={color}
-                    onClick={() => { handleInsert(list.length) }}
+                    onClick={() => { handleInsert(index) }}
                 >
                     <AddIcon />
                 </IconButton>
-            )
-        }
+            )}
+
+            <Box display={'flex'} flexDirection={'column'}>
+                <Stack direction={'row'} justifyContent={'space-between'}>
+                    {!noMoveButtons && (
+                        <ButtonGroup orientation={horizontalMoveButtons ? 'horizontal' : 'vertical'} component={'aside'}>
+                            <MoveButton horizontal handleMove={handleMove} index={index} role="UP" color={color} />
+                            <MoveButton horizontal handleMove={handleMove} index={index} role="DOWN" color={color} />
+                        </ButtonGroup>
+                    )}
+                    {!noDeleteButtons &&
+                        <DeleteButton handleDelete={handleDelete} index={index} deleteIcon={deleteIcon} color={color} />
+                    }
+                </Stack>
+                <Box>
+                    {describeItem(item, index)}
+                </Box>
+            </Box>
+        </Fragment>
+    );
+
+    const maybeInsertButtonAtEnd = !!handleInsert ? <IconButton size={buttonSize}
+        title="insert"
+        color={color}
+        onClick={() => { handleInsert(list.length) }}
+    >
+        <AddIcon />
+    </IconButton> : null
+
+    if (getIdent) {
+        return <Box display={'flex'} gap={2} flexWrap={'wrap'}>
+            <AnimatedContainer nonUniqueIdents={nonUniqueIdents} getIdent={getIdent} represent={renderItemListing} list={list} />
+            {maybeInsertButtonAtEnd}
+        </Box>
+    }
+
+    return <Box display={'flex'} gap={2} flexWrap={'wrap'}>
+        {list.map(renderItemListing)}
+        {maybeInsertButtonAtEnd}
     </Box>
 }
 
@@ -178,6 +189,8 @@ const StackFormat = <T,>({
     handleInsert,
     handleMove,
     handleDelete,
+    getIdent,
+    nonUniqueIdents,
 }: FormatProps<T>) => {
 
     const renderCreateButton = (index: number): ReactNode => {
@@ -189,44 +202,54 @@ const StackFormat = <T,>({
         }
         return null
     }
+    const renderItemListing = (item: T, index: number) => (
+        <Fragment key={index}>
+            {(createButton !== 'END') && renderCreateButton(index)}
+            <Frame index={index} framing={frame}>
+                <Stack component={'article'}
+                    justifyContent={'space-between'}
+                    alignItems={'center'}
+                    direction={'row'}
+                    spacing={1}
+                >
+                    {!noMoveButtons && (
+                        <ButtonGroup orientation={horizontalMoveButtons ? 'horizontal' : 'vertical'} component={'aside'}>
+                            <MoveButton handleMove={handleMove} index={index} role="UP" color={color} />
+                            <MoveButton handleMove={handleMove} index={index} role="DOWN" color={color} />
+                        </ButtonGroup>
+                    )}
+
+                    <Box flex={1}>
+                        {describeItem(item, index)}
+                    </Box>
+
+                    {!noDeleteButtons && (
+                        <Box position={'relative'} component={'aside'}>
+                            <DeleteButton index={index}
+                                handleDelete={handleDelete}
+                                color={color}
+                                buttonSize={buttonSize}
+                                deleteIcon={deleteIcon} />
+                        </Box>
+                    )}
+
+                </Stack>
+            </Frame>
+        </Fragment>
+    );
+
+    if (getIdent) {
+        return <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }} {...stackProps}>
+            <AnimatedContainer nonUniqueIdents={nonUniqueIdents} getIdent={getIdent} represent={renderItemListing} list={list} />
+            {
+                renderCreateButton(list.length)
+            }
+        </Stack>
+    }
 
     return (
         <Stack sx={{ paddingY: noMoveButtons ? 1 : 2 }} {...stackProps}>
-            {list.map((item, index) => (
-                <Fragment key={index}>
-                    {(createButton !== 'END') && renderCreateButton(index)}
-                    <Frame index={index} framing={frame}>
-                        <Stack component={'article'}
-                            justifyContent={'space-between'}
-                            alignItems={'center'}
-                            direction={'row'}
-                            spacing={1}
-                        >
-                            {!noMoveButtons && (
-                                <ButtonGroup orientation={horizontalMoveButtons ? 'horizontal' : 'vertical'} component={'aside'}>
-                                    <MoveButton handleMove={handleMove} index={index} role="UP" color={color} />
-                                    <MoveButton handleMove={handleMove} index={index} role="DOWN" color={color} />
-                                </ButtonGroup>
-                            )}
-
-                            <Box flex={1}>
-                                {describeItem(item, index)}
-                            </Box>
-
-                            {!noDeleteButtons && (
-                                <Box position={'relative'} component={'aside'}>
-                                    <DeleteButton index={index}
-                                        handleDelete={handleDelete}
-                                        color={color}
-                                        buttonSize={buttonSize}
-                                        deleteIcon={deleteIcon} />
-                                </Box>
-                            )}
-
-                        </Stack>
-                    </Frame>
-                </Fragment>
-            ))}
+            {list.map(renderItemListing)}
             {
                 renderCreateButton(list.length)
             }
@@ -246,6 +269,8 @@ export const ArrayControl = <T,>({
     deleteIcon = 'delete',
     format = 'stack',
     customInsertFunction,
+    getIdent,
+    nonUniqueIdents,
 }: Props<T>) => {
 
     const handleDelete = (index: number) => {
@@ -290,6 +315,8 @@ export const ArrayControl = <T,>({
         handleMove,
         handleInsert,
         customCreateButton,
+        getIdent,
+        nonUniqueIdents,
     }
 
     if (format === 'cards') {

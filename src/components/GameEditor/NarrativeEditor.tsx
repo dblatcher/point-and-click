@@ -32,7 +32,7 @@ const TextControl = ({ narrative, updateText, updateLine }: {
                     list={narrative.text}
                     mutateList={updateText}
                     describeItem={(line, index) => (
-                        <Box key={index}>
+                        <Box>
                             <DelayedStringInput delayAfterEdits={5000} type='textArea'
                                 value={line} 
                                 inputHandler={(newLine) => { updateLine(newLine, index) }} />
