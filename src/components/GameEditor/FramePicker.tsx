@@ -13,7 +13,6 @@ interface Props {
     currentCol?: number;
     imageId?: string;
     setLocalFrame: { (row: number, col: number, imageId?: string): void };
-    fixedSheet?: boolean;
     noOptions?: boolean;
     imageFilter?: { (item: FileAsset): boolean }
     handleSelection: { (frame: SpriteFrame): void };
@@ -60,7 +59,6 @@ export const FramePicker: FunctionComponent<Props> = ({
     currentCol,
     imageId,
     setLocalFrame,
-    fixedSheet = false,
     noOptions = false,
     imageFilter,
     handleSelection,
@@ -92,17 +90,13 @@ export const FramePicker: FunctionComponent<Props> = ({
     }
 
     return (
-        <>
-            <Stack direction={'row'} justifyContent={'space-between'} alignItems={'flex-end'}>
-                {!fixedSheet && (
-                    <FileAssetSelector assetType="image"
-                        legend="sprite sheet"
-                        format="select"
-                        selectedItemId={imageId}
-                        filterItems={imageFilter}
-                        select={(item): void => { setLocalFrame(0, 0, item.id) }} />
-                )}
-            </Stack>
+        <Stack direction={'column'} justifyContent={'space-between'} alignItems={'flex-start'}>
+            <FileAssetSelector assetType="image"
+                legend="sprite sheet"
+                format="select"
+                selectedItemId={imageId}
+                filterItems={imageFilter}
+                select={(item): void => { setLocalFrame(0, 0, item.id) }} />
 
             {image && (<>
                 {showInOneRow ? (<>
@@ -126,7 +120,7 @@ export const FramePicker: FunctionComponent<Props> = ({
             </>)}
 
             {!noOptions && (
-                <Stack direction={'row'} justifyContent={'space-between'} paddingTop={2}>
+                <Stack direction={'row'} justifyContent={'space-between'} paddingTop={2} gap={2}>
                     <BooleanInput value={showInOneRow} inputHandler={setShowInOneRow} label="arrange frames in one list" />
                     <Box width={100}>
                         <SelectInput
@@ -139,6 +133,6 @@ export const FramePicker: FunctionComponent<Props> = ({
                     </Box>
                 </Stack>
             )}
-        </>
+        </Stack>
     )
 }
