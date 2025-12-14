@@ -66,10 +66,7 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
     if (designProperty === 'items') {
         const { imageId, row = 0, col = 0 } = item as ItemData
         return <Box {...previewBoxProps}>
-            {imageId
-                ? <FramePreview frame={{ imageId, row, col }} height={80} width={80} />
-                : <HideImageOutlinedIcon sx={{ height: 50, width: 50 }} />
-            }
+            <FramePreview frame={imageId ? { imageId, row, col } : undefined} height={80} width={80} />
         </Box>
     }
     if (designProperty === 'storyBoards') {

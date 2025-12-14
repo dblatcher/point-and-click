@@ -68,9 +68,9 @@ export const ItemEditor = ({ item }: Props) => {
                     buttonContent={
                         <Box >
                             <Typography>Pick Icon</Typography>
-                            {imageId
-                                ? <FramePreview frame={{ imageId, row, col }} height={100} width={100} />
-                                : <Box><HideImageOutlinedIcon sx={{ height: 50, width: 50 }} /></Box>}
+                            <FramePreview
+                                frame={imageId ? { imageId, row, col } : undefined}
+                                height={100} width={100} />
                         </Box>
                     }
                     defaultState={{

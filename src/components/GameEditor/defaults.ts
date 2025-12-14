@@ -149,8 +149,8 @@ export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({
 export const makeEmptyStoryBoardPagePicture = (imageId = ''): PagePicture => ({
     x: "center",
     y: "center",
-    width: 5,
-    height: 5,
+    width: 10,
+    height: 10,
     image: {
         imageId
     }

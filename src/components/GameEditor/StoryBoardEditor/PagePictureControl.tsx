@@ -1,10 +1,9 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { PagePicture } from "@/definitions/StoryBoard";
-import { Box, Button, ButtonProps, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, ButtonProps, Grid, Stack } from "@mui/material";
+import { AspectRatioControl } from "../AspectRatioControl";
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { FramePreview } from "../FramePreview";
-import { AspectRatioControl } from "../AspectRatioControl";
-import { HideImageOutlinedIcon } from "../material-icons";
 
 
 const PlacementControl = ({ x, y, updatePicture, pictureIndex }: Pick<PagePicture, 'x' | 'y'> & { updatePicture: { (mod: Partial<PagePicture>, pictureIndex: number): void }, pictureIndex: number }) => {
@@ -87,8 +86,8 @@ export const PagePictureControl = ({
                                 padding: 0,
                             }
                         }}
-                        buttonContent={imageId
-                            ? <FramePreview
+                        buttonContent={
+                            <FramePreview
                                 style={{
                                     border: '1px solid black',
                                     alignSelf: 'center',
@@ -97,10 +96,6 @@ export const PagePictureControl = ({
                                 frame={{ imageId, row, col }}
                                 width={(picture.width ?? 5) * 4}
                                 height={(picture.height ?? 5) * 4} />
-                            : <HideImageOutlinedIcon sx={{
-                                width: (picture.width ?? 5) * 4,
-                                height: (picture.height ?? 5) * 4,
-                            }} />
                         }
                     />
                 </Grid>
