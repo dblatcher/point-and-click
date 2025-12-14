@@ -54,10 +54,14 @@ export function insertAt<T>(index: number, item: T, list: T[]): T[] {
     return [...list.slice(0, index), item, ...list.slice(index)]
 }
 
+export function replaceAt<T>(index: number, item: T, list: T[]): T[] {
+    return [...list.slice(0, index), item, ...list.slice(index + 1)]
+}
+
 export function excludeByIndex<T>(index: number, list: T[]): T[] {
     return [...list.slice(0, index), ...list.slice(index + 1)]
 }
 
 export const formatTimestamp = (time: number) => new Date(time).toLocaleString()
 
-export const displaySaveKey = (key:string) => key.startsWith("SAVE_") ? key.substring(5) : key;
+export const displaySaveKey = (key: string) => key.startsWith("SAVE_") ? key.substring(5) : key;

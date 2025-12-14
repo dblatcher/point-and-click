@@ -1,7 +1,7 @@
 import { Direction, SpriteFrame } from "@/definitions";
-import { insertAt } from "@/lib/util";
-import { Button } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
+import { insertAt, replaceAt } from "@/lib/util";
+import { Box } from "@mui/material";
+import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { FramePreview } from "../FramePreview";
@@ -13,18 +13,15 @@ interface Props {
     direction: Direction;
     animation: Partial<Record<Direction, SpriteFrame[]>>;
     editCycle: { (animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined): void };
-    imageId?: string;
-    setSelectedSheetId: Dispatch<SetStateAction<string | undefined>>
 }
 
 export const AnimationFrameList = ({
     animKey,
     animation,
     editCycle,
-    setSelectedSheetId,
-    imageId,
     direction
 }: Props) => {
+    const [selectedSheetId, setSelectedSheetId] = useState<string>();
     const animationInDirection = animation[direction] ?? []
 
     return (
@@ -34,22 +31,35 @@ export const AnimationFrameList = ({
             mutateList={newList => {
                 return editCycle(animKey, direction, newList)
             }}
-            describeItem={(frame) => (
-                <Button
-                    fullWidth
-                    variant="outlined"
-                    sx={{ display: 'flex', justifyContent: 'space-between', marginY: 1, paddingY: 0 }}
-                    onClick={() => { setSelectedSheetId(frame.imageId) }}
-                >
-                    <FramePreview
-                        height={60}
-                        width={60}
-                        frame={frame} />
-                    <div>
-                        <p>{frame.imageId}</p>
-                        <p>[{frame.col}, {frame.row}]</p>
-                    </div>
-                </Button>
+            describeItem={(frame, index) => (
+                <FramePickDialogButton
+                    buttonLabel="Change frame"
+                    buttonProps={{ sx: { width: '100%' } }}
+                    buttonContent={
+                        <Box flex={1} display={'flex'}>
+                            <FramePreview
+                                height={60}
+                                width={60}
+                                frame={frame} />
+                            <div>
+                                <p>{frame.imageId}</p>
+                                <p>[{frame.col}, {frame.row}]</p>
+                            </div>
+                        </Box>
+                    }
+                    quickPicking
+                    noOptions
+                    defaultState={frame}
+                    pickFrame={(row, col, imageId) => {
+                        const newFrame = imageId ? { row, col, imageId } : undefined;
+                        if (!newFrame) {
+                            return
+                        }
+                        setSelectedSheetId(newFrame.imageId)
+                        const newList = replaceAt(index, newFrame, animationInDirection);
+                        return editCycle(animKey, direction, newList)
+                    }}
+                />
             )}
             customCreateButton={(index) =>
                 <FramePickDialogButton
@@ -60,7 +70,7 @@ export const AnimationFrameList = ({
                     buttonLabel="Insert frame"
                     quickPicking
                     noOptions
-                    defaultState={{ imageId, row: 0, col: 0 }}
+                    defaultState={{ imageId: selectedSheetId, row: 0, col: 0 }}
                     pickFrame={(row, col, imageId) => {
                         const newFrame = imageId ? { row, col, imageId } : undefined;
                         if (!newFrame) {

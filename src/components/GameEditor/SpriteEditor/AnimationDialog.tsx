@@ -2,9 +2,7 @@
 import { ActorData, Direction, SpriteData, SpriteFrame } from "@/definitions";
 import { Sprite } from "@/lib/Sprite";
 import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { useState } from "react";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
-import { FileAssetSelector } from "../FileAssetSelector";
 import { SpritePreview } from "../SpritePreview";
 import { AnimationFrameList } from "./AnimationFrameList";
 
@@ -59,7 +57,6 @@ export const AnimationDialog = ({
     editCycle,
     close,
 }: Props) => {
-    const [selectedSheetId, setSelectedSheetId] = useState<string>();
     const { defaultDirection, animations } = spriteData
     const animationSet = selectedAnimation ? animations[selectedAnimation] : undefined;
     const animationSetForDirection = animationSet && selectedDirection ? animationSet[selectedDirection] : undefined;
@@ -81,12 +78,6 @@ export const AnimationDialog = ({
 
                 <DialogContent sx={{ display: 'flex', gap: 4, minHeight: 'calc(100% - 164px)' }}>
                     <Box position={'sticky'} top={1} overflow={'auto'}>
-                        <FileAssetSelector assetType="image"
-                            legend="sprite sheet"
-                            format="select"
-                            filterItems={(item) => item.category === 'spriteSheet' || item.category === 'any'}
-                            selectedItemId={selectedSheetId}
-                            select={(asset): void => { setSelectedSheetId(asset.id) }} />
                         <SpritePreview
                             noBaseLine
                             scale={2}
@@ -107,8 +98,6 @@ export const AnimationDialog = ({
                             direction={selectedDirection}
                             animation={animationSet}
                             editCycle={editCycle}
-                            setSelectedSheetId={setSelectedSheetId}
-                            imageId={selectedSheetId}
                         />
                     )}
                 </DialogContent>
