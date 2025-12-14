@@ -21,7 +21,7 @@ export const AnimationFrameList = ({
     editCycle,
     direction
 }: Props) => {
-    const [selectedSheetId, setSelectedSheetId] = useState<string>();
+    const [selectedSheetId, setSelectedSheetId] = useState<string | undefined>(animation[direction]?.find(frame => !!frame.imageId)?.imageId);
     const animationInDirection = animation[direction] ?? []
 
     return (
@@ -70,7 +70,7 @@ export const AnimationFrameList = ({
                     buttonLabel="Insert frame"
                     quickPicking
                     noOptions
-                    defaultState={{ imageId: selectedSheetId, row: 0, col: 0 }}
+                    defaultState={{ imageId: selectedSheetId }}
                     pickFrame={(row, col, imageId) => {
                         const newFrame = imageId ? { row, col, imageId } : undefined;
                         if (!newFrame) {

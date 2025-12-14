@@ -19,10 +19,8 @@ interface Props {
 
 
 type PickerState = {
-    row: number; col: number; imageId?: string
+    row?: number; col?: number; imageId?: string
 }
-
-const emptyState = (): PickerState => ({ row: 0, col: 0, imageId: undefined })
 
 export const FramePickDialogButton: React.FunctionComponent<Props> = ({
     title = 'pick frame',
@@ -38,11 +36,14 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
     noOptions,
 }: Props) => {
     const [dialogOpen, setDialogOpen] = useState(false)
-    const [localFrame, setLocalFrame] = useState(emptyState())
+    const [localFrame, setLocalFrame] = useState(defaultState ?? {})
 
     const handleSelection = (frame: PickerState) => {
         const { row, col, imageId } = frame
         if (!imageId) {
+            return
+        }
+        if (typeof row === 'undefined' || typeof col === 'undefined') {
             return
         }
         pickFrame(row, col, imageId)
@@ -78,7 +79,10 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
                     quickPicking={quickPicking}
                     noOptions={noOptions}
                     handleSelection={handleSelection}
-                    {...localFrame} />
+                    currentCol={localFrame.col}
+                    currentRow={localFrame.row}
+                    imageId={localFrame.imageId}
+                    />
             </DialogContent>
             <DialogActions>
                 <ButtonGroup variant="contained">

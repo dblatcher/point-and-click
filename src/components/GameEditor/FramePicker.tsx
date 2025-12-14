@@ -9,8 +9,8 @@ import { FramePreview } from "./FramePreview";
 import { SpriteFrame } from "@/definitions";
 
 interface Props {
-    row: number;
-    col: number;
+    currentRow?: number;
+    currentCol?: number;
     imageId?: string;
     setLocalFrame: { (row: number, col: number, imageId?: string): void };
     fixedSheet?: boolean;
@@ -57,8 +57,8 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
 }
 
 export const FramePicker: FunctionComponent<Props> = ({
-    row,
-    col,
+    currentRow,
+    currentCol,
     imageId,
     setLocalFrame,
     fixedSheet = false,
@@ -81,7 +81,7 @@ export const FramePicker: FunctionComponent<Props> = ({
             for (let c = 0; c < (image.cols || 1); c++) {
                 buttonPropsGrid[r].push(
                     {
-                        isSelected: quickPicking ? false : r === row && c === col,
+                        isSelected: r === currentRow && c === currentCol,
                         row: r,
                         col: c,
                         image,
@@ -108,7 +108,7 @@ export const FramePicker: FunctionComponent<Props> = ({
                 )}
                 {!quickPicking && (
                     <Typography>
-                        {imageId ?? '[no sheet]'} [ <span>{col}</span>,<span>{row}</span> ]
+                        {imageId ?? '[no sheet]'} [ <span>{currentCol}</span>,<span>{currentRow}</span> ]
                     </Typography>
                 )}
             </Stack>
