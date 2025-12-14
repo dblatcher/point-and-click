@@ -73,6 +73,11 @@ export const ItemEditor = ({ item }: Props) => {
                                 : <Box><HideImageOutlinedIcon sx={{ height: 50, width: 50 }} /></Box>}
                         </Box>
                     }
+                    defaultState={{
+                        imageId: item.imageId,
+                        row: item.row,
+                        col: item.col,
+                    }}
                 />
 
                 <Box display='flex' gap={2}>

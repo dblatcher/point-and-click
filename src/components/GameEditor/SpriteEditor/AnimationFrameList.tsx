@@ -46,8 +46,7 @@ export const AnimationFrameList = ({
                                 <p>[{frame.col}, {frame.row}]</p>
                             </div>
                         </Box>
-                    }
-                    quickPicking
+                    }    
                     noOptions
                     defaultState={frame}
                     pickFrame={(row, col, imageId) => {
@@ -68,7 +67,6 @@ export const AnimationFrameList = ({
                         sx: { alignSelf: 'center' }
                     }}
                     buttonLabel="Insert frame"
-                    quickPicking
                     noOptions
                     defaultState={{ imageId: selectedSheetId }}
                     pickFrame={(row, col, imageId) => {

@@ -1,12 +1,12 @@
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useAssets } from "@/context/asset-context";
+import { SpriteFrame } from "@/definitions";
 import { FileAsset, ImageAsset } from "@/services/assets";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 import { FileAssetSelector } from "./FileAssetSelector";
 import { FramePreview } from "./FramePreview";
-import { SpriteFrame } from "@/definitions";
 
 interface Props {
     currentRow?: number;
@@ -17,7 +17,6 @@ interface Props {
     noOptions?: boolean;
     imageFilter?: { (item: FileAsset): boolean }
     handleSelection: { (frame: SpriteFrame): void };
-    quickPicking?: boolean
 }
 
 interface FrameButtonProps {
@@ -65,7 +64,6 @@ export const FramePicker: FunctionComponent<Props> = ({
     noOptions = false,
     imageFilter,
     handleSelection,
-    quickPicking,
 }) => {
     const { getImageAsset } = useAssets()
     const [showInOneRow, setShowInOneRow] = useState(false)
@@ -86,9 +84,7 @@ export const FramePicker: FunctionComponent<Props> = ({
                         col: c,
                         image,
                         frameSize,
-                        onClick: quickPicking
-                            ? () => handleSelection({ row: r, col: c, imageId: image.id })
-                            : () => { setLocalFrame(r, c, imageId) }
+                        onClick: () => handleSelection({ row: r, col: c, imageId: image.id })
                     }
                 )
             }
@@ -105,11 +101,6 @@ export const FramePicker: FunctionComponent<Props> = ({
                         selectedItemId={imageId}
                         filterItems={imageFilter}
                         select={(item): void => { setLocalFrame(0, 0, item.id) }} />
-                )}
-                {!quickPicking && (
-                    <Typography>
-                        {imageId ?? '[no sheet]'} [ <span>{currentCol}</span>,<span>{currentRow}</span> ]
-                    </Typography>
                 )}
             </Stack>
 

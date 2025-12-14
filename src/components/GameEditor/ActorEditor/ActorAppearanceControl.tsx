@@ -44,6 +44,7 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                         buttonLabel="pick default frame"
                         title={`pick default image for ${data.id}`}
                         disabled={!!spriteId}
+                        showRemoveButton
                         pickFrame={(row, col, imageId) => {
                             if (imageId) {
                                 updateFromPartial({ defaultFrame: { row, col, imageId } })
@@ -51,6 +52,7 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                                 updateFromPartial({ defaultFrame: undefined })
                             }
                         }}
+                        defaultState={data.defaultFrame}
                     />
 
                     <StatusFramesDialogButton
@@ -98,14 +100,14 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                 </Box>
             </Box>
 
-            <Divider flexItem  />
+            <Divider flexItem />
             <Box>
                 <FilterWidget
                     value={data.filter || ''}
                     setValue={(filter) => updateFromPartial({ filter })}
                     renderPreview={(filter) => (
-                        <SpritePreview data={{ ...data, filter }} maxHeight={height} noBaseLine/>
-                    )} 
+                        <SpritePreview data={{ ...data, filter }} maxHeight={height} noBaseLine />
+                    )}
                 />
             </Box>
         </>

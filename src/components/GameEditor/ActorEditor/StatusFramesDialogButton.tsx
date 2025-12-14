@@ -53,24 +53,30 @@ export const StatusFramesDialogButton: React.FunctionComponent<Props> = ({
 
                 <Box display={'flex'} alignItems={'center'}>
                     <Typography>default frame</Typography>
-                    <SpritePreview data={actorData} noBaseLine maxHeight={80} animation="default"/>
+                    <SpritePreview data={actorData} noBaseLine maxHeight={80} animation="default" />
                 </Box>
 
                 {Object.keys(statusFrames).map((status) => (
-                    <Box key={status} display={'flex'} alignItems={'center'} component={Paper} padding={1} marginBottom={2}>
+                    <Box key={status} display={'flex'} alignItems={'center'} padding={1} marginBottom={2} gap={5}>
                         <Typography marginRight={'auto'}>{status}</Typography>
-                        <SpritePreview animation={status} data={actorData} noBaseLine maxHeight={80} />
-
-                        <ButtonGroup>
-                            <FramePickDialogButton buttonLabel="change"
-                                pickFrame={(row, col, imageId) => {
-                                    if (imageId) {
-                                        handleChangeFrame(status, { row, col, imageId })
-                                    }
-                                }}
-                            />
-                            <Button variant="outlined" color={'warning'} onClick={() => { handleDeleteFrame(status) }}>delete</Button>
-                        </ButtonGroup>
+                        <FramePickDialogButton
+                            buttonLabel="change"
+                            pickFrame={(row, col, imageId) => {
+                                if (imageId) {
+                                    handleChangeFrame(status, { row, col, imageId })
+                                } else {
+                                    handleDeleteFrame(status)
+                                }
+                            }}
+                            defaultState={actorData.statusFrames?.[status]}
+                            showRemoveButton
+                            buttonContent={
+                                <Box>
+                                    <SpritePreview animation={status} data={actorData} noBaseLine maxHeight={80} />
+                                </Box>
+                            }
+                        />
+                        <Button variant="outlined" color={'warning'} onClick={() => { handleDeleteFrame(status) }}>delete</Button>
                     </Box>
                 ))}
 
@@ -79,7 +85,8 @@ export const StatusFramesDialogButton: React.FunctionComponent<Props> = ({
                         value={newStatusName}
                         inputHandler={(value) => setNewStatusName(formatIdInput(value))} />
 
-                    <FramePickDialogButton buttonLabel="pick"
+                    <FramePickDialogButton
+                        buttonLabel="pick"
                         disabled={!newStatusIsOkay}
                         pickFrame={(row, col, imageId) => {
                             if (imageId) {

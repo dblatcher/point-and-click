@@ -87,8 +87,8 @@ export const PagePictureControl = ({
                                 padding: 0,
                             }
                         }}
-                        buttonContent={imageId ?
-                            <FramePreview
+                        buttonContent={imageId
+                            ? <FramePreview
                                 style={{
                                     border: '1px solid black',
                                     alignSelf: 'center',
@@ -97,8 +97,7 @@ export const PagePictureControl = ({
                                 frame={{ imageId, row, col }}
                                 width={(picture.width ?? 5) * 4}
                                 height={(picture.height ?? 5) * 4} />
-                            :
-                            <HideImageOutlinedIcon sx={{
+                            : <HideImageOutlinedIcon sx={{
                                 width: (picture.width ?? 5) * 4,
                                 height: (picture.height ?? 5) * 4,
                             }} />

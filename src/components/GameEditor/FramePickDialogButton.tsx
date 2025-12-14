@@ -13,7 +13,6 @@ interface Props {
     filterAssets?: { (asset: FileAsset): boolean }
     showRemoveButton?: boolean;
     defaultState?: PickerState;
-    quickPicking?: boolean;
     noOptions?: boolean;
 }
 
@@ -32,7 +31,6 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
     filterAssets = (item) => item.category === 'spriteSheet' || item.category === 'any',
     showRemoveButton,
     defaultState,
-    quickPicking,
     noOptions,
 }: Props) => {
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -76,7 +74,6 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
                 <FramePicker
                     imageFilter={filterAssets}
                     setLocalFrame={(row, col, imageId) => setLocalFrame({ row, col, imageId })}
-                    quickPicking={quickPicking}
                     noOptions={noOptions}
                     handleSelection={handleSelection}
                     currentCol={localFrame.col}
@@ -88,9 +85,6 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
                 <ButtonGroup variant="contained">
                     <Button variant="outlined" onClick={() => setDialogOpen(false)}>cancel</Button>
                     {showRemoveButton && <Button onClick={remove}>remove</Button>}
-                    {!quickPicking &&
-                        <Button onClick={() => handleSelection(localFrame)}>pick frame</Button>
-                    }
                 </ButtonGroup>
             </DialogActions>
         </Dialog>
