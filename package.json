@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "point-click-lib":"file:../point-click-lib",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.13",
     "@types/node": "18.15.3",
