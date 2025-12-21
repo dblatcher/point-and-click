@@ -1,7 +1,6 @@
-import { GameDesignSchema } from "point-click-lib"
+import { GameDesignSchema, parseAndUpgrade } from "point-click-lib"
 import { ImageAssetSchema, SoundAssetSchema } from "@/services/assets"
 import { z } from "zod"
-import { parseAndUpgrade } from "../design-version-management"
 
 
 const unparsedDesignAndAssetsSchema = z.object({

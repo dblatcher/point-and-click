@@ -1,5 +1,4 @@
-import { GameDesign } from "point-click-lib";
-import { parseAndUpgrade } from "@/lib/design-version-management";
+import { GameDesign, parseAndUpgrade } from "point-click-lib";
 import { makeDownloadFile } from "@/lib/files";
 import { GameEditorDatabase, SavedDesignKey, DesignListingWithThumbnail } from "@/lib/indexed-db";
 import { retrieveAllDesignSummariesAndThumbnails, retrieveDesignAndAssets } from "@/lib/indexed-db/complex-transactions";

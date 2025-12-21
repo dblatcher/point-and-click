@@ -4,8 +4,7 @@ import { FileAssetService } from "@/services/FileAssetService";
 import { ImageService } from "@/services/imageService";
 import { SoundService } from "@/services/soundService";
 import JSZip from "jszip";
-import { GameDesign, V2GameDesign } from "point-click-lib";
-import { parseAndUpgrade } from "./design-version-management";
+import { GameDesign, V2GameDesign, parseAndUpgrade } from "point-click-lib";
 import { dataToBlob, fileToObjectUrl } from "./files";
 
 type ZipActionFailure = {
