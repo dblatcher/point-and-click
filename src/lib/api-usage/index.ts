@@ -1,5 +1,5 @@
-import { GameDesignSchema, parseAndUpgrade } from "point-click-lib"
-import { ImageAssetSchema, SoundAssetSchema } from "@/services/assets"
+import { GameDesign, parseAndUpgrade } from "point-click-lib"
+import { ImageAsset, ImageAssetSchema, SoundAsset, SoundAssetSchema } from "@/services/assets"
 import { z } from "zod"
 
 
@@ -9,12 +9,12 @@ const unparsedDesignAndAssetsSchema = z.object({
   soundAssets: SoundAssetSchema.array(),
 })
 
-const designAndAssetsSchema = z.object({
-  gameDesign: GameDesignSchema,
-  imageAssets: ImageAssetSchema.array(),
-  soundAssets: SoundAssetSchema.array(),
-})
-export type DesignAndAssets = z.infer<typeof designAndAssetsSchema>
+
+export type DesignAndAssets = {
+  gameDesign: GameDesign,
+  imageAssets: ImageAsset[],
+  soundAssets: SoundAsset[],
+}
 
 const validGameId = z.enum([
   'test',
