@@ -1,5 +1,4 @@
-import { GameDesign } from "@/definitions";
-import { V2GameDesign } from "@/definitions/old-versions/v2";
+import { GameDesign, V2GameDesign } from "point-click-lib";
 import { ImageService } from "@/services/imageService";
 import { setHrefsFromFiles } from "@/services/set-hrefs";
 import { SoundService } from "@/services/soundService";

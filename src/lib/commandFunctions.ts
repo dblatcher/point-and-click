@@ -1,4 +1,4 @@
-import { Command, Interaction, RoomData, FlagMap, CommandTarget, GameContents } from "@/definitions";
+import { Command, Interaction, RoomData, FlagMap, CommandTarget, GameContents } from "point-click-lib";
 import { findById } from "./util";
 import { GameState } from "./game-state-logic/types";
 

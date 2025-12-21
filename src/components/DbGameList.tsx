@@ -1,4 +1,4 @@
-import { GameDesign } from "@/definitions";
+import { GameDesign } from "point-click-lib";
 import { parseAndUpgrade } from "@/lib/design-version-management";
 import { makeDownloadFile } from "@/lib/files";
 import { GameEditorDatabase, SavedDesignKey, DesignListingWithThumbnail } from "@/lib/indexed-db";

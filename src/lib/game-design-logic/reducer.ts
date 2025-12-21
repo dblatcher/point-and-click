@@ -2,7 +2,7 @@ import { Reducer } from "react"
 import { GameEditorState, GameDesignAction } from "./types"
 import { cloneData } from "../clone"
 import { addGameDataItem, putInteraction } from "./mutate-design"
-import { GameDesign } from "@/definitions"
+import { GameDesign } from "point-click-lib"
 import { storeSavedDesign } from "../indexed-db"
 
 

@@ -1,5 +1,5 @@
-import { Animation } from "@/definitions";
-import { Direction, directions } from "@/definitions/BaseTypes";
+import { Animation } from "point-click-lib";
+import { Direction, directions } from "point-click-lib";
 import { Stack } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { EditorBox } from "../layout/EditorBox";

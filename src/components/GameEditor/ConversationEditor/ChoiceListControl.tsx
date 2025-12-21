@@ -1,5 +1,5 @@
-import { Conversation } from "@/definitions";
-import { ChoiceRefSet } from "@/definitions/Conversation";
+import { Conversation } from "point-click-lib";
+import { ChoiceRefSet } from "point-click-lib";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { FunctionComponent } from "react";
 import { ChoiceSelector } from "./ChoiceSelector";

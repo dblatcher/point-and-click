@@ -1,6 +1,6 @@
 import { useGameState } from "@/context/game-state-context"
-import { GameData } from "@/definitions"
-import { GameDataSchema } from "@/definitions/Game"
+import { GameData } from "point-click-lib"
+import { GameDataSchema } from "point-click-lib"
 import { getSaveData } from "@/lib/game-state-logic/state-to-save-data"
 import { GameState } from "@/lib/game-state-logic/types"
 

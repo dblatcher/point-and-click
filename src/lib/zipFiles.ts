@@ -1,13 +1,12 @@
-import { V2GameDesign } from "@/definitions/old-versions/v2";
+import { MaybeDesignAndAssets } from "@/lib/indexed-db";
 import { assetToFile, ImageAsset, ImageAssetSchema, SoundAsset, SoundAssetSchema, } from "@/services/assets";
+import { FileAssetService } from "@/services/FileAssetService";
 import { ImageService } from "@/services/imageService";
 import { SoundService } from "@/services/soundService";
 import JSZip from "jszip";
-import { GameDesign } from "../definitions";
+import { GameDesign, V2GameDesign } from "point-click-lib";
 import { parseAndUpgrade } from "./design-version-management";
 import { dataToBlob, fileToObjectUrl } from "./files";
-import { MaybeDesignAndAssets } from "@/lib/indexed-db"
-import { FileAssetService } from "@/services/FileAssetService";
 
 type ZipActionFailure = {
   success: false;

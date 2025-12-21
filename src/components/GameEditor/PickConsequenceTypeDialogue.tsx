@@ -1,5 +1,5 @@
-import { ConsequenceType } from "@/definitions"
-import { consequenceTypes, immediateConsequenceTypes } from "@/definitions/Consequence"
+import { ConsequenceType } from "point-click-lib"
+import { consequenceTypes, immediateConsequenceTypes } from "point-click-lib"
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
 import { getConsequenceIcon } from "./SequenceEditor/get-order-details"
 

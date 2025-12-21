@@ -1,5 +1,5 @@
 import ZoneSvg from "@/components/svg/ZoneSvg";
-import { HotspotZone } from "@/definitions";
+import { HotspotZone } from "point-click-lib";
 import { useRoomRender } from "@/hooks/useRoomRender";
 import { getXShift, getYShift } from "@/lib/roomFunctions";
 import { FunctionComponent } from "react";

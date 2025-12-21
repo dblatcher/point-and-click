@@ -1,5 +1,5 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { PagePicture } from "@/definitions/StoryBoard";
+import { PagePicture } from "point-click-lib";
 import { Box, Button, ButtonProps, Grid, Stack } from "@mui/material";
 import { AspectRatioControl } from "../AspectRatioControl";
 import { FramePickDialogButton } from "../FramePickDialogButton";

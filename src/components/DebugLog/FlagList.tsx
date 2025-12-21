@@ -1,4 +1,4 @@
-import { FlagMap } from "@/definitions"
+import { FlagMap } from "point-click-lib"
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material"
 import { FlagOutlinedIcon, FlagFilledIcon } from "../GameEditor/material-icons"
 

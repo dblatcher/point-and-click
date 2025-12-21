@@ -1,6 +1,5 @@
-import { GameDesign } from "@/definitions";
+import { GameDesign, V2GameDesign } from "point-click-lib";
 import { GameEditorDatabase, SavedDesignKey } from "./types";
-import { V2GameDesign } from "@/definitions/old-versions/v2";
 
 const listSavedDesignKeys = (db: GameEditorDatabase) => () => {
     return db.getAllKeys('designs')

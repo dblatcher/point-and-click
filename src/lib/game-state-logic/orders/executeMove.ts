@@ -1,4 +1,4 @@
-import { Direction, ActorData, MoveOrder } from "@/definitions";
+import { Direction, ActorData, MoveOrder } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
 import { Point } from "@/lib/pathfinding/geometry";
 

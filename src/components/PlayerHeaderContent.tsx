@@ -1,5 +1,5 @@
 import { usePageMeta } from "@/context/page-meta-context";
-import { GameDesign } from "@/definitions";
+import { GameDesign } from "point-click-lib";
 import { Avatar, Button, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 

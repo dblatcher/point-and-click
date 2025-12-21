@@ -1,9 +1,9 @@
-import { ActorData } from "@/definitions";
+import { ActorData } from "point-click-lib";
 import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { SpritePreview } from "../SpritePreview";
 import { FramePickDialogButton } from "../FramePickDialogButton";
-import { StaticFrameParamsS } from "@/definitions/BaseTypes";
+import { StaticFrameParamsS } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { StringInput } from "@/components/SchemaForm/StringInput";
 import { formatIdInput } from "../helpers";

@@ -1,4 +1,4 @@
-import { ActorData, HotspotZone } from "@/definitions";
+import { ActorData, HotspotZone } from "point-click-lib";
 import React, { useEffect, useState } from "react";
 
 interface Props {

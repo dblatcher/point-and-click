@@ -1,5 +1,5 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { ItemData, Verb } from "@/definitions";
+import { ItemData, Verb } from "point-click-lib";
 import { findById } from "@/lib/util";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Card, Fade, IconButton, Typography } from "@mui/material";

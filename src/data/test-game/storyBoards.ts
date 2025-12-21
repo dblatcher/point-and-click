@@ -1,4 +1,4 @@
-import { StoryBoard } from "@/definitions/StoryBoard";
+import { StoryBoard } from "point-click-lib";
 
 export const storyBoards: StoryBoard[] = [
     {

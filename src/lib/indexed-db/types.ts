@@ -1,7 +1,6 @@
-import { GameDesign } from "@/definitions";
-import { V2GameDesign } from "@/definitions/old-versions/v2";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { DBSchema, IDBPDatabase } from "idb";
+import { GameDesign, V2GameDesign } from "point-click-lib";
 
 type Name = string;
 export type SavedDesignKey = 'quit-save' | `SAVE_${Name}`

@@ -1,4 +1,4 @@
-import { GameData, CommandTarget } from "@/definitions";
+import { GameData, CommandTarget } from "point-click-lib";
 import { GameEventEmitter } from "../game-event-emitter";
 import { CellMatrix } from "../pathfinding/cells";
 

@@ -1,8 +1,8 @@
 
 import { SchemaForm } from "@/components/SchemaForm";
 import { useGameDesign } from "@/context/game-design-context";
-import { Verb } from "@/definitions";
-import { VerbSchema } from "@/definitions/Verb";
+import { Verb } from "point-click-lib";
+import { VerbSchema } from "point-click-lib";
 import { wildCard } from "@/lib/commandFunctions";
 import { patchMember } from "@/lib/update-design";
 import { Alert, Box, Stack } from "@mui/material";

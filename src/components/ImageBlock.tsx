@@ -1,5 +1,5 @@
 import { useAssets } from "@/context/asset-context";
-import { AspectRatio, StaticFrameParamsS } from "@/definitions/BaseTypes";
+import { AspectRatio, StaticFrameParamsS } from "point-click-lib";
 import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
 import React from "react";
 

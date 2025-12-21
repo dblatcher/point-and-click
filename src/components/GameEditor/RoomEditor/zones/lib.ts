@@ -1,8 +1,8 @@
-import { HotspotZone, RoomData, SupportedZoneShape, Zone } from "@/definitions";
+import { HotspotZone, RoomData, SupportedZoneShape, Zone } from "point-click-lib";
 import { ClickEffect } from "../ClickEffect";
 import { getXShift, locateClickInWorld } from "@/lib/roomFunctions";
 import { cloneData } from "@/lib/clone";
-import { Polygon } from "@/definitions/Zone";
+import { Polygon } from "point-click-lib";
 
 interface Point { x: number; y: number }
 

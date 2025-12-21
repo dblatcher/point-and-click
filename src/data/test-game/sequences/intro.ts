@@ -1,4 +1,4 @@
-import { Sequence } from "@/definitions";
+import { Sequence } from "point-click-lib";
 
 export const intro: Sequence = {
     id: "intro",

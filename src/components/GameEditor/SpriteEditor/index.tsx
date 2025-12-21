@@ -1,8 +1,8 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { ActorData, Animation, Direction, SpriteData, SpriteFrame } from "@/definitions";
-import { directions } from "@/definitions/SpriteSheet";
+import { ActorData, Animation, Direction, SpriteData, SpriteFrame } from "point-click-lib";
+import { directions } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
 import { cloneData } from "@/lib/clone";
 import { patchMember } from "@/lib/update-design";

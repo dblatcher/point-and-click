@@ -1,4 +1,4 @@
-import { ScaleLevel } from "../definitions/RoomData";
+import { ScaleLevel } from "point-click-lib";
 
 export const getScale = (y: number, scaleLevel?: ScaleLevel): number => {
 

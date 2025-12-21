@@ -1,9 +1,8 @@
 import { useGameDesign } from "@/context/game-design-context"
-import { changeHistory } from "@/definitions/old-versions/changes"
 import { DB_VERSION } from "@/lib/indexed-db"
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, List, ListItem, ListItemText, ListSubheader } from "@mui/material"
+import { changeHistory } from "point-click-lib"
 import { FunctionComponent } from "react"
-
 
 export const UpgradeNotice: FunctionComponent = () => {
     const { dispatchDesignUpdate, upgradeInfo } = useGameDesign()

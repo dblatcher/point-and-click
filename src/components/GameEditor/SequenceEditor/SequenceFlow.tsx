@@ -1,5 +1,5 @@
-import { Consequence, ImmediateConsequence, Order, Sequence, Stage } from "@/definitions";
-import { Narrative } from "@/definitions/BaseTypes";
+import { Consequence, ImmediateConsequence, Order, Sequence, Stage } from "point-click-lib";
+import { Narrative } from "point-click-lib";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { makeBlankStage } from "../defaults";

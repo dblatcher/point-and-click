@@ -1,6 +1,6 @@
 import { GameState } from "@/lib/game-state-logic/types";
 import { CELL_SIZE } from "@/lib/pathfinding/constants";
-import { MoveOrder } from "@/definitions";
+import { MoveOrder } from "point-click-lib";
 import { Point } from "@/lib/pathfinding/geometry";
 import { findPath } from "@/lib/pathfinding/pathfind";
 import { makeDebugEntry } from "@/lib/inGameDebugging";

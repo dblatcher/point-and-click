@@ -2,7 +2,7 @@
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
-import { ActOrder, ActStep } from "@/definitions/Order";
+import { ActOrder, ActStep } from "point-click-lib";
 import { Box, Typography } from "@mui/material";
 import { FunctionComponent } from "react";
 import { ArrayControl } from "../ArrayControl";

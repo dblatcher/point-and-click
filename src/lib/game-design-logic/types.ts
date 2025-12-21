@@ -1,5 +1,5 @@
-import { GameDesign, Interaction } from "@/definitions";
-import { GameDataItem, GameDataItemType } from "@/definitions/Game";
+import { GameDesign, Interaction } from "point-click-lib";
+import { GameDataItem, GameDataItemType } from "point-click-lib";
 import { TabId } from "../editor-config";
 import { GameEditorDatabase } from "../indexed-db";
 import { ValidGameId } from "../api-usage";

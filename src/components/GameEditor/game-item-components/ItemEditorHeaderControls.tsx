@@ -1,5 +1,5 @@
-import { GameDataItem } from "@/definitions";
-import { GameDataItemType } from "@/definitions/Game";
+import { GameDataItem } from "point-click-lib";
+import { GameDataItemType } from "point-click-lib";
 import { Box, ButtonGroup } from "@mui/material";
 import { DeleteDataItemButton } from "./DeleteDataItemButton";
 import { DownloadJsonButton } from "./DownloadJsonButton";

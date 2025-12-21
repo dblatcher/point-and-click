@@ -1,5 +1,5 @@
 import { SoundAsset } from "@/services/assets";
-import { GameDesign } from "../../definitions/Game";
+import { GameDesign } from "point-click-lib";
 import { imageAssets as allImageAssets } from "../images";
 import { beach, npc, player } from "../shared";
 import { boySprite } from "../sprites/boySprite";

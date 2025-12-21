@@ -1,4 +1,4 @@
-import { Consequence, ConsequenceType, Order } from "@/definitions";
+import { Consequence, ConsequenceType, Order } from "point-click-lib";
 import AnimationIcon from '@mui/icons-material/Animation';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import CameraIndoorOutlinedIcon from '@mui/icons-material/CameraIndoorOutlined';

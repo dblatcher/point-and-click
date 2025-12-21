@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { BoardFontSchema, BoardProgression, BoardProgressionSchema, StoryBoard } from "@/definitions/StoryBoard";
+import { BoardFontSchema, BoardProgression, BoardProgressionSchema, StoryBoard } from "point-click-lib";
 import { patchMember } from "@/lib/update-design";
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";

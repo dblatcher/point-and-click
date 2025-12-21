@@ -1,6 +1,6 @@
 
 import { SchemaForm } from "@/components/SchemaForm";
-import { GotoOrder, GotoOrderSchema, orderBaseOmits } from "@/definitions/Order";
+import { GotoOrder, GotoOrderSchema, orderBaseOmits } from "point-click-lib";
 import { excludeByIndex } from "@/lib/util";
 import { ReactNode } from "react";
 

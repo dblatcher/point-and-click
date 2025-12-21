@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context"
-import { HotspotZone, RoomData, Zone, ZoneType } from "@/definitions"
+import { HotspotZone, RoomData, Zone, ZoneType } from "point-click-lib"
 import { cloneData } from "@/lib/clone"
 import { useState } from "react"
 import { ClickEffect, RoomClickContext } from "../ClickEffect"

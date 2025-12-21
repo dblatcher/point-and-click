@@ -1,10 +1,11 @@
-import { Consequence, Conversation, GameDesign, ImmediateConsequence, Sequence } from "@/definitions";
-import { GameDesignSchema } from "@/definitions/Game";
-import { V2GameDesign, v2GameDesignSchema } from "@/definitions/old-versions/v2";
-import { V3GameDesign, v3GameDesignSchema } from "@/definitions/old-versions/v3";
+import {
+    Consequence, Conversation, GameDesign, ImmediateConsequence, Sequence,
+    GameDesignSchema,
+    V2GameDesign, v2GameDesignSchema, V3GameDesign, v3GameDesignSchema,
+    PagePicture, StoryBoard,
+    ConsequenceWithDeprecated, ConversationWithDeprecatedConsequences, Ending, SequenceWithDeprecatedConsequences
+} from "point-click-lib";
 import { DB_VERSION } from "../indexed-db";
-import { PagePicture, StoryBoard } from "@/definitions/StoryBoard";
-import { ConsequenceWithDeprecated, ConversationWithDeprecatedConsequences, Ending, SequenceWithDeprecatedConsequences } from "@/definitions/old-versions/deprecated-schemas";
 
 const upgradeV2toV3 = (v2Design: V2GameDesign): V3GameDesign => {
     return {
@@ -89,7 +90,7 @@ const migrateV3Design = (v3Design: V3GameDesign): GameDesign => {
             immediateConsequences: stage.immediateConsequences?.map(convertConsequenceIfEnding) as ImmediateConsequence[]
         }))
     });
-    const convertConversations = (conversation:ConversationWithDeprecatedConsequences):Conversation => {
+    const convertConversations = (conversation: ConversationWithDeprecatedConsequences): Conversation => {
         const { branches } = conversation as Conversation;
         for (let branchKey in branches) {
             const branch = branches[branchKey];

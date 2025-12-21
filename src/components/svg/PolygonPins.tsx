@@ -1,4 +1,4 @@
-import { Polygon } from "@/definitions/Zone";
+import { Polygon } from "point-click-lib";
 import { Pin } from "./Pin";
 
 interface Props {

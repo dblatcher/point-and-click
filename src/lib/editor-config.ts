@@ -6,7 +6,7 @@ import {
     InventoryIcon, RoomIcon, SequenceIcon,
     SlideshowIcon, SoundIcon, SpriteIcon
 } from "@/components/GameEditor/material-icons";
-import { GameDataItemType, GameDataItemTypeEnum, GameDesign } from "@/definitions/Game";
+import { GameDataItemType, GameDataItemTypeEnum, GameDesign } from "point-click-lib";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 
 export type NonItemEditorType = 'main' | 'images' | 'sounds' | 'interactions';

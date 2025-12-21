@@ -1,4 +1,4 @@
-import { SpriteData, Direction, SpriteFrame, Animation } from "../definitions/SpriteSheet"
+import { SpriteData, Direction, SpriteFrame, Animation } from "point-click-lib";
 import { ImageAsset } from "@/services/assets";
 import { getBackgroundStyle } from "./image-frame-backgrounds";
 

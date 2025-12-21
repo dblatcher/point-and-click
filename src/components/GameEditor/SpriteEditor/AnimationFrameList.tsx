@@ -1,4 +1,4 @@
-import { Direction, SpriteFrame } from "@/definitions";
+import { Direction, SpriteFrame } from "point-click-lib";
 import { insertAt, replaceAt } from "@/lib/util";
 import { Box } from "@mui/material";
 import { useState } from "react";

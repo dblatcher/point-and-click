@@ -1,5 +1,5 @@
 import { defaultVerbs1, getBlankRoom } from "@/components/GameEditor/defaults";
-import { GameDesign } from "@/definitions";
+import { GameDesign } from "point-click-lib";
 import { DB_VERSION } from "../indexed-db";
 
 const defaultRoomId = 'ROOM_1' as const;

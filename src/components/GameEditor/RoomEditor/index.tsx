@@ -1,4 +1,4 @@
-import { RoomData, ZoneType } from "@/definitions";
+import { RoomData, ZoneType } from "point-click-lib";
 import { Box, Stack, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import { EditorHeading } from "../layout/EditorHeading";

@@ -1,5 +1,5 @@
 import { GameDesignProvider, useGameDesign } from "@/context/game-design-context"
-import { GameDesign } from "@/definitions"
+import { GameDesign } from "point-click-lib"
 import { cloneData } from "@/lib/clone"
 import { gameDesignReducer } from "@/lib/game-design-logic/reducer"
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"

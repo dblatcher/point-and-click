@@ -1,9 +1,9 @@
 import { useGameDesign } from '@/context/game-design-context';
-import { ActorDataSchema } from "@/definitions/ActorData";
-import { ConversationSchema } from "@/definitions/Conversation";
-import { ItemDataSchema } from "@/definitions/ItemData";
-import { RoomDataSchema } from "@/definitions/RoomData";
-import { SpriteDataSchema } from "@/definitions/SpriteSheet";
+import { ActorDataSchema } from "point-click-lib";
+import { ConversationSchema } from "point-click-lib";
+import { ItemDataSchema } from "point-click-lib";
+import { RoomDataSchema } from "point-click-lib";
+import { SpriteDataSchema } from "point-click-lib";
 import { useKeyBoard } from '@/hooks/use-keyboard';
 import { findById } from "@/lib/util";
 import { tabOrder } from "../../lib/editor-config";

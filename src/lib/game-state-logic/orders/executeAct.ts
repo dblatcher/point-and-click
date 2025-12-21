@@ -1,4 +1,4 @@
-import { ActOrder } from "@/definitions";
+import { ActOrder } from "point-click-lib";
 
 
 export function executeAction(actOrder: ActOrder, instantMode = false, orderSpeed = 1): void {

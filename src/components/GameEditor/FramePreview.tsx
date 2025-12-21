@@ -1,6 +1,6 @@
 import { ImageBlock } from "@/components/ImageBlock";
-import { SpriteFrame } from "@/definitions";
-import { AspectRatio } from "@/definitions/BaseTypes";
+import { SpriteFrame } from "point-click-lib";
+import { AspectRatio } from "point-click-lib";
 import { CSSProperties, FunctionComponent } from "react";
 import { HideImageOutlinedIcon } from "./material-icons";
 

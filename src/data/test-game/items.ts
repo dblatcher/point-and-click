@@ -1,4 +1,4 @@
-import { ItemData } from "@/definitions";
+import { ItemData } from "point-click-lib";
 
 
 export const items: ItemData[] = [

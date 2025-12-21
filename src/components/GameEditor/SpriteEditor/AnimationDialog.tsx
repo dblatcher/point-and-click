@@ -1,5 +1,5 @@
 
-import { ActorData, Direction, SpriteData, SpriteFrame } from "@/definitions";
+import { ActorData, Direction, SpriteData, SpriteFrame } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
 import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";

@@ -1,5 +1,5 @@
 import { LogEntry } from "@/lib/inGameDebugging";
-import { ActorData, Command, Consequence, ConversationBranch, Order, Stage } from "@/definitions";
+import { ActorData, Command, Consequence, ConversationBranch, Order, Stage } from "point-click-lib";
 import { TypedEmitter } from "tiny-typed-emitter";
 import { GameState } from "@/lib/game-state-logic/types";
 import { findById } from "./util";

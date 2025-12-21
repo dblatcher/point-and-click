@@ -1,6 +1,6 @@
 import { AddIcon, InteractionIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
-import { Interaction } from "@/definitions";
+import { Interaction } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
 import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";

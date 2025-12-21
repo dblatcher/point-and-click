@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import React from "react";
 import { ImageBlock } from "../ImageBlock";
-import { ItemData } from "@/definitions";
+import { ItemData } from "point-click-lib";
 
 interface Props {
     item: ItemData

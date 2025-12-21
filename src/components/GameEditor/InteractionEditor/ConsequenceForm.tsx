@@ -1,8 +1,8 @@
 import { SchemaForm } from "@/components/SchemaForm";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
-import { AnyConsequence, Consequence, GameDesign, Order } from "@/definitions";
-import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "@/definitions/Consequence";
+import { AnyConsequence, Consequence, GameDesign, Order } from "point-click-lib";
+import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "point-click-lib";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { findById, insertAt, listIds } from "@/lib/util";
 import { Box } from "@mui/material";

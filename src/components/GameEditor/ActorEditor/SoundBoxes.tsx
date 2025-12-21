@@ -1,4 +1,4 @@
-import { SoundValue } from "@/definitions";
+import { SoundValue } from "point-click-lib";
 import { Box, BoxProps, IconButton } from "@mui/material";
 import { Fragment } from "react";
 import { ClearIcon } from "../material-icons";

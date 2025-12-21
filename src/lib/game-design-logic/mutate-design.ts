@@ -1,5 +1,5 @@
-import { GameDataItem, GameDesign, Interaction } from "@/definitions";
-import { GameDataItemType } from "@/definitions/Game";
+import { GameDataItem, GameDesign, Interaction } from "point-click-lib";
+import { GameDataItemType } from "point-click-lib";
 import { findIndexById } from "../util";
 
 const addNewOrUpdate = <T extends GameDataItem>(newItem: T, list: T[]): T[] => {

@@ -3,7 +3,7 @@ import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
-import { ActorData, HotspotZone, RoomData, ZoneType } from "@/definitions";
+import { ActorData, HotspotZone, RoomData, ZoneType } from "point-click-lib";
 import { getTargetPoint, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";

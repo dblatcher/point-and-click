@@ -1,4 +1,4 @@
-import { CommandTarget, GameDesign } from "@/definitions";
+import { CommandTarget, GameDesign } from "point-click-lib";
 import { GameState } from "@/lib/game-state-logic/types";
 import { putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { HandleClickFunction, ActorWithOrdersAndClickHandlers } from "./types";

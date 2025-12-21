@@ -1,4 +1,4 @@
-import { Sequence } from "@/definitions/Sequence";
+import { Sequence } from "point-click-lib";
 
 export const LIGHT_FIRE: Sequence = {
     id: "LIGHT_FIRE",

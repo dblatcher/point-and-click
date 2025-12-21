@@ -1,4 +1,4 @@
-import { AspectRatio } from "@/definitions/BaseTypes";
+import { AspectRatio } from "point-click-lib";
 import Zod, { object, string, number } from "zod";
 
 export type FileAsset = {

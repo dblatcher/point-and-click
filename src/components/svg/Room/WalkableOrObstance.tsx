@@ -1,4 +1,4 @@
-import { Zone } from "@/definitions"
+import { Zone } from "point-click-lib"
 import ZoneSvg from "../ZoneSvg"
 import { obstableClassNames, walkableClassNames, ZoneOptions } from "./zoneCssClasses"
 import { useRoomRender } from "@/hooks/useRoomRender"

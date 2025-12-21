@@ -1,4 +1,4 @@
-import { FlagMap } from '@/definitions/Flag'
+import { FlagMap } from "point-click-lib";
 
 export const flagMap: FlagMap = {
  testFlag : {

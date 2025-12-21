@@ -1,6 +1,6 @@
 
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { HotspotZone, Point, Shape, Zone, ZoneType } from "@/definitions";
+import { HotspotZone, Point, Shape, Zone, ZoneType } from "point-click-lib";
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { ArrayControl } from "../../ArrayControl";
 import { ClickPointIcon, ClickPointActiveIcon } from "../../material-icons";

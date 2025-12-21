@@ -1,4 +1,4 @@
-import { GameDataItem } from "@/definitions";
+import { GameDataItem } from "point-click-lib";
 import { cloneData } from "./clone";
 import { findById } from "./util";
 

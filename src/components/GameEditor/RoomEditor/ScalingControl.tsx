@@ -3,7 +3,7 @@ import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { Room } from "@/components/svg/Room";
 import { useGameDesign } from "@/context/game-design-context";
-import { ActorData, RoomData, ScaleLevel } from "@/definitions";
+import { ActorData, RoomData, ScaleLevel } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { locateClickInWorld } from "@/lib/roomFunctions";
 import { clamp, findById } from "@/lib/util";

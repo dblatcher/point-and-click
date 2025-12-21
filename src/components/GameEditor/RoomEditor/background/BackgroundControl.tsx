@@ -1,4 +1,4 @@
-import { BackgroundLayer, RoomData } from "@/definitions";
+import { BackgroundLayer, RoomData } from "point-click-lib";
 import { Stack } from "@mui/material";
 import { ArrayControl } from "../../ArrayControl";
 import { ColorInput } from "../../ColorInput";

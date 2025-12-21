@@ -1,4 +1,4 @@
-import { ItemData, Verb } from "@/definitions";
+import { ItemData, Verb } from "point-click-lib";
 import { FunctionComponent } from "react";
 import { HandleHoverFunction } from "./types";
 

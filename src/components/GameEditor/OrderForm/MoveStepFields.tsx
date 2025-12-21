@@ -1,6 +1,6 @@
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput"
 import { StringInput } from "@/components/SchemaForm/StringInput"
-import { MoveStep } from "@/definitions/Order"
+import { MoveStep } from "point-click-lib"
 import { Box, Collapse, IconButton, Typography } from "@mui/material"
 import { XYControl } from "../XYControl"
 import { useState } from "react"

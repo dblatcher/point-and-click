@@ -17,23 +17,20 @@ interface Props<DataShape extends ZodRawShape> {
     fieldWrapperProps?: Omit<Partial<StackProps>, 'component' | 'children' | 'ref'>
 }
 
-// if this fails becuase of version/import hell when
-// making definitions a package, switch to accessing the typeName
-// zod._def.innerType._def.typeName === 'ZodEnum'
-// zod._def.typeName === 'ZodEnum'
-const getType = (zodExtract: unknown): FieldDef['type'] => {
-    if (zodExtract instanceof ZodString) {
+const getType = (typeName: string): FieldDef['type'] => {
+    if (typeName === "ZodString") {
         return 'ZodString'
     }
-    if (zodExtract instanceof ZodBoolean) {
+    if (typeName === "ZodBoolean") {
         return 'ZodBoolean'
     }
-    if (zodExtract instanceof ZodEnum) {
+    if (typeName === "ZodEnum") {
         return 'ZodEnum'
     }
-    if (zodExtract instanceof ZodNumber) {
+    if (typeName === "ZodNumber") {
         return 'ZodNumber'
     }
+    console.warn('TYPE GET FAIL!', typeName)
 }
 
 /**
@@ -51,7 +48,7 @@ export function SchemaForm<DataShape extends ZodRawShape>({
     for (const key in schema.shape) {
         const zod = schema.shape[key];
         const optional = zod.isOptional();
-        const type = optional ? getType(zod._def.innerType) : getType(zod)
+        const type = optional ? getType(zod._def.innerType._def.typeName) : getType(zod._def.typeName)
         const enumOptions = type === 'ZodEnum'
             ? optional
                 ? zod._def.innerType._def.values

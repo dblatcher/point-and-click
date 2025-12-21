@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context"
-import { Interaction } from "@/definitions"
+import { Interaction } from "point-click-lib"
 import { Button, Dialog, DialogContent, DialogTitle, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import React, { Fragment } from "react"
 import { InteractionTableRow } from "./InteractionTableRow"

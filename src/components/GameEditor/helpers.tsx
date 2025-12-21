@@ -1,4 +1,4 @@
-import { GameDataItemType } from "@/definitions/Game"
+import { GameDataItemType } from "point-click-lib"
 
 export const formatIdInput = (input: string): string => input.toUpperCase().replaceAll(/[-" "_]+/g, "_")
 

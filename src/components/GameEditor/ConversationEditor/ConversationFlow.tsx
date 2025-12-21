@@ -1,5 +1,5 @@
 import { AddIcon, DeleteIcon, StarIcon, StarOutlineIcon, SortIcon, ExclamationIcon } from "@/components/GameEditor/material-icons"
-import { Conversation, ConversationBranch } from "@/definitions"
+import { Conversation, ConversationBranch } from "point-click-lib"
 import { Box, Button, IconButton, Stack, Tooltip, useTheme } from "@mui/material"
 import Checkbox from '@mui/material/Checkbox'
 import { Fragment, useEffect, useRef, useState } from "react"

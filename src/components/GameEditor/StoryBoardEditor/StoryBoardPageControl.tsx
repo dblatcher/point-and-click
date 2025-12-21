@@ -1,5 +1,5 @@
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
-import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
+import { PagePicture, StoryBoard, StoryBoardPage } from "point-click-lib";
 import { cloneArrayWithPatch } from "@/lib/clone";
 import { Box, Divider, Stack, Typography } from "@mui/material";
 import React from "react";

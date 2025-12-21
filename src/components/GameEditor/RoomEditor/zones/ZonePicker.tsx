@@ -1,4 +1,4 @@
-import { HotspotZone, Zone } from "@/definitions";
+import { HotspotZone, Zone } from "point-click-lib";
 import { FormControl, MenuItem, Select } from "@mui/material";
 
 

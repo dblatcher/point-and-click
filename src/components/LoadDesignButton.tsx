@@ -1,4 +1,4 @@
-import { GameDesign } from "@/definitions";
+import { GameDesign } from "point-click-lib";
 import { uploadFile } from "@/lib/files";
 import { readParseAndUpdateGameFromZipFile } from "@/lib/zipFiles";
 import { ImageAsset, SoundAsset } from "@/services/assets";

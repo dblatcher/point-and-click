@@ -1,7 +1,7 @@
 import { GameState } from "@/lib/game-state-logic/types";
 import { GameProps } from "../../components/game/types";
 import { CELL_SIZE } from "@/lib/pathfinding/constants";
-import { Command, Interaction, ActorData, OrderConsequence } from "@/definitions";
+import { Command, Interaction, ActorData, OrderConsequence } from "point-click-lib";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { makeDebugEntry } from "@/lib/inGameDebugging";
 import { findPath } from "@/lib/pathfinding/pathfind";

@@ -1,4 +1,4 @@
-import { BoardFont, PagePicture, StoryBoardPage } from "@/definitions/StoryBoard";
+import { BoardFont, PagePicture, StoryBoardPage } from "point-click-lib";
 import React, { CSSProperties } from "react";
 import { FramePreview } from "../GameEditor/FramePreview";
 

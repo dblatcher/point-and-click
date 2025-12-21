@@ -1,4 +1,4 @@
-import { ConversationChoice } from "@/definitions";
+import { ConversationChoice } from "point-click-lib";
 import { Button, Tooltip, Typography } from "@mui/material";
 import { LogOut, SpeakerNotesOffIcon, RepeatOneIcon } from "@/components/GameEditor/material-icons"
 import { truncateLine } from "../helpers";

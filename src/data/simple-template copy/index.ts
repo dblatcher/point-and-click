@@ -1,5 +1,5 @@
 import { SoundAsset } from "@/services/assets";
-import { GameDesign } from "../../definitions/Game";
+import { GameDesign } from "point-click-lib";
 import { allSprites } from '../sprites';
 import { minimalVerbSet } from '../verbs';
 import { imageAssets as allImageAssets } from "../images";

@@ -1,4 +1,4 @@
-import { SpriteData } from "@/definitions";
+import { SpriteData } from "point-click-lib";
 
 export const marioSprite: SpriteData = {
     id: 'mario',

@@ -1,7 +1,7 @@
 
 import { useAssets } from "@/context/asset-context";
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { ItemData } from "@/definitions";
+import { ItemData } from "point-click-lib";
 import { ImageAsset } from "@/services/assets";
 import { Avatar, Button, Grid, Typography } from "@mui/material";
 import { CSSProperties, memo } from "react";

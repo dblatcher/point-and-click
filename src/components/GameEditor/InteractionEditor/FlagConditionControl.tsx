@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { Interaction } from "@/definitions";
+import { Interaction } from "point-click-lib";
 import { Divider, Stack } from "@mui/material";
 import React from "react";
 import { EditorBox } from "../layout/EditorBox";

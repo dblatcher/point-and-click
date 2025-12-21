@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { AnyConsequence, Consequence, HotspotZone, Point, RoomData, Zone } from "@/definitions";
+import { AnyConsequence, Consequence, HotspotZone, Point, RoomData, Zone } from "point-click-lib";
 import { getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
 import { Box, Typography } from "@mui/material";

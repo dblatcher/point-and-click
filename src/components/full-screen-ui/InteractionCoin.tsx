@@ -1,5 +1,5 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { CommandTarget, ItemData, Verb } from "@/definitions";
+import { CommandTarget, ItemData, Verb } from "point-click-lib";
 import { Box, ButtonGroup, Card, Fade, IconButton, Typography } from "@mui/material";
 import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import { ItemButton } from "./ItemButton";

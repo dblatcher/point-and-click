@@ -1,6 +1,6 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
-import { HotspotZone } from "@/definitions";
+import { HotspotZone } from "point-click-lib";
 import { clamp } from "@/lib/util";
 import { Box, ButtonGroup, Divider, Stack } from "@mui/material";
 import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";

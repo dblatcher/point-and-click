@@ -1,4 +1,4 @@
-import { ActorData, Direction } from "@/definitions";
+import { ActorData, Direction } from "point-click-lib";
 import { useRoomRender } from "@/hooks/useRoomRender";
 import { Sprite } from "@/lib/Sprite";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";

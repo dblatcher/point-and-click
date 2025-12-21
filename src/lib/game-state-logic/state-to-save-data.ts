@@ -1,4 +1,4 @@
-import { GameData } from "@/definitions"
+import { GameData } from "point-click-lib"
 import { GameState } from "./types"
 
 export const getSaveData = (gameState: GameState): GameData => {

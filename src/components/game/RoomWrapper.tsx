@@ -1,5 +1,5 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { CommandTarget } from "@/definitions";
+import { CommandTarget } from "point-click-lib";
 import { findById } from "@/lib/util";
 import React from "react";
 import { PersistentSound } from "../sound/PersistentSound";

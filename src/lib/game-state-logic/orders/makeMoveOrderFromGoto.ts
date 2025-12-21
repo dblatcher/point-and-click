@@ -1,4 +1,4 @@
-import { GotoOrder, MoveOrder } from "@/definitions";
+import { GotoOrder, MoveOrder } from "point-click-lib";
 import { findTarget } from "@/lib/commandFunctions";
 import { GameState } from "@/lib/game-state-logic/types";
 import { getTargetPoint } from "@/lib/roomFunctions";

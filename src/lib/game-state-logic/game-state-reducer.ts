@@ -1,4 +1,4 @@
-import { Verb, ConversationChoice, CommandTarget, Command, GameData } from "@/definitions"
+import { Verb, ConversationChoice, CommandTarget, Command, GameData } from "point-click-lib"
 import { locateClickInWorld, getViewAngleXCenteredOn, getViewAngleYCenteredOn } from "@/lib/roomFunctions"
 import { findById } from "@/lib/util"
 import { Reducer } from "react"

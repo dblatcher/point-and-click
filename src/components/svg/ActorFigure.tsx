@@ -1,21 +1,19 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 
-import { ActorData, Order, RoomData } from "@/definitions";
-import { getScale } from "@/lib/getScale";
-import { Sprite } from "@/lib/Sprite";
-import { useInterval } from "@/hooks/useInterval";
-import { MouseEventHandler } from "react";
-
 import { IntermitentSound } from "@/components/sound/IntermitentSound";
 import { PersistentSound } from "@/components/sound/PersistentSound";
+import { useGameState } from "@/context/game-state-context";
 import { useSprites } from "@/context/sprite-context";
+import { useInterval } from "@/hooks/useInterval";
+import { useRoomRender } from "@/hooks/useRoomRender";
+import { getScale } from "@/lib/getScale";
+import { Sprite } from "@/lib/Sprite";
 import { findById } from "@/lib/util";
-import { SoundEffectMap, SoundValue } from "../../definitions/ActorData";
+import { ActorData, Order, SoundEffectMap, SoundValue } from "point-click-lib";
+import { MouseEventHandler } from "react";
 import { HandleClickFunction, HandleHoverFunction } from "../game/types";
 import { FrameShape } from "./FrameShape";
 import { SpriteShape } from "./SpriteShape";
-import { useGameState } from "@/context/game-state-context";
-import { useRoomRender } from "@/hooks/useRoomRender";
 
 interface Props {
     data: ActorData;

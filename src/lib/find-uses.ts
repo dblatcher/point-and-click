@@ -1,4 +1,4 @@
-import { Consequence, GameDesign, Sequence } from "@/definitions";
+import { Consequence, GameDesign, Sequence } from "point-click-lib";
 import { cloneData } from "./clone";
 
 

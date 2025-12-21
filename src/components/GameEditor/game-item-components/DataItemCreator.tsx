@@ -1,7 +1,7 @@
 import { AddIcon, UploadIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
-import { GameDataItem } from "@/definitions";
-import { GameDataItemType } from "@/definitions/Game";
+import { GameDataItem } from "point-click-lib";
+import { GameDataItemType } from "point-click-lib";
 import { DATA_TYPES_WITH_JSON, tabIcons, tabOrder } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
 import { Alert, Box, Button, ButtonGroup, Grid, Stack } from "@mui/material";

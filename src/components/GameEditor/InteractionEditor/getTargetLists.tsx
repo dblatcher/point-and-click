@@ -1,4 +1,4 @@
-import { GameDesign, RoomData, Zone, ZoneType, ActorData, ItemData, HotspotZone } from "@/definitions";
+import { GameDesign, RoomData, Zone, ZoneType, ActorData, ItemData, HotspotZone } from "point-click-lib";
 import { findById } from "@/lib/util";
 import { ReactNode } from "react";
 import { ActorIcon, HotspotIcon, InventoryIcon } from "../material-icons";

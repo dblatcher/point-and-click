@@ -1,5 +1,5 @@
 import { StringInput } from "@/components/SchemaForm/StringInput"
-import { Command, CommandTarget, ItemData, Verb } from "@/definitions"
+import { Command, CommandTarget, ItemData, Verb } from "point-click-lib"
 import { describeCommand, getDefaultResponseText } from "@/lib/commandFunctions"
 import { BoxProps, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material"
 import { useState } from "react"

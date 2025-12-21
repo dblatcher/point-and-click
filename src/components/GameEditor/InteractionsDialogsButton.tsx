@@ -3,7 +3,7 @@ import { InteractionIcon } from '@/components/GameEditor/material-icons';
 import { Button, ButtonProps } from "@mui/material";
 import { InteractionDialog } from "./InteractionEditor/InteractionDialog";
 import { useGameDesign } from "@/context/game-design-context";
-import { Interaction } from "@/definitions";
+import { Interaction } from "point-click-lib";
 import { PickInteractionDialog } from "./InteractionEditor/PickInteractionDialog";
 
 interface Props {

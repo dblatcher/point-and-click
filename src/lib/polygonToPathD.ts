@@ -1,4 +1,4 @@
-import { Polygon } from "../definitions/Zone"
+import { Polygon } from "point-click-lib"
 
 export function polygonToPathD(polygon: Polygon): string {
     let output = ''

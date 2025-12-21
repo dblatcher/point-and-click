@@ -1,6 +1,6 @@
 import { UndoIcon, RedoIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
-import { GameDesign } from "@/definitions/Game";
+import { GameDesign } from "point-click-lib";
 import { Badge, IconButton, Tooltip } from "@mui/material";
 import { FunctionComponent } from "react";
 

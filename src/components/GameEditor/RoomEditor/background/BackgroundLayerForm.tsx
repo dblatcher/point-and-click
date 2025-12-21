@@ -1,5 +1,5 @@
 import { AddIcon } from "@/components/GameEditor/material-icons";
-import { BackgroundLayer, RoomData } from "@/definitions";
+import { BackgroundLayer, RoomData } from "point-click-lib";
 import { ImageAsset } from "@/services/assets";
 import { Box, IconButton } from "@mui/material";
 import { useState } from "react";

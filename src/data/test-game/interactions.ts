@@ -1,4 +1,4 @@
-import { Interaction } from '@/definitions/Interaction'
+import { Interaction } from "point-click-lib";
 
 export const interactions: Interaction[] = [
     {

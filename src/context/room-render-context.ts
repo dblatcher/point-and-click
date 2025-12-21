@@ -1,4 +1,4 @@
-import { RoomData } from "@/definitions";
+import { RoomData } from "point-click-lib";
 import { createContext } from "react";
 
 export const RoomRenderContext = createContext<{

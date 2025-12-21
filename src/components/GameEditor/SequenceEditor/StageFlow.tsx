@@ -1,5 +1,5 @@
-import { ImmediateConsequence, Order, Stage } from "@/definitions";
-import { Narrative } from "@/definitions/BaseTypes";
+import { ImmediateConsequence, Order, Stage } from "point-click-lib";
+import { Narrative } from "point-click-lib";
 import { insertAt } from "@/lib/util";
 import { Box, Button, Dialog, DialogContent, Grid, IconButton, Stack } from "@mui/material";
 import { useState } from "react";

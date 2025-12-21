@@ -1,4 +1,4 @@
-import { ActorData, CommandTarget, GameDesign, Order } from "@/definitions";
+import { ActorData, CommandTarget, GameDesign, Order } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
 import { SoundService } from "@/services/soundService";
 import { UiComponentSet } from "./uiComponentSet";

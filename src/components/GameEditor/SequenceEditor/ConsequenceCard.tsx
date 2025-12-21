@@ -1,5 +1,5 @@
 import { ConceptCard } from "@/components/GameEditor/ConceptCard";
-import { Consequence } from "@/definitions";
+import { Consequence } from "point-click-lib";
 import { Box, Typography } from "@mui/material";
 import { DescriptionOutlinedIcon } from "../material-icons";
 import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";

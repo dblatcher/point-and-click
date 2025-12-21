@@ -1,7 +1,7 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { Room } from "@/components/svg/Room";
 import { useGameDesign } from "@/context/game-design-context";
-import { RoomData } from "@/definitions";
+import { RoomData } from "point-click-lib";
 import { Alert, Box, Grid, Stack } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { ViewAngleSlider } from "./ViewAngleSlider";

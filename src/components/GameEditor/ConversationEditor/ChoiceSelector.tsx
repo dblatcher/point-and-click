@@ -1,6 +1,6 @@
 import { SelectInput } from "@/components/SchemaForm/inputs";
-import { Conversation } from "@/definitions";
-import { ChoiceRefSet } from "@/definitions/Conversation";
+import { Conversation } from "point-click-lib";
+import { ChoiceRefSet } from "point-click-lib";
 import { findById, listIds } from "@/lib/util";
 import { IconButton, Stack } from '@mui/material';
 import { ClearIcon } from "../material-icons";

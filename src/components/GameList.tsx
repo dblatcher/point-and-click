@@ -1,5 +1,5 @@
 import castleLifeBlurb from "@/content/castleLifeBlurb.md";
-import { GameDesign } from "@/definitions";
+import { GameDesign } from "point-click-lib";
 import { getGameFromApi, ValidGameId } from "@/lib/api-usage";
 import { makeDownloadFile } from "@/lib/files";
 import { buildGameZipBlobFromAssets } from "@/lib/zipFiles";

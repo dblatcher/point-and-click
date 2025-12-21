@@ -1,5 +1,5 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context"
-import { Command, Conversation, ConversationChoice } from "@/definitions"
+import { Command, Conversation, ConversationChoice } from "point-click-lib"
 import { reportConversationBranch } from "@/lib/game-event-emitter"
 import { getStoryboardCloseAction } from "@/lib/game-state-logic/game-state-reducer"
 import { standard } from "@/lib/text-based/standard-text"

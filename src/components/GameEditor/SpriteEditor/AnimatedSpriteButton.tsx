@@ -1,4 +1,4 @@
-import { Direction, Animation, ActorData } from "@/definitions";
+import { Direction, Animation, ActorData } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
 import { Button, Typography } from "@mui/material";
 import { SpritePreview } from "../SpritePreview";

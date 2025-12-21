@@ -1,7 +1,7 @@
 import { Box } from "@mui/material"
 import { Dispatch, ReactNode, SetStateAction } from "react"
 import { ViewAngleSlider } from "./ViewAngleSlider"
-import { RoomData } from "@/definitions"
+import { RoomData } from "point-click-lib"
 
 interface Props {
     children: ReactNode;

@@ -1,4 +1,4 @@
-import { ActorData, SpriteData } from "@/definitions"
+import { ActorData, SpriteData } from "point-click-lib"
 import { Sprite } from "./Sprite"
 import { findById, deduplicateStringArray } from "./util"
 

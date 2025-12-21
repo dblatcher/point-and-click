@@ -1,5 +1,5 @@
 import { useAssets } from "@/context/asset-context";
-import { BackgroundLayer } from "@/definitions";
+import { BackgroundLayer } from "point-click-lib";
 import { useRoomRender } from "@/hooks/useRoomRender";
 import { getLayerHeight, getLayerWidth, getXShift, getYShift } from "@/lib/roomFunctions";
 

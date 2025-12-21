@@ -1,4 +1,4 @@
-import { Conversation } from '@/definitions/Conversation'
+import { Conversation } from "point-click-lib";
 
 const chat: Conversation = {
     id: 'CHAT',

@@ -2,7 +2,7 @@ import { Game } from "@/components/game/Game";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { GameDesign } from "@/definitions";
+import { GameDesign } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { editorTheme } from "@/theme";
 import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Slider, ThemeProvider, Typography } from "@mui/material";

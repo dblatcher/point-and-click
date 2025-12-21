@@ -1,5 +1,5 @@
 import selectADesignContent from "@/content/selectADesign.md";
-import { GameDesign } from "@/definitions";
+import { GameDesign } from "point-click-lib";
 import { GameEditorDatabase, openDataBaseConnection } from "@/lib/indexed-db";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { Alert, Box, Card, Grid, Snackbar, Typography } from "@mui/material";

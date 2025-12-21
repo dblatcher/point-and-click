@@ -1,5 +1,5 @@
 import { useAssets } from "@/context/asset-context";
-import { ActorData } from "@/definitions";
+import { ActorData } from "point-click-lib";
 import { useRoomRender } from "@/hooks/useRoomRender";
 import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
 import { calculateScreenX } from "@/lib/roomFunctions";

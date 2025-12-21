@@ -1,6 +1,6 @@
 import { GameProps } from "../../components/game/types";
 import { GameState } from "@/lib/game-state-logic/types";
-import { Order, ActorData } from "@/definitions";
+import { Order, ActorData } from "point-click-lib";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";

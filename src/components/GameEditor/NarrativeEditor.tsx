@@ -1,5 +1,5 @@
 import { DescriptionOutlinedIcon } from '@/components/GameEditor/material-icons';
-import { Narrative } from "@/definitions/BaseTypes";
+import { Narrative } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { Box, Button, ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography, useTheme } from "@mui/material";
 import React, { useState } from "react";

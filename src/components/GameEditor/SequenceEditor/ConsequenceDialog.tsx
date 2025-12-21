@@ -1,4 +1,4 @@
-import { Consequence } from "@/definitions";
+import { Consequence } from "point-click-lib";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, useTheme } from "@mui/material";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";

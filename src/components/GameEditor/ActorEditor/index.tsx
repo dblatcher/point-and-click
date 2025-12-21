@@ -1,6 +1,6 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { ActorData } from "@/definitions";
-import { SoundValue } from "@/definitions/ActorData";
+import { ActorData } from "point-click-lib";
+import { SoundValue } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { patchMember } from "@/lib/update-design";
 import { Stack, Tab, Tabs } from "@mui/material";

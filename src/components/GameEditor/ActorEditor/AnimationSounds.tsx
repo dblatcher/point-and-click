@@ -1,7 +1,7 @@
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { ActorData, SoundValue, SpriteFrame } from "@/definitions";
+import { ActorData, SoundValue, SpriteFrame } from "point-click-lib";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";

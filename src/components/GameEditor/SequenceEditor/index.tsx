@@ -1,7 +1,7 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { Consequence, ImmediateConsequence, Order, Sequence } from "@/definitions";
-import { Narrative } from "@/definitions/BaseTypes";
-import { ImmediateConsequenceSchema } from "@/definitions/Consequence";
+import { Consequence, ImmediateConsequence, Order, Sequence } from "point-click-lib";
+import { Narrative } from "point-click-lib";
+import { ImmediateConsequenceSchema } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { patchMember } from "@/lib/update-design";
 import { Grid } from "@mui/material";

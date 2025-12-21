@@ -1,6 +1,6 @@
 import { FunctionComponent, MouseEventHandler } from "react";
 import { polygonToPathD } from "@/lib/polygonToPathD";
-import { Zone, HotspotZone } from "@/definitions"
+import { Zone, HotspotZone } from "point-click-lib"
 import { HandleClickFunction, HandleHoverFunction } from "../game/types";
 import { PolygonPins } from "./PolygonPins";
 import { CirclePins } from "./CirclePins";

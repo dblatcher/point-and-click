@@ -1,5 +1,5 @@
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay"
-import { StoryBoard } from "@/definitions/StoryBoard"
+import { StoryBoard } from "point-click-lib"
 import { Box, Button } from "@mui/material"
 import { useEffect, useState } from "react"
 import { ArrayControl } from "../ArrayControl"

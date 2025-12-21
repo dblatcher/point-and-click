@@ -1,7 +1,7 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { StringInput } from "@/components/SchemaForm/StringInput";
-import { Direction, directions } from "@/definitions/BaseTypes";
-import { Order } from "@/definitions/Order";
+import { Direction, directions } from "point-click-lib";
+import { Order } from "point-click-lib";
 import { Box, Stack } from "@mui/material";
 import { ReactNode } from "react";
 import { ActOrderForm } from "./ActOrderForm";

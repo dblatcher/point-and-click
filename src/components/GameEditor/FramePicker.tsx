@@ -1,7 +1,7 @@
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useAssets } from "@/context/asset-context";
-import { SpriteFrame } from "@/definitions";
+import { SpriteFrame } from "point-click-lib";
 import { FileAsset, ImageAsset } from "@/services/assets";
 import { Box, Button, Stack } from "@mui/material";
 import { FunctionComponent, useState } from "react";

@@ -1,6 +1,6 @@
 
 import { useGameDesign } from "@/context/game-design-context";
-import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice } from "@/definitions/Conversation";
+import { ChoiceRefSet, Conversation, ConversationBranch, ConversationChoice } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { findById, listIds } from "@/lib/util";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@mui/material";

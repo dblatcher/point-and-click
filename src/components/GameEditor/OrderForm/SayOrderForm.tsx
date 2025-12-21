@@ -1,6 +1,6 @@
 
 import { SchemaForm } from "@/components/SchemaForm";
-import { orderBaseOmits, SayOrder, SayOrderSchema } from "@/definitions/Order";
+import { orderBaseOmits, SayOrder, SayOrderSchema } from "point-click-lib";
 
 
 interface Props {

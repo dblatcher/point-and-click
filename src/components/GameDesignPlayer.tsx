@@ -1,7 +1,7 @@
 import { Game } from "@/components/game/Game";
 import { AssetsProvider } from "@/context/asset-context";
 import { SpritesProvider } from "@/context/sprite-context";
-import { GameDesign } from "@/definitions";
+import { GameDesign } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { ImageService } from "@/services/imageService";

@@ -1,4 +1,4 @@
-import { Conversation, ConversationChoice } from "@/definitions";
+import { Conversation, ConversationChoice } from "point-click-lib";
 import { Box, Button } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";

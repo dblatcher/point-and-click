@@ -1,5 +1,5 @@
 import { useGameState } from "@/context/game-state-context";
-import { Verb } from "@/definitions";
+import { Verb } from "point-click-lib";
 import { Box } from "@mui/material";
 import React from "react";
 import { canUseIcons, VerbButton } from "./VerbButton";

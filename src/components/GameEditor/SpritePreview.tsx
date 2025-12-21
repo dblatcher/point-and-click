@@ -1,5 +1,5 @@
 import { RoomRenderContext } from "@/context/room-render-context";
-import { ActorData, Direction } from "@/definitions";
+import { ActorData, Direction } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
 import { Box } from "@mui/material";
 import { ActorFigure } from "../svg/ActorFigure";

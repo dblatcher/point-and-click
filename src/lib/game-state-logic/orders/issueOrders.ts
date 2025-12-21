@@ -1,4 +1,4 @@
-import { Order } from "@/definitions";
+import { Order } from "point-click-lib";
 import { GameState } from "@/lib/game-state-logic/types";
 import { cloneData } from "@/lib/clone";
 

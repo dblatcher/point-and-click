@@ -1,4 +1,4 @@
-import { ActorData, Direction } from "@/definitions"
+import { ActorData, Direction } from "point-click-lib"
 import { Sprite } from "./Sprite"
 
 export const buildActorData = (sprite: Sprite, animationKey: string, direction: Direction): ActorData => {

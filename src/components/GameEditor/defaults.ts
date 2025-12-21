@@ -1,9 +1,9 @@
 import {
     Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType,
     Stage, ConversationChoice, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData
-} from "@/definitions";
-import { ActStep, MoveStep } from "@/definitions/Order";
-import { PagePicture, StoryBoard, StoryBoardPage } from "@/definitions/StoryBoard";
+} from "point-click-lib";
+import { ActStep, MoveStep } from "point-click-lib";
+import { PagePicture, StoryBoard, StoryBoardPage } from "point-click-lib";
 
 export const DEFAULT_TALK_TIME = 200;
 

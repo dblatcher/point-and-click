@@ -1,4 +1,4 @@
-import { GameDesign } from "@/definitions";
+import { GameDesign } from "point-click-lib";
 import game from "./game.json"
 import images from "./imageAssets.json"
 import sounds from "./soundAssets.json"

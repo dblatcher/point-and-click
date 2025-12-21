@@ -1,4 +1,4 @@
-import { ActorData, CommandTarget, Consequence } from "@/definitions"
+import { ActorData, CommandTarget, Consequence } from "point-click-lib"
 import { changeRoom } from "@/lib/game-state-logic/changeRoom"
 import { cloneData } from "@/lib/clone"
 import { generateCellMatrix } from "@/lib/pathfinding/cells"

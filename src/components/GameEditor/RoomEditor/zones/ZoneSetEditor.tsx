@@ -1,4 +1,4 @@
-import { HotspotZone, Zone, ZoneType } from "@/definitions";
+import { HotspotZone, Zone, ZoneType } from "point-click-lib";
 import Delete from '@mui/icons-material/Delete';
 import { Alert, Box, Stack } from "@mui/material";
 import { FunctionComponent } from "react";

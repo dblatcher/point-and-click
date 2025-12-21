@@ -1,4 +1,4 @@
-import { ActorData, Order } from "@/definitions"
+import { ActorData, Order } from "point-click-lib"
 import { useRoomRender } from "@/hooks/useRoomRender"
 import { getScale } from "@/lib/getScale"
 import { clamp } from "@/lib/util"

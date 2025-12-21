@@ -1,4 +1,4 @@
-import { ActorData } from "@/definitions"
+import { ActorData } from "point-click-lib"
 
 export const initialActors: ActorData[] = [
     {

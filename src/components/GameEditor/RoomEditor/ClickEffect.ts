@@ -1,4 +1,4 @@
-import { SupportedZoneShape, ZoneType } from "@/definitions"
+import { SupportedZoneShape, ZoneType } from "point-click-lib"
 import { createContext, useContext } from "react";
 
 type NewAreaEffect = {

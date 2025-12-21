@@ -1,4 +1,4 @@
-import { Order } from "@/definitions";
+import { Order } from "point-click-lib";
 import { getOrderIcon } from "./get-order-details";
 import { Box, Card, CardActionArea, Typography } from "@mui/material";
 

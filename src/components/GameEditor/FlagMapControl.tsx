@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { Flag, FlagMap } from "@/definitions/Flag";
+import { Flag, FlagMap } from "point-click-lib";
 import { Box, Divider, FormControlLabel, Stack, Switch, Typography } from "@mui/material";
 import { ButtonWithConfirm } from "./ButtonWithConfirm";
 import { ButtonWithTextInput } from "./ButtonWithTextInput";

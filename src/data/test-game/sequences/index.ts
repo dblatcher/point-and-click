@@ -1,4 +1,4 @@
-import { Sequence } from "@/definitions/Sequence";
+import { Sequence } from "point-click-lib";
 import { DIALOGUE } from "./DIALOGUE";
 import { LIGHT_FIRE } from "./LIGHT_FIRE";
 import { PUT_OUT_FIRE } from "./PUT_OUT_FIRE";

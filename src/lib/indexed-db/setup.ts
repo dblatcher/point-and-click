@@ -1,9 +1,9 @@
 import { deleteDB, openDB } from "idb";
 import { GameEditorDatabase, GameEditorDBSchema } from "./types";
-
+import { DB_VERSION as VERSION_FROM_LIB} from "point-click-lib"
 
 const DB_NAME = 'Point-and-click-db'
-export const DB_VERSION = 4
+export const DB_VERSION = VERSION_FROM_LIB
 
 type WindowPlus = Window & {
     MY_DATABASE?: GameEditorDatabase,

@@ -1,5 +1,5 @@
 import { useAssets } from "@/context/asset-context";
-import { SoundInstance } from "@/definitions/BaseTypes";
+import { SoundInstance } from "point-click-lib";
 import { Alert, Box, Typography } from "@mui/material";
 import React from "react";
 import { FileAssetSelector } from "../FileAssetSelector";

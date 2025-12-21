@@ -1,7 +1,6 @@
-import { type RoomData } from "../../definitions/RoomData"
-import { type Zone } from "../../definitions/Zone"
-import { Circle, isPointInsideCircle, isPointInsideRectangle, Point, Rectangle } from "./geometry"
-import { isPointInsidePolygon } from "typed-geometry"
+import type { RoomData, Zone } from "point-click-lib";
+import { isPointInsidePolygon } from "typed-geometry";
+import { Circle, isPointInsideCircle, isPointInsideRectangle, Point, Rectangle } from "./geometry";
 
 export type CellMatrix = (0 | 1)[][]
 

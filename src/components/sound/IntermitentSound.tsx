@@ -1,6 +1,6 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { SoundControl } from "sound-deck";
-import type { SoundValue } from "@/definitions";
+import type { SoundValue } from "point-click-lib";
 import { useAssets } from "@/context/asset-context";
 
 interface Props {

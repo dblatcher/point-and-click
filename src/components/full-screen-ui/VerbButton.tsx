@@ -1,4 +1,4 @@
-import { Verb } from "@/definitions";
+import { Verb } from "point-click-lib";
 import DirectionsWalk from "@mui/icons-material/DirectionsWalk";
 import PanToolIcon from '@mui/icons-material/PanTool';
 import VisibilityIcon from '@mui/icons-material/Visibility';

@@ -1,6 +1,6 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
-import { BackgroundLayer, RoomData } from "@/definitions";
+import { BackgroundLayer, RoomData } from "point-click-lib";
 import { clamp, listIds } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
 import { Box, Button, Stack } from "@mui/material";

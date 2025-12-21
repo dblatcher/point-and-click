@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { RoomData } from "@/definitions";
+import { RoomData } from "point-click-lib";
 import { Box, Typography } from "@mui/material";
 import { DelayedStringInput } from "../DelayedStringInput";
 import { HelpButton } from "../HelpButton";

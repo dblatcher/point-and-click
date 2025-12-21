@@ -1,4 +1,4 @@
-import { StoryBoard } from "@/definitions/StoryBoard";
+import { StoryBoard } from "point-click-lib";
 import React, { CSSProperties, useEffect, useState } from "react";
 import { StoryPageDisplay } from "./StoryPageDisplay";
 import { useAssets } from "@/context/asset-context";

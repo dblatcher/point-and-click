@@ -1,17 +1,17 @@
-import { initialActors as actors } from "./actors";
-import { initialRooms as rooms } from './rooms';
-import { items } from './items';
+import { GameDesign } from "point-click-lib";
+import { allSprites } from '../sprites';
 import { detailedVerbSet } from '../verbs';
-import { interactions } from './interactions';
-import { sequences } from './sequences';
+import { initialActors as actors } from "./actors";
 import { conversations } from './conversations';
-import { allSprites } from '../sprites'
-import { flagMap } from './flags'
-import { storyBoards } from './storyBoards'
-import { GameDesign } from "../../definitions/Game";
+import { flagMap } from './flags';
+import { interactions } from './interactions';
+import { items } from './items';
+import { initialRooms as rooms } from './rooms';
+import { sequences } from './sequences';
+import { storyBoards } from './storyBoards';
 
-export { imageAssets } from "../images"
-export { soundAssets } from "../sounds"
+export { imageAssets } from "../images";
+export { soundAssets } from "../sounds";
 
 export const gameDesign: GameDesign = {
     id: "THE_TEST_GAME",

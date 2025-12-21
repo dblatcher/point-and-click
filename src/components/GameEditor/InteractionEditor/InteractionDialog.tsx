@@ -1,7 +1,7 @@
 import { BooleanInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
-import { Consequence, Interaction } from "@/definitions";
-import { InteractionSchema } from "@/definitions/Interaction";
+import { Consequence, Interaction } from "point-click-lib";
+import { InteractionSchema } from "point-click-lib";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { findTarget } from "@/lib/commandFunctions";
 import { insertAt, listIds } from "@/lib/util";

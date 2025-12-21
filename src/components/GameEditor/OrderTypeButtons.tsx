@@ -1,4 +1,4 @@
-import { OrderType, orderTypes } from "@/definitions/Order"
+import { OrderType, orderTypes } from "point-click-lib"
 import { Button, ButtonGroup } from "@mui/material"
 import { getOrderIcon } from "./SequenceEditor/get-order-details"
 

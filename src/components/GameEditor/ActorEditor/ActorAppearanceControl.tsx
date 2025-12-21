@@ -2,7 +2,7 @@ import { FilterWidget } from "@/components/Filter/FilterWidget";
 import { NumberInput, SelectInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { ActorData } from "@/definitions";
+import { ActorData } from "point-click-lib";
 import { patchMember } from "@/lib/update-design";
 import { listIds } from "@/lib/util";
 import { Alert, Box, Divider, Stack } from "@mui/material";

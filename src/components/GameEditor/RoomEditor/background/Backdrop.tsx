@@ -1,5 +1,5 @@
 import { useAssets } from "@/context/asset-context"
-import { BackgroundLayer, RoomData } from "@/definitions"
+import { BackgroundLayer, RoomData } from "point-click-lib"
 import { Box } from "@mui/material"
 import { ReactNode } from "react"
 

@@ -2,7 +2,7 @@ import { AddIcon, ClickPointActiveIcon, ClickPointIcon } from "@/components/Game
 import { Button, ButtonGroup, ButtonGroupProps, useMediaQuery, useTheme } from "@mui/material";
 import { FunctionComponent } from "react";
 import { ClickEffect, useRoomClickEffect } from "../ClickEffect";
-import { SupportedZoneShape } from "@/definitions";
+import { SupportedZoneShape } from "point-click-lib";
 
 
 interface Props {

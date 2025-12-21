@@ -1,4 +1,4 @@
-import { Verb } from "@/definitions";
+import { Verb } from "point-click-lib";
 
 export const detailedVerbSet: Verb[] = [
     { id: 'WALK', label: 'walk to', isMoveVerb: true },

@@ -1,5 +1,5 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { ActorData, CommandTarget, HotspotZone } from "@/definitions";
+import { ActorData, CommandTarget, HotspotZone } from "point-click-lib";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 import { GameState } from "@/lib/game-state-logic/types";
 import { calculateScreenX } from "@/lib/roomFunctions";

@@ -1,6 +1,6 @@
 import { CELL_SIZE } from "@/lib/pathfinding/constants";
 import { GameState } from "@/lib/game-state-logic/types";
-import { ActorData, MoveOrder, Order } from "@/definitions";
+import { ActorData, MoveOrder, Order } from "point-click-lib";
 import { CellMatrix } from "@/lib/pathfinding/cells";
 import { Point } from "@/lib/pathfinding/geometry";
 import { findPath } from "@/lib/pathfinding/pathfind";

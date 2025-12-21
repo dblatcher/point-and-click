@@ -1,5 +1,5 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { AspectRatio } from "@/definitions/BaseTypes";
+import { AspectRatio } from "point-click-lib";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
 import { AspectRatioIcon, CheckBoxIcon, CheckBoxOutlineBlankIcon } from "./material-icons";
 

@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { ItemData } from "@/definitions";
+import { ItemData } from "point-click-lib";
 import { patchMember } from "@/lib/update-design";
 import { List, ListItem, ListItemText, Switch } from "@mui/material";
 import { EditorBox } from "./layout/EditorBox";

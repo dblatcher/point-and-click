@@ -1,6 +1,6 @@
 import { getTargetLists } from "@/components/GameEditor/InteractionEditor/getTargetLists";
 import { useGameDesign } from "@/context/game-design-context";
-import { Order } from "@/definitions";
+import { Order } from "point-click-lib";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, useTheme } from "@mui/material";
 import { NarrativeEditor } from "../NarrativeEditor";

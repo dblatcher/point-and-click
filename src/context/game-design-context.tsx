@@ -1,11 +1,10 @@
-import { GameDesign, Interaction, RoomData } from '@/definitions'
-import { GameDataItem, GameDataItemType } from '@/definitions/Game'
-import { TabId } from '@/lib/editor-config'
-import { DesignUpgradeInfo, GameDesignAction } from '@/lib/game-design-logic/types'
-import { DB_VERSION, MaybeDesignAndAssets } from '@/lib/indexed-db'
-import { patchMember } from '@/lib/update-design'
-import { UpdateSource } from '@/services/FileAssetService'
-import { createContext, ReactNode, useContext } from 'react'
+import { TabId } from '@/lib/editor-config';
+import { DesignUpgradeInfo, GameDesignAction } from '@/lib/game-design-logic/types';
+import { DB_VERSION, MaybeDesignAndAssets } from '@/lib/indexed-db';
+import { patchMember } from '@/lib/update-design';
+import { UpdateSource } from '@/services/FileAssetService';
+import { GameDataItem, GameDataItemType, GameDesign, Interaction, RoomData } from "point-click-lib";
+import { createContext, ReactNode, useContext } from 'react';
 
 
 type GameDesignContextInputs = {

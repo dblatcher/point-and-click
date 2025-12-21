@@ -1,7 +1,7 @@
-import { CommandTarget, ItemData, Verb } from '@/definitions';
 import { findById } from '@/lib/util';
 import { Box, BoxProps, useTheme } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import { CommandTarget, ItemData, Verb } from "point-click-lib";
 import { memo } from 'react';
 import { useGameState, useGameStateDerivations } from '../../context/game-state-context';
 

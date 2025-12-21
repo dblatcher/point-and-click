@@ -1,4 +1,4 @@
-import { Interaction } from "@/definitions";
+import { Interaction } from "point-click-lib";
 import { IconButton, Stack, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon, FlagFilledIcon, FlagOutlinedIcon, InventoryIcon } from "../material-icons";

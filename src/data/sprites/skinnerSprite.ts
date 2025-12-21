@@ -1,4 +1,4 @@
-import { SpriteData } from '@/definitions/SpriteSheet'
+import { SpriteData } from "point-click-lib";
 
 export const skinnerSprite: SpriteData = {
     id: 'skinner',

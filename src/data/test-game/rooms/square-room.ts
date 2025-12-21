@@ -1,4 +1,4 @@
-import { RoomData } from "@/definitions/RoomData"
+import { RoomData } from "point-click-lib"
 
 export const SQUARE_ROOM: RoomData = {
   id: "SQUARE_ROOM",

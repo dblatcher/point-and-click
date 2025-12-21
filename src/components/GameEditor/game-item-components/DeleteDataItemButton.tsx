@@ -1,8 +1,8 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { GameDataItem } from "@/definitions";
+import { GameDataItem } from "point-click-lib";
 import { DeleteIcon } from "@/components/GameEditor/material-icons";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
-import { GameDataItemType } from "@/definitions/Game";
+import { GameDataItemType } from "point-click-lib";
 import { ButtonProps } from "@mui/material";
 
 type Props = {
