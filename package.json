@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "point-click-lib":"file:../point-click-lib",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.13",
     "@types/node": "18.15.3",
@@ -20,6 +19,7 @@
     "jszip": "^3.10.1",
     "micromark": "^3.1.0",
     "next": "^14.2.24",
+    "point-click-lib": "^0.0.4",
     "raw-loader": "^4.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

@@ -2,7 +2,7 @@ import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
-import { ActorData, Point } from "point-click-lib";
+import { ActorData } from "point-click-lib";
 import { Direction, directions } from "point-click-lib";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
@@ -16,6 +16,7 @@ import { RoomLocationPicker } from "../RoomLocationPicker";
 import { WalkToControl, XYControl } from "../XYControl";
 import { EditorBox } from "../layout/EditorBox";
 import { LayoutControls, LayoutHolder, LayoutPreview } from "../layout/SplitLayout";
+import { Point } from "@/lib/pathfinding/geometry";
 
 interface Props {
     actorData: ActorData;

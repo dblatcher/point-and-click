@@ -1,6 +1,6 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
-import { Point } from "point-click-lib";
+import { Point } from "@/lib/pathfinding/geometry";
 import { MoveOrder, MoveStep } from "point-click-lib";
 import { findById, listIds } from "@/lib/util";
 import { Box, Button, Typography } from "@mui/material";
