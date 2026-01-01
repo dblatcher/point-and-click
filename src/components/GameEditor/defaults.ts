@@ -16,7 +16,7 @@ export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'TALK', label: 'talk to' },
 ]
 
-export const makeBlankVerb: { (id?:string): Verb } = (id = "NEW_VERB") => ({ id, label: "****" })
+export const makeBlankVerb: { (id?: string): Verb } = (id = "NEW_VERB") => ({ id, label: "****" })
 
 export const getBlankRoom: { (): RoomData } = () => ({
     id: '_NEW_ROOM',
@@ -99,37 +99,39 @@ export const makeNewFlag = (): Flag => ({
 export function makeNewConsequence(type: ConsequenceType): Consequence {
     switch (type) {
         case 'conversation':
-            return { type: 'conversation', conversationId: '' }
+            return { type, conversationId: '' }
         case 'sequence':
-            return { type: 'sequence', sequence: '' }
+            return { type, sequence: '' }
         case 'changeStatus':
-            return { type: 'changeStatus', targetId: '', status: '', targetType: 'actor' }
+            return { type, targetId: '', status: '', targetType: 'actor' }
         case 'removeActor':
-            return { type: 'removeActor', actorId: '' }
+            return { type, actorId: '' }
         case 'inventory':
-            return { type: "inventory", itemId: '', addOrRemove: 'ADD' }
+            return { type, itemId: '', addOrRemove: 'ADD' }
         case 'changeRoom':
-            return { type: 'changeRoom', roomId: '', takePlayer: true, x: 0, y: 0 }
+            return { type, roomId: '', takePlayer: true, x: 0, y: 0 }
         case 'teleportActor':
-            return { type: 'teleportActor', actorId: '', x: 0, y: 0, roomId: '' }
+            return { type, actorId: '', x: 0, y: 0, roomId: '' }
         case 'order':
             return {
-                type: 'order', actorId: '', orders: []
+                type, actorId: '', orders: []
             }
         case 'toggleZone':
-            return { type: 'toggleZone', roomId: '', ref: '', on: true, zoneType: 'obstacle' }
+            return { type, roomId: '', ref: '', on: true, zoneType: 'obstacle' }
         case 'soundEffect':
-            return { type: 'soundEffect', sound: '', volume: 1 }
+            return { type, sound: '', volume: 1 }
         case 'ambientNoise':
-            return { type: 'ambientNoise', sound: undefined, volume: 1, roomId: undefined }
+            return { type, sound: undefined, volume: 1, roomId: undefined }
         case 'backgroundMusic':
-            return { type: 'backgroundMusic', sound: undefined, volume: 1, roomId: undefined }
+            return { type, sound: undefined, volume: 1, roomId: undefined }
         case 'flag':
-            return { type: 'flag', on: true, flag: '' }
+            return { type, on: true, flag: '' }
         case 'conversationChoice':
-            return { type: 'conversationChoice', conversationId: '', branchId: '', choiceRef: '', on: true }
+            return { type, conversationId: '', branchId: '', choiceRef: '', on: true }
         case 'storyBoardConsequence':
-            return { type: 'storyBoardConsequence', storyBoardId: '' }
+            return { type, storyBoardId: '' }
+        case "changePlayerCharacter":
+            return { type, actorId: '' }
     }
 }
 

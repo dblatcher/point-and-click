@@ -224,6 +224,19 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 }
                 break
             }
+            case "changePlayerCharacter": {
+                const { actorId } = consequence;
+                const newPlayerCharacter = findById(actorId, state.actors);
+                if (!newPlayerCharacter) {
+                    console.warn(console.warn('no such actor', actorId))
+                    break;
+                }
+                const previousPlayerCharacter = state.actors.find(actor => actor.isPlayer)
+                if (previousPlayerCharacter) {
+                    previousPlayerCharacter.isPlayer = false
+                }
+                newPlayerCharacter.isPlayer = true
+            }
             default: {
                 console.warn('unsupported conseqeunce!', consequence)
                 break;

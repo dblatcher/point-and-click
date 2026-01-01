@@ -54,7 +54,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import SchoolIcon from '@mui/icons-material/School';
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FilterListOffIcon from "@mui/icons-material/FilterListOff";
-
+import ChangePlayerCharacterIcon from '@mui/icons-material/People';
 
 export type IconComponent = typeof ActorIcon;
 
@@ -69,6 +69,7 @@ export {
     AspectRatioIcon,
     AudioFileOutlinedIcon,
     ConversationIcon,
+    ChangePlayerCharacterIcon,
     CheckBoxIcon,
     CheckBoxOutlineBlankIcon,
     ClearIcon,

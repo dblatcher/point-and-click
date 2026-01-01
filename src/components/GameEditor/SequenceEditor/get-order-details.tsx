@@ -13,7 +13,7 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import RouteIcon from '@mui/icons-material/Route';
 import SurroundSoundIcon from '@mui/icons-material/SurroundSound';
 import { Tooltip } from "@mui/material";
-import { ConversationIcon, ExclamationIcon, FlagCircleIcon, SequenceIcon, SoundIcon } from "../material-icons";
+import { ChangePlayerCharacterIcon, ConversationIcon, ExclamationIcon, FlagCircleIcon, SequenceIcon, SlideshowIcon, SoundIcon } from "../material-icons";
 
 export const getOrderIcon = (orderType?: Order['type']): typeof ChatOutlinedIcon => {
     switch (orderType) {
@@ -58,6 +58,10 @@ export const getConsequenceIcon = (type: ConsequenceType): typeof ChatOutlinedIc
             return MusicNote
         case "ambientNoise":
             return SurroundSoundIcon
+        case 'changePlayerCharacter':
+            return ChangePlayerCharacterIcon
+        case "storyBoardConsequence":
+            return SlideshowIcon
         case "changeStatus":
         default:
             return ExclamationIcon
@@ -108,6 +112,8 @@ export const getConsequenceDescription = (c: Consequence): string => {
             return `Set ambient noise in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
         case "storyBoardConsequence":
             return `Run story board "${c.storyBoardId}"`
+        case "changePlayerCharacter":
+            return `Change player character to ${c.actorId ?? UNSET}`
         default:
             return "[description]"
     }

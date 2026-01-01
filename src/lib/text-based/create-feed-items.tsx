@@ -138,6 +138,13 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
                         return [stringToFeedItem(`a way is opened${locationClause}.`)]
                     }
             }
+        case 'changePlayerCharacter':
+            const { actorId } = consequence;
+            const newPlayerCharacter = findById(actorId, state.actors);
+            if (!newPlayerCharacter) {
+                return []
+            }
+            return [stringToFeedItem(`YOU ARE NOW CONTROLLING: ${newPlayerCharacter.name ?? newPlayerCharacter.id}`)]
 
         case "storyBoardConsequence":
         case "soundEffect":
