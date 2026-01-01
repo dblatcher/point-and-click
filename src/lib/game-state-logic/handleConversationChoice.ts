@@ -1,6 +1,5 @@
-import { Conversation, ConversationChoice, Sequence, ChoiceRefSet } from "point-click-lib";
+import { Conversation, ConversationChoice, Sequence, ChoiceRefSet, GameData } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
-import { GameState } from "@/lib/game-state-logic/types";
 import { findById } from "@/lib/util";
 import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
 
@@ -61,7 +60,7 @@ function setChoicesDisabled(
     return conversations
 }
 
-function buildDefaultSequence(choice: ConversationChoice, state: GameState): Sequence {
+function buildDefaultSequence(choice: ConversationChoice, state: GameData): Sequence {
 
     const sequence: Sequence = { id: "", stages: [{ actorOrders: {} }] }
     const player = state.actors.find(_ => _.isPlayer)
@@ -84,10 +83,9 @@ function buildDefaultSequence(choice: ConversationChoice, state: GameState): Seq
     return sequence
 }
 
-export function handleConversationChoice(choice: ConversationChoice, sequences: Sequence[]): { (state: GameState): Partial<GameState> } {
+export function handleConversationChoice(choice: ConversationChoice, sequences: Sequence[]): { (state: GameData): Partial<GameData> } {
 
-    return (state): GameState => {
-
+    return (state): GameData => {
         const { conversations, currentConversationId = '' } = state;
         const currentConversation = conversations.find(conversation => conversation.id === currentConversationId)
         if (!currentConversation) {

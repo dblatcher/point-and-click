@@ -1,17 +1,22 @@
-import { ActorData, CommandTarget, Consequence } from "point-click-lib"
-import { changeRoom } from "@/lib/game-state-logic/changeRoom"
 import { cloneData } from "@/lib/clone"
-import { generateCellMatrix, CELL_SIZE } from "@/lib/pathfinding"
+import { reportConversationBranch } from "@/lib/game-event-emitter"
+import { changeRoom } from "@/lib/game-state-logic/changeRoom"
+import { CELL_SIZE, generateCellMatrix } from "@/lib/pathfinding"
 import { findById } from "@/lib/util"
-import { GameState } from "@/lib/game-state-logic/types";
+import { ActorData, CommandTarget, Consequence } from "point-click-lib"
 import { GameProps } from "../../components/game/types"
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
-import { reportConversationBranch } from "@/lib/game-event-emitter"
+import { GameState } from "./types"
+import { ReportConsequence } from "./report-emitting"
 
 
-export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (consequence: Consequence): void } => {
+export const makeConsequenceExecutor = (
+    state: GameState,
+    props: GameProps,
+    reportConsequence?: ReportConsequence
+): { (consequence: Consequence): void } => {
 
-    const { actors, items, rooms, currentRoomId, emitter } = state
+    const { actors, items, rooms, currentRoomId } = state
     const player = actors.find(_ => _.isPlayer)
     const getActor = (actorId?: string): (ActorData | undefined) =>
         actorId ? actors.find(_ => _.id === actorId) : player;
@@ -21,7 +26,6 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
     let isOffscreen = false
 
     return (consequence: Consequence): void => {
-
         switch (consequence.type) {
             case 'order': {
                 const { actorId, orders } = consequence
@@ -241,7 +245,6 @@ export const makeConsequenceExecutor = (state: GameState, props: GameProps): { (
                 break;
             }
         }
-
-        emitter.emit('in-game-event', { type: 'consequence', consequence, success: conseqeunceSuccess, offscreen: isOffscreen })
+        reportConsequence?.(consequence, conseqeunceSuccess, isOffscreen);
     }
 }

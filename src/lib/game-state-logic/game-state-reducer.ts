@@ -14,6 +14,7 @@ import { doPendingInteraction, handleCommand } from "./handleCommand";
 import { handleConversationChoice } from "./handleConversationChoice";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { followOrder } from "./orders/followOrder";
+import { makeDebugLogEmitter, makeEventReporter } from "./report-emitting";
 
 
 export type GameStateAction =
@@ -67,6 +68,8 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
     const isActive: boolean = !gameState.currentStoryBoardId && !gameState.isPaused && !gameState.sequenceRunning
     const player = gameState.actors.find(actor => actor.isPlayer)
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
+    const debugLogger = makeDebugLogEmitter(gameState)
+    const { reportCommand, reportOrder, reportStage, reportConsequence } = makeEventReporter(gameState)
 
     switch (action.type) {
         case 'SET-PAUSED': {
@@ -114,7 +117,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 if (nonPrepositionalItemInteraction) {
                     return {
                         ...gameState,
-                        ...handleCommand({ verb, target }, action.props)(gameState)
+                        ...handleCommand({ verb, target }, action.props, gameState, debugLogger, reportCommand, reportConsequence)
                     }
                 }
                 return {
@@ -125,14 +128,14 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
 
             return {
                 ...gameState,
-                ...handleCommand({ verb, target, item }, action.props)(gameState)
+                ...handleCommand({ verb, target, item }, action.props, gameState, debugLogger, reportCommand, reportConsequence)
             }
         }
 
         case "SEND-COMMAND": {
             return {
                 ...gameState,
-                ...handleCommand(action.command, action.props)(gameState)
+                ...handleCommand(action.command, action.props, gameState, debugLogger, reportCommand, reportConsequence)
             }
         }
 
@@ -153,7 +156,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
 
             return ({
                 ...gameState,
-                ...issueMoveOrder(pointClicked, player.id, false, false)(gameState)
+                ...issueMoveOrder(pointClicked, player.id, false, false)(gameState, debugLogger)
             })
         }
 
@@ -171,7 +174,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
             if (gameState.sequenceRunning) {
                 return {
                     ...gameState,
-                    ...continueSequence(gameState, action.props),
+                    ...continueSequence(gameState, action.props, reportOrder, reportStage, reportConsequence),
                     viewAngleX: viewAngleXCenteredOnPlayer ?? gameState.viewAngleX,
                     viewAngleY: viewAngleYCenteredOnPlayer ?? gameState.viewAngleY,
                 }
@@ -181,20 +184,21 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 const { cellMatrix = [] } = state
                 let pendingInteractionShouldBeDone = false;
                 state.actors.forEach(actor => {
-                    const triggersPendingInteraction = followOrder(
+                    followOrder(
                         actor, cellMatrix,
                         state.actorOrders[actor.id],
                         state,
-                        findById(actor.sprite, action.props._sprites),
-                        action.props.instantMode,
-                        action.props.orderSpeed,
+                        {
+                            orderSpeed: action.props.orderSpeed,
+                            instantMode: action.props.instantMode,
+                            sprite: findById(actor.sprite, action.props._sprites),
+                            onOrderStart: order => reportOrder(order, actor),
+                            triggerPendingInteraction: () => { pendingInteractionShouldBeDone = true }
+                        },
                     )
-                    if (triggersPendingInteraction) {
-                        pendingInteractionShouldBeDone = true
-                    }
                 })
                 if (pendingInteractionShouldBeDone) {
-                    doPendingInteraction(state, action.props)
+                    doPendingInteraction(state, action.props, debugLogger, reportConsequence)
                 }
                 return state
             }

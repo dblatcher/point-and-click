@@ -1,11 +1,12 @@
-import { GameProps } from "../../components/game/types";
+import { reportConversationBranch } from "@/lib/game-event-emitter";
 import { GameState } from "@/lib/game-state-logic/types";
-import { Order, ActorData } from "point-click-lib";
+import { findById } from "@/lib/util";
+import { ActorData, Order, Stage } from "point-click-lib";
+import { GameProps } from "../../components/game/types";
+import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
-import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
-import { findById } from "@/lib/util";
-import { reportConversationBranch } from "@/lib/game-event-emitter";
+import { ReportConsequence } from "./report-emitting";
 
 
 function validateOrderIdsAndClearEmpties(
@@ -31,10 +32,15 @@ function validateOrderIdsAndClearEmpties(
 /**
  * Takes the next step in the sequence, shifting stages the array
  * when the stage is complete, until the sequence has finished
- * @param state 
  * @returns a partial state
  */
-export function continueSequence(state: GameState, props: GameProps): Partial<GameState> {
+export function continueSequence(
+    state: GameState,
+    props: GameProps,
+    reportOrder?: { (order: Order, actor: ActorData): void },
+    reportStage?: { (stage: Stage): void },
+    reportConsequence?: ReportConsequence,
+): Partial<GameState> {
     const { actors, sequenceRunning, cellMatrix = [] } = state
     if (!sequenceRunning) { return {} }
     const [currentStage] = sequenceRunning.stages
@@ -43,7 +49,7 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
     if (!currentStage._started) {
         currentStage._started = true
         console.log('starting stage', currentStage)
-        state.emitter.emit('in-game-event', { type: 'sequence-stage', stage: currentStage })
+        reportStage?.(currentStage)
     }
 
     const { actorOrders: stageActorOrders = {} } = currentStage
@@ -54,13 +60,16 @@ export function continueSequence(state: GameState, props: GameProps): Partial<Ga
         cellMatrix,
         stageActorOrders[actor.id],
         state,
-        findById(actor.sprite, props._sprites),
-        props.instantMode,
-        props.orderSpeed,
+        {
+            orderSpeed: props.orderSpeed,
+            sprite: findById(actor.sprite, props._sprites),
+            instantMode: props.instantMode,
+            onOrderStart: order => reportOrder?.(order, actor),
+        },
     ))
 
     if (currentStage.immediateConsequences) {
-        const consequenceExecutor = makeConsequenceExecutor(state, props)
+        const consequenceExecutor = makeConsequenceExecutor(state, props, reportConsequence)
         currentStage.immediateConsequences.forEach(consequence => {
             console.log(`executing: ${consequence.type}`)
             consequenceExecutor(consequence)

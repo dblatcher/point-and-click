@@ -1,7 +1,6 @@
 import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
 import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
 import { GameState } from "@/lib/game-state-logic/types";
-import { makeDebugEntry } from "@/lib/inGameDebugging";
 import { CELL_SIZE, findPath } from "@/lib/pathfinding";
 import { getTargetPoint } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
@@ -10,8 +9,9 @@ import { GameProps } from "../../components/game/types";
 import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
+import { DebugLogger, ReportConsequence } from "./report-emitting";
 
-function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
+function doDefaultResponse(command: Command, state: GameState, unreachable: boolean, debugLogger?: DebugLogger): GameState {
     const { actors, rooms, currentRoomId } = state
     const player = actors.find(_ => _.isPlayer)
     const currentRoom = findById(currentRoomId, rooms)
@@ -20,8 +20,7 @@ function doDefaultResponse(command: Command, state: GameState, unreachable = fal
 
     if (command.verb.isMoveVerb && (command.target.type === 'actor' || command.target.type === 'hotspot')) {
         const point = getTargetPoint(command.target, currentRoom)
-        const log = makeDebugEntry(`walk to point is ${point.x}, ${point.y}`, 'pathfinding')
-        state.emitter.emit('debugLog', log)
+        debugLogger?.(`walk to point is ${point.x}, ${point.y}`, 'pathfinding')
         issueOrdersOutsideSequence(state, player.id, [{
             type: 'move', steps: [
                 { ...point }
@@ -65,64 +64,65 @@ function makeGoToOrder(player: ActorData, targetPoint: { x: number; y: number },
     }
 }
 
-export function handleCommand(command: Command, props: GameProps): { (state: GameState): Partial<GameState> } {
+export const handleCommand = (
+    command: Command,
+    props: GameProps,
+    state: GameState,
+    debugLogger?: DebugLogger,
+    reportCommand?: { (command: Command): void },
+    reportConsequence?: ReportConsequence
+): GameState => {
+    const { currentRoomId, rooms, actors, cellMatrix = [] } = state
+    const currentRoom = findById(currentRoomId, rooms)
+    if (!currentRoom) { return state }
 
-    return (state): GameState => {
-        const { currentRoomId, rooms, actors, cellMatrix = [], emitter } = state
-        const currentRoom = findById(currentRoomId, rooms)
-        if (!currentRoom) { return state }
+    const player = actors.find(_ => _.isPlayer)
+    const interaction = matchInteraction(command, currentRoom, state.interactions, state)
+    const mustReachFirst = interaction && (command.verb.isMoveVerb || interaction.mustReachFirst)
 
-        const player = actors.find(_ => _.isPlayer)
-        const interaction = matchInteraction(command, currentRoom, state.interactions, state)
-        const mustReachFirst = interaction && (command.verb.isMoveVerb || interaction.mustReachFirst)
+    const descriptionForLog = describeCommand(command)
+    reportCommand?.(command);
 
-        const descriptionForLog = describeCommand(command)
-        emitter.emit('in-game-event', { type: 'command', command })
+    if (interaction && mustReachFirst && command.target.type !== 'item') {
+        debugLogger?.(`[${descriptionForLog}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command')
 
-        if (interaction && mustReachFirst && command.target.type !== 'item') {
-            const log = makeDebugEntry(`[${descriptionForLog}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command')
-            emitter.emit('debugLog', log)
+        const targetPoint = getTargetPoint(command.target, currentRoom)
 
-            const targetPoint = getTargetPoint(command.target, currentRoom)
-
-            if (player) {
-                const isReachable = findPath(player, targetPoint, cellMatrix, CELL_SIZE).length > 0;
-                if (isReachable) {
-                    state.pendingInteraction = interaction
-                    const execute = makeConsequenceExecutor(state, props)
-                    execute(makeGoToOrder(player, targetPoint, props.instantMode ? undefined : command.target.name ?? command.target.id))
-                } else {
-                    const log = makeDebugEntry(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding')
-                    emitter.emit('debugLog', log)
-                    doDefaultResponse(command, state, true)
-                }
+        if (player) {
+            const isReachable = findPath(player, targetPoint, cellMatrix, CELL_SIZE).length > 0;
+            if (isReachable) {
+                state.pendingInteraction = interaction
+                const execute = makeConsequenceExecutor(state, props, reportConsequence)
+                execute(makeGoToOrder(player, targetPoint, props.instantMode ? undefined : command.target.name ?? command.target.id))
+            } else {
+                debugLogger?.(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding')
+                doDefaultResponse(command, state, true, debugLogger)
             }
-        } else if (interaction) {
-            const log = makeDebugEntry(`[${descriptionForLog}]: ${describeConsequences(interaction)}`, 'command')
-            emitter.emit('debugLog', log)
-            const execute = makeConsequenceExecutor(state, props)
-            interaction.consequences.forEach(execute)
-        } else {
-            const log = makeDebugEntry(`[${descriptionForLog}]: (no match)`, 'command')
-            emitter.emit('debugLog', log)
-            doDefaultResponse(command, state)
         }
-
-        removeHoverTargetIfGone(state)
-        removeItemIfGone(state)
-        return state
+    } else if (interaction) {
+        debugLogger?.(`[${descriptionForLog}]: ${describeConsequences(interaction)}`, 'command')
+        const execute = makeConsequenceExecutor(state, props, reportConsequence)
+        interaction.consequences.forEach(execute)
+    } else {
+        debugLogger?.(`[${descriptionForLog}]: (no match)`, 'command')
+        doDefaultResponse(command, state, false, debugLogger)
     }
+
+    removeHoverTargetIfGone(state)
+    removeItemIfGone(state)
+    return state
 }
 
-export function doPendingInteraction(state: GameState, props: GameProps): GameState {
-    const execute = makeConsequenceExecutor(state, props)
+
+export function doPendingInteraction(state: GameState, props: GameProps, debugLogger?: DebugLogger, reportConsequence?: ReportConsequence): GameState {
+    const execute = makeConsequenceExecutor(state, props, reportConsequence)
     state.pendingInteraction?.consequences.forEach(execute)
 
     if (state.pendingInteraction) {
-        state.emitter.emit('debugLog', makeDebugEntry(
+        debugLogger?.(
             `Pending interaction: ${describeConsequences(state.pendingInteraction)}`,
             'command'
-        ))
+        )
     }
 
     state.pendingInteraction = undefined
