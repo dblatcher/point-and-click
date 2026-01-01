@@ -1,6 +1,6 @@
 import { GameData, CommandTarget } from "point-click-lib";
 import { GameEventEmitter } from "../game-event-emitter";
-import { CellMatrix } from "../pathfinding/cells";
+import { CellMatrix } from "@/lib/pathfinding";
 
 export type GameState = GameData & {
     viewAngleX: number;

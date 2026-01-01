@@ -1,6 +1,6 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
-import { Point } from "@/lib/pathfinding/geometry";
+import { XY } from "typed-geometry";
 import { MoveOrder, MoveStep } from "point-click-lib";
 import { findById, listIds } from "@/lib/util";
 import { Box, Button, Typography } from "@mui/material";
@@ -60,7 +60,7 @@ export const MoveOrderForm: FunctionComponent<Props> = ({ data, animationSuggest
     const sharedAnimation = getAnimationForEveryStep(steps)
     const sharedSpeed = getSpeedForEveryStep(steps)
 
-    const addStep = (point: Point) => modifyOrder({
+    const addStep = (point: XY) => modifyOrder({
         steps: [...steps, {
             ...makeNewStep.move(),
             animation: sharedAnimation,

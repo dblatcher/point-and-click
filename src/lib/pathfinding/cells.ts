@@ -1,33 +1,28 @@
 import type { RoomData, Zone } from "point-click-lib";
-import { isPointInsidePolygon } from "typed-geometry";
-import { Circle, isPointInsideCircle, isPointInsideRectangle, Point, Rectangle } from "./geometry";
+import { isPointInsidePolygon, XY } from "typed-geometry";
+import { Circle, isPointInsideCircle, isPointInsideRectangle, Rectangle } from "./geometry";
 
 export type CellMatrix = (0 | 1)[][]
 
 function isCellBlocked(
     rowIndex: number, cellIndex: number, cellSize: number,
-    obstacleZones: { polygons: Point[][]; rectangles: Rectangle[]; circles: Circle[] },
-    walkableZones: { polygons: Point[][]; rectangles: Rectangle[]; circles: Circle[] } | null,
+    obstacleZones: { polygons: XY[][]; rectangles: Rectangle[]; circles: Circle[] },
+    walkableZones: { polygons: XY[][]; rectangles: Rectangle[]; circles: Circle[] } | null,
 ): boolean {
-    const cellCenter: Point = {
+    const cellCenter: XY = {
         x: (cellIndex + .5) * cellSize,
         y: (rowIndex - .5) * cellSize,
     }
-
-
     const isInObstable = isPointInsideAny(cellCenter, obstacleZones)
 
     if (walkableZones) {
         const isInWalkable = isPointInsideAny(cellCenter, walkableZones)
-           
-
         return isInObstable || !isInWalkable
     }
-
     return isInObstable
 }
 
-export function isPointInsideAny(point: Point, zones: { polygons: Point[][]; rectangles: Rectangle[]; circles: Circle[] }): boolean {
+function isPointInsideAny(point: XY, zones: { polygons: XY[][]; rectangles: Rectangle[]; circles: Circle[] }): boolean {
     const { polygons, rectangles, circles } = zones;
     return (
         polygons.some(polygon => isPointInsidePolygon(point, polygon))
@@ -37,7 +32,7 @@ export function isPointInsideAny(point: Point, zones: { polygons: Point[][]; rec
 }
 
 
-function getObstaclePolygons(obstacleAreas: Zone[]): Point[][] {
+function getObstaclePolygons(obstacleAreas: Zone[]): XY[][] {
     return obstacleAreas
         .filter(area => area.polygon)
         .map(area => {

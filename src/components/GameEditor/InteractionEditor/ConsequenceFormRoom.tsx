@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { Point } from "@/lib/pathfinding/geometry";
+import { XY } from "typed-geometry";
 import { getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
 import { Box, Typography } from "@mui/material";
@@ -9,7 +9,7 @@ import { RoomLocationPicker } from "../RoomLocationPicker";
 
 interface Props {
     consequence: Consequence
-    setPoint: { (point: Point): void };
+    setPoint: { (point: XY): void };
 }
 
 const getZone = (consequence: Consequence, roomData?: RoomData): Zone | undefined => {

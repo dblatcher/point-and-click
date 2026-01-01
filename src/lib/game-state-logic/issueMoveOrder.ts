@@ -1,13 +1,12 @@
 import { GameState } from "@/lib/game-state-logic/types";
-import { CELL_SIZE } from "@/lib/pathfinding/constants";
-import { MoveOrder } from "point-click-lib";
-import { Point } from "@/lib/pathfinding/geometry";
-import { findPath } from "@/lib/pathfinding/pathfind";
 import { makeDebugEntry } from "@/lib/inGameDebugging";
+import { CELL_SIZE, findPath } from "@/lib/pathfinding";
+import { MoveOrder } from "point-click-lib";
+import { XY } from "typed-geometry";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 
 export function issueMoveOrder(
-    destination: Point,
+    destination: XY,
     actorId: string,
     appendToExisting?: boolean,
     ignoreObstacles?: boolean,

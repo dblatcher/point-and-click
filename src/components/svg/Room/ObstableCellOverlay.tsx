@@ -1,5 +1,5 @@
 import { useRoomRender } from "@/hooks/useRoomRender";
-import { CellMatrix } from "@/lib/pathfinding/cells";
+import { CellMatrix } from "@/lib/pathfinding";
 import { FunctionComponent } from "react";
 
 

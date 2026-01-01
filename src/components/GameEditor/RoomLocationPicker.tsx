@@ -1,7 +1,7 @@
 import { ActorWithOrdersAndClickHandlers } from "@/components/game/types";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
-import { Point } from "@/lib/pathfinding/geometry";
+import { XY } from "typed-geometry";
 import { locateClickInWorld } from "@/lib/roomFunctions";
 import { Box } from "@mui/material";
 import { RoomData } from "point-click-lib";
@@ -15,8 +15,8 @@ import { RoomAngleFrame } from "./RoomEditor/RoomAngleFrame";
 interface Props {
     roomData: RoomData,
     contents?: ActorWithOrdersAndClickHandlers[],
-    targetPoint?: Point,
-    subPoints?: Point[],
+    targetPoint?: XY,
+    subPoints?: XY[],
     previewWidth?: number,
     previewHeight?: number,
     onClick?: { (point: { x: number; y: number }): void };

@@ -1,10 +1,9 @@
 import { ActorData, CommandTarget, Consequence } from "point-click-lib"
 import { changeRoom } from "@/lib/game-state-logic/changeRoom"
 import { cloneData } from "@/lib/clone"
-import { generateCellMatrix } from "@/lib/pathfinding/cells"
+import { generateCellMatrix, CELL_SIZE } from "@/lib/pathfinding"
 import { findById } from "@/lib/util"
 import { GameState } from "@/lib/game-state-logic/types";
-import { CELL_SIZE } from "@/lib/pathfinding/constants";
 import { GameProps } from "../../components/game/types"
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
 import { reportConversationBranch } from "@/lib/game-event-emitter"

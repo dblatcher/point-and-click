@@ -6,7 +6,7 @@ import { ArrayControl } from "../../ArrayControl";
 import { ClickPointIcon, ClickPointActiveIcon } from "../../material-icons";
 import { useRoomClickEffect } from "../ClickEffect";
 import { XYControl } from "../../XYControl";
-import { Point } from "@/lib/pathfinding/geometry";
+import { XY } from "typed-geometry";
 
 interface Props {
     shape: HotspotZone | Zone;
@@ -28,7 +28,7 @@ export const ShapeControl = ({ shape, index, changeHotSpotOrZone, type }: Props)
         changeHotSpotOrZone(index, { rect: newRect })
     }
 
-    const changePolygonPoint = (pointIndex: number, mod: Partial<Point>) => {
+    const changePolygonPoint = (pointIndex: number, mod: Partial<XY>) => {
         const pointToChange = polygon?.[pointIndex]
         if (!pointToChange) {
             return

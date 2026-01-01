@@ -1,7 +1,6 @@
 import { AStarFinder } from "astar-typescript";
 import { CellMatrix } from "./cells";
-import { Point } from "./geometry";
-
+import { XY } from 'typed-geometry'
 
 const invertMatrix = (cellMatrix: CellMatrix): CellMatrix => {
     return cellMatrix
@@ -9,22 +8,21 @@ const invertMatrix = (cellMatrix: CellMatrix): CellMatrix => {
         .reverse()
 }
 
-const isOutOfBounds = (cell: Point, matrix: CellMatrix): boolean => {
+const isOutOfBounds = (cell: XY, matrix: CellMatrix): boolean => {
     return cell.x >= matrix[0].length ||
         cell.y >= matrix.length ||
         cell.x < 0 ||
         cell.y < 0
 }
 
-export function findPath(start: Point, goal: Point, matrix: CellMatrix, cellSize: number): Point[] {
-
-    const toCell = (point: Point): Point => {
+export function findPath(start: XY, goal: XY, matrix: CellMatrix, cellSize: number): XY[] {
+    const toCell = (point: XY): XY => {
         return {
             x: Math.floor(point.x / cellSize),
             y: Math.floor(point.y / cellSize)
         }
     }
-    const toPoint = (pathPair: [number, number]): Point => {
+    const toPoint = (pathPair: [number, number]): XY => {
         return {
             x: (pathPair[0] + .5) * cellSize,
             y: (pathPair[1] + .5) * cellSize
@@ -50,7 +48,7 @@ export function findPath(start: Point, goal: Point, matrix: CellMatrix, cellSize
     }
 
     const pathPoints = (pathPairs as [number, number][]).map(toPoint)
-    // adding goal to the  can make the actor go backwards at the end
+    // adding goal to the can make the actor go backwards at the end
     // pathPoints.push(goal)
     return pathPoints
 }

@@ -1,13 +1,11 @@
-import { CELL_SIZE } from "@/lib/pathfinding/constants";
+import { CELL_SIZE, generateCellMatrix } from "@/lib/pathfinding";
 import { GameState } from "./types";
-import { generateCellMatrix } from "../pathfinding/cells";
-import { Point } from "../pathfinding/geometry";
-
+import { XY } from "typed-geometry"
 
 export function changeRoom(
     roomId: string,
     takePlayer?: boolean,
-    newPosition?: Point
+    newPosition?: XY
 ): { (state: GameState): Partial<GameState> | undefined } {
 
     return (state: GameState): Partial<GameState | undefined> => {

@@ -2,7 +2,7 @@ import { ActorFigure } from "@/components/svg/ActorFigure";
 import { DialogueBubble } from "@/components/svg/DialogueBubble";
 import { RoomRenderContext } from "@/context/room-render-context";
 import { HotspotZone, RoomData } from "point-click-lib";
-import { CellMatrix } from "@/lib/pathfinding/cells";
+import { CellMatrix } from "@/lib/pathfinding";
 import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode } from "react";
 import { HandleHoverFunction, ActorWithOrdersAndClickHandlers } from "../../game/types";
 import BackgroundShape from "./BackgroundShape";

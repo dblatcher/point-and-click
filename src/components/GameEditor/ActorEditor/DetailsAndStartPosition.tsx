@@ -16,7 +16,7 @@ import { RoomLocationPicker } from "../RoomLocationPicker";
 import { WalkToControl, XYControl } from "../XYControl";
 import { EditorBox } from "../layout/EditorBox";
 import { LayoutControls, LayoutHolder, LayoutPreview } from "../layout/SplitLayout";
-import { Point } from "@/lib/pathfinding/geometry";
+import { XY } from "typed-geometry";
 
 interface Props {
     actorData: ActorData;
@@ -53,7 +53,7 @@ export const DetailsAndStartPosition = ({ actorData, updateFromPartial, defaultP
         .map(actor => ({ data: actor }))
 
 
-    const handlePreviewClick = (point: Point, pointRole: 'position' | 'walkTo') => {
+    const handlePreviewClick = (point: XY, pointRole: 'position' | 'walkTo') => {
         switch (pointRole) {
             case 'position':
                 return updateFromPartial(point)

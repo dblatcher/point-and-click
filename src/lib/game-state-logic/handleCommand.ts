@@ -1,16 +1,15 @@
-import { GameState } from "@/lib/game-state-logic/types";
-import { GameProps } from "../../components/game/types";
-import { CELL_SIZE } from "@/lib/pathfinding/constants";
-import { Command, Interaction, ActorData, OrderConsequence } from "point-click-lib";
-import { makeConsequenceExecutor } from "./executeConsequence";
-import { makeDebugEntry } from "@/lib/inGameDebugging";
-import { findPath } from "@/lib/pathfinding/pathfind";
-import { findById } from "@/lib/util";
-import { getDefaultResponseText, matchInteraction, describeCommand } from "@/lib/commandFunctions";
-import { getTargetPoint } from "@/lib/roomFunctions";
-import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
-import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
+import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
+import { GameState } from "@/lib/game-state-logic/types";
+import { makeDebugEntry } from "@/lib/inGameDebugging";
+import { CELL_SIZE, findPath } from "@/lib/pathfinding";
+import { getTargetPoint } from "@/lib/roomFunctions";
+import { findById } from "@/lib/util";
+import { ActorData, Command, Interaction, OrderConsequence } from "point-click-lib";
+import { GameProps } from "../../components/game/types";
+import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
+import { makeConsequenceExecutor } from "./executeConsequence";
+import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 
 function doDefaultResponse(command: Command, state: GameState, unreachable = false): GameState {
     const { actors, rooms, currentRoomId } = state

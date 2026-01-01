@@ -1,13 +1,13 @@
 import { Direction, ActorData, MoveOrder } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
-import { Point } from "@/lib/pathfinding/geometry";
+import { XY } from "typed-geometry";
 
 function getAvailableDirections(sprite?: Sprite, animationName?: string): Direction[] {
     const animation = sprite?.getAnimation(animationName, 'move') || {}
     return Object.keys(animation) as Direction[]
 }
 
-function determineDirection(postion: Point, desination: Point, availableDirections: Direction[]): Direction {
+function determineDirection(postion: XY, desination: XY, availableDirections: Direction[]): Direction {
 
     const dx = desination.x - postion.x
     const dy = desination.y - postion.y
