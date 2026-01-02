@@ -9,11 +9,11 @@ import { Reducer } from "react";
 import { GameProps } from "../../components/game/types";
 import { matchInteraction } from "../commandFunctions";
 import { DB_VERSION } from "../indexed-db";
-import { continueSequence } from "./continueSequence";
-import { doPendingInteraction, handleCommand } from "./handleCommand";
-import { handleConversationChoice } from "./handleConversationChoice";
-import { issueMoveOrder } from "./issueMoveOrder";
-import { followOrder } from "./orders/followOrder";
+import { continueSequence } from "../game-data-changes/continueSequence";
+import { doPendingInteraction, handleCommand } from "../game-data-changes/handleCommand";
+import { handleConversationChoice } from "../game-data-changes/handleConversationChoice";
+import { issueMoveOrder } from "../game-data-changes/orders/issueMoveOrder";
+import { followOrder } from "../game-data-changes/orders/followOrder";
 import { makeDebugLogEmitter, makeEventReporter } from "./report-emitting";
 import { clearRemovedEntitiesFromCommand } from "./clearCommand";
 

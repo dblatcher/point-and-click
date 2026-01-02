@@ -7,7 +7,7 @@ import { ActorData, Command, GameData, Interaction, OrderConsequence, findPath }
 import { GameProps } from "../../components/game/types";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
-import { DebugLogger, InGameEventReporter } from "./report-emitting";
+import { DebugLogger, InGameEventReporter } from "../game-state-logic/report-emitting";
 
 function doDefaultResponse(command: Command, state: GameData, unreachable: boolean, debugLogger?: DebugLogger): GameData {
     const { actors, rooms, currentRoomId } = state

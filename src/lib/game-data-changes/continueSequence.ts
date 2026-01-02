@@ -3,7 +3,7 @@ import { ActorData, GameData, Order } from "point-click-lib";
 import { GameProps } from "../../components/game/types";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
-import { InGameEventReporter } from "./report-emitting";
+import { InGameEventReporter } from "../game-state-logic/report-emitting";
 
 
 function validateOrderIdsAndClearEmpties(

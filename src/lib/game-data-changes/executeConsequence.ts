@@ -1,11 +1,11 @@
 import { cloneData } from "@/lib/clone"
-import { changeRoom } from "@/lib/game-state-logic/changeRoom"
 import { CELL_SIZE } from "@/lib/types-and-constants"
 import { findById } from "@/lib/util"
 import { ActorData, CommandTarget, Consequence, GameData, generateCellMatrix } from "point-click-lib"
 import { GameProps } from "../../components/game/types"
+import { InGameEventReporter } from "../game-state-logic/report-emitting"
+import { changeRoom } from "./changeRoom"
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
-import { InGameEventReporter } from "./report-emitting"
 
 
 export const makeConsequenceExecutor = (

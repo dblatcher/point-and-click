@@ -1,7 +1,7 @@
 import { CELL_SIZE, XY } from "@/lib/types-and-constants";
 import { GameData, MoveOrder, findPath } from "point-click-lib";
-import { issueOrdersOutsideSequence } from "./orders/issueOrders";
-import { DebugLogger } from "./report-emitting";
+import { issueOrdersOutsideSequence } from "./issueOrders";
+import { DebugLogger } from "../../game-state-logic/report-emitting";
 
 export const issueMoveOrder = (
     destination: XY,
