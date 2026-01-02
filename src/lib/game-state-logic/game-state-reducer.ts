@@ -1,10 +1,10 @@
 import { cloneData } from "@/lib/clone";
 import { GameEventEmitter } from "@/lib/game-event-emitter";
 import { GameState } from "@/lib/game-state-logic/types";
-import { CELL_SIZE, generateCellMatrix } from "@/lib/pathfinding";
+import { CELL_SIZE } from "@/lib/types-and-constants";
 import { getViewAngleXCenteredOn, getViewAngleYCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
-import { Command, CommandTarget, ConversationChoice, GameData, Verb } from "point-click-lib";
+import { Command, CommandTarget, ConversationChoice, GameData, Verb, generateCellMatrix } from "point-click-lib";
 import { Reducer } from "react";
 import { GameProps } from "../../components/game/types";
 import { matchInteraction } from "../commandFunctions";

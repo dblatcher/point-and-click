@@ -1,8 +1,8 @@
 import { ActorWithOrdersAndClickHandlers } from "@/components/game/types";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { Room } from "@/components/svg/Room";
-import { XY } from "typed-geometry";
 import { locateClickInWorld } from "@/lib/roomFunctions";
+import { XY } from "@/lib/types-and-constants";
 import { Box } from "@mui/material";
 import { RoomData } from "point-click-lib";
 import { useState } from "react";

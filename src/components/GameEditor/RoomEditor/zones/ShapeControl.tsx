@@ -1,12 +1,12 @@
 
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { HotspotZone, Shape, Zone, ZoneType } from "point-click-lib";
+import { XY } from "@/lib/types-and-constants";
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
+import { HotspotZone, Shape, Zone, ZoneType } from "point-click-lib";
 import { ArrayControl } from "../../ArrayControl";
-import { ClickPointIcon, ClickPointActiveIcon } from "../../material-icons";
-import { useRoomClickEffect } from "../ClickEffect";
+import { ClickPointActiveIcon, ClickPointIcon } from "../../material-icons";
 import { XYControl } from "../../XYControl";
-import { XY } from "typed-geometry";
+import { useRoomClickEffect } from "../ClickEffect";
 
 interface Props {
     shape: HotspotZone | Zone;

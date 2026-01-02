@@ -2,12 +2,12 @@ import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
-import { ActorData } from "point-click-lib";
-import { Direction, directions } from "point-click-lib";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
+import { XY } from "@/lib/types-and-constants";
 import { findById, listIds } from "@/lib/util";
 import { Alert, Box, Slider, Stack, Typography } from "@mui/material";
+import { ActorData, Direction, directions } from "point-click-lib";
 import { useEffect, useState } from "react";
 import { ColorInput } from "../ColorInput";
 import { DelayedStringInput } from "../DelayedStringInput";
@@ -16,7 +16,6 @@ import { RoomLocationPicker } from "../RoomLocationPicker";
 import { WalkToControl, XYControl } from "../XYControl";
 import { EditorBox } from "../layout/EditorBox";
 import { LayoutControls, LayoutHolder, LayoutPreview } from "../layout/SplitLayout";
-import { XY } from "typed-geometry";
 
 interface Props {
     actorData: ActorData;

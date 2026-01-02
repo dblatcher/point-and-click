@@ -1,6 +1,6 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { XY } from "typed-geometry";
 import { getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn } from "@/lib/roomFunctions";
+import { XY } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
 import { Box, Typography } from "@mui/material";
 import { AnyConsequence, Consequence, HotspotZone, RoomData, Zone } from "point-click-lib";

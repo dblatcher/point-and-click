@@ -1,17 +1,17 @@
+import { buildContentForRoomInDesign } from "@/components/game/put-contents-in-order";
+import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
-import { XY } from "typed-geometry";
-import { MoveOrder, MoveStep } from "point-click-lib";
+import { XY } from "@/lib/types-and-constants";
 import { findById, listIds } from "@/lib/util";
 import { Box, Button, Typography } from "@mui/material";
+import { MoveOrder, MoveStep } from "point-click-lib";
 import { FunctionComponent, useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { makeNewStep } from "../defaults";
 import { ClickPointActiveIcon, ClickPointIcon } from "../material-icons";
 import { RoomLocationPicker } from "../RoomLocationPicker";
 import { MoveStepFields } from "./MoveStepFields";
-import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
-import { buildContentForRoomInDesign } from "@/components/game/put-contents-in-order";
 
 
 interface Props {

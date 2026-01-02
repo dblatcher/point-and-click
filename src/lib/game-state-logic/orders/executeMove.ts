@@ -1,6 +1,6 @@
-import { Direction, ActorData, MoveOrder } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
-import { XY } from "typed-geometry";
+import { XY } from "@/lib/types-and-constants";
+import { ActorData, Direction, MoveOrder } from "point-click-lib";
 
 function getAvailableDirections(sprite?: Sprite, animationName?: string): Direction[] {
     const animation = sprite?.getAnimation(animationName, 'move') || {}

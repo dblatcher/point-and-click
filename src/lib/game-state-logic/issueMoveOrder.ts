@@ -1,7 +1,6 @@
 import { GameState } from "@/lib/game-state-logic/types";
-import { CELL_SIZE, findPath } from "@/lib/pathfinding";
-import { MoveOrder } from "point-click-lib";
-import { XY } from "typed-geometry";
+import { CELL_SIZE, XY } from "@/lib/types-and-constants";
+import { MoveOrder, findPath } from "point-click-lib";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 import { DebugLogger } from "./report-emitting";
 

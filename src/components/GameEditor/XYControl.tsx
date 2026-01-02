@@ -1,14 +1,11 @@
 
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { Box, IconButton } from "@mui/material";
-import { ClickPointIcon, ClickPointActiveIcon } from "./material-icons";
-import { ReactNode } from "react";
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
+import { Box, IconButton } from "@mui/material";
+import { ReactNode } from "react";
+import { XY } from "@/lib/types-and-constants";
+import { ClickPointActiveIcon, ClickPointIcon } from "./material-icons";
 
-interface XY {
-    x: number;
-    y: number;
-}
 
 interface WalkToPoint {
     walkToX?: number;

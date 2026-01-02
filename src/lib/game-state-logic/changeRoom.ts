@@ -1,6 +1,6 @@
-import { CELL_SIZE, generateCellMatrix } from "@/lib/pathfinding";
+import { CELL_SIZE, XY } from "@/lib/types-and-constants";
+import { generateCellMatrix } from "point-click-lib";
 import { GameState } from "./types";
-import { XY } from "typed-geometry"
 
 export function changeRoom(
     roomId: string,

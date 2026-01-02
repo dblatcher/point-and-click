@@ -1,7 +1,6 @@
-import { CELL_SIZE, findPath, type CellMatrix } from "@/lib/pathfinding";
 import { Sprite } from "@/lib/Sprite";
-import { ActorData, GameData, MoveOrder, Order } from "point-click-lib";
-import { XY } from "typed-geometry";
+import { CELL_SIZE, XY } from "@/lib/types-and-constants";
+import { ActorData, GameData, MoveOrder, Order, findPath, type CellMatrix } from "point-click-lib";
 import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
 import { executeSay } from "./executeSay";

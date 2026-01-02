@@ -1,5 +1,5 @@
 import { useRoomRender } from "@/hooks/useRoomRender";
-import { CellMatrix } from "@/lib/pathfinding";
+import type { CellMatrix } from "point-click-lib";
 import { FunctionComponent } from "react";
 
 

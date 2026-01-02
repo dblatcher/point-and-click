@@ -1,10 +1,10 @@
 import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
 import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
 import { GameState } from "@/lib/game-state-logic/types";
-import { CELL_SIZE, findPath } from "@/lib/pathfinding";
+import { CELL_SIZE } from "@/lib/types-and-constants";
 import { getTargetPoint } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
-import { ActorData, Command, Interaction, OrderConsequence } from "point-click-lib";
+import { ActorData, Command, Interaction, OrderConsequence, findPath } from "point-click-lib";
 import { GameProps } from "../../components/game/types";
 import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
 import { makeConsequenceExecutor } from "./executeConsequence";

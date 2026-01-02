@@ -1,10 +1,10 @@
 import { ActorFigure } from "@/components/svg/ActorFigure";
 import { DialogueBubble } from "@/components/svg/DialogueBubble";
 import { RoomRenderContext } from "@/context/room-render-context";
-import { HotspotZone, RoomData } from "point-click-lib";
-import { CellMatrix } from "@/lib/pathfinding";
+import type { CellMatrix } from "point-click-lib";
+import { HotspotZone, RoomData, } from "point-click-lib";
 import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode } from "react";
-import { HandleHoverFunction, ActorWithOrdersAndClickHandlers } from "../../game/types";
+import { ActorWithOrdersAndClickHandlers, HandleHoverFunction } from "../../game/types";
 import BackgroundShape from "./BackgroundShape";
 import Hotspot from "./HotSpot";
 import ObstacleCellOverlay from "./ObstableCellOverlay";
