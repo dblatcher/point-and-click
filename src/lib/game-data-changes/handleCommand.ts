@@ -1,13 +1,13 @@
 import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
 import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
 import { getTargetPoint } from "@/lib/roomFunctions";
-import { CELL_SIZE } from "@/lib/types-and-constants";
+import { CELL_SIZE, InGameEventReporter } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
 import { ActorData, Command, GameData, Interaction, OrderConsequence, findPath } from "point-click-lib";
 import { GameProps } from "../../components/game/types";
+import { DebugLogger } from "../inGameDebugging";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
-import { DebugLogger, InGameEventReporter } from "../game-state-logic/report-emitting";
 
 function doDefaultResponse(command: Command, state: GameData, unreachable: boolean, debugLogger?: DebugLogger): GameData {
     const { actors, rooms, currentRoomId } = state

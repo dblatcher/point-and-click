@@ -1,7 +1,8 @@
 import { ActorData, Command, Consequence, Order, Stage } from "point-click-lib"
-import { LogEntry, makeDebugEntry, } from "../inGameDebugging"
+import { LogEntry, makeDebugEntry, DebugLogger } from "../inGameDebugging"
 import { GameState } from "./types"
 import { reportConversationBranch } from "../game-event-emitter"
+import { InGameEventReporter } from "../types-and-constants"
 
 const makeConsequenceReportEmitter = (state: GameState) => (consequence: Consequence, success: boolean, offscreen: boolean) => {
     state.emitter.emit('in-game-event', { type: 'consequence', consequence, success, offscreen })
@@ -21,7 +22,7 @@ const makeSequenceStageReportEmitter = (state: GameState) => (stage: Stage) => {
 
 const makeCurrentConversationReporter = (state: GameState) => () => reportConversationBranch(state)
 
-export const makeEventReporter = (state: GameState) => {
+export const makeEventReporter = (state: GameState): InGameEventReporter => {
     return {
         reportConsequence: makeConsequenceReportEmitter(state),
         reportCommand: makeCommandReportEmitter(state),
@@ -30,10 +31,8 @@ export const makeEventReporter = (state: GameState) => {
         reportCurrentConversation: makeCurrentConversationReporter(state)
     }
 }
-export type InGameEventReporter = ReturnType<typeof makeEventReporter>
 
-export const makeDebugLogEmitter = (state: GameState) => (message: string, subject?: LogEntry['subject']) => {
+export const makeDebugLogEmitter = (state: GameState): DebugLogger => (message: string, subject?: LogEntry['subject']) => {
     state.emitter.emit('debugLog', makeDebugEntry(message, subject))
 }
-export type DebugLogger = ReturnType<typeof makeDebugLogEmitter>;
 
