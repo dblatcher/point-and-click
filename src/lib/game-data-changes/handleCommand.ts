@@ -1,11 +1,11 @@
+import { GameProps } from "@/components/game/types";
 import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
 import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
+import { DebugLogger } from "@/lib/inGameDebugging";
 import { getTargetPoint } from "@/lib/roomFunctions";
 import { CELL_SIZE, InGameEventReporter } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
 import { ActorData, Command, GameData, Interaction, OrderConsequence, findPath } from "point-click-lib";
-import { GameProps } from "../../components/game/types";
-import { DebugLogger } from "../inGameDebugging";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 

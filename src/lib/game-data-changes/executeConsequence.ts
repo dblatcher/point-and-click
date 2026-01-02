@@ -1,8 +1,8 @@
+import { GameProps } from "@/components/game/types"
 import { cloneData } from "@/lib/clone"
 import { CELL_SIZE, InGameEventReporter } from "@/lib/types-and-constants"
 import { findById } from "@/lib/util"
 import { ActorData, CommandTarget, Consequence, GameData, generateCellMatrix } from "point-click-lib"
-import { GameProps } from "../../components/game/types"
 import { changeRoom } from "./changeRoom"
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
 
@@ -20,7 +20,7 @@ export const makeConsequenceExecutor = (
         actorId ? actors.find(_ => _.id === actorId) : player;
     const currentRoom = rooms.find(_ => _.id === currentRoomId)
 
-    let conseqeunceSuccess = false
+    let consequenceSuccess = false
     let isOffscreen = false
 
     return (consequence: Consequence): void => {
@@ -32,7 +32,7 @@ export const makeConsequenceExecutor = (
                     break
                 }
                 issueOrdersOutsideSequence(state, actor.id, orders, consequence.replaceCurrentOrders)
-                conseqeunceSuccess = true
+                consequenceSuccess = true
                 isOffscreen = actor.room !== currentRoomId
                 break;
             }
@@ -44,7 +44,7 @@ export const makeConsequenceExecutor = (
                     break
                 }
                 Object.assign(state, modification)
-                conseqeunceSuccess = true
+                consequenceSuccess = true
                 break;
             }
             case 'inventory': {
@@ -54,10 +54,10 @@ export const makeConsequenceExecutor = (
                 if (!actor || !item) { break }
                 if (addOrRemove === 'ADD') {
                     item.actorId = actor.id
-                    conseqeunceSuccess = true
+                    consequenceSuccess = true
                 } else if (item.actorId === actor.id) {
                     item.actorId = undefined
-                    conseqeunceSuccess = true
+                    consequenceSuccess = true
                 }
                 isOffscreen = actor && actor.room !== currentRoomId
                 break;
@@ -66,7 +66,7 @@ export const makeConsequenceExecutor = (
                 const { actorId } = consequence
                 const actor = actors.find(_ => _.id === actorId)
                 if (!actor) { break }
-                conseqeunceSuccess = true
+                consequenceSuccess = true
                 isOffscreen = actor.room !== currentRoomId
                 actor.room = undefined;
                 break;
@@ -79,7 +79,7 @@ export const makeConsequenceExecutor = (
                 actor.room = roomId || actor.room
                 actor.x = x
                 actor.y = y
-                conseqeunceSuccess = true
+                consequenceSuccess = true
                 break;
             }
             case 'changeStatus': {
@@ -102,7 +102,7 @@ export const makeConsequenceExecutor = (
                     break
                 }
                 target.status = status
-                conseqeunceSuccess = true
+                consequenceSuccess = true
                 break;
             }
             case 'sequence': {
@@ -119,7 +119,7 @@ export const makeConsequenceExecutor = (
                 } else {
                     state.sequenceRunning = clonedSequence
                 }
-                conseqeunceSuccess = true
+                consequenceSuccess = true
                 break;
             }
             case 'conversation': {
@@ -130,7 +130,7 @@ export const makeConsequenceExecutor = (
                     break
                 }
                 state.currentConversationId = end ? undefined : conversationId
-                conseqeunceSuccess = true
+                consequenceSuccess = true
 
                 // TO DO[text-based] - how to make sure this only happens after any previous consequences have finished?
                 reportCurrentConversation?.()
@@ -160,12 +160,12 @@ export const makeConsequenceExecutor = (
                 if (currentRoom?.id === room.id) {
                     state.cellMatrix = generateCellMatrix(room, CELL_SIZE)
                 }
-                conseqeunceSuccess = true
+                consequenceSuccess = true
                 break
             }
             case 'soundEffect': {
                 const { sound, volume } = consequence
-                conseqeunceSuccess = !!props.soundService.play(sound, { volume })
+                consequenceSuccess = !!props.soundService.play(sound, { volume })
                 break;
             }
             case 'flag': {
@@ -177,7 +177,7 @@ export const makeConsequenceExecutor = (
 
                 }
                 flagEntry.value = on
-                conseqeunceSuccess = true
+                consequenceSuccess = true
                 break;
             }
             case 'conversationChoice': {
@@ -191,7 +191,7 @@ export const makeConsequenceExecutor = (
                     break;
 
                 }
-                conseqeunceSuccess = true
+                consequenceSuccess = true
                 choice.disabled = !on
                 break;
             }
@@ -243,6 +243,6 @@ export const makeConsequenceExecutor = (
                 break;
             }
         }
-        reportConsequence?.(consequence, conseqeunceSuccess, isOffscreen);
+        reportConsequence?.(consequence, consequenceSuccess, isOffscreen);
     }
 }
