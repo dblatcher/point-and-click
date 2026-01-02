@@ -1,16 +1,15 @@
 import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
 import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
-import { GameState } from "@/lib/game-state-logic/types";
 import { getTargetPoint } from "@/lib/roomFunctions";
 import { CELL_SIZE } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
-import { ActorData, Command, Interaction, OrderConsequence, findPath } from "point-click-lib";
+import { ActorData, Command, GameData, Interaction, OrderConsequence, findPath } from "point-click-lib";
 import { GameProps } from "../../components/game/types";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 import { DebugLogger, InGameEventReporter } from "./report-emitting";
 
-function doDefaultResponse(command: Command, state: GameState, unreachable: boolean, debugLogger?: DebugLogger): GameState {
+function doDefaultResponse(command: Command, state: GameData, unreachable: boolean, debugLogger?: DebugLogger): GameData {
     const { actors, rooms, currentRoomId } = state
     const player = actors.find(_ => _.isPlayer)
     const currentRoom = findById(currentRoomId, rooms)
@@ -66,11 +65,11 @@ function makeGoToOrder(player: ActorData, targetPoint: { x: number; y: number },
 export const handleCommand = (
     command: Command,
     props: GameProps,
-    state: GameState,
+    state: GameData,
     { reportCommand, reportCurrentConversation, reportConsequence }: InGameEventReporter,
     debugLogger?: DebugLogger,
 
-): GameState => {
+): GameData => {
     const { currentRoomId, rooms, actors, cellMatrix = [] } = state
     const currentRoom = findById(currentRoomId, rooms)
     if (!currentRoom) { return state }
@@ -112,11 +111,11 @@ export const handleCommand = (
 
 
 export function doPendingInteraction(
-    state: GameState,
+    state: GameData,
     props: GameProps,
     { reportCurrentConversation, reportConsequence }: InGameEventReporter,
     debugLogger?: DebugLogger,
-): GameState {
+): GameData {
     const execute = makeConsequenceExecutor(state, props, reportCurrentConversation, reportConsequence)
     state.pendingInteraction?.consequences.forEach(execute)
 

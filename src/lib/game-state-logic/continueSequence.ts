@@ -1,7 +1,5 @@
-import { reportConversationBranch } from "@/lib/game-event-emitter";
-import { GameState } from "@/lib/game-state-logic/types";
 import { findById } from "@/lib/util";
-import { ActorData, Order } from "point-click-lib";
+import { ActorData, GameData, Order } from "point-click-lib";
 import { GameProps } from "../../components/game/types";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
@@ -33,10 +31,10 @@ function validateOrderIdsAndClearEmpties(
  * @returns a partial state
  */
 export function continueSequence(
-    state: GameState,
+    state: GameData,
     props: GameProps,
     { reportOrder, reportStage, reportCurrentConversation, reportConsequence }: InGameEventReporter,
-): Partial<GameState> {
+): Partial<GameData> {
     const { actors, sequenceRunning, cellMatrix = [] } = state
     if (!sequenceRunning) { return {} }
     const [currentStage] = sequenceRunning.stages
@@ -81,7 +79,7 @@ export function continueSequence(
     const [nextStage] = sequenceRunning.stages;
 
     if (!nextStage && state.currentConversationId) {
-        reportConversationBranch(state)
+        reportCurrentConversation()
     }
 
     return {

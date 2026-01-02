@@ -1,6 +1,5 @@
-import { Command, Interaction, RoomData, FlagMap, CommandTarget, GameContents } from "point-click-lib";
+import { Command, Interaction, RoomData, FlagMap, CommandTarget, GameContents, GameData } from "point-click-lib";
 import { findById } from "./util";
-import { GameState } from "./game-state-logic/types";
 
 export const wildCard = {
     ITEM: "$ITEM",
@@ -79,7 +78,7 @@ function failsOnFlags(mustBe: boolean, idList: string[], flagMap: FlagMap): bool
     return results.includes(false)
 }
 
-function failsOnInventory(requiredInventory: string[], gameState: GameState): boolean {
+function failsOnInventory(requiredInventory: string[], gameState: GameData): boolean {
     const player = gameState.actors.find(actor => actor.isPlayer)
     return gameState.items.some(item => item.actorId !== player?.id && requiredInventory.includes(item.id))
 }
@@ -88,7 +87,7 @@ export function matchInteraction(
     command: Command,
     room: RoomData | undefined,
     interactions: Interaction[],
-    gameState: GameState,
+    gameState: GameData,
 ): Interaction | undefined {
     const { verb, item, target } = command
     const { flagMap } = gameState
