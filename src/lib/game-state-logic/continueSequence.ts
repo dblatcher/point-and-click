@@ -1,11 +1,11 @@
 import { reportConversationBranch } from "@/lib/game-event-emitter";
 import { GameState } from "@/lib/game-state-logic/types";
 import { findById } from "@/lib/util";
-import { ActorData, Order, Stage } from "point-click-lib";
+import { ActorData, Order } from "point-click-lib";
 import { GameProps } from "../../components/game/types";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
-import { ReportConsequence } from "./report-emitting";
+import { InGameEventReporter } from "./report-emitting";
 
 
 function validateOrderIdsAndClearEmpties(
@@ -35,9 +35,7 @@ function validateOrderIdsAndClearEmpties(
 export function continueSequence(
     state: GameState,
     props: GameProps,
-    reportOrder?: { (order: Order, actor: ActorData): void },
-    reportStage?: { (stage: Stage): void },
-    reportConsequence?: ReportConsequence,
+    { reportOrder, reportStage, reportCurrentConversation, reportConsequence }: InGameEventReporter,
 ): Partial<GameState> {
     const { actors, sequenceRunning, cellMatrix = [] } = state
     if (!sequenceRunning) { return {} }
@@ -67,7 +65,7 @@ export function continueSequence(
     ))
 
     if (currentStage.immediateConsequences) {
-        const consequenceExecutor = makeConsequenceExecutor(state, props, reportConsequence)
+        const consequenceExecutor = makeConsequenceExecutor(state, props, reportCurrentConversation, reportConsequence)
         currentStage.immediateConsequences.forEach(consequence => {
             console.log(`executing: ${consequence.type}`)
             consequenceExecutor(consequence)

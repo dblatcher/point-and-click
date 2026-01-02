@@ -70,7 +70,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
     const player = gameState.actors.find(actor => actor.isPlayer)
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     const debugLogger = makeDebugLogEmitter(gameState)
-    const { reportCommand, reportOrder, reportStage, reportConsequence } = makeEventReporter(gameState)
+    const eventReporter = makeEventReporter(gameState)
 
     switch (action.type) {
         case 'SET-PAUSED': {
@@ -118,7 +118,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 if (nonPrepositionalItemInteraction) {
                     return clearRemovedEntitiesFromCommand({
                         ...gameState,
-                        ...handleCommand({ verb, target }, action.props, gameState, debugLogger, reportCommand, reportConsequence),
+                        ...handleCommand({ verb, target }, action.props, gameState, eventReporter, debugLogger),
                     })
                 }
                 return {
@@ -129,14 +129,14 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
 
             return clearRemovedEntitiesFromCommand({
                 ...gameState,
-                ...handleCommand({ verb, target, item }, action.props, gameState, debugLogger, reportCommand, reportConsequence)
+                ...handleCommand({ verb, target, item }, action.props, gameState, eventReporter, debugLogger)
             })
         }
 
         case "SEND-COMMAND": {
             return clearRemovedEntitiesFromCommand({
                 ...gameState,
-                ...handleCommand(action.command, action.props, gameState, debugLogger, reportCommand, reportConsequence)
+                ...handleCommand(action.command, action.props, gameState, eventReporter, debugLogger)
             })
         }
 
@@ -175,7 +175,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
             if (gameState.sequenceRunning) {
                 const updatedState = {
                     ...gameState,
-                    ...continueSequence(gameState, action.props, reportOrder, reportStage, reportConsequence),
+                    ...continueSequence(gameState, action.props, eventReporter),
                     viewAngleX: viewAngleXCenteredOnPlayer ?? gameState.viewAngleX,
                     viewAngleY: viewAngleYCenteredOnPlayer ?? gameState.viewAngleY,
                 }
@@ -197,13 +197,13 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                             orderSpeed: action.props.orderSpeed,
                             instantMode: action.props.instantMode,
                             sprite: findById(actor.sprite, action.props._sprites),
-                            onOrderStart: order => reportOrder(order, actor),
+                            onOrderStart: order => eventReporter.reportOrder(order, actor),
                             triggerPendingInteraction: () => { pendingInteractionShouldBeDone = true }
                         },
                     )
                 })
                 if (pendingInteractionShouldBeDone) {
-                    doPendingInteraction(state, action.props, debugLogger, reportConsequence)
+                    doPendingInteraction(state, action.props, eventReporter, debugLogger)
                     return clearRemovedEntitiesFromCommand(state)
                 }
                 return state

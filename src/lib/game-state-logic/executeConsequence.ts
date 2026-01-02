@@ -1,19 +1,19 @@
 import { cloneData } from "@/lib/clone"
-import { reportConversationBranch } from "@/lib/game-event-emitter"
 import { changeRoom } from "@/lib/game-state-logic/changeRoom"
 import { CELL_SIZE } from "@/lib/types-and-constants"
 import { findById } from "@/lib/util"
 import { ActorData, CommandTarget, Consequence, generateCellMatrix } from "point-click-lib"
 import { GameProps } from "../../components/game/types"
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
+import { InGameEventReporter } from "./report-emitting"
 import { GameState } from "./types"
-import { ReportConsequence } from "./report-emitting"
 
 
 export const makeConsequenceExecutor = (
     state: GameState,
     props: GameProps,
-    reportConsequence?: ReportConsequence
+    reportCurrentConversation?: { (): void },
+    reportConsequence?: InGameEventReporter['reportConsequence'],
 ): { (consequence: Consequence): void } => {
 
     const { actors, items, rooms, currentRoomId } = state
@@ -135,7 +135,7 @@ export const makeConsequenceExecutor = (
                 conseqeunceSuccess = true
 
                 // TO DO[text-based] - how to make sure this only happens after any previous consequences have finished?
-                reportConversationBranch(state)
+                reportCurrentConversation?.()
                 break;
             }
             case 'toggleZone': {

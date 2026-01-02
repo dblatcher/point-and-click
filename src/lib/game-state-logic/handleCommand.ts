@@ -1,14 +1,14 @@
 import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
 import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
 import { GameState } from "@/lib/game-state-logic/types";
-import { CELL_SIZE } from "@/lib/types-and-constants";
 import { getTargetPoint } from "@/lib/roomFunctions";
+import { CELL_SIZE } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
 import { ActorData, Command, Interaction, OrderConsequence, findPath } from "point-click-lib";
 import { GameProps } from "../../components/game/types";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
-import { DebugLogger, ReportConsequence } from "./report-emitting";
+import { DebugLogger, InGameEventReporter } from "./report-emitting";
 
 function doDefaultResponse(command: Command, state: GameState, unreachable: boolean, debugLogger?: DebugLogger): GameState {
     const { actors, rooms, currentRoomId } = state
@@ -67,9 +67,9 @@ export const handleCommand = (
     command: Command,
     props: GameProps,
     state: GameState,
+    { reportCommand, reportCurrentConversation, reportConsequence }: InGameEventReporter,
     debugLogger?: DebugLogger,
-    reportCommand?: { (command: Command): void },
-    reportConsequence?: ReportConsequence
+
 ): GameState => {
     const { currentRoomId, rooms, actors, cellMatrix = [] } = state
     const currentRoom = findById(currentRoomId, rooms)
@@ -91,7 +91,7 @@ export const handleCommand = (
             const isReachable = findPath(player, targetPoint, cellMatrix, CELL_SIZE).length > 0;
             if (isReachable) {
                 state.pendingInteraction = interaction
-                const execute = makeConsequenceExecutor(state, props, reportConsequence)
+                const execute = makeConsequenceExecutor(state, props, reportCurrentConversation, reportConsequence)
                 execute(makeGoToOrder(player, targetPoint, props.instantMode ? undefined : command.target.name ?? command.target.id))
             } else {
                 debugLogger?.(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding')
@@ -100,7 +100,7 @@ export const handleCommand = (
         }
     } else if (interaction) {
         debugLogger?.(`[${descriptionForLog}]: ${describeConsequences(interaction)}`, 'command')
-        const execute = makeConsequenceExecutor(state, props, reportConsequence)
+        const execute = makeConsequenceExecutor(state, props, reportCurrentConversation, reportConsequence)
         interaction.consequences.forEach(execute)
     } else {
         debugLogger?.(`[${descriptionForLog}]: (no match)`, 'command')
@@ -111,8 +111,13 @@ export const handleCommand = (
 }
 
 
-export function doPendingInteraction(state: GameState, props: GameProps, debugLogger?: DebugLogger, reportConsequence?: ReportConsequence): GameState {
-    const execute = makeConsequenceExecutor(state, props, reportConsequence)
+export function doPendingInteraction(
+    state: GameState,
+    props: GameProps,
+    { reportCurrentConversation, reportConsequence }: InGameEventReporter,
+    debugLogger?: DebugLogger,
+): GameState {
+    const execute = makeConsequenceExecutor(state, props, reportCurrentConversation, reportConsequence)
     state.pendingInteraction?.consequences.forEach(execute)
 
     if (state.pendingInteraction) {
