@@ -6,7 +6,6 @@ import { getTargetPoint } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
 import { ActorData, Command, Interaction, OrderConsequence, findPath } from "point-click-lib";
 import { GameProps } from "../../components/game/types";
-import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 import { DebugLogger, ReportConsequence } from "./report-emitting";
@@ -108,8 +107,6 @@ export const handleCommand = (
         doDefaultResponse(command, state, false, debugLogger)
     }
 
-    removeHoverTargetIfGone(state)
-    removeItemIfGone(state)
     return state
 }
 

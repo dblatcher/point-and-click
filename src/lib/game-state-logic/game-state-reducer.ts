@@ -15,6 +15,7 @@ import { handleConversationChoice } from "./handleConversationChoice";
 import { issueMoveOrder } from "./issueMoveOrder";
 import { followOrder } from "./orders/followOrder";
 import { makeDebugLogEmitter, makeEventReporter } from "./report-emitting";
+import { clearRemovedEntitiesFromCommand } from "./clearCommand";
 
 
 export type GameStateAction =
@@ -115,10 +116,10 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                     { verb, target }, currentRoom, gameState.interactions, gameState
                 );
                 if (nonPrepositionalItemInteraction) {
-                    return {
+                    return clearRemovedEntitiesFromCommand({
                         ...gameState,
-                        ...handleCommand({ verb, target }, action.props, gameState, debugLogger, reportCommand, reportConsequence)
-                    }
+                        ...handleCommand({ verb, target }, action.props, gameState, debugLogger, reportCommand, reportConsequence),
+                    })
                 }
                 return {
                     ...gameState,
@@ -126,17 +127,17 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 }
             }
 
-            return {
+            return clearRemovedEntitiesFromCommand({
                 ...gameState,
                 ...handleCommand({ verb, target, item }, action.props, gameState, debugLogger, reportCommand, reportConsequence)
-            }
+            })
         }
 
         case "SEND-COMMAND": {
-            return {
+            return clearRemovedEntitiesFromCommand({
                 ...gameState,
                 ...handleCommand(action.command, action.props, gameState, debugLogger, reportCommand, reportConsequence)
-            }
+            })
         }
 
         case "HANDLE-HOVER": {
@@ -172,12 +173,16 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
             const viewAngleXCenteredOnPlayer = (player && currentRoom) ? getViewAngleXCenteredOn(player.x, currentRoom) : undefined
             const viewAngleYCenteredOnPlayer = (player && currentRoom) ? getViewAngleYCenteredOn(player.y, currentRoom) : undefined
             if (gameState.sequenceRunning) {
-                return {
+                const updatedState = {
                     ...gameState,
                     ...continueSequence(gameState, action.props, reportOrder, reportStage, reportConsequence),
                     viewAngleX: viewAngleXCenteredOnPlayer ?? gameState.viewAngleX,
                     viewAngleY: viewAngleYCenteredOnPlayer ?? gameState.viewAngleY,
                 }
+                if (!updatedState.sequenceRunning) {
+                    return clearRemovedEntitiesFromCommand(updatedState)
+                }
+                return updatedState
             }
 
             const makeActorsDoOrders = (state: GameState) => {
@@ -199,6 +204,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 })
                 if (pendingInteractionShouldBeDone) {
                     doPendingInteraction(state, action.props, debugLogger, reportConsequence)
+                    return clearRemovedEntitiesFromCommand(state)
                 }
                 return state
             }

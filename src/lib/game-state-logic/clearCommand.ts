@@ -1,41 +1,34 @@
-import { findById } from "@/lib/util"
 import { GameState } from "@/lib/game-state-logic/types";
+import { findById } from "@/lib/util";
 
-export function removeHoverTargetIfGone(state: GameState): GameState {
-    const { hoverTarget, rooms, currentRoomId, actors } = state
-    if (!hoverTarget) {
-        return state
+export const clearRemovedEntitiesFromCommand = (state: GameState): GameState => {
+    const { currentItemId, items, actors, hoverTarget, currentRoomId, rooms } = state
+    const player = actors.find(_ => _.isPlayer);
+    const item = findById(currentItemId, items);
+
+    const commandUpdates: Pick<GameState, 'currentItemId' | 'hoverTarget'> = {
+        currentItemId,
+        hoverTarget,
     }
-    const player = actors.find(_ => _.isPlayer)
-    const currentRoom = findById(currentRoomId, rooms)
+    if (!item || !player) {
+        commandUpdates.currentItemId = undefined
+    } else {
+        if (item.actorId !== player.id) {
+            commandUpdates.currentItemId = undefined
+        }
+    }
 
-    if (currentRoom) {
+
+    if (hoverTarget) {
         if (hoverTarget.type === 'actor') {
-            if (hoverTarget.room !== currentRoom.id) {
-                state.hoverTarget = undefined
+            const currentRoom = findById(currentRoomId, rooms)
+            if (currentRoom && hoverTarget.room !== currentRoom.id) {
+                commandUpdates.hoverTarget = undefined
             }
         }
-    }
-    if (player) {
-        if (hoverTarget.type === 'item' && hoverTarget.actorId !== player.id) {
-            state.hoverTarget = undefined
+        if (hoverTarget.type === 'item' && player && hoverTarget.actorId !== player.id) {
+            commandUpdates.hoverTarget = undefined
         }
     }
-    return state
-}
-
-export function removeItemIfGone(state: GameState): GameState {
-    const { currentItemId, items } = state
-    const item = findById(currentItemId, items)
-    if (!item) {
-        return state
-    }
-    const player = state.actors.find(_ => _.isPlayer)
-
-    if (player) {
-        if (item.actorId !== player.id) {
-            state.currentItemId = undefined
-        }
-    }
-    return state
+    return { ...state, ...commandUpdates }
 }

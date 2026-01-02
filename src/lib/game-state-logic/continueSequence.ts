@@ -3,7 +3,6 @@ import { GameState } from "@/lib/game-state-logic/types";
 import { findById } from "@/lib/util";
 import { ActorData, Order, Stage } from "point-click-lib";
 import { GameProps } from "../../components/game/types";
-import { removeHoverTargetIfGone, removeItemIfGone } from "./clearCommand";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 import { ReportConsequence } from "./report-emitting";
@@ -14,17 +13,16 @@ function validateOrderIdsAndClearEmpties(
     targets: ActorData[]
 ): void {
     const validIds = targets.map(_ => _.id)
-    const invalidIds = Object.keys(orders).filter(_ => !validIds.includes(_))
+    const invalidIds = Object.keys(orders).filter(id => !validIds.includes(id))
 
-    invalidIds.forEach(_ => {
-        console.warn(`invalid id in stage: ${_}`)
-        delete orders[_]
+    invalidIds.forEach(id => {
+        console.warn(`invalid id in stage: ${id}`)
+        delete orders[id]
     })
 
-    const emptyOrderLists = Object.keys(orders).filter(_ => orders[_].length === 0)
+    const emptyOrderLists = Object.keys(orders).filter(key => orders[key].length === 0)
 
     emptyOrderLists.forEach(_ => {
-        console.log(`finished orders in stage: ${_}`)
         delete orders[_]
     })
 }
@@ -80,8 +78,6 @@ export function continueSequence(
     const currentStageIsFinished = Object.keys(stageActorOrders).length === 0
     if (currentStageIsFinished) {
         sequenceRunning.stages.shift()
-        removeHoverTargetIfGone(state)
-        removeItemIfGone(state)
     }
 
     const [nextStage] = sequenceRunning.stages;

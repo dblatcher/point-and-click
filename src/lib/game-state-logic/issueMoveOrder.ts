@@ -1,6 +1,5 @@
-import { GameState } from "@/lib/game-state-logic/types";
 import { CELL_SIZE, XY } from "@/lib/types-and-constants";
-import { MoveOrder, findPath } from "point-click-lib";
+import { GameData, MoveOrder, findPath } from "point-click-lib";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 import { DebugLogger } from "./report-emitting";
 
@@ -9,7 +8,7 @@ export const issueMoveOrder = (
     actorId: string,
     appendToExisting?: boolean,
     ignoreObstacles?: boolean,
-) => (state: GameState, debugLogger?: DebugLogger): Partial<GameState> => {
+) => (state: GameData, debugLogger?: DebugLogger): Partial<GameData> => {
 
     const { cellMatrix, actors } = state
     const actor = actors.find(_ => _.id === actorId)
