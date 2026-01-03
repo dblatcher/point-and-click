@@ -1,21 +1,17 @@
 import { cloneData } from "@/lib/clone";
 import { GameEventEmitter } from "@/lib/game-event-emitter";
 import { GameState } from "@/lib/game-state-logic/types";
-import { CELL_SIZE } from "@/lib/types-and-constants";
 import { getViewAngleXCenteredOn, getViewAngleYCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
+import { CELL_SIZE } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
 import { Command, CommandTarget, ConversationChoice, GameData, Verb, generateCellMatrix } from "point-click-lib";
 import { Reducer } from "react";
 import { GameProps } from "../../components/game/types";
 import { matchInteraction } from "../commandFunctions";
+import { continueSequence, doPendingInteraction, followOrder, handleCommand, handleConversationChoice, issueMoveOrder } from "../game-data-changes";
 import { DB_VERSION } from "../indexed-db";
-import { continueSequence } from "../game-data-changes/continueSequence";
-import { doPendingInteraction, handleCommand } from "../game-data-changes/handleCommand";
-import { handleConversationChoice } from "../game-data-changes/handleConversationChoice";
-import { issueMoveOrder } from "../game-data-changes/orders/issueMoveOrder";
-import { followOrder } from "../game-data-changes/orders/followOrder";
-import { makeDebugLogEmitter, makeEventReporter } from "./report-emitting";
 import { clearRemovedEntitiesFromCommand } from "./clearCommand";
+import { makeDebugLogEmitter, makeEventReporter } from "./report-emitting";
 
 
 export type GameStateAction =

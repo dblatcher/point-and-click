@@ -1,15 +1,14 @@
-import { GameProps } from "@/components/game/types"
 import { cloneData } from "@/lib/clone"
-import { CELL_SIZE, InGameEventReporter } from "@/lib/types-and-constants"
+import { CELL_SIZE, GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants"
 import { findById } from "@/lib/util"
-import { ActorData, CommandTarget, Consequence, GameData, generateCellMatrix } from "point-click-lib"
+import { ActorData, CommandTarget, Consequence, GameData, GameDesign, generateCellMatrix } from "point-click-lib"
 import { changeRoom } from "./changeRoom"
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
 
 
 export const makeConsequenceExecutor = (
     state: GameData,
-    props: GameProps,
+    props: GameDesign & GameRuntimeOptions,
     reportCurrentConversation?: { (): void },
     reportConsequence?: InGameEventReporter['reportConsequence'],
 ): { (consequence: Consequence): void } => {
@@ -165,7 +164,7 @@ export const makeConsequenceExecutor = (
             }
             case 'soundEffect': {
                 const { sound, volume } = consequence
-                consequenceSuccess = !!props.playSound?.(sound,  volume)
+                consequenceSuccess = !!props.playSound?.(sound, volume)
                 break;
             }
             case 'flag': {

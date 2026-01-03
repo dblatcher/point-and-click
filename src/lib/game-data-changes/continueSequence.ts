@@ -1,7 +1,6 @@
-import { GameProps } from "@/components/game/types";
 import { findById } from "@/lib/util";
-import { ActorData, GameData, Order } from "point-click-lib";
-import { InGameEventReporter } from "@/lib/types-and-constants";
+import { ActorData, GameData, GameDesign, Order } from "point-click-lib";
+import { GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 
@@ -32,7 +31,7 @@ function validateOrderIdsAndClearEmpties(
  */
 export function continueSequence(
     state: GameData,
-    props: GameProps,
+    props: GameDesign & GameRuntimeOptions,
     { reportOrder, reportStage, reportCurrentConversation, reportConsequence }: InGameEventReporter,
 ): Partial<GameData> {
     const { actors, sequenceRunning, cellMatrix = [] } = state
