@@ -1,7 +1,7 @@
-import { Conversation, ConversationChoice, Sequence, ChoiceRefSet, GameData } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
-import { DEFAULT_TALK_TIME } from "@/components/GameEditor/defaults";
+import { ChoiceRefSet, Conversation, ConversationChoice, GameData, Sequence } from "point-click-lib";
+import { DEFAULT_TALK_TIME } from "../types-and-constants";
 
 
 function findChoiceFromRefSet(

@@ -10,3 +10,5 @@ export interface InGameEventReporter {
     reportStage: (stage: Stage) => void;
     reportCurrentConversation: () => void;
 }
+
+export const DEFAULT_TALK_TIME = 200;

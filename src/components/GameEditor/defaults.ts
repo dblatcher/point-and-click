@@ -1,3 +1,4 @@
+import { DEFAULT_TALK_TIME } from "@/lib/types-and-constants";
 import {
     Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType,
     Stage, ConversationChoice, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData
@@ -5,7 +6,6 @@ import {
 import { ActStep, MoveStep } from "point-click-lib";
 import { PagePicture, StoryBoard, StoryBoardPage } from "point-click-lib";
 
-export const DEFAULT_TALK_TIME = 200;
 
 export const defaultVerbs1: { (): Verb[] } = () => [
     { id: 'WALK', label: 'walk to', isMoveVerb: true },
