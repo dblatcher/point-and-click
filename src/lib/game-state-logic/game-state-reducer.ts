@@ -196,7 +196,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                         {
                             orderSpeed: action.props.orderSpeed,
                             instantMode: action.props.instantMode,
-                            sprite: findById(actor.sprite, action.props._sprites),
+                            spriteData: findById(actor.sprite, action.props.sprites),
                             onOrderStart: order => eventReporter.reportOrder(order, actor),
                             triggerPendingInteraction: () => { pendingInteractionShouldBeDone = true }
                         },

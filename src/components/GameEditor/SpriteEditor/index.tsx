@@ -1,22 +1,22 @@
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
+import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { ActorData, Animation, Direction, SpriteData, SpriteFrame } from "point-click-lib";
-import { directions } from "point-click-lib";
-import { Sprite } from "@/lib/Sprite";
+import { DEFAULT_ANIMATION } from "@/lib/animationFunctions";
 import { cloneData } from "@/lib/clone";
+import { Sprite } from "@/lib/Sprite";
 import { patchMember } from "@/lib/update-design";
 import { findById } from "@/lib/util";
 import { Box, Grid, Stack } from "@mui/material";
+import { ActorData, Animation, Direction, directions, SpriteData, SpriteFrame } from "point-click-lib";
 import { useState } from "react";
-import { EditorHeading } from "../layout/EditorHeading";
-import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
-import { AnimationDialog } from "./AnimationDialog";
-import { AnimationGrid } from "./AnimationGrid";
-import { useAssets } from "@/context/asset-context";
 import { ButtonWithTextInput } from "../ButtonWithTextInput";
+import { ItemEditorHeaderControls } from "../game-item-components/ItemEditorHeaderControls";
+import { EditorHeading } from "../layout/EditorHeading";
 import { AddIcon } from "../material-icons";
 import { SearchControl } from "../SearchControl";
+import { AnimationDialog } from "./AnimationDialog";
+import { AnimationGrid } from "./AnimationGrid";
 
 
 type SpriteEditorProps = {
@@ -158,7 +158,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
                         fullWidth: true,
                         startIcon: <AddIcon />
                     }}
-                    suggestions={Array.from(new Set(Object.values(Sprite.DEFAULT_ANIMATION)
+                    suggestions={Array.from(new Set(Object.values(DEFAULT_ANIMATION)
                         .filter(value => !existingKeys.includes(value))))}
                     clearOnOpen
                     getError={input => {

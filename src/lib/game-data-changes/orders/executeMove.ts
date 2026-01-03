@@ -1,14 +1,16 @@
-import { Sprite } from "@/lib/Sprite";
+import { DEFAULT_ANIMATION } from "@/lib/animationFunctions";
 import { XY } from "@/lib/types-and-constants";
-import { ActorData, Direction, MoveOrder } from "point-click-lib";
+import { ActorData, Direction, MoveOrder, SpriteData } from "point-click-lib";
 
-function getAvailableDirections(sprite?: Sprite, animationName?: string): Direction[] {
-    const animation = sprite?.getAnimation(animationName, 'move') || {}
+function getAvailableDirections(spriteData?: SpriteData, animationName?: string): Direction[] {
+    if (!spriteData) {
+        return []
+    }
+    const animation = animationName ? spriteData.animations[animationName] : spriteData.animations[DEFAULT_ANIMATION.move] ?? {}
     return Object.keys(animation) as Direction[]
 }
 
 function determineDirection(postion: XY, desination: XY, availableDirections: Direction[]): Direction {
-
     const dx = desination.x - postion.x
     const dy = desination.y - postion.y
 
@@ -26,7 +28,7 @@ function determineDirection(postion: XY, desination: XY, availableDirections: Di
 }
 
 
-export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Sprite, instantMode?: boolean, orderSpeed = 1): void {
+export function executeMove(moveOrder: MoveOrder, actor: ActorData, spriteData?: SpriteData, instantMode?: boolean, orderSpeed = 1): void {
     if (moveOrder.roomId && moveOrder.roomId !== actor.room) {
         console.warn(`${actor.id} is in ${actor.room ?? '[NOWHERE]'}, not ${moveOrder.roomId} - cancelling order`)
         moveOrder.steps.splice(0, moveOrder.steps.length)
@@ -66,7 +68,7 @@ export function executeMove(moveOrder: MoveOrder, actor: ActorData, sprite?: Spr
         moveOrder.steps.shift()
     }
 
-    const availableDirections = getAvailableDirections(sprite, nextStep.animation)
+    const availableDirections = getAvailableDirections(spriteData, nextStep.animation)
     actor.x = newX
     actor.y = newY
     actor.direction = determineDirection({ x, y }, { x: newX, y: newY }, availableDirections)

@@ -1,6 +1,7 @@
 import { SpriteData, Direction, SpriteFrame, Animation } from "point-click-lib";
 import { ImageAsset } from "@/services/assets";
 import { getBackgroundStyle } from "./image-frame-backgrounds";
+import { DEFAULT_ANIMATION } from "./animationFunctions";
 
 
 interface ImageWithFrame {
@@ -17,14 +18,6 @@ export class Sprite {
         this.getImageAsset = getImage
     }
 
-    static readonly DEFAULT_ANIMATION = {
-        say: 'talk',
-        move: 'walk',
-        goTo: 'walk',
-        wait: 'default',
-        act: 'default',
-    } as const
-
     public get id() {
         return this.data.id
     }
@@ -38,7 +31,7 @@ export class Sprite {
     public getAnimation(animationName?: string, type?: 'say' | 'move' | 'wait' | 'act'): Animation {
         const { animations } = this.data
         if (animationName && this.hasAnimation(animationName)) { return animations[animationName] }
-        if (type && this.hasAnimation(Sprite.DEFAULT_ANIMATION[type])) { return animations[Sprite.DEFAULT_ANIMATION[type]] }
+        if (type && this.hasAnimation(DEFAULT_ANIMATION[type])) { return animations[DEFAULT_ANIMATION[type]] }
         return {}
     }
 

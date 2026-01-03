@@ -56,7 +56,6 @@ export const GameDesignPlayer = ({
         {(ready) ? (
           <Game
             {...gameDesign}
-            _sprites={sprites}
             uiComponents={uiComponents}
             instantMode={instantMode}
             soundService={soundServiceRef.current}

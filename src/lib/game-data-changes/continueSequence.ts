@@ -56,7 +56,7 @@ export function continueSequence(
         state,
         {
             orderSpeed: props.orderSpeed,
-            sprite: findById(actor.sprite, props._sprites),
+            spriteData: findById(actor.sprite, props.sprites),
             instantMode: props.instantMode,
             onOrderStart: order => reportOrder?.(order, actor),
         },

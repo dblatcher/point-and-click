@@ -1,6 +1,5 @@
-import { Sprite } from "@/lib/Sprite";
 import { CELL_SIZE, XY } from "@/lib/types-and-constants";
-import { ActorData, GameData, MoveOrder, Order, findPath, type CellMatrix } from "point-click-lib";
+import { ActorData, GameData, MoveOrder, Order, SpriteData, findPath, type CellMatrix } from "point-click-lib";
 import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
 import { executeSay } from "./executeSay";
@@ -37,7 +36,7 @@ function executeOrder(
     cellMatrix: CellMatrix,
     state: GameData,
     orders: Order[],
-    sprite?: Sprite,
+    spriteData?: SpriteData,
     instantMode = false,
     orderSpeed = 1
 ) {
@@ -46,7 +45,7 @@ function executeOrder(
             if (!nextOrder.pathIsSet) {
                 findPathBetweenSteps(subject, cellMatrix, nextOrder);
             }
-            executeMove(nextOrder, subject, sprite, instantMode, orderSpeed);
+            executeMove(nextOrder, subject, spriteData, instantMode, orderSpeed);
             break;
         case "say":
             executeSay(nextOrder, instantMode, orderSpeed);
@@ -88,12 +87,12 @@ export function followOrder(
     options: {
         orderSpeed?: number;
         instantMode?: boolean;
-        sprite?: Sprite;
+        spriteData?: SpriteData,
         onOrderStart?: { (order: Order): void },
         triggerPendingInteraction?: { (): void },
     },
 ) {
-    const { orderSpeed = 1, instantMode = false, sprite, onOrderStart, triggerPendingInteraction } = options
+    const { orderSpeed = 1, instantMode = false, spriteData, onOrderStart, triggerPendingInteraction } = options
     if (!orders || orders.length === 0) { return false }
     const [currentOrder] = orders
 
@@ -104,7 +103,7 @@ export function followOrder(
         }
         currentOrder._started = true
     }
-    executeOrder(currentOrder, subject, cellMatrix, state, orders, sprite, instantMode, orderSpeed);
+    executeOrder(currentOrder, subject, cellMatrix, state, orders, spriteData, instantMode, orderSpeed);
 
     if (orderIsFinished(currentOrder)) {
         if (currentOrder.endDirection) {

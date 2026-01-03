@@ -5,7 +5,6 @@ import { UiComponentSet } from "./uiComponentSet";
 
 
 export type GameProps = Readonly<{
-    _sprites: Sprite[];
     showDebugLog?: boolean;
     startPaused?: boolean;
     uiComponents?: UiComponentSet;

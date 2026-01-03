@@ -6,6 +6,7 @@ import { useGameState } from "@/context/game-state-context";
 import { useSprites } from "@/context/sprite-context";
 import { useInterval } from "@/hooks/useInterval";
 import { useRoomRender } from "@/hooks/useRoomRender";
+import { DEFAULT_ANIMATION } from "@/lib/animationFunctions";
 import { getScale } from "@/lib/getScale";
 import { Sprite } from "@/lib/Sprite";
 import { findById } from "@/lib/util";
@@ -34,17 +35,17 @@ const getUnverifiedAnimationName = (currentOrder: Order | undefined, status: str
             : currentOrder.animation
         : undefined;
     const defaultAnimationFromOrder = currentOrder
-        ? Sprite.DEFAULT_ANIMATION[currentOrder.type]
+        ? DEFAULT_ANIMATION[currentOrder.type]
         : undefined
     return specificAnimationFromOrder || defaultAnimationFromOrder || status || 'default';
 }
 
 const getAnimationName = (currentOrder: Order | undefined, status: string | undefined, sprite?: Sprite): string => {
-    if (!sprite) { return Sprite.DEFAULT_ANIMATION.wait }
+    if (!sprite) { return DEFAULT_ANIMATION.wait }
     const animationName = getUnverifiedAnimationName(currentOrder, status)
     return animationName && sprite.hasAnimation(animationName)
         ? animationName
-        : Sprite.DEFAULT_ANIMATION[currentOrder?.type || 'wait'];
+        : DEFAULT_ANIMATION[currentOrder?.type || 'wait'];
 }
 
 const getSoundValues = (
