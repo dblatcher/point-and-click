@@ -9,10 +9,9 @@ import { issueOrdersOutsideSequence } from "./orders/issueOrders"
 export const makeConsequenceExecutor = (
     state: GameData,
     props: GameDesign & GameRuntimeOptions,
-    reportCurrentConversation?: { (): void },
-    reportConsequence?: InGameEventReporter['reportConsequence'],
+    eventReporter: InGameEventReporter,
 ): { (consequence: Consequence): void } => {
-
+    const { reportCurrentConversation, reportConsequence } = eventReporter
     const { actors, items, rooms, currentRoomId } = state
     const player = actors.find(_ => _.isPlayer)
     const getActor = (actorId?: string): (ActorData | undefined) =>

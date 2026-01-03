@@ -1,6 +1,6 @@
-import { findById } from "@/lib/util";
-import { ActorData, GameData, GameDesign, Order } from "point-click-lib";
 import { GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants";
+import { ActorData, GameData, GameDesign, Order } from "point-click-lib";
+import { DebugLogger } from "../inGameDebugging";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
 
@@ -29,40 +29,34 @@ function validateOrderIdsAndClearEmpties(
  * when the stage is complete, until the sequence has finished
  * @returns a partial state
  */
-export function continueSequence(
-    state: GameData,
+export const continueSequence = (
     props: GameDesign & GameRuntimeOptions,
-    { reportOrder, reportStage, reportCurrentConversation, reportConsequence }: InGameEventReporter,
-): Partial<GameData> {
-    const { actors, sequenceRunning, cellMatrix = [] } = state
+    eventReporter: InGameEventReporter,
+    debugLogger: DebugLogger,
+) => (state: GameData): Partial<GameData> => {
+    const { reportStage, reportCurrentConversation } = eventReporter
+    const { actors, sequenceRunning } = state
     if (!sequenceRunning) { return {} }
     const [currentStage] = sequenceRunning.stages
     if (!currentStage) { return {} }
 
     if (!currentStage._started) {
         currentStage._started = true
-        console.log('starting stage', currentStage)
+        debugLogger(`starting next stage in sequence ${sequenceRunning.id}`)
         reportStage?.(currentStage)
     }
 
     const { actorOrders: stageActorOrders = {} } = currentStage
     validateOrderIdsAndClearEmpties(stageActorOrders, actors)
 
-    actors.forEach(actor => followOrder(
-        actor,
-        cellMatrix,
-        stageActorOrders[actor.id],
+    actors.forEach(actor => followOrder(props, eventReporter)(
         state,
-        {
-            orderSpeed: props.orderSpeed,
-            spriteData: findById(actor.sprite, props.sprites),
-            instantMode: props.instantMode,
-            onOrderStart: order => reportOrder?.(order, actor),
-        },
+        actor,
+        stageActorOrders[actor.id],
     ))
 
     if (currentStage.immediateConsequences) {
-        const consequenceExecutor = makeConsequenceExecutor(state, props, reportCurrentConversation, reportConsequence)
+        const consequenceExecutor = makeConsequenceExecutor(state, props, eventReporter)
         currentStage.immediateConsequences.forEach(consequence => {
             console.log(`executing: ${consequence.type}`)
             consequenceExecutor(consequence)

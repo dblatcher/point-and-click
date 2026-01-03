@@ -1,7 +1,8 @@
 import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
-import { ChoiceRefSet, Conversation, ConversationChoice, GameData, Sequence } from "point-click-lib";
-import { DEFAULT_TALK_TIME } from "../types-and-constants";
+import { ChoiceRefSet, Conversation, ConversationChoice, GameData, GameDesign, Sequence } from "point-click-lib";
+import { DEFAULT_TALK_TIME, GameRuntimeOptions } from "../types-and-constants";
+import { DebugLogger } from "../inGameDebugging";
 
 
 function findChoiceFromRefSet(
@@ -83,41 +84,40 @@ function buildDefaultSequence(choice: ConversationChoice, state: GameData): Sequ
     return sequence
 }
 
-export function handleConversationChoice(choice: ConversationChoice, sequences: Sequence[]): { (state: GameData): Partial<GameData> } {
+export const handleConversationChoice =
+    ({ sequences }: GameDesign & GameRuntimeOptions, debugLogger:DebugLogger) =>
+        (state: GameData, choice: ConversationChoice): GameData => {
+            const { conversations, currentConversationId = '' } = state;
+            const currentConversation = conversations.find(conversation => conversation.id === currentConversationId)
+            if (!currentConversation) {
+                return state
+            }
+            if (choice.once) {
+                choice.disabled = true
+            }
+            if (choice.enablesChoices) {
+                setChoicesDisabled(false, choice.enablesChoices, conversations, currentConversation)
+            }
+            if (choice.disablesChoices) {
+                setChoicesDisabled(true, choice.disablesChoices, conversations, currentConversation)
+            }
+            if (choice.nextBranch && currentConversation?.branches[choice.nextBranch]) {
+                currentConversation.currentBranch = choice.nextBranch
+            }
 
-    return (state): GameData => {
-        const { conversations, currentConversationId = '' } = state;
-        const currentConversation = conversations.find(conversation => conversation.id === currentConversationId)
-        if (!currentConversation) {
+            const originalSequence = findById(choice.sequence, sequences) ?? choice.choiceSequence
+            if (choice.sequence && !originalSequence) {
+                debugLogger(`invalid sequenceId "${choice.sequence}" in conversation "${currentConversationId}"`)
+            }
+
+            const sequenceCopy: Sequence = originalSequence ? cloneData(originalSequence) : buildDefaultSequence(choice, state);
+            if (choice.end) {
+                sequenceCopy.stages.push({
+                    immediateConsequences: [{ type: 'conversation', end: true, conversationId: currentConversationId }]
+                })
+            }
+            state.sequenceRunning = sequenceCopy
+
+
             return state
         }
-        if (choice.once) {
-            choice.disabled = true
-        }
-        if (choice.enablesChoices) {
-            setChoicesDisabled(false, choice.enablesChoices, conversations, currentConversation)
-        }
-        if (choice.disablesChoices) {
-            setChoicesDisabled(true, choice.disablesChoices, conversations, currentConversation)
-        }
-        if (choice.nextBranch && currentConversation?.branches[choice.nextBranch]) {
-            currentConversation.currentBranch = choice.nextBranch
-        }
-
-        const originalSequence = findById(choice.sequence, sequences) ?? choice.choiceSequence
-        if (choice.sequence && !originalSequence) {
-            console.warn(`invalid sequenceId "${choice.sequence}" in conversation "${currentConversationId}"`)
-        }
-
-        const sequenceCopy: Sequence = originalSequence ? cloneData(originalSequence) : buildDefaultSequence(choice, state);
-        if (choice.end) {
-            sequenceCopy.stages.push({
-                immediateConsequences: [{ type: 'conversation', end: true, conversationId: currentConversationId }]
-            })
-        }
-        state.sequenceRunning = sequenceCopy
-
-
-        return state
-    }
-}

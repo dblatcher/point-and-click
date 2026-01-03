@@ -60,14 +60,11 @@ function makeGoToOrder(player: ActorData, targetPoint: { x: number; y: number },
     }
 }
 
-export const handleCommand = (
-    command: Command,
+export const makeCommandHandler = (
     props: GameDesign & GameRuntimeOptions,
-    state: GameData,
-    { reportCommand, reportCurrentConversation, reportConsequence }: InGameEventReporter,
+    eventReporter: InGameEventReporter,
     debugLogger?: DebugLogger,
-
-): GameData => {
+) => (state: GameData, command: Command): GameData => {
     const { currentRoomId, rooms, actors, cellMatrix = [] } = state
     const currentRoom = findById(currentRoomId, rooms)
     if (!currentRoom) { return state }
@@ -77,7 +74,7 @@ export const handleCommand = (
     const mustReachFirst = interaction && (command.verb.isMoveVerb || interaction.mustReachFirst)
 
     const descriptionForLog = describeCommand(command)
-    reportCommand?.(command);
+    eventReporter.reportCommand?.(command);
 
     if (interaction && mustReachFirst && command.target.type !== 'item') {
         debugLogger?.(`[${descriptionForLog}]: (pending interaction at  [${command.target.x}, ${command.target.y}])`, 'command')
@@ -88,7 +85,7 @@ export const handleCommand = (
             const isReachable = findPath(player, targetPoint, cellMatrix, CELL_SIZE).length > 0;
             if (isReachable) {
                 state.pendingInteraction = interaction
-                const execute = makeConsequenceExecutor(state, props, reportCurrentConversation, reportConsequence)
+                const execute = makeConsequenceExecutor(state, props, eventReporter)
                 execute(makeGoToOrder(player, targetPoint, props.instantMode ? undefined : command.target.name ?? command.target.id))
             } else {
                 debugLogger?.(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding')
@@ -97,7 +94,7 @@ export const handleCommand = (
         }
     } else if (interaction) {
         debugLogger?.(`[${descriptionForLog}]: ${describeConsequences(interaction)}`, 'command')
-        const execute = makeConsequenceExecutor(state, props, reportCurrentConversation, reportConsequence)
+        const execute = makeConsequenceExecutor(state, props, eventReporter)
         interaction.consequences.forEach(execute)
     } else {
         debugLogger?.(`[${descriptionForLog}]: (no match)`, 'command')
@@ -108,13 +105,12 @@ export const handleCommand = (
 }
 
 
-export function doPendingInteraction(
-    state: GameData,
+export const doPendingInteraction = (
     props: GameDesign & GameRuntimeOptions,
-    { reportCurrentConversation, reportConsequence }: InGameEventReporter,
+    eventReporter: InGameEventReporter,
     debugLogger?: DebugLogger,
-): GameData {
-    const execute = makeConsequenceExecutor(state, props, reportCurrentConversation, reportConsequence)
+) => (state: GameData): GameData => {
+    const execute = makeConsequenceExecutor(state, props, eventReporter)
     state.pendingInteraction?.consequences.forEach(execute)
 
     if (state.pendingInteraction) {

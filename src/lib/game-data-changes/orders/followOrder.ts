@@ -1,9 +1,10 @@
-import { CELL_SIZE, XY } from "@/lib/types-and-constants";
-import { ActorData, GameData, MoveOrder, Order, SpriteData, findPath, type CellMatrix } from "point-click-lib";
+import { CELL_SIZE, GameRuntimeOptions, InGameEventReporter, XY } from "@/lib/types-and-constants";
+import { ActorData, GameData, GameDesign, MoveOrder, Order, SpriteData, findPath, type CellMatrix } from "point-click-lib";
 import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
 import { executeSay } from "./executeSay";
 import { makeMoveOrderFromGoto } from "./makeMoveOrderFromGoto";
+import { findById } from "@/lib/util";
 
 
 function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order: MoveOrder): void {
@@ -79,42 +80,40 @@ const orderIsFinished = (order: Order): boolean => {
  * make a actor do a step from their current order and remove it from the
  * start of the queue if finished
  */
-export function followOrder(
-    subject: ActorData,
-    cellMatrix: CellMatrix,
-    orders: Order[] | undefined,
+export const followOrder = (
+    props: GameDesign & GameRuntimeOptions,
+    eventReporter: InGameEventReporter,
+) => (
     state: GameData,
-    options: {
-        orderSpeed?: number;
-        instantMode?: boolean;
-        spriteData?: SpriteData,
-        onOrderStart?: { (order: Order): void },
-        triggerPendingInteraction?: { (): void },
-    },
-) {
-    const { orderSpeed = 1, instantMode = false, spriteData, onOrderStart, triggerPendingInteraction } = options
-    if (!orders || orders.length === 0) { return false }
-    const [currentOrder] = orders
+    subject: ActorData,
+    orders: Order[] | undefined,
+    triggerPendingInteraction?: { (): void },
+) => {
+        const { orderSpeed = 1, instantMode = false, } = props
+        const { cellMatrix = [] } = state
+        const spriteData = findById(subject.sprite, props.sprites)
+        if (!orders || orders.length === 0) { return false }
+        const [currentOrder] = orders
 
-    if (!currentOrder._started) {
-        onOrderStart?.(currentOrder);
-        if (currentOrder.startDirection) {
-            subject.direction = currentOrder.startDirection
+        if (!currentOrder._started) {
+            eventReporter.reportOrder(currentOrder, subject);
+            if (currentOrder.startDirection) {
+                subject.direction = currentOrder.startDirection
+            }
+            currentOrder._started = true
         }
-        currentOrder._started = true
-    }
-    executeOrder(currentOrder, subject, cellMatrix, state, orders, spriteData, instantMode, orderSpeed);
+        executeOrder(currentOrder, subject, cellMatrix, state, orders, spriteData, instantMode, orderSpeed);
 
-    if (orderIsFinished(currentOrder)) {
-        if (currentOrder.endDirection) {
-            subject.direction = currentOrder.endDirection
-        }
-        if (currentOrder.endStatus) {
-            subject.status = currentOrder.endStatus
-        }
-        orders.shift()
-        if (currentOrder.type === 'move' && currentOrder.doPendingInteractionWhenFinished) {
-            triggerPendingInteraction?.();
+        if (orderIsFinished(currentOrder)) {
+            if (currentOrder.endDirection) {
+                subject.direction = currentOrder.endDirection
+            }
+            if (currentOrder.endStatus) {
+                subject.status = currentOrder.endStatus
+            }
+            orders.shift()
+            if (currentOrder.type === 'move' && currentOrder.doPendingInteractionWhenFinished) {
+                triggerPendingInteraction?.();
+            }
         }
     }
-}
