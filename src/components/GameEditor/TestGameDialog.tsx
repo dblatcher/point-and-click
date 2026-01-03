@@ -85,7 +85,7 @@ export const TestGameDialog = () => {
                                 key={resetTimeStamp}
                                 {...modifiedGameDesign}
                                 showDebugLog={showDebugLog}
-                                soundService={soundService}
+                                playSound={(soundId, volume) => !!soundService.play(soundId, { volume })}
                                 timerInterval={10}
                                 orderSpeed={gameSpeed}
                             />

@@ -38,7 +38,7 @@ const gameStateContext = createContext<{
         updateGameState: () => { },
         gameProps: {
             schemaVersion: DB_VERSION,
-            soundService: new SoundService,
+            playSound: () => false,
             id: '',
             rooms: [],
             items: [],

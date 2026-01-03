@@ -1,5 +1,6 @@
 import { Consequence, Command, Order, ActorData, Stage } from "point-click-lib";
 
+export const DEFAULT_TALK_TIME = 200;
 export const CELL_SIZE = 5
 export type XY = { x: number, y: number };
 
@@ -11,4 +12,11 @@ export interface InGameEventReporter {
     reportCurrentConversation: () => void;
 }
 
-export const DEFAULT_TALK_TIME = 200;
+export interface PlaySound { (soundId: string, volume?: number): boolean }
+
+export type GameRuntimeOptions = {
+    instantMode?: boolean;
+    orderSpeed?: number;
+    playSound: PlaySound;
+    // cellSize: number; TO DO - make this a prop? Or maybe an attribute of a gamedesign? or RoomData?
+}

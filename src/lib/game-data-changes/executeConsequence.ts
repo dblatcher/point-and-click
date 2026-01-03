@@ -165,7 +165,7 @@ export const makeConsequenceExecutor = (
             }
             case 'soundEffect': {
                 const { sound, volume } = consequence
-                consequenceSuccess = !!props.soundService.play(sound, { volume })
+                consequenceSuccess = !!props.playSound?.(sound,  volume)
                 break;
             }
             case 'flag': {

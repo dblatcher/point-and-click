@@ -58,7 +58,7 @@ export const GameDesignPlayer = ({
             {...gameDesign}
             uiComponents={uiComponents}
             instantMode={instantMode}
-            soundService={soundServiceRef.current}
+            playSound={(soundId,volume) => !!soundServiceRef.current.play(soundId,{volume})}
             allowLocalSaves
           />
         ) : (

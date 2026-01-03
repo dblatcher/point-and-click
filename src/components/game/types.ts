@@ -1,19 +1,16 @@
 import { ActorData, CommandTarget, GameDesign, Order } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
-import { SoundService } from "@/services/soundService";
 import { UiComponentSet } from "./uiComponentSet";
+import { GameRuntimeOptions } from "@/lib/types-and-constants";
 
 
 export type GameProps = Readonly<{
     showDebugLog?: boolean;
     startPaused?: boolean;
     uiComponents?: UiComponentSet;
-    instantMode?: boolean;
-    soundService: SoundService;
     timerInterval?: number;
-    orderSpeed?: number;
     allowLocalSaves?: boolean;
-} & GameDesign>
+} & GameRuntimeOptions & GameDesign>
 
 export type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
 export type HandleClickFunction<T extends CommandTarget> = { (target: T, event: PointerEvent): void };
