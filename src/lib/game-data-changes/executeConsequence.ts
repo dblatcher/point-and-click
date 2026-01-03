@@ -1,5 +1,5 @@
 import { cloneData } from "@/lib/clone"
-import { CELL_SIZE, GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants"
+import { GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants"
 import { findById } from "@/lib/util"
 import { ActorData, CommandTarget, Consequence, GameData, GameDesign, generateCellMatrix } from "point-click-lib"
 import { changeRoom } from "./changeRoom"
@@ -37,7 +37,7 @@ export const makeConsequenceExecutor = (
             case 'changeRoom': {
                 const { roomId, takePlayer, x, y } = consequence;
                 const point = typeof x === 'number' && typeof y === 'number' ? { x, y } : undefined
-                const modification = changeRoom(roomId, takePlayer, point)(state)
+                const modification = changeRoom(props)(state, roomId, takePlayer, point)
                 if (!modification) {
                     break
                 }
@@ -156,7 +156,7 @@ export const makeConsequenceExecutor = (
 
                 zone.disabled = !on
                 if (currentRoom?.id === room.id) {
-                    state.cellMatrix = generateCellMatrix(room, CELL_SIZE)
+                    state.cellMatrix = generateCellMatrix(room, props.cellSize)
                 }
                 consequenceSuccess = true
                 break

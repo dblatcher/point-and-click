@@ -20,7 +20,7 @@ export type GameStateAction =
     | { type: 'CONVERSATION-CHOICE', choice: ConversationChoice, props: GameProps }
     | { type: 'TARGET-CLICK', target: CommandTarget, props: GameProps }
     | { type: 'HANDLE-HOVER', target: CommandTarget, event: 'enter' | 'leave' }
-    | { type: 'ROOM-CLICK', x: number, y: number }
+    | { type: 'ROOM-CLICK', x: number, y: number, props: GameProps }
     | { type: 'SEND-COMMAND', command: Command, props: GameProps }
     | { type: 'SET-SCREEN-SIZE', height?: number, width?: number }
     | { type: 'TICK-UPDATE', props: GameProps }
@@ -35,6 +35,7 @@ export type ActionWithoutProp =
     | { type: 'TICK-UPDATE' }
     | { type: 'RESTART' }
     | { type: 'HANDLE-LOAD', data: GameData }
+    | { type: 'ROOM-CLICK', x: number, y: number }
 
 export const makeDispatcherWithProps =
     (dispatch: React.Dispatch<GameStateAction>, props: GameProps) =>
@@ -46,11 +47,11 @@ export const makeDispatcherWithProps =
                 case "TICK-UPDATE":
                 case "RESTART":
                 case "HANDLE-LOAD":
+                case "ROOM-CLICK":
                     return dispatch({ ...action, props })
                 case "SET-PAUSED":
                 case "VERB-SELECT":
                 case "HANDLE-HOVER":
-                case "ROOM-CLICK":
                 case "SET-SCREEN-SIZE":
                 case "CLEAR-STORYBOARD":
                     return dispatch(action)
@@ -153,7 +154,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
 
             return ({
                 ...gameState,
-                ...issueMoveOrder(debugLogger)(gameState, pointClicked, player.id,)
+                ...issueMoveOrder(action.props, debugLogger)(gameState, pointClicked, player.id,)
             })
         }
 

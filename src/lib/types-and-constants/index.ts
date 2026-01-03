@@ -18,5 +18,5 @@ export type GameRuntimeOptions = {
     instantMode?: boolean;
     orderSpeed?: number;
     playSound: PlaySound;
-    // cellSize: number; TO DO - make this a prop? Or maybe an attribute of a gamedesign? or RoomData?
+    cellSize: number;
 }

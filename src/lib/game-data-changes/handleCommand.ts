@@ -1,7 +1,7 @@
 import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
 import { DebugLogger } from "@/lib/inGameDebugging";
 import { getTargetPoint } from "@/lib/roomFunctions";
-import { CELL_SIZE, DEFAULT_TALK_TIME, GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants";
+import { DEFAULT_TALK_TIME, GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
 import { ActorData, Command, GameData, GameDesign, Interaction, OrderConsequence, findPath } from "point-click-lib";
 import { makeConsequenceExecutor } from "./executeConsequence";
@@ -82,7 +82,7 @@ export const makeCommandHandler = (
         const targetPoint = getTargetPoint(command.target, currentRoom)
 
         if (player) {
-            const isReachable = findPath(player, targetPoint, cellMatrix, CELL_SIZE).length > 0;
+            const isReachable = findPath(player, targetPoint, cellMatrix, props.cellSize).length > 0;
             if (isReachable) {
                 state.pendingInteraction = interaction
                 const execute = makeConsequenceExecutor(state, props, eventReporter)

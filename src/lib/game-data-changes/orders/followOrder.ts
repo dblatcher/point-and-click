@@ -1,18 +1,18 @@
-import { CELL_SIZE, GameRuntimeOptions, InGameEventReporter, XY } from "@/lib/types-and-constants";
+import { GameRuntimeOptions, InGameEventReporter, XY } from "@/lib/types-and-constants";
+import { findById } from "@/lib/util";
 import { ActorData, GameData, GameDesign, MoveOrder, Order, SpriteData, findPath, type CellMatrix } from "point-click-lib";
 import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
 import { executeSay } from "./executeSay";
 import { makeMoveOrderFromGoto } from "./makeMoveOrderFromGoto";
-import { findById } from "@/lib/util";
 
 
-function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, order: MoveOrder): void {
+function findPathBetweenSteps(subject: ActorData, cellMatrix: CellMatrix, cellSize:number, order: MoveOrder): void {
     const { steps: oldSteps } = order
     let pointReached: XY = { x: subject.x, y: subject.y }
 
     const newSteps = oldSteps.flatMap(step => {
-        const substeps = findPath(pointReached, step, cellMatrix, CELL_SIZE) as (XY & { animation?: string; speed?: number })[]
+        const substeps = findPath(pointReached, step, cellMatrix, cellSize) as (XY & { animation?: string; speed?: number })[]
         substeps.forEach(subStep => {
             subStep.animation = step.animation
             subStep.speed = step.speed
@@ -35,6 +35,7 @@ function executeOrder(
     nextOrder: Order,
     subject: ActorData,
     cellMatrix: CellMatrix,
+    cellSize: number,
     state: GameData,
     orders: Order[],
     spriteData?: SpriteData,
@@ -44,7 +45,7 @@ function executeOrder(
     switch (nextOrder.type) {
         case "move":
             if (!nextOrder.pathIsSet) {
-                findPathBetweenSteps(subject, cellMatrix, nextOrder);
+                findPathBetweenSteps(subject, cellMatrix, cellSize, nextOrder);
             }
             executeMove(nextOrder, subject, spriteData, instantMode, orderSpeed);
             break;
@@ -102,7 +103,7 @@ export const followOrder = (
             }
             currentOrder._started = true
         }
-        executeOrder(currentOrder, subject, cellMatrix, state, orders, spriteData, instantMode, orderSpeed);
+        executeOrder(currentOrder, subject, cellMatrix, props.cellSize, state, orders, spriteData, instantMode, orderSpeed);
 
         if (orderIsFinished(currentOrder)) {
             if (currentOrder.endDirection) {

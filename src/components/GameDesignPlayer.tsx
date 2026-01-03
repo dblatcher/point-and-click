@@ -9,6 +9,7 @@ import { SoundService } from "@/services/soundService";
 import React, { useEffect, useRef, useState } from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
 import { Box, Skeleton } from "@mui/material";
+import { CELL_SIZE } from "@/lib/types-and-constants";
 
 type Props = {
   gameDesign: GameDesign;
@@ -58,7 +59,8 @@ export const GameDesignPlayer = ({
             {...gameDesign}
             uiComponents={uiComponents}
             instantMode={instantMode}
-            playSound={(soundId,volume) => !!soundServiceRef.current.play(soundId,{volume})}
+            playSound={(soundId, volume) => !!soundServiceRef.current.play(soundId, { volume })}
+            cellSize={CELL_SIZE}
             allowLocalSaves
           />
         ) : (

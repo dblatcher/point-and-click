@@ -10,6 +10,7 @@ import { useState } from "react";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
+import { CELL_SIZE } from "@/lib/types-and-constants";
 
 
 export const TestGameDialog = () => {
@@ -87,6 +88,7 @@ export const TestGameDialog = () => {
                                 showDebugLog={showDebugLog}
                                 playSound={(soundId, volume) => !!soundService.play(soundId, { volume })}
                                 timerInterval={10}
+                                cellSize={CELL_SIZE}
                                 orderSpeed={gameSpeed}
                             />
                         )}
