@@ -1,6 +1,5 @@
-import { DEFAULT_ANIMATION } from "@/lib/animationFunctions";
 import { XY } from "@/lib/types-and-constants";
-import { ActorData, Direction, MoveOrder, SpriteData } from "point-click-lib";
+import { ActorData, Direction, MoveOrder, SpriteData, DEFAULT_ANIMATION } from "point-click-lib";
 
 function getAvailableDirections(spriteData?: SpriteData, animationName?: string): Direction[] {
     if (!spriteData) {

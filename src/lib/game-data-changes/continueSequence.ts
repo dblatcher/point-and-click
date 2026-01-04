@@ -1,5 +1,4 @@
-import { GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants";
-import { ActorData, GameData, GameDesign, Order } from "point-click-lib";
+import { ActorData, GameData, GameRunnerProps, InGameEventReporter, Order } from "point-click-lib";
 import { DebugLogger } from "../inGameDebugging";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { followOrder } from "./orders/followOrder";
@@ -30,7 +29,7 @@ function validateOrderIdsAndClearEmpties(
  * @returns a partial state
  */
 export const continueSequence = (
-    props: GameDesign & GameRuntimeOptions,
+    props: GameRunnerProps,
     eventReporter: InGameEventReporter,
     debugLogger: DebugLogger,
 ) => (state: GameData): Partial<GameData> => {

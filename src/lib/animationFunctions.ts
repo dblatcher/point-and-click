@@ -1,13 +1,5 @@
-import { ActorData, SpriteData } from "point-click-lib"
-import { findById, deduplicateStringArray } from "./util"
-
-export const DEFAULT_ANIMATION = {
-    say: 'talk',
-    move: 'walk',
-    goTo: 'walk',
-    wait: 'default',
-    act: 'default',
-} as const
+import { ActorData, DEFAULT_ANIMATION, SpriteData } from "point-click-lib";
+import { deduplicateStringArray, findById } from "./util";
 
 export function getStatusSuggestions(actorId: string | undefined, gameDesign: { actors: ActorData[]; sprites: SpriteData[] }): string[] {
     const actorData = findById(actorId, gameDesign.actors)

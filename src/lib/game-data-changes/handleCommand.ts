@@ -1,9 +1,8 @@
 import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
 import { DebugLogger } from "@/lib/inGameDebugging";
 import { getTargetPoint } from "@/lib/roomFunctions";
-import { GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
-import { ActorData, Command, GameData, GameDesign, Interaction, OrderConsequence, findPath } from "point-click-lib";
+import { ActorData, Command, GameData, GameRunnerProps, InGameEventReporter, Interaction, OrderConsequence, findPath } from "point-click-lib";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 
@@ -61,7 +60,7 @@ function makeGoToOrder(player: ActorData, targetPoint: { x: number; y: number },
 }
 
 export const makeCommandHandler = (
-    props: GameDesign & GameRuntimeOptions,
+    props: GameRunnerProps,
     eventReporter: InGameEventReporter,
     debugLogger?: DebugLogger,
 ) => (state: GameData, command: Command): GameData => {
@@ -106,7 +105,7 @@ export const makeCommandHandler = (
 
 
 export const doPendingInteraction = (
-    props: GameDesign & GameRuntimeOptions,
+    props: GameRunnerProps,
     eventReporter: InGameEventReporter,
     debugLogger?: DebugLogger,
 ) => (state: GameData): GameData => {

@@ -1,8 +1,8 @@
-import { GameRuntimeOptions, XY } from "@/lib/types-and-constants";
-import { GameData, GameDesign, generateCellMatrix } from "point-click-lib";
+import { XY } from "@/lib/types-and-constants";
+import { GameData, GameRunnerProps, generateCellMatrix } from "point-click-lib";
 
 export const changeRoom = (
-    props: GameDesign & GameRuntimeOptions,
+    props: GameRunnerProps,
 ) => (
     state: GameData, roomId: string,
     takePlayer?: boolean,

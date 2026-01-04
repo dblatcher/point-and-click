@@ -1,10 +1,10 @@
 import { DebugLogger } from "@/lib/inGameDebugging";
-import { GameRuntimeOptions, XY } from "@/lib/types-and-constants";
-import { GameData, GameDesign, MoveOrder, findPath } from "point-click-lib";
+import { XY } from "@/lib/types-and-constants";
+import { GameData, GameRunnerProps, MoveOrder, findPath } from "point-click-lib";
 import { issueOrdersOutsideSequence } from "./issueOrders";
 
 export const issueMoveOrder = (
-    props: GameDesign & GameRuntimeOptions,
+    props: GameRunnerProps,
     debugLogger?: DebugLogger,
 ) => (
     state: GameData,

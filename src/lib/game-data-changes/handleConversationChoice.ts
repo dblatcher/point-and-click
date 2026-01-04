@@ -1,8 +1,7 @@
 import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
-import { ChoiceRefSet, Conversation, ConversationChoice, GameData, GameDesign, Sequence } from "point-click-lib";
+import { ChoiceRefSet, Conversation, ConversationChoice, GameData, GameRunnerProps, Sequence } from "point-click-lib";
 import { DebugLogger } from "../inGameDebugging";
-import { GameRuntimeOptions } from "../types-and-constants";
 
 
 function findChoiceFromRefSet(
@@ -85,7 +84,7 @@ function buildDefaultSequence(choice: ConversationChoice, defaultTalkTime: numbe
 }
 
 export const handleConversationChoice =
-    ({ sequences, defaultTalkTime }: GameDesign & GameRuntimeOptions, debugLogger: DebugLogger) =>
+    ({ sequences, defaultTalkTime }: GameRunnerProps, debugLogger: DebugLogger) =>
         (state: GameData, choice: ConversationChoice): GameData => {
             const { conversations, currentConversationId = '' } = state;
             const currentConversation = conversations.find(conversation => conversation.id === currentConversationId)

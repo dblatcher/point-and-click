@@ -1,7 +1,6 @@
-import { SpriteData, Direction, SpriteFrame, Animation } from "point-click-lib";
 import { ImageAsset } from "@/services/assets";
+import { Animation, DEFAULT_ANIMATION, Direction, SpriteData, SpriteFrame } from "point-click-lib";
 import { getBackgroundStyle } from "./image-frame-backgrounds";
-import { DEFAULT_ANIMATION } from "./animationFunctions";
 
 
 interface ImageWithFrame {

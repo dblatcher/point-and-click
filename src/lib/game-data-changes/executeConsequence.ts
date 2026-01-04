@@ -1,14 +1,13 @@
 import { cloneData } from "@/lib/clone"
-import { GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants"
 import { findById } from "@/lib/util"
-import { ActorData, CommandTarget, Consequence, GameData, GameDesign, generateCellMatrix } from "point-click-lib"
+import { ActorData, CommandTarget, Consequence, GameData, GameRunnerProps, InGameEventReporter, generateCellMatrix } from "point-click-lib"
 import { changeRoom } from "./changeRoom"
 import { issueOrdersOutsideSequence } from "./orders/issueOrders"
 
 
 export const makeConsequenceExecutor = (
     state: GameData,
-    props: GameDesign & GameRuntimeOptions,
+    props: GameRunnerProps,
     eventReporter: InGameEventReporter,
 ): { (consequence: Consequence): void } => {
     const { reportCurrentConversation, reportConsequence } = eventReporter

@@ -1,8 +1,7 @@
-import { ActorData, Command, Consequence, Order, Stage } from "point-click-lib"
-import { LogEntry, makeDebugEntry, DebugLogger } from "../inGameDebugging"
-import { GameState } from "./types"
+import { ActorData, Command, Consequence, InGameEventReporter, Order, Stage } from "point-click-lib"
 import { reportConversationBranch } from "../game-event-emitter"
-import { InGameEventReporter } from "../types-and-constants"
+import { DebugLogger, LogEntry, makeDebugEntry } from "../inGameDebugging"
+import { GameState } from "./types"
 
 const makeConsequenceReportEmitter = (state: GameState) => (consequence: Consequence, success: boolean, offscreen: boolean) => {
     state.emitter.emit('in-game-event', { type: 'consequence', consequence, success, offscreen })

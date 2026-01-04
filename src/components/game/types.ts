@@ -1,7 +1,6 @@
-import { ActorData, CommandTarget, GameDesign, Order } from "point-click-lib";
+import { ActorData, CommandTarget, GameDesign, Order, GameRuntimeOptions } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
 import { UiComponentSet } from "./uiComponentSet";
-import { GameRuntimeOptions } from "@/lib/types-and-constants";
 
 
 export type GameProps = Readonly<{

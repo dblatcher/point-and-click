@@ -1,6 +1,6 @@
-import { GameRuntimeOptions, InGameEventReporter, XY } from "@/lib/types-and-constants";
+import { XY } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
-import { ActorData, GameData, GameDesign, MoveOrder, Order, SpriteData, findPath, type CellMatrix } from "point-click-lib";
+import { ActorData, GameData, GameRunnerProps, InGameEventReporter, MoveOrder, Order, SpriteData, findPath, type CellMatrix } from "point-click-lib";
 import { executeAction } from "./executeAct";
 import { executeMove } from "./executeMove";
 import { executeSay } from "./executeSay";
@@ -82,7 +82,7 @@ const orderIsFinished = (order: Order): boolean => {
  * start of the queue if finished
  */
 export const followOrder = (
-    props: GameDesign & GameRuntimeOptions,
+    props: GameRunnerProps,
     eventReporter: InGameEventReporter,
 ) => (
     state: GameData,
