@@ -1,9 +1,8 @@
 import { BooleanInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
 import { useGameDesign } from "@/context/game-design-context";
 import { Consequence, Interaction } from "point-click-lib";
-import { InteractionSchema } from "point-click-lib";
+import { InteractionSchema, findTarget } from "point-click-lib";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
-import { findTarget } from "@/lib/commandFunctions";
 import { insertAt, listIds } from "@/lib/util";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, Typography } from "@mui/material";
 import { useReducer, useState } from "react";

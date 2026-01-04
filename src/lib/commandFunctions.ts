@@ -1,5 +1,4 @@
-import { Command, Interaction, RoomData, FlagMap, CommandTarget, GameContents, GameData } from "point-click-lib";
-import { findById } from "./util";
+import { Command, FlagMap, GameData, Interaction, RoomData } from "point-click-lib";
 
 export const wildCard = {
     ITEM: "$ITEM",
@@ -21,21 +20,6 @@ export const describeCommand = (command: Command, useNames = false): string => {
         return `${verb.id}  ${item.id} ${verb.preposition} ${target.id}`
     }
     return `${verb.id} ${target.id}`
-}
-
-export function findTarget(ids: { targetId?: string, roomId?: string }, gameContents: GameContents, excludeItems = false): CommandTarget | undefined {
-    const { targetId, roomId } = ids
-    if (!targetId) { return undefined }
-    const { rooms, actors, items } = gameContents
-    const room = roomId ? findById(roomId, rooms) : undefined;
-    const relevantRooms: RoomData[] = room ? [room] : roomId ? [] : rooms
-    const hotspots = relevantRooms.flatMap(room => room.hotspots || [])
-
-
-    return findById(targetId, excludeItems
-        ? [...actors, ...hotspots]
-        : [...actors, ...items, ...hotspots]
-    )
 }
 
 export function getDefaultResponseText(command: Command, unreachable: boolean): string {

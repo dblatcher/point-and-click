@@ -1,7 +1,5 @@
-import { findTarget } from "@/lib/commandFunctions";
-import { getTargetPoint } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
-import { GameData, GotoOrder, MoveOrder } from "point-click-lib";
+import { GameData, GotoOrder, MoveOrder, findTarget, getTargetPoint } from "point-click-lib";
 
 
 const makeEmptyMoveOrder = (): MoveOrder => ({

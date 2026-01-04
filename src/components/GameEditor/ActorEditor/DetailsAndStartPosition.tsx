@@ -3,11 +3,11 @@ import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
-import { getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
+import { getViewAngleXCenteredOn, getViewAngleYCenteredOn, putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { XY } from "@/lib/types-and-constants";
 import { findById, listIds } from "@/lib/util";
 import { Alert, Box, Slider, Stack, Typography } from "@mui/material";
-import { ActorData, Direction, directions } from "point-click-lib";
+import { ActorData, Direction, directions, getTargetPoint } from "point-click-lib";
 import { useEffect, useState } from "react";
 import { ColorInput } from "../ColorInput";
 import { DelayedStringInput } from "../DelayedStringInput";
