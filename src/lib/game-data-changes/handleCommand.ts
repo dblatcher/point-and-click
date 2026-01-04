@@ -1,12 +1,11 @@
 import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
-import { DebugLogger } from "@/lib/inGameDebugging";
 import { getTargetPoint } from "@/lib/roomFunctions";
 import { findById } from "@/lib/util";
-import { ActorData, Command, GameData, GameRunnerProps, InGameEventReporter, Interaction, OrderConsequence, findPath } from "point-click-lib";
+import { ActorData, Command, GameData, GameRunnerProps, InGameEventReporter, Interaction, LogToDebug, OrderConsequence, findPath } from "point-click-lib";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 
-function doDefaultResponse(state: GameData, defaultTalkTime: number, command: Command, unreachable: boolean, debugLogger?: DebugLogger): GameData {
+function doDefaultResponse(state: GameData, defaultTalkTime: number, command: Command, unreachable: boolean, debugLogger?: LogToDebug): GameData {
     const { actors, rooms, currentRoomId } = state
     const player = actors.find(_ => _.isPlayer)
     const currentRoom = findById(currentRoomId, rooms)
@@ -62,7 +61,7 @@ function makeGoToOrder(player: ActorData, targetPoint: { x: number; y: number },
 export const makeCommandHandler = (
     props: GameRunnerProps,
     eventReporter: InGameEventReporter,
-    debugLogger?: DebugLogger,
+    debugLogger?: LogToDebug,
 ) => (state: GameData, command: Command): GameData => {
     const { currentRoomId, rooms, actors, cellMatrix = [] } = state
     const currentRoom = findById(currentRoomId, rooms)
@@ -107,7 +106,7 @@ export const makeCommandHandler = (
 export const doPendingInteraction = (
     props: GameRunnerProps,
     eventReporter: InGameEventReporter,
-    debugLogger?: DebugLogger,
+    debugLogger?: LogToDebug,
 ) => (state: GameData): GameData => {
     const execute = makeConsequenceExecutor(state, props, eventReporter)
     state.pendingInteraction?.consequences.forEach(execute)
