@@ -78,7 +78,7 @@ export function getTargetPoint(target: ActorData | HotspotZone, roomData: RoomDa
         }
         case 'hotspot': {
             const { x, y, walkToX, walkToY, parallax } = target
-            const { frameWidth } = roomData
+            const { frameWidth, frameHeight, height } = roomData
 
             let pointX: number;
             if (typeof walkToX === 'undefined') {
@@ -91,7 +91,9 @@ export function getTargetPoint(target: ActorData | HotspotZone, roomData: RoomDa
 
             let pointY: number;
             if (typeof walkToY === 'undefined') {
-                pointY = y
+                const layerHeight = getLayerHeight(parallax, roomData)
+                const offset = (layerHeight - (frameHeight ?? height)) / 2
+                pointY = y + offset
             } else {
                 pointY = walkToY
             }
