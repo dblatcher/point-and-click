@@ -1,8 +1,8 @@
 import { cloneData } from "@/lib/clone";
 import { findById } from "@/lib/util";
 import { ChoiceRefSet, Conversation, ConversationChoice, GameData, GameDesign, Sequence } from "point-click-lib";
-import { DEFAULT_TALK_TIME, GameRuntimeOptions } from "../types-and-constants";
 import { DebugLogger } from "../inGameDebugging";
+import { GameRuntimeOptions } from "../types-and-constants";
 
 
 function findChoiceFromRefSet(
@@ -61,7 +61,7 @@ function setChoicesDisabled(
     return conversations
 }
 
-function buildDefaultSequence(choice: ConversationChoice, state: GameData): Sequence {
+function buildDefaultSequence(choice: ConversationChoice, defaultTalkTime: number, state: GameData): Sequence {
 
     const sequence: Sequence = { id: "", stages: [{ actorOrders: {} }] }
     const player = state.actors.find(_ => _.isPlayer)
@@ -76,7 +76,7 @@ function buildDefaultSequence(choice: ConversationChoice, state: GameData): Sequ
             {
                 type: 'say',
                 text: choice.text,
-                time: DEFAULT_TALK_TIME,
+                time: defaultTalkTime,
             }
         ]
     }
@@ -85,7 +85,7 @@ function buildDefaultSequence(choice: ConversationChoice, state: GameData): Sequ
 }
 
 export const handleConversationChoice =
-    ({ sequences }: GameDesign & GameRuntimeOptions, debugLogger:DebugLogger) =>
+    ({ sequences, defaultTalkTime }: GameDesign & GameRuntimeOptions, debugLogger: DebugLogger) =>
         (state: GameData, choice: ConversationChoice): GameData => {
             const { conversations, currentConversationId = '' } = state;
             const currentConversation = conversations.find(conversation => conversation.id === currentConversationId)
@@ -110,7 +110,9 @@ export const handleConversationChoice =
                 debugLogger(`invalid sequenceId "${choice.sequence}" in conversation "${currentConversationId}"`)
             }
 
-            const sequenceCopy: Sequence = originalSequence ? cloneData(originalSequence) : buildDefaultSequence(choice, state);
+            const sequenceCopy: Sequence = originalSequence
+                ? cloneData(originalSequence)
+                : buildDefaultSequence(choice, defaultTalkTime, state);
             if (choice.end) {
                 sequenceCopy.stages.push({
                     immediateConsequences: [{ type: 'conversation', end: true, conversationId: currentConversationId }]

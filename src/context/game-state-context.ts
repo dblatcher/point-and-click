@@ -1,11 +1,11 @@
-import { createContext, useContext } from 'react'
-import { GameState } from '@/lib/game-state-logic/types'
-import { findById } from '@/lib/util'
-import { GameEventEmitter } from '../lib/game-event-emitter'
-import { ActionWithoutProp, GameStateAction } from '@/lib/game-state-logic/game-state-reducer'
 import { GameProps } from '@/components/game/types'
-import { SoundService } from '@/services/soundService'
+import { ActionWithoutProp, GameStateAction } from '@/lib/game-state-logic/game-state-reducer'
+import { GameState } from '@/lib/game-state-logic/types'
 import { DB_VERSION } from '@/lib/indexed-db'
+import { CELL_SIZE, DEFAULT_TALK_TIME } from '@/lib/types-and-constants'
+import { findById } from '@/lib/util'
+import { createContext, useContext } from 'react'
+import { GameEventEmitter } from '../lib/game-event-emitter'
 
 const gameStateContext = createContext<{
     gameState: GameState,
@@ -51,6 +51,8 @@ const gameStateContext = createContext<{
             verbs: [],
             sequences: [],
             sprites: [],
+            cellSize: CELL_SIZE,
+            defaultTalkTime: DEFAULT_TALK_TIME,
         }
     }
 )

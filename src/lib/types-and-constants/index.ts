@@ -1,4 +1,4 @@
-import { Consequence, Command, Order, ActorData, Stage } from "point-click-lib";
+import { ActorData, Command, Consequence, Order, Stage } from "point-click-lib";
 
 export const DEFAULT_TALK_TIME = 200;
 export const CELL_SIZE = 5
@@ -19,4 +19,5 @@ export type GameRuntimeOptions = {
     orderSpeed?: number;
     playSound: PlaySound;
     cellSize: number;
+    defaultTalkTime: number;
 }

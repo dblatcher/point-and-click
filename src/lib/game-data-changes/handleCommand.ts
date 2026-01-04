@@ -1,13 +1,13 @@
 import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
 import { DebugLogger } from "@/lib/inGameDebugging";
 import { getTargetPoint } from "@/lib/roomFunctions";
-import { DEFAULT_TALK_TIME, GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants";
+import { GameRuntimeOptions, InGameEventReporter } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
 import { ActorData, Command, GameData, GameDesign, Interaction, OrderConsequence, findPath } from "point-click-lib";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 
-function doDefaultResponse(command: Command, state: GameData, unreachable: boolean, debugLogger?: DebugLogger): GameData {
+function doDefaultResponse(state: GameData, defaultTalkTime: number, command: Command, unreachable: boolean, debugLogger?: DebugLogger): GameData {
     const { actors, rooms, currentRoomId } = state
     const player = actors.find(_ => _.isPlayer)
     const currentRoom = findById(currentRoomId, rooms)
@@ -25,7 +25,7 @@ function doDefaultResponse(command: Command, state: GameData, unreachable: boole
     } else {
         const text = getDefaultResponseText(command, unreachable)
         issueOrdersOutsideSequence(state, player.id, [{
-            type: 'say', text, time: DEFAULT_TALK_TIME
+            type: 'say', text, time: defaultTalkTime
         }])
     }
     return state
@@ -89,7 +89,7 @@ export const makeCommandHandler = (
                 execute(makeGoToOrder(player, targetPoint, props.instantMode ? undefined : command.target.name ?? command.target.id))
             } else {
                 debugLogger?.(`cannot reach [${targetPoint.x}, ${targetPoint.y}] from [${player.x},${player.y}]`, 'pathfinding')
-                doDefaultResponse(command, state, true, debugLogger)
+                doDefaultResponse(state, props.defaultTalkTime, command, true, debugLogger)
             }
         }
     } else if (interaction) {
@@ -98,7 +98,7 @@ export const makeCommandHandler = (
         interaction.consequences.forEach(execute)
     } else {
         debugLogger?.(`[${descriptionForLog}]: (no match)`, 'command')
-        doDefaultResponse(command, state, false, debugLogger)
+        doDefaultResponse(state, props.defaultTalkTime, command, false, debugLogger)
     }
 
     return state

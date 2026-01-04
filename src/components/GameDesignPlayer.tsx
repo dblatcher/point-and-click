@@ -1,15 +1,15 @@
 import { Game } from "@/components/game/Game";
 import { AssetsProvider } from "@/context/asset-context";
 import { SpritesProvider } from "@/context/sprite-context";
-import { GameDesign } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
+import { CELL_SIZE, DEFAULT_TALK_TIME } from "@/lib/types-and-constants";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { ImageService } from "@/services/imageService";
 import { SoundService } from "@/services/soundService";
-import React, { useEffect, useRef, useState } from "react";
-import { UiComponentSet } from "./game/uiComponentSet";
 import { Box, Skeleton } from "@mui/material";
-import { CELL_SIZE } from "@/lib/types-and-constants";
+import { GameDesign } from "point-click-lib";
+import { useEffect, useRef, useState } from "react";
+import { UiComponentSet } from "./game/uiComponentSet";
 
 type Props = {
   gameDesign: GameDesign;
@@ -61,6 +61,7 @@ export const GameDesignPlayer = ({
             instantMode={instantMode}
             playSound={(soundId, volume) => !!soundServiceRef.current.play(soundId, { volume })}
             cellSize={CELL_SIZE}
+            defaultTalkTime={DEFAULT_TALK_TIME}
             allowLocalSaves
           />
         ) : (

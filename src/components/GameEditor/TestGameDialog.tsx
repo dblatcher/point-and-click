@@ -2,15 +2,15 @@ import { Game } from "@/components/game/Game";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { GameDesign } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
+import { CELL_SIZE, DEFAULT_TALK_TIME } from "@/lib/types-and-constants";
 import { editorTheme } from "@/theme";
 import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Slider, ThemeProvider, Typography } from "@mui/material";
+import { GameDesign } from "point-click-lib";
 import { useState } from "react";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
-import { CELL_SIZE } from "@/lib/types-and-constants";
 
 
 export const TestGameDialog = () => {
@@ -89,6 +89,7 @@ export const TestGameDialog = () => {
                                 playSound={(soundId, volume) => !!soundService.play(soundId, { volume })}
                                 timerInterval={10}
                                 cellSize={CELL_SIZE}
+                                defaultTalkTime={DEFAULT_TALK_TIME}
                                 orderSpeed={gameSpeed}
                             />
                         )}
