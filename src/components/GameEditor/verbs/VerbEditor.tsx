@@ -1,11 +1,9 @@
 
 import { SchemaForm } from "@/components/SchemaForm";
 import { useGameDesign } from "@/context/game-design-context";
-import { Verb } from "point-click-lib";
-import { VerbSchema } from "point-click-lib";
-import { wildCard } from "@/lib/commandFunctions";
 import { patchMember } from "@/lib/update-design";
 import { Alert, Box, Stack } from "@mui/material";
+import { Verb, VerbSchema, wildCard } from "point-click-lib";
 import { useState } from "react";
 import { DelayedStringInput } from "../DelayedStringInput";
 import { HelpButton } from "../HelpButton";
@@ -24,7 +22,7 @@ export const VerbEditor = ({ verb }: Props) => {
     const [localDefaultResponseWithItem, setLocalDefaultResponseWithItem] = useState(verb.defaultResponseWithItem)
 
     const handleUpdate = (mod: Partial<Verb>): void => {
-        console.log({mod})
+        console.log({ mod })
         const keys = Object.keys(mod);
         if (keys.includes('id')) {
             console.error('no id changes', mod)

@@ -1,13 +1,11 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { ItemData, Verb } from "point-click-lib";
 import { findById } from "@/lib/util";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Card, Fade, IconButton, Typography } from "@mui/material";
+import { ItemData, Verb, matchInteraction } from "point-click-lib";
 import React, { useState } from "react";
 import { ItemButton } from "./ItemButton";
 import { InventoryVerbList } from "./VerbList";
-import { matchInteraction } from "@/lib/commandFunctions";
-
 interface Props {
     remove: { (): void }
     isShowing: boolean

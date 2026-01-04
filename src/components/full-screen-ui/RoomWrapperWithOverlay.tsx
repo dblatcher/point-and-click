@@ -1,10 +1,11 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { ActorData, CommandTarget, HotspotZone } from "point-click-lib";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
 import { GameState } from "@/lib/game-state-logic/types";
 import { calculateScreenX } from "@/lib/roomFunctions";
 import { clamp, findById } from "@/lib/util";
+import InventoryIcon from '@mui/icons-material/Inventory2Outlined';
 import { Box, Button } from "@mui/material";
+import { ActorData, CommandTarget, HotspotZone, matchInteraction } from "point-click-lib";
 import React, { useEffect, useRef, useState } from "react";
 import { buildActorListSortedForDisplay } from "../game/put-contents-in-order";
 import { ResizeWatcher } from "../ResizeWatcher";
@@ -13,8 +14,6 @@ import { Room } from "../svg/Room";
 import { InteractionCoin } from "./InteractionCoin";
 import { InventoryDrawer } from "./InventoryDrawer";
 import { TargetLabel } from "./TargetLabel";
-import { matchInteraction } from "@/lib/commandFunctions";
-import InventoryIcon from '@mui/icons-material/Inventory2Outlined';
 
 const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {
     return gameState.hoverTarget?.type === 'actor' || gameState.hoverTarget?.type === 'hotspot'

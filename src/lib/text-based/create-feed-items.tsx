@@ -1,6 +1,5 @@
-import { ActorData, findTarget } from "point-click-lib";
+import { ActorData, describeCommand, findTarget } from "point-click-lib";
 import { StoryBoard } from "point-click-lib";
-import { describeCommand } from "@/lib/commandFunctions";
 import { CommandReport, ConsequenceReport, ConversationBranchReport, InGameEvent, OrderReport, SequenceStageReport } from "@/lib/game-event-emitter";
 import { GameState } from "@/lib/game-state-logic/types";
 import { FeedItem } from "@/lib/text-based/types";

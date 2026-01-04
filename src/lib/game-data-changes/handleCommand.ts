@@ -1,6 +1,5 @@
-import { describeCommand, getDefaultResponseText, matchInteraction } from "@/lib/commandFunctions";
 import { findById } from "@/lib/util";
-import { ActorData, Command, getTargetPoint, GameData, GameRunnerProps, InGameEventReporter, Interaction, LogToDebug, OrderConsequence, findPath } from "point-click-lib";
+import { ActorData, Command, GameData, GameRunnerProps, InGameEventReporter, Interaction, LogToDebug, OrderConsequence, describeCommand, findPath, getDefaultResponseText, getTargetPoint, matchInteraction } from "point-click-lib";
 import { makeConsequenceExecutor } from "./executeConsequence";
 import { issueOrdersOutsideSequence } from "./orders/issueOrders";
 
