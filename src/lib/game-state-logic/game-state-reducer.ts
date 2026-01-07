@@ -4,14 +4,13 @@ import { GameState } from "@/lib/game-state-logic/types";
 import { getViewAngleXCenteredOn, getViewAngleYCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
 import { CELL_SIZE } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
-import { continueSequence, doPendingInteraction, followOrder, generateCellMatrix, handleConversationChoice, issueMoveOrder, makeCommandHandler, matchInteraction } from "point-click-lib";
+import { advanceTimeOneStep, generateCellMatrix, handleConversationChoice, issueMoveOrder, makeCommandHandler, matchInteraction } from "point-click-lib";
 import { Reducer } from "react";
 import { GameProps } from "../../components/game/types";
 import { DB_VERSION } from "../indexed-db";
 import { clearRemovedEntitiesFromCommand } from "./clearCommand";
 import { ActionWithoutProp, GameStateAction } from "./game-state-actions";
 import { makeDebugLogEmitter, makeEventReporter } from "./report-emitting";
-
 
 export const makeDispatcherWithProps =
     (dispatch: React.Dispatch<GameStateAction>, props: GameProps) =>
@@ -143,43 +142,25 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
         }
 
         case "TICK-UPDATE": {
-            const viewAngleXCenteredOnPlayer = (player && currentRoom) ? getViewAngleXCenteredOn(player.x, currentRoom) : undefined
-            const viewAngleYCenteredOnPlayer = (player && currentRoom) ? getViewAngleYCenteredOn(player.y, currentRoom) : undefined
-            if (gameState.sequenceRunning) {
-                const updatedState = {
-                    ...gameState,
-                    ...continueSequence(action.props, eventReporter, debugLogger)(gameState),
-                    viewAngleX: viewAngleXCenteredOnPlayer ?? gameState.viewAngleX,
-                    viewAngleY: viewAngleYCenteredOnPlayer ?? gameState.viewAngleY,
-                }
-                if (!updatedState.sequenceRunning) {
-                    return clearRemovedEntitiesFromCommand(updatedState)
-                }
-                return updatedState
-            }
+            const wasPendingInteraction = !!gameState.pendingInteraction;
+            const wasSeqeunceRunning = !!gameState.sequenceRunning;            
+            advanceTimeOneStep(action.props, eventReporter, debugLogger)(gameState)
+            
+            const shouldClearCommand = wasPendingInteraction && !gameState.pendingInteraction || wasSeqeunceRunning && !gameState.sequenceRunning;
+            const viewAngle = (player && currentRoom) ? {
+                viewAngleX: getViewAngleXCenteredOn(player.x, currentRoom),
+                viewAngleY: getViewAngleYCenteredOn(player.y, currentRoom),
+            } : {}
 
-            const makeActorsDoOrders = (state: GameState) => {
-                let pendingInteractionShouldBeDone = false;
-                state.actors.forEach(actor => {
-                    followOrder(action.props, eventReporter)(
-                        state,
-                        actor,
-                        state.actorOrders[actor.id],
-                        () => { pendingInteractionShouldBeDone = true }
-                    )
-                })
-                if (pendingInteractionShouldBeDone) {
-                    doPendingInteraction(action.props, eventReporter, debugLogger)(state)
-                    return clearRemovedEntitiesFromCommand(state)
-                }
-                return state
+            if (shouldClearCommand) {
+                return clearRemovedEntitiesFromCommand({
+                ...gameState,
+                ...viewAngle
+            })
             }
-
             return {
                 ...gameState,
-                ...makeActorsDoOrders(gameState),
-                viewAngleX: viewAngleXCenteredOnPlayer ?? gameState.viewAngleX,
-                viewAngleY: viewAngleYCenteredOnPlayer ?? gameState.viewAngleY,
+                ...viewAngle
             }
         }
 
