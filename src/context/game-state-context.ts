@@ -1,11 +1,11 @@
 import { GameProps } from '@/components/game/types'
-import { ActionWithoutProp, GameStateAction } from '@/lib/game-state-logic/game-state-reducer'
 import { GameState } from '@/lib/game-state-logic/types'
 import { DB_VERSION } from '@/lib/indexed-db'
 import { CELL_SIZE, DEFAULT_TALK_TIME } from '@/lib/types-and-constants'
 import { findById } from '@/lib/util'
 import { createContext, useContext } from 'react'
 import { GameEventEmitter } from '../lib/game-event-emitter'
+import { ActionWithoutProp, GameStateAction } from '@/lib/game-state-logic/game-state-actions'
 
 const gameStateContext = createContext<{
     gameState: GameState,

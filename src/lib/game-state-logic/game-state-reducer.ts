@@ -4,36 +4,14 @@ import { GameState } from "@/lib/game-state-logic/types";
 import { getViewAngleXCenteredOn, getViewAngleYCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
 import { CELL_SIZE } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
-import { Command, CommandTarget, ConversationChoice, GameData, Verb, continueSequence, doPendingInteraction, followOrder, generateCellMatrix, handleConversationChoice, issueMoveOrder, makeCommandHandler, matchInteraction } from "point-click-lib";
+import { continueSequence, doPendingInteraction, followOrder, generateCellMatrix, handleConversationChoice, issueMoveOrder, makeCommandHandler, matchInteraction } from "point-click-lib";
 import { Reducer } from "react";
 import { GameProps } from "../../components/game/types";
 import { DB_VERSION } from "../indexed-db";
 import { clearRemovedEntitiesFromCommand } from "./clearCommand";
+import { ActionWithoutProp, GameStateAction } from "./game-state-actions";
 import { makeDebugLogEmitter, makeEventReporter } from "./report-emitting";
 
-
-export type GameStateAction =
-    | { type: 'SET-PAUSED', isPaused: boolean }
-    | { type: 'VERB-SELECT', verb: Verb }
-    | { type: 'CONVERSATION-CHOICE', choice: ConversationChoice, props: GameProps }
-    | { type: 'TARGET-CLICK', target: CommandTarget, props: GameProps }
-    | { type: 'HANDLE-HOVER', target: CommandTarget, event: 'enter' | 'leave' }
-    | { type: 'ROOM-CLICK', x: number, y: number, props: GameProps }
-    | { type: 'SEND-COMMAND', command: Command, props: GameProps }
-    | { type: 'SET-SCREEN-SIZE', height?: number, width?: number }
-    | { type: 'TICK-UPDATE', props: GameProps }
-    | { type: 'CLEAR-STORYBOARD' }
-    | { type: 'RESTART', props: GameProps }
-    | { type: 'HANDLE-LOAD', data: GameData, props: GameProps }
-
-export type ActionWithoutProp =
-    | { type: 'SEND-COMMAND', command: Command }
-    | { type: 'TARGET-CLICK', target: CommandTarget }
-    | { type: 'CONVERSATION-CHOICE', choice: ConversationChoice }
-    | { type: 'TICK-UPDATE' }
-    | { type: 'RESTART' }
-    | { type: 'HANDLE-LOAD', data: GameData }
-    | { type: 'ROOM-CLICK', x: number, y: number }
 
 export const makeDispatcherWithProps =
     (dispatch: React.Dispatch<GameStateAction>, props: GameProps) =>
