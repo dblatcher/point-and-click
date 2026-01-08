@@ -1,5 +1,5 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
+import { screenSizeAction } from "@/lib/game-state-logic/game-state-actions";
 import { RoomWrapper } from "../game/RoomWrapper";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";

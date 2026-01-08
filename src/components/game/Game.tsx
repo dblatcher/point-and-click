@@ -1,6 +1,7 @@
 import { GameStateProvider } from "@/context/game-state-context";
 import { useInterval } from "@/hooks/useInterval";
-import { gameStateReducer, getInitialGameState, makeDispatcherWithProps } from "@/lib/game-state-logic/game-state-reducer";
+import { makeDispatcherWithProps } from "@/lib/game-state-logic/game-state-actions";
+import { gameStateReducer, getInitialGameState } from "@/lib/game-state-logic/game-state-reducer";
 import { findById } from "@/lib/util";
 import React, { useReducer } from "react";
 import { DebugLog } from "../DebugLog";

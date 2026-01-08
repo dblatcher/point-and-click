@@ -9,33 +9,8 @@ import { Reducer } from "react";
 import { GameProps } from "../../components/game/types";
 import { DB_VERSION } from "../indexed-db";
 import { clearRemovedEntitiesFromCommand } from "./clearCommand";
-import { ActionWithoutProp, GameStateAction } from "./game-state-actions";
+import { GameStateAction } from "./game-state-actions";
 import { makeDebugLogEmitter, makeEventReporter } from "./report-emitting";
-
-export const makeDispatcherWithProps =
-    (dispatch: React.Dispatch<GameStateAction>, props: GameProps) =>
-        (action: GameStateAction | ActionWithoutProp) => {
-            switch (action.type) {
-                case "SEND-COMMAND":
-                case "TARGET-CLICK":
-                case "CONVERSATION-CHOICE":
-                case "TICK-UPDATE":
-                case "RESTART":
-                case "HANDLE-LOAD":
-                case "ROOM-CLICK":
-                    return dispatch({ ...action, props })
-                case "SET-PAUSED":
-                case "VERB-SELECT":
-                case "HANDLE-HOVER":
-                case "SET-SCREEN-SIZE":
-                case "CLEAR-STORYBOARD":
-                    return dispatch(action)
-            }
-        }
-
-export const getStoryboardCloseAction = (isEndOfGame?: boolean): ActionWithoutProp | GameStateAction => isEndOfGame ? { type: 'RESTART' } : { type: 'CLEAR-STORYBOARD' }
-
-export const screenSizeAction = (width?: number, height?: number): GameStateAction => ({ type: 'SET-SCREEN-SIZE', height, width })
 
 export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState, action) => {
     const isActive: boolean = !gameState.currentStoryBoardId && !gameState.isPaused && !gameState.sequenceRunning

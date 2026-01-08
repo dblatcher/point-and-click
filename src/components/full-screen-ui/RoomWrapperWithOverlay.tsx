@@ -1,5 +1,5 @@
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { screenSizeAction } from "@/lib/game-state-logic/game-state-reducer";
+import { screenSizeAction } from "@/lib/game-state-logic/game-state-actions";
 import { GameState } from "@/lib/game-state-logic/types";
 import { calculateScreenX } from "@/lib/roomFunctions";
 import { clamp, findById } from "@/lib/util";

@@ -1,4 +1,5 @@
 import { Command, CommandTarget, ConversationChoice, GameData, Verb } from "point-click-lib";
+import { Dispatch } from "react";
 import { GameProps } from "../../components/game/types";
 
 
@@ -24,3 +25,28 @@ export type ActionWithoutProp =
     | { type: 'RESTART' }
     | { type: 'HANDLE-LOAD', data: GameData }
     | { type: 'ROOM-CLICK', x: number, y: number }
+
+export const makeDispatcherWithProps =
+    (dispatch: Dispatch<GameStateAction>, props: GameProps) =>
+        (action: GameStateAction | ActionWithoutProp) => {
+            switch (action.type) {
+                case "SEND-COMMAND":
+                case "TARGET-CLICK":
+                case "CONVERSATION-CHOICE":
+                case "TICK-UPDATE":
+                case "RESTART":
+                case "HANDLE-LOAD":
+                case "ROOM-CLICK":
+                    return dispatch({ ...action, props })
+                case "SET-PAUSED":
+                case "VERB-SELECT":
+                case "HANDLE-HOVER":
+                case "SET-SCREEN-SIZE":
+                case "CLEAR-STORYBOARD":
+                    return dispatch(action)
+            }
+        }
+
+export const getStoryboardCloseAction = (isEndOfGame?: boolean): ActionWithoutProp | GameStateAction => isEndOfGame ? { type: 'RESTART' } : { type: 'CLEAR-STORYBOARD' }
+
+export const screenSizeAction = (width?: number, height?: number): GameStateAction => ({ type: 'SET-SCREEN-SIZE', height, width })

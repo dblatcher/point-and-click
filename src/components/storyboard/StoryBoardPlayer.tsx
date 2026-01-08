@@ -1,10 +1,10 @@
+import { useAssets } from "@/context/asset-context";
+import { useGameState } from "@/context/game-state-context";
+import { getStoryboardCloseAction } from "@/lib/game-state-logic/game-state-actions";
 import { StoryBoard } from "point-click-lib";
 import React, { CSSProperties, useEffect, useState } from "react";
-import { StoryPageDisplay } from "./StoryPageDisplay";
-import { useAssets } from "@/context/asset-context";
 import { SoundControl } from "sound-deck";
-import { useGameState } from "@/context/game-state-context";
-import { getStoryboardCloseAction } from "@/lib/game-state-logic/game-state-reducer";
+import { StoryPageDisplay } from "./StoryPageDisplay";
 
 interface Props {
     storyBoard: StoryBoard
