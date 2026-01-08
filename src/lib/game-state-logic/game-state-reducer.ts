@@ -1,7 +1,7 @@
 import { cloneData } from "@/lib/clone";
 import { GameEventEmitter } from "@/lib/game-event-emitter";
 import { GameState } from "@/lib/game-state-logic/types";
-import { getViewAngleXCenteredOn, getViewAngleYCenteredOn, locateClickInWorld } from "@/lib/roomFunctions";
+import { locateClickInWorld } from "@/lib/roomFunctions";
 import { CELL_SIZE } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
 import { advanceTimeOneStep, generateCellMatrix, handleConversationChoice, issueMoveOrder, makeCommandHandler, matchInteraction } from "point-click-lib";
@@ -70,7 +70,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
 
         case "TARGET-CLICK": {
             const { target } = action
-            const handleCommand = makeCommandHandler(action.props, eventReporter, debugLogger);
+
             if (!isActive || gameState.currentConversationId) { return gameState }
             const verb = findById(gameState.currentVerbId, action.props.verbs)
             if (!verb) { return gameState }
@@ -83,6 +83,7 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
                 }
             }
 
+            const handleCommand = makeCommandHandler(action.props, eventReporter, debugLogger);
             if (target.type === 'item' && !gameState.currentItemId && verb.preposition) {
                 const nonPrepositionalItemInteraction = matchInteraction(
                     { verb, target }, currentRoom, gameState.interactions, gameState
@@ -143,25 +144,13 @@ export const gameStateReducer: Reducer<GameState, GameStateAction> = (gameState,
 
         case "TICK-UPDATE": {
             const wasPendingInteraction = !!gameState.pendingInteraction;
-            const wasSeqeunceRunning = !!gameState.sequenceRunning;            
+            const wasSeqeunceRunning = !!gameState.sequenceRunning;
             advanceTimeOneStep(action.props, eventReporter, debugLogger)(gameState)
-            
-            const shouldClearCommand = wasPendingInteraction && !gameState.pendingInteraction || wasSeqeunceRunning && !gameState.sequenceRunning;
-            const viewAngle = (player && currentRoom) ? {
-                viewAngleX: getViewAngleXCenteredOn(player.x, currentRoom),
-                viewAngleY: getViewAngleYCenteredOn(player.y, currentRoom),
-            } : {}
-
+            const shouldClearCommand = (wasPendingInteraction && !gameState.pendingInteraction) || (wasSeqeunceRunning && !gameState.sequenceRunning);
             if (shouldClearCommand) {
-                return clearRemovedEntitiesFromCommand({
-                ...gameState,
-                ...viewAngle
-            })
+                return clearRemovedEntitiesFromCommand({ ...gameState })
             }
-            return {
-                ...gameState,
-                ...viewAngle
-            }
+            return { ...gameState }
         }
 
         case "CLEAR-STORYBOARD": {

@@ -1,5 +1,4 @@
-import { RoomData, ActorData, HotspotZone } from "point-click-lib";
-import { clamp } from "./util";
+import { ActorData, RoomData } from "point-click-lib";
 
 export const putActorsInDisplayOrder = (a: ActorData, b: ActorData) => (b.y + (b.baseline ? b.baseline : 0)) - (a.y + (a.baseline ? a.baseline : 0))
 
@@ -54,15 +53,4 @@ export function locateClickInWorld(clickXPosition: number, clickYposition: numbe
     return { x: Math.round(x), y: Math.round(y) }
 }
 
-export function getViewAngleXCenteredOn(xPosition: number, roomData: RoomData) {
-    const { width } = roomData
-    const offCenter = 2 * (xPosition - width / 2) / width
-    return clamp(-offCenter * 2, 1, -1)
-}
-
-export function getViewAngleYCenteredOn(yPosition: number, roomData: RoomData) {
-    const { height } = roomData
-    const offCenter = 2 * (yPosition - height / 2) / height
-    return clamp(offCenter * 2, 1, -1)
-}
 

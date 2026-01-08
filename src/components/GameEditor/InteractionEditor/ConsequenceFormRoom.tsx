@@ -1,9 +1,8 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { getViewAngleXCenteredOn, getViewAngleYCenteredOn } from "@/lib/roomFunctions";
 import { XY } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
 import { Box, Typography } from "@mui/material";
-import { AnyConsequence, Consequence, HotspotZone, RoomData, Zone, getTargetPoint } from "point-click-lib";
+import { AnyConsequence, Consequence, HotspotZone, RoomData, Zone, getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn } from "point-click-lib";
 import React from "react";
 import { RoomLocationPicker } from "../RoomLocationPicker";
 
