@@ -1,43 +1,37 @@
 import { useGameState } from "@/context/game-state-context";
-import { RoomRenderContext } from "@/context/room-render-context";
-import { useContext, useState } from "react";
-import { useInterval } from "./useInterval";
+import { useState } from "react";
 
-const MAX_CAMERA_MOVE = 0.005;
 
-// TO DO - the hook is convienient, but the stae is duplicated for every
-// usage in useRoomRender.
-// can we instead hold the camera state in context? 
-export const useCamera = () => {
-    const { gameProps: { timerInterval = 10 }, gameState: { isPaused } } = useGameState()
-    const { roomData, viewAngleX, viewAngleY } = useContext(RoomRenderContext);
+export const useCamera = (maxCameraMove = 0.005) => {
+    const { gameState } = useGameState()
+    const [roomId, setRoomId] = useState(gameState.currentRoomId)
+    const [cameraX, setCameraX] = useState(gameState.viewAngleX)
+    const [cameraY, setCameraY] = useState(gameState.viewAngleY)
+    const [isAtPoint, setIsAtPoint] = useState(true)
 
-    const [roomId, setRoomId] = useState(roomData.id)
-    const [cameraX, setCameraX] = useState(viewAngleX)
-    const [cameraY, setCameraY] = useState(viewAngleY)
-
-    useInterval(() => {
-        if (isPaused) {
-            return
-        }
-        if (roomId !== roomData.id) {
-            setRoomId(roomData.id)
+    const updateCamera = (viewAngleX: number, viewAngleY: number, currentRoomId: string) => {
+        if (roomId !== currentRoomId) {
+            console.log({ roomId, cameraX, cameraY }, { currentRoomId, viewAngleX, viewAngleY })
+            setRoomId(currentRoomId)
             setCameraX(viewAngleX)
             setCameraY(viewAngleY)
+            setIsAtPoint(true)
             return
         }
-        const newCameraX = Math.abs(viewAngleX - cameraX) <= MAX_CAMERA_MOVE
+        const newCameraX = Math.abs(viewAngleX - cameraX) <= maxCameraMove
             ? viewAngleX
-            : cameraX + MAX_CAMERA_MOVE * Math.sign(viewAngleX - cameraX);
-        const newCameraY = Math.abs(viewAngleY - cameraY) <= MAX_CAMERA_MOVE
+            : cameraX + maxCameraMove * Math.sign(viewAngleX - cameraX);
+        const newCameraY = Math.abs(viewAngleY - cameraY) <= maxCameraMove
             ? viewAngleY
-            : cameraY + MAX_CAMERA_MOVE * Math.sign(viewAngleY - cameraY);
+            : cameraY + maxCameraMove * Math.sign(viewAngleY - cameraY);
         setCameraX(newCameraX)
         setCameraY(newCameraY)
-    }, timerInterval)
+        setIsAtPoint(newCameraX === viewAngleX && newCameraY === viewAngleY)
+    }
 
     return {
-        x: cameraX,
-        y: cameraY,
+        cameraPoint: { x: cameraX, y: cameraY },
+        updateCamera,
+        isAtPoint
     }
 };

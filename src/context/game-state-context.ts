@@ -1,7 +1,7 @@
 import { GameProps } from '@/components/game/types'
 import { GameState } from '@/lib/game-state-logic/types'
 import { DB_VERSION } from '@/lib/indexed-db'
-import { CELL_SIZE, DEFAULT_TALK_TIME } from '@/lib/types-and-constants'
+import { CELL_SIZE, DEFAULT_TALK_TIME, XY } from '@/lib/types-and-constants'
 import { findById } from '@/lib/util'
 import { createContext, useContext } from 'react'
 import { GameEventEmitter } from '../lib/game-event-emitter'
@@ -11,6 +11,7 @@ const gameStateContext = createContext<{
     gameState: GameState,
     updateGameState: { (action: GameStateAction | ActionWithoutProp): void },
     gameProps: Readonly<GameProps>,
+    cameraPoint?: XY
 }>(
     {
         gameState: {

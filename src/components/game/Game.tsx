@@ -8,10 +8,13 @@ import { DebugLog } from "../DebugLog";
 import { SimpleLayout } from "../game-simple-ui/Layout";
 import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 import { GameProps } from "./types";
+import { useCamera } from "@/hooks/useCamera";
+import { getPointOfFocus } from "point-click-lib";
 
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
     const [gameState, dispatch] = useReducer(gameStateReducer, getInitialGameState(props))
+    const { updateCamera, cameraPoint } = useCamera()
     const { showDebugLog, uiComponents = {}, timerInterval = 10 } = props
     const {
         GameLayoutComponent = SimpleLayout,
@@ -23,6 +26,8 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
     const tick = () => {
         if (gameState.isPaused || currentStoryBoard) { return }
         dispatch({ type: 'TICK-UPDATE', props })
+        const { x, y } = getPointOfFocus(gameState) ?? { x: gameState.viewAngleX, y: gameState.viewAngleY }
+        updateCamera(x, y, gameState.currentRoomId)
     }
     useInterval(tick, timerInterval)
 
@@ -30,6 +35,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         gameState,
         gameProps: props,
         updateGameState: makeDispatcherWithProps(dispatch, props),
+        cameraPoint
     }}>
         {showDebugLog && (<DebugLog />)}
         <GameLayoutComponent />
