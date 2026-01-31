@@ -5,6 +5,7 @@ export const LIGHT_FIRE: Sequence = {
     description: "player lights the fire with the matches",
     stages: [
         {
+            actorToFollow: 'MARIO',
             actorOrders: {
                 PLAYER: [
                     {
@@ -18,6 +19,18 @@ export const LIGHT_FIRE: Sequence = {
                     },
                     {
                         type: 'say', text: 'yes.', time: 50,
+                    }
+                ],
+                MARIO: [
+                    {
+                        type: 'move',
+                        steps: [
+                            { x: 400, y: 10 },
+                            { x: 390, y: 10 }
+                        ]
+                    },
+                    {
+                        type: 'say', text: 'I have gone over here to be away from the fire', time: 150,
                     }
                 ]
             }
@@ -49,11 +62,17 @@ export const LIGHT_FIRE: Sequence = {
         },
         {
             immediateConsequences: [
-                {
-                    type: 'storyBoardConsequence',
-                    storyBoardId: 'part-two'
-                }
-            ]
+            ],
+            actorOrders: {
+                MARIO: [
+                    {
+                        type: 'move',
+                        steps: [
+                            { x: 100, y: 10 },
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }
