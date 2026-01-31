@@ -4,7 +4,7 @@ import { GameState } from "@/lib/game-state-logic/types";
 import { locateClickInWorld } from "@/lib/roomFunctions";
 import { CELL_SIZE } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
-import { advanceTimeOneStep, generateCellMatrix, handleConversationChoice, issueMoveOrder, makeCommandHandler, matchInteraction } from "point-click-lib";
+import { advanceTimeOneStep, generateCellMatrix, getPointOfFocus, getViewAngleXCenteredOn, handleConversationChoice, issueMoveOrder, makeCommandHandler, matchInteraction } from "point-click-lib";
 import { Reducer } from "react";
 import { GameProps } from "../../components/game/types";
 import { DB_VERSION } from "../indexed-db";
@@ -163,6 +163,7 @@ export const getInitialGameState = (props: GameProps, existingEmitter?: GameEven
     const conversations = props.conversations.map(cloneData);
     const interactions = props.interactions.map(cloneData);
     const flagMap = cloneData(props.flagMap);
+    const {currentRoomId} = props
 
     const openingSequenceInProps = findById(props.openingSequenceId, props.sequences)
     const sequenceRunning = (openingSequenceInProps)
@@ -170,8 +171,10 @@ export const getInitialGameState = (props: GameProps, existingEmitter?: GameEven
         : undefined;
     const currentStoryBoardId = props.openingStoryboardId;
 
-    const currentRoom = findById(props.currentRoomId, rooms)
+    const currentRoom = findById(currentRoomId, rooms)
     const cellMatrix = currentRoom ? generateCellMatrix(currentRoom, CELL_SIZE) : undefined
+
+    const initialViewPoint = getPointOfFocus({ rooms, actors, sequenceRunning, currentRoomId })
 
     return {
         sequenceRunning,
@@ -181,11 +184,11 @@ export const getInitialGameState = (props: GameProps, existingEmitter?: GameEven
         gameNotBegun: false,
 
         schemaVersion: DB_VERSION,
-        viewAngleX: 0,
-        viewAngleY: 0,
+        viewAngleX: initialViewPoint.x,
+        viewAngleY: initialViewPoint.y,
         isPaused: props.startPaused || false,
         id: props.id,
-        currentRoomId: props.currentRoomId,
+        currentRoomId,
         actors,
         rooms,
         currentVerbId: props.verbs[0].id,
