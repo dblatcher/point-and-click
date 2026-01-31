@@ -1,4 +1,4 @@
-import { insertAt } from "@/lib/util";
+import { insertAt, replaceAt } from "@/lib/util";
 import { Button } from "@mui/material";
 import { Consequence, Order, Sequence, Stage } from "point-click-lib";
 import { useState } from "react";
@@ -14,7 +14,6 @@ interface Props {
     sequence: Sequence
     changeConsequence: { (consequence: Consequence, stageIndex: number, consequenceIndex: number): void }
     changeStages: { (stages: Stage[]): void }
-    changeOrder: { (order: Order, stageIndex: number, actorId: string, orderIndex: number): void }
     modifyStage: { (mod: Partial<Stage>, stageIndex: number, description: string): void }
 }
 
@@ -40,12 +39,21 @@ export const SequenceFlow = ({
     sequence,
     changeStages,
     changeConsequence,
-    changeOrder,
     modifyStage,
 }: Props) => {
     const [consequenceParams, setConsequenceParams] = useState<ConsequenceDialogParams | undefined>(undefined)
     const [orderParams, setOrderParams] = useState<OrderDialogParams | undefined>(undefined)
     const [addActorParams, setAddActorParams] = useState<AddActorParams | undefined>(undefined)
+
+    const changeOrder = (order: Order, stageIndex: number, actorId: string, orderIndex: number) => {
+        const actorOrders = sequence.stages[stageIndex]?.actorOrders;
+        modifyStage({
+            actorOrders: {
+                ...actorOrders,
+                [actorId]: replaceAt(orderIndex, order, actorOrders?.[actorId]),
+            }
+        }, stageIndex, `change order #${orderIndex + 1}`)
+    }
 
     const actorIds = sequence.stages.reduce<string[]>((list, stage) => {
         if (!stage.actorOrders) {

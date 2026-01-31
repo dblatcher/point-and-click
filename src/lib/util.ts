@@ -54,7 +54,7 @@ export function insertAt<T>(index: number, item: T, list: T[] = []): T[] {
     return [...list.slice(0, index), item, ...list.slice(index)]
 }
 
-export function replaceAt<T>(index: number, item: T, list: T[]): T[] {
+export function replaceAt<T>(index: number, item: T, list: T[] = []): T[] {
     return [...list.slice(0, index), item, ...list.slice(index + 1)]
 }
 
