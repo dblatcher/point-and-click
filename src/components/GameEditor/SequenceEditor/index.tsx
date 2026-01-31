@@ -1,5 +1,5 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { Consequence, ImmediateConsequence, Order, Sequence } from "point-click-lib";
+import { Consequence, ImmediateConsequence, Order, Sequence, Stage } from "point-click-lib";
 import { Narrative } from "point-click-lib";
 import { ImmediateConsequenceSchema } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
@@ -51,17 +51,6 @@ export const SequenceEditor = (props: Props) => {
         })
     }
 
-    const changeOrderList = (newList: Order[], stageIndex: number, actorId: string) => {
-        updateFromPartial(state => {
-            const { stages } = state
-            const stage = stages[stageIndex]
-            if (!stage) { return {} }
-            if (!stage.actorOrders) { stage.actorOrders = {} }
-            stage.actorOrders[actorId] = newList
-            return { stages }
-        })
-    }
-
     const changeConsequence = (consequence: Consequence, stageIndex: number, consequenceIndex: number) => {
         const isImmediateConsequence = ImmediateConsequenceSchema.safeParse(consequence)
         if (!isImmediateConsequence.success) {
@@ -78,24 +67,14 @@ export const SequenceEditor = (props: Props) => {
         }, `sequence ${props.data.id}: change consequece in stage ${stageIndex + 1}`)
     }
 
-    const changeConsequenceList = (newList: ImmediateConsequence[], stageIndex: number) => {
+    const modifyStage = (mod: Partial<Stage>, stageIndex: number, description:string) => {
         updateFromPartial(state => {
             const { stages } = state
             const stage = stages[stageIndex]
             if (!stage) { return {} }
-            stage.immediateConsequences = newList
+            stages[stageIndex] = { ...stage, ...mod }
             return { stages }
-        })
-    }
-
-    const changeConsequenceNarrative = (newNarrative: Narrative | undefined, stageIndex: number) => {
-        updateFromPartial(state => {
-            const { stages } = state
-            const stage = stages[stageIndex]
-            if (!stage) { return {} }
-            stage.narrative = newNarrative
-            return { stages }
-        }, `sequence ${props.data.id}: change narrative for stage ${stageIndex + 1}`)
+        }, `sequence ${props.data.id}, stage#${stageIndex + 1}: ${description}`)
     }
 
     const { data: sequence, heading } = props
@@ -136,10 +115,8 @@ export const SequenceEditor = (props: Props) => {
                 sequence={props.data}
                 changeConsequence={changeConsequence}
                 changeStages={(stages) => { updateFromPartial({ stages }) }}
-                changeConsequenceList={changeConsequenceList}
                 changeOrder={changeOrder}
-                changeOrderList={changeOrderList}
-                changeConsequenceNarrative={changeConsequenceNarrative}
+                modifyStage={modifyStage}
             />
         </article>
     )

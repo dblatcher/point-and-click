@@ -50,7 +50,7 @@ export function deduplicateStringArray(list: string[]): string[] {
     return newList
 }
 
-export function insertAt<T>(index: number, item: T, list: T[]): T[] {
+export function insertAt<T>(index: number, item: T, list: T[] = []): T[] {
     return [...list.slice(0, index), item, ...list.slice(index)]
 }
 

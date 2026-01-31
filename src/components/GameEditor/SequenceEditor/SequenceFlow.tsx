@@ -1,24 +1,21 @@
-import { Consequence, ImmediateConsequence, Order, Sequence, Stage } from "point-click-lib";
-import { Narrative } from "point-click-lib";
+import { insertAt } from "@/lib/util";
+import { Button } from "@mui/material";
+import { Consequence, Order, Sequence, Stage } from "point-click-lib";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { makeBlankStage } from "../defaults";
+import { AddIcon } from "../material-icons";
 import { PickActorDialog } from "../PickActorDialog";
 import { ConsequenceDialog } from "./ConsequenceDialog";
 import { OrderDialog } from "./OrderDialog";
 import { StageFlow } from "./StageFlow";
-import { Button } from "@mui/material";
-import { insertAt } from "@/lib/util";
-import { AddIcon } from "../material-icons";
 
 interface Props {
     sequence: Sequence
     changeConsequence: { (consequence: Consequence, stageIndex: number, consequenceIndex: number): void }
     changeStages: { (stages: Stage[]): void }
-    changeConsequenceList: { (newList: ImmediateConsequence[], stageIndex: number): void }
     changeOrder: { (order: Order, stageIndex: number, actorId: string, orderIndex: number): void }
-    changeOrderList: { (newList: Order[], stageIndex: number, actorId: string): void }
-    changeConsequenceNarrative: { (newNarrative: Narrative | undefined, stageIndex: number): void }
+    modifyStage: { (mod: Partial<Stage>, stageIndex: number, description: string): void }
 }
 
 type ConsequenceDialogParams = {
@@ -39,7 +36,13 @@ type AddActorParams = {
 const getConsequenceFromParams = (consequenceParams: ConsequenceDialogParams | undefined, sequence: Sequence): Consequence | undefined =>
     consequenceParams ? sequence.stages[consequenceParams.stage].immediateConsequences?.[consequenceParams.index] : undefined
 
-export const SequenceFlow = ({ sequence, changeStages, changeConsequence, changeConsequenceList, changeOrder, changeOrderList, changeConsequenceNarrative }: Props) => {
+export const SequenceFlow = ({
+    sequence,
+    changeStages,
+    changeConsequence,
+    changeOrder,
+    modifyStage,
+}: Props) => {
     const [consequenceParams, setConsequenceParams] = useState<ConsequenceDialogParams | undefined>(undefined)
     const [orderParams, setOrderParams] = useState<OrderDialogParams | undefined>(undefined)
     const [addActorParams, setAddActorParams] = useState<AddActorParams | undefined>(undefined)
@@ -52,7 +55,16 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
         return [...list, ...newKeys]
     }, [])
 
-    const addActor = (actorId: string, stageIndex: number) => { changeOrderList([], stageIndex, actorId) }
+    const addActor = (actorId: string, stageIndex: number) => {
+        const stage = sequence.stages[stageIndex];
+        if (!stage) { return }
+        modifyStage({
+            actorOrders: {
+                ...stage.actorOrders,
+                [actorId]: []
+            }
+        }, stageIndex, `add order list for ${actorId}`)
+    }
 
     const removeActorFromAll = (actorId: string) => {
         const stagesCopy = sequence.stages.map(stage => ({ ...stage }))
@@ -76,13 +88,11 @@ export const SequenceFlow = ({ sequence, changeStages, changeConsequence, change
                         stage={stage}
                         stageIndex={stageIndex}
                         actorIds={actorIds}
-                        changeConsequenceList={changeConsequenceList}
                         setConsequenceParams={setConsequenceParams}
                         setOrderParams={setOrderParams}
                         setAddActorParams={setAddActorParams}
-                        changeOrderList={changeOrderList}
                         removeActorFromAll={removeActorFromAll}
-                        changeConsequenceNarrative={changeConsequenceNarrative}
+                        modifyStage={modifyStage}
                     />
                 )}
                 mutateList={changeStages}

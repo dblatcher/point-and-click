@@ -1,15 +1,14 @@
-import { ImmediateConsequence, Order, Stage } from "point-click-lib";
-import { Narrative } from "point-click-lib";
 import { insertAt } from "@/lib/util";
-import { Box, Button, Dialog, DialogContent, Grid, IconButton, Stack } from "@mui/material";
+import { Box, Button, Checkbox, Grid, IconButton } from "@mui/material";
+import { ImmediateConsequence, Stage } from "point-click-lib";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
-import { PickConsequenceTypeDialogue } from "../PickConsequenceTypeDialogue";
-import { EditorBox } from "../layout/EditorBox";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { OrderTypeButtons } from "../OrderTypeButtons";
+import { PickConsequenceTypeDialogue } from "../PickConsequenceTypeDialogue";
 import { getDefaultOrder, makeNewConsequence } from "../defaults";
-import { AddIcon, ClearOutlinedIcon } from "../material-icons";
+import { EditorBox } from "../layout/EditorBox";
+import { AddIcon, ClearOutlinedIcon, StarIcon, StarOutlineIcon } from "../material-icons";
 import { ConsequenceCard } from "./ConsequenceCard";
 import { OrderCard } from "./OrderCard";
 
@@ -18,13 +17,11 @@ interface Props {
     stage: Stage
     stageIndex: number
     actorIds: string[]
-    changeConsequenceList: { (newList: ImmediateConsequence[], stageIndex: number): void }
     setConsequenceParams: { (params: ConsequenceDialogParams): void }
     setOrderParams: { (params: OrderDialogParams): void }
-    changeOrderList: { (newList: Order[], stageIndex: number, actorId: string): void }
     setAddActorParams: { (params: { stage: number }): void }
     removeActorFromAll: { (actorId: string): void }
-    changeConsequenceNarrative: { (newNarrative: Narrative | undefined, stageIndex: number): void }
+    modifyStage: { (mod: Partial<Stage>, stageIndex: number, description: string): void }
 }
 
 type ConsequenceDialogParams = {
@@ -40,9 +37,9 @@ type OrderDialogParams = {
 
 export const StageFlow = ({
     stage, stageIndex, actorIds,
-    changeConsequenceList,
     setConsequenceParams, setOrderParams, setAddActorParams,
-    changeOrderList, removeActorFromAll, changeConsequenceNarrative,
+    removeActorFromAll,
+    modifyStage,
 }: Props) => {
 
     const [insertConsequenceDialogIndex, setInsertConsequenceDialogIndex] = useState<number | undefined>(undefined)
@@ -75,9 +72,9 @@ export const StageFlow = ({
                                         width={250}
                                     />
                                 )}
-                                mutateList={(newList) => {
-                                    changeConsequenceList(newList, stageIndex)
-                                }}
+                                mutateList={(newList) =>
+                                    modifyStage({ immediateConsequences: newList }, stageIndex, 'change consequences')
+                                }
                                 customInsertFunction={(index) => {
                                     setInsertConsequenceDialogIndex(index)
                                 }}
@@ -91,7 +88,7 @@ export const StageFlow = ({
                                 sx: { marginTop: 4 }
                             }}
                             narrative={stage.narrative}
-                            update={(newNarrative) => changeConsequenceNarrative(newNarrative, stageIndex)} />
+                            update={(newNarrative) => modifyStage({ narrative: newNarrative }, stageIndex, 'update narrative')} />
                     </EditorBox>
                 </Grid>
 
@@ -100,7 +97,9 @@ export const StageFlow = ({
                     immediateOnly
                     handleChoice={type => {
                         if (typeof insertConsequenceDialogIndex === 'number') {
-                            changeConsequenceList(insertAt(insertConsequenceDialogIndex, makeNewConsequence(type) as ImmediateConsequence, stage.immediateConsequences ?? []), stageIndex)
+                            modifyStage({
+                                immediateConsequences: insertAt(insertConsequenceDialogIndex, makeNewConsequence(type) as ImmediateConsequence, stage.immediateConsequences)
+                            }, stageIndex, `add ${type} consequence`)
                             setConsequenceParams({
                                 stage: stageIndex,
                                 index: insertConsequenceDialogIndex,
@@ -114,11 +113,27 @@ export const StageFlow = ({
                         <EditorBox title={actorId}
                             boxProps={{ minWidth: 260 }}
                             barContent={(
-                                <IconButton size="small"
-                                    onClick={() => { removeActorFromAll(actorId) }}
-                                >
-                                    <ClearOutlinedIcon />
-                                </IconButton>
+                                <>
+                                    <Checkbox
+                                        title={`camera follows ${actorId} during stage`}
+                                        aria-label={actorId === stage.actorToFollow ? `stop camera following ${actorId} during stage` : `make camera follow ${actorId} during stage`}
+                                        onChange={() => {
+                                            if (actorId === stage.actorToFollow) {
+                                                return modifyStage({ actorToFollow: undefined }, stageIndex, `unfollow ${actorId}`)
+                                            }
+                                            return modifyStage({ actorToFollow: actorId }, stageIndex, `follow ${actorId}`)
+                                        }}
+                                        checked={actorId === stage.actorToFollow}
+                                        icon={<StarOutlineIcon color='secondary' />}
+                                        checkedIcon={<StarIcon color='secondary' />}
+                                    />
+
+                                    <IconButton size="small"
+                                        onClick={() => { removeActorFromAll(actorId) }}
+                                    >
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </>
                             )}
                         >
                             <Box paddingY={2}>
@@ -135,15 +150,29 @@ export const StageFlow = ({
                                                     index: orderIndex,
                                                 })
                                             }}
-                                            width={220}
+                                            width={200}
                                         />
                                     )}
-                                    mutateList={(newList) => { changeOrderList(newList, stageIndex, actorId) }}
+                                    mutateList={(newList) => {
+                                        modifyStage({
+                                            actorOrders: {
+                                                ...stage.actorOrders,
+                                                [actorId]: newList,
+                                            }
+                                        }, stageIndex, `change order list for ${actorId}`)
+                                    }}
                                     customCreateButton={index => (
                                         <OrderTypeButtons
                                             handler={(type) => () => {
-                                                changeOrderList(
-                                                    insertAt(index, getDefaultOrder(type), stage.actorOrders?.[actorId] ?? []), stageIndex, actorId
+                                                modifyStage(
+                                                    {
+                                                        actorOrders: {
+                                                            ...stage.actorOrders,
+                                                            [actorId]: insertAt(index, getDefaultOrder(type), stage.actorOrders?.[actorId] ?? [])
+                                                        }
+                                                    },
+                                                    stageIndex,
+                                                    `insert ${type} order for ${actorId}`
                                                 )
                                                 setOrderParams({
                                                     stage: stageIndex,
