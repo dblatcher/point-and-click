@@ -58,6 +58,15 @@ export function replaceAt<T>(index: number, item: T, list: T[] = []): T[] {
     return [...list.slice(0, index), item, ...list.slice(index + 1)]
 }
 
+export function modifyAt<T>(index: number, modification: Partial<T>, list: T[] = []): T[] {
+    const item = list[index] as T | undefined;
+    if (!item) {
+        console.warn(`no item`, index, list)
+        return list;
+    }
+    return [...list.slice(0, index), { ...item, ...modification }, ...list.slice(index + 1)]
+}
+
 export function excludeByIndex<T>(index: number, list: T[]): T[] {
     return [...list.slice(0, index), ...list.slice(index + 1)]
 }

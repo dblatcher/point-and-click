@@ -1,6 +1,6 @@
 import { insertAt, replaceAt } from "@/lib/util";
 import { Button } from "@mui/material";
-import { Consequence, Order, Sequence, Stage } from "point-click-lib";
+import { Consequence, ImmediateConsequenceSchema, Order, Sequence, Stage } from "point-click-lib";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { makeBlankStage } from "../defaults";
@@ -12,7 +12,6 @@ import { StageFlow } from "./StageFlow";
 
 interface Props {
     sequence: Sequence
-    changeConsequence: { (consequence: Consequence, stageIndex: number, consequenceIndex: number): void }
     changeStages: { (stages: Stage[]): void }
     modifyStage: { (mod: Partial<Stage>, stageIndex: number, description: string): void }
 }
@@ -38,7 +37,6 @@ const getConsequenceFromParams = (consequenceParams: ConsequenceDialogParams | u
 export const SequenceFlow = ({
     sequence,
     changeStages,
-    changeConsequence,
     modifyStage,
 }: Props) => {
     const [consequenceParams, setConsequenceParams] = useState<ConsequenceDialogParams | undefined>(undefined)
@@ -53,6 +51,17 @@ export const SequenceFlow = ({
                 [actorId]: replaceAt(orderIndex, order, actorOrders?.[actorId]),
             }
         }, stageIndex, `change order #${orderIndex + 1}`)
+    }
+
+    const changeConsequence = (consequence: Consequence, stageIndex: number, consequenceIndex: number) => {
+        const parseAsImmediate = ImmediateConsequenceSchema.safeParse(consequence)
+        if (!parseAsImmediate.success) {
+            console.warn('not immediate', consequence)
+            return
+        }
+        modifyStage({
+            immediateConsequences: replaceAt(consequenceIndex, parseAsImmediate.data, sequence.stages[stageIndex]?.immediateConsequences)
+        }, stageIndex, `update consequence #${consequenceIndex + 1} (${consequence.type})`)
     }
 
     const actorIds = sequence.stages.reduce<string[]>((list, stage) => {
