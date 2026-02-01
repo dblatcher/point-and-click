@@ -10,7 +10,7 @@ import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 import { GameProps } from "./types";
 import { useCamera } from "@/hooks/useCamera";
 import { getPointOfFocus } from "point-click-lib";
-import { CamerPointProvider } from "@/context/camera-point-context";
+import { CamerPointProvider } from "point-click-components";
 
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {

@@ -1,4 +1,4 @@
-import { useCameraPoint } from "@/context/camera-point-context";
+import { useCameraPoint } from "point-click-components";
 import { RoomRenderContext } from "@/context/room-render-context";
 import { getXShift, getYShift } from "@/lib/roomFunctions";
 import { useContext } from "react";
