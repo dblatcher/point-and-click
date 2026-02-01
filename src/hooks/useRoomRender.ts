@@ -1,12 +1,10 @@
+import { useCameraPoint } from "@/context/camera-point-context";
 import { RoomRenderContext } from "@/context/room-render-context";
 import { getXShift, getYShift } from "@/lib/roomFunctions";
 import { useContext } from "react";
-import { useGameState } from "@/context/game-state-context";
 
-// TO DO - will referencing useGameState in the render logic complicate abstract the room components?
-// separate camera context?
 export const useRoomRender = () => {
-    const { cameraPoint } = useGameState()
+    const { cameraPoint } = useCameraPoint()
     const { roomData, scale, viewAngleX, viewAngleY } = useContext(RoomRenderContext);
     const { width, frameWidth, height, frameHeight = height } = roomData;
     const viewPoint = cameraPoint ?? { x: viewAngleX, y: viewAngleY };

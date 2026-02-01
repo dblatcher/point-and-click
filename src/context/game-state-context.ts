@@ -11,7 +11,6 @@ const gameStateContext = createContext<{
     gameState: GameState,
     updateGameState: { (action: GameStateAction | ActionWithoutProp): void },
     gameProps: Readonly<GameProps>,
-    cameraPoint?: XY
 }>(
     {
         gameState: {

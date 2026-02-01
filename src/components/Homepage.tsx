@@ -6,7 +6,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import { Box, Card, Grid, Typography } from "@mui/material";
 import { LinkCard } from "./LinkCard";
 import { MarkDown } from "./MarkDown";
-
+import {Foo} from "point-click-components"
 
 export const Homepage = () => {
 
@@ -17,6 +17,7 @@ export const Homepage = () => {
                 <MarkDown content={content} />
             </Card>
         </Box>
+        <Foo message={"hello"} />
 
         <Grid container spacing={2} padding={2} justifyContent="center">
             <Grid item xs={12} sm={6} md={4}>
