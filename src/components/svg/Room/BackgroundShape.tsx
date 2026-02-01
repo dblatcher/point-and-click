@@ -1,18 +1,17 @@
-import { useAssets } from "@/context/asset-context";
-import { BackgroundLayer } from "point-click-lib";
 import { useRoomRender } from "@/hooks/useRoomRender";
 import { getLayerHeight, getLayerWidth, getXShift, getYShift } from "@/lib/roomFunctions";
+import { ImageAsset } from "@/services/assets";
+import { BackgroundLayer } from "point-click-lib";
 
 interface Props {
     layer: BackgroundLayer;
+    getImageAsset: { (id: string): ImageAsset | undefined }
 }
 
-export default function BackgroundShape({ layer }: Props) {
+export default function BackgroundShape({ layer, getImageAsset }: Props) {
     const { roomData, viewAngleX, viewAngleY } = useRoomRender()
     const { parallax, imageId, placement } = layer
     const { frameWidth, height: roomHeight, frameHeight = roomHeight } = roomData
-
-    const { getImageAsset } = useAssets()
 
     const imageUrl = getImageAsset(imageId)?.href;
 

@@ -14,7 +14,6 @@ import { PlayCircleFilledOutlinedIcon } from "./material-icons";
 
 
 export const TestGameDialog = () => {
-    const sprites = useSprites()
     const { gameDesign } = useGameDesign()
     const { soundService } = useAssets()
     const [showDebugLog, setShowDebugLog] = useState(false)

@@ -12,6 +12,7 @@ import { ParallaxFrame } from "./ParallaxFrame";
 import styles from './styles.module.css';
 import { SurfaceFrame } from "./SurfaceFrame";
 import { WalkableOrObstacle } from "./WalkableOrObstance";
+import { ImageAsset } from "@/services/assets";
 
 interface Props {
     data: RoomData;
@@ -38,6 +39,7 @@ interface Props {
     fontFamily?: string;
     parallaxContent?: ReactNode;
     surfaceContent?: ReactNode;
+    getImageAsset: { (id: string): ImageAsset | undefined }
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -65,6 +67,7 @@ export const Room: FunctionComponent<Props> = ({
     fontFamily,
     parallaxContent,
     surfaceContent,
+    getImageAsset,
 }: Props) => {
     const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], frameHeight = height } = data;
 
@@ -108,7 +111,7 @@ export const Room: FunctionComponent<Props> = ({
                     {background
                         .filter(layer => layer.parallax <= 1)
                         .map((layer, index) =>
-                            <BackgroundShape key={index} layer={layer} />
+                            <BackgroundShape key={index} layer={layer} getImageAsset={getImageAsset} />
                         )}
                     {obstacleCells &&
                         <ObstacleCellOverlay cellMatrix={obstacleCells} />
@@ -138,6 +141,7 @@ export const Room: FunctionComponent<Props> = ({
                             roomScale={scale}
                             handleHover={handleHover}
                             overrideSprite={entry.overrideSprite}
+                            getImageAsset={getImageAsset}
                         />
                     ))}
                 </SurfaceFrame>
@@ -146,7 +150,7 @@ export const Room: FunctionComponent<Props> = ({
                     {background
                         .filter(layer => layer.parallax > 1)
                         .map((layer, index) =>
-                            <BackgroundShape key={index} layer={layer} />
+                            <BackgroundShape key={index} layer={layer} getImageAsset={getImageAsset} />
                         )}
 
                     {walkableAreas.map((zone, index) => {

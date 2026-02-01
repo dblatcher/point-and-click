@@ -10,6 +10,7 @@ import { Pin } from "../svg/Pin";
 import Hotspot from "../svg/Room/HotSpot";
 import { WalkableOrObstacle } from "../svg/Room/WalkableOrObstance";
 import { RoomAngleFrame } from "./RoomEditor/RoomAngleFrame";
+import { useAssets } from "@/context/asset-context";
 
 
 interface Props {
@@ -33,7 +34,7 @@ export const RoomLocationPicker = ({
     onClick, renderAllZones, obstacleRefToFocus, walkableRefToFocus, hotspotIdToFocus,
     fixedView,
 }: Props) => {
-
+    const { getImageAsset } = useAssets();
     const [viewAngleXState, setViewAngleXState] = useState(0)
     const [viewAngleYState, setViewAngleYState] = useState(0)
     const viewAngleX = fixedView?.x ?? viewAngleXState;
@@ -49,6 +50,7 @@ export const RoomLocationPicker = ({
         viewAngleX={viewAngleX}
         viewAngleY={viewAngleY}
         renderAllZones={renderAllZones}
+        getImageAsset={getImageAsset}
         handleRoomClick={(x, y) => {
             if (onClick) {
                 const point = locateClickInWorld(x, y, viewAngleX, viewAngleY, roomData)

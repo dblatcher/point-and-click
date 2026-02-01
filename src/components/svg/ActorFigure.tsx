@@ -9,6 +9,7 @@ import { useRoomRender } from "@/hooks/useRoomRender";
 import { getScale } from "@/lib/getScale";
 import { Sprite } from "@/lib/Sprite";
 import { findById } from "@/lib/util";
+import { ImageAsset } from "@/services/assets";
 import { ActorData, DEFAULT_ANIMATION, Order, SoundEffectMap, SoundValue } from "point-click-lib";
 import { MouseEventHandler } from "react";
 import { HandleClickFunction, HandleHoverFunction } from "../game/types";
@@ -25,6 +26,7 @@ interface Props {
     roomScale?: number;
     overrideSprite?: Sprite;
     noSound?: boolean;
+    getImageAsset: { (id: string): ImageAsset | undefined }
 }
 
 const getUnverifiedAnimationName = (currentOrder: Order | undefined, status: string | undefined): string | undefined => {
@@ -66,6 +68,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
     orders = [],
     overrideSprite,
     noSound,
+    getImageAsset,
 }: Props) => {
     const { roomData } = useRoomRender()
     const { gameProps } = useGameState()
@@ -172,6 +175,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
 
     return (
         <FrameShape
+            getImageAsset={getImageAsset}
             // works - the Event definitions don't match, but stopPropagation is the only event method needed
             clickHandler={processClick as unknown as MouseEventHandler<SVGElement>}
             handleHover={processClick ? handleHover : undefined}

@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import { ActorFigure } from "../svg/ActorFigure";
 import HorizontalLine from "../svg/HorizontalLine";
 import { SurfaceFrame } from "../svg/Room/SurfaceFrame";
+import { useAssets } from "@/context/asset-context";
 
 type Props = {
     data: ActorData;
@@ -35,6 +36,7 @@ const getRoomScale = (scale: number, roomWidth: number, roomHeight: number, maxH
 
 export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, maxHeight, animation, direction }: Props) => {
 
+    const {getImageAsset} = useAssets()
     const actorScale = getActorScale(data.height, scale, maxHeight)
     const roomWidth = actorScale * data.width;
     const roomHeight = actorScale * data.height;
@@ -79,6 +81,7 @@ export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, max
                         }}
                         roomScale={roomScale}
                         overrideSprite={overrideSprite}
+                        getImageAsset={getImageAsset}
                     />
                     {!noBaseLine && (
                         <HorizontalLine y={data.baseline || 0} />

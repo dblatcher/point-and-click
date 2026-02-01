@@ -1,9 +1,7 @@
-import { useAssets } from "@/context/asset-context";
-import { ActorData } from "point-click-lib";
 import { useRoomRender } from "@/hooks/useRoomRender";
 import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
-import { calculateScreenX } from "@/lib/roomFunctions";
 import { ImageAsset } from "@/services/assets";
+import { ActorData } from "point-click-lib";
 import { CSSProperties, FunctionComponent, MouseEventHandler } from "react";
 import { HandleHoverFunction } from "../game/types";
 
@@ -18,6 +16,7 @@ interface Props {
     handleHover?: HandleHoverFunction;
     actorData: ActorData;
     status?: string;
+    getImageAsset: { (id: string): ImageAsset | undefined }
 }
 
 type AssetAndFrame = {
@@ -36,7 +35,7 @@ const getPlaceholderStyle = (filter?: string): CSSProperties => {
 
 const getAssetAndFrame = (
     actorData: ActorData,
-    getAsset: { (id: string): ImageAsset | undefined }
+    getImageAsset: { (id: string): ImageAsset | undefined }
 ): AssetAndFrame | undefined => {
     const { defaultFrame, status, statusFrames } = actorData
     const frameForStatus = status ? statusFrames?.[status] : undefined
@@ -45,7 +44,7 @@ const getAssetAndFrame = (
         return undefined
     }
 
-    const asset = getAsset?.(frameToUse.imageId)
+    const asset = getImageAsset?.(frameToUse.imageId)
     if (!asset) {
         return undefined
     }
@@ -89,9 +88,9 @@ const FrameContents = (props: {
 export const FrameShape: FunctionComponent<Props> = ({
     x, y, height = 50, width = 50, filter,
     clickHandler, handleHover, actorData, status,
+    getImageAsset,
 }: Props) => {
-    const { roomData, viewAngleX, plotSurfaceY } = useRoomRender()
-    const { getImageAsset } = useAssets()
+    const { roomData } = useRoomRender()
     const assetAndFrame = getAssetAndFrame(actorData, getImageAsset)
     const { widthScale = 1, heightScale = 1 } = assetAndFrame?.asset ?? {};
     const widthAdjustedByScale = width * widthScale

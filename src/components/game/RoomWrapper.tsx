@@ -5,6 +5,7 @@ import React from "react";
 import { PersistentSound } from "../sound/PersistentSound";
 import { Room } from "../svg/Room";
 import { buildActorListSortedForDisplay } from "./put-contents-in-order";
+import { useAssets } from "@/context/asset-context";
 
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, renderCells }) => {
     const { gameState, updateGameState } = useGameState()
     const { currentStoryBoard } = useGameStateDerivations()
+    const { getImageAsset } = useAssets();
     const { viewAngleX, viewAngleY, isPaused, roomHeight, roomWidth } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
 
@@ -45,6 +47,7 @@ export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, ren
                 }}
                 orderedActors={orderedActors}
                 obstacleCells={renderCells ? gameState.cellMatrix : undefined}
+                getImageAsset={getImageAsset}
             />
         )}
         <PersistentSound isPaused={isPaused} soundValue={currentRoom?.backgroundMusic} />

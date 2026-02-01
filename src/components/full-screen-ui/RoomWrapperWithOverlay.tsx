@@ -14,6 +14,7 @@ import { Room } from "../svg/Room";
 import { InteractionCoin } from "./InteractionCoin";
 import { InventoryDrawer } from "./InventoryDrawer";
 import { TargetLabel } from "./TargetLabel";
+import { useAssets } from "@/context/asset-context";
 
 const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {
     return gameState.hoverTarget?.type === 'actor' || gameState.hoverTarget?.type === 'hotspot'
@@ -55,6 +56,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const [clickEvent, setClickEvent] = useState<PointerEvent>();
     const [inventoryOpen, setInventoryOpen] = useState(false);
     const { gameProps, gameState, updateGameState } = useGameState()
+    const { getImageAsset } = useAssets();
     const { isConversationRunning, isSequenceRunning, inventory, lookVerb, moveVerb, currentStoryBoard } = useGameStateDerivations()
     const { viewAngleX, viewAngleY, isPaused, roomHeight, roomWidth } = gameState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
@@ -148,6 +150,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                                 </ParallaxPlace>
                             )
                         }
+                        getImageAsset={getImageAsset}
                     />
 
                     {(!isSequenceRunning && !isConversationRunning) && (

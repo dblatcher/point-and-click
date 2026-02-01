@@ -15,6 +15,7 @@ import { LayoutControls, LayoutHolder, LayoutPreview } from "../layout/SplitLayo
 import { PickActorDialog } from "../PickActorDialog";
 import { XYControl } from "../XYControl";
 import { RoomAngleFrame } from "./RoomAngleFrame";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
     roomData: RoomData;
@@ -31,6 +32,7 @@ export const ScalingControl = ({ roomData: roomData }: Props) => {
     const [actorDialogOpen, setActorDialogOpen] = useState<boolean>(false)
     const { scaling = [], height } = roomData
     const { gameDesign, modifyRoom } = useGameDesign()
+    const { getImageAsset } = useAssets();
 
     const change = (scaling: ScaleLevel) => {
         modifyRoom(`change scaling, room ${roomData.id}`, roomData.id, { scaling })
@@ -133,6 +135,7 @@ export const ScalingControl = ({ roomData: roomData }: Props) => {
                         <Room data={roomData} noSound noMargin
                             viewAngleX={viewAngleX}
                             viewAngleY={viewAngleY}
+                            getImageAsset={getImageAsset}
                             handleRoomClick={handleClick}
                             maxHeight={(roomData.frameHeight || roomData.height) * scale}
                             maxWidth={roomData.frameWidth * scale}

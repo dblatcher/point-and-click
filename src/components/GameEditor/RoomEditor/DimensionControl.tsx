@@ -6,6 +6,7 @@ import { Alert, Box, Grid, Stack } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { ViewAngleSlider } from "./ViewAngleSlider";
 import { BackDrop } from "./background/Backdrop";
+import { useAssets } from "@/context/asset-context";
 
 interface Props {
     room: RoomData
@@ -32,6 +33,7 @@ const LeftGridCell = ({ children }: { children?: ReactNode }) => <Grid
 export const DimensionControl = ({ room }: Props) => {
     const { modifyRoom } = useGameDesign()
     const [scale, setScale] = useState(1)
+    const { getImageAsset } = useAssets();
     const [viewAngleX, setViewAngleX] = useState(0)
     const [viewAngleY, setViewAngleY] = useState(0)
     const updateRoom = (mod: Partial<RoomData>) => {
@@ -92,6 +94,7 @@ export const DimensionControl = ({ room }: Props) => {
                         position={'absolute'}>
 
                         <Room data={room} noSound
+                            getImageAsset={getImageAsset}
                             viewAngleX={viewAngleX}
                             viewAngleY={viewAngleY}
                             handleRoomClick={() => { }}

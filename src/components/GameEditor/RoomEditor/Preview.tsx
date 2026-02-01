@@ -9,6 +9,7 @@ import { ActorData, getTargetPoint, HotspotZone, RoomData, ZoneType } from "poin
 import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { RoomAngleFrame } from "./RoomAngleFrame";
+import { useAssets } from "@/context/asset-context";
 
 
 type Props = {
@@ -62,6 +63,7 @@ export const Preview = ({
     const [highlightHotspots, setHighlightHotspots] = useState(false);
     const [showScaleLines, setShowScaleLines] = useState(false);
     const [showRealActors, setShowRealActors] = useState(true);
+    const { getImageAsset } = useAssets();
 
     const { scaling = [] } = roomData
 
@@ -99,6 +101,7 @@ export const Preview = ({
                     setViewAngleY={setViewAngleY}>
                     <Room data={roomData} noSound noMargin
                         renderAllZones={renderAllZones}
+                        getImageAsset={getImageAsset}
                         maxHeight={(roomData.frameHeight || roomData.height) * scale}
                         maxWidth={roomData.frameWidth * scale}
                         viewAngleX={viewAngleX}
