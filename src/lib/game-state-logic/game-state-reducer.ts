@@ -163,7 +163,7 @@ export const getInitialGameState = (props: GameProps, existingEmitter?: GameEven
     const conversations = props.conversations.map(cloneData);
     const interactions = props.interactions.map(cloneData);
     const flagMap = cloneData(props.flagMap);
-    const {currentRoomId} = props
+    const { currentRoomId } = props
 
     const openingSequenceInProps = findById(props.openingSequenceId, props.sequences)
     const sequenceRunning = (openingSequenceInProps)
@@ -174,7 +174,7 @@ export const getInitialGameState = (props: GameProps, existingEmitter?: GameEven
     const currentRoom = findById(currentRoomId, rooms)
     const cellMatrix = currentRoom ? generateCellMatrix(currentRoom, CELL_SIZE) : undefined
 
-    const initialViewPoint = getPointOfFocus({ rooms, actors, sequenceRunning, currentRoomId })
+    const initialViewPoint = getPointOfFocus({ rooms, actors, sequenceRunning, currentRoomId }) ?? { x: 0, y: 0 }
 
     return {
         sequenceRunning,
