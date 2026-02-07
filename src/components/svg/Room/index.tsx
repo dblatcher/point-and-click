@@ -1,7 +1,7 @@
 import { ActorFigure } from "@/components/svg/ActorFigure";
 import { DialogueBubble } from "@/components/svg/DialogueBubble";
 import { RoomRenderContext } from "@/context/room-render-context";
-import type { CellMatrix } from "point-click-lib";
+import type { CellMatrix, SpriteData } from "point-click-lib";
 import { HotspotZone, RoomData, } from "point-click-lib";
 import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode } from "react";
 import { ActorWithOrdersAndClickHandlers, HandleHoverFunction } from "../../game/types";
@@ -41,6 +41,7 @@ interface Props {
     surfaceContent?: ReactNode;
     getImageAsset: { (id: string): ImageAsset | undefined }
     orderSpeed?: number;
+    sprites: SpriteData[];
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -70,6 +71,7 @@ export const Room: FunctionComponent<Props> = ({
     surfaceContent,
     getImageAsset,
     orderSpeed = 1,
+    sprites,
 }: Props) => {
     const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], frameHeight = height } = data;
 
@@ -144,6 +146,7 @@ export const Room: FunctionComponent<Props> = ({
                             roomScale={scale}
                             handleHover={handleHover}
                             getImageAsset={getImageAsset}
+                            sprites={sprites}
                         />
                     ))}
                 </SurfaceFrame>

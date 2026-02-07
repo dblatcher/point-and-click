@@ -49,6 +49,7 @@ export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, ren
                 obstacleCells={renderCells ? gameState.cellMatrix : undefined}
                 getImageAsset={getImageAsset}
                 orderSpeed={gameProps.orderSpeed}
+                sprites={gameProps.sprites}
             />
         )}
         <PersistentSound isPaused={isPaused} soundValue={currentRoom?.backgroundMusic} />

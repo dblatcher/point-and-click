@@ -31,7 +31,7 @@ const LeftGridCell = ({ children }: { children?: ReactNode }) => <Grid
 
 
 export const DimensionControl = ({ room }: Props) => {
-    const { modifyRoom } = useGameDesign()
+    const { modifyRoom, gameDesign } = useGameDesign()
     const [scale, setScale] = useState(1)
     const { getImageAsset } = useAssets();
     const [viewAngleX, setViewAngleX] = useState(0)
@@ -94,6 +94,7 @@ export const DimensionControl = ({ room }: Props) => {
                         position={'absolute'}>
 
                         <Room data={room} noSound
+                            sprites={gameDesign.sprites}
                             getImageAsset={getImageAsset}
                             viewAngleX={viewAngleX}
                             viewAngleY={viewAngleY}

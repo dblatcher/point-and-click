@@ -133,6 +133,7 @@ export const ScalingControl = ({ roomData: roomData }: Props) => {
                         setViewAngleX={setViewAngleX}
                         setViewAngleY={setViewAngleY}>
                         <Room data={roomData} noSound noMargin
+                            sprites={gameDesign.sprites}
                             viewAngleX={viewAngleX}
                             viewAngleY={viewAngleY}
                             getImageAsset={getImageAsset}

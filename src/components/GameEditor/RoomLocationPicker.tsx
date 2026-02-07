@@ -11,6 +11,7 @@ import Hotspot from "../svg/Room/HotSpot";
 import { WalkableOrObstacle } from "../svg/Room/WalkableOrObstance";
 import { RoomAngleFrame } from "./RoomEditor/RoomAngleFrame";
 import { useAssets } from "@/context/asset-context";
+import { useGameDesign } from "@/context/game-design-context";
 
 
 interface Props {
@@ -34,6 +35,7 @@ export const RoomLocationPicker = ({
     onClick, renderAllZones, obstacleRefToFocus, walkableRefToFocus, hotspotIdToFocus,
     fixedView,
 }: Props) => {
+    const {gameDesign} = useGameDesign()
     const { getImageAsset } = useAssets();
     const [viewAngleXState, setViewAngleXState] = useState(0)
     const [viewAngleYState, setViewAngleYState] = useState(0)
@@ -46,6 +48,7 @@ export const RoomLocationPicker = ({
 
     const renderedRoom = <Room
         data={roomData}
+        sprites={gameDesign.sprites}
         orderedActors={contents}
         viewAngleX={viewAngleX}
         viewAngleY={viewAngleY}

@@ -10,6 +10,7 @@ import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { RoomAngleFrame } from "./RoomAngleFrame";
 import { useAssets } from "@/context/asset-context";
+import { useGameDesign } from "@/context/game-design-context";
 
 
 type Props = {
@@ -56,6 +57,7 @@ export const Preview = ({
     activeZoneIndex,
     zoneType
 }: Props) => {
+    const { gameDesign } = useGameDesign()
     const [scale, setScale] = useState(1.5)
     const [viewAngleX, setViewAngleX] = useState(0);
     const [viewAngleY, setViewAngleY] = useState(0);
@@ -100,6 +102,7 @@ export const Preview = ({
                     setViewAngleX={setViewAngleX}
                     setViewAngleY={setViewAngleY}>
                     <Room data={roomData} noSound noMargin
+                        sprites={gameDesign.sprites}
                         renderAllZones={renderAllZones}
                         getImageAsset={getImageAsset}
                         maxHeight={(roomData.frameHeight || roomData.height) * scale}

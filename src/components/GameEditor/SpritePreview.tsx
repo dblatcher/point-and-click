@@ -5,6 +5,7 @@ import { ActorFigure } from "../svg/ActorFigure";
 import HorizontalLine from "../svg/HorizontalLine";
 import { SurfaceFrame } from "../svg/Room/SurfaceFrame";
 import { useAssets } from "@/context/asset-context";
+import { useGameDesign } from "@/context/game-design-context";
 
 type Props = {
     data: ActorData;
@@ -34,7 +35,7 @@ const getRoomScale = (scale: number, roomWidth: number, roomHeight: number, maxH
 }
 
 export const SpritePreview = ({ data, overrideSpriteData, scale = 1, noBaseLine, maxHeight, animation, direction }: Props) => {
-
+    const { gameDesign } = useGameDesign()
     const { getImageAsset } = useAssets()
     const actorScale = getActorScale(data.height, scale, maxHeight)
     const roomWidth = actorScale * data.width;
@@ -82,6 +83,7 @@ export const SpritePreview = ({ data, overrideSpriteData, scale = 1, noBaseLine,
                         roomScale={roomScale}
                         overrideSpriteData={overrideSpriteData}
                         getImageAsset={getImageAsset}
+                        sprites={gameDesign.sprites}
                     />
                     {!noBaseLine && (
                         <HorizontalLine y={data.baseline || 0} />

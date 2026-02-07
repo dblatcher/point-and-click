@@ -1,7 +1,6 @@
 import { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
 import { IntermitentSound } from "@/components/sound/IntermitentSound";
 import { PersistentSound } from "@/components/sound/PersistentSound";
-import { useGameState } from "@/context/game-state-context";
 import { useInterval } from "@/hooks/useInterval";
 import { useRoomRender } from "@/hooks/useRoomRender";
 import { getScale } from "@/lib/getScale";
@@ -25,6 +24,7 @@ interface Props {
     overrideSpriteData?: SpriteData;
     noSound?: boolean;
     getImageAsset: { (id: string): ImageAsset | undefined }
+    sprites: SpriteData[];
 }
 
 const getUnverifiedAnimationName = (currentOrder: Order | undefined, status: string | undefined): string | undefined => {
@@ -67,9 +67,9 @@ export const ActorFigure: FunctionComponent<Props> = ({
     overrideSpriteData,
     noSound,
     getImageAsset,
+    sprites,
 }: Props) => {
     const { roomData, orderSpeed } = useRoomRender()
-    const { gameProps } = useGameState()
     const animationRate = 200 / (orderSpeed)
 
     const {
@@ -82,7 +82,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
 
     const sprite = useMemo(
         () => {
-            const spriteData = overrideSpriteData ?? findById(spriteId, gameProps.sprites);
+            const spriteData = overrideSpriteData ?? findById(spriteId, sprites);
             return spriteData && new Sprite(spriteData, getImageAsset);
         },
         [overrideSpriteData, spriteId]

@@ -152,6 +152,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                         }
                         getImageAsset={getImageAsset}
                         orderSpeed={gameProps.orderSpeed}
+                        sprites={gameProps.sprites}
                     />
 
                     {(!isSequenceRunning && !isConversationRunning) && (
