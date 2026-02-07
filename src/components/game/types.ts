@@ -1,5 +1,4 @@
 import { ActorData, CommandTarget, GameDesign, Order, GameRuntimeOptions } from "point-click-lib";
-import { Sprite } from "@/lib/Sprite";
 import { UiComponentSet } from "./uiComponentSet";
 
 

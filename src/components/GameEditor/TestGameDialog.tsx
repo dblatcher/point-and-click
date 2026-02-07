@@ -1,7 +1,6 @@
 import { Game } from "@/components/game/Game";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
-import { useSprites } from "@/context/sprite-context";
 import { cloneData } from "@/lib/clone";
 import { CELL_SIZE, DEFAULT_TALK_TIME } from "@/lib/types-and-constants";
 import { editorTheme } from "@/theme";
