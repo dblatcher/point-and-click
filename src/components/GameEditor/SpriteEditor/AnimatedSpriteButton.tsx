@@ -1,8 +1,8 @@
-import { Direction, Animation, ActorData } from "point-click-lib";
 import { Sprite } from "@/lib/Sprite";
-import { Button, Typography } from "@mui/material";
-import { SpritePreview } from "../SpritePreview";
 import { buildActorData } from "@/lib/sprite-to-actor";
+import { Button, Typography } from "@mui/material";
+import { Animation, Direction } from "point-click-lib";
+import { SpritePreview } from "../SpritePreview";
 
 interface Props {
     sprite: Sprite
@@ -26,7 +26,7 @@ export const AnimatedSpriteButton = ({
         >
             {hasFrames ?
                 <SpritePreview noBaseLine scale={.8}
-                    overrideSprite={sprite}
+                    overrideSpriteData={sprite.data}
                     data={buildActorData(sprite, animationKey, direction)}
                 /> : <Typography>[{direction}]</Typography>
             }

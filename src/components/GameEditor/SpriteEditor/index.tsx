@@ -137,7 +137,7 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
             {filteredAnimationEntries.map(([animationKey, animation]) => (
                 <Grid xs={4} md={3} item key={animationKey} minWidth={260}>
                     <AnimationGrid
-                        {...{ animationKey, animation, defaultDirection, sprite }}
+                        {...{ animationKey, animation, defaultDirection, sprite: sprite }}
                         deleteAnimation={deleteAnimation}
                         selectAnimationAndDirection={(selectedAnimation, selectedDirection) => {
                             setSelectedAnimation(selectedAnimation)
@@ -173,12 +173,9 @@ export const SpriteEditor = (props: SpriteEditorProps) => {
         </Grid>
 
         <AnimationDialog
-            {...{
-                selectedAnimation,
-                selectedDirection,
-                overrideSprite: sprite,
-
-            }}
+            selectedAnimation={selectedAnimation}
+            selectedDirection={selectedDirection}
+            overrideSpriteData={sprite.data}
             spriteData={props.data}
             actorData={(selectedAnimation && selectedDirection) ? buildActorData(selectedAnimation, selectedDirection) : undefined}
             editCycle={editCycle}

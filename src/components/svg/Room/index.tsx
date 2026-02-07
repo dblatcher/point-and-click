@@ -140,7 +140,6 @@ export const Room: FunctionComponent<Props> = ({
                             contextClickHandler={entry.contextClickHandler}
                             roomScale={scale}
                             handleHover={handleHover}
-                            overrideSprite={entry.overrideSprite}
                             getImageAsset={getImageAsset}
                         />
                     ))}

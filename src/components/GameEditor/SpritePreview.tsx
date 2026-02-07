@@ -1,6 +1,5 @@
 import { RoomRenderContext } from "@/context/room-render-context";
-import { ActorData, Direction } from "point-click-lib";
-import { Sprite } from "@/lib/Sprite";
+import { ActorData, Direction, SpriteData } from "point-click-lib";
 import { Box } from "@mui/material";
 import { ActorFigure } from "../svg/ActorFigure";
 import HorizontalLine from "../svg/HorizontalLine";
@@ -9,7 +8,7 @@ import { useAssets } from "@/context/asset-context";
 
 type Props = {
     data: ActorData;
-    overrideSprite?: Sprite;
+    overrideSpriteData?: SpriteData;
     scale?: number;
     noBaseLine?: boolean;
     maxHeight?: number;
@@ -34,7 +33,7 @@ const getRoomScale = (scale: number, roomWidth: number, roomHeight: number, maxH
     )
 }
 
-export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, maxHeight, animation, direction }: Props) => {
+export const SpritePreview = ({ data, overrideSpriteData, scale = 1, noBaseLine, maxHeight, animation, direction }: Props) => {
 
     const {getImageAsset} = useAssets()
     const actorScale = getActorScale(data.height, scale, maxHeight)
@@ -80,7 +79,7 @@ export const SpritePreview = ({ data, overrideSprite, scale = 1, noBaseLine, max
                             y: 0
                         }}
                         roomScale={roomScale}
-                        overrideSprite={overrideSprite}
+                        overrideSpriteData={overrideSpriteData}
                         getImageAsset={getImageAsset}
                     />
                     {!noBaseLine && (

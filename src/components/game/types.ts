@@ -18,5 +18,4 @@ export type ActorWithOrdersAndClickHandlers = {
     orders?: Order[];
     clickHandler?: HandleClickFunction<ActorData>;
     contextClickHandler?: HandleClickFunction<ActorData>;
-    overrideSprite?: Sprite;
 }

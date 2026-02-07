@@ -1,16 +1,14 @@
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
-
+import { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
 import { IntermitentSound } from "@/components/sound/IntermitentSound";
 import { PersistentSound } from "@/components/sound/PersistentSound";
 import { useGameState } from "@/context/game-state-context";
-import { useSprites } from "@/context/sprite-context";
 import { useInterval } from "@/hooks/useInterval";
 import { useRoomRender } from "@/hooks/useRoomRender";
 import { getScale } from "@/lib/getScale";
 import { Sprite } from "@/lib/Sprite";
 import { findById } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
-import { ActorData, DEFAULT_ANIMATION, Order, SoundEffectMap, SoundValue } from "point-click-lib";
+import { ActorData, DEFAULT_ANIMATION, Order, SoundEffectMap, SoundValue, SpriteData } from "point-click-lib";
 import { MouseEventHandler } from "react";
 import { HandleClickFunction, HandleHoverFunction } from "../game/types";
 import { FrameShape } from "./FrameShape";
@@ -24,7 +22,7 @@ interface Props {
     orders?: Order[];
     isPaused: boolean;
     roomScale?: number;
-    overrideSprite?: Sprite;
+    overrideSpriteData?: SpriteData;
     noSound?: boolean;
     getImageAsset: { (id: string): ImageAsset | undefined }
 }
@@ -66,23 +64,32 @@ export const ActorFigure: FunctionComponent<Props> = ({
     isPaused,
     clickHandler, handleHover, contextClickHandler,
     orders = [],
-    overrideSprite,
+    overrideSpriteData,
     noSound,
     getImageAsset,
 }: Props) => {
     const { roomData } = useRoomRender()
     const { gameProps } = useGameState()
     const animationRate = 200 / (gameProps.orderSpeed ?? 1)
-    const sprites = useSprites()
 
     const {
         x, y,
-        height = 50, width = 50, sprite: spriteId, filter,
-        status, soundEffectMap = {}
+        height = 50, width = 50, filter,
+        status,
+        soundEffectMap = {},
+        sprite: spriteId
     } = data
-    const spriteObject = overrideSprite || findById(spriteId, sprites)
+
+    const sprite = useMemo(
+        () => {
+            const spriteData = overrideSpriteData ?? findById(spriteId, gameProps.sprites);
+            return spriteData && new Sprite(spriteData, getImageAsset);
+        },
+        [overrideSpriteData, spriteId]
+    );
+
     const currentOrder: Order | undefined = orders[0]
-    const currentAnimation = getAnimationName(currentOrder, status, spriteObject)
+    const currentAnimation = getAnimationName(currentOrder, status, sprite)
 
     const [animationName, setAnimationName] = useState(currentAnimation)
     const [frameIndex, setFrameIndex] = useState<number>(0)
@@ -92,11 +99,11 @@ export const ActorFigure: FunctionComponent<Props> = ({
     const persistentSoundValues = soundValues.filter(sv => typeof sv.frameIndex === 'undefined')
     const intermittentSoundValues = soundValues.filter(sv => typeof sv.frameIndex === 'number')
 
-    const direction = data.direction || spriteObject?.data.defaultDirection || 'left';
+    const direction = data.direction || sprite?.data.defaultDirection || 'left';
     const spriteScale = getScale(y, roomData.scaling)
 
     const updateFrame = useCallback((): void => {
-        const frames = spriteObject?.getFrames(getAnimationName(currentOrder, status, spriteObject), direction) || []
+        const frames = sprite?.getFrames(getAnimationName(currentOrder, status, sprite), direction) || []
         if (!frames || isPaused) { return }
         if (currentOrder?.type === 'act') {
             const [currentAction] = currentOrder.steps
@@ -105,13 +112,13 @@ export const ActorFigure: FunctionComponent<Props> = ({
             const frame = Math.floor(frames.length * (timeElapsed / duration))
             setFrameIndex(frame)
             setReverseCycle(reverse)
-            setAnimationName(getAnimationName(currentOrder, status, spriteObject))
+            setAnimationName(getAnimationName(currentOrder, status, sprite))
         } else {
             setFrameIndex(frameIndex => frameIndex + 1 < frames.length ? frameIndex + 1 : 0)
             setReverseCycle(false)
-            setAnimationName(getAnimationName(currentOrder, status, spriteObject))
+            setAnimationName(getAnimationName(currentOrder, status, sprite))
         }
-    }, [currentOrder, status, direction, isPaused, spriteObject])
+    }, [currentOrder, status, direction, isPaused, sprite])
 
     const processClick: MouseEventHandler<SVGElement> | undefined = clickHandler
         ? (event): void => {
@@ -133,11 +140,11 @@ export const ActorFigure: FunctionComponent<Props> = ({
     useEffect(updateFrame, [updateFrame, direction, currentAnimation])
     useInterval(updateFrame, animationRate)
 
-    if (spriteObject) {
+    if (sprite) {
         return (
             <>
                 <SpriteShape
-                    spriteObject={spriteObject}
+                    spriteObject={sprite}
                     animationName={animationName}
                     direction={direction}
                     frameIndex={frameIndex}

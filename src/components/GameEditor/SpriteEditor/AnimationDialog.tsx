@@ -1,6 +1,5 @@
 
 import { ActorData, Direction, SpriteData, SpriteFrame } from "point-click-lib";
-import { Sprite } from "@/lib/Sprite";
 import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { SpritePreview } from "../SpritePreview";
@@ -9,7 +8,7 @@ import { AnimationFrameList } from "./AnimationFrameList";
 interface Props {
     selectedDirection?: Direction
     selectedAnimation?: string
-    overrideSprite: Sprite
+    overrideSpriteData: SpriteData
     actorData?: ActorData
     spriteData: SpriteData
     editCycle: { (animationKey: string, direction: Direction, newValue: SpriteFrame[] | undefined): void };
@@ -51,7 +50,7 @@ const getDefaultingMessage = (
 export const AnimationDialog = ({
     selectedAnimation,
     selectedDirection,
-    overrideSprite,
+    overrideSpriteData,
     spriteData,
     actorData,
     editCycle,
@@ -81,7 +80,7 @@ export const AnimationDialog = ({
                         <SpritePreview
                             noBaseLine
                             scale={2}
-                            overrideSprite={overrideSprite}
+                            overrideSpriteData={overrideSpriteData}
                             data={actorData}
                         />
                         {getDefaultingMessage(

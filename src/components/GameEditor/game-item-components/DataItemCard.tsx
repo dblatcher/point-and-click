@@ -57,8 +57,11 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
         const sprite = findById(spriteData.id, sprites);
         return <Box {...previewBoxProps}>
             {sprite &&
-                <SpritePreview data={buildActorData(sprite, 'default', spriteData.defaultDirection)}
-                    animation='default' noBaseLine maxHeight={PREVIEW_HEIGHT} />
+                <SpritePreview 
+                    data={buildActorData(sprite, 'default', spriteData.defaultDirection)}
+                    animation='default' noBaseLine maxHeight={PREVIEW_HEIGHT} 
+                    overrideSpriteData={spriteData}
+                />
             }
         </Box>
 
