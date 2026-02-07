@@ -68,9 +68,9 @@ export const ActorFigure: FunctionComponent<Props> = ({
     noSound,
     getImageAsset,
 }: Props) => {
-    const { roomData } = useRoomRender()
+    const { roomData, orderSpeed } = useRoomRender()
     const { gameProps } = useGameState()
-    const animationRate = 200 / (gameProps.orderSpeed ?? 1)
+    const animationRate = 200 / (orderSpeed)
 
     const {
         x, y,

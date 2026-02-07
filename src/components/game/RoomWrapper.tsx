@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, renderCells }) => {
-    const { gameState, updateGameState } = useGameState()
+    const { gameState, updateGameState, gameProps } = useGameState()
     const { currentStoryBoard } = useGameStateDerivations()
     const { getImageAsset } = useAssets();
     const { viewAngleX, viewAngleY, isPaused, roomHeight, roomWidth } = gameState
@@ -48,6 +48,7 @@ export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, ren
                 orderedActors={orderedActors}
                 obstacleCells={renderCells ? gameState.cellMatrix : undefined}
                 getImageAsset={getImageAsset}
+                orderSpeed={gameProps.orderSpeed}
             />
         )}
         <PersistentSound isPaused={isPaused} soundValue={currentRoom?.backgroundMusic} />

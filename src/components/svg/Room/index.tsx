@@ -40,6 +40,7 @@ interface Props {
     parallaxContent?: ReactNode;
     surfaceContent?: ReactNode;
     getImageAsset: { (id: string): ImageAsset | undefined }
+    orderSpeed?: number;
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -68,6 +69,7 @@ export const Room: FunctionComponent<Props> = ({
     parallaxContent,
     surfaceContent,
     getImageAsset,
+    orderSpeed = 1,
 }: Props) => {
     const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], frameHeight = height } = data;
 
@@ -100,6 +102,7 @@ export const Room: FunctionComponent<Props> = ({
             viewAngleX,
             viewAngleY,
             scale,
+            orderSpeed,
         }}>
             <figure
                 className={styles.roomFigure}

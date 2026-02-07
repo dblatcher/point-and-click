@@ -5,7 +5,7 @@ import { useContext } from "react";
 
 export const useRoomRender = () => {
     const { cameraPoint } = useCameraPoint()
-    const { roomData, scale, viewAngleX, viewAngleY } = useContext(RoomRenderContext);
+    const { roomData, scale, viewAngleX, viewAngleY, orderSpeed } = useContext(RoomRenderContext);
     const { width, frameWidth, height, frameHeight = height } = roomData;
     const viewPoint = cameraPoint ?? { x: viewAngleX, y: viewAngleY };
 
@@ -25,5 +25,6 @@ export const useRoomRender = () => {
         surfaceYOffcenter,
         scale,
         plotSurfaceY,
+        orderSpeed,
     }
 };

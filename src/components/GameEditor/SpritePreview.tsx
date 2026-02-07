@@ -35,7 +35,7 @@ const getRoomScale = (scale: number, roomWidth: number, roomHeight: number, maxH
 
 export const SpritePreview = ({ data, overrideSpriteData, scale = 1, noBaseLine, maxHeight, animation, direction }: Props) => {
 
-    const {getImageAsset} = useAssets()
+    const { getImageAsset } = useAssets()
     const actorScale = getActorScale(data.height, scale, maxHeight)
     const roomWidth = actorScale * data.width;
     const roomHeight = actorScale * data.height;
@@ -48,11 +48,12 @@ export const SpritePreview = ({ data, overrideSpriteData, scale = 1, noBaseLine,
                 width: roomWidth,
                 frameWidth: roomWidth,
                 id: '',
-                background: []
+                background: [],
             },
             viewAngleX: 0,
             viewAngleY: 0,
             scale: roomScale,
+            orderSpeed: 1,
         }}>
             <Box component={'figure'}
                 sx={{
