@@ -1,6 +1,3 @@
-import { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
-import { IntermitentSound } from "@/components/sound/IntermitentSound";
-import { PersistentSound } from "@/components/sound/PersistentSound";
 import { useInterval } from "@/hooks/useInterval";
 import { useRoomRender } from "@/hooks/useRoomRender";
 import { getScale } from "@/lib/getScale";
@@ -8,7 +5,7 @@ import { Sprite } from "@/lib/Sprite";
 import { findById } from "@/lib/util";
 import { ImageAsset } from "@/services/assets";
 import { ActorData, DEFAULT_ANIMATION, Order, SoundEffectMap, SoundValue, SpriteData } from "point-click-lib";
-import { MouseEventHandler } from "react";
+import { FunctionComponent, MouseEventHandler, useCallback, useEffect, useMemo, useState } from "react";
 import { HandleClickFunction, HandleHoverFunction } from "../game/types";
 import { FrameShape } from "./FrameShape";
 import { SpriteShape } from "./SpriteShape";
@@ -25,6 +22,11 @@ interface Props {
     noSound?: boolean;
     getImageAsset: { (id: string): ImageAsset | undefined }
     sprites: SpriteData[];
+    SoundHandler?: FunctionComponent<{
+        soundValues: SoundValue[];
+        isPaused: boolean;
+        frameIndex?: number;
+    }>
 }
 
 const getUnverifiedAnimationName = (currentOrder: Order | undefined, status: string | undefined): string | undefined => {
@@ -68,6 +70,7 @@ export const ActorFigure: FunctionComponent<Props> = ({
     noSound,
     getImageAsset,
     sprites,
+    SoundHandler
 }: Props) => {
     const { roomData, orderSpeed } = useRoomRender()
     const animationRate = 200 / (orderSpeed)
@@ -94,10 +97,6 @@ export const ActorFigure: FunctionComponent<Props> = ({
     const [animationName, setAnimationName] = useState(currentAnimation)
     const [frameIndex, setFrameIndex] = useState<number>(0)
     const [reverseCycle, setReverseCycle] = useState(false)
-
-    const soundValues = getSoundValues(currentOrder, status, soundEffectMap)
-    const persistentSoundValues = soundValues.filter(sv => typeof sv.frameIndex === 'undefined')
-    const intermittentSoundValues = soundValues.filter(sv => typeof sv.frameIndex === 'number')
 
     const direction = data.direction || sprite?.data.defaultDirection || 'left';
     const spriteScale = getScale(y, roomData.scaling)
@@ -161,20 +160,12 @@ export const ActorFigure: FunctionComponent<Props> = ({
                     status={data.status}
                 />
 
-                {!noSound && <>
-                    {persistentSoundValues.map((soundValue, index) =>
-                        <PersistentSound
-                            key={index}
-                            soundValue={soundValue}
-                            isPaused={isPaused} />)}
-                    {intermittentSoundValues.map((soundValue, index) => (
-                        <IntermitentSound
-                            key={index}
-                            frameIndex={frameIndex}
-                            soundValue={soundValue}
-                            isPaused={isPaused} />
-                    ))}
-                </>}
+                {(!noSound && !!SoundHandler) &&
+                    <SoundHandler
+                        soundValues={getSoundValues(currentOrder, status, soundEffectMap)}
+                        isPaused={isPaused}
+                        frameIndex={frameIndex} />
+                }
             </>
         )
     }

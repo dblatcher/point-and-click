@@ -1,11 +1,11 @@
+import { useAssets } from "@/context/asset-context";
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { CommandTarget } from "point-click-lib";
 import { findById } from "@/lib/util";
+import { CommandTarget } from "point-click-lib";
 import React from "react";
-import { PersistentSound } from "../sound/PersistentSound";
+import { SoundHandler } from "../sound/SoundHandler";
 import { Room } from "../svg/Room";
 import { buildActorListSortedForDisplay } from "./put-contents-in-order";
-import { useAssets } from "@/context/asset-context";
 
 
 interface Props {
@@ -50,10 +50,9 @@ export const RoomWrapper: React.FunctionComponent<Props> = ({ noInteraction, ren
                 getImageAsset={getImageAsset}
                 orderSpeed={gameProps.orderSpeed}
                 sprites={gameProps.sprites}
+                SoundHandler={SoundHandler}
             />
         )}
-        <PersistentSound isPaused={isPaused} soundValue={currentRoom?.backgroundMusic} />
-        <PersistentSound isPaused={isPaused} soundValue={currentRoom?.ambientNoise} />
     </>
 
 }

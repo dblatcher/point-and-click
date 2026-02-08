@@ -1,7 +1,7 @@
 import { ActorFigure } from "@/components/svg/ActorFigure";
 import { DialogueBubble } from "@/components/svg/DialogueBubble";
 import { RoomRenderContext } from "@/context/room-render-context";
-import type { CellMatrix, SpriteData } from "point-click-lib";
+import type { CellMatrix, SoundValue, SpriteData } from "point-click-lib";
 import { HotspotZone, RoomData, } from "point-click-lib";
 import { CSSProperties, FunctionComponent, MouseEventHandler, ReactNode } from "react";
 import { ActorWithOrdersAndClickHandlers, HandleHoverFunction } from "../../game/types";
@@ -42,6 +42,11 @@ interface Props {
     getImageAsset: { (id: string): ImageAsset | undefined }
     orderSpeed?: number;
     sprites: SpriteData[];
+    SoundHandler?: FunctionComponent<{
+        soundValues: SoundValue[];
+        isPaused: boolean;
+        frameIndex?: number;
+    }>
 }
 
 export const Room: FunctionComponent<Props> = ({
@@ -72,6 +77,7 @@ export const Room: FunctionComponent<Props> = ({
     getImageAsset,
     orderSpeed = 1,
     sprites,
+    SoundHandler,
 }: Props) => {
     const { id, frameWidth, height, background, hotspots = [], obstacleAreas = [], walkableAreas = [], frameHeight = height } = data;
 
@@ -97,6 +103,8 @@ export const Room: FunctionComponent<Props> = ({
         margin: noMargin ? 0 : undefined,
         backgroundColor: data.backgroundColor,
     }
+
+    const soundValues:SoundValue[] = [data?.backgroundMusic, data?.ambientNoise].flatMap(i => i ? i :[])
 
     return (
         <RoomRenderContext.Provider value={{
@@ -147,6 +155,7 @@ export const Room: FunctionComponent<Props> = ({
                             handleHover={handleHover}
                             getImageAsset={getImageAsset}
                             sprites={sprites}
+                            SoundHandler={SoundHandler}
                         />
                     ))}
                 </SurfaceFrame>
@@ -195,6 +204,12 @@ export const Room: FunctionComponent<Props> = ({
                         />
                     ))}
                 </SurfaceFrame>
+
+                {(!noSound && !!SoundHandler) && 
+                    <SoundHandler 
+                        isPaused={isPaused} 
+                        soundValues={soundValues} 
+                    />}
 
                 {showCaption && (
                     <figcaption className={styles.roomCaption}>{id}</figcaption>

@@ -1,3 +1,4 @@
+import { useAssets } from "@/context/asset-context";
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-actions";
 import { GameState } from "@/lib/game-state-logic/types";
@@ -9,12 +10,12 @@ import { ActorData, CommandTarget, HotspotZone, matchInteraction } from "point-c
 import React, { useEffect, useRef, useState } from "react";
 import { buildActorListSortedForDisplay } from "../game/put-contents-in-order";
 import { ResizeWatcher } from "../ResizeWatcher";
+import { SoundHandler } from "../sound/SoundHandler";
 import { ParallaxPlace, ParallaxPlaceProps } from "../svg/ParallaxPlace";
 import { Room } from "../svg/Room";
 import { InteractionCoin } from "./InteractionCoin";
 import { InventoryDrawer } from "./InventoryDrawer";
 import { TargetLabel } from "./TargetLabel";
-import { useAssets } from "@/context/asset-context";
 
 const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {
     return gameState.hoverTarget?.type === 'actor' || gameState.hoverTarget?.type === 'hotspot'
@@ -153,6 +154,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                         getImageAsset={getImageAsset}
                         orderSpeed={gameProps.orderSpeed}
                         sprites={gameProps.sprites}
+                        SoundHandler={SoundHandler}
                     />
 
                     {(!isSequenceRunning && !isConversationRunning) && (
