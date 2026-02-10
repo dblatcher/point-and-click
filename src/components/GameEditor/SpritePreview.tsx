@@ -1,9 +1,8 @@
-import { ActorData, Direction, SpriteData } from "point-click-lib";
-import { Box } from "@mui/material";
-import HorizontalLine from "../svg/HorizontalLine";
-import { SurfaceFrame, ActorFigure, RoomRenderContext } from "point-click-components";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
+import { Box } from "@mui/material";
+import { ActorData, Direction, SpriteData } from "point-click-lib";
+import { ActorPreview } from "../svg/ActorPreview";
 
 type Props = {
     data: ActorData;
@@ -16,79 +15,23 @@ type Props = {
 }
 
 
-const getActorScale = (height: number, scale: number, maxHeight?: number) => {
-    if (!maxHeight || height === 0) {
-        return scale
-    }
-    return maxHeight / height
-}
-
-const getRoomScale = (scale: number, roomWidth: number, roomHeight: number, maxHeight?: number) => {
-    const effectiveMaxWidth = maxHeight ? roomWidth : 100 * scale
-    const effectiveMaxHeight = maxHeight ?? 200;
-    return Math.min(
-        effectiveMaxWidth / roomWidth,
-        effectiveMaxHeight / roomHeight
-    )
-}
-
-export const SpritePreview = ({ data, overrideSpriteData, scale = 1, noBaseLine, maxHeight, animation, direction }: Props) => {
+export const SpritePreview = (props: Props) => {
     const { gameDesign } = useGameDesign()
     const { getImageAsset } = useAssets()
-    const actorScale = getActorScale(data.height, scale, maxHeight)
-    const roomWidth = actorScale * data.width;
-    const roomHeight = actorScale * data.height;
-    const roomScale = getRoomScale(scale, roomWidth, roomHeight, maxHeight)
 
     return (
-        <Box component={'figure'}
+        <Box
             sx={{
                 margin: 0,
                 position: 'relative',
                 overflow: 'hidden',
             }}
-            style={{
-                width: roomWidth * roomScale,
-                height: roomHeight * roomScale,
-            }}
         >
-            <RoomRenderContext.Provider value={{
-                roomData: {
-                    height: roomHeight,
-                    width: roomWidth,
-                    frameWidth: roomWidth,
-                    id: '',
-                    background: [],
-                },
-                viewAngleX: 0,
-                viewAngleY: 0,
-                scale: roomScale,
-                orderSpeed: 1,
-            }}>
-
-                <SurfaceFrame>
-                    <ActorFigure
-                        isPaused={false}
-                        noSound
-                        data={{
-                            ...data,
-                            width: roomWidth,
-                            height: roomHeight,
-                            x: roomWidth / 2,
-                            status: animation ?? data.status,
-                            direction: direction ?? data.direction,
-                            y: 0
-                        }}
-                        roomScale={roomScale}
-                        overrideSpriteData={overrideSpriteData}
-                        getImageAsset={getImageAsset}
-                        sprites={gameDesign.sprites}
-                    />
-                    {!noBaseLine && (
-                        <HorizontalLine y={data.baseline || 0} />
-                    )}
-                </SurfaceFrame>
-            </RoomRenderContext.Provider>
+            <ActorPreview
+                {...props}
+                sprites={gameDesign.sprites}
+                getImageAsset={getImageAsset}
+            />
         </Box>
     )
 }
