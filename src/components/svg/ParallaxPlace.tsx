@@ -1,4 +1,4 @@
-import { useRoomRender } from "@/hooks/useRoomRender";
+import { useRoomRender } from "point-click-components";
 import { getXShift, getYShift } from "@/lib/roomFunctions";
 import { FunctionComponent, ReactNode } from "react";
 

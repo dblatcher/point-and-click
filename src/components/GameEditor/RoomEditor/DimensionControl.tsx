@@ -1,5 +1,5 @@
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import { Room } from "@/components/svg/Room";
+import { Room } from "point-click-components";
 import { useGameDesign } from "@/context/game-design-context";
 import { RoomData } from "point-click-lib";
 import { Alert, Box, Grid, Stack } from "@mui/material";

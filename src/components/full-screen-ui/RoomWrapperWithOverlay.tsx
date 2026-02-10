@@ -12,7 +12,7 @@ import { buildActorListSortedForDisplay } from "../game/put-contents-in-order";
 import { ResizeWatcher } from "../ResizeWatcher";
 import { SoundHandler } from "../sound/SoundHandler";
 import { ParallaxPlace, ParallaxPlaceProps } from "../svg/ParallaxPlace";
-import { Room } from "../svg/Room";
+import { Room } from "point-click-components";
 import { InteractionCoin } from "./InteractionCoin";
 import { InventoryDrawer } from "./InventoryDrawer";
 import { TargetLabel } from "./TargetLabel";

@@ -1,10 +1,10 @@
 import { useAssets } from "@/context/asset-context";
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { findById } from "@/lib/util";
+import { Room } from "point-click-components";
 import { CommandTarget } from "point-click-lib";
 import React from "react";
 import { SoundHandler } from "../sound/SoundHandler";
-import { Room } from "../svg/Room";
 import { buildActorListSortedForDisplay } from "./put-contents-in-order";
 
 

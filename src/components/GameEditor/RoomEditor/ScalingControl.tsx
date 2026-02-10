@@ -1,13 +1,14 @@
 
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import HorizontalLine from "@/components/svg/HorizontalLine";
-import { Room } from "@/components/svg/Room";
+import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
-import { ActorData, RoomData, ScaleLevel } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { locateClickInWorld } from "@/lib/roomFunctions";
 import { clamp, findById } from "@/lib/util";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import { Room } from "point-click-components";
+import { ActorData, RoomData, ScaleLevel } from "point-click-lib";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { EditorBox } from "../layout/EditorBox";
@@ -15,7 +16,6 @@ import { LayoutControls, LayoutHolder, LayoutPreview } from "../layout/SplitLayo
 import { PickActorDialog } from "../PickActorDialog";
 import { XYControl } from "../XYControl";
 import { RoomAngleFrame } from "./RoomAngleFrame";
-import { useAssets } from "@/context/asset-context";
 
 interface Props {
     roomData: RoomData;

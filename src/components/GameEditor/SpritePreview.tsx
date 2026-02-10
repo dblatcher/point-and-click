@@ -1,9 +1,7 @@
-import { RoomRenderContext } from "@/context/room-render-context";
 import { ActorData, Direction, SpriteData } from "point-click-lib";
 import { Box } from "@mui/material";
-import { ActorFigure } from "../svg/ActorFigure";
 import HorizontalLine from "../svg/HorizontalLine";
-import { SurfaceFrame } from "../svg/Room/SurfaceFrame";
+import { SurfaceFrame, ActorFigure, RoomRenderContext } from "point-click-components";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 
@@ -43,30 +41,31 @@ export const SpritePreview = ({ data, overrideSpriteData, scale = 1, noBaseLine,
     const roomScale = getRoomScale(scale, roomWidth, roomHeight, maxHeight)
 
     return (
-        <RoomRenderContext.Provider value={{
-            roomData: {
-                height: roomHeight,
-                width: roomWidth,
-                frameWidth: roomWidth,
-                id: '',
-                background: [],
-            },
-            viewAngleX: 0,
-            viewAngleY: 0,
-            scale: roomScale,
-            orderSpeed: 1,
-        }}>
-            <Box component={'figure'}
-                sx={{
-                    margin: 0,
-                    position: 'relative',
-                    overflow: 'hidden',
-                }}
-                style={{
-                    width: roomWidth * roomScale,
-                    height: roomHeight * roomScale,
-                }}
-            >
+        <Box component={'figure'}
+            sx={{
+                margin: 0,
+                position: 'relative',
+                overflow: 'hidden',
+            }}
+            style={{
+                width: roomWidth * roomScale,
+                height: roomHeight * roomScale,
+            }}
+        >
+            <RoomRenderContext.Provider value={{
+                roomData: {
+                    height: roomHeight,
+                    width: roomWidth,
+                    frameWidth: roomWidth,
+                    id: '',
+                    background: [],
+                },
+                viewAngleX: 0,
+                viewAngleY: 0,
+                scale: roomScale,
+                orderSpeed: 1,
+            }}>
+
                 <SurfaceFrame>
                     <ActorFigure
                         isPaused={false}
@@ -89,8 +88,8 @@ export const SpritePreview = ({ data, overrideSpriteData, scale = 1, noBaseLine,
                         <HorizontalLine y={data.baseline || 0} />
                     )}
                 </SurfaceFrame>
-            </Box>
-        </RoomRenderContext.Provider>
+            </RoomRenderContext.Provider>
+        </Box>
     )
 }
 

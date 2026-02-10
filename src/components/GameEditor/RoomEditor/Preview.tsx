@@ -2,15 +2,15 @@ import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import HorizontalLine from "@/components/svg/HorizontalLine";
 import { MarkerShape } from "@/components/svg/MarkerShape";
-import { Room } from "@/components/svg/Room";
+import { useAssets } from "@/context/asset-context";
+import { useGameDesign } from "@/context/game-design-context";
 import { putActorsInDisplayOrder } from "@/lib/roomFunctions";
 import { Box, Typography } from "@mui/material";
+import { Room } from "point-click-components";
 import { ActorData, getTargetPoint, HotspotZone, RoomData, ZoneType } from "point-click-lib";
 import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { RoomAngleFrame } from "./RoomAngleFrame";
-import { useAssets } from "@/context/asset-context";
-import { useGameDesign } from "@/context/game-design-context";
 
 
 type Props = {

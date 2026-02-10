@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import { useRoomRender } from "@/hooks/useRoomRender";
+import { useRoomRender } from "point-click-components";
 
 interface Props {
     y: number;

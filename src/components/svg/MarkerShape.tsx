@@ -1,4 +1,4 @@
-import { useRoomRender } from "@/hooks/useRoomRender";
+import { useRoomRender } from "point-click-components";
 import { FunctionComponent } from "react";
 
 interface Props {
