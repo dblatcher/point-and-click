@@ -10,7 +10,7 @@ import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 import { GameProps } from "./types";
 import { useCamera } from "@/hooks/useCamera";
 import { getPointOfFocus } from "point-click-lib";
-import { CamerPointProvider } from "point-click-components";
+import { CameraPointProvider } from "point-click-components";
 
 
 export const Game: React.FunctionComponent<GameProps> = (props) => {
@@ -37,12 +37,12 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         gameProps: props,
         updateGameState: makeDispatcherWithProps(dispatch, props),
     }}>
-        <CamerPointProvider value={{cameraPoint}}>
+        <CameraPointProvider value={{cameraPoint}}>
             {showDebugLog && (<DebugLog />)}
             <GameLayoutComponent />
             {(!props.instantMode && currentStoryBoard) && (
                 <StoryBoardPlayer storyBoard={currentStoryBoard} />
             )}
-        </CamerPointProvider>
+        </CameraPointProvider>
     </GameStateProvider>
 }

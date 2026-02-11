@@ -1,11 +1,10 @@
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import HorizontalLine from "@/components/svg/HorizontalLine";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { Box, Typography } from "@mui/material";
-import { putActorsInDisplayOrder, Room } from "point-click-components";
+import { HorizontalLine, putActorsInDisplayOrder, Room } from "point-click-components";
 import { ActorData, getTargetPoint, HotspotZone, RoomData, ZoneType } from "point-click-lib";
 import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";

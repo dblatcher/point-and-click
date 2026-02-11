@@ -1,12 +1,11 @@
 
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
-import HorizontalLine from "@/components/svg/HorizontalLine";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { cloneData } from "@/lib/clone";
 import { clamp, findById } from "@/lib/util";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { Room, locateClickInWorld } from "point-click-components";
+import { HorizontalLine, Room, locateClickInWorld } from "point-click-components";
 import { ActorData, RoomData, ScaleLevel } from "point-click-lib";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
