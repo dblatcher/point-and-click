@@ -1,5 +1,4 @@
-import { useRoomRender } from "point-click-components";
-import { getXShift, getYShift } from "@/lib/roomFunctions";
+import { useRoomRender, getXShift, getYShift } from "point-click-components";
 import { FunctionComponent, ReactNode } from "react";
 
 export interface ParallaxPlaceProps {

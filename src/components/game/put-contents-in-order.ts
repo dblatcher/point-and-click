@@ -1,6 +1,6 @@
 import { CommandTarget, GameDesign } from "point-click-lib";
 import { GameState } from "@/lib/game-state-logic/types";
-import { putActorsInDisplayOrder } from "@/lib/roomFunctions";
+import { putActorsInDisplayOrder } from "point-click-components";
 import { HandleClickFunction, ActorWithOrdersAndClickHandlers } from "./types";
 
 export const buildActorListSortedForDisplay = (

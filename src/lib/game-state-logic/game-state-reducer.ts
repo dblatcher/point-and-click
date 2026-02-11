@@ -1,10 +1,10 @@
 import { cloneData } from "@/lib/clone";
 import { GameEventEmitter } from "@/lib/game-event-emitter";
 import { GameState } from "@/lib/game-state-logic/types";
-import { locateClickInWorld } from "@/lib/roomFunctions";
+import { locateClickInWorld } from "point-click-components";
 import { CELL_SIZE } from "@/lib/types-and-constants";
 import { findById } from "@/lib/util";
-import { advanceTimeOneStep, generateCellMatrix, getPointOfFocus, getViewAngleXCenteredOn, handleConversationChoice, issueMoveOrder, makeCommandHandler, matchInteraction } from "point-click-lib";
+import { advanceTimeOneStep, generateCellMatrix, getPointOfFocus, handleConversationChoice, issueMoveOrder, makeCommandHandler, matchInteraction } from "point-click-lib";
 import { Reducer } from "react";
 import { GameProps } from "../../components/game/types";
 import { DB_VERSION } from "../indexed-db";

@@ -2,17 +2,16 @@ import { useAssets } from "@/context/asset-context";
 import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-actions";
 import { GameState } from "@/lib/game-state-logic/types";
-import { calculateScreenX } from "@/lib/roomFunctions";
 import { clamp, findById } from "@/lib/util";
 import InventoryIcon from '@mui/icons-material/Inventory2Outlined';
 import { Box, Button } from "@mui/material";
-import { ActorData, CommandTarget, HotspotZone, matchInteraction } from "point-click-lib";
+import { ActorData, CommandTarget, HotspotZone, matchInteraction, RoomData } from "point-click-lib";
 import React, { useEffect, useRef, useState } from "react";
 import { buildActorListSortedForDisplay } from "../game/put-contents-in-order";
 import { ResizeWatcher } from "../ResizeWatcher";
 import { SoundHandler } from "../sound/SoundHandler";
 import { ParallaxPlace, ParallaxPlaceProps } from "../svg/ParallaxPlace";
-import { Room } from "point-click-components";
+import { getXShift, Room } from "point-click-components";
 import { InteractionCoin } from "./InteractionCoin";
 import { InventoryDrawer } from "./InventoryDrawer";
 import { TargetLabel } from "./TargetLabel";
@@ -21,6 +20,12 @@ const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefin
     return gameState.hoverTarget?.type === 'actor' || gameState.hoverTarget?.type === 'hotspot'
         ? gameState.hoverTarget
         : undefined
+}
+
+function calculateScreenX(xPosition: number, viewAngleX: number, roomData: RoomData) {
+    const { width, frameWidth } = roomData
+    const shift = getXShift(viewAngleX, 1, roomData)
+    return (frameWidth / 2) + (xPosition - width / 2) + shift
 }
 
 const getTargetPlace = (hoverTargetInRoom: ActorData | HotspotZone | undefined, gameState: GameState) => {
