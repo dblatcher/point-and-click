@@ -5,9 +5,12 @@ import { ImageAsset, SoundAsset } from "@/services/assets";
 import { ImageService } from "@/services/imageService";
 import { SoundService } from "@/services/soundService";
 import { Box, Skeleton } from "@mui/material";
+import { GameRunner } from "point-click-components";
 import { GameDesign } from "point-click-lib";
 import { useEffect, useRef, useState } from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
+import { BasicLayout } from "./layouts-for-runner/BasicLayout";
+
 
 type Props = {
   gameDesign: GameDesign;
@@ -16,6 +19,7 @@ type Props = {
   uiComponents?: UiComponentSet;
   instantMode?: boolean;
 }
+const usingGameRunner = false as boolean;
 
 export const GameDesignPlayer = ({
   uiComponents,
@@ -50,15 +54,29 @@ export const GameDesignPlayer = ({
   return (
     <AssetsProvider imageService={imageServiceRef.current} soundService={soundServiceRef.current}>
       {(ready) ? (
-        <Game
-          {...gameDesign}
-          uiComponents={uiComponents}
-          instantMode={instantMode}
-          playSound={(soundId, volume) => !!soundServiceRef.current.play(soundId, { volume })}
-          cellSize={CELL_SIZE}
-          defaultTalkTime={DEFAULT_TALK_TIME}
-          allowLocalSaves
-        />
+        <>
+          {(usingGameRunner)
+            ? <GameRunner
+              gameDesign={gameDesign}
+              getImageAsset={id => imageServiceRef.current.get(id)}
+              getSoundAsset={id => soundServiceRef.current.get(id)}
+              Layout={BasicLayout}
+              options={{
+                cellSize: CELL_SIZE,
+                playSound: (soundId, volume) => !!soundServiceRef.current.play(soundId, { volume })
+              }}
+            />
+            : <Game
+              {...gameDesign}
+              uiComponents={uiComponents}
+              instantMode={instantMode}
+              playSound={(soundId, volume) => !!soundServiceRef.current.play(soundId, { volume })}
+              cellSize={CELL_SIZE}
+              defaultTalkTime={DEFAULT_TALK_TIME}
+              allowLocalSaves
+            />
+          }
+        </>
       ) : (
         <Box padding={3} flex={1} display={'flex'} flexDirection={'column'} gap={1}>
           <Skeleton variant="rectangular" sx={{ flex: 3 }}></Skeleton>

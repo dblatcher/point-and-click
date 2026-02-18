@@ -2,9 +2,10 @@ import { useAssets } from "@/context/asset-context";
 import { useGameState } from "@/context/game-state-context";
 import { getStoryboardCloseAction } from "@/lib/game-state-logic/game-state-actions";
 import { StoryBoard } from "point-click-lib";
-import React, { CSSProperties, useEffect, useState } from "react";
+import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { SoundControl } from "sound-deck";
 import { StoryPageDisplay } from "./StoryPageDisplay";
+import { GameDataContext } from "point-click-components";
 
 interface Props {
     storyBoard: StoryBoard
@@ -51,6 +52,7 @@ const buttonsStyle: CSSProperties = {
 
 export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard }) => {
     const { updateGameState } = useGameState()
+    const { dispatch } = useContext(GameDataContext)
     const [pageNumber, setPageNumber] = useState(0)
     const [sound, setSound] = useState<SoundControl | undefined>(undefined)
     const { soundService } = useAssets()
@@ -77,6 +79,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
                     }
                     soundControl.whenEnded.then(() => {
                         updateGameState(getStoryboardCloseAction(storyBoard.isEndOfGame));
+                        dispatch({ type: 'CLEAR-STORYBOARD' }) // handle end of game
                     })
                 }
                 setSound(soundControl)
@@ -86,9 +89,9 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
 
         return () => {
             sound?.stop()
-            
+
         }
-    }, [setPageNumber, storyBoard, soundService, setSound, updateGameState, sound])
+    }, [setPageNumber, storyBoard, soundService, setSound, updateGameState, dispatch, sound])
 
 
     const currentPage = storyBoard.pages[pageNumber]
@@ -99,6 +102,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
         if (onLastPage || storyBoard.progression === 'sound') {
             sound?.stop()
             updateGameState(getStoryboardCloseAction(storyBoard.isEndOfGame))
+            dispatch({ type: 'CLEAR-STORYBOARD' }) // handle end of game
         } else {
             goToNextPage()
         }
