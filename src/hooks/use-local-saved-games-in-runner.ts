@@ -1,11 +1,12 @@
-import { deleteSave, listSavedGames, load, save } from "@/lib/local-saves";
+import { localStorageSaves } from "@/lib/local-saves";
 import { GameDataContext } from "point-click-components";
 import { GameData } from "point-click-lib";
 import { useContext } from "react";
 
+const { listSavedGames, load, save, deleteSave } = localStorageSaves;
 
 export const useLocalSavedGame = () => {
-    const {gameState, dispatch} = useContext(GameDataContext)
+    const { gameState, dispatch } = useContext(GameDataContext)
     const restart = () => dispatch({ type: 'RESET' });
 
     const saveGame = (fileName?: string) => save(gameState.id)(gameState, fileName);

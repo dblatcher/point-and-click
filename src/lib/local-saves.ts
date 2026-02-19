@@ -26,19 +26,19 @@ const extractSaveData = (gameState: GameData): GameData => {
 }
 
 
-export const save = (gameId: string) => (state: GameData, fileName = 'saved-game') => {
+const save = (gameId: string) => (state: GameData, fileName = 'saved-game') => {
     const storageKey = getStorageKey(gameId, fileName);
     localStorage.setItem(storageKey, JSON.stringify(extractSaveData(state)));
 }
 
-export const listSavedGames = (gameId: string) => (): string[] => {
+const listSavedGames = (gameId: string) => (): string[] => {
     const prefixAndIdAndTrailingDelimiter = [SAVED_GAME_PREFIX, gameId, ''].join(SAVED_GAME_DELIMITER)
     return Object.keys(localStorage)
         .filter(key => key.startsWith(prefixAndIdAndTrailingDelimiter))
         .map(key => key.substring(prefixAndIdAndTrailingDelimiter.length))
 }
 
-export const deleteSave = (gameId: string) => (fileName: string) => {
+const deleteSave = (gameId: string) => (fileName: string) => {
     const storageKey = getStorageKey(gameId, fileName)
     console.log('DELETE SAVE', fileName, storageKey)
     if (storageKey) {
@@ -46,7 +46,7 @@ export const deleteSave = (gameId: string) => (fileName: string) => {
     }
 }
 
-export const load = (gameId: string) => (callback: { (data: GameData): void }, fileName = 'saved-game') => {
+const load = (gameId: string) => (callback: { (data: GameData): void }, fileName = 'saved-game') => {
     const storageKey = getStorageKey(gameId, fileName)
     if (!storageKey) {
         return;
@@ -73,4 +73,11 @@ export const load = (gameId: string) => (callback: { (data: GameData): void }, f
     } catch (error) {
         console.error(error);
     }
+}
+
+export const localStorageSaves = {
+    save,
+    listSavedGames,
+    deleteSave,
+    load,
 }

@@ -1,7 +1,8 @@
 import { useGameState } from "@/context/game-state-context"
-import { deleteSave, listSavedGames, load, save } from "@/lib/local-saves";
+import { localStorageSaves} from "@/lib/local-saves";
 import { GameData } from "point-click-lib"
 
+const { listSavedGames, load, save, deleteSave } = localStorageSaves;
 
 export const useLocalSavedGame = () => {
     const { updateGameState, gameState, gameProps: { allowLocalSaves } } = useGameState();
