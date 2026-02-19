@@ -79,7 +79,11 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
                     }
                     soundControl.whenEnded.then(() => {
                         updateGameState(getStoryboardCloseAction(storyBoard.isEndOfGame));
-                        dispatch({ type: 'CLEAR-STORYBOARD' }) // handle end of game
+                        if (storyBoard.isEndOfGame) {
+                            dispatch({ type: 'RESET' })
+                        } else {
+                            dispatch({ type: 'CLEAR-STORYBOARD' })
+                        }
                     })
                 }
                 setSound(soundControl)
@@ -102,7 +106,11 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
         if (onLastPage || storyBoard.progression === 'sound') {
             sound?.stop()
             updateGameState(getStoryboardCloseAction(storyBoard.isEndOfGame))
-            dispatch({ type: 'CLEAR-STORYBOARD' }) // handle end of game
+            if (storyBoard.isEndOfGame) {
+                dispatch({ type: 'RESET' })
+            } else {
+                dispatch({ type: 'CLEAR-STORYBOARD' })
+            }
         } else {
             goToNextPage()
         }
