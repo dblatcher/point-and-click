@@ -5,7 +5,6 @@ import { useContext } from "react";
 import { ImageBlock } from "../ImageBlock";
 import uiStyles from './uiStyles.module.css';
 import { findById } from '@/lib/util';
-import { Console } from 'console';
 
 
 export const ItemMenu = () => {

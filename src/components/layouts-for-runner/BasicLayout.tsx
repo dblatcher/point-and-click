@@ -10,6 +10,7 @@ import { ConversationMenu } from "./ConversationMenu"
 import { useCamera } from "@/hooks/useCamera"
 import { useInterval } from "@/hooks/useInterval"
 import { getPointOfFocus } from "point-click-lib"
+import { SaveMenu } from "./SaveMenu"
 
 
 export const BasicLayout = () => {
@@ -29,7 +30,9 @@ export const BasicLayout = () => {
 
     return <section>
         <CameraPointProvider value={{ cameraPoint }}>
+
             <p>game runner!</p>
+            <SaveMenu />
             {condition === 'story-board'
                 ? (
                     <div>

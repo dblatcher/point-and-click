@@ -1,5 +1,4 @@
 import { GameData, GameDataSchema } from "point-click-lib";
-import { GameState } from "./game-state-logic/types";
 
 const SAVED_GAME_PREFIX = 'POINT_AND_CLICK'
 const SAVED_GAME_DELIMITER = "//"
@@ -8,7 +7,7 @@ const getStorageKey = (gameId: string, fileName: string): string => {
     return [SAVED_GAME_PREFIX, gameId, fileName].join(SAVED_GAME_DELIMITER);
 }
 
-const extractSaveData = (gameState: GameState): GameData => {
+const extractSaveData = (gameState: GameData): GameData => {
     const {
         id, schemaVersion,
         rooms, actors, interactions, items,
@@ -27,7 +26,7 @@ const extractSaveData = (gameState: GameState): GameData => {
 }
 
 
-export const save = (gameId: string) => (state: GameState, fileName = 'saved-game') => {
+export const save = (gameId: string) => (state: GameData, fileName = 'saved-game') => {
     const storageKey = getStorageKey(gameId, fileName);
     localStorage.setItem(storageKey, JSON.stringify(extractSaveData(state)));
 }
