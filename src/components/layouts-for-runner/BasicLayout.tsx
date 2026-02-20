@@ -10,6 +10,7 @@ import { RoomSizeButtons } from "./RoomSizeButton"
 import { SaveMenu } from "./SaveMenu"
 import { SoundToggle } from "./SoundToggle"
 import { VerbMenu } from "./VerbMenu"
+import { DebugLog } from "./RunnerDebugLog"
 
 
 export const BasicLayout = () => {
@@ -18,8 +19,9 @@ export const BasicLayout = () => {
     const storyBoard = findById(currentStoryBoardId, gameDesign.storyBoards)
     const condition = getUiCondition(gameState)
 
-
+    // TO DO - how to control whether to remove DebugLog
     return <section>
+        <DebugLog />
         <SoundToggle />
         <RoomSizeButtons />
         {allowLocalSaves && (
