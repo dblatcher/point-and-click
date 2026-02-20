@@ -1,11 +1,11 @@
+import { InGameEvent } from "@/lib/game-event-emitter";
 import { LogEntry, makeDebugEntry } from "@/lib/inGameDebugging";
 import { Box, Typography } from "@mui/material";
+import { GameDataContext } from "point-click-components";
 import { useContext, useEffect, useState } from "react";
 import { EventFeed } from "../DebugLog/EventFeed";
 import { FlagList } from "../DebugLog/FlagList";
-import { GameDataContext } from "point-click-components";
 import { logService } from "./log-service";
-import { Command, describeCommand } from "point-click-lib";
 
 
 
@@ -14,12 +14,13 @@ export const DebugLog = () => {
     const [log, setLog] = useState<LogEntry[]>([])
 
     useEffect(() => {
-        const handleCommand = (command: Command) => {
-            setLog([...log, makeDebugEntry(describeCommand(command), 'command')])
+        const handleInGameEvent = (event: InGameEvent) => {
+            // TO DO - message format
+            setLog([...log, makeDebugEntry(JSON.stringify(event))])
         }
-        logService.emitter.on('command', handleCommand)
+        logService.emitter.on('in-game-event', handleInGameEvent)
         return () => {
-            logService.emitter.off('command', handleCommand)
+            logService.emitter.off('in-game-event', handleInGameEvent)
         }
     })
 
