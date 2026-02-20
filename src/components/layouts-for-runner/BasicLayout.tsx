@@ -8,7 +8,7 @@ import { ItemMenu } from "./ItemMenu"
 import { SaveMenu } from "./SaveMenu"
 import { VerbMenu } from "./VerbMenu"
 import { getUiCondition } from "./helpers"
-import { SoundToggle } from "../game-mui-ux/SoundToggle"
+import { SoundToggle } from "./SoundToggle"
 
 
 export const BasicLayout = () => {
