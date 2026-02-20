@@ -10,11 +10,15 @@ import { useState } from "react";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
+import { GameRunner } from "point-click-components";
+import { BasicLayout } from "../layouts-for-runner/BasicLayout";
+import { logService } from "../layouts-for-runner/log-service";
 
+const usingGameRunner = true as boolean;
 
 export const TestGameDialog = () => {
     const { gameDesign } = useGameDesign()
-    const { soundService } = useAssets()
+    const { soundService, imageService } = useAssets()
     const [showDebugLog, setShowDebugLog] = useState(false)
     const [haveStartedTests, setHaveStartedTest] = useState(false)
     const [gameSpeed, setGameSpeed] = useState(1)
@@ -80,16 +84,33 @@ export const TestGameDialog = () => {
                         flexDirection: 'column',
                     }}>
                         {haveStartedTests && (
-                            <Game
-                                key={resetTimeStamp}
-                                {...modifiedGameDesign}
-                                showDebugLog={showDebugLog}
-                                playSound={(soundId, volume) => !!soundService.play(soundId, { volume })}
-                                timerInterval={10}
-                                cellSize={CELL_SIZE}
-                                defaultTalkTime={DEFAULT_TALK_TIME}
-                                orderSpeed={gameSpeed}
-                            />
+                            <>
+                                {usingGameRunner ? (
+                                    <GameRunner key={resetTimeStamp}
+                                        gameDesign={{ ...modifiedGameDesign }}
+                                        getImageAsset={id => imageService.get(id)}
+                                        getSoundAsset={id => soundService.get(id)}
+                                        Layout={BasicLayout}
+                                        options={{
+                                            eventReporter: logService.reporter,
+                                            cellSize: CELL_SIZE,
+                                            orderSpeed: gameSpeed,
+                                            playSound: (soundId, volume) => !!soundService.play(soundId, { volume })
+                                        }}
+                                    />
+                                ) : (
+                                    <Game
+                                        key={resetTimeStamp}
+                                        {...modifiedGameDesign}
+                                        showDebugLog={showDebugLog}
+                                        playSound={(soundId, volume) => !!soundService.play(soundId, { volume })}
+                                        timerInterval={10}
+                                        cellSize={CELL_SIZE}
+                                        defaultTalkTime={DEFAULT_TALK_TIME}
+                                        orderSpeed={gameSpeed}
+                                    />
+                                )}
+                            </>
                         )}
                     </DialogContent>
                 </Dialog>
