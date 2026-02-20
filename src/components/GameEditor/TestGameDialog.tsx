@@ -11,7 +11,7 @@ import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
 import { GameRunner } from "point-click-components";
-import { BasicLayout } from "../layouts-for-runner/BasicLayout";
+import { BasicLayout, BasicLayoutWithDebugLog } from "../layouts-for-runner/BasicLayout";
 import { logService } from "../layouts-for-runner/log-service";
 
 const usingGameRunner = true as boolean;
@@ -90,7 +90,7 @@ export const TestGameDialog = () => {
                                         gameDesign={{ ...modifiedGameDesign }}
                                         getImageAsset={id => imageService.get(id)}
                                         getSoundAsset={id => soundService.get(id)}
-                                        Layout={BasicLayout}
+                                        Layout={showDebugLog ? BasicLayoutWithDebugLog : BasicLayout}
                                         options={{
                                             eventReporter: logService.reporter,
                                             cellSize: CELL_SIZE,
