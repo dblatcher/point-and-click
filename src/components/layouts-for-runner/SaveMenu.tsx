@@ -1,5 +1,4 @@
-import { useLocalSavedGame } from "@/hooks/use-local-saved-games-in-runner";
-import { GameDataContext } from "point-click-components";
+import { GameDataContext, useLocalSavedGame } from "point-click-components";
 import { useContext } from "react";
 
 export const SaveMenu = () => {

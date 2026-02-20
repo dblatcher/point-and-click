@@ -1,6 +1,5 @@
 import { useGameState } from "@/context/game-state-context"
-import { localStorageSaves} from "@/lib/local-saves";
-import { GameData } from "point-click-lib"
+import { GameData, localStorageSaves } from "point-click-lib"
 
 const { listSavedGames, load, save, deleteSave } = localStorageSaves;
 

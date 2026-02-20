@@ -19,7 +19,7 @@ type Props = {
   uiComponents?: UiComponentSet;
   instantMode?: boolean;
 }
-const usingGameRunner = false as boolean;
+const usingGameRunner = true as boolean;
 
 export const GameDesignPlayer = ({
   uiComponents,
