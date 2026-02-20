@@ -4,24 +4,27 @@ import { useContext } from "react"
 import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer"
 import { CommandLine } from "./CommandLine"
 import { ConversationMenu } from "./ConversationMenu"
-import { ItemMenu } from "./ItemMenu"
-import { SaveMenu } from "./SaveMenu"
-import { VerbMenu } from "./VerbMenu"
 import { getUiCondition } from "./helpers"
+import { ItemMenu } from "./ItemMenu"
+import { RoomSizeButtons } from "./RoomSizeButton"
+import { SaveMenu } from "./SaveMenu"
 import { SoundToggle } from "./SoundToggle"
+import { VerbMenu } from "./VerbMenu"
 
 
 export const BasicLayout = () => {
-    const { gameState, dispatch, gameDesign } = useContext(GameDataContext)
+    const { gameState, dispatch, gameDesign, allowLocalSaves } = useContext(GameDataContext)
     const { currentStoryBoardId } = gameState
     const storyBoard = findById(currentStoryBoardId, gameDesign.storyBoards)
     const condition = getUiCondition(gameState)
 
 
     return <section>
-        <p>game runner!</p>
         <SoundToggle />
-        <SaveMenu />
+        <RoomSizeButtons />
+        {allowLocalSaves && (
+            <SaveMenu />
+        )}
         {condition === 'story-board'
             ? (
                 <div>
