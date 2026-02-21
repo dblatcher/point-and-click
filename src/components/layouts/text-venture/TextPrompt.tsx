@@ -1,10 +1,10 @@
 import { reportConversationBranch } from "@/lib/game-event-emitter"
 import { standard } from "@/lib/text-based/standard-text"
 import { promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
-import { clamp } from "@/lib/util"
+import { clamp, findById } from "@/lib/util"
 import { Box, TextField } from "@mui/material"
 import { GameDataContext } from "point-click-components"
-import { Command, Conversation, ConversationChoice } from "point-click-lib"
+import { Command, Conversation, ConversationChoice, matchInteraction } from "point-click-lib"
 import { useContext, useRef, useState } from "react"
 import { logService } from "../log-service"
 import { useGameStateDerivations } from "../use-derivations"
@@ -88,6 +88,9 @@ export const TextPrompt = () => {
             return
         }
         emitter.emit('prompt-feedback', { message: `"${choice.text}"`, type: 'command' })
+
+        const nextBranch = choice.nextBranch ? conversation.branches[choice.nextBranch] ?? branch : branch;
+        emitter.emit('in-game-event', { type: 'conversation-branch', branch: nextBranch })
         selectConversationChoice(choice)
     }
 
@@ -100,6 +103,20 @@ export const TextPrompt = () => {
             return emitter.emit('prompt-feedback', { message: standard.PROMPT_NOT_UNDERSTOOD, type: 'system' })
         }
         sendCommand(command)
+
+        const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
+        const interaction = matchInteraction(command, currentRoom, gameDesign.interactions, gameState)
+        const conversationConsequence = interaction?.consequences.find(consequence => consequence.type === 'conversation')
+        
+        if (conversationConsequence) {
+            const conversation = findById(conversationConsequence.conversationId, gameState.conversations);
+            if (conversation) {
+                const firstBranch = conversation.branches[conversation.currentBranch??conversation.defaultBranch]
+                if (firstBranch) {
+                    emitter.emit('in-game-event', { type: 'conversation-branch', branch: firstBranch })
+                }
+            }
+        }
     }
 
     const scrollThroughHistory = (key: 'ArrowUp' | 'ArrowDown') => {

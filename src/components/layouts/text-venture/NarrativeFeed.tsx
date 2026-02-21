@@ -38,15 +38,6 @@ export const NarrativeFeed = () => {
     }, [currentStoryBoardId, gameDesign, feedQueue])
 
 
-    const { currentConversationId } = gameState
-    const conversation = findById(currentConversationId, gameState.conversations);
-    const branchName = conversation?.currentBranch || conversation?.defaultBranch
-
-    const choices = branchName
-        ? conversation?.branches[branchName]?.choices.filter(c => !c.disabled).map(choice => choice.text)
-        : undefined;
-
-
     useEffect(() => {
         const handleInGameEvent = (inGameEvent: InGameEvent) => {
             feedQueue.current.push(...inGameEventToFeedLines(inGameEvent, gameState))
@@ -69,38 +60,25 @@ export const NarrativeFeed = () => {
     }, [])
 
 
-    return <>
-        {choices && (
-            <div
-                aria-atomic="true"
-                aria-live="assertive"
-                aria-label='conversation choices'
-            >
-                <p>choices</p>
-                <ol>
-                    {choices.map((c, i) => <li key={i}>{c}</li>)}
-                </ol>
-            </div>
+    return <ScrollingFeed
+        feed={feed.map((feedItem, index) =>
+            <FeedLine key={index} feedItem={feedItem} />
         )}
-        <ScrollingFeed
-            feed={feed.map((feedItem, index) =>
-                <FeedLine key={index} feedItem={feedItem} />
-            )}
-            maxHeight={250}
-            boxProps={{
-                component: 'section',
-                flex: 1,
-                paddingX: 1,
-                role: 'log',
-                'aria-atomic': true,
-                'aria-live': "assertive",
-                'aria-label': 'in-game events'
-            }}
-            listProps={{
-                sx: {
-                    listStyle: 'none',
-                    padding: 0
-                }
-            }}
-        /></>
+        maxHeight={250}
+        boxProps={{
+            component: 'section',
+            flex: 1,
+            paddingX: 1,
+            role: 'log',
+            'aria-atomic': true,
+            'aria-live': "assertive",
+            'aria-label': 'in-game events'
+        }}
+        listProps={{
+            sx: {
+                listStyle: 'none',
+                padding: 0
+            }
+        }}
+    />
 };
