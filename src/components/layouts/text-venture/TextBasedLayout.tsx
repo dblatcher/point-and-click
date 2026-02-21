@@ -1,24 +1,22 @@
-import { SaveMenu } from "@/components/game-simple-ui/SaveMenu";
-import { SoundToggle } from "@/components/game-simple-ui/SoundToggle";
-import { useGameState } from "@/context/game-state-context";
-import { screenSizeAction } from "@/lib/game-state-logic/game-state-actions";
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
-import { RoomWrapper } from "../../game/RoomWrapper";
+import { ContextualGameRoom, UiStateContext } from "point-click-components";
+import { useContext, useEffect, useState } from "react";
+import { SaveMenu } from "../basic/SaveMenu";
+import { SoundToggle } from "../shared-mui-components/SoundToggle";
 import { NarrativeFeed } from "./NarrativeFeed";
 import { RoomDescription } from "./RoomDescription";
 import { TextPrompt } from "./TextPrompt";
 
 
 export const TextBasedLayout = () => {
-    const { updateGameState } = useGameState()
+    const { dispatchUi } = useContext(UiStateContext)
     const [initialResizeDone, setInitialResizeDone] = useState(false)
 
     useEffect(() => {
         if (initialResizeDone) { return }
-        updateGameState(screenSizeAction(300, 200));
+        dispatchUi({ type: 'SET_SCREEN_SIZE', width: 300, height: 200 });
         setInitialResizeDone(true)
-    }, [initialResizeDone, setInitialResizeDone, updateGameState])
+    }, [initialResizeDone, setInitialResizeDone, dispatchUi])
 
     return (<main>
         <SaveMenu />
@@ -36,7 +34,7 @@ export const TextBasedLayout = () => {
 
         <Box display={'flex'} component={'aside'}>
             <figure role='img'>
-                <RoomWrapper noInteraction />
+                <ContextualGameRoom />
             </figure>
         </Box>
     </main>)

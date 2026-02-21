@@ -1,9 +1,7 @@
-import { ActorData, describeCommand, findTarget } from "point-click-lib";
-import { StoryBoard } from "point-click-lib";
 import { CommandReport, ConsequenceReport, ConversationBranchReport, InGameEvent, OrderReport, SequenceStageReport } from "@/lib/game-event-emitter";
-import { GameState } from "@/lib/game-state-logic/types";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
+import { ActorData, describeCommand, findTarget, GameData, StoryBoard } from "point-click-lib";
 import { standard } from "./standard-text";
 
 const stringToFeedItem = (message: string) => ({
@@ -11,7 +9,7 @@ const stringToFeedItem = (message: string) => ({
 });
 
 // TO DO[text-based] - proper sentence grammar!
-const orderReportToFeedLine = (orderReport: OrderReport, state: GameState): FeedItem[] => {
+const orderReportToFeedLine = (orderReport: OrderReport, state: GameData): FeedItem[] => {
     const { actor, order } = orderReport;
 
     if (order.narrative) {
@@ -57,7 +55,7 @@ const conversationBranchReportToFeedLines = (commandReport: ConversationBranchRe
         type: 'dialogue'
     }];
 };
-const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameState): FeedItem[] => {
+const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameData): FeedItem[] => {
     const { consequence, success, offscreen } = consequenceReport;
     if (!success || offscreen) {
         return [];
@@ -115,7 +113,7 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
         case "toggleZone":
             const { roomId, ref, on, zoneType } = consequence
             const room = findById(roomId, state.rooms);
-            const locationClause = roomId === state.currentItemId ? '' : ` in the ${roomId}`
+            const locationClause = ` in the ${roomId}`
             switch (zoneType) {
                 case 'hotspot': {
                     const hotspot = room?.hotspots?.find(h => h.id === ref);
@@ -156,7 +154,7 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
             return [];
     }
 };
-const sequenceStageReportToFeedLines = (sequenceStageReport: SequenceStageReport, state: GameState): FeedItem[] => {
+const sequenceStageReportToFeedLines = (sequenceStageReport: SequenceStageReport, state: GameData): FeedItem[] => {
     const { stage } = sequenceStageReport;
     if (stage.narrative) {
         return stage.narrative.text.map(stringToFeedItem);
@@ -171,7 +169,7 @@ export const storyBoardReportToFeedLines = (storyBoard: StoryBoard): FeedItem[] 
     }))
 };
 
-export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameState): FeedItem[] => {
+export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameData): FeedItem[] => {
     switch (inGameEvent.type) {
         case "command":
             return [commandReportToFeedLine(inGameEvent)]
@@ -180,13 +178,13 @@ export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameStat
         case "consequence":
             return consequenceReportToFeedLines(inGameEvent, state)
         case "conversation-branch":
-            return conversationBranchReportToFeedLines(inGameEvent)
+            return conversationBranchReportToFeedLines({...inGameEvent})
         case "sequence-stage":
             return sequenceStageReportToFeedLines(inGameEvent, state)
     }
 }
 
-export const makeRoomDescription = (state: GameState, player?: ActorData): FeedItem => {
+export const makeRoomDescription = (state: GameData, player?: ActorData): FeedItem => {
     const { currentRoomId, rooms, actors } = state
     const room = rooms.find(room => room.id === currentRoomId)
     const hotspots = room?.hotspots ?? []

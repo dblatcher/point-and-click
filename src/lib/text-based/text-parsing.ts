@@ -1,5 +1,4 @@
-import { GameState } from "@/lib/game-state-logic/types";
-import { Verb, ItemData, Command, ActorData, HotspotZone } from "point-click-lib";
+import { Verb, ItemData, Command, ActorData, HotspotZone, GameData } from "point-click-lib";
 import { PromptFeedbackReport } from "../game-event-emitter";
 import { makeRoomDescription } from "./create-feed-items";
 
@@ -61,7 +60,7 @@ export const promptToCommand = (
     promptText: string,
     verbs: Verb[],
     inventory: ItemData[],
-    gameState: GameState
+    gameState: GameData
 ): Command | undefined => {
     const words = splitPhrase(promptText).filter(word => !ignoreList.has(word))
     const { verb, words: wordsMinusVerb } = extractVerb(words, verbs)
@@ -91,7 +90,7 @@ export const promptToHelpFeedback = (
     promptText: string,
     verbs: Verb[],
     inventory: ItemData[],
-    state: GameState,
+    state: GameData,
     player: ActorData | undefined
 ): PromptFeedbackReport | undefined => {
     switch (promptText.trim().toUpperCase()) {

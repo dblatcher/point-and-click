@@ -9,6 +9,7 @@ import { GameRunner } from "point-click-components";
 import { GameDesign } from "point-click-lib";
 import { useEffect, useRef, useState } from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
+import { logService } from "./layouts/log-service";
 
 
 type Props = {
@@ -61,8 +62,11 @@ export const GameDesignPlayer = ({
               getImageAsset={id => imageServiceRef.current.get(id)}
               getSoundAsset={id => soundServiceRef.current.get(id)}
               Layout={uiComponents.GameLayoutComponent}
+
               options={{
                 cellSize: CELL_SIZE,
+                eventReporter: logService.reporter,
+                instantMode,
                 playSound: (soundId, volume) => !!soundServiceRef.current.play(soundId, { volume })
               }}
             />

@@ -1,9 +1,8 @@
 import { LogEntry } from "@/lib/inGameDebugging";
-import { ActorData, Command, Consequence, ConversationBranch, Order, Stage } from "point-click-lib";
+import { ActorData, Command, Consequence, ConversationBranch, GameData, Order, Stage } from "point-click-lib";
 import { TypedEmitter } from "tiny-typed-emitter";
-import { GameState } from "@/lib/game-state-logic/types";
-import { findById } from "./util";
 import { FeedItem } from "./text-based/types";
+import { findById } from "./util";
 
 export interface OrderReport { type: 'order', order: Order, actor: ActorData }
 export interface CommandReport { type: 'command', command: Command }
@@ -24,12 +23,12 @@ export class GameEventEmitter extends TypedEmitter<GameEvents> {
 
 }
 
-export const reportConversationBranch = (state: GameState) => {
+export const reportConversationBranch = (state: GameData, emitter:GameEventEmitter) => {
     const conversation = findById(state.currentConversationId, state.conversations)
     if (conversation) {
         const branch = conversation.branches[conversation.currentBranch || conversation.defaultBranch]
         if (branch) {
-            state.emitter.emit('in-game-event', { type: 'conversation-branch', branch })
+            emitter.emit('in-game-event', { type: 'conversation-branch', branch })
         }
     }
 }

@@ -21,7 +21,8 @@ const reporter: InGameEventReporter = {
         emitter.emit('in-game-event', { type: 'sequence-stage', stage })
     },
     reportCurrentConversation: function (): void {
-        // emitter.emit('in-game-event', {type:'conversation-branch', branch:''})
+        // TO DO - how do we get the choice into the event?
+        emitter.emit('in-game-event', { type: 'conversation-branch', branch: { choices: [] } })
     }
 }
 

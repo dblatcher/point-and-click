@@ -19,7 +19,7 @@ const makeSequenceStageReportEmitter = (state: GameState) => (stage: Stage) => {
     state.emitter.emit('in-game-event', { type: 'sequence-stage', stage })
 }
 
-const makeCurrentConversationReporter = (state: GameState) => () => reportConversationBranch(state)
+const makeCurrentConversationReporter = (state: GameState) => () => reportConversationBranch(state, state.emitter)
 
 export const makeEventReporter = (state: GameState): InGameEventReporter => {
     return {

@@ -1,27 +1,29 @@
-import { useGameState, useGameStateDerivations } from "@/context/game-state-context"
 import { reportConversationBranch } from "@/lib/game-event-emitter"
-import { getStoryboardCloseAction } from "@/lib/game-state-logic/game-state-actions"
 import { standard } from "@/lib/text-based/standard-text"
 import { promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
 import { clamp } from "@/lib/util"
 import { Box, TextField } from "@mui/material"
+import { GameDataContext } from "point-click-components"
 import { Command, Conversation, ConversationChoice } from "point-click-lib"
-import { useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
+import { logService } from "../log-service"
+import { useGameStateDerivations } from "../use-derivations"
 
+const { emitter } = logService
 
 const maxHistoryLength = 20
 
 export const TextPrompt = () => {
-    const { gameState, gameProps, updateGameState } = useGameState();
+    const { gameState, gameDesign, dispatch } = useContext(GameDataContext);
     const { inventory, currentStoryBoard, player, currentConversation: conversation, isSequenceRunning } = useGameStateDerivations()
-    const { verbs } = gameProps
+    const { verbs } = gameDesign
     const [promptText, setPromptText] = useState('')
     const [historyIndex, setHistoryIndex] = useState<number | undefined>(undefined)
     const promptHistoryRef = useRef<string[]>([])
     const { current: history } = promptHistoryRef
 
-    const sendCommand = (command: Command) => updateGameState({ type: 'SEND-COMMAND', command, props: gameProps })
-    const selectConversationChoice = (choice: ConversationChoice) => updateGameState({ type: 'CONVERSATION-CHOICE', choice })
+    const sendCommand = (command: Command) => dispatch({ type: 'SEND-COMMAND', command })
+    const selectConversationChoice = (choice: ConversationChoice) => dispatch({ type: 'CONVERSATION-CHOICE', choice })
 
     const addToHistory = (promptText: string) => {
         if (promptText !== history[history.length - 1] && promptText.length > 0) {
@@ -39,7 +41,11 @@ export const TextPrompt = () => {
 
     const handleSubmit = () => {
         if (currentStoryBoard) {
-            updateGameState(getStoryboardCloseAction(currentStoryBoard.isEndOfGame))
+            if (currentStoryBoard.isEndOfGame) {
+                dispatch({ type: 'RESET' })
+            } else {
+                dispatch({ type: 'CLEAR-STORYBOARD' })
+            }
             return
         }
         if (isSequenceRunning) {
@@ -47,7 +53,7 @@ export const TextPrompt = () => {
         }
         const helpFeedback = promptToHelpFeedback(promptText, verbs, inventory, gameState, player)
         if (helpFeedback) {
-            gameState.emitter.emit('prompt-feedback', helpFeedback)
+            emitter.emit('prompt-feedback', helpFeedback)
         } else if (conversation) {
             interpretPromptAsConversationChoice(conversation)
         } else {
@@ -71,27 +77,27 @@ export const TextPrompt = () => {
         const availableChoices = branch.choices.filter(choice => !choice.disabled)
         const inputtedNumber = Number(promptText)
         if (isNaN(inputtedNumber)) {
-            gameState.emitter.emit('prompt-feedback', { message: standard.INVALID_DIALOG_PROMPT, type: 'system' })
-            reportConversationBranch(gameState)
+            emitter.emit('prompt-feedback', { message: standard.INVALID_DIALOG_PROMPT, type: 'system' })
+            reportConversationBranch(gameState, emitter)
             return
         }
         const choice = availableChoices[inputtedNumber - 1] // not presenting users with zero-based list
         if (!choice) {
-            gameState.emitter.emit('prompt-feedback', { message: standard.INVALID_DIALOG_PROMPT, type: 'system' })
-            reportConversationBranch(gameState)
+            emitter.emit('prompt-feedback', { message: standard.INVALID_DIALOG_PROMPT, type: 'system' })
+            reportConversationBranch(gameState, emitter)
             return
         }
-        gameState.emitter.emit('prompt-feedback', { message: `"${choice.text}"`, type: 'command' })
+        emitter.emit('prompt-feedback', { message: `"${choice.text}"`, type: 'command' })
         selectConversationChoice(choice)
     }
 
     const interpretPromptAsCommand = () => {
         const command = promptToCommand(promptText, verbs, inventory, gameState)
         if (currentStoryBoard?.isEndOfGame) {
-            return gameState.emitter.emit('prompt-feedback', { message: standard.GAME_OVER_CANNOT_COMMAND, type: 'system' })
+            return emitter.emit('prompt-feedback', { message: standard.GAME_OVER_CANNOT_COMMAND, type: 'system' })
         }
         if (!command) {
-            return gameState.emitter.emit('prompt-feedback', { message: standard.PROMPT_NOT_UNDERSTOOD, type: 'system' })
+            return emitter.emit('prompt-feedback', { message: standard.PROMPT_NOT_UNDERSTOOD, type: 'system' })
         }
         sendCommand(command)
     }
