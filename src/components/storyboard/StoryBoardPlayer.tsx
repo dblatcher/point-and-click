@@ -1,23 +1,13 @@
-import { useAssets } from "@/context/asset-context";
 import { StoryBoard } from "point-click-lib";
 import React, { CSSProperties, useContext, useEffect, useState } from "react";
-import { SoundControl } from "sound-deck";
 import { StoryPageDisplay } from "./StoryPageDisplay";
 import { GameDataContext } from "point-click-components";
+import { SoundAsset } from "@/services/assets";
 
 interface Props {
     storyBoard: StoryBoard
 }
 
-const getDuration = (sourceNode: SoundControl['sourceNode']) => {
-    if (sourceNode instanceof HTMLAudioElement) {
-        return sourceNode.duration
-    }
-    if (sourceNode instanceof AudioBufferSourceNode) {
-        return sourceNode.buffer?.duration
-    }
-    return undefined
-}
 
 const schedulePageTurns = (setPageNumber: { (pageNumber: number): void }, duration: number, pageCount: number) => {
     const turnsNeeded = pageCount - 1
@@ -48,12 +38,32 @@ const buttonsStyle: CSSProperties = {
 }
 
 
-// TO DO - need to remove reliance on useAssets
+const playSoundEffect =
+    (getSoundAsset: { (id: string): SoundAsset | undefined }) =>
+        async (id: string, volume?: number): Promise<HTMLAudioElement | undefined> => {
+            const soundSrc = getSoundAsset(id)?.href;
+            if (!soundSrc) {
+                return undefined
+            }
+            const audioElement = document.createElement('audio')
+            audioElement.volume = volume ?? 1;
+            audioElement.src = soundSrc
+
+            return new Promise((resolve, reject) => {
+                audioElement.oncanplay = (() => {
+                    audioElement.play()
+                    resolve(audioElement)
+                });
+                audioElement.onerror = reject
+            })
+        }
+
+
 export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard }) => {
-    const { dispatch } = useContext(GameDataContext)
+    const { dispatch, getSoundAsset } = useContext(GameDataContext)
     const [pageNumber, setPageNumber] = useState(0)
-    const [sound, setSound] = useState<SoundControl | undefined>(undefined)
-    const { soundService } = useAssets()
+    const [sound, setSound] = useState<HTMLAudioElement | undefined>(undefined)
+    const [wasSoundError, setWasSoundError] = useState(false)
 
     const goToNextPage = () => {
         setPageNumber(pageNumber + 1)
@@ -65,34 +75,40 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
 
     useEffect(() => {
         if (storyBoard.sound && !sound) {
-            const soundControl = soundService.play(storyBoard.sound.soundId, {
-                volume: storyBoard.sound.volume,
-            })
-            if (soundControl) {
-                const { sourceNode } = soundControl;
-                const duration = getDuration(sourceNode)
-                if (storyBoard.progression === 'sound') {
-                    if (duration && storyBoard.pages.length > 1) {
-                        schedulePageTurns(setPageNumber, duration, storyBoard.pages.length)
-                    }
-                    soundControl.whenEnded.then(() => {
-                        if (storyBoard.isEndOfGame) {
-                            dispatch({ type: 'RESET' })
-                        } else {
-                            dispatch({ type: 'CLEAR-STORYBOARD' })
+            const play = playSoundEffect(getSoundAsset);
+            play(storyBoard.sound.soundId, storyBoard.sound.volume)
+                .then((maybeAudioElement) => {
+                    if (maybeAudioElement) {
+                        const { duration } = maybeAudioElement;
+                        if (storyBoard.progression === 'sound') {
+                            if (duration && storyBoard.pages.length > 1) {
+                                schedulePageTurns(setPageNumber, duration, storyBoard.pages.length)
+                            }
+                            maybeAudioElement.addEventListener('ended', () => {
+                                if (storyBoard.isEndOfGame) {
+                                    dispatch({ type: 'RESET' })
+                                } else {
+                                    dispatch({ type: 'CLEAR-STORYBOARD' })
+                                }
+                            }, { once: true })
+
                         }
-                    })
-                }
-                setSound(soundControl)
-                soundControl.whenEnded.then(() => setSound(undefined))
-            }
+                        setSound(maybeAudioElement)
+                        maybeAudioElement.addEventListener('ended', () => {
+                            setSound(undefined)
+                        }, { once: true })
+                    }
+                })
+                .catch(err => {
+                    console.error('failed to play sound in storyboard', err)
+                    setWasSoundError(true)
+                })
         }
 
         return () => {
-            sound?.stop()
-
+            sound?.pause()
         }
-    }, [setPageNumber, storyBoard, soundService, setSound, dispatch, sound])
+    }, [storyBoard, dispatch, sound])
 
 
     const currentPage = storyBoard.pages[pageNumber]
@@ -100,8 +116,8 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
     const onFirstPage = pageNumber === 0;
 
     const proceed = () => {
-        if (onLastPage || storyBoard.progression === 'sound') {
-            sound?.stop()
+        if (onLastPage || (storyBoard.progression === 'sound' && !wasSoundError)) {
+            sound?.pause()
             if (storyBoard.isEndOfGame) {
                 dispatch({ type: 'RESET' })
             } else {

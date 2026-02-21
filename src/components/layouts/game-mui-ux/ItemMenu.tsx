@@ -1,6 +1,5 @@
 
 import { useGameStateDerivations } from "@/components/layouts/use-derivations";
-import { useAssets } from "@/context/asset-context";
 import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
 import { ImageAsset } from "@/services/assets";
 import { Avatar, Button, Grid, Typography } from "@mui/material";
@@ -54,7 +53,7 @@ const buildBackground = (
 
 
 export const ItemMenuInner = function ItemMenu({ items, currentItemId, select, handleHover }: ItemMenuProps) {
-    const { getImageAsset } = useAssets()
+    const { getImageAsset } = useContext(GameDataContext)
     return (
         <Grid container alignItems={'stretch'} mb={1}>
             {items.map(item => {
