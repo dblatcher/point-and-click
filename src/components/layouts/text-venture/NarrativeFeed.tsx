@@ -71,7 +71,11 @@ export const NarrativeFeed = () => {
 
     return <>
         {choices && (
-            <div>
+            <div
+                aria-atomic="true"
+                aria-live="assertive"
+                aria-label='conversation choices'
+            >
                 <p>choices</p>
                 <ol>
                     {choices.map((c, i) => <li key={i}>{c}</li>)}
