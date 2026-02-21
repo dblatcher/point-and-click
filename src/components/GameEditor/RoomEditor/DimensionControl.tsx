@@ -96,6 +96,7 @@ export const DimensionControl = ({ room }: Props) => {
                         <Room data={room} noSound
                             sprites={gameDesign.sprites}
                             getImageAsset={getImageAsset}
+                            getSoundAsset={() => undefined}
                             viewAngleX={viewAngleX}
                             viewAngleY={viewAngleY}
                             handleRoomClick={() => { }}

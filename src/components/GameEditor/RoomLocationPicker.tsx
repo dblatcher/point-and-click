@@ -50,6 +50,7 @@ export const RoomLocationPicker = ({
         viewAngleY={viewAngleY}
         renderAllZones={renderAllZones}
         getImageAsset={getImageAsset}
+        getSoundAsset={() => undefined}
         handleRoomClick={(x, y) => {
             if (onClick) {
                 const point = locateClickInWorld(x, y, viewAngleX, viewAngleY, roomData)

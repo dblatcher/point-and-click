@@ -103,6 +103,7 @@ export const Preview = ({
                         sprites={gameDesign.sprites}
                         renderAllZones={renderAllZones}
                         getImageAsset={getImageAsset}
+                        getSoundAsset={() => undefined}
                         maxHeight={(roomData.frameHeight || roomData.height) * scale}
                         maxWidth={roomData.frameWidth * scale}
                         viewAngleX={viewAngleX}

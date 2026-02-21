@@ -108,7 +108,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
         return () => {
             sound?.pause()
         }
-    }, [storyBoard, dispatch, sound])
+    }, [storyBoard, dispatch, sound, getSoundAsset])
 
 
     const currentPage = storyBoard.pages[pageNumber]

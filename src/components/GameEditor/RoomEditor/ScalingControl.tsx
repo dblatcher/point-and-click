@@ -135,6 +135,7 @@ export const ScalingControl = ({ roomData: roomData }: Props) => {
                             viewAngleX={viewAngleX}
                             viewAngleY={viewAngleY}
                             getImageAsset={getImageAsset}
+                            getSoundAsset={() => undefined}
                             handleRoomClick={handleClick}
                             maxHeight={(roomData.frameHeight || roomData.height) * scale}
                             maxWidth={roomData.frameWidth * scale}
