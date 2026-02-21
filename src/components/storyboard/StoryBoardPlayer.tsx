@@ -1,6 +1,4 @@
 import { useAssets } from "@/context/asset-context";
-import { useGameState } from "@/context/game-state-context";
-import { getStoryboardCloseAction } from "@/lib/game-state-logic/game-state-actions";
 import { StoryBoard } from "point-click-lib";
 import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { SoundControl } from "sound-deck";
@@ -50,8 +48,8 @@ const buttonsStyle: CSSProperties = {
 }
 
 
+// TO DO - need to remove reliance on useAssets
 export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard }) => {
-    const { updateGameState } = useGameState()
     const { dispatch } = useContext(GameDataContext)
     const [pageNumber, setPageNumber] = useState(0)
     const [sound, setSound] = useState<SoundControl | undefined>(undefined)
@@ -78,7 +76,6 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
                         schedulePageTurns(setPageNumber, duration, storyBoard.pages.length)
                     }
                     soundControl.whenEnded.then(() => {
-                        updateGameState(getStoryboardCloseAction(storyBoard.isEndOfGame));
                         if (storyBoard.isEndOfGame) {
                             dispatch({ type: 'RESET' })
                         } else {
@@ -95,7 +92,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
             sound?.stop()
 
         }
-    }, [setPageNumber, storyBoard, soundService, setSound, updateGameState, dispatch, sound])
+    }, [setPageNumber, storyBoard, soundService, setSound, dispatch, sound])
 
 
     const currentPage = storyBoard.pages[pageNumber]
@@ -105,7 +102,6 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
     const proceed = () => {
         if (onLastPage || storyBoard.progression === 'sound') {
             sound?.stop()
-            updateGameState(getStoryboardCloseAction(storyBoard.isEndOfGame))
             if (storyBoard.isEndOfGame) {
                 dispatch({ type: 'RESET' })
             } else {

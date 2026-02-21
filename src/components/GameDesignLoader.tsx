@@ -120,7 +120,6 @@ export const GameDesignLoader: React.FunctionComponent = () => {
         {design && (
             <GameDesignPlayer
                 instantMode={layoutOption === 'textBased'}
-                usingGameRunner={true}
                 gameDesign={design}
                 imageAssets={imageAssets ?? []}
                 soundAssets={soundAssets ?? []}

@@ -1,6 +1,5 @@
-import { Game } from "@/components/game/Game";
 import { AssetsProvider } from "@/context/asset-context";
-import { CELL_SIZE, DEFAULT_TALK_TIME } from "@/lib/types-and-constants";
+import { CELL_SIZE } from "@/lib/types-and-constants";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { ImageService } from "@/services/imageService";
 import { SoundService } from "@/services/soundService";
@@ -18,7 +17,6 @@ type Props = {
   soundAssets: SoundAsset[];
   uiComponents: UiComponentSet;
   instantMode?: boolean;
-  usingGameRunner?: boolean;
 }
 
 export const GameDesignPlayer = ({
@@ -27,7 +25,6 @@ export const GameDesignPlayer = ({
   gameDesign,
   imageAssets,
   soundAssets,
-  usingGameRunner
 }: Props) => {
   const soundServiceRef = useRef(new SoundService())
   const imageServiceRef = useRef(new ImageService())
@@ -55,32 +52,19 @@ export const GameDesignPlayer = ({
   return (
     <AssetsProvider imageService={imageServiceRef.current} soundService={soundServiceRef.current}>
       {(ready) ? (
-        <>
-          {(usingGameRunner)
-            ? <GameRunner
-              gameDesign={gameDesign}
-              getImageAsset={id => imageServiceRef.current.get(id)}
-              getSoundAsset={id => soundServiceRef.current.get(id)}
-              Layout={uiComponents.GameLayoutComponent}
+        <GameRunner
+          gameDesign={gameDesign}
+          getImageAsset={id => imageServiceRef.current.get(id)}
+          getSoundAsset={id => soundServiceRef.current.get(id)}
+          Layout={uiComponents.GameLayoutComponent}
 
-              options={{
-                cellSize: CELL_SIZE,
-                eventReporter: logService.reporter,
-                instantMode,
-                playSound: (soundId, volume) => !!soundServiceRef.current.play(soundId, { volume })
-              }}
-            />
-            : <Game
-              {...gameDesign}
-              uiComponents={uiComponents}
-              instantMode={instantMode}
-              playSound={(soundId, volume) => !!soundServiceRef.current.play(soundId, { volume })}
-              cellSize={CELL_SIZE}
-              defaultTalkTime={DEFAULT_TALK_TIME}
-              allowLocalSaves
-            />
-          }
-        </>
+          options={{
+            cellSize: CELL_SIZE,
+            eventReporter: logService.reporter,
+            instantMode,
+            playSound: (soundId, volume) => !!soundServiceRef.current.play(soundId, { volume })
+          }}
+        />
       ) : (
         <Box padding={3} flex={1} display={'flex'} flexDirection={'column'} gap={1}>
           <Skeleton variant="rectangular" sx={{ flex: 3 }}></Skeleton>
