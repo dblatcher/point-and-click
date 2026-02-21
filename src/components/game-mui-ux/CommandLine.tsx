@@ -1,9 +1,10 @@
+import { useGameStateDerivations } from "@/components/layouts/use-derivations";
 import { findById } from '@/lib/util';
 import { Box, BoxProps, useTheme } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import { GameDataContext, UiStateContext } from 'point-click-components';
 import { CommandTarget, ItemData, Verb } from "point-click-lib";
-import { memo } from 'react';
-import { useGameState, useGameStateDerivations } from '../../context/game-state-context';
+import { memo, useContext } from 'react';
 
 type InnerCommandLineProps = {
     verb?: Verb;
@@ -46,16 +47,17 @@ const CommandLineInner = memo(function CommandLine({ verb, item, hoverTarget, bo
 }, innerCommandLinePropsAreEqual)
 
 export const CommandLine = ({ boxProps }: { boxProps?: BoxProps; }) => {
-    const { gameState } = useGameState()
+    const { gameState } = useContext(GameDataContext)
+    const { uiState: { hoverTarget, itemId } } = useContext(UiStateContext)
     const { verb } = useGameStateDerivations()
-    const { items, currentItemId, hoverTarget } = gameState
+    const { items } = gameState
 
     return (
         <CommandLineInner
             boxProps={boxProps}
             verb={verb}
             hoverTarget={hoverTarget}
-            item={findById(currentItemId, items)}
+            item={findById(itemId, items)}
         />
     )
 }

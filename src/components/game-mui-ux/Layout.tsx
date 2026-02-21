@@ -1,18 +1,21 @@
+import { useGameStateDerivations } from "@/components/layouts/use-derivations";
 import { Box, Card, Container, Grid, useTheme } from "@mui/material";
 import { FullScreenWrapper } from "../FullScreenWrapper";
-import { useGameStateDerivations } from "@/context/game-state-context";
-import { SoundToggle } from "./SoundToggle";
 import { CommandLine } from "./CommandLine";
-import { VerbMenu } from "./VerbMenu";
 import { ConversationMenu } from "./ConversationMenu";
-import { ItemMenu } from "./ItemMenu";
 import { DialogSaveMenu } from "./DialogSaveMenu";
-import { RoomWrapper } from "../game/RoomWrapper";
-
+import { ItemMenu } from "./ItemMenu";
+import { SoundToggle } from "./SoundToggle";
+import { VerbMenu } from "./VerbMenu";
+import { ContextualGameRoom } from "point-click-components";
+import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 
 export const MaterialLayout = () => {
     const theme = useTheme()
-    const { isConversationRunning, isSequenceRunning } = useGameStateDerivations()
+    const { isConversationRunning, isSequenceRunning, currentStoryBoard } = useGameStateDerivations()
+    if (currentStoryBoard) {
+        return <StoryBoardPlayer storyBoard={currentStoryBoard} />
+    }
 
     return (
         <Container maxWidth={'md'} sx={{ paddingY: .5, marginY: 2 }}>
@@ -33,7 +36,7 @@ export const MaterialLayout = () => {
                     <Card sx={{ padding: 1, background: theme.palette.secondary.light }}>
                         <Grid container>
                             <Grid item xs={1}><SoundToggle /></Grid>
-                            <Grid item xs={10}><RoomWrapper /></Grid>
+                            <Grid item xs={10}><ContextualGameRoom /></Grid>
                             <Grid item xs={1} />
                         </Grid>
                         <Card sx={{ marginY: 1, padding: 1, background: theme.palette.grey[50] }}>

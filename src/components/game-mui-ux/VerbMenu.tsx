@@ -1,18 +1,24 @@
 import { Button } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { memo } from 'react';
-import { useGameState } from '../../context/game-state-context';
+import { GameDataContext, UiStateContext } from "point-click-components";
+import { memo, useContext } from 'react';
 import { VerbMenuProps, verbMenuPropsAreEqual } from "../game/uiComponentSet";
 
 
 export const VerbMenu = () => {
-    const { gameState, updateGameState, gameProps } = useGameState()
-    const { currentVerbId } = gameState
-    const { verbs } = gameProps
+    const { gameDesign } = useContext(GameDataContext)
+    const { uiState, dispatchUi } = useContext(UiStateContext)
+    const { verbId } = uiState
+    const { verbs } = gameDesign
     return <VerbMenuInner
-        select={(verb) => { updateGameState({ type: 'VERB-SELECT', verb }) }}
+        select={(verb) => {
+            if (!verb.preposition) {
+                dispatchUi({ type: 'SET_ITEM' })
+            }
+            dispatchUi({ type: 'SET_VERB', verbId: verb.id })
+        }}
         verbs={verbs}
-        currentVerbId={currentVerbId}
+        currentVerbId={verbId}
     />
 }
 

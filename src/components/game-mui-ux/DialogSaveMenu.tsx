@@ -1,5 +1,3 @@
-import { useGameState } from '@/context/game-state-context';
-import { useLocalSavedGame } from '@/hooks/use-local-saved-games';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -7,16 +5,17 @@ import LoadIcon from '@mui/icons-material/Restore';
 import SaveIcon from '@mui/icons-material/Save';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from "@mui/material";
-import { useState } from 'react';
+import { GameDataContext, useLocalSavedGame } from 'point-click-components';
+import { useContext, useState } from 'react';
 import { StringInput } from '../SchemaForm/StringInput';
 import { SoundToggle } from './SoundToggle';
 
 
 export const DialogSaveMenu = () => {
-    const { updateGameState, gameState } = useGameState();
+    const { dispatch, gameState } = useContext(GameDataContext);
     const { isPaused } = gameState
     const { deleteSave, saveGame, loadGame, listSavedGames, restart } = useLocalSavedGame()
-    const setIsPaused = (isPaused: boolean) => { updateGameState({ type: 'SET-PAUSED', isPaused }) }
+    const setIsPaused = (isPaused: boolean) => { dispatch({ type: 'SET-PAUSED', isPaused }) }
 
     const [newSaveName, setNewSaveName] = useState('')
     const [savedGameNames, setSavedGameNames] = useState(listSavedGames?.() ?? [])
@@ -40,7 +39,7 @@ export const DialogSaveMenu = () => {
             <SettingsIcon fontSize='large' />
         </IconButton>
 
-        <Dialog open={isPaused} onClose={() => { setIsPaused(false) }} >
+        <Dialog open={!!isPaused} onClose={() => { setIsPaused(false) }} >
             <DialogTitle>Menu</DialogTitle>
             <DialogContent>
                 <List dense>
@@ -49,7 +48,10 @@ export const DialogSaveMenu = () => {
                             <ListItemIcon><PlayIcon /></ListItemIcon>
                             <ListItemText primary="Continue" />
                         </ListItemButton>
-                        <ListItemButton onClick={restart}>
+                        <ListItemButton onClick={() => {
+                            setIsPaused(false)
+                            restart()
+                        }}>
                             <ListItemIcon><RestartAltIcon /></ListItemIcon>
                             <ListItemText primary="Restart" />
                         </ListItemButton>
@@ -63,7 +65,10 @@ export const DialogSaveMenu = () => {
                         >
                             {savedGameNames.map((saveName, index) => (
                                 <ListItem key={index} disablePadding>
-                                    <IconButton onClick={() => loadGame(saveName)}>
+                                    <IconButton onClick={() => {
+                                        setIsPaused(false)
+                                        loadGame(saveName)
+                                    }}>
                                         <LoadIcon />
                                     </IconButton>
                                     <ListItemText primary={saveName} />

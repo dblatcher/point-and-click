@@ -1,12 +1,14 @@
-import { Conversation, ConversationChoice } from "point-click-lib";
+import { useGameStateDerivations } from "@/components/layouts/use-derivations";
 import { Box, Button } from "@mui/material";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
+import { GameDataContext } from "point-click-components";
+import { Conversation, ConversationChoice } from "point-click-lib";
+import { useContext } from "react";
 
 export const ConversationMenu = () => {
+    const { dispatch } = useContext(GameDataContext)
     const { currentConversation } = useGameStateDerivations()
-    const { updateGameState } = useGameState()
-    const select = (choice: ConversationChoice) => updateGameState({ type: 'CONVERSATION-CHOICE', choice })
+    const select = (choice: ConversationChoice) => dispatch({ type: 'CONVERSATION-CHOICE', choice })
     return <>{currentConversation && (
         <ConversationMenuInner select={select} conversation={currentConversation} />
     )}</>
