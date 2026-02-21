@@ -8,7 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from "@mui/material";
 import { useState } from 'react';
-import { StringInput } from '../SchemaForm/StringInput';
+import { StringInput } from '../../SchemaForm/StringInput';
 import { SoundToggle } from './SoundToggle';
 
 
