@@ -4,7 +4,7 @@ import { GameDataContext } from "point-click-components";
 import { useContext, useEffect, useState } from "react";
 import { EventFeed } from "./EventFeed";
 import { FlagList } from "./FlagList";
-import { logService } from "../layouts-for-runner/log-service";
+import { logService } from "../layouts/log-service";
 
 
 

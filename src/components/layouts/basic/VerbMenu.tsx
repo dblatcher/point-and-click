@@ -1,6 +1,6 @@
 import { GameDataContext, UiStateContext } from 'point-click-components';
 import { memo, useContext } from 'react';
-import { VerbMenuProps, verbMenuPropsAreEqual } from "../game/uiComponentSet";
+import { VerbMenuProps, verbMenuPropsAreEqual } from "../../game/uiComponentSet";
 import uiStyles from './uiStyles.module.css';
 
 
