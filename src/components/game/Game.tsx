@@ -4,7 +4,6 @@ import { makeDispatcherWithProps } from "@/lib/game-state-logic/game-state-actio
 import { gameStateReducer, getInitialGameState } from "@/lib/game-state-logic/game-state-reducer";
 import { findById } from "@/lib/util";
 import React, { useReducer } from "react";
-import { DebugLog } from "../DebugLog";
 import { SimpleLayout } from "../game-simple-ui/Layout";
 import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 import { GameProps } from "./types";
@@ -16,7 +15,7 @@ import { CameraPointProvider } from "point-click-components";
 export const Game: React.FunctionComponent<GameProps> = (props) => {
     const [gameState, dispatch] = useReducer(gameStateReducer, getInitialGameState(props))
     const { updateCamera, cameraPoint } = useCamera()
-    const { showDebugLog, uiComponents = {}, timerInterval = 10 } = props
+    const { uiComponents = {}, timerInterval = 10 } = props
     const {
         GameLayoutComponent = SimpleLayout,
     } = uiComponents
@@ -38,7 +37,6 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         updateGameState: makeDispatcherWithProps(dispatch, props),
     }}>
         <CameraPointProvider value={{cameraPoint}}>
-            {showDebugLog && (<DebugLog />)}
             <GameLayoutComponent />
             {(!props.instantMode && currentStoryBoard) && (
                 <StoryBoardPlayer storyBoard={currentStoryBoard} />

@@ -1,5 +1,6 @@
 import { GameEventEmitter } from '@/lib/game-event-emitter'
-import { ActorData, Command, Consequence, InGameEventReporter, Order, Stage } from 'point-click-lib'
+import { makeDebugEntry } from '@/lib/inGameDebugging'
+import { ActorData, Command, Consequence, InGameEventReporter, LogToDebug, Order, Stage, } from 'point-click-lib'
 
 // TODO - there should only be one event for LogEntry
 const emitter = new GameEventEmitter
@@ -24,7 +25,10 @@ const reporter: InGameEventReporter = {
     }
 }
 
+const logToDebug: LogToDebug = (message, subject) => emitter.emit('debugLog', makeDebugEntry(message, subject))
+
 export const logService = {
     emitter,
-    reporter
+    reporter,
+    logToDebug,
 }

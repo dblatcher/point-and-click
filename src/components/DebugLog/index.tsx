@@ -1,22 +1,24 @@
-import { useGameState } from "@/context/game-state-context";
 import { LogEntry } from "@/lib/inGameDebugging";
 import { Box, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { GameDataContext } from "point-click-components";
+import { useContext, useEffect, useState } from "react";
 import { EventFeed } from "./EventFeed";
 import { FlagList } from "./FlagList";
+import { logService } from "../layouts-for-runner/log-service";
+
+
 
 export const DebugLog = () => {
-    const { gameState } = useGameState();
-    const { emitter } = gameState
+    const { gameState } = useContext(GameDataContext);
     const [log, setLog] = useState<LogEntry[]>([])
 
     useEffect(() => {
-        const logEvents = (newEntry: LogEntry) => {
-            setLog([...log, newEntry])
+        const handleInGameEvent = (event: LogEntry) => {
+            setLog([...log, event])
         }
-        emitter.on('debugLog', logEvents)
+        logService.emitter.on('debugLog', handleInGameEvent)
         return () => {
-            emitter.off('debugLog', logEvents)
+            logService.emitter.off('debugLog', handleInGameEvent)
         }
     })
 

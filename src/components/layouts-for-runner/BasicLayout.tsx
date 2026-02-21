@@ -10,16 +10,14 @@ import { RoomSizeButtons } from "./RoomSizeButton"
 import { SaveMenu } from "./SaveMenu"
 import { SoundToggle } from "./SoundToggle"
 import { VerbMenu } from "./VerbMenu"
-import { DebugLog } from "./RunnerDebugLog"
 
-const Layout = ({ showDebugLog }: { showDebugLog: boolean }) => {
+export const BasicLayout = () => {
     const { gameState, dispatch, gameDesign, allowLocalSaves } = useContext(GameDataContext)
     const { currentStoryBoardId } = gameState
     const storyBoard = findById(currentStoryBoardId, gameDesign.storyBoards)
     const condition = getUiCondition(gameState)
 
     return <section>
-        {showDebugLog && <DebugLog />}
         <SoundToggle />
         <RoomSizeButtons />
         {allowLocalSaves && (
@@ -53,6 +51,3 @@ const Layout = ({ showDebugLog }: { showDebugLog: boolean }) => {
             )}
     </section>
 }
-
-export const BasicLayout = () => <Layout showDebugLog={false} />
-export const BasicLayoutWithDebugLog = () => <Layout showDebugLog={true} />

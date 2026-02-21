@@ -1,20 +1,25 @@
-import { Game } from "@/components/game/Game";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { cloneData } from "@/lib/clone";
-import { CELL_SIZE, DEFAULT_TALK_TIME } from "@/lib/types-and-constants";
+import { CELL_SIZE } from "@/lib/types-and-constants";
 import { editorTheme } from "@/theme";
 import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Slider, ThemeProvider, Typography } from "@mui/material";
+import { GameRunner } from "point-click-components";
 import { GameDesign } from "point-click-lib";
 import { useState } from "react";
+import { DebugLog } from "../DebugLog";
+import { BasicLayout } from "../layouts-for-runner/BasicLayout";
+import { logService } from "../layouts-for-runner/log-service";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
-import { GameRunner } from "point-click-components";
-import { BasicLayout, BasicLayoutWithDebugLog } from "../layouts-for-runner/BasicLayout";
-import { logService } from "../layouts-for-runner/log-service";
 
-const usingGameRunner = true as boolean;
+
+export const BasicLayoutWithDebugLog = () => <>
+    <DebugLog />
+    <BasicLayout />
+</>
+
 
 export const TestGameDialog = () => {
     const { gameDesign } = useGameDesign()
@@ -84,33 +89,19 @@ export const TestGameDialog = () => {
                         flexDirection: 'column',
                     }}>
                         {haveStartedTests && (
-                            <>
-                                {usingGameRunner ? (
-                                    <GameRunner key={resetTimeStamp}
-                                        gameDesign={{ ...modifiedGameDesign }}
-                                        getImageAsset={id => imageService.get(id)}
-                                        getSoundAsset={id => soundService.get(id)}
-                                        Layout={showDebugLog ? BasicLayoutWithDebugLog : BasicLayout}
-                                        options={{
-                                            eventReporter: logService.reporter,
-                                            cellSize: CELL_SIZE,
-                                            orderSpeed: gameSpeed,
-                                            playSound: (soundId, volume) => !!soundService.play(soundId, { volume })
-                                        }}
-                                    />
-                                ) : (
-                                    <Game
-                                        key={resetTimeStamp}
-                                        {...modifiedGameDesign}
-                                        showDebugLog={showDebugLog}
-                                        playSound={(soundId, volume) => !!soundService.play(soundId, { volume })}
-                                        timerInterval={10}
-                                        cellSize={CELL_SIZE}
-                                        defaultTalkTime={DEFAULT_TALK_TIME}
-                                        orderSpeed={gameSpeed}
-                                    />
-                                )}
-                            </>
+                            <GameRunner key={resetTimeStamp}
+                                gameDesign={{ ...modifiedGameDesign }}
+                                getImageAsset={id => imageService.get(id)}
+                                getSoundAsset={id => soundService.get(id)}
+                                Layout={showDebugLog ? BasicLayoutWithDebugLog : BasicLayout}
+                                options={{
+                                    eventReporter: logService.reporter,
+                                    debugLogger: logService.logToDebug,
+                                    cellSize: CELL_SIZE,
+                                    orderSpeed: gameSpeed,
+                                    playSound: (soundId, volume) => !!soundService.play(soundId, { volume })
+                                }}
+                            />
                         )}
                     </DialogContent>
                 </Dialog>
