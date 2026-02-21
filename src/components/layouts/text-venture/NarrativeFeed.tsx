@@ -5,7 +5,7 @@ import { inGameEventToFeedLines, storyBoardReportToFeedLines } from "@/lib/text-
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
 import { useEffect, useRef, useState } from "react";
-import { ScrollingFeed } from "../ScrollingFeed";
+import { ScrollingFeed } from "../../ScrollingFeed";
 import { FeedLine } from "./FeedLine";
 
 export const NarrativeFeed = () => {

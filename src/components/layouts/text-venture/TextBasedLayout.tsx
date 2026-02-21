@@ -4,7 +4,7 @@ import { useGameState } from "@/context/game-state-context";
 import { screenSizeAction } from "@/lib/game-state-logic/game-state-actions";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import { RoomWrapper } from "../game/RoomWrapper";
+import { RoomWrapper } from "../../game/RoomWrapper";
 import { NarrativeFeed } from "./NarrativeFeed";
 import { RoomDescription } from "./RoomDescription";
 import { TextPrompt } from "./TextPrompt";

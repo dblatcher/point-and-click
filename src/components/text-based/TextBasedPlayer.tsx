@@ -3,7 +3,7 @@ import { usePageMeta } from '@/context/page-meta-context'
 import { gameDesign, imageAssets, soundAssets } from '@/data/test-game'
 import { Typography } from '@mui/material'
 import { useEffect } from 'react'
-import { TextBasedLayout } from './TextBasedLayout'
+import { TextBasedLayout } from '../layouts/text-venture/TextBasedLayout'
 
 
 export const TextBasedPlayer = () => {
