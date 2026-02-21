@@ -1,10 +1,9 @@
-import { CommandTarget, GameDesign } from "point-click-lib";
-import { GameState } from "@/lib/game-state-logic/types";
 import { putActorsInDisplayOrder } from "point-click-components";
-import { HandleClickFunction, ActorWithOrdersAndClickHandlers } from "./types";
+import { CommandTarget, GameData, GameDesign } from "point-click-lib";
+import { ActorWithOrdersAndClickHandlers, HandleClickFunction } from "./types";
 
 export const buildActorListSortedForDisplay = (
-    state: GameState,
+    state: GameData,
     clickHandler: HandleClickFunction<CommandTarget>,
     contextClickHandler?: HandleClickFunction<CommandTarget>
 ): ActorWithOrdersAndClickHandlers[] => {

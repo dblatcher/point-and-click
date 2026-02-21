@@ -1,10 +1,11 @@
-import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { CommandTarget, ItemData, Verb } from "point-click-lib";
+import ClearIcon from '@mui/icons-material/Clear';
 import { Box, ButtonGroup, Card, Fade, IconButton, Typography } from "@mui/material";
-import React, { ReactElement, ReactNode, useEffect, useState } from "react";
+import { GameDataContext } from "point-click-components";
+import { CommandTarget, ItemData, Verb } from "point-click-lib";
+import React, { ReactElement, ReactNode, useContext, useEffect, useState } from "react";
+import { useGameStateDerivations } from "../use-derivations";
 import { ItemButton } from "./ItemButton";
 import { canUseIcons, VerbButton } from "./VerbButton";
-import ClearIcon from '@mui/icons-material/Clear';
 
 interface Props {
     target?: CommandTarget,
@@ -32,9 +33,9 @@ const FadeAndPosition = ({ x, y, isShowing, children }: Pick<Props, 'x' | 'y' | 
 const TextButtonBox = ({children}:{children:ReactNode}) => <Box display={'flex'} justifyContent={'space-around'} alignItems={'center'} flexWrap={'wrap'}>{children}</Box>
 
 export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove, x, y, isShowing }) => {
-    const { gameProps, updateGameState } = useGameState()
+    const { gameDesign, dispatch } = useContext(GameDataContext)
     const { inventory, isConversationRunning } = useGameStateDerivations()
-    const { verbs } = gameProps
+    const { verbs } = gameDesign
     const [activeItemVerb, setActiveItemVerb] = useState<Verb | undefined>(undefined)
 
     useEffect(() => {
@@ -54,7 +55,7 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
 
     const handleDirectVerbClick = (verb: Verb) => {
         remove()
-        updateGameState({
+        dispatch({
             type: 'SEND-COMMAND',
             command: {
                 target,
@@ -69,7 +70,7 @@ export const InteractionCoin: React.FunctionComponent<Props> = ({ target, remove
         }
         setActiveItemVerb(undefined)
         remove()
-        updateGameState({
+        dispatch({
             type: 'SEND-COMMAND',
             command: {
                 target,

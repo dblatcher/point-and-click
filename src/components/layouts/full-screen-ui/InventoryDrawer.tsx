@@ -1,9 +1,10 @@
-import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
 import { findById } from "@/lib/util";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Card, Fade, IconButton, Typography } from "@mui/material";
+import { GameDataContext } from "point-click-components";
 import { ItemData, Verb, matchInteraction } from "point-click-lib";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { useGameStateDerivations } from "../use-derivations";
 import { ItemButton } from "./ItemButton";
 import { InventoryVerbList } from "./VerbList";
 interface Props {
@@ -13,7 +14,7 @@ interface Props {
 
 
 export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove, isShowing }) => {
-    const { updateGameState, gameProps, gameState } = useGameState()
+    const { dispatch, gameDesign, gameState } = useContext(GameDataContext)
     const { inventory, lookVerb } = useGameStateDerivations()
 
     const [activeItemId, setActiveItemId] = useState<string | undefined>(undefined)
@@ -39,20 +40,20 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove, isShow
         }
 
         const firstItem = findById(activeItemId, inventory)
-        const verb = findById(activeVerbId, gameProps.verbs)
+        const verb = findById(activeVerbId, gameDesign.verbs)
 
         if (!firstItem || !verb) {
             return
         }
 
         closeAndReset()
-        updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item, item: firstItem } })
+        dispatch({ type: 'SEND-COMMAND', command: { verb, target: item, item: firstItem } })
     }
 
     const examineItem = (item: ItemData) => {
         if (lookVerb) {
             closeAndReset()
-            updateGameState({ type: 'SEND-COMMAND', command: { verb: lookVerb, target: item } })
+            dispatch({ type: 'SEND-COMMAND', command: { verb: lookVerb, target: item } })
         }
     }
 
@@ -66,7 +67,7 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove, isShow
 
         if (isCompleteInteraction) {
             closeAndReset()
-            updateGameState({ type: 'SEND-COMMAND', command: { verb, target: item } })
+            dispatch({ type: 'SEND-COMMAND', command: { verb, target: item } })
             setActiveVerbId(undefined)
             return
         }
@@ -74,7 +75,7 @@ export const InventoryDrawer: React.FunctionComponent<Props> = ({ remove, isShow
     }
 
     const item = findById(activeItemId, inventory)
-    const verb = findById(activeVerbId, gameProps.verbs)
+    const verb = findById(activeVerbId, gameDesign.verbs)
 
     const command = item && verb
         ? `${verb.label} ${item.name ?? item.id} ${verb.preposition ?? ''}...`

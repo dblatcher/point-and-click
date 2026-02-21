@@ -1,22 +1,18 @@
-import { useAssets } from "@/context/asset-context";
-import { useGameState, useGameStateDerivations } from "@/context/game-state-context";
-import { screenSizeAction } from "@/lib/game-state-logic/game-state-actions";
-import { GameState } from "@/lib/game-state-logic/types";
+import { buildActorListSortedForDisplay } from "@/components/game/put-contents-in-order";
 import { clamp, findById } from "@/lib/util";
 import InventoryIcon from '@mui/icons-material/Inventory2Outlined';
 import { Box, Button } from "@mui/material";
-import { ActorData, CommandTarget, HotspotZone, matchInteraction, RoomData } from "point-click-lib";
-import React, { useEffect, useRef, useState } from "react";
-import { buildActorListSortedForDisplay } from "../../game/put-contents-in-order";
+import { GameDataContext, getXShift, Room, UiState, UiStateContext } from "point-click-components";
+import { ActorData, CommandTarget, GameData, HotspotZone, matchInteraction, RoomData } from "point-click-lib";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { ResizeWatcher } from "../../ResizeWatcher";
-import { SoundHandler } from "../../sound/SoundHandler";
 import { ParallaxPlace, ParallaxPlaceProps } from "../../svg/ParallaxPlace";
-import { getXShift, Room } from "point-click-components";
+import { useGameStateDerivations } from "../use-derivations";
 import { InteractionCoin } from "./InteractionCoin";
 import { InventoryDrawer } from "./InventoryDrawer";
 import { TargetLabel } from "./TargetLabel";
 
-const getHoverTarget = (gameState: GameState): ActorData | HotspotZone | undefined => {
+const getHoverTarget = (gameState: UiState): ActorData | HotspotZone | undefined => {
     return gameState.hoverTarget?.type === 'actor' || gameState.hoverTarget?.type === 'hotspot'
         ? gameState.hoverTarget
         : undefined
@@ -28,7 +24,7 @@ function calculateScreenX(xPosition: number, viewAngleX: number, roomData: RoomD
     return (frameWidth / 2) + (xPosition - width / 2) + shift
 }
 
-const getTargetPlace = (hoverTargetInRoom: ActorData | HotspotZone | undefined, gameState: GameState) => {
+const getTargetPlace = (hoverTargetInRoom: ActorData | HotspotZone | undefined, gameState: GameData) => {
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
     if (!currentRoom || !hoverTargetInRoom) {
         return undefined
@@ -61,10 +57,11 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const [clickedTarget, setClickedTarget] = useState<ActorData | HotspotZone | undefined>(undefined)
     const [clickEvent, setClickEvent] = useState<PointerEvent>();
     const [inventoryOpen, setInventoryOpen] = useState(false);
-    const { gameProps, gameState, updateGameState } = useGameState()
-    const { getImageAsset } = useAssets();
+    const { gameDesign, gameState, dispatch, getImageAsset, getSoundAsset, SoundHandler } = useContext(GameDataContext)
+    const { uiState, dispatchUi } = useContext(UiStateContext)
     const { isConversationRunning, isSequenceRunning, inventory, lookVerb, moveVerb, currentStoryBoard } = useGameStateDerivations()
-    const { viewAngleX, viewAngleY, isPaused, roomHeight, roomWidth } = gameState
+    const { viewAngleX, viewAngleY, isPaused } = gameState
+    const { roomHeight, roomWidth } = uiState
     const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
 
 
@@ -82,16 +79,16 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
     const performDefaultInteraction = (target: CommandTarget) => {
         if (moveVerb) {
             const moveCommand = { verb: moveVerb, target };
-            const moveInteraction = matchInteraction(moveCommand, currentRoom, gameProps.interactions, gameState)
+            const moveInteraction = matchInteraction(moveCommand, currentRoom, gameDesign.interactions, gameState)
             if (moveInteraction) {
-                return updateGameState({
+                return dispatch({
                     type: 'SEND-COMMAND', command: moveCommand
                 })
             }
         }
 
         if (lookVerb) {
-            updateGameState({
+            dispatch({
                 type: 'SEND-COMMAND', command: {
                     target,
                     verb: lookVerb
@@ -107,7 +104,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
         performDefaultInteraction,
     )
 
-    const hoverTargetInRoom = getHoverTarget(gameState)
+    const hoverTargetInRoom = getHoverTarget(uiState)
     const hoverPlaceProps = getTargetPlace(hoverTargetInRoom, gameState)
 
     const showInventory = inventoryOpen && !isSequenceRunning && !isConversationRunning;
@@ -116,7 +113,11 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
         <ResizeWatcher resizeHandler={() => {
             const innnerLayout = document.querySelector('.LAYOUT_INNER');
             if (innnerLayout) {
-                updateGameState(screenSizeAction(innnerLayout.clientWidth - 20, innnerLayout.clientHeight - 40))
+                dispatchUi({
+                    type: 'SET_SCREEN_SIZE',
+                    width: innnerLayout.clientWidth - 20,
+                    height: innnerLayout.clientHeight - 40
+                })
             }
         }}>
             {(currentRoom && !currentStoryBoard) && (
@@ -132,7 +133,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                         viewAngleX={viewAngleX}
                         viewAngleY={viewAngleY}
                         handleRoomClick={(x, y) => {
-                            updateGameState({ type: 'ROOM-CLICK', x, y })
+                            dispatch({ type: 'ROOM-CLICK', x, y })
                             setClickedTarget(undefined)
                         }}
                         handleRoomContextClick={() => {
@@ -145,7 +146,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                         handleHotspotClick={handleTargetClick}
                         handleHotspotContextClick={performDefaultInteraction}
                         handleHover={(target: CommandTarget, event: 'enter' | 'leave') => {
-                            updateGameState({ type: 'HANDLE-HOVER', event, target })
+                            dispatchUi({ type: 'SET_HOVER_TARGET', hoverTarget: event === 'enter' ? target : undefined })
                         }}
                         orderedActors={orderedActors}
                         obstacleCells={renderCells ? gameState.cellMatrix : undefined}
@@ -157,9 +158,9 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                             )
                         }
                         getImageAsset={getImageAsset}
-                        orderSpeed={gameProps.orderSpeed}
-                        sprites={gameProps.sprites}
+                        sprites={gameDesign.sprites}
                         SoundHandler={SoundHandler}
+                        getSoundAsset={getSoundAsset}
                     />
 
                     {(!isSequenceRunning && !isConversationRunning) && (

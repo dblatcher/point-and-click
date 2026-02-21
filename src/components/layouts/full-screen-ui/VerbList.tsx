@@ -1,7 +1,7 @@
-import { useGameState } from "@/context/game-state-context";
-import { Verb } from "point-click-lib";
 import { Box } from "@mui/material";
-import React from "react";
+import { GameDataContext } from "point-click-components";
+import { Verb } from "point-click-lib";
+import React, { useContext } from "react";
 import { canUseIcons, VerbButton } from "./VerbButton";
 
 interface Props {
@@ -13,8 +13,8 @@ interface Props {
 
 
 export const InventoryVerbList: React.FunctionComponent<Props> = ({ activeVerbId, selectVerb, disabled }) => {
-    const { gameProps, } = useGameState()
-    const { verbs } = gameProps
+    const { gameDesign, } = useContext(GameDataContext)
+    const { verbs } = gameDesign
     const relevantVerbs = verbs.filter(verb => !verb.isMoveVerb && !verb.isNotForItems);
 
     return (

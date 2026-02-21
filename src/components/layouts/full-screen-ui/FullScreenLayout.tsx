@@ -1,7 +1,7 @@
-import { useGameStateDerivations } from "@/context/game-state-context";
+import { useGameStateDerivations } from "../use-derivations";
 import { FullScreenWrapper } from "../../FullScreenWrapper";
-import { DialogSaveMenu } from "./DialogSaveMenu";
-import { ConversationMenu } from "../../game-simple-ui/ConversationMenu";
+import { DialogSaveMenu } from "../shared-mui-components/DialogSaveMenu";
+import { ConversationMenu } from "../basic/ConversationMenu";
 import { RoomWrapperWithOverlay } from "./RoomWrapperWithOverlay";
 
 export const FullScreenLayout = () => {
