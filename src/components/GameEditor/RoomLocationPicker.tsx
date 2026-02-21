@@ -1,4 +1,4 @@
-import { ActorWithOrdersAndClickHandlers } from "@/components/game/types";
+import { ActorWithOrdersAndClickHandlers } from "@/lib/types-and-constants";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";

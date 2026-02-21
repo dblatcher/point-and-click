@@ -1,4 +1,4 @@
-import { buildActorListSortedForDisplay } from "@/components/game/put-contents-in-order";
+import { buildActorListSortedForDisplay } from "@/lib/put-contents-in-order";
 import { clamp, findById } from "@/lib/util";
 import InventoryIcon from '@mui/icons-material/Inventory2Outlined';
 import { Box, Button } from "@mui/material";

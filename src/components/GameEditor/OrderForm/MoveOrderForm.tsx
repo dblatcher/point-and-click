@@ -1,4 +1,4 @@
-import { buildContentForRoomInDesign } from "@/components/game/put-contents-in-order";
+import { buildContentForRoomInDesign } from "@/lib/put-contents-in-order";
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
 import { useGameDesign } from "@/context/game-design-context";

@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { GameDataContext, UiStateContext } from "point-click-components";
 import { memo, useContext } from 'react';
-import { VerbMenuProps, verbMenuPropsAreEqual } from "../../game/uiComponentSet";
+import { VerbMenuProps, verbMenuPropsAreEqual } from "../../uiComponentSet";
 
 
 export const VerbMenu = () => {

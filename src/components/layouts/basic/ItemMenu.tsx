@@ -1,5 +1,5 @@
 
-import { ItemMenuProps } from '@/components/game/uiComponentSet';
+import { ItemMenuProps } from '@/components/uiComponentSet';
 import { GameDataContext, UiStateContext } from 'point-click-components';
 import { useContext } from "react";
 import { ImageBlock } from "../../ImageBlock";
