@@ -1,7 +1,7 @@
 import DownloadIcon from '@mui/icons-material/Download';
 import { IconButton } from "@mui/material";
 import { ReactNode } from "react";
-import { DesignListItem } from './DesignListItem';
+import { DesignListItem } from '../DesignListItem';
 
 interface Props {
     title: string,

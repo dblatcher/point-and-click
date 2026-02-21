@@ -5,12 +5,12 @@ import { ImageAsset, SoundAsset } from "@/services/assets";
 import { Alert, Box, Card, Grid, Snackbar, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { DbGameList } from "./DbGameList";
-import { LayoutOption, layoutOptions, layouts } from "./game/layouts";
-import { GameDesignPlayer } from "./GameDesignPlayer";
+import { LayoutOption, layoutOptions, layouts } from "./layouts";
+import { GameDesignPlayer } from "../GameDesignPlayer";
 import { GameList } from "./GameList";
 import { LayoutRadioButtons } from "./LayoutRadioButtons";
 import { LoadDesignButton } from "./LoadDesignButton";
-import { MarkDown } from "./MarkDown";
+import { MarkDown } from "../MarkDown";
 import { PlayerHeaderContent } from "./PlayerHeaderContent";
 
 
