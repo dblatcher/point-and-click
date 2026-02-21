@@ -9,24 +9,24 @@ import { GameRunner } from "point-click-components";
 import { GameDesign } from "point-click-lib";
 import { useEffect, useRef, useState } from "react";
 import { UiComponentSet } from "./game/uiComponentSet";
-import { BasicLayout } from "./layouts-for-runner/BasicLayout";
 
 
 type Props = {
   gameDesign: GameDesign;
   imageAssets: ImageAsset[];
   soundAssets: SoundAsset[];
-  uiComponents?: UiComponentSet;
+  uiComponents: UiComponentSet;
   instantMode?: boolean;
+  usingGameRunner?: boolean;
 }
-const usingGameRunner = true as boolean;
 
 export const GameDesignPlayer = ({
   uiComponents,
   instantMode,
   gameDesign,
   imageAssets,
-  soundAssets
+  soundAssets,
+  usingGameRunner
 }: Props) => {
   const soundServiceRef = useRef(new SoundService())
   const imageServiceRef = useRef(new ImageService())
@@ -60,7 +60,7 @@ export const GameDesignPlayer = ({
               gameDesign={gameDesign}
               getImageAsset={id => imageServiceRef.current.get(id)}
               getSoundAsset={id => soundServiceRef.current.get(id)}
-              Layout={BasicLayout}
+              Layout={uiComponents.GameLayoutComponent}
               options={{
                 cellSize: CELL_SIZE,
                 playSound: (soundId, volume) => !!soundServiceRef.current.play(soundId, { volume })

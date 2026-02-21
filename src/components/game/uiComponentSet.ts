@@ -25,6 +25,6 @@ export const itemMenuPropsAreEqual = (prevProps: ItemMenuProps, nextProps: ItemM
 
 
 export type UiComponentSet = {
-    GameLayoutComponent?: FunctionComponent;
+    GameLayoutComponent: FunctionComponent;
     title?: string
 }

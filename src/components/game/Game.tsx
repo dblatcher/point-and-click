@@ -15,10 +15,8 @@ import { CameraPointProvider } from "point-click-components";
 export const Game: React.FunctionComponent<GameProps> = (props) => {
     const [gameState, dispatch] = useReducer(gameStateReducer, getInitialGameState(props))
     const { updateCamera, cameraPoint } = useCamera()
-    const { uiComponents = {}, timerInterval = 10 } = props
-    const {
-        GameLayoutComponent = SimpleLayout,
-    } = uiComponents
+    const { uiComponents, timerInterval = 10 } = props
+    const GameLayoutComponent = uiComponents?.GameLayoutComponent ?? SimpleLayout;
     const { currentStoryBoardId } = gameState
 
     const currentStoryBoard = findById(currentStoryBoardId, props.storyBoards)
@@ -36,7 +34,7 @@ export const Game: React.FunctionComponent<GameProps> = (props) => {
         gameProps: props,
         updateGameState: makeDispatcherWithProps(dispatch, props),
     }}>
-        <CameraPointProvider value={{cameraPoint}}>
+        <CameraPointProvider value={{ cameraPoint }}>
             <GameLayoutComponent />
             {(!props.instantMode && currentStoryBoard) && (
                 <StoryBoardPlayer storyBoard={currentStoryBoard} />
