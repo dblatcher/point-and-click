@@ -3,11 +3,11 @@ import { InGameEvent, PromptFeedbackReport } from "@/lib/game-event-emitter";
 import { inGameEventToFeedLines, storyBoardReportToFeedLines } from "@/lib/text-based/create-feed-items";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
+import { GameDataContext } from "point-click-components";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ScrollingFeed } from "../../ScrollingFeed";
-import { FeedLine } from "./FeedLine";
-import { GameDataContext } from "point-click-components";
 import { logService } from "../log-service";
+import { FeedLine } from "./FeedLine";
 
 const { emitter } = logService
 
@@ -37,6 +37,16 @@ export const NarrativeFeed = () => {
 
     }, [currentStoryBoardId, gameDesign, feedQueue])
 
+
+    const { currentConversationId } = gameState
+    const conversation = findById(currentConversationId, gameState.conversations);
+    const branchName = conversation?.currentBranch || conversation?.defaultBranch
+
+    const choices = branchName
+        ? conversation?.branches[branchName]?.choices.filter(c => !c.disabled).map(choice => choice.text)
+        : undefined;
+
+
     useEffect(() => {
         const handleInGameEvent = (inGameEvent: InGameEvent) => {
             feedQueue.current.push(...inGameEventToFeedLines(inGameEvent, gameState))
@@ -56,28 +66,37 @@ export const NarrativeFeed = () => {
             emitter.off('in-game-event', handleInGameEvent)
             emitter.off('prompt-feedback', handlePromptFeedback)
         }
-    })
+    }, [])
 
 
-    return <ScrollingFeed
-        feed={feed.map((feedItem, index) =>
-            <FeedLine key={index} feedItem={feedItem} />
+    return <>
+        {choices && (
+            <div>
+                <p>choices</p>
+                <ol>
+                    {choices.map((c, i) => <li key={i}>{c}</li>)}
+                </ol>
+            </div>
         )}
-        maxHeight={250}
-        boxProps={{
-            component: 'section',
-            flex: 1,
-            paddingX: 1,
-            role: 'log',
-            'aria-atomic': true,
-            'aria-live': "assertive",
-            'aria-label': 'in-game events'
-        }}
-        listProps={{
-            sx: {
-                listStyle: 'none',
-                padding: 0
-            }
-        }}
-    />
+        <ScrollingFeed
+            feed={feed.map((feedItem, index) =>
+                <FeedLine key={index} feedItem={feedItem} />
+            )}
+            maxHeight={250}
+            boxProps={{
+                component: 'section',
+                flex: 1,
+                paddingX: 1,
+                role: 'log',
+                'aria-atomic': true,
+                'aria-live': "assertive",
+                'aria-label': 'in-game events'
+            }}
+            listProps={{
+                sx: {
+                    listStyle: 'none',
+                    padding: 0
+                }
+            }}
+        /></>
 };
