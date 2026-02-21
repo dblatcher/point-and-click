@@ -6,7 +6,7 @@ import { ResizeWatcher } from "../../ResizeWatcher";
 import { StoryBoardPlayer } from "../../storyboard/StoryBoardPlayer";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
-import { DialogSaveMenu } from "./DialogSaveMenu";
+import { DialogSaveMenu } from "../shared-mui-components/DialogSaveMenu";
 import { ItemMenu } from "./ItemMenu";
 import { VerbMenu } from "./VerbMenu";
 
