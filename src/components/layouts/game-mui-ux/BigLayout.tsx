@@ -2,13 +2,13 @@ import { useGameStateDerivations } from "@/components/layouts/use-derivations";
 import { Box, Grid } from "@mui/material";
 import { ContextualGameRoom, UiStateContext } from "point-click-components";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ResizeWatcher } from "../ResizeWatcher";
+import { ResizeWatcher } from "../../ResizeWatcher";
+import { StoryBoardPlayer } from "../../storyboard/StoryBoardPlayer";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
 import { DialogSaveMenu } from "./DialogSaveMenu";
 import { ItemMenu } from "./ItemMenu";
 import { VerbMenu } from "./VerbMenu";
-import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
 
 
 export const BigLayout = () => {
@@ -26,7 +26,7 @@ export const BigLayout = () => {
                 height: containerRef.current.clientHeight - 60
             })
         }
-    }, [dispatchUi, initialResize, setInitialResize])
+    }, [dispatchUi, initialResize, setInitialResize, currentStoryBoard?.id])
 
     // TO DO - the resize handler could use the size of the container div instead of the whole document body
     return (

@@ -1,6 +1,6 @@
 import { useGameStateDerivations } from "@/components/layouts/use-derivations";
 import { Box, Card, Container, Grid, useTheme } from "@mui/material";
-import { FullScreenWrapper } from "../FullScreenWrapper";
+import { FullScreenWrapper } from "../../FullScreenWrapper";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
 import { DialogSaveMenu } from "./DialogSaveMenu";
@@ -8,7 +8,7 @@ import { ItemMenu } from "./ItemMenu";
 import { SoundToggle } from "./SoundToggle";
 import { VerbMenu } from "./VerbMenu";
 import { ContextualGameRoom } from "point-click-components";
-import { StoryBoardPlayer } from "../storyboard/StoryBoardPlayer";
+import { StoryBoardPlayer } from "../../storyboard/StoryBoardPlayer";
 
 export const MaterialLayout = () => {
     const theme = useTheme()

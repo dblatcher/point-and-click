@@ -7,7 +7,7 @@ import { Avatar, Button, Grid, Typography } from "@mui/material";
 import { GameDataContext, UiStateContext } from "point-click-components";
 import { ItemData } from "point-click-lib";
 import { CSSProperties, useContext } from "react";
-import { ItemMenuProps } from "../game/uiComponentSet";
+import { ItemMenuProps } from "../../game/uiComponentSet";
 
 export const ItemMenu = () => {
     const { dispatch } = useContext(GameDataContext)

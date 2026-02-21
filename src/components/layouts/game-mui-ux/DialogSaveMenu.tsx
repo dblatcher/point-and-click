@@ -7,7 +7,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from "@mui/material";
 import { GameDataContext, useLocalSavedGame } from 'point-click-components';
 import { useContext, useState } from 'react';
-import { StringInput } from '../SchemaForm/StringInput';
+import { StringInput } from '../../SchemaForm/StringInput';
 import { SoundToggle } from './SoundToggle';
 
 

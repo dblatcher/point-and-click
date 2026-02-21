@@ -1,6 +1,6 @@
 import { GameDesignPlayer } from '@/components/GameDesignPlayer'
 import { PageLayout } from '@/components/PageLayout'
-import { BigLayout } from '@/components/game-mui-ux/BigLayout'
+import { BigLayout } from '@/components/layouts/game-mui-ux/BigLayout'
 import { DesignAndAssets, getGameFromApi } from '@/lib/api-usage'
 import { useEffect, useState } from 'react'
 
