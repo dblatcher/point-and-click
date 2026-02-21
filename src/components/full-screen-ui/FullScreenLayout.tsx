@@ -1,6 +1,6 @@
 import { useGameStateDerivations } from "@/context/game-state-context";
 import { FullScreenWrapper } from "../FullScreenWrapper";
-import { DialogSaveMenu } from "../game-mui-ux/DialogSaveMenu";
+import { DialogSaveMenu } from "./DialogSaveMenu";
 import { ConversationMenu } from "../game-simple-ui/ConversationMenu";
 import { RoomWrapperWithOverlay } from "./RoomWrapperWithOverlay";
 
