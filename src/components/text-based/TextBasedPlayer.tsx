@@ -21,9 +21,7 @@ export const TextBasedPlayer = () => {
             gameDesign={gameDesign}
             imageAssets={imageAssets}
             soundAssets={soundAssets}
-            uiComponents={{
-                GameLayoutComponent: TextBasedLayout
-            }}
+            Layout={TextBasedLayout}
             instantMode
         />
     )

@@ -1,5 +1,4 @@
 import { CommandTarget, ItemData, Verb } from "point-click-lib";
-import { FunctionComponent } from "react";
 
 
 type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
@@ -24,8 +23,3 @@ export const itemMenuPropsAreEqual = (prevProps: ItemMenuProps, nextProps: ItemM
     return prevProps.currentItemId === nextProps.currentItemId && itemsToIdString(prevProps.items) === itemsToIdString(nextProps.items)
 }
 
-
-export type UiComponentSet = {
-    GameLayoutComponent: FunctionComponent;
-    title?: string
-}

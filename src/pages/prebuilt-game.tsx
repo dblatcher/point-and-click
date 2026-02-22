@@ -30,9 +30,7 @@ export default function GameLoaderPage() {
           gameDesign={data.gameDesign}
           imageAssets={data.imageAssets}
           soundAssets={data.soundAssets}
-          uiComponents={{
-            GameLayoutComponent: BigLayout,
-          }}
+          Layout={BigLayout}
         /> : null}
     </PageLayout>
   )

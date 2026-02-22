@@ -6,8 +6,7 @@ import { SoundService } from "@/services/soundService";
 import { Box, Skeleton } from "@mui/material";
 import { GameRunner } from "point-click-components";
 import { GameDesign } from "point-click-lib";
-import { useEffect, useRef, useState } from "react";
-import { UiComponentSet } from "./uiComponentSet";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { logService } from "./layouts/log-service";
 
 
@@ -15,12 +14,12 @@ type Props = {
   gameDesign: GameDesign;
   imageAssets: ImageAsset[];
   soundAssets: SoundAsset[];
-  uiComponents: UiComponentSet;
+  Layout: FunctionComponent<{}>;
   instantMode?: boolean;
 }
 
 export const GameDesignPlayer = ({
-  uiComponents,
+  Layout,
   instantMode,
   gameDesign,
   imageAssets,
@@ -56,7 +55,7 @@ export const GameDesignPlayer = ({
           gameDesign={gameDesign}
           getImageAsset={id => imageServiceRef.current.get(id)}
           getSoundAsset={id => soundServiceRef.current.get(id)}
-          Layout={uiComponents.GameLayoutComponent}
+          Layout={Layout}
 
           options={{
             cellSize: CELL_SIZE,
