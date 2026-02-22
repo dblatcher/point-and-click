@@ -1,6 +1,6 @@
 import { useAssets } from "@/context/asset-context";
 import { AspectRatio, StaticFrameParamsS } from "point-click-lib";
-import { getBackgroundStyle } from "@/lib/image-frame-backgrounds";
+import { getAspectRatioStyle, getBackgroundStyle } from "@/lib/image-frame-backgrounds";
 import React from "react";
 
 interface Props {
@@ -8,25 +8,6 @@ interface Props {
     aspectRatio?: AspectRatio,
     filter?: string,
     fitHeight?: boolean,
-}
-
-
-const getAspectRatioStyle = (aspectRatio?: AspectRatio, fitHeight = false) => {
-    return !aspectRatio ? {
-        height: '100%',
-        width: '100%',
-        margin: 0,
-    } : fitHeight ? {
-        height: '100%',
-        width: 'auto',
-        aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`,
-        margin: 0,
-    } : {
-        height: 'auto',
-        width: '100%',
-        aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`,
-        margin: 0,
-    }
 }
 
 /**

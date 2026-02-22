@@ -1,8 +1,27 @@
 import { ImageAsset } from "@/services/assets"
+import { AspectRatio } from "point-click-lib"
 import { CSSProperties } from "react"
 
 
-const getBackgroundStyle = (imageAsset: ImageAsset, col = 0, row = 0, filter?: string): CSSProperties => {
+export const getAspectRatioStyle = (aspectRatio?: AspectRatio, fitHeight = false) => {
+    return !aspectRatio ? {
+        height: '100%',
+        width: '100%',
+        margin: 0,
+    } : fitHeight ? {
+        height: '100%',
+        width: 'auto',
+        aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`,
+        margin: 0,
+    } : {
+        height: 'auto',
+        width: '100%',
+        aspectRatio: `${aspectRatio.x}/${aspectRatio.y}`,
+        margin: 0,
+    }
+}
+
+export const getBackgroundStyle = (imageAsset: ImageAsset, col = 0, row = 0, filter?: string): CSSProperties => {
     const { href, rows, cols } = imageAsset
 
     if (typeof cols === 'undefined' && typeof rows === 'undefined') {
@@ -27,5 +46,3 @@ const getBackgroundStyle = (imageAsset: ImageAsset, col = 0, row = 0, filter?: s
         filter,
     }
 }
-
-export { getBackgroundStyle }

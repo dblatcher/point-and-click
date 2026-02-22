@@ -1,6 +1,6 @@
 import { BoardFont, PagePicture, StoryBoardPage } from "point-click-lib";
 import React, { CSSProperties } from "react";
-import { FramePreview } from "../GameEditor/FramePreview";
+import { BoardPicture } from "./BoardPicture";
 
 type Props = {
     page: StoryBoardPage
@@ -44,7 +44,7 @@ const PagePictureBlock: React.FunctionComponent<{ picture: PagePicture }> = ({ p
         return null
     }
 
-    return <FramePreview
+    return <BoardPicture
         style={getPictureStyle(picture)}
         frame={{ col: 0, row: 0, ...picture.image }}
         aspectRatio={picture.aspectRatio}
