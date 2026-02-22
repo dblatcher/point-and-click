@@ -14,7 +14,7 @@ type Props = {
   gameDesign: GameDesign;
   imageAssets: ImageAsset[];
   soundAssets: SoundAsset[];
-  Layout: FunctionComponent<{}>;
+  Layout?: FunctionComponent<{}>;
   instantMode?: boolean;
 }
 
