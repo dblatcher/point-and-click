@@ -1,8 +1,8 @@
+import { SoundAsset } from "@/services/assets";
+import { GameDataContext } from "point-click-components";
 import { StoryBoard } from "point-click-lib";
 import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { StoryPageDisplay } from "./StoryPageDisplay";
-import { GameDataContext } from "point-click-components";
-import { SoundAsset } from "@/services/assets";
 
 interface Props {
     storyBoard: StoryBoard
@@ -60,7 +60,7 @@ const playSoundEffect =
 
 
 export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard }) => {
-    const { dispatch, getSoundAsset } = useContext(GameDataContext)
+    const { dispatch, getSoundAsset, getImageAsset } = useContext(GameDataContext)
     const [pageNumber, setPageNumber] = useState(0)
     const [sound, setSound] = useState<HTMLAudioElement | undefined>(undefined)
     const [wasSoundError, setWasSoundError] = useState(false)
@@ -134,7 +134,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
 
     if (storyBoard.progression === 'buttons') {
         return <article style={fullScreenStyle}>
-            <StoryPageDisplay page={currentPage} />
+            <StoryPageDisplay page={currentPage} getImageAsset={getImageAsset} />
             <div style={buttonsStyle}>
                 <button disabled={onFirstPage} onClick={goBack}>
                     <span>back</span>
@@ -154,7 +154,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
         style={{ ...fullScreenStyle, cursor: 'pointer' }}
         onClick={proceed}
     >
-        <StoryPageDisplay page={currentPage} font={storyBoard.font} />
+        <StoryPageDisplay page={currentPage} font={storyBoard.font} getImageAsset={getImageAsset} />
     </article>
 
 }

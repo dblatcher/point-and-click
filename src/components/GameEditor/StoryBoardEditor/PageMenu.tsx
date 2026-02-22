@@ -1,6 +1,7 @@
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay"
-import { StoryBoard } from "point-click-lib"
+import { useAssets } from "@/context/asset-context"
 import { Box, Button } from "@mui/material"
+import { StoryBoard } from "point-click-lib"
 import { useEffect, useState } from "react"
 import { ArrayControl } from "../ArrayControl"
 import { makeEmptyStoryBoardPage } from "../defaults"
@@ -15,7 +16,7 @@ export const PageMenu = ({
     storyBoard,
     update,
 }: Props) => {
-
+    const { getImageAsset } = useAssets()
     const [currentPageNumber, setCurrentPageNumber] = useState(0)
 
     useEffect(() => {
@@ -26,7 +27,7 @@ export const PageMenu = ({
 
     return (
         <Box display={'flex'} flexDirection={'column'} gap={3}>
-               <ArrayControl format='cards'
+            <ArrayControl format='cards'
                 list={storyBoard.pages}
                 createItem={makeEmptyStoryBoardPage}
                 describeItem={(page, index) => (
@@ -48,7 +49,7 @@ export const PageMenu = ({
                             fontSize={3}
                             sx={{ backgroundColor: 'white', color: 'black' }}
                         >
-                            <StoryPageDisplay page={page} font={storyBoard.font}/>
+                            <StoryPageDisplay page={page} font={storyBoard.font} getImageAsset={getImageAsset} />
                         </Box>
                     </Button>
                 )}

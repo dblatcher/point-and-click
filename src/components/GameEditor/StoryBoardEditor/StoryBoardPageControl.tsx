@@ -1,7 +1,8 @@
 import { StoryPageDisplay } from "@/components/storyboard/StoryPageDisplay";
-import { PagePicture, StoryBoard, StoryBoardPage } from "point-click-lib";
+import { useAssets } from "@/context/asset-context";
 import { cloneArrayWithPatch } from "@/lib/clone";
 import { Box, Divider, Stack, Typography } from "@mui/material";
+import { PagePicture, StoryBoard, StoryBoardPage } from "point-click-lib";
 import React from "react";
 import { ArrayControl } from "../ArrayControl";
 import { ColorInput } from "../ColorInput";
@@ -21,6 +22,7 @@ interface Props {
 export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
     storyBoard, page, index, update,
 }) => {
+    const { getImageAsset } = useAssets()
     const pageDescription = `storyboard ${storyBoard.id} page #${index + 1}`;
 
     const updatePicture = (mod: Partial<PagePicture>, pictureIndex: number) => {
@@ -48,10 +50,10 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                     <Typography variant="h3">Text</Typography>
                     <Box gap={2} display={'flex'} flexDirection={'column'}>
                         <DelayedStringInput delayAfterEdits={5000}
-                            label="title" 
-                            value={page.title} 
+                            label="title"
+                            value={page.title}
                             inputHandler={title => updatePage(`title to "${title}"`, { title })
-                        } />
+                            } />
                         <NarrativeEditor isRequired noDialog
                             narrative={page.narrative}
                             update={(narrative) => {
@@ -97,7 +99,7 @@ export const StoryBoardPageControl: React.FunctionComponent<Props> = ({
                     flexDirection={'column'}
                     fontSize={10}
                 >
-                    <StoryPageDisplay page={page} font={storyBoard.font} />
+                    <StoryPageDisplay page={page} font={storyBoard.font} getImageAsset={getImageAsset} />
                 </Box>
             </Box>
         </EditorBox>

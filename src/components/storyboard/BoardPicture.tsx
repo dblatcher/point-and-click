@@ -1,30 +1,27 @@
 import { getAspectRatioStyle, getBackgroundStyle } from "@/lib/image-frame-backgrounds";
-import { GameDataContext } from "point-click-components";
+import { ImageAsset } from "@/services/assets";
 import { AspectRatio, SpriteFrame } from "point-click-lib";
-import { CSSProperties, FunctionComponent, useContext } from "react";
+import { CSSProperties, FunctionComponent } from "react";
 
 
 interface Props {
-    width: number;
-    height: number;
     backgroundColor?: string;
     frame: SpriteFrame;
     filter?: string
     aspectRatio?: AspectRatio;
     style?: CSSProperties;
+    getImageAsset: { (id: string): ImageAsset | undefined }
 }
 
 export const BoardPicture: FunctionComponent<Props> = ({
-    width, height, backgroundColor, frame, filter, aspectRatio, style
+    backgroundColor, frame, filter, aspectRatio, style, getImageAsset
 }: Props) => {
-    const { getImageAsset } = useContext(GameDataContext)
     const imageAsset = getImageAsset(frame.imageId)
     const divStyle: CSSProperties = {
-        width, height,
         ...style,
         backgroundColor
     }
-    const fitHeight = aspectRatio ? height / aspectRatio.y < width / aspectRatio.x : undefined
+    const fitHeight = aspectRatio ? 1 / aspectRatio.y < 1 / aspectRatio.x : undefined
     return (
         <div style={divStyle}>
             {imageAsset ? (

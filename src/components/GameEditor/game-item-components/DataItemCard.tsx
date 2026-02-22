@@ -7,16 +7,15 @@ import { InteractionsDialogsButton } from "@/components/GameEditor/InteractionsD
 import { ContentCopyIcon, HideImageOutlinedIcon } from "@/components/GameEditor/material-icons";
 import { RoomLocationPicker } from "@/components/GameEditor/RoomLocationPicker";
 import { SpritePreview } from "@/components/GameEditor/SpritePreview";
+import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
-import { ActorData, Conversation, GameDataItem, ItemData, RoomData, Sequence, SpriteData } from "point-click-lib";
-import { GameDataItemType } from "point-click-lib";
-import { StoryBoard } from "point-click-lib";
 import { cloneData } from "@/lib/clone";
 import { tabIcons } from "@/lib/editor-config";
 import { buildActorData } from "@/lib/sprite-to-actor";
 import { findById } from "@/lib/util";
 import { Box, BoxProps, Typography } from "@mui/material";
+import { ActorData, Conversation, GameDataItem, GameDataItemType, ItemData, RoomData, Sequence, SpriteData, StoryBoard } from "point-click-lib";
 import { StoryPageDisplay } from "../../storyboard/StoryPageDisplay";
 
 type Props<DataType extends GameDataItem> = {
@@ -39,6 +38,7 @@ const previewBoxProps: BoxProps = {
 }
 
 const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
+    const { getImageAsset } = useAssets()
     const sprites = useSprites();
     if (designProperty === 'rooms') {
         const roomData = item as RoomData
@@ -57,9 +57,9 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
         const sprite = findById(spriteData.id, sprites);
         return <Box {...previewBoxProps}>
             {sprite &&
-                <SpritePreview 
+                <SpritePreview
                     data={buildActorData(sprite, 'default', spriteData.defaultDirection)}
-                    animation='default' noBaseLine maxHeight={PREVIEW_HEIGHT} 
+                    animation='default' noBaseLine maxHeight={PREVIEW_HEIGHT}
                     overrideSpriteData={spriteData}
                 />
             }
@@ -77,7 +77,7 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
         const [firstPage] = pages
         return <Box {...previewBoxProps} flexDirection={'column'} alignItems={'stretch'} fontSize={3}>
             {firstPage
-                ? <StoryPageDisplay page={firstPage} font={font} />
+                ? <StoryPageDisplay page={firstPage} font={font} getImageAsset={getImageAsset} />
                 : <HideImageOutlinedIcon sx={{ height: 50, width: 50 }} />
             }
         </Box>

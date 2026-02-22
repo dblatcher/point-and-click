@@ -1,10 +1,12 @@
+import { ImageAsset } from "@/services/assets";
 import { BoardFont, PagePicture, StoryBoardPage } from "point-click-lib";
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, Fragment } from "react";
 import { BoardPicture } from "./BoardPicture";
 
 type Props = {
     page: StoryBoardPage
     font?: BoardFont
+    getImageAsset: { (id: string): ImageAsset | undefined }
 }
 
 
@@ -39,19 +41,7 @@ const getPictureStyle = (picture: PagePicture): CSSProperties => {
 }
 
 
-const PagePictureBlock: React.FunctionComponent<{ picture: PagePicture }> = ({ picture }) => {
-    if (!picture.image) {
-        return null
-    }
-
-    return <BoardPicture
-        style={getPictureStyle(picture)}
-        frame={{ col: 0, row: 0, ...picture.image }}
-        aspectRatio={picture.aspectRatio}
-        width={1} height={1} />
-}
-
-export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page, font }) => {
+export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page, font, getImageAsset }) => {
     const { color, backgroundColor } = page
     return <section style={{
         flex: 1, position: 'relative', overflow: 'hidden',
@@ -59,8 +49,15 @@ export const StoryPageDisplay: React.FunctionComponent<Props> = ({ page, font })
         backgroundColor,
         fontFamily: font,
     }}>
-        {page.pictures.map((element, index) => (
-            <PagePictureBlock key={index} picture={element} />
+        {page.pictures.map((picture, index) => (
+            <Fragment key={index}>
+                {picture.image && <BoardPicture
+                    style={getPictureStyle(picture)}
+                    frame={{ col: 0, row: 0, ...picture.image }}
+                    aspectRatio={picture.aspectRatio}
+                    getImageAsset={getImageAsset}
+                />}
+            </Fragment>
         ))}
         <div style={{
             position: 'absolute',
