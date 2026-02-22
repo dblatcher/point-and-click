@@ -19,7 +19,7 @@
     "jszip": "^3.10.1",
     "micromark": "^3.1.0",
     "next": "^14.2.24",
-    "point-click-components": "^0.1.0",
+    "point-click-components": "^0.1.1",
     "point-click-lib": "^0.0.13",
     "raw-loader": "^4.0.2",
     "react": "^18.3.1",
