@@ -1,10 +1,9 @@
-import { GameEventEmitter } from '@/lib/game-event-emitter'
-import { makeDebugEntry } from '@/lib/inGameDebugging'
+import { GameEventEmitter } from '@/lib/event-emitting/game-event-emitter'
+import { makeDebugEntry } from '@/lib/event-emitting/inGameDebugging'
 import { ActorData, Command, Consequence, InGameEventReporter, LogToDebug, Order, Stage, } from 'point-click-lib'
 
 // TODO - there should only be one event for LogEntry
 const emitter = new GameEventEmitter
-
 
 
 const reporter: InGameEventReporter = {

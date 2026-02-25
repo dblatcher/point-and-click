@@ -1,10 +1,10 @@
-import { LogEntry } from "@/lib/inGameDebugging";
+import { logService } from "@/lib/event-emitting/log-service";
+import { LogEntry } from "@/lib/event-emitting/inGameDebugging";
 import { Box, Typography } from "@mui/material";
 import { GameDataContext } from "point-click-components";
 import { useContext, useEffect, useState } from "react";
 import { EventFeed } from "./EventFeed";
 import { FlagList } from "./FlagList";
-import { logService } from "../layouts/log-service";
 
 
 

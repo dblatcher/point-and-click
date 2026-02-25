@@ -1,12 +1,12 @@
+import { ScrollingFeed } from "@/components/ScrollingFeed";
 import { useInterval } from "@/hooks/useInterval";
-import { InGameEvent, PromptFeedbackReport } from "@/lib/game-event-emitter";
+import { InGameEvent, PromptFeedbackReport } from "@/lib/event-emitting/game-event-emitter";
+import { logService } from "@/lib/event-emitting/log-service";
 import { inGameEventToFeedLines, storyBoardReportToFeedLines } from "@/lib/text-based/create-feed-items";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
 import { GameDataContext } from "point-click-components";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ScrollingFeed } from "../../ScrollingFeed";
-import { logService } from "../log-service";
 import { FeedLine } from "./FeedLine";
 
 const { emitter } = logService

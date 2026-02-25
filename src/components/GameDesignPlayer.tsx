@@ -1,4 +1,5 @@
 import { AssetsProvider } from "@/context/asset-context";
+import { logService } from "@/lib/event-emitting/log-service";
 import { CELL_SIZE } from "@/lib/types-and-constants";
 import { ImageAsset, SoundAsset } from "@/services/assets";
 import { ImageService } from "@/services/imageService";
@@ -7,7 +8,6 @@ import { Box, Skeleton } from "@mui/material";
 import { GameRunner } from "point-click-components";
 import { GameDesign } from "point-click-lib";
 import { FunctionComponent, useEffect, useRef, useState } from "react";
-import { logService } from "./layouts/log-service";
 
 
 type Props = {

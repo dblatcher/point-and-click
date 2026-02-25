@@ -1,4 +1,5 @@
-import { reportConversationBranch } from "@/lib/game-event-emitter"
+import { reportConversationBranch } from "@/lib/event-emitting/game-event-emitter"
+import { logService } from "@/lib/event-emitting/log-service"
 import { standard } from "@/lib/text-based/standard-text"
 import { promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
 import { clamp, findById } from "@/lib/util"
@@ -6,7 +7,6 @@ import { Box, TextField } from "@mui/material"
 import { GameDataContext } from "point-click-components"
 import { Command, Conversation, ConversationChoice, matchInteraction } from "point-click-lib"
 import { useContext, useRef, useState } from "react"
-import { logService } from "../log-service"
 import { useGameStateDerivations } from "../use-derivations"
 
 const { emitter } = logService

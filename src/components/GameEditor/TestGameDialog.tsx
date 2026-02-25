@@ -1,6 +1,7 @@
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { cloneData } from "@/lib/clone";
+import { logService } from "@/lib/event-emitting/log-service";
 import { CELL_SIZE } from "@/lib/types-and-constants";
 import { editorTheme } from "@/theme";
 import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Slider, ThemeProvider, Typography } from "@mui/material";
@@ -9,7 +10,6 @@ import { GameDesign } from "point-click-lib";
 import { useState } from "react";
 import { DebugLog } from "../DebugLog";
 import { BasicLayout } from "../layouts/basic";
-import { logService } from "../layouts/log-service";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";

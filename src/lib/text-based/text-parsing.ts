@@ -1,5 +1,5 @@
 import { Verb, ItemData, Command, ActorData, HotspotZone, GameData } from "point-click-lib";
-import { PromptFeedbackReport } from "../game-event-emitter";
+import { PromptFeedbackReport } from "@/lib/event-emitting/game-event-emitter";
 import { makeRoomDescription } from "./create-feed-items";
 
 

@@ -1,4 +1,4 @@
-import { LogEntry } from "@/lib/inGameDebugging";
+import { LogEntry } from "@/lib/event-emitting/inGameDebugging";
 import { Box, Button, Typography } from "@mui/material";
 import { ScrollingFeed } from "../ScrollingFeed";
 

@@ -1,8 +1,8 @@
-import { LogEntry } from "@/lib/inGameDebugging";
+import { LogEntry } from "@/lib/event-emitting/inGameDebugging";
+import { FeedItem } from "@/lib/text-based/types";
+import { findById } from "@/lib/util";
 import { ActorData, Command, Consequence, ConversationBranch, GameData, Order, Stage } from "point-click-lib";
 import { TypedEmitter } from "tiny-typed-emitter";
-import { FeedItem } from "./text-based/types";
-import { findById } from "./util";
 
 export interface OrderReport { type: 'order', order: Order, actor: ActorData }
 export interface CommandReport { type: 'command', command: Command }
