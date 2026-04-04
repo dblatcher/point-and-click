@@ -1,4 +1,4 @@
-import { Verb, ItemData, Command, ActorData, HotspotZone, GameData } from "point-click-lib";
+import { Verb, ItemData, Command, ActorData, HotspotZone, GameData, getActorsPlayerCanSwitchTo } from "point-click-lib";
 import { PromptFeedbackReport } from "@/lib/event-emitting/game-event-emitter";
 import { makeRoomDescription } from "./create-feed-items";
 
@@ -86,6 +86,22 @@ export const promptToCommand = (
     return undefined
 };
 
+const getSwitchingList = (state: GameData) => {
+    const player = state.actors.find(a => a.isPlayer);
+    const actorCanSwitchTo = getActorsPlayerCanSwitchTo(state, false);
+    const whoYouAre = player ? `You are currently ${player.name ?? player.id}. ` : ''
+    if (actorCanSwitchTo.length === 0) {
+        return {
+            message: `${whoYouAre}There are no other characters you can switch to.`
+        }
+    } else {
+        return {
+            message: `${whoYouAre}To switch to another character, type "switch:{name of character}". You can switch to:`,
+            list: actorCanSwitchTo.map(a => a.name ?? a.id)
+        }
+    }
+}
+
 export const promptToHelpFeedback = (
     promptText: string,
     verbs: Verb[],
@@ -100,7 +116,8 @@ export const promptToHelpFeedback = (
                 list: [
                     'For a list of available verbs, type "verbs" or "V".',
                     'For a list of what your character is carrying, type "inventory" or "I".',
-                    'For the the description of your characters location, type "look" or "l".',
+                    'For the the description of your character\'s location, type "look" or "l".',
+                    'To see the characters you can switcht to, type "switch".',
                     'When in a conversation, just type the number of the dialoge choice you want.'
                 ],
                 type: 'system',
@@ -126,7 +143,22 @@ export const promptToHelpFeedback = (
         case 'L':
         case 'LOOK':
             return { ...makeRoomDescription(state, player), type: undefined }
+        case 'SWITCH': {
+            return getSwitchingList(state)
+        }
         default:
             return undefined
     }
 };
+
+export const promptToCharacterSwitch = (promptText: string, state: GameData): { actor?: ActorData, input: string } | undefined => {
+    const actorCanSwitchTo = getActorsPlayerCanSwitchTo(state, false);
+    if (!promptText.toUpperCase().startsWith('SWITCH:')) {
+        return undefined
+    }
+    const input = promptText.substring(7).trim()
+    const matchingActor = actorCanSwitchTo.find(a => (a.name ?? a.id).toUpperCase() === input.toUpperCase())
+
+    console.log({ input, matchingActor })
+    return { actor: matchingActor, input }
+}

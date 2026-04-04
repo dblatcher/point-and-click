@@ -1,7 +1,7 @@
 import { CommandReport, ConsequenceReport, ConversationBranchReport, InGameEvent, OrderReport, SequenceStageReport } from "@/lib/event-emitting/game-event-emitter";
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
-import { ActorData, describeCommand, findTarget, GameData, StoryBoard } from "point-click-lib";
+import { ActorData, describeCommand, findTarget, GameData, GameDesign, StoryBoard } from "point-click-lib";
 import { standard } from "./standard-text";
 
 const stringToFeedItem = (message: string) => ({
@@ -9,7 +9,7 @@ const stringToFeedItem = (message: string) => ({
 });
 
 // TO DO[text-based] - proper sentence grammar!
-const orderReportToFeedLine = (orderReport: OrderReport, state: GameData): FeedItem[] => {
+const orderReportToFeedLine = (orderReport: OrderReport, runningStageWithNarrative: boolean): FeedItem[] => {
     const { actor, order } = orderReport;
 
     if (order.narrative) {
@@ -17,8 +17,7 @@ const orderReportToFeedLine = (orderReport: OrderReport, state: GameData): FeedI
     }
 
     // don't show generic order descriptions if part of a stage with a narrative
-    const runningStage = state.sequenceRunning?.stages[0]
-    if (runningStage?.narrative) {
+    if (runningStageWithNarrative) {
         return []
     }
 
@@ -55,7 +54,7 @@ const conversationBranchReportToFeedLines = (commandReport: ConversationBranchRe
         type: 'dialogue'
     }];
 };
-const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameData): FeedItem[] => {
+const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, state: GameDesign): FeedItem[] => {
     const { consequence, success, offscreen } = consequenceReport;
     if (!success || offscreen) {
         return [];
@@ -165,7 +164,7 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
             return [];
     }
 };
-const sequenceStageReportToFeedLines = (sequenceStageReport: SequenceStageReport, state: GameData): FeedItem[] => {
+const sequenceStageReportToFeedLines = (sequenceStageReport: SequenceStageReport): FeedItem[] => {
     const { stage } = sequenceStageReport;
     if (stage.narrative) {
         return stage.narrative.text.map(stringToFeedItem);
@@ -180,18 +179,18 @@ export const storyBoardReportToFeedLines = (storyBoard: StoryBoard): FeedItem[] 
     }))
 };
 
-export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameData): FeedItem[] => {
+export const inGameEventToFeedLines = (inGameEvent: InGameEvent, runningStageWithNarrative: boolean, design: GameDesign): FeedItem[] => {
     switch (inGameEvent.type) {
         case "command":
             return [commandReportToFeedLine(inGameEvent)]
         case "order":
-            return orderReportToFeedLine(inGameEvent, state)
+            return orderReportToFeedLine(inGameEvent, runningStageWithNarrative)
         case "consequence":
-            return consequenceReportToFeedLines(inGameEvent, state)
+            return consequenceReportToFeedLines(inGameEvent, design)
         case "conversation-branch":
             return conversationBranchReportToFeedLines({ ...inGameEvent })
         case "sequence-stage":
-            return sequenceStageReportToFeedLines(inGameEvent, state)
+            return sequenceStageReportToFeedLines(inGameEvent)
     }
 }
 

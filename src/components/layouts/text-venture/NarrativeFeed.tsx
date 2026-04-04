@@ -6,7 +6,7 @@ import { inGameEventToFeedLines, storyBoardReportToFeedLines } from "@/lib/text-
 import { FeedItem } from "@/lib/text-based/types";
 import { findById } from "@/lib/util";
 import { GameDataContext } from "point-click-components";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FeedLine } from "./FeedLine";
 
 const { emitter } = logService
@@ -34,15 +34,22 @@ export const NarrativeFeed = () => {
                     [{ message: `Missing storyboard: ${currentStoryBoardId}`, type: 'system' }];
             feedQueue.current.push(...boardMessages, { message: '[press enter to continue]', type: 'system' },)
         }
-
     }, [currentStoryBoardId, gameDesign, feedQueue])
+
+    const runningStageWithNarrative = !!gameState.sequenceRunning?.stages[0]?.narrative;
+    const handleInGameEvent = useCallback((inGameEvent: InGameEvent) => {
+        feedQueue.current.push(...inGameEventToFeedLines(inGameEvent, runningStageWithNarrative, gameDesign))
+    }, [runningStageWithNarrative, gameDesign])
+
+    useEffect(() => {
+        emitter.on('in-game-event', handleInGameEvent)
+        return () => {
+            emitter.off('in-game-event', handleInGameEvent)
+        }
+    }, [handleInGameEvent])
 
 
     useEffect(() => {
-        const handleInGameEvent = (inGameEvent: InGameEvent) => {
-            feedQueue.current.push(...inGameEventToFeedLines(inGameEvent, gameState))
-        }
-
         const handlePromptFeedback = (feedback: PromptFeedbackReport) => {
             feedQueue.current.push({
                 message: feedback.message,
@@ -51,10 +58,8 @@ export const NarrativeFeed = () => {
             })
         }
 
-        emitter.on('in-game-event', handleInGameEvent)
         emitter.on('prompt-feedback', handlePromptFeedback)
         return () => {
-            emitter.off('in-game-event', handleInGameEvent)
             emitter.off('prompt-feedback', handlePromptFeedback)
         }
     }, [])

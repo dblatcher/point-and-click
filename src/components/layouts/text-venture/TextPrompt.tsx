@@ -1,7 +1,7 @@
 import { reportConversationBranch } from "@/lib/event-emitting/game-event-emitter"
 import { logService } from "@/lib/event-emitting/log-service"
 import { standard } from "@/lib/text-based/standard-text"
-import { promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
+import { promptToCharacterSwitch, promptToCommand, promptToHelpFeedback } from "@/lib/text-based/text-parsing"
 import { clamp, findById } from "@/lib/util"
 import { Box, TextField } from "@mui/material"
 import { GameDataContext } from "point-click-components"
@@ -42,7 +42,7 @@ export const TextPrompt = () => {
     const handleSubmit = () => {
         if (currentStoryBoard) {
             if (currentStoryBoard.isEndOfGame) {
-                dispatch({ type: 'RESET', reason:'game-end' })
+                dispatch({ type: 'RESET', reason: 'game-end' })
             } else {
                 dispatch({ type: 'CLEAR-STORYBOARD' })
             }
@@ -57,7 +57,10 @@ export const TextPrompt = () => {
         } else if (conversation) {
             interpretPromptAsConversationChoice(conversation)
         } else {
-            interpretPromptAsCommand()
+            const wasSwitchInstruction = interpretPromptAsSwitch()
+            if (!wasSwitchInstruction) {
+                interpretPromptAsCommand()
+            }
         }
 
         // do not add people typing dialogue numbers to history
@@ -94,6 +97,20 @@ export const TextPrompt = () => {
         selectConversationChoice(choice)
     }
 
+    const interpretPromptAsSwitch = (): boolean => {
+        const result = promptToCharacterSwitch(promptText, gameState)
+        if (!result) {
+            return false
+        }
+        if (!result.actor) {
+            emitter.emit('prompt-feedback', { message: `${result.input} is not a character you can switch to.` })
+            return true
+        }
+        dispatch({ type: 'SWITCH-PLAYER', actorId: result.actor.id })
+        emitter.emit('prompt-feedback', { message: `You now control ${result.actor.name ?? result.actor.id}.` })
+        return true
+    }
+
     const interpretPromptAsCommand = () => {
         const command = promptToCommand(promptText, verbs, inventory, gameState)
         if (currentStoryBoard?.isEndOfGame) {
@@ -107,11 +124,11 @@ export const TextPrompt = () => {
         const currentRoom = findById(gameState.currentRoomId, gameState.rooms)
         const interaction = matchInteraction(command, currentRoom, gameDesign.interactions, gameState)
         const conversationConsequence = interaction?.consequences.find(consequence => consequence.type === 'conversation')
-        
+
         if (conversationConsequence) {
             const conversation = findById(conversationConsequence.conversationId, gameState.conversations);
             if (conversation) {
-                const firstBranch = conversation.branches[conversation.currentBranch??conversation.defaultBranch]
+                const firstBranch = conversation.branches[conversation.currentBranch ?? conversation.defaultBranch]
                 if (firstBranch) {
                     emitter.emit('in-game-event', { type: 'conversation-branch', branch: firstBranch })
                 }
