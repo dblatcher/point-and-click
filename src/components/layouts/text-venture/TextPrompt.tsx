@@ -42,7 +42,7 @@ export const TextPrompt = () => {
     const handleSubmit = () => {
         if (currentStoryBoard) {
             if (currentStoryBoard.isEndOfGame) {
-                dispatch({ type: 'RESET' })
+                dispatch({ type: 'RESET', reason:'game-end' })
             } else {
                 dispatch({ type: 'CLEAR-STORYBOARD' })
             }

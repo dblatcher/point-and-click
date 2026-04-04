@@ -143,6 +143,17 @@ const consequenceReportToFeedLines = (consequenceReport: ConsequenceReport, stat
             }
             return [stringToFeedItem(`YOU ARE NOW CONTROLLING: ${newPlayerCharacter.name ?? newPlayerCharacter.id}`)]
 
+        case "setActorPlayable": {
+            const { actorId, canBePlayer } = consequence;
+            const actor = findById(actorId, state.actors);
+            if (!actor) {
+                return []
+            }
+            if (canBePlayer) {
+                return [stringToFeedItem(`YOU CAN NOW CONTROL: ${actor.name ?? actor.id}`)]
+            }
+            return [stringToFeedItem(`YOU CAN NO LONGER CONTROL: ${actor.name ?? actor.id}`)]
+        }
         case "storyBoardConsequence":
         case "soundEffect":
         case "flag":
@@ -178,7 +189,7 @@ export const inGameEventToFeedLines = (inGameEvent: InGameEvent, state: GameData
         case "consequence":
             return consequenceReportToFeedLines(inGameEvent, state)
         case "conversation-branch":
-            return conversationBranchReportToFeedLines({...inGameEvent})
+            return conversationBranchReportToFeedLines({ ...inGameEvent })
         case "sequence-stage":
             return sequenceStageReportToFeedLines(inGameEvent, state)
     }

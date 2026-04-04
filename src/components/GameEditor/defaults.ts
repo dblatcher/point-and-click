@@ -132,6 +132,8 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type, storyBoardId: '' }
         case "changePlayerCharacter":
             return { type, actorId: '' }
+        case "setActorPlayable":
+            return { type, actorId: '', canBePlayer:true }
     }
 }
 

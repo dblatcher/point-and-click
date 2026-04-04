@@ -86,7 +86,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
                             }
                             maybeAudioElement.addEventListener('ended', () => {
                                 if (storyBoard.isEndOfGame) {
-                                    dispatch({ type: 'RESET' })
+                                    dispatch({ type: 'RESET', reason:'game-end' })
                                 } else {
                                     dispatch({ type: 'CLEAR-STORYBOARD' })
                                 }
@@ -119,7 +119,7 @@ export const StoryBoardPlayer: React.FunctionComponent<Props> = ({ storyBoard })
         if (onLastPage || (storyBoard.progression === 'sound' && !wasSoundError)) {
             sound?.pause()
             if (storyBoard.isEndOfGame) {
-                dispatch({ type: 'RESET' })
+                dispatch({ type: 'RESET', reason:'game-end' })
             } else {
                 dispatch({ type: 'CLEAR-STORYBOARD' })
             }
