@@ -1,7 +1,7 @@
 import { Interaction } from "point-click-lib";
 import { IconButton, Stack, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
-import { ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon, FlagFilledIcon, FlagOutlinedIcon, InventoryIcon } from "../material-icons";
+import { ActorIcon, ArrowDownwardIcon, ArrowUpwardIcon, ClearIcon, EditIcon, FlagFilledIcon, FlagOutlinedIcon, InventoryIcon, ChangePlayerCharacterIcon } from "../material-icons";
 import { ConsequenceIconWithDescription } from "../SequenceEditor/get-order-details";
 
 interface Props {
@@ -15,7 +15,11 @@ interface Props {
 export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInteraction, openEditor }: Props) => {
     const {
         verbId, targetId, targetStatus, itemId, roomId,
-        consequences, flagsThatMustBeFalse = [], flagsThatMustBeTrue = [], requiredInventory = []
+        consequences, 
+        flagsThatMustBeFalse = [], 
+        flagsThatMustBeTrue = [], 
+        requiredInventory = [],
+        allowedPlayerIds = [],
     } = interaction
 
     return (
@@ -52,6 +56,16 @@ export const InteractionTableRow = ({ index, interaction, changeOrder, deleteInt
                         <InventoryIcon />
                     </Tooltip>
                 ))}
+                {allowedPlayerIds.length === 1 && (
+                    <Tooltip title={ `actor must be ${allowedPlayerIds[0]}`}>
+                        <ActorIcon />
+                    </Tooltip>
+                )}
+                {allowedPlayerIds.length >1 && (
+                    <Tooltip title={ `actor must be one of ${allowedPlayerIds.join()}`}>
+                        <ChangePlayerCharacterIcon />
+                    </Tooltip>
+                )}
             </TableCell>
             <TableCell padding="none">
                 <Stack direction={'row'}>

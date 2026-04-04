@@ -191,7 +191,13 @@ export const InteractionDialog = ({ initialInteraction, confirm, cancel }: Props
                                     inputHandler={(mustReachFirst) => { updateInteraction({ mustReachFirst }) }}
                                     value={!!interaction.mustReachFirst}
                                 />
-
+                                <MultipleSelectChip
+                                    label="allowed player"
+                                    options={gameDesign.actors.filter(actor => typeof actor.canBePlayer === 'boolean').map(item => item)}
+                                    selectedOptionIds={interaction.allowedPlayerIds ?? []}
+                                    setSelectedOptionIds={allowedPlayerIds => updateInteraction({ allowedPlayerIds })}
+                                    idBase="allowed-players"
+                                />
                                 <MultipleSelectChip
                                     label="Required inventory items"
                                     options={gameDesign.items.map(item => item)}
