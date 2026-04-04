@@ -4,7 +4,7 @@ import { FramePreview } from "@/components/GameEditor/FramePreview";
 import { DeleteDataItemButton } from "@/components/GameEditor/game-item-components/DeleteDataItemButton";
 import { formatIdInput, truncateLine } from "@/components/GameEditor/helpers";
 import { InteractionsDialogsButton } from "@/components/GameEditor/InteractionsDialogsButton";
-import { ContentCopyIcon, HideImageOutlinedIcon } from "@/components/GameEditor/material-icons";
+import { CheckBoxIcon, CheckBoxOutlineBlankIcon, ContentCopyIcon, HideImageOutlinedIcon, RoomIcon } from "@/components/GameEditor/material-icons";
 import { RoomLocationPicker } from "@/components/GameEditor/RoomLocationPicker";
 import { SpritePreview } from "@/components/GameEditor/SpritePreview";
 import { useAssets } from "@/context/asset-context";
@@ -85,28 +85,41 @@ const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designPrope
     return null
 }
 
+const NameDisplay = ({ name }: { name?: string }) => name
+    ? <Typography sx={{ fontWeight: 700 }}>{name}</Typography>
+    : <Typography>[no name]</Typography>
+
+
 const ItemDetails = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
     const { gameDesign: { openingSequenceId, openingStoryboardId } } = useGameDesign()
     switch (designProperty) {
         case "rooms":
             const room = item as RoomData;
             return <Box paddingX={1}>
-                {room.name && <Typography>{room.name}</Typography>}
+                <NameDisplay name={room.name}/>
                 <Typography>{room.width} x {room.height}</Typography>
                 <Typography>x{room.hotspots?.length ?? 0} hotspots</Typography>
             </Box>
         case "items":
             const itemData = item as ItemData;
             return <Box paddingX={1}>
-                <Typography>{itemData.name}</Typography>
+                <NameDisplay name={itemData.name}/>
             </Box>
         case "actors":
             const actor = item as ActorData;
             return (
-                <Box paddingX={1}>
-                    <Typography>{actor.name}</Typography>
-                    {actor.isPlayer && <Typography><b>PLAYER CHARACTER</b></Typography>}
-                    <Typography>starts in: {actor.room ?? '[nowhere]'}</Typography>
+                <Box paddingX={1} alignSelf={'flex-start'} paddingTop={1}>
+                    <NameDisplay name={actor.name}/>
+                    <Box display={'flex'} alignItems={'center'} gap={1}>
+                        <RoomIcon />
+                        <Typography>{actor.room ?? '[nowhere]'}</Typography>
+                    </Box>
+                    {typeof actor.isPlayer === 'boolean' && (
+                        <Box display={'flex'} alignItems={'center'} gap={1}>
+                            {actor.isPlayer ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
+                            <Typography>Player character</Typography>
+                        </Box>
+                    )}
                 </Box>
             )
         case "conversations":
