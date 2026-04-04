@@ -2,14 +2,16 @@ import { findById } from "@/lib/util"
 import { ContextualGameRoom, GameDataContext } from "point-click-components"
 import { useContext } from "react"
 import { StoryBoardPlayer } from "../../storyboard/StoryBoardPlayer"
+import { getUiCondition } from "../helpers"
 import { CommandLine } from "./CommandLine"
 import { ConversationMenu } from "./ConversationMenu"
-import { getUiCondition } from "../helpers"
 import { ItemMenu } from "./ItemMenu"
 import { RoomSizeButtons } from "./RoomSizeButton"
 import { SaveMenu } from "./SaveMenu"
 import { SoundToggle } from "./SoundToggle"
 import { VerbMenu } from "./VerbMenu"
+import { CharacterSwitchButtons } from "./CharacterSwitchButtons"
+
 
 export const BasicLayout = () => {
     const { gameState, dispatch, gameDesign, allowLocalSaves } = useContext(GameDataContext)
@@ -40,6 +42,7 @@ export const BasicLayout = () => {
                             <CommandLine />
                             <VerbMenu />
                             <ItemMenu />
+                            <CharacterSwitchButtons />
                         </section>
                     )}
                     {condition === 'conversation' && (

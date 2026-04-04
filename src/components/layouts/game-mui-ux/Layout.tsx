@@ -9,6 +9,7 @@ import { SoundToggle } from "../shared-mui-components/SoundToggle";
 import { VerbMenu } from "./VerbMenu";
 import { ContextualGameRoom } from "point-click-components";
 import { StoryBoardPlayer } from "../../storyboard/StoryBoardPlayer";
+import { CharacterSwitchButtons } from "../shared-mui-components/CharacterSwitchButtons";
 
 export const MaterialLayout = () => {
     const theme = useTheme()
@@ -48,6 +49,7 @@ export const MaterialLayout = () => {
                                 <CommandLine />
                                 <VerbMenu />
                                 <ItemMenu />
+                                <CharacterSwitchButtons />
                             </>)}
                         </Card>
                     </Card>

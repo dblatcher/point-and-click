@@ -9,6 +9,7 @@ import { ConversationMenu } from "./ConversationMenu";
 import { DialogSaveMenu } from "../shared-mui-components/DialogSaveMenu";
 import { ItemMenu } from "./ItemMenu";
 import { VerbMenu } from "./VerbMenu";
+import { CharacterSwitchButtons } from "../shared-mui-components/CharacterSwitchButtons";
 
 
 export const BigLayout = () => {
@@ -85,6 +86,7 @@ export const BigLayout = () => {
                                             <ItemMenu />
                                         </Grid>
                                     </Grid>
+                                    <CharacterSwitchButtons />
                                 </>}
                             </>)}
                         </Box>

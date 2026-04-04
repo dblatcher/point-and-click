@@ -11,6 +11,7 @@ import { useGameStateDerivations } from "../use-derivations";
 import { InteractionCoin } from "./InteractionCoin";
 import { InventoryDrawer } from "./InventoryDrawer";
 import { TargetLabel } from "./TargetLabel";
+import { CharacterSwitchButtons } from "../shared-mui-components/CharacterSwitchButtons";
 
 const getHoverTarget = (gameState: UiState): ActorData | HotspotZone | undefined => {
     return gameState.hoverTarget?.type === 'actor' || gameState.hoverTarget?.type === 'hotspot'
@@ -184,6 +185,7 @@ export const RoomWrapperWithOverlay: React.FunctionComponent = () => {
                                         setClickedTarget(undefined)
                                         setInventoryOpen(true)
                                     }}>INV</Button>
+                                <CharacterSwitchButtons buttonGroupProps={{ sx: { backgroundColor: 'white' } }} />
                             </Box>
                         </>
                     )}
