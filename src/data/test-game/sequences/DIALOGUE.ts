@@ -6,7 +6,7 @@ export const DIALOGUE: Sequence = {
     stages: [
         {
             actorOrders: {
-                PLAYER: [
+                SKINNER: [
                     {
                         type: 'move',
                         roomId: 'OUTSIDE',
@@ -21,7 +21,7 @@ export const DIALOGUE: Sequence = {
         },
         {
             actorOrders: {
-                PLAYER: [
+                SKINNER: [
                     { type: 'say', time: 100, text: 'hello' },
                     { type: 'say', time: 100, text: 'I am Skinner' },
                 ],
@@ -46,7 +46,7 @@ export const DIALOGUE: Sequence = {
                     { type: 'say', time: 120, text: 'ha ha ha ha!' },
                     { type: 'move', roomId: 'INSIDE', steps: [{ x: 200, y: 30 }] },
                 ],
-                PLAYER: [
+                SKINNER: [
                     { type: 'say', time: 200, text: 'Noooo!', animation: 'yell' },
                 ]
             }

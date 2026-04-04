@@ -7,7 +7,7 @@ export const LIGHT_FIRE: Sequence = {
         {
             actorToFollow: 'MARIO',
             actorOrders: {
-                PLAYER: [
+                SKINNER: [
                     {
                         roomId: 'OUTSIDE',
                         type: 'move', steps: [{
@@ -37,7 +37,7 @@ export const LIGHT_FIRE: Sequence = {
         },
         {
             actorOrders: {
-                PLAYER: [
+                SKINNER: [
                     {
                         type: 'say', text: 'here goes...', time: 150,
                     }
@@ -53,7 +53,7 @@ export const LIGHT_FIRE: Sequence = {
         },
         {
             actorOrders: {
-                PLAYER: [
+                SKINNER: [
                     { type: 'say', text: 'It is burning now.', time: 150 },
                 ]
             },

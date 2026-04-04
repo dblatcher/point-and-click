@@ -11,7 +11,7 @@ export const sequences: Sequence[] = [
         stages: [
             {
                 actorOrders: {
-                    PLAYER: [
+                    SKINNER: [
                         {
                             type: 'say',
                             text: 'this is sequence one',
@@ -42,7 +42,7 @@ export const sequences: Sequence[] = [
                     ]
                 },
                 actorOrders: {
-                    PLAYER: [
+                    SKINNER: [
                         {
                             type: 'say',
                             text: 'this is sequence two',

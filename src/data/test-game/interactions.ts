@@ -20,6 +20,7 @@ export const interactions: Interaction[] = [
     {
         verbId: 'LOOK',
         targetId: 'BUCKET',
+        allowedPlayerIds: ['SKINNER'],
         consequences: [
             {
                 type: 'order',
@@ -80,6 +81,7 @@ export const interactions: Interaction[] = [
     {
         verbId: 'TALK',
         targetId: 'EVIL_SKINNER',
+        allowedPlayerIds: ['SKINNER'],
         consequences: [
             {
                 type: 'sequence',

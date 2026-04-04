@@ -2,10 +2,11 @@ import { ActorData } from "point-click-lib"
 
 export const initialActors: ActorData[] = [
     {
-        id: 'PLAYER',
+        id: 'SKINNER',
         name: 'Seymour Skinner',
         type: 'actor',
         isPlayer: true,
+        canBePlayer: true,
         room: 'OUTSIDE',
         x: (200),
         y: 10,
@@ -76,6 +77,7 @@ export const initialActors: ActorData[] = [
         id: 'MARIO',
         name: 'Mario',
         type: 'actor',
+        canBePlayer: true,
         room: 'OUTSIDE',
         x: (640 * 1 / 5),
         y: 10,
@@ -107,7 +109,7 @@ export const initialActors: ActorData[] = [
         height: 30,
         width: 20,
         defaultFrame: {
-            imageId:'tube.png'
+            imageId: 'tube.png'
         }
     },
     {
@@ -119,11 +121,11 @@ export const initialActors: ActorData[] = [
         height: 40,
         width: 40,
         defaultFrame: {
-            imageId:'boy.png'
+            imageId: 'boy.png'
         },
         statusFrames: {
-            'BACKWARDS':  {
-                imageId:'boy.png',
+            'BACKWARDS': {
+                imageId: 'boy.png',
                 row: 1,
             },
         }

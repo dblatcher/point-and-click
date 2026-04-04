@@ -5,7 +5,7 @@ export const PUT_OUT_FIRE: Sequence = {
     stages: [
         {
             actorOrders: {
-                PLAYER: [
+                SKINNER: [
                     {
                         roomId: 'OUTSIDE',
                         type: 'move', steps: [{
@@ -18,7 +18,7 @@ export const PUT_OUT_FIRE: Sequence = {
         },
         {
             actorOrders: {
-                PLAYER: [
+                SKINNER: [
                     { type: 'say', text: 'ok...', time: 100 },
                 ],
                 FIRE: [
@@ -35,7 +35,7 @@ export const PUT_OUT_FIRE: Sequence = {
         },
         {
             actorOrders: {
-                PLAYER: [
+                SKINNER: [
                     { type: 'say', text: 'It is out now.', time: 150 },
                 ]
             }

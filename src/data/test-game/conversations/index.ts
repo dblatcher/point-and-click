@@ -15,7 +15,7 @@ const chat: Conversation = {
                         stages: [
                             {
                                 actorOrders: {
-                                    PLAYER: [
+                                    SKINNER: [
                                         { type: 'say', text: 'hello there, lets talk about tools', time: 100 },
                                         { type: 'say', text: 'I am doing dialogue', time: 100 }
                                     ]
@@ -39,7 +39,7 @@ const chat: Conversation = {
                         stages: [
                             {
                                 actorOrders: {
-                                    PLAYER: [
+                                    SKINNER: [
                                         { type: 'say', text: 'hello there, lets talk about fish', time: 100 },
                                     ]
                                 },
@@ -65,7 +65,7 @@ const chat: Conversation = {
                         stages: [
                             {
                                 actorOrders: {
-                                    PLAYER: [
+                                    SKINNER: [
                                         { type: 'say', text: 'good bye', time: 100 }
                                     ]
                                 }
@@ -100,7 +100,7 @@ const chat: Conversation = {
                         stages: [
                             {
                                 actorOrders: {
-                                    PLAYER: [
+                                    SKINNER: [
                                         { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
                                         { type: 'say', text: 'Do you have a hammer?', time: 100 },
                                     ]
@@ -127,7 +127,7 @@ const chat: Conversation = {
                         stages: [
                             {
                                 actorOrders: {
-                                    PLAYER: [
+                                    SKINNER: [
                                         { type: 'say', text: 'Can I have the hammer?', time: 100 },
                                     ]
                                 }
@@ -154,7 +154,7 @@ const chat: Conversation = {
                         stages: [
                             {
                                 actorOrders: {
-                                    PLAYER: [
+                                    SKINNER: [
                                         { type: 'act', steps: [{ animation: 'think', duration: 50 }] },
                                         { type: 'say', text: 'Do you have a screwdriver?', time: 100 },
                                     ]
@@ -178,7 +178,7 @@ const chat: Conversation = {
                         stages: [
                             {
                                 actorOrders: {
-                                    PLAYER: [
+                                    SKINNER: [
                                         { type: 'say', text: 'Never mind.', time: 100 },
                                     ]
                                 }
