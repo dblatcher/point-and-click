@@ -1,51 +1,77 @@
-import { FunctionComponent, ReactNode } from "react";
+import { FunctionComponent } from "react";
+import type { FieldProps } from './types';
+import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 
 
-type FieldProps = {
-    block?: boolean;
-    className?: string;
-    label?: string;
+const stringifyValue = (value: boolean | undefined): TristateValue => {
+    switch (value) {
+        case true:
+            return 'true'
+        case false:
+            return 'false'
+        case undefined:
+            return 'undefined'
+    }
 }
-const FieldWrapper: FunctionComponent<FieldProps & { children?: ReactNode }> = ({ children, block, className, label }) => {
-    return block
-        ? <div className={className}>
-            {label && <label>{label}</label>}
-            {children}
-        </div>
-        : <>
-            {label && <label>{label}</label>}
-            {children}
-        </>
+
+const stringToValue = (stringValue: TristateValue) => {
+    switch (stringValue) {
+        case 'true':
+            return true
+        case 'false':
+            return false
+        case 'undefined':
+        default:
+            return undefined
+    }
+}
+
+
+type TristateValue = 'true' | 'false' | 'undefined';
+const tristateValues: TristateValue[] = ['true', 'false', 'undefined']
+
+type LabelMap = {
+    true: string;
+    false: string;
+    undefined: string;
 }
 
 export const TriStateInput: FunctionComponent<FieldProps & {
     name?: string;
     value: boolean | undefined;
     inputHandler: { (value: boolean | undefined): void };
-}> = (props) => {
+    labelMap?: LabelMap
+}> = ({ value, label, name, inputHandler, labelMap, notFullWidth }) => {
 
+    const stringValue = stringifyValue(value)
+    const groupName = `${name ?? label}-group`
 
-    return <FieldWrapper {...props}>
-        <div>
-            <label>undefined</label>
-            <input type='radio'
-                name={props.name || props.label}
-                checked={props.value === undefined}
-                onInput={(): void => props.inputHandler(undefined)}
-            />|
-            <label>true</label>
-            <input type='radio'
-                name={props.name || props.label}
-                checked={props.value === true}
-                onInput={(): void => props.inputHandler(true)}
-            />|
-            <label>false</label>
-            <input type='radio'
-                name={props.name || props.label}
-                checked={props.value === false}
-                onInput={(): void => props.inputHandler(false)}
-            />
-
-        </div>
-    </FieldWrapper>
+    return <FormControl sx={{
+        width: notFullWidth ? undefined : '100%',
+        paddingRight: notFullWidth ? undefined : 3,
+        boxSizing: 'border-box',
+    }}>
+        <FormLabel>{label}</FormLabel>
+        <RadioGroup
+            aria-label={name ?? label}
+            value={stringValue}
+            name={groupName}
+            onChange={(event) =>
+                inputHandler(stringToValue(event.target.value as TristateValue))
+            }
+            sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                gap: 5,
+            }}
+        >
+            {tristateValues.map((label) =>
+                <FormControlLabel key={label}
+                    value={label}
+                    control={<Radio size="small" sx={{ padding: 1}} />}
+                    label={labelMap ? labelMap[label] : label} />
+            )}
+        </RadioGroup>
+    </FormControl>
 }

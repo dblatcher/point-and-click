@@ -64,7 +64,7 @@ export const ActorEditor = ({ actorData }: Props) => {
             </Tabs>
 
             {tabOpen === ActorEditorTab.Details &&
-                <DetailsAndStartPosition actorData={actorData} updateFromPartial={updateFromPartial} />
+                <DetailsAndStartPosition actorData={actorData} updateFromPartial={updateFromPartial} key={actorData.id}/>
             }
             {tabOpen === ActorEditorTab.Appearance &&
                 <ActorAppearanceControl data={actorData} />

@@ -1,12 +1,13 @@
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { OptionalNumberInput } from "@/components/SchemaForm/OptionalNumberInput";
 import { SelectInput } from "@/components/SchemaForm/SelectInput";
+import { TriStateInput } from "@/components/SchemaForm/TristateInput";
 import { useGameDesign } from "@/context/game-design-context";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
-import { putActorsInDisplayOrder } from "point-click-components";
 import { XY } from "@/lib/types-and-constants";
 import { findById, listIds } from "@/lib/util";
 import { Alert, Box, Slider, Stack, Typography } from "@mui/material";
+import { putActorsInDisplayOrder } from "point-click-components";
 import { ActorData, Direction, directions, getTargetPoint, getViewAngleXCenteredOn, getViewAngleYCenteredOn, } from "point-click-lib";
 import { useEffect, useState } from "react";
 import { ColorInput } from "../ColorInput";
@@ -88,6 +89,12 @@ export const DetailsAndStartPosition = ({ actorData, updateFromPartial, defaultP
                         <BooleanInput label="Is player Actor"
                             value={actorData.isPlayer}
                             inputHandler={isPlayer => updateFromPartial({ isPlayer })} />
+                        <TriStateInput label="can be player actor"
+                            notFullWidth
+                            value={actorData.canBePlayer}
+                            inputHandler={canBePlayer => updateFromPartial({ canBePlayer })}
+                            labelMap={{ true: 'from start', false: 'can be', undefined: 'never' }}
+                        />
                         <BooleanInput label="Cannot interact with"
                             value={actorData.noInteraction}
                             inputHandler={noInteraction => updateFromPartial({ noInteraction })} />
