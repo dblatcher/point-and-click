@@ -51,6 +51,7 @@ export const VerbEditor = ({ verb }: Props) => {
                         requiresItem: 'must have an item',
                         isMoveVerb: 'is "move" verb',
                         isLookVerb: 'is "look" verb',
+                        isGiveVerb: 'is "give" verb'
                     }}
                     changeValue={handleUpdate}
                 />

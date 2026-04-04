@@ -16,7 +16,7 @@ export const VerbSetControl = () => {
         if (!currentVerbId) {
             dispatchDesignUpdate({ type: 'open-in-editor', tabId: 'verbs', itemId: verbs[0]?.id })
         }
-    }, [])
+    }, [currentVerbId, dispatchDesignUpdate, verbs])
 
     return (
         <>
