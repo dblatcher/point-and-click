@@ -13,10 +13,11 @@ import { useEffect, useState } from "react";
 import { ColorInput } from "../ColorInput";
 import { DelayedStringInput } from "../DelayedStringInput";
 import { InteractionsDialogsButton } from "../InteractionsDialogsButton";
-import { RoomLocationPicker } from "../RoomLocationPicker";
-import { WalkToControl, XYControl } from "../XYControl";
 import { EditorBox } from "../layout/EditorBox";
-import { LayoutControls, LayoutHolder, LayoutPreview } from "../layout/SplitLayout";
+import { LayoutControls, LayoutHolder, LayoutItem, LayoutPreview } from "../layout/SplitLayout";
+import { RoomLocationPicker } from "../RoomLocationPicker";
+import { SpritePreview } from "../SpritePreview";
+import { WalkToControl, XYControl } from "../XYControl";
 
 interface Props {
     actorData: ActorData;
@@ -138,8 +139,8 @@ export const DetailsAndStartPosition = ({ actorData, updateFromPartial, defaultP
                 </EditorBox>
             </LayoutControls>
 
-            <LayoutPreview>
-                {roomData ? (<>
+            {roomData
+                ? <LayoutPreview>
                     <Box display={'inline-flex'} alignItems={'center'}>
                         <Typography variant="caption">preview size</Typography>
                         <Slider sx={{ width: 150 }}
@@ -166,14 +167,16 @@ export const DetailsAndStartPosition = ({ actorData, updateFromPartial, defaultP
                             handlePreviewClick(point, role)
                         }}
                     />
-
-                </>) : (
-                    <Stack padding={2} spacing={2}>
+                </LayoutPreview>
+                : <LayoutItem>
+                    <Stack padding={2} spacing={2} alignItems={'flex-start'}>
+                        <SpritePreview data={actorData} />
                         <Alert severity="info">no initial Room selected</Alert>
                         <Typography>If you want this Actor to have an initial position, select a starting room.</Typography>
                     </Stack>
-                )}
-            </LayoutPreview>
-        </LayoutHolder>
+                </LayoutItem>
+            }
+
+        </LayoutHolder >
     )
 }
