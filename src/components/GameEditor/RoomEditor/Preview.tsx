@@ -15,9 +15,9 @@ type Props = {
     roomData: RoomData;
     actors: ActorData[];
     clickEffect?: ClickEffect;
-    handleRoomClick: { (pointClicked: { x: number; y: number }, viewAngleX: number, viewAngleY: number, clickEffect: ClickEffect): void };
+    handleRoomClick?: { (pointClicked: { x: number; y: number }, viewAngleX: number, viewAngleY: number, clickEffect: ClickEffect): void };
     activeZoneIndex?: number;
-    zoneType: ZoneType
+    zoneType?: ZoneType
 }
 
 
@@ -70,7 +70,7 @@ export const Preview = ({
 
     const processClick = (x: number, y: number) => {
         if (clickEffect) {
-            handleRoomClick({ x, y }, viewAngleX, viewAngleY, clickEffect)
+            handleRoomClick?.({ x, y }, viewAngleX, viewAngleY, clickEffect)
         }
     }
 
