@@ -7,6 +7,7 @@ import { ReactNode, useState } from "react";
 import { ViewAngleSlider } from "./ViewAngleSlider";
 import { BackDrop } from "./background/Backdrop";
 import { useAssets } from "@/context/asset-context";
+import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 
 interface Props {
     room: RoomData
@@ -33,6 +34,7 @@ const LeftGridCell = ({ children }: { children?: ReactNode }) => <Grid
 export const DimensionControl = ({ room }: Props) => {
     const { modifyRoom, gameDesign } = useGameDesign()
     const [scale, setScale] = useState(1)
+    const [showFrame, setShowFrame] = useState(true)
     const { getImageAsset } = useAssets();
     const [viewAngleX, setViewAngleX] = useState(0)
     const [viewAngleY, setViewAngleY] = useState(0)
@@ -48,9 +50,10 @@ export const DimensionControl = ({ room }: Props) => {
     return <Box minWidth={300} width={room.width * scale * (12 / 10)} padding={2}>
         <Grid container>
             <LeftGridCell >
-                <Box>
+                <Box display={'flex'} flexDirection={'column'}>
                     <NumberInput label="preview scale" value={scale} notFullWidth
                         inputHandler={setScale} max={2} min={.5} step={.05} />
+                    <BooleanInput label="show frame" value={showFrame} inputHandler={setShowFrame} />
                 </Box>
             </LeftGridCell>
             <RightGridCell row>
@@ -84,51 +87,58 @@ export const DimensionControl = ({ room }: Props) => {
                     height={(room.height) * scale}
                     position={'relative'}
                 >
-                    {room.background.map((layer, index) => <BackDrop key={index} roomData={room} layer={layer} filter='saturate(.15) brightness(.4)' />)}
-                    <Box
-                        boxSizing={'border-box'}
-                        height={room.height * scale}
-                        width={room.frameWidth * scale}
-                        top={viewBoxTop * scale}
-                        left={viewBoxLeft * scale}
-                        position={'absolute'}>
+                    {room.background.map((layer, index) =>
+                        <BackDrop key={index}
+                            roomData={room}
+                            layer={layer}
+                            filter={showFrame ? 'saturate(.15) brightness(.4)' : undefined} />
+                    )}
 
-                        <Room data={room} noSound
-                            sprites={gameDesign.sprites}
-                            getImageAsset={getImageAsset}
-                            getSoundAsset={() => undefined}
-                            viewAngleX={viewAngleX}
-                            viewAngleY={viewAngleY}
-                            handleRoomClick={() => { }}
-                            maxHeight={room.height * scale}
-                            maxWidth={room.frameWidth * scale}
+                    {showFrame && <>
+                        <Box
+                            boxSizing={'border-box'}
+                            height={room.height * scale}
+                            width={room.frameWidth * scale}
+                            top={viewBoxTop * scale}
+                            left={viewBoxLeft * scale}
+                            position={'absolute'}>
+                            <Room data={room} noSound
+                                sprites={gameDesign.sprites}
+                                getImageAsset={getImageAsset}
+                                getSoundAsset={() => undefined}
+                                viewAngleX={viewAngleX}
+                                viewAngleY={viewAngleY}
+                                handleRoomClick={() => { }}
+                                maxHeight={room.height * scale}
+                                maxWidth={room.frameWidth * scale}
+                            />
+                        </Box>
+
+                        <ViewAngleSlider
+                            viewAngle={viewAngleY}
+                            setViewAngle={setViewAngleY}
+                            trackLength={(room.height * scale) - 50}
+                            boxProps={{
+                                position: 'absolute',
+                                left: 0,
+                                top: 10
+                            }}
+                            disabled={room.height === room.frameHeight}
+                            forY
                         />
-                    </Box>
 
-                    <ViewAngleSlider
-                        viewAngle={viewAngleY}
-                        setViewAngle={setViewAngleY}
-                        trackLength={(room.height * scale) - 50}
-                        boxProps={{
-                            position: 'absolute',
-                            left: 0,
-                            top: 10
-                        }}
-                        disabled={room.height === room.frameHeight}
-                        forY
-                    />
-
-                    <ViewAngleSlider
-                        viewAngle={viewAngleX}
-                        setViewAngle={setViewAngleX}
-                        trackLength={(room.width * scale) - 50}
-                        boxProps={{
-                            position: 'absolute',
-                            right: 10,
-                            bottom: 0,
-                        }}
-                        disabled={room.width === room.frameWidth}
-                    />
+                        <ViewAngleSlider
+                            viewAngle={viewAngleX}
+                            setViewAngle={setViewAngleX}
+                            trackLength={(room.width * scale) - 50}
+                            boxProps={{
+                                position: 'absolute',
+                                right: 10,
+                                bottom: 0,
+                            }}
+                            disabled={room.width === room.frameWidth}
+                        />
+                    </>}
                 </Box>
             </RightGridCell>
         </Grid>

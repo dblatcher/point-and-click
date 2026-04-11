@@ -56,6 +56,7 @@ export const Preview = ({
     zoneType
 }: Props) => {
     const { gameDesign } = useGameDesign()
+    const [compressedView, setCompressedView] = useState(false)
     const [scale, setScale] = useState(1.5)
     const [viewAngleX, setViewAngleX] = useState(0);
     const [viewAngleY, setViewAngleY] = useState(0);
@@ -82,31 +83,37 @@ export const Preview = ({
 
     const hotspotToHaveMarkWalkToPoint = zoneType === 'hotspot' && typeof activeZoneIndex === 'number' ? roomData.hotspots?.[activeZoneIndex] : undefined
 
+    const roomDataForView: RoomData = compressedView
+        ? { ...roomData, frameWidth: roomData.width, frameHeight: roomData.height ?? roomData.height }
+        : roomData
+    const scaleForView = compressedView ? scale * (roomData.frameWidth / roomData.width) : scale
 
     return (
         <Box>
             <Box>
                 <NumberInput label="preview scale" value={scale} notFullWidth
                     inputHandler={setScale} max={2} min={.5} step={.05} />
+                <BooleanInput label="compress backgrounds" value={compressedView} notFullWidth
+                    inputHandler={setCompressedView} />
             </Box>
             <Box
                 display={'inline-block'}
                 position={'relative'}
                 boxSizing={'border-box'}
             >
-                <RoomAngleFrame roomData={roomData}
-                    viewAngleX={viewAngleX}
+                <RoomAngleFrame roomData={roomDataForView}
+                    viewAngleX={compressedView ? 0 : viewAngleX}
                     viewAngleY={viewAngleY}
                     setViewAngleX={setViewAngleX}
                     setViewAngleY={setViewAngleY}>
-                    <Room data={roomData} noSound noMargin
+                    <Room data={roomDataForView} noSound noMargin
                         sprites={gameDesign.sprites}
                         renderAllZones={renderAllZones}
                         getImageAsset={getImageAsset}
                         getSoundAsset={() => undefined}
-                        maxHeight={(roomData.frameHeight || roomData.height) * scale}
-                        maxWidth={roomData.frameWidth * scale}
-                        viewAngleX={viewAngleX}
+                        maxHeight={(roomDataForView.frameHeight || roomDataForView.height) * scaleForView}
+                        maxWidth={roomDataForView.frameWidth * scaleForView}
+                        viewAngleX={compressedView ? 0 : viewAngleX}
                         viewAngleY={viewAngleY}
                         orderedActors={actorsInRoom}
                         handleRoomClick={processClick}
@@ -123,8 +130,8 @@ export const Preview = ({
                             ))}
                             {hotspotToHaveMarkWalkToPoint && (
                                 <MarkerShape
-                                    text={getHotspotMarkerLabel(hotspotToHaveMarkWalkToPoint, roomData)}
-                                    {...getTargetPoint(hotspotToHaveMarkWalkToPoint, roomData)}
+                                    text={getHotspotMarkerLabel(hotspotToHaveMarkWalkToPoint, roomDataForView)}
+                                    {...getTargetPoint(hotspotToHaveMarkWalkToPoint, roomDataForView)}
                                 />
                             )}
                         </>}
