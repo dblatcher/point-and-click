@@ -1,11 +1,11 @@
 import { Direction, SpriteFrame } from "point-click-lib";
 import { insertAt, replaceAt } from "@/lib/util";
-import { Box } from "@mui/material";
+import { Box, Button, ButtonGroup } from "@mui/material";
 import { useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { FramePreview } from "../FramePreview";
-import { AddIcon } from "../material-icons";
+import { AddIcon, ArrowDownwardIcon } from "../material-icons";
 
 interface Props {
     animKey: string;
@@ -46,7 +46,7 @@ export const AnimationFrameList = ({
                                 <p>[{frame.col}, {frame.row}]</p>
                             </div>
                         </Box>
-                    }    
+                    }
                     noOptions
                     defaultState={frame}
                     pickFrame={(row, col, imageId) => {
@@ -61,24 +61,38 @@ export const AnimationFrameList = ({
                 />
             )}
             customCreateButton={(index) =>
-                <FramePickDialogButton
-                    buttonProps={{
-                        startIcon: <AddIcon />,
-                        sx: { alignSelf: 'center' }
-                    }}
-                    buttonLabel="Insert frame"
-                    noOptions
-                    defaultState={{ imageId: selectedSheetId }}
-                    pickFrame={(row, col, imageId) => {
-                        const newFrame = imageId ? { row, col, imageId } : undefined;
-                        if (!newFrame) {
-                            return
-                        }
-                        setSelectedSheetId(newFrame.imageId)
-                        const newList = insertAt(index, newFrame, animationInDirection);
-                        return editCycle(animKey, direction, newList)
-                    }}
-                />
+                <ButtonGroup sx={{ justifyContent: 'center' }}>
+                    <FramePickDialogButton
+                        buttonProps={{
+                            startIcon: <AddIcon />,
+                            sx: { alignSelf: 'center' }
+                        }}
+                        buttonLabel="Insert frame"
+                        noOptions
+                        defaultState={{ imageId: selectedSheetId }}
+                        pickFrame={(row, col, imageId) => {
+                            const newFrame = imageId ? { row, col, imageId } : undefined;
+                            if (!newFrame) {
+                                return
+                            }
+                            setSelectedSheetId(newFrame.imageId)
+                            const newList = insertAt(index, newFrame, animationInDirection);
+                            return editCycle(animKey, direction, newList)
+                        }}
+                    />
+                    {index > 0 &&
+                        <Button
+                            onClick={() => {
+                                const frameToCopy = animationInDirection[index - 1];
+                                if (!frameToCopy) {
+                                    return
+                                }
+                                editCycle(animKey, direction, insertAt(index, structuredClone(frameToCopy), animationInDirection))
+                            }}
+                            startIcon={<ArrowDownwardIcon />}
+                            variant="outlined">Repeat</Button>
+                    }
+                </ButtonGroup>
             }
             stackProps={{
                 minWidth: 250,
