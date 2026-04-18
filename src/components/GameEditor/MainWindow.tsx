@@ -112,7 +112,7 @@ const MainWindowInner = () => {
 }
 
 export const MainWindow = () => {
-    const { openInEditor, dispatchDesignUpdate } = useGameDesign()
+    const { openInEditor, dispatchDesignUpdate, interactionIndex } = useGameDesign()
     useKeyBoard([
         {
             key: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
@@ -135,6 +135,9 @@ export const MainWindow = () => {
         {
             key: ['z', 'x', '.', ','],
             handler: ({ key }) => {
+                if (interactionIndex !== undefined) {
+                    return
+                }
                 switch (key) {
                     case 'z': return dispatchDesignUpdate({ type: 'undo' })
                     case 'x': return dispatchDesignUpdate({ type: 'redo' })
