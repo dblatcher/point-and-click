@@ -113,14 +113,14 @@ export type DesignUpgradeInfo = {
     sourceVersion: number;
 }
 
+export type NavigationState = { tabOpen: TabId, gameItemIds: Partial<Record<GameDataItemType, string>> }
+
 export type GameEditorState = {
     gameDesign: GameDesign;
     history: { gameDesign: GameDesign; label: string }[];
     undoneHistory: { gameDesign: GameDesign; label: string }[];
-    tabOpen: TabId;
-    gameItemIds: Partial<Record<GameDataItemType, string>>;
     db?: GameEditorDatabase;
     upgradeInfo?: DesignUpgradeInfo;
-    navigationStackBack?: { tabOpen: TabId, gameItemIds: Partial<Record<GameDataItemType, string>> }[];
-    navigationStackForward?: { tabOpen: TabId, gameItemIds: Partial<Record<GameDataItemType, string>> }[];
-}
+    navigationStackBack?: NavigationState[];
+    navigationStackForward?: NavigationState[];
+} & NavigationState;

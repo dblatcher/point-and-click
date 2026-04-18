@@ -1,8 +1,8 @@
 import { Reducer } from "react"
-import { GameEditorState, GameDesignAction } from "./types"
+import { GameEditorState, GameDesignAction, NavigationState } from "./types"
 import { cloneData } from "../clone"
 import { addGameDataItem, putInteraction } from "./mutate-design"
-import { GameDesign } from "point-click-lib"
+import { GameDataItemTypeEnum, GameDesign } from "point-click-lib"
 import { storeSavedDesign } from "../indexed-db"
 
 const pushWithLimitLength = <T>(history: T[], item: T, maxLength = 10) => {
@@ -18,6 +18,18 @@ const higherLevelAddHistoryItem =
             return { history, undoneHistory: [] }
         }
 
+const navigationStatesAreSame = (a: NavigationState | undefined, b: NavigationState | undefined) => {
+    if (!a || !b) {
+        return a === b
+    }
+    if (a.tabOpen !== b.tabOpen) {
+        return false
+    }
+    return GameDataItemTypeEnum.options.every(key =>
+        a.gameItemIds[key] === b.gameItemIds[key]
+    )
+}
+
 export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (gameEditorState, action) => {
     const addHistory = higherLevelAddHistoryItem(gameEditorState.history, cloneData(gameEditorState.gameDesign));
 
@@ -29,7 +41,7 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
         return gameEditorState
     }
 
-    const getCurrentNavigation = () => structuredClone({
+    const getCurrentNavigation = (): NavigationState => structuredClone({
         tabOpen: gameEditorState.tabOpen,
         gameItemIds: gameEditorState.gameItemIds,
     })
@@ -51,9 +63,10 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
 
         case 'open-in-editor': {
             const { tabId, itemId } = action
-            const { gameItemIds, navigationStackBack = [] } = gameEditorState
-            pushWithLimitLength(navigationStackBack, getCurrentNavigation())
-
+            const newNavigationState: NavigationState = {
+                tabOpen: tabId,
+                gameItemIds: {...gameEditorState.gameItemIds},
+            }
             switch (tabId) {
                 case 'rooms':
                 case 'items':
@@ -63,13 +76,20 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
                 case 'sequences':
                 case 'verbs':
                 case 'storyBoards':
-                    gameItemIds[tabId] = itemId
+                    newNavigationState.gameItemIds[tabId] = itemId
                     break;
             }
+ 
+            const current = getCurrentNavigation()
+            if (navigationStatesAreSame(newNavigationState, current)) {
+                return {...gameEditorState}
+            }
+            
+            const { navigationStackBack = [] } = gameEditorState
+            pushWithLimitLength(navigationStackBack, current)
             return {
                 ...gameEditorState,
-                tabOpen: tabId,
-                gameItemIds,
+                ...newNavigationState,
                 navigationStackForward: []
             }
         }
