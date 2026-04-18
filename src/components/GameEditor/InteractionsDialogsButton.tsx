@@ -1,13 +1,13 @@
-import React, { useState } from "react";
 import { InteractionIcon } from '@/components/GameEditor/material-icons';
+import { DraftInteraction, useGameDesign } from "@/context/game-design-context";
 import { Button, ButtonProps } from "@mui/material";
-import { InteractionDialog } from "./InteractionEditor/InteractionDialog";
-import { useGameDesign } from "@/context/game-design-context";
 import { Interaction } from "point-click-lib";
+import React, { useState } from "react";
+import { InteractionDialog } from "./InteractionEditor/InteractionDialog";
 import { PickInteractionDialog } from "./InteractionEditor/PickInteractionDialog";
 
 interface Props {
-    newPartial: Partial<Interaction>
+    newPartial: DraftInteraction
     criteria: { (interaction: Interaction): boolean }
     disabled?: boolean;
     label?: string;
@@ -21,16 +21,15 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({
     label = 'interactions',
     variant = 'outlined'
 }) => {
-    const { gameDesign, changeOrAddInteraction } = useGameDesign()
+    const { gameDesign, changeOrAddInteraction, interactionIndex, openInEditor, tabOpen } = useGameDesign()
     const [interactionDialogOpen, setInteractionDialogOpen] = useState(false)
     const [pickInteractionDialogOpen, setPickInteractionDialogOpen] = useState(false)
-    const [interactionIndex, setInteractionIndex] = useState<number | undefined>(undefined)
 
     const handleInteractionButton = () => {
         if (gameDesign.interactions.some(criteria)) {
             setPickInteractionDialogOpen(true)
         } else {
-            setInteractionIndex(undefined)
+            openInEditor(tabOpen, undefined, undefined)
             setInteractionDialogOpen(true)
         }
     }
@@ -38,7 +37,7 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({
     const handlePickInteractionIndex = (index: number | undefined) => {
         setInteractionDialogOpen(true)
         setPickInteractionDialogOpen(false)
-        setInteractionIndex(index)
+        openInEditor(tabOpen, undefined, index)
     }
 
     return <>
@@ -50,7 +49,7 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({
 
         {(interactionDialogOpen) &&
             <InteractionDialog
-                initialInteraction={typeof interactionIndex === 'number' ? gameDesign.interactions[interactionIndex] : newPartial}
+                customDraft={newPartial}
                 cancel={() => { setInteractionDialogOpen(false) }}
                 confirm={(interaction) => {
                     setInteractionDialogOpen(false)

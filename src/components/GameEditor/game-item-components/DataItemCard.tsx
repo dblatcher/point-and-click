@@ -96,20 +96,20 @@ const ItemDetails = ({ item, designProperty }: { item: GameDataItem, designPrope
         case "rooms":
             const room = item as RoomData;
             return <Box paddingX={1}>
-                <NameDisplay name={room.name}/>
+                <NameDisplay name={room.name} />
                 <Typography>{room.width} x {room.height}</Typography>
                 <Typography>x{room.hotspots?.length ?? 0} hotspots</Typography>
             </Box>
         case "items":
             const itemData = item as ItemData;
             return <Box paddingX={1}>
-                <NameDisplay name={itemData.name}/>
+                <NameDisplay name={itemData.name} />
             </Box>
         case "actors":
             const actor = item as ActorData;
             return (
                 <Box paddingX={1} alignSelf={'flex-start'} paddingTop={1}>
-                    <NameDisplay name={actor.name}/>
+                    <NameDisplay name={actor.name} />
                     <Box display={'flex'} alignItems={'center'} gap={1}>
                         <RoomIcon />
                         <Typography>{actor.room ?? '[nowhere]'}</Typography>
@@ -164,10 +164,10 @@ const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designP
     const { id } = item
     if (designProperty === 'actors') {
         const { noInteraction } = item as ActorData
-        return <InteractionsDialogsButton variant='text' disabled={noInteraction} criteria={i => i.targetId === id} newPartial={{ targetId: id }} />
+        return <InteractionsDialogsButton variant='text' disabled={noInteraction} criteria={i => i.targetId === id} newPartial={{ targetId: id, consequences: [] }} />
     }
     if (designProperty === 'items') {
-        return <InteractionsDialogsButton variant='text' criteria={i => i.targetId === id || i.itemId === id} newPartial={{ itemId: id }} />
+        return <InteractionsDialogsButton variant='text' criteria={i => i.targetId === id || i.itemId === id} newPartial={{ itemId: id, consequences: [] }} />
     }
     return null
 }

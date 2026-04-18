@@ -1,10 +1,9 @@
 import { BooleanInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
-import { useGameDesign } from "@/context/game-design-context";
-import { Consequence, Interaction } from "point-click-lib";
-import { InteractionSchema, findTarget } from "point-click-lib";
+import { DraftInteraction, useGameDesign } from "@/context/game-design-context";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
-import { insertAt, listIds } from "@/lib/util";
+import { findById, insertAt, listIds } from "@/lib/util";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, Typography } from "@mui/material";
+import { Consequence, Interaction, InteractionSchema, findTarget } from "point-click-lib";
 import { useReducer, useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { ButtonWithConfirm } from '../ButtonWithConfirm';
@@ -19,9 +18,9 @@ import { FlagConditionControl } from "./FlagConditionControl";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 
 interface Props {
-    initialInteraction: Partial<Interaction>;
     confirm: { (interaction: Interaction): void };
     cancel: { (): void }
+    customDraft?: DraftInteraction
 }
 
 type Action = {
@@ -36,8 +35,8 @@ type Action = {
 }
 
 type State = {
-    interaction: Partial<Interaction> & { consequences: Interaction['consequences'] },
-    initialValue: Partial<Interaction> & { consequences: Interaction['consequences'] },
+    interaction: DraftInteraction,
+    initialValue: DraftInteraction,
     hasChanges: boolean
 };
 
@@ -77,23 +76,22 @@ const reducer = (state: State, action: Action): State => {
 };
 
 
-export const InteractionDialog = ({ initialInteraction, confirm, cancel }: Props) => {
+export const InteractionDialog = ({ confirm, cancel, customDraft }: Props) => {
+    const { interactionIndex, getInteractionClone, gameDesign } = useGameDesign()
+    const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
 
-    const [state, dispatch] = useReducer(
+    const [{ interaction, hasChanges }, dispatch] = useReducer(
         reducer,
         {
             hasChanges: false,
-            interaction: { ...initialInteraction, consequences: initialInteraction.consequences ?? [] },
-            initialValue: { ...initialInteraction, consequences: initialInteraction.consequences ?? [] }
+            interaction: (customDraft && typeof interactionIndex === 'undefined') ? customDraft : getInteractionClone(interactionIndex),
+            initialValue: (customDraft && typeof interactionIndex === 'undefined') ? customDraft : getInteractionClone(interactionIndex),
         }
     )
-    const { interaction, hasChanges } = state;
 
     const [activeConsequenceIndex, setActiveConsequenceIndex] = useState<number | undefined>(undefined)
     const [insertConsequenceDialogIndex, setInsertConsequenceDialogIndex] = useState<number | undefined>(undefined)
     const [showExitDialog, setShowExitDialog] = useState(false)
-    const { gameDesign } = useGameDesign()
-    const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
     const activeConsequence = typeof activeConsequenceIndex === 'number' ? interaction.consequences[activeConsequenceIndex] : undefined
 
     const updateInteraction = (mod: Partial<Interaction>) => {
@@ -120,16 +118,12 @@ export const InteractionDialog = ({ initialInteraction, confirm, cancel }: Props
         return `${verbId} ${targetId} ${itemId ? `with ${itemId}` : ''}`
     }
 
-    const verb = gameDesign.verbs.find(_ => _.id === interaction.verbId);
+    const verb = findById(interaction.verbId, gameDesign.verbs);
     const showItemOption = verb?.preposition
     const { consequences = [] } = interaction
     const parseResult = InteractionSchema.safeParse(interaction)
-
-    const statusSuggestions: string[] = []
     const target = findTarget(interaction, gameDesign);
-    if (target?.type === 'actor') {
-        statusSuggestions.push(...getStatusSuggestions(target.id, gameDesign));
-    }
+    const statusSuggestions = target?.type === 'actor' ? getStatusSuggestions(target.id, gameDesign) : []
 
     return (
         <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'} onClose={handleClose}>

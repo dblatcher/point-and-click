@@ -22,6 +22,8 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
             undoneHistory: [],
             tabOpen: 'main',
             gameItemIds: {},
+            navigationStackBack: [],
+            navigationStackForward: [],
         }
     )
 
@@ -39,6 +41,7 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
                     ...modifiedGameState,
                     dispatchDesignUpdate,
                     handleIncomingDesign: () => true,
+                    interactionIndex: undefined,
                 }}>
                     <ChangeGameStateControls />
                 </GameDesignProvider>

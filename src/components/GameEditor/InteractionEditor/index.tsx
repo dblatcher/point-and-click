@@ -1,15 +1,14 @@
 import { AddIcon, InteractionIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
-import { Interaction } from "point-click-lib";
-import { cloneData } from "@/lib/clone";
 import { listIds } from "@/lib/util";
-import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Interaction } from "point-click-lib";
 import { Fragment, useState } from "react";
 import { EditorHeading } from "../layout/EditorHeading";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { HeadingCellWithFilter } from "./HeadingCellWithFilter";
 import { InteractionDialog } from "./InteractionDialog";
 import { InteractionTableRow } from "./InteractionTableRow";
-import { HeadingCellWithFilter } from "./HeadingCellWithFilter";
 
 
 const doesMatchFilters = (
@@ -33,8 +32,8 @@ const doesMatchFilters = (
     return true
 }
 
-export const InteractionEditor: React.FunctionComponent = () => {
-    const { gameDesign, changeOrAddInteraction, applyModification, deleteInteraction } = useGameDesign()
+export const InteractionEditor = () => {
+    const { gameDesign, changeOrAddInteraction, applyModification, deleteInteraction, openInEditor, interactionIndex } = useGameDesign()
     const { interactions, verbs, items, rooms } = gameDesign
 
     const [verbFilter, setVerbFilter] = useState<string[]>([])
@@ -42,17 +41,12 @@ export const InteractionEditor: React.FunctionComponent = () => {
     const [targetFilter, setTargetFilter] = useState<string[]>([])
     const [roomFilter, setRoomFilter] = useState<string[]>([])
 
-    const [interactionUnderConstruction, setInteractionUnderConstruction] = useState<Partial<Interaction> | undefined>(undefined)
-    const [edittedIndex, setEdittedIndex] = useState<number | undefined>(undefined)
-
     const filteredInteractions = interactions.filter(doesMatchFilters(verbFilter, itemFilter, targetFilter, roomFilter))
-
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign);
 
     const saveInteraction = (interaction: Interaction) => {
-        changeOrAddInteraction(interaction, edittedIndex)
-        setEdittedIndex(undefined)
-        setInteractionUnderConstruction(undefined)
+        changeOrAddInteraction(interaction, interactionIndex)
+        openInEditor('interactions')
     }
 
     const moveInteractionInList = (index: number, direction: 'down' | 'up') => {
@@ -82,8 +76,7 @@ export const InteractionEditor: React.FunctionComponent = () => {
                     <Button
                         size="large"
                         onClick={() => {
-                            setInteractionUnderConstruction({})
-                            setEdittedIndex(undefined)
+                            openInEditor('interactions', undefined, interactions.length)
                         }}
                         variant="contained"
                         startIcon={<AddIcon />}
@@ -126,8 +119,7 @@ export const InteractionEditor: React.FunctionComponent = () => {
                                 changeOrder={moveInteractionInList}
                                 deleteInteraction={deleteInteraction}
                                 openEditor={() => {
-                                    setEdittedIndex(index)
-                                    setInteractionUnderConstruction(cloneData(interaction))
+                                    openInEditor('interactions', undefined, index)
                                 }}
                             />)
                         })}
@@ -135,13 +127,11 @@ export const InteractionEditor: React.FunctionComponent = () => {
                 </Table>
             </TableContainer>
 
-            {interactionUnderConstruction &&
-                <InteractionDialog key={edittedIndex}
+            {typeof interactionIndex === 'number' &&
+                <InteractionDialog key={interactionIndex}
                     confirm={saveInteraction}
-                    initialInteraction={interactionUnderConstruction}
                     cancel={() => {
-                        setEdittedIndex(undefined)
-                        setInteractionUnderConstruction(undefined)
+                        openInEditor('interactions')
                     }}
                 />
             }

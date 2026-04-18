@@ -186,6 +186,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
             tabOpen: gameEditorState.tabOpen,
             gameItemIds: gameEditorState.gameItemIds,
             upgradeInfo: gameEditorState.upgradeInfo,
+            interactionIndex: gameEditorState.interactionIndex,
             dispatchDesignUpdate,
             handleIncomingDesign,
         }}>

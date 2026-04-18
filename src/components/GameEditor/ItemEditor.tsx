@@ -84,13 +84,13 @@ export const ItemEditor = ({ item }: Props) => {
                     <InteractionsDialogsButton
                         label="interactions as target"
                         criteria={(interaction) => interaction.targetId === id}
-                        newPartial={{ targetId: id }}
+                        newPartial={{ targetId: id, consequences:[] }}
                     />
 
                     <InteractionsDialogsButton
                         label="interactions as item"
                         criteria={(interaction) => interaction.itemId === id}
-                        newPartial={{ itemId: id }}
+                        newPartial={{ itemId: id, consequences:[]}}
                     />
                 </Box>
             </Stack>

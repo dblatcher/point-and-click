@@ -22,12 +22,12 @@ const navigationStatesAreSame = (a: NavigationState | undefined, b: NavigationSt
     if (!a || !b) {
         return a === b
     }
-    if (a.tabOpen !== b.tabOpen) {
-        return false
-    }
-    return GameDataItemTypeEnum.options.every(key =>
-        a.gameItemIds[key] === b.gameItemIds[key]
-    )
+
+    return a.tabOpen === b.tabOpen &&
+        a.interactionIndex === b.interactionIndex &&
+        GameDataItemTypeEnum.options.every(key =>
+            a.gameItemIds[key] === b.gameItemIds[key]
+        )
 }
 
 export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (gameEditorState, action) => {
@@ -44,6 +44,7 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
     const getCurrentNavigation = (): NavigationState => structuredClone({
         tabOpen: gameEditorState.tabOpen,
         gameItemIds: gameEditorState.gameItemIds,
+        interactionIndex: gameEditorState.interactionIndex,
     })
 
     switch (action.type) {
@@ -62,10 +63,11 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             }
 
         case 'open-in-editor': {
-            const { tabId, itemId } = action
+            const { tabId, itemId, interactionIndex } = action
             const newNavigationState: NavigationState = {
                 tabOpen: tabId,
-                gameItemIds: {...gameEditorState.gameItemIds},
+                interactionIndex,
+                gameItemIds: { ...gameEditorState.gameItemIds },
             }
             switch (tabId) {
                 case 'rooms':
@@ -79,12 +81,12 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
                     newNavigationState.gameItemIds[tabId] = itemId
                     break;
             }
- 
+
             const current = getCurrentNavigation()
             if (navigationStatesAreSame(newNavigationState, current)) {
-                return {...gameEditorState}
+                return { ...gameEditorState }
             }
-            
+
             const { navigationStackBack = [] } = gameEditorState
             pushWithLimitLength(navigationStackBack, current)
             return {

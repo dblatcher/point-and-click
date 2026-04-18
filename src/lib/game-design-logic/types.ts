@@ -33,6 +33,7 @@ type OpenInEditorAction = {
     type: 'open-in-editor';
     tabId: TabId;
     itemId?: string;
+    interactionIndex?: number;
 }
 
 type GoBackInEditorAction = {
@@ -113,7 +114,11 @@ export type DesignUpgradeInfo = {
     sourceVersion: number;
 }
 
-export type NavigationState = { tabOpen: TabId, gameItemIds: Partial<Record<GameDataItemType, string>> }
+export type NavigationState = {
+    tabOpen: TabId,
+    gameItemIds: Partial<Record<GameDataItemType, string>>,
+    interactionIndex?: number,
+}
 
 export type GameEditorState = {
     gameDesign: GameDesign;
@@ -121,6 +126,6 @@ export type GameEditorState = {
     undoneHistory: { gameDesign: GameDesign; label: string }[];
     db?: GameEditorDatabase;
     upgradeInfo?: DesignUpgradeInfo;
-    navigationStackBack?: NavigationState[];
-    navigationStackForward?: NavigationState[];
+    navigationStackBack: NavigationState[];
+    navigationStackForward: NavigationState[];
 } & NavigationState;
