@@ -25,29 +25,7 @@ import { Box, ThemeProvider } from '@mui/material';
 import { editorTheme } from '@/theme';
 
 const MainWindowInner = () => {
-    const { gameDesign, tabOpen, openInEditor, gameItemIds } = useGameDesign()
-
-    useKeyBoard([
-        {
-            key: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-            handler: ({ key }) => {
-                const tabId = tabOrder[Number(key) - 1]?.id
-                if (!tabId) { return }
-                openInEditor(tabId)
-            }
-        },
-        {
-            key: ['0', '-', '='],
-            handler: ({ key }) => {
-                switch (key) {
-                    case '0': return openInEditor(tabOrder[9].id)
-                    case '-': return openInEditor(tabOrder[10].id)
-                    case '=': return openInEditor(tabOrder[11].id)
-                }
-            }
-        }
-    ])
-
+    const { gameDesign, tabOpen, gameItemIds } = useGameDesign()
     const currentSequence = findById(gameItemIds.sequences, gameDesign.sequences)
     const currentRoom = findById(gameItemIds.rooms, gameDesign.rooms)
     const currentSprite = findById(gameItemIds.sprites, gameDesign.sprites)
@@ -134,9 +112,7 @@ const MainWindowInner = () => {
 }
 
 export const MainWindow = () => {
-
-    const { openInEditor } = useGameDesign()
-
+    const { openInEditor, dispatchDesignUpdate } = useGameDesign()
     useKeyBoard([
         {
             key: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
@@ -153,6 +129,17 @@ export const MainWindow = () => {
                     case '0': return openInEditor(tabOrder[9].id)
                     case '-': return openInEditor(tabOrder[10].id)
                     case '=': return openInEditor(tabOrder[11].id)
+                }
+            }
+        },
+        {
+            key: ['z', 'x', '.', ','],
+            handler: ({ key }) => {
+                switch (key) {
+                    case 'z': return dispatchDesignUpdate({ type: 'undo' })
+                    case 'x': return dispatchDesignUpdate({ type: 'redo' })
+                    case ',': return dispatchDesignUpdate({ type: 'go-back-in-editor' })
+                    case '.': return dispatchDesignUpdate({ type: 'go-forward-in-editor' })
                 }
             }
         }
