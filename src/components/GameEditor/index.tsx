@@ -24,7 +24,7 @@ import { TabButtonList } from './TabButtonList';
 import { TemplateDesignDialog } from './TemplateDesignDialog';
 import { TestGameDialog } from './TestGameDialog';
 import { TutorialContainer } from './tutorial/TutorialContainer';
-import { UndoAndRedoButtons } from './UndoButton';
+import { NavigationButtons, UndoAndRedoButtons } from './HistoryButtons';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
 
@@ -43,6 +43,8 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
         undoneHistory: [],
         tabOpen: 'main',
         gameItemIds: {},
+        navigationStackBack: [],
+        navigationStackForward: [],
     })
 
     const handleIncomingDesign = useCallback((sourceIdentifier: string, designAndAssets: MaybeDesignAndAssets, updateSource: UpdateSource): boolean => {
@@ -133,7 +135,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
         }
     }, [imageService, soundService, gameEditorState.db])
 
-    const { gameDesign, history, undoneHistory } = gameEditorState;
+    const { gameDesign, history, undoneHistory, navigationStackBack, navigationStackForward } = gameEditorState;
 
     useEffect(() => {
         setHeaderContent(
@@ -202,8 +204,10 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
                                 <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />
                                 <ZipFileButtons />
                             </ButtonGroup>
-
                             <TabButtonList />
+                            <ButtonGroup orientation="horizontal" sx={{justifyContent:'center'}}>
+                                <NavigationButtons navigationStackBack={navigationStackBack} navigationStackForward={navigationStackForward} />
+                            </ButtonGroup>
                             <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}>
                                 <TestGameDialog />
                             </div>

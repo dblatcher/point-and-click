@@ -56,6 +56,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import FilterListOffIcon from "@mui/icons-material/FilterListOff";
 import ChangePlayerCharacterIcon from '@mui/icons-material/People';
 import ShortCutIcon from '@mui/icons-material/Shortcut';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 export type IconComponent = typeof ActorIcon;
 
@@ -97,6 +99,8 @@ export {
     InventoryIcon,
     LinkIcon,
     LogOut,
+    NavigateBeforeIcon,
+    NavigateNextIcon,
     InteractionIcon,
     PhotoOutlinedIcon,
     PlayCircleFilledOutlinedIcon,

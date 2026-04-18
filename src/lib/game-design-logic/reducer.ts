@@ -5,15 +5,16 @@ import { addGameDataItem, putInteraction } from "./mutate-design"
 import { GameDesign } from "point-click-lib"
 import { storeSavedDesign } from "../indexed-db"
 
+const pushWithLimitLength = <T>(history: T[], item: T, maxLength = 10) => {
+    if (!history) { return }
+    history.push(item)
+    if (history.length > maxLength) { history.shift() }
+}
 
 const higherLevelAddHistoryItem =
     (history: GameEditorState['history'], gameDesign: GameDesign, maxLength = 10) =>
         (label: string): Pick<GameEditorState, 'history' | 'undoneHistory'> => {
-            history.push({
-                label,
-                gameDesign
-            })
-            if (history.length > maxLength) { history.shift() }
+            pushWithLimitLength(history, { label, gameDesign }, maxLength)
             return { history, undoneHistory: [] }
         }
 
@@ -27,6 +28,11 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
         }
         return gameEditorState
     }
+
+    const getCurrentNavigation = () => structuredClone({
+        tabOpen: gameEditorState.tabOpen,
+        gameItemIds: gameEditorState.gameItemIds,
+    })
 
     switch (action.type) {
         case "set-db-instance":
@@ -45,7 +51,8 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
 
         case 'open-in-editor': {
             const { tabId, itemId } = action
-            const { gameItemIds } = gameEditorState
+            const { gameItemIds, navigationStackBack = [] } = gameEditorState
+            pushWithLimitLength(navigationStackBack, getCurrentNavigation())
 
             switch (tabId) {
                 case 'rooms':
@@ -63,6 +70,34 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
                 ...gameEditorState,
                 tabOpen: tabId,
                 gameItemIds,
+                navigationStackForward: []
+            }
+        }
+
+        case 'go-back-in-editor': {
+            const { navigationStackBack = [], navigationStackForward = [] } = gameEditorState;
+            const previous = navigationStackBack.pop()
+            if (previous) {
+                pushWithLimitLength(navigationStackForward, getCurrentNavigation())
+            }
+
+            return {
+                ...gameEditorState,
+                ...previous
+            }
+        }
+        case 'go-forward-in-editor': {
+            const { navigationStackBack = [], navigationStackForward = [] } = gameEditorState;
+            const next = navigationStackForward.pop()
+            if (!next) {
+                return { ...gameEditorState }
+            }
+
+            const current = getCurrentNavigation()
+            pushWithLimitLength(navigationStackBack, current)
+            return {
+                ...gameEditorState,
+                ...next
             }
         }
 

@@ -35,6 +35,13 @@ type OpenInEditorAction = {
     itemId?: string;
 }
 
+type GoBackInEditorAction = {
+    type: 'go-back-in-editor'
+}
+type GoForwardInEditorAction = {
+    type: 'go-forward-in-editor'
+}
+
 type ModifyDesignAction = {
     type: 'modify-design';
     description: string;
@@ -88,6 +95,8 @@ type SetUpgradeInfo = {
 
 export type GameDesignAction =
     OpenInEditorAction |
+    GoBackInEditorAction |
+    GoForwardInEditorAction |
     ModifyDesignAction |
     UndoAction |
     RedoAction |
@@ -112,4 +121,6 @@ export type GameEditorState = {
     gameItemIds: Partial<Record<GameDataItemType, string>>;
     db?: GameEditorDatabase;
     upgradeInfo?: DesignUpgradeInfo;
+    navigationStackBack?: { tabOpen: TabId, gameItemIds: Partial<Record<GameDataItemType, string>> }[];
+    navigationStackForward?: { tabOpen: TabId, gameItemIds: Partial<Record<GameDataItemType, string>> }[];
 }
