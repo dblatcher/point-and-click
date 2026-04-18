@@ -12,6 +12,7 @@ import { SequenceEditor } from "../SequenceEditor"
 import { makeBlankSequence } from "../defaults"
 import { DeleteIcon } from "../material-icons"
 import { ChoiceListControl } from "./ChoiceListControl"
+import { EditorShortcut } from "../EditorShortcut"
 
 
 interface Props {
@@ -123,7 +124,7 @@ export const ChoiceEditor = ({
             )}
         </ButtonGroup>
 
-        <Box flex={1} paddingTop={2.5}>
+        <Box flex={1} paddingTop={2.5} display={'flex'} gap={2}>
             <SelectInput
                 value={choice.sequence}
                 optional
@@ -133,6 +134,7 @@ export const ChoiceEditor = ({
                     handleChoiceUpdate({ sequence: value })
                 }}
             />
+            <EditorShortcut itemType='sequences' itemId={choice.sequence} sx={{flexBasis:200}}/>
         </Box>
         <Divider textAlign="left"><Typography fontWeight={700}>effect on other choices</Typography></Divider>
 

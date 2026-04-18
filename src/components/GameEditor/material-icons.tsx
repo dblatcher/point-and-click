@@ -55,6 +55,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FilterListOffIcon from "@mui/icons-material/FilterListOff";
 import ChangePlayerCharacterIcon from '@mui/icons-material/People';
+import ShortCutIcon from '@mui/icons-material/Shortcut';
 
 export type IconComponent = typeof ActorIcon;
 
@@ -103,6 +104,7 @@ export {
     RepeatOneIcon,
     SaveIcon,
     SearchIcon,
+    ShortCutIcon,
     SlideshowIcon,
     SortIcon,
     SchoolIcon,

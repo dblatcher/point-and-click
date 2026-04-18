@@ -1,8 +1,9 @@
-import { Consequence } from "point-click-lib";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, useTheme } from "@mui/material";
+import { Consequence } from "point-click-lib";
+import { ShortcutsForConsequence } from "../EditorShortcut";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
-import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";
 import { NarrativeEditor } from "../NarrativeEditor";
+import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";
 
 interface Props {
     consequence: Consequence
@@ -34,6 +35,7 @@ export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence,
                 )}
             </DialogContent>
             <DialogActions>
+                <ShortcutsForConsequence consequence={consequence} />
                 <NarrativeEditor narrative={consequence.narrative} update={narrative => handleConsequenceUpdate({ ...consequence, narrative })} />
                 <Button onClick={close}>done</Button>
             </DialogActions>

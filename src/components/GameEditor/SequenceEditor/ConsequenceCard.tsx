@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 import { DescriptionOutlinedIcon } from "../material-icons";
 import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";
 import { OrderCard } from "./OrderCard";
+import { ShortcutsForConsequence } from "../EditorShortcut";
 
 interface Props {
     consequence: Consequence;
@@ -19,7 +20,7 @@ const DetailedDescription = ({ consequence, detailed }: Pick<Props, 'consequence
         const { orders } = consequence;
         return <Box display={'flex'} gap={2} flexWrap={'wrap'} paddingY={1}>
             {orders.map((order, index) => <OrderCard key={index} order={order} />)}
-            {orders.length===0 && (
+            {orders.length === 0 && (
                 <Typography>[no orders]</Typography>
             )}
         </Box>
@@ -37,6 +38,7 @@ export const ConsequenceCard = ({ consequence, handleEditButton, width, detailed
         Icon={getConsequenceIcon(consequence.type)}
         handleClick={handleEditButton}
         width={width}
+        actions={<ShortcutsForConsequence consequence={consequence} />}
     >
         <Box
             display={'flex'}
