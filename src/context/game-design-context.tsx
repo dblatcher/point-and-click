@@ -18,7 +18,7 @@ type GameDesignContextInputs = {
     handleIncomingDesign: { (sourceIdentifier: string, designAndAssets: MaybeDesignAndAssets, updateSource: UpdateSource): boolean },
 }
 
-type GameDesignContextProps = GameDesignContextInputs & {
+export type GameDesignContextProps = GameDesignContextInputs & {
     openInEditor: { (itemType: TabId, itemId?: string | undefined, interactionIndex?: number): void }
     applyModification: { (description: string, mod: Partial<GameDesign>): void },
     createGameDataItem: { (property: GameDataItemType, data: GameDataItem): void },

@@ -1,14 +1,14 @@
-import { GameDesign, Interaction } from "point-click-lib";
-import { GameDataItem, GameDataItemType } from "point-click-lib";
+import { GameDesignContextProps } from "@/context/game-design-context";
+import { GameDataItem, GameDataItemType, GameDesign, Interaction } from "point-click-lib";
+import { ReactNode } from "react";
+import { ValidGameId } from "../api-usage";
 import { TabId } from "../editor-config";
 import { GameEditorDatabase } from "../indexed-db";
-import { ValidGameId } from "../api-usage";
-import { ReactNode } from "react";
 
 export type Task = {
     title: string;
     detail?: string;
-    test: { (state: Omit<GameEditorState, 'history' | 'undoneHistory'>): boolean }
+    test: { (state: GameDesignContextProps): boolean }
 }
 
 export type TutorialStage = {
