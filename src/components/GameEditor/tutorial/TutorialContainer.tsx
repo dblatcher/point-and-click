@@ -1,21 +1,20 @@
-import { Tutorial } from "@/lib/game-design-logic/types";
+import { TutorialContext } from "@/context/tutorial-context";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
-import { useState } from "react";
-import { TutorialContent } from "./TutorialContent";
+import { useContext } from "react";
 import { SchoolIcon } from "../material-icons";
+import { TutorialContent } from "./TutorialContent";
 
-interface Props {
-    tutorial: Tutorial
-}
+export const TutorialContainer = () => {
+    const {tutorial, stageIndex, setStageIndex} = useContext(TutorialContext)
 
+    if (!tutorial) {
+        return null
+    }
 
-export const TutorialContainer = ({ tutorial }: Props) => {
-
-    const [stageIndex, setStageIndex] = useState(0)
     const progressToNextStage = () => {
         setStageIndex(index => index + 1)
     }

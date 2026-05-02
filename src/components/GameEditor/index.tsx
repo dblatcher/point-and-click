@@ -27,6 +27,7 @@ import { TutorialContainer } from './tutorial/TutorialContainer';
 import { NavigationButtons, UndoAndRedoButtons } from './HistoryButtons';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
+import { TutorialProvider } from '@/context/tutorial-context';
 
 
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame, tutorial }) => {
@@ -192,47 +193,49 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
         }}>
             <AssetsProvider soundService={soundService} imageService={imageService}>
                 <SpritesProvider value={sprites}>
-                    <Box component={'main'}
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            overflow: 'hidden',
-                            flex: 1,
-                        }}>
+                    <TutorialProvider tutorial={tutorial}>
+                        <Box component={'main'}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                overflow: 'hidden',
+                                flex: 1,
+                            }}>
 
-                        <Stack component={'nav'}>
-                            <ButtonGroup orientation="horizontal" >
-                                <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />
-                                <ZipFileButtons />
-                            </ButtonGroup>
-                            <TabButtonList />
-                            <ButtonGroup orientation="horizontal" sx={{justifyContent:'center'}}>
-                                <NavigationButtons navigationStackBack={navigationStackBack} navigationStackForward={navigationStackForward} />
-                            </ButtonGroup>
-                            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}>
-                                <TestGameDialog />
-                            </div>
-                        </Stack>
-                        <Box component={'section'}
-                            flex={1}
-                            margin={1}
-                            paddingX={1}
-                            display={'flex'}
-                            flexDirection={'column-reverse'}
-                            sx={{ overflowY: 'auto', backgroundColor: 'white' }}
-                        >
-                            <MainWindow />
-                            {tutorial && (
-                                <TutorialContainer tutorial={tutorial} />
-                            )}
-                            <UpgradeNotice />
+                            <Stack component={'nav'}>
+                                <ButtonGroup orientation="horizontal" >
+                                    <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />
+                                    <ZipFileButtons />
+                                </ButtonGroup>
+                                <TabButtonList />
+                                <ButtonGroup orientation="horizontal" sx={{ justifyContent: 'center' }}>
+                                    <NavigationButtons navigationStackBack={navigationStackBack} navigationStackForward={navigationStackForward} />
+                                </ButtonGroup>
+                                <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'center' }}>
+                                    <TestGameDialog />
+                                </div>
+                            </Stack>
+                            <Box component={'section'}
+                                flex={1}
+                                margin={1}
+                                paddingX={1}
+                                display={'flex'}
+                                flexDirection={'column-reverse'}
+                                sx={{ overflowY: 'auto', backgroundColor: 'white' }}
+                            >
+                                <MainWindow />
+                                {tutorial && (
+                                    <TutorialContainer />
+                                )}
+                                <UpgradeNotice />
+                            </Box>
                         </Box>
-                    </Box>
 
-                    {gameEditorState.db &&
-                        <SavedDesignDialog db={gameEditorState.db} isOpen={saveMenuOpen} setIsOpen={setSaveMenuOpen} />
-                    }
-                    <TemplateDesignDialog isOpen={templateMenuOpen} setIsOpen={setTemplateMenuOpen} />
+                        {gameEditorState.db &&
+                            <SavedDesignDialog db={gameEditorState.db} isOpen={saveMenuOpen} setIsOpen={setSaveMenuOpen} />
+                        }
+                        <TemplateDesignDialog isOpen={templateMenuOpen} setIsOpen={setTemplateMenuOpen} />
+                    </TutorialProvider>
                 </SpritesProvider>
             </AssetsProvider>
         </GameDesignProvider>
