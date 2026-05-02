@@ -1,19 +1,19 @@
 import { useGameDesign } from "@/context/game-design-context"
-import { TutorialStage } from "@/lib/game-design-logic/types"
-import { Box, Button, Grid, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material"
-import { CheckBoxIcon, CheckBoxOutlineBlankIcon } from "../material-icons"
+import { TutorialContext } from "@/context/tutorial-context"
 import { Forward } from "@mui/icons-material"
+import { Box, Button, Grid, Typography } from "@mui/material"
+import { useContext } from "react"
+import { TaskList } from "./TaskList"
 
-interface Props {
-    currentStage: TutorialStage
-    onLastStage: boolean
-    progressToNextStage: { (): void }
-}
-
-export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage }: Props) => {
+export const TutorialContent = () => {
 
     const editorState = useGameDesign()
-    const stageComplete = currentStage.tasks.every(task => task.test(editorState))
+    const { progressToNextStage, currentStage, onLastStage } = useContext(TutorialContext)
+    const stageComplete = currentStage?.tasks.every(task => task.test(editorState))
+
+    if (!currentStage) {
+        return null
+    }
 
     return <Box>
         {currentStage.tasks.length > 0 ? (
@@ -23,17 +23,7 @@ export const TutorialContent = ({ currentStage, onLastStage, progressToNextStage
                     <Typography component={'div'} fontSize={'small'}>{currentStage.intro}</Typography>
                 </Grid>
                 <Grid item xs={12} lg={8}>
-                    <List dense disablePadding>
-                        {currentStage.tasks.map((task, index) => (
-                            <ListItem key={index} >
-                                <ListItemText primary={task.title} secondary={task.detail} sx={{ margin: 0 }} />
-                                <ListItemIcon >
-                                    {task.test(editorState) ? <CheckBoxIcon color="secondary" />
-                                        : <CheckBoxOutlineBlankIcon color="secondary" />}
-                                </ListItemIcon>
-                            </ListItem>
-                        ))}
-                    </List>
+                    <TaskList currentStage={currentStage} />
                 </Grid>
             </Grid>
         ) : (

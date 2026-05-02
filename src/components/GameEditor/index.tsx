@@ -28,6 +28,7 @@ import { NavigationButtons, UndoAndRedoButtons } from './HistoryButtons';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
 import { TutorialProvider } from '@/context/tutorial-context';
+import { TutorialContent } from './tutorial/TutorialContent';
 
 
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame, tutorial }) => {
@@ -225,7 +226,9 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
                             >
                                 <MainWindow />
                                 {tutorial && (
-                                    <TutorialContainer />
+                                    <TutorialContainer defaultExpanded>
+                                        <TutorialContent />
+                                    </TutorialContainer>
                                 )}
                                 <UpgradeNotice />
                             </Box>

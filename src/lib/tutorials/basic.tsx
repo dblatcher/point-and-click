@@ -33,7 +33,7 @@ const addInteraction: TutorialStage = {
         },
         {
             title: 'Give the PLAYER something to say',
-            detail: 'open your INTERACTION with the edit button, add an "order" CONSEQUENCE, select "PLAYER" as the ACTOR and create a "say" order. You can then click on the box to edit the text.',
+            detail: 'open your INTERACTION with the edit button, add an "order" CONSEQUENCE, select "PLAYER" as the ACTOR and create a "say" order. After writing the text, save the interaction again.',
             test(state) {
                 return state.gameDesign.interactions.some(
                     interaction => interaction.targetId === 'NPC' &&
