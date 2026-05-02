@@ -9,18 +9,11 @@ import { SchoolIcon } from "../material-icons";
 import { TutorialContent } from "./TutorialContent";
 
 export const TutorialContainer = () => {
-    const {tutorial, stageIndex, setStageIndex} = useContext(TutorialContext)
+    const { tutorial, progressToNextStage, currentStage, onLastStage } = useContext(TutorialContext)
 
-    if (!tutorial) {
+    if (!tutorial || !currentStage) {
         return null
     }
-
-    const progressToNextStage = () => {
-        setStageIndex(index => index + 1)
-    }
-
-    const currentStage = tutorial.stages[stageIndex];
-    const onLastStage = stageIndex + 1 === tutorial.stages.length;
 
     return <div>
         <Accordion defaultExpanded disableGutters>
