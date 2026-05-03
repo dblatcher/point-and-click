@@ -21,10 +21,8 @@ type Props = {
 }
 
 export const ConversationEditor = (props: Props) => {
-
     const [openBranchId, setOpenBranchId] = useState<string | undefined>(undefined)
     const [activeChoiceIndex, setActiveChoiceIndex] = useState<number | undefined>(0)
-    const [externalSequenceDialogOpen, setExternalSequenceDialogOpen] = useState<boolean>(false)
     const [editOrderDialogBranchId, setEditOrderDialogBranchId] = useState<string | undefined>(undefined)
 
     const { gameDesign, applyModification } = useGameDesign()
@@ -238,35 +236,9 @@ export const ConversationEditor = (props: Props) => {
                     </>)}
                 </DialogContent>
                 <DialogActions>
-                    {choice?.sequence && (
-                        <Button
-                            variant="outlined"
-                            onClick={() => { setExternalSequenceDialogOpen(true) }}>edit external sequence</Button>
-                    )}
                     <Button
                         variant="contained"
                         onClick={() => { setActiveChoiceIndex(undefined) }}>close</Button>
-                </DialogActions>
-            </Dialog>
-
-            <Dialog
-                open={!!externalSequenceDialogOpen}
-                onClose={() => { setExternalSequenceDialogOpen(false) }}
-                maxWidth={'xl'}
-            >
-                {externalSequenceForCurrentChoice && (
-                    <DialogContent>
-                        <DialogTutorial />
-                        <SequenceEditor key={choice.sequence}
-                            data={externalSequenceForCurrentChoice}
-                            heading='externalSequence'
-                        />
-                    </DialogContent>
-                )}
-                <DialogActions>
-                    <Button
-                        variant="contained"
-                        onClick={() => { setExternalSequenceDialogOpen(false) }}>close</Button>
                 </DialogActions>
             </Dialog>
         </Stack >
