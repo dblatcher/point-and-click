@@ -14,6 +14,7 @@ import { ChoiceDescription } from "./ChoiceDescription";
 import { ChoiceEditor } from "./ChoiceEditor";
 import { ConversationFlow } from "./ConversationFlow";
 import { patchMember } from "@/lib/update-design";
+import { DialogTutorial } from "../tutorial/sections";
 
 type Props = {
     conversation: Conversation;
@@ -221,6 +222,7 @@ export const ConversationEditor = (props: Props) => {
                     Branch {'"'}{openBranchId}{'"'} : choice #{activeChoiceIndex}
                 </DialogTitle>
                 <DialogContent>
+                    <DialogTutorial />
                     {choice && (<>
                         <ChoiceEditor
                             key={`choice-editor-${openBranchId}-${activeChoiceIndex}`}
@@ -254,6 +256,7 @@ export const ConversationEditor = (props: Props) => {
             >
                 {externalSequenceForCurrentChoice && (
                     <DialogContent>
+                        <DialogTutorial />
                         <SequenceEditor key={choice.sequence}
                             data={externalSequenceForCurrentChoice}
                             heading='externalSequence'

@@ -4,6 +4,7 @@ import { ShortcutsForConsequence } from "../EditorShortcut";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { NarrativeEditor } from "../NarrativeEditor";
 import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";
+import { DialogTutorial } from "../tutorial/sections";
 
 interface Props {
     consequence: Consequence
@@ -26,6 +27,7 @@ export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence,
                 <Typography>{getConsequenceDescription(consequence)}</Typography>
             </DialogTitle>
             <DialogContent>
+                <DialogTutorial />
                 {consequence && (
                     <ConsequenceForm
                         consequence={consequence}
