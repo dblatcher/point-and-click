@@ -1,5 +1,5 @@
 import featuresAndDetails from "@/content/featuresAndDetails.md";
-import content from "@/content/homepage.md";
+import homepageContent from "@/content/homepage.md";
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
 import SchoolIcon from '@mui/icons-material/School';
@@ -13,7 +13,7 @@ export const Homepage = () => {
         <Box padding={2}>
             <Card sx={{ padding: 2 }}>
                 <Typography variant="h2">This is Point and Click</Typography>
-                <MarkDown content={content} />
+                <MarkDown content={homepageContent} />
             </Card>
         </Box>
 
@@ -38,8 +38,8 @@ export const Homepage = () => {
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
                 <LinkCard
-                    title="Tutorial"
-                    href="./editor-tutorial"
+                    title="Tutorials"
+                    href="./tutorial"
                     Icon={SchoolIcon}
                 >
                     <Typography>Learn to use the editor.</Typography>

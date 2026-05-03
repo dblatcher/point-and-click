@@ -16,6 +16,7 @@ const navItems: { label: string, href: string }[] = [
     { label: 'prebuilt game', href: '/prebuilt-game' },
     { label: 'text prebuilt game', href: '/prebuilt-text-game' },
     { label: 'game editor', href: '/editor' },
+    { label: 'tutorials', href: '/tutorial' },
 ]
 
 export function AppHeader({ position, children }: Props) {

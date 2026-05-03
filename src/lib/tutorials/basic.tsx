@@ -251,7 +251,9 @@ const conclution: TutorialStage = {
 
 export const basicTutorial: Tutorial = {
     title: 'Learning the basics',
+    path: 'basic',
     designId: 'detailed-template',
+    description: <>Learn some core concepts of Point and Click - <b>Interactions</b>, <b>Orders</b> and <b>Consequences</b>.</>,
     stages: [
         addInteraction,
         createActor,

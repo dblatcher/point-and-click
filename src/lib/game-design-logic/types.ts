@@ -20,6 +20,8 @@ export type TutorialStage = {
 
 export type Tutorial = {
     title: string;
+    description?: ReactNode;
+    path: string;
     designId: ValidGameId;
     stages: TutorialStage[]
 }

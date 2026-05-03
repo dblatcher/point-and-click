@@ -1,0 +1,1 @@
+Tutorials teach you how to use the editor with simple tasks to introduce the concepts and features used to build you own point and click games.
