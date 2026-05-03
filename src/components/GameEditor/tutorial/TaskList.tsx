@@ -26,14 +26,14 @@ export const TaskList = ({ stage: propStage, onlyDetailNextTask }: Props) => {
     return <List dense disablePadding>
         {stage.tasks.map((task, index) => (
             <ListItem key={index}  >
-                <ListItemText
-                    primary={task.title}
-                    secondary={onlyDetailNextTask ? (index === firstUndoneTaskIndex) ? task.detail : undefined : task.detail}
-                    sx={{ margin: 0, color: (index === firstUndoneTaskIndex) ? 'secondary.dark' : undefined }} />
                 <ListItemIcon >
                     {task.test(editorState) ? <CheckBoxIcon color="secondary" />
                         : <CheckBoxOutlineBlankIcon color="secondary" />}
                 </ListItemIcon>
+                <ListItemText
+                    primary={task.title}
+                    secondary={onlyDetailNextTask ? (index === firstUndoneTaskIndex) ? task.detail : undefined : task.detail}
+                    sx={{ margin: 0, color: (index === firstUndoneTaskIndex) ? 'secondary.dark' : undefined }} />
             </ListItem>
         ))}
     </List>
