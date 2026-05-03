@@ -2,6 +2,7 @@ import { AssetsProvider } from '@/context/asset-context';
 import { GameDesignProvider } from '@/context/game-design-context';
 import { usePageMeta } from '@/context/page-meta-context';
 import { SpritesProvider } from '@/context/sprite-context';
+import { TutorialProvider } from '@/context/tutorial-context';
 import { getGameFromApi } from '@/lib/api-usage';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
 import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
@@ -17,18 +18,16 @@ import { Avatar, Box, ButtonGroup, IconButton, Stack, Typography } from '@mui/ma
 import { parseAndUpgrade } from "point-click-lib";
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { GameEditorSkeleton } from '../GameEditorSkeleton';
+import { NavigationButtons, UndoAndRedoButtons } from './HistoryButtons';
 import { MainWindow } from './MainWindow';
 import { DesignServicesIcon, SaveIcon } from './material-icons';
 import { SavedDesignDialog } from './SavedDesignDialog';
 import { TabButtonList } from './TabButtonList';
 import { TemplateDesignDialog } from './TemplateDesignDialog';
 import { TestGameDialog } from './TestGameDialog';
-import { TutorialContainer } from './tutorial/TutorialContainer';
-import { NavigationButtons, UndoAndRedoButtons } from './HistoryButtons';
+import { MainWindowTutorial } from './tutorial/sections';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
-import { TutorialProvider } from '@/context/tutorial-context';
-import { TutorialContent } from './tutorial/TutorialContent';
 
 
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame, tutorial }) => {
@@ -221,15 +220,11 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
                                 margin={1}
                                 paddingX={1}
                                 display={'flex'}
-                                flexDirection={'column-reverse'}
+                                flexDirection={'column'}
                                 sx={{ overflowY: 'auto', backgroundColor: 'white' }}
                             >
+                                <MainWindowTutorial />
                                 <MainWindow />
-                                {tutorial && (
-                                    <TutorialContainer defaultExpanded>
-                                        <TutorialContent />
-                                    </TutorialContainer>
-                                )}
                                 <UpgradeNotice />
                             </Box>
                         </Box>

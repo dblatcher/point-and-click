@@ -23,7 +23,7 @@ export const TutorialContent = () => {
                     <Typography component={'div'} fontSize={'small'}>{currentStage.intro}</Typography>
                 </Grid>
                 <Grid item xs={12} lg={8}>
-                    <TaskList currentStage={currentStage} />
+                    <TaskList stage={currentStage} />
                 </Grid>
             </Grid>
         ) : (

@@ -4,7 +4,7 @@ import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { findById, insertAt, listIds } from "@/lib/util";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, Typography } from "@mui/material";
 import { Consequence, Interaction, InteractionSchema, findTarget } from "point-click-lib";
-import { useContext, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import { ArrayControl } from "../ArrayControl";
 import { ButtonWithConfirm } from '../ButtonWithConfirm';
 import { makeNewConsequence } from "../defaults";
@@ -14,12 +14,9 @@ import { MultipleSelectChip } from "../MultipleSelectChip";
 import { PickConsequenceTypeDialogue } from "../PickConsequenceTypeDialogue";
 import { ConsequenceCard } from "../SequenceEditor/ConsequenceCard";
 import { ConsequenceDialog } from "../SequenceEditor/ConsequenceDialog";
+import { DialogTutorial } from "../tutorial/sections";
 import { FlagConditionControl } from "./FlagConditionControl";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
-import { TutorialContext } from "@/context/tutorial-context";
-import { TutorialContent } from "../tutorial/TutorialContent";
-import { TaskList } from "../tutorial/TaskList";
-import { TutorialContainer } from "../tutorial/TutorialContainer";
 
 interface Props {
     confirm: { (interaction: Interaction): void };
@@ -82,7 +79,6 @@ const reducer = (state: State, action: Action): State => {
 
 export const InteractionDialog = ({ confirm, cancel, customDraft }: Props) => {
     const { interactionIndex, getInteractionClone, gameDesign } = useGameDesign()
-    const { currentStage } = useContext(TutorialContext)
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign)
 
     const [{ interaction, hasChanges }, dispatch] = useReducer(
@@ -139,11 +135,7 @@ export const InteractionDialog = ({ confirm, cancel, customDraft }: Props) => {
 
 
             <DialogContent>
-                {currentStage && (
-                    <TutorialContainer>
-                        <TaskList currentStage={currentStage} onlyDetailNextTask />
-                    </TutorialContainer>
-                )}
+                <DialogTutorial />
                 <EditorBox title="Command">
                     <Stack direction={'row'}
                         alignItems={'center'} spacing={2}
