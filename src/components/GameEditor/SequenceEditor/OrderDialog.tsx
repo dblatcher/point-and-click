@@ -6,10 +6,11 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, useTh
 import { NarrativeEditor } from "../NarrativeEditor";
 import { OrderForm } from "../OrderForm";
 import { getOrderIcon } from "./get-order-details";
+import { DialogTutorial } from "../tutorial/sections";
 
 
 interface Props {
-    order?:Order
+    order?: Order
     actorId?: string
     index: number
     close: { (): void }
@@ -37,6 +38,7 @@ export const OrderDialog = ({ order, index, actorId, close, changeOrder }: Props
                 </Stack>
             </DialogTitle>
             <DialogContent>
+                <DialogTutorial />
                 {order && (
                     <OrderForm
                         actorId={actorId}

@@ -4,6 +4,7 @@ import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle }
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { SpritePreview } from "../SpritePreview";
 import { AnimationFrameList } from "./AnimationFrameList";
+import { DialogTutorial } from "../tutorial/sections";
 
 interface Props {
     selectedDirection?: Direction
@@ -76,7 +77,7 @@ export const AnimationDialog = ({
                 </DialogTitle>
 
                 <DialogContent sx={{ display: 'flex', gap: 4, minHeight: 'calc(100% - 164px)' }}>
-                    <Box position={'sticky'} top={1} overflow={'auto'}>
+                    <Box position={'sticky'} top={1} overflow={'auto'}>                 
                         <SpritePreview
                             noBaseLine
                             scale={2}
@@ -89,6 +90,7 @@ export const AnimationDialog = ({
                             defaultDirection,
                             selectedDirection,
                         )}
+                        <DialogTutorial />
                     </Box>
 
                     {(animationSet) && (
