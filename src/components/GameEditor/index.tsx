@@ -14,7 +14,7 @@ import { Sprite } from '@/lib/Sprite';
 import { UpdateSource } from '@/services/FileAssetService';
 import { ImageService } from '@/services/imageService';
 import { SoundService } from '@/services/soundService';
-import { Avatar, Box, ButtonGroup, IconButton, Stack, Typography } from '@mui/material';
+import { Avatar, Box, ButtonGroup, Drawer, IconButton, Stack, Typography } from '@mui/material';
 import { parseAndUpgrade } from "point-click-lib";
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { GameEditorSkeleton } from '../GameEditorSkeleton';
@@ -223,9 +223,9 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
                                 flexDirection={'column'}
                                 sx={{ overflowY: 'auto', backgroundColor: 'white' }}
                             >
-                                <MainWindowTutorial />
                                 <MainWindow />
                                 <UpgradeNotice />
+                                <MainWindowTutorial />
                             </Box>
                         </Box>
 
