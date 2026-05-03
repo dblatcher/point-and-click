@@ -1,8 +1,8 @@
 import { ImageAsset, ImageAssetCategory } from "@/services/assets"
 
-const backgroundPath = "./assets/backgrounds/"
-const actorSpritePath = "./assets/characters/"
-const thingSpritePath = "./assets/things/"
+const backgroundPath = "/assets/backgrounds/"
+const actorSpritePath = "/assets/characters/"
+const thingSpritePath = "/assets/things/"
 
 const buildAsset = (fileName: string, path: string, category: ImageAssetCategory, props: Partial<ImageAsset> = {}): ImageAsset => {
     return {
