@@ -7,6 +7,6 @@ export const MainWindowTutorial = () => <TutorialContainer defaultExpanded>
     <TutorialContent />
 </TutorialContainer>
 
-export const DialogTutorial = () => <TutorialContainer>
-    <TaskList onlyDetailNextTask />
+export const DialogTutorial = () => <TutorialContainer defaultExpanded>
+    <TaskList onlyShowCurrent />
 </TutorialContainer>
