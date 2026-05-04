@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import * as testGame from '@/data/test-game'
 import * as simpleTemplate from '@/data/simple-template'
-import * as detailedTemplate from '@/data/detailed-template'
+import { detailedTemplate, conversationTutorial } from '@/data/detailed-template'
 import * as castleLife from '@/data/castle-life'
 import type { DesignAndAssets, ValidGameId } from '@/lib/api-usage'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -11,6 +11,7 @@ const gameDataMap: Record<string, DesignAndAssets | undefined> = {
     "simple-template": simpleTemplate,
     "detailed-template": detailedTemplate,
     'castle-life': castleLife,
+    'conversation-tutorial': conversationTutorial,
 } satisfies Record<ValidGameId, DesignAndAssets>
 
 export default function handler(

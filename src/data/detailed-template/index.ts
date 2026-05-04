@@ -4,6 +4,7 @@ import { imageAssets as allImageAssets } from "../images";
 import { beach, npc, player } from "../shared";
 import { boySprite } from "../sprites/boySprite";
 import { detailedVerbSet } from '../verbs';
+import type { DesignAndAssets } from "@/lib/api-usage";
 
 export const gameDesign: GameDesign = {
     id: "DETAILED",
@@ -38,3 +39,33 @@ const imageAssets = allImageAssets.filter(asset => [
 
 export { imageAssets };
 
+export const detailedTemplate: DesignAndAssets = {
+    gameDesign,
+    imageAssets,
+    soundAssets,
+}
+
+const designForConversationTutorial: GameDesign = {
+    ...gameDesign,
+    interactions: [
+        {
+            targetId: 'NPC',
+            verbId: 'TALK',
+            consequences: [
+                {
+                    type: 'order',
+                    actorId: 'PLAYER',
+                    orders: [
+                        { type: 'say', 'text': 'hello', time: 150}
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+export const conversationTutorial: DesignAndAssets = {
+    gameDesign: designForConversationTutorial,
+    imageAssets,
+    soundAssets,
+}
