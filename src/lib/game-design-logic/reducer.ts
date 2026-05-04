@@ -96,6 +96,13 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             }
         }
 
+        case "close-interaction": {
+            return {
+                ...gameEditorState,
+                interactionIndex: undefined,
+            }
+        }
+
         case 'go-back-in-editor': {
             const { navigationStackBack = [], navigationStackForward = [] } = gameEditorState;
             const previous = navigationStackBack.pop()

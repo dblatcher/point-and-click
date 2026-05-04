@@ -38,6 +38,10 @@ type OpenInEditorAction = {
     interactionIndex?: number;
 }
 
+type CloseInteractionAction = {
+    type: 'close-interaction';
+}
+
 type GoBackInEditorAction = {
     type: 'go-back-in-editor'
 }
@@ -109,7 +113,8 @@ export type GameDesignAction =
     ChangeOrAddInteractionAction |
     DeleteInteractionAction |
     SetDBInstance |
-    SetUpgradeInfo;
+    SetUpgradeInfo |
+    CloseInteractionAction;
 
 export type DesignUpgradeInfo = {
     sourceIdentifier: string;

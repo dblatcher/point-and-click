@@ -5,6 +5,7 @@ import { Interaction } from "point-click-lib";
 import React, { useState } from "react";
 import { InteractionDialog } from "./InteractionEditor/InteractionDialog";
 import { PickInteractionDialog } from "./InteractionEditor/PickInteractionDialog";
+import { makeBlankInteraction } from './defaults';
 
 type DraftInteraction = Interaction;
 
@@ -24,21 +25,19 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({
     variant = 'outlined'
 }) => {
     const { gameDesign, changeOrAddInteraction, interactionIndex, openInEditor, tabOpen } = useGameDesign()
-    const [interactionDialogOpen, setInteractionDialogOpen] = useState(false)
     const [pickInteractionDialogOpen, setPickInteractionDialogOpen] = useState(false)
 
     const handleInteractionButton = () => {
         if (gameDesign.interactions.some(criteria)) {
             setPickInteractionDialogOpen(true)
         } else {
-            openInEditor(tabOpen, undefined, undefined)
-            setInteractionDialogOpen(true)
+            openInEditor(tabOpen, undefined, undefined) // TO DO - preserve item id
         }
     }
 
     const handlePickInteractionIndex = (index: number | undefined) => {
-        setInteractionDialogOpen(true)
         setPickInteractionDialogOpen(false)
+        changeOrAddInteraction(makeBlankInteraction(newPartial))
         openInEditor(tabOpen, undefined, index)
     }
 
@@ -48,17 +47,6 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({
             disabled={disabled}
             startIcon={<InteractionIcon />}
         >{label}</Button>
-
-        {(interactionDialogOpen) &&
-            <InteractionDialog
-                customDraft={newPartial}
-                cancel={() => { setInteractionDialogOpen(false) }}
-                confirm={(interaction) => {
-                    setInteractionDialogOpen(false)
-                    changeOrAddInteraction(interaction, interactionIndex)
-                }}
-            />
-        }
 
         <PickInteractionDialog
             isOpen={pickInteractionDialogOpen}

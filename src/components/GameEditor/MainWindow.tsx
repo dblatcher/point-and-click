@@ -23,6 +23,7 @@ import { StoryBoardEditor } from './StoryBoardEditor/StoryBoardEditor';
 import { VerbSetControl } from './verbs/VerbSetControl';
 import { Box, ThemeProvider } from '@mui/material';
 import { editorTheme } from '@/theme';
+import { InteractionDialog } from './InteractionEditor/InteractionDialog';
 
 const MainWindowInner = () => {
     const { gameDesign, tabOpen, gameItemIds } = useGameDesign()
@@ -135,9 +136,6 @@ export const MainWindow = () => {
         {
             key: ['z', 'x', '.', ','],
             handler: ({ key }) => {
-                if (interactionIndex !== undefined) {
-                    return
-                }
                 switch (key) {
                     case 'z': return dispatchDesignUpdate({ type: 'undo' })
                     case 'x': return dispatchDesignUpdate({ type: 'redo' })
@@ -153,6 +151,9 @@ export const MainWindow = () => {
             <Box flex={1} display={'flex'} flexDirection={'column'}>
                 <MainWindowInner />
             </Box>
+            {typeof interactionIndex === 'number' &&
+                <InteractionDialog key={interactionIndex} />
+            }
         </ThemeProvider>
     )
 }

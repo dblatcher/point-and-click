@@ -4,10 +4,10 @@ import { listIds } from "@/lib/util";
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Interaction } from "point-click-lib";
 import { Fragment, useState } from "react";
+import { makeBlankInteraction } from "../defaults";
 import { EditorHeading } from "../layout/EditorHeading";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { HeadingCellWithFilter } from "./HeadingCellWithFilter";
-import { InteractionDialog } from "./InteractionDialog";
 import { InteractionTableRow } from "./InteractionTableRow";
 
 
@@ -76,6 +76,7 @@ export const InteractionEditor = () => {
                     <Button
                         size="large"
                         onClick={() => {
+                            changeOrAddInteraction(makeBlankInteraction())
                             openInEditor('interactions', undefined, interactions.length)
                         }}
                         variant="contained"
@@ -126,15 +127,6 @@ export const InteractionEditor = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-
-            {typeof interactionIndex === 'number' &&
-                <InteractionDialog key={interactionIndex}
-                    confirm={saveInteraction}
-                    cancel={() => {
-                        openInEditor('interactions')
-                    }}
-                />
-            }
         </article>
     )
 }

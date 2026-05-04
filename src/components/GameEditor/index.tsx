@@ -28,6 +28,7 @@ import { TestGameDialog } from './TestGameDialog';
 import { MainWindowTutorial } from './tutorial/sections';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
+import { InteractionDialog } from './InteractionEditor/InteractionDialog';
 
 
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame, tutorial }) => {
