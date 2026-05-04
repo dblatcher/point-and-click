@@ -14,7 +14,7 @@ import { Sprite } from '@/lib/Sprite';
 import { UpdateSource } from '@/services/FileAssetService';
 import { ImageService } from '@/services/imageService';
 import { SoundService } from '@/services/soundService';
-import { Avatar, Box, ButtonGroup, Drawer, IconButton, Stack, Typography } from '@mui/material';
+import { Avatar, Box, ButtonGroup, IconButton, Stack, Typography } from '@mui/material';
 import { parseAndUpgrade } from "point-click-lib";
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import { GameEditorSkeleton } from '../GameEditorSkeleton';
@@ -28,7 +28,6 @@ import { TestGameDialog } from './TestGameDialog';
 import { MainWindowTutorial } from './tutorial/sections';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';
-import { InteractionDialog } from './InteractionEditor/InteractionDialog';
 
 
 const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame, tutorial }) => {

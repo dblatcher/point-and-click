@@ -22,7 +22,6 @@ import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 
 const DialogFrame = ({ children, interaction }: { children: ReactNode, interaction?: Interaction }) => {
     const { dispatchDesignUpdate } = useGameDesign()
-    const closeDialog = () => dispatchDesignUpdate({ type: 'close-interaction' })
 
     const dialogTitle = () => {
         if (!interaction) { return '' }
@@ -31,11 +30,12 @@ const DialogFrame = ({ children, interaction }: { children: ReactNode, interacti
     }
 
     useEffect(() => {
-        if (!interaction) { closeDialog() }
-    }, [interaction])
+        if (!interaction) { () => dispatchDesignUpdate({ type: 'close-interaction' }) }
+    }, [interaction, dispatchDesignUpdate])
 
     return (
-        <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'} onClose={closeDialog}>
+        <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'} onClose={() => dispatchDesignUpdate({ type: 'close-interaction' })
+        }>
             <DialogTitle sx={{ alignItems: 'center', display: 'flex' }}>
                 <InteractionIcon />
                 Edit Interaction: {dialogTitle()}
@@ -45,7 +45,7 @@ const DialogFrame = ({ children, interaction }: { children: ReactNode, interacti
                 <UndoAndRedoButtons />
                 <Button
                     sx={{ marginLeft: 8 }}
-                    onClick={closeDialog}
+                    onClick={() => dispatchDesignUpdate({ type: 'close-interaction' })}
                     variant="contained"
                 >
                     Done
