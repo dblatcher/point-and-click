@@ -18,6 +18,7 @@ import { LayoutControls, LayoutHolder, LayoutItem, LayoutPreview } from "../layo
 import { RoomLocationPicker } from "../RoomLocationPicker";
 import { SpritePreview } from "../SpritePreview";
 import { WalkToControl, XYControl } from "../XYControl";
+import { makeBlankInteraction } from "../defaults";
 
 interface Props {
     actorData: ActorData;
@@ -110,7 +111,7 @@ export const DetailsAndStartPosition = ({ actorData, updateFromPartial, defaultP
                         <InteractionsDialogsButton
                             disabled={actorData.noInteraction || actorData.isPlayer}
                             criteria={(interaction) => interaction.targetId === actorData.id}
-                            newPartial={{ targetId: actorData.id, consequences: [] }}
+                            newPartial={makeBlankInteraction({ targetId: actorData.id })}
                         />
                     </Box>
                 </EditorBox>

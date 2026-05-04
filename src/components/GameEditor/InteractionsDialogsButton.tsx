@@ -1,10 +1,12 @@
 import { InteractionIcon } from '@/components/GameEditor/material-icons';
-import { DraftInteraction, useGameDesign } from "@/context/game-design-context";
+import { useGameDesign } from "@/context/game-design-context";
 import { Button, ButtonProps } from "@mui/material";
 import { Interaction } from "point-click-lib";
 import React, { useState } from "react";
 import { InteractionDialog } from "./InteractionEditor/InteractionDialog";
 import { PickInteractionDialog } from "./InteractionEditor/PickInteractionDialog";
+
+type DraftInteraction = Interaction;
 
 interface Props {
     newPartial: DraftInteraction

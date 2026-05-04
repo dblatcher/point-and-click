@@ -1,8 +1,7 @@
-import { UndoIcon, RedoIcon, NavigateBeforeIcon, NavigateNextIcon } from "@/components/GameEditor/material-icons";
+import { NavigateBeforeIcon, NavigateNextIcon, RedoIcon, UndoIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
-import { GameDesign } from "point-click-lib";
-import { Badge, ButtonProps, IconButton, Tooltip } from "@mui/material";
 import { GameEditorState } from "@/lib/game-design-logic/types";
+import { Badge, ButtonProps, IconButton, Tooltip } from "@mui/material";
 
 interface HistoryButtonProps {
   label: string;
@@ -25,14 +24,8 @@ const HistoryButton = ({ label, length, onClick, Icon }: HistoryButtonProps) => 
   )
 }
 
-interface UndoRedoProps {
-  history: { gameDesign: GameDesign; label: string }[];
-  undoneHistory: { gameDesign: GameDesign; label: string }[];
-}
-export const UndoAndRedoButtons = ({
-  history, undoneHistory
-}: UndoRedoProps) => {
-  const { dispatchDesignUpdate } = useGameDesign()
+export const UndoAndRedoButtons = () => {
+  const { dispatchDesignUpdate,  history, undoneHistory } = useGameDesign()
   const undoLabel = history.length > 0 ? `undo ${history[history.length - 1]?.label}` : 'undo'
   const redoLabel = undoneHistory.length > 0 ? `redo ${undoneHistory[undoneHistory.length - 1]?.label}` : 'redo'
 

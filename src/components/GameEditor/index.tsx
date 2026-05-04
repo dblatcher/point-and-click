@@ -190,6 +190,8 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
             interactionIndex: gameEditorState.interactionIndex,
             dispatchDesignUpdate,
             handleIncomingDesign,
+            history: gameEditorState.history,
+            undoneHistory: gameEditorState.undoneHistory
         }}>
             <AssetsProvider soundService={soundService} imageService={imageService}>
                 <SpritesProvider value={sprites}>
@@ -204,7 +206,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
 
                             <Stack component={'nav'}>
                                 <ButtonGroup orientation="horizontal" >
-                                    <UndoAndRedoButtons history={history} undoneHistory={undoneHistory} />
+                                    <UndoAndRedoButtons />
                                     <ZipFileButtons />
                                 </ButtonGroup>
                                 <TabButtonList />

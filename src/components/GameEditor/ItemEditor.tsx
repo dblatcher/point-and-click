@@ -11,6 +11,7 @@ import { InteractionsDialogsButton } from "./InteractionsDialogsButton";
 import { ItemEditorHeaderControls } from "./game-item-components/ItemEditorHeaderControls";
 import { FramePreview } from "./FramePreview";
 import { HideImageOutlinedIcon } from "./material-icons";
+import { makeBlankInteraction } from "./defaults";
 
 type Props = {
     item: ItemData;
@@ -84,13 +85,13 @@ export const ItemEditor = ({ item }: Props) => {
                     <InteractionsDialogsButton
                         label="interactions as target"
                         criteria={(interaction) => interaction.targetId === id}
-                        newPartial={{ targetId: id, consequences:[] }}
+                        newPartial={makeBlankInteraction({ targetId: id })}
                     />
 
                     <InteractionsDialogsButton
                         label="interactions as item"
                         criteria={(interaction) => interaction.itemId === id}
-                        newPartial={{ itemId: id, consequences:[]}}
+                        newPartial={makeBlankInteraction({ itemId: id })}
                     />
                 </Box>
             </Stack>

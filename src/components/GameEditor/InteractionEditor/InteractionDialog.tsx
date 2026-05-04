@@ -1,5 +1,5 @@
 import { BooleanInput, SelectInput, StringInput } from "@/components/SchemaForm/inputs";
-import { DraftInteraction, useGameDesign } from "@/context/game-design-context";
+import { useGameDesign } from "@/context/game-design-context";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { findById, insertAt, listIds } from "@/lib/util";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, Typography } from "@mui/material";
@@ -17,11 +17,12 @@ import { ConsequenceDialog } from "../SequenceEditor/ConsequenceDialog";
 import { DialogTutorial } from "../tutorial/sections";
 import { FlagConditionControl } from "./FlagConditionControl";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { UndoAndRedoButtons } from "../HistoryButtons";
 
 interface Props {
     confirm: { (interaction: Interaction): void };
     cancel: { (): void }
-    customDraft?: DraftInteraction
+    customDraft?: Interaction
 }
 
 type Action = {
@@ -36,8 +37,8 @@ type Action = {
 }
 
 type State = {
-    interaction: DraftInteraction,
-    initialValue: DraftInteraction,
+    interaction: Interaction,
+    initialValue: Interaction,
     hasChanges: boolean
 };
 

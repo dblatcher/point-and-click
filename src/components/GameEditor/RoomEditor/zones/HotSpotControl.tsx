@@ -7,6 +7,7 @@ import { InteractionsDialogsButton } from "../../InteractionsDialogsButton";
 import { useRoomClickEffect } from "../ClickEffect";
 import { ShapeControl } from "./ShapeControl";
 import { WalkToControl, XYControl } from "../../XYControl";
+import { makeBlankInteraction } from "../../defaults";
 
 interface Props {
     roomId: string;
@@ -45,7 +46,7 @@ export function HotspotControl({ roomId, hotspot, index, changeHotspot }: Props)
                     <ButtonGroup>
                         <InteractionsDialogsButton
                             criteria={interaction => interaction.targetId === id && (!interaction.roomId || interaction.roomId === roomId)}
-                            newPartial={{ roomId, targetId: id, consequences:[] }}
+                            newPartial={makeBlankInteraction({ roomId, targetId: id })}
                         />
                     </ButtonGroup>
                 </Box>

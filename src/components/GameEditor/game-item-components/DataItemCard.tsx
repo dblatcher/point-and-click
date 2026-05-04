@@ -17,6 +17,7 @@ import { findById } from "@/lib/util";
 import { Box, BoxProps, Typography } from "@mui/material";
 import { ActorData, Conversation, GameDataItem, GameDataItemType, ItemData, RoomData, Sequence, SpriteData, StoryBoard } from "point-click-lib";
 import { StoryPageDisplay } from "../../storyboard/StoryPageDisplay";
+import { makeBlankInteraction } from "../defaults";
 
 type Props<DataType extends GameDataItem> = {
     item: DataType;
@@ -164,10 +165,15 @@ const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designP
     const { id } = item
     if (designProperty === 'actors') {
         const { noInteraction } = item as ActorData
-        return <InteractionsDialogsButton variant='text' disabled={noInteraction} criteria={i => i.targetId === id} newPartial={{ targetId: id, consequences: [] }} />
+        return <InteractionsDialogsButton variant='text'
+            disabled={noInteraction}
+            criteria={i => i.targetId === id}
+            newPartial={makeBlankInteraction({ targetId: id })} />
     }
     if (designProperty === 'items') {
-        return <InteractionsDialogsButton variant='text' criteria={i => i.targetId === id || i.itemId === id} newPartial={{ itemId: id, consequences: [] }} />
+        return <InteractionsDialogsButton variant='text'
+            criteria={i => i.targetId === id || i.itemId === id}
+            newPartial={makeBlankInteraction({ itemId: id })} />
     }
     return null
 }

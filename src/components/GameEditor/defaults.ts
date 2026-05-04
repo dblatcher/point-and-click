@@ -1,7 +1,8 @@
 import { DEFAULT_TALK_TIME } from "@/lib/types-and-constants";
 import {
     Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType,
-    Stage, ConversationChoice, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData
+    Stage, ConversationChoice, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData,
+    Interaction
 } from "point-click-lib";
 import { ActStep, MoveStep } from "point-click-lib";
 import { PagePicture, StoryBoard, StoryBoardPage } from "point-click-lib";
@@ -133,7 +134,7 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
         case "changePlayerCharacter":
             return { type, actorId: '' }
         case "setActorPlayable":
-            return { type, actorId: '', canBePlayer:true }
+            return { type, actorId: '', canBePlayer: true }
     }
 }
 
@@ -192,5 +193,14 @@ export function makeBlankSprite(): SpriteData {
                 down: []
             }
         }
+    }
+}
+
+export function makeBlankInteraction(partial: Partial<Interaction> = {}): Interaction {
+    return {
+        verbId: '',
+        targetId: '',
+        consequences: [],
+        ...partial,
     }
 }

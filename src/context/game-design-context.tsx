@@ -1,3 +1,4 @@
+import { makeBlankInteraction } from '@/components/GameEditor/defaults';
 import { TabId } from '@/lib/editor-config';
 import { DesignUpgradeInfo, GameDesignAction } from '@/lib/game-design-logic/types';
 import { DB_VERSION, MaybeDesignAndAssets } from '@/lib/indexed-db';
@@ -6,14 +7,14 @@ import { UpdateSource } from '@/services/FileAssetService';
 import { GameDataItem, GameDataItemType, GameDesign, Interaction, RoomData } from "point-click-lib";
 import { createContext, ReactNode, useCallback, useContext } from 'react';
 
-export type DraftInteraction = Partial<Interaction> & { consequences: Interaction['consequences'] };
-
 type GameDesignContextInputs = {
     gameDesign: GameDesign,
     tabOpen: TabId,
     gameItemIds: Partial<Record<GameDataItemType, string>>,
     interactionIndex: number | undefined,
     upgradeInfo?: DesignUpgradeInfo
+    history: { gameDesign: GameDesign; label: string }[];
+    undoneHistory: { gameDesign: GameDesign; label: string }[];
     dispatchDesignUpdate: { (value: GameDesignAction): void },
     handleIncomingDesign: { (sourceIdentifier: string, designAndAssets: MaybeDesignAndAssets, updateSource: UpdateSource): boolean },
 }
@@ -26,7 +27,7 @@ export type GameDesignContextProps = GameDesignContextInputs & {
     changeOrAddInteraction: { (data: Interaction, index?: number): void },
     deleteInteraction: { (index: number): void }
     modifyRoom: { (description: string, id: string, mod: Partial<RoomData>): void }
-    getInteractionClone: { (index?: number): DraftInteraction }
+    getInteractionClone: { (index?: number): Interaction }
 }
 
 const GameDesignContext = createContext<GameDesignContextProps>(
@@ -58,7 +59,9 @@ const GameDesignContext = createContext<GameDesignContextProps>(
         deleteInteraction: () => { },
         applyModification: () => { },
         modifyRoom: () => { },
-        getInteractionClone: () => ({ consequences: [] }),
+        getInteractionClone: () => makeBlankInteraction(),
+        history: [],
+        undoneHistory: []
     }
 )
 
@@ -72,11 +75,11 @@ export const GameDesignProvider = ({
 
     const { dispatchDesignUpdate, gameDesign } = input
 
-    const getInteractionClone = useCallback((index?: number): DraftInteraction => {
+    const getInteractionClone = useCallback((index?: number): Interaction => {
         const original = typeof index === 'number' ? gameDesign.interactions[index] : undefined;
         return original
             ? structuredClone({ ...original, consequences: original.consequences ?? [] })
-            : { consequences: [] }
+            : makeBlankInteraction()
     }, [gameDesign.interactions])
 
     const value: GameDesignContextProps = {
