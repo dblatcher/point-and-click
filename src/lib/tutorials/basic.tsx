@@ -23,7 +23,7 @@ const addInteraction: TutorialStage = {
         },
         {
             title: 'Add an INTERACTION for TALK (verb) NPC (target)',
-            detail: 'click "add new interaction", set the verb and target in the dialog and save changes',
+            detail: 'click "add new interaction", set the verb to "TALK" and target to "NPC"',
             test(state) {
                 return state.gameDesign.interactions.some(
                     interaction => interaction.targetId === 'NPC' &&
@@ -33,15 +33,15 @@ const addInteraction: TutorialStage = {
         },
         {
             title: 'Give the PLAYER something to say',
-            detail: 'open your INTERACTION with the edit button, add an "order" CONSEQUENCE, select "PLAYER" as the ACTOR and create a "say" order. After writing the text, save the interaction again.',
+            detail: 'Click the add button in the Consequences section and pick an "order" CONSEQUENCE, select "PLAYER" as the ACTOR and create a "say" order.',
             test(state) {
                 return state.gameDesign.interactions.some(
                     interaction => interaction.targetId === 'NPC' &&
                         interaction.verbId === 'TALK' &&
                         interaction.consequences.some(consequence =>
                             consequence.type === 'order' &&
-                            consequence.orders.some(order => order.type === 'say'
-                            ))
+                            consequence.orders.some(order => order.type === 'say')
+                        )
                 )
             }
         }
@@ -105,9 +105,9 @@ const createActor: TutorialStage = {
 
 const inventory: TutorialStage = {
     intro: <>
-        <p>What if our player character wanted to pick up the tube and carry it around?</p>
+        <p>What if our player character wanted to take the tube and carry it around?</p>
         <p>We can create INVENTORY ITEMS to represent things that the player can carry and use in INTERACTIONS. Let's create onr for the tube.</p>
-        <p>We will also need to add an INTERACTION to allow the player to pick up the ACTOR represening the TUBE</p>
+        <p>We will also need to add an INTERACTION to allow the player to take the ACTOR represening the TUBE</p>
     </>,
     tasks: [
         {
@@ -132,8 +132,8 @@ const inventory: TutorialStage = {
             },
         },
         {
-            title: "Add consequences to the INTERACTION - it should remove the ACTOR and add the INVENTORY ITEM to the player's inventory",
-            detail: "You need a 'remove actor' consequence and an 'inventory' consequence",
+            title: "Add consequences - remove the 'TUBE' ACTOR and add the 'TUBE_ITEM' to the player's inventory",
+            detail: "The Interactions needs a 'remove actor' consequence and an 'inventory' consequence",
             test(state) {
                 return state.gameDesign.interactions.some(interaction =>
                     interaction.targetId === 'TUBE' && interaction.verbId === 'TAKE' &&
@@ -144,7 +144,7 @@ const inventory: TutorialStage = {
         }
     ],
     confirmation: <>
-        <p>Great! try running the game again and pick up the tube!</p>
+        <p>Great! try running the game again and take the tube!</p>
         <p>You should see the item in the player's inventory.</p>
     </>
 }
@@ -153,7 +153,7 @@ const mustReachAndName: TutorialStage = {
     intro: <>
         <p>
             If you ran the game and picked up the tube, you probably noticed that the player character didn't move and the consequences happened immediately.
-            Sometimes, that's what you want, but wouldn't it be better for the player character to have to get close enough to pick up the tube?
+            Sometimes, that's what you want, but wouldn't it be better for the player character to have to get close enough to take the tube?
         </p>
         <p>There's an option for that - under the Conditions for an INTERACTION, you can set "Must reach target first" to on/checked.</p>
         <p>
@@ -163,7 +163,8 @@ const mustReachAndName: TutorialStage = {
     </>,
     tasks: [
         {
-            title: 'Open the "PICK UP TUBE" INTERACTION and set "Must reach target first" to on',
+            title: 'Make "TAKE TUBE" require the player to reach to target first',
+            detail: 'Open the "TAKE TUBE" INTERACTION and set "Must reach target first" checkbox to on',
             test(state) {
                 return state.gameDesign.interactions.some(interaction =>
                     interaction.targetId === 'TUBE' && interaction.verbId === 'TAKE' &&
@@ -182,14 +183,14 @@ const mustReachAndName: TutorialStage = {
         }
     ],
     confirmation: <>
-        <p>Try running the game again and pick up the tube - the consequences won't happen until the player character reaches the target.</p>
+        <p>Try running the game again and take the tube - the consequences won't happen until the player character reaches the target.</p>
         <p>If the player character cannot reach the target, the INTERACTION will fail and the player character will say the default response.</p>
     </>
 }
 
 const interactionUsingItem: TutorialStage = {
     intro: <>
-        <p>Now the player can pick up the tube - let's give them something to do with it!</p>
+        <p>Now the player can take the tube - let's give them something to do with it!</p>
         <p>INTERACTIONS need a verb and a target, but they can also have an INVENTORY_ITEM if the verb supports it. In this game, the "USE" and "GIVE" verbs support INVENTORY ITEMS</p>
         <p>To try that out, let's make something happen when we give the tube to the NPC.</p>
     </>,
@@ -246,7 +247,7 @@ const conclution: TutorialStage = {
         <p>There are more features to discover. Every screen in the editor has a help icon <HelpIcon fontSize="inherit" /> to explain what they are for.</p>
     </>,
     tasks: [],
-    confirmation: <p>Good luck! <Link href='/editor'>Ready to start building your own game in the Editor?</Link></p>,
+    confirmation: <p>Good luck! <Link href='/editor'>Ready to start building your own game in the Editor?</Link> or you can <Link href='/tutorial'>try another tutorial</Link></p>,
 }
 
 export const basicTutorial: Tutorial = {

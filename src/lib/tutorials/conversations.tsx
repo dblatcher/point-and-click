@@ -47,6 +47,7 @@ const addChoices: TutorialStage = {
     tasks: [
         {
             title: 'Add a new choice to the "start" branch.',
+            detail: 'Go back to the conversation screen with the 7 key, then click your conversation to open it.',
             test(state) {
                 return state.gameDesign.conversations.some(
                     conversation =>
@@ -85,7 +86,7 @@ export const conversationTutorial: Tutorial = {
     title: 'Conversations',
     path: 'conversation',
     designId: 'conversation-tutorial',
-    description: <>Bring you story to leif with branching <b>Conversations</b>.</>,
+    description: <>Bring your story to life with branching <b>Conversations</b>.</>,
     stages: [
         createConversation,
         addChoices,
