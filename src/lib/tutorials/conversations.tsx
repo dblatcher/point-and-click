@@ -21,7 +21,7 @@ const createConversation: TutorialStage = {
             },
         },
         {
-            title: 'Make the Conversation Consequence for an Interaction',
+            title: 'Put a Conversation Consequence on an Interaction',
             detail: 'Go to the interaction screen and edit the "TALK NPC" interaction. On the Consequences list, insert a "conversation" consequence (NOT "conversationChoice"). Select the ID for you conversation, then save the changes to the interaction',
             test(state) {
                 return state.gameDesign.interactions.some(
