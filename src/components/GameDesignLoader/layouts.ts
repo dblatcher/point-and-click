@@ -1,9 +1,8 @@
+import { DefaultLayout } from "point-click-components";
+import { FunctionComponent } from "react";
 import { FullScreenLayout } from "../layouts/full-screen-ui/FullScreenLayout";
 import { MaterialLayout } from "../layouts/game-mui-ux/Layout";
-import { BasicLayout } from "../layouts/basic";
 import { TextBasedLayout } from "../layouts/text-venture/TextBasedLayout";
-import { FunctionComponent } from "react";
-import { DefaultLayout } from "point-click-components";
 
 type UiComponentSet = {
     GameLayoutComponent: FunctionComponent;
@@ -11,13 +10,12 @@ type UiComponentSet = {
     instantMode?: boolean;
 }
 
-export type LayoutOption = "fullScreen" | "material" | "textBased" | "simple" | "default"
+export type LayoutOption = "fullScreen" | "material" | "textBased" | "default"
 
 export const layouts: Record<LayoutOption, UiComponentSet> = {
     fullScreen: { GameLayoutComponent: FullScreenLayout, title: "full screen" },
     material: { GameLayoutComponent: MaterialLayout },
     textBased: { GameLayoutComponent: TextBasedLayout, title: "text-venture", instantMode: true },
-    simple: { GameLayoutComponent: BasicLayout },
     default: { GameLayoutComponent: DefaultLayout },
 }
 

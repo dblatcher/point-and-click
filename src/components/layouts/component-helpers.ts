@@ -1,7 +1,6 @@
-import { CommandTarget, ItemData, Verb } from "point-click-lib";
+import { HandleHoverFunction } from "point-click-components";
+import { ItemData, Verb } from "point-click-lib";
 
-
-type HandleHoverFunction = { (target: CommandTarget, event: 'enter' | 'leave'): void };
 
 export type VerbMenuProps = {
     verbs: Verb[];

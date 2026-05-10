@@ -5,11 +5,10 @@ import { logService } from "@/lib/event-emitting/log-service";
 import { CELL_SIZE } from "@/lib/types-and-constants";
 import { editorTheme } from "@/theme";
 import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Slider, ThemeProvider, Typography } from "@mui/material";
-import { GameRunner } from "point-click-components";
+import { GameRunner, TemplateLayout } from "point-click-components";
 import { GameDesign } from "point-click-lib";
 import { useState } from "react";
 import { DebugLog } from "../DebugLog";
-import { BasicLayout } from "../layouts/basic";
 import { BooleanInput } from "../SchemaForm/BooleanInput";
 import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
@@ -17,7 +16,7 @@ import { PlayCircleFilledOutlinedIcon } from "./material-icons";
 
 export const BasicLayoutWithDebugLog = () => <>
     <DebugLog />
-    <BasicLayout />
+    <TemplateLayout />
 </>
 
 
@@ -93,13 +92,17 @@ export const TestGameDialog = () => {
                                 gameDesign={{ ...modifiedGameDesign }}
                                 getImageAsset={id => imageService.get(id)}
                                 getSoundAsset={id => soundService.get(id)}
-                                Layout={showDebugLog ? BasicLayoutWithDebugLog : BasicLayout}
+                                Layout={showDebugLog ? BasicLayoutWithDebugLog : TemplateLayout}
                                 options={{
                                     eventReporter: logService.reporter,
                                     debugLogger: logService.logToDebug,
                                     cellSize: CELL_SIZE,
                                     orderSpeed: gameSpeed,
                                     playSound: (soundId, volume) => !!soundService.play(soundId, { volume })
+                                }}
+                                initialRoomSize={{
+                                    roomWidth: 600,
+                                    roomHeight: 600
                                 }}
                             />
                         )}

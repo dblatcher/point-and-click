@@ -1,10 +1,9 @@
-import { ActorWithOrdersAndClickHandlers } from "@/lib/types-and-constants";
 import { MarkerShape } from "@/components/svg/MarkerShape";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { XY } from "@/lib/types-and-constants";
 import { Box } from "@mui/material";
-import { Hotspot, Pin, Room, WalkableOrObstacle, locateClickInWorld } from "point-click-components";
+import { ActorWithOrdersAndClickHandlers, Hotspot, Pin, Room, WalkableOrObstacle, locateClickInWorld } from "point-click-components";
 import { RoomData } from "point-click-lib";
 import { useState } from "react";
 import { RoomAngleFrame } from "./RoomEditor/RoomAngleFrame";
