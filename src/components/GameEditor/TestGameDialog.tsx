@@ -14,7 +14,7 @@ import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
 import { PlayCircleFilledOutlinedIcon } from "./material-icons";
 
 
-export const BasicLayoutWithDebugLog = () => <>
+export const TemplateLayoutWithDebugLog = () => <>
     <DebugLog />
     <TemplateLayout />
 </>
@@ -92,7 +92,7 @@ export const TestGameDialog = () => {
                                 gameDesign={{ ...modifiedGameDesign }}
                                 getImageAsset={id => imageService.get(id)}
                                 getSoundAsset={id => soundService.get(id)}
-                                Layout={showDebugLog ? BasicLayoutWithDebugLog : TemplateLayout}
+                                Layout={showDebugLog ? TemplateLayoutWithDebugLog : TemplateLayout}
                                 options={{
                                     eventReporter: logService.reporter,
                                     debugLogger: logService.logToDebug,

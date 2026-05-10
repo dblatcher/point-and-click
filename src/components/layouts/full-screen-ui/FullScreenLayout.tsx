@@ -1,9 +1,12 @@
-import { useGameStateDerivations } from "../use-derivations";
+import { StoryBoardPlayer } from "@/components/storyboard/StoryBoardPlayer";
+import { Box } from "@mui/material";
+import { ConversationChoices } from "point-click-components";
 import { FullScreenWrapper } from "../../FullScreenWrapper";
 import { DialogSaveMenu } from "../shared-mui-components/DialogSaveMenu";
-import { ConversationMenu } from "../basic/ConversationMenu";
+import { useGameStateDerivations } from "../use-derivations";
 import { RoomWrapperWithOverlay } from "./RoomWrapperWithOverlay";
-import { StoryBoardPlayer } from "@/components/storyboard/StoryBoardPlayer";
+import { SoundToggle } from "../shared-mui-components/SoundToggle";
+
 
 export const FullScreenLayout = () => {
     const { isConversationRunning, isSequenceRunning, currentStoryBoard } = useGameStateDerivations()
@@ -30,16 +33,24 @@ export const FullScreenLayout = () => {
                         top: 0,
                         right: 0
                     }}>
+                        <SoundToggle buttonType='IconButton' />
                         <DialogSaveMenu />
                     </div>
                     <RoomWrapperWithOverlay />
                     {!isSequenceRunning && (
-                        <div style={{
+                        <Box sx={{
                             position: 'absolute',
                             bottom: 0,
+                            'section': {
+                                paddingLeft: 1,
+                                'button': {
+                                    backgroundColor: 'white',
+                                    width: '100%'
+                                }
+                            }
                         }}>
-                            {isConversationRunning ? <ConversationMenu /> : <></>}
-                        </div>
+                            {isConversationRunning ? <ConversationChoices /> : <></>}
+                        </Box>
                     )}
                 </main>
             }

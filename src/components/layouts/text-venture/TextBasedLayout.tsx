@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import { ContextualGameRoom, UiStateContext } from "point-click-components";
 import { useContext, useEffect, useState } from "react";
-import { SaveMenu } from "../basic/SaveMenu";
 import { SoundToggle } from "../shared-mui-components/SoundToggle";
 import { NarrativeFeed } from "./NarrativeFeed";
 import { RoomDescription } from "./RoomDescription";
 import { TextPrompt } from "./TextPrompt";
+import { DialogSaveMenu } from "../shared-mui-components/DialogSaveMenu";
 
 
 export const TextBasedLayout = () => {
@@ -19,8 +19,8 @@ export const TextBasedLayout = () => {
     }, [initialResizeDone, setInitialResizeDone, dispatchUi])
 
     return (<main>
-        <SaveMenu />
-        <SoundToggle />
+        <SoundToggle buttonType='IconButton' />
+        <DialogSaveMenu />
 
         <Box display={'flex'} minHeight={300} padding={1}>
             <Box display={'flex'} justifyContent={'space-between'} flex={1}>

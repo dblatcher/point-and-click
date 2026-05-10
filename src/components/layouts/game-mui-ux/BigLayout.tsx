@@ -4,12 +4,13 @@ import { ContextualGameRoom, UiStateContext } from "point-click-components";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ResizeWatcher } from "../../ResizeWatcher";
 import { StoryBoardPlayer } from "../../storyboard/StoryBoardPlayer";
+import { CharacterSwitchButtons } from "../shared-mui-components/CharacterSwitchButtons";
+import { DialogSaveMenu } from "../shared-mui-components/DialogSaveMenu";
+import { SoundToggle } from "../shared-mui-components/SoundToggle";
 import { CommandLine } from "./CommandLine";
 import { ConversationMenu } from "./ConversationMenu";
-import { DialogSaveMenu } from "../shared-mui-components/DialogSaveMenu";
 import { ItemMenu } from "./ItemMenu";
 import { VerbMenu } from "./VerbMenu";
-import { CharacterSwitchButtons } from "../shared-mui-components/CharacterSwitchButtons";
 
 
 export const BigLayout = () => {
@@ -46,6 +47,7 @@ export const BigLayout = () => {
                 ? (<StoryBoardPlayer storyBoard={currentStoryBoard} />)
                 : (<>
                     <Box position={'fixed'} top={0} right={0}>
+                        <SoundToggle buttonType='IconButton' />
                         <DialogSaveMenu />
                     </Box>
 

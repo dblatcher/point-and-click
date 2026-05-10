@@ -34,7 +34,6 @@ export const DialogSaveMenu = () => {
     }
 
     return <>
-        <SoundToggle buttonType='IconButton' />
         <IconButton onClick={() => { setIsPaused(true) }} aria-label='settings' size='large'>
             <SettingsIcon fontSize='large' />
         </IconButton>
