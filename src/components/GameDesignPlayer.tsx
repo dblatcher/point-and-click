@@ -16,6 +16,10 @@ type Props = {
   soundAssets: SoundAsset[];
   Layout?: FunctionComponent<{}>;
   instantMode?: boolean;
+  initialRoomSize?: {
+    roomHeight?: number | undefined;
+    roomWidth?: number | undefined;
+  }
 }
 
 export const GameDesignPlayer = ({
@@ -24,6 +28,7 @@ export const GameDesignPlayer = ({
   gameDesign,
   imageAssets,
   soundAssets,
+  initialRoomSize,
 }: Props) => {
   const soundServiceRef = useRef(new SoundService())
   const imageServiceRef = useRef(new ImageService())
@@ -56,7 +61,7 @@ export const GameDesignPlayer = ({
           getImageAsset={id => imageServiceRef.current.get(id)}
           getSoundAsset={id => soundServiceRef.current.get(id)}
           Layout={Layout}
-
+          initialRoomSize={initialRoomSize}
           options={{
             cellSize: CELL_SIZE,
             eventReporter: logService.reporter,

@@ -66,6 +66,8 @@ export const GameDesignLoader: React.FunctionComponent = () => {
 
     const thumbnailUrl = imageAssets?.find(asset => asset.id === design?.thumbnailAssetId)?.href;
 
+    const { GameLayoutComponent, instantMode, initialRoomSize } = layouts[layoutOption]
+
     return <>
         <PlayerHeaderContent design={design} thumbnailUrl={thumbnailUrl} eject={() => {
             setDesign(undefined)
@@ -122,8 +124,9 @@ export const GameDesignLoader: React.FunctionComponent = () => {
                 gameDesign={design}
                 imageAssets={imageAssets ?? []}
                 soundAssets={soundAssets ?? []}
-                Layout={layouts[layoutOption].GameLayoutComponent}
-                instantMode={layouts[layoutOption].instantMode}
+                Layout={GameLayoutComponent}
+                instantMode={instantMode}
+                initialRoomSize={initialRoomSize}
             />
         )}
 

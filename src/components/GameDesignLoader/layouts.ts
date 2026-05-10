@@ -4,19 +4,30 @@ import { FullScreenLayout } from "../layouts/full-screen-ui/FullScreenLayout";
 import { MaterialLayout } from "../layouts/game-mui-ux/Layout";
 import { TextBasedLayout } from "../layouts/text-venture/TextBasedLayout";
 
-type UiComponentSet = {
+type GameDesignPlayerOptions = {
     GameLayoutComponent: FunctionComponent;
     title?: string;
     instantMode?: boolean;
+    initialRoomSize?: {
+        roomHeight?: number;
+        roomWidth?: number;
+    }
 }
 
 export type LayoutOption = "fullScreen" | "material" | "textBased" | "default"
 
-export const layouts: Record<LayoutOption, UiComponentSet> = {
+export const layouts: Record<LayoutOption, GameDesignPlayerOptions> = {
+    default: {
+        title: 'default layout',
+        GameLayoutComponent: DefaultLayout,
+        initialRoomSize: {
+            roomHeight: 600,
+            roomWidth: 600,
+        }
+    },
     fullScreen: { GameLayoutComponent: FullScreenLayout, title: "full screen" },
     material: { GameLayoutComponent: MaterialLayout },
     textBased: { GameLayoutComponent: TextBasedLayout, title: "text-venture", instantMode: true },
-    default: { GameLayoutComponent: DefaultLayout },
 }
 
 export const layoutOptions = Object.keys(layouts) as LayoutOption[]
