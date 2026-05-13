@@ -1,11 +1,10 @@
-import { makeBlankInteraction } from '@/components/GameEditor/defaults';
 import { TabId } from '@/lib/editor-config';
 import { DesignUpgradeInfo, GameDesignAction } from '@/lib/game-design-logic/types';
 import { DB_VERSION, MaybeDesignAndAssets } from '@/lib/indexed-db';
 import { patchMember } from '@/lib/update-design';
 import { UpdateSource } from '@/services/FileAssetService';
-import { GameDataItem, GameDataItemType, GameDesign, Interaction, RoomData } from "point-click-lib";
-import { createContext, ReactNode, useCallback, useContext } from 'react';
+import { GameDataItem, GameDataItemType, GameDesign, RoomData } from "point-click-lib";
+import { createContext, ReactNode, useContext } from 'react';
 
 type GameDesignContextInputs = {
     gameDesign: GameDesign,
@@ -26,7 +25,6 @@ export type GameDesignContextProps = GameDesignContextInputs & {
     deleteArrayItem: { (index: number, property: GameDataItemType): void },
     deleteInteraction: { (index: number): void }
     modifyRoom: { (description: string, id: string, mod: Partial<RoomData>): void }
-    getInteractionClone: { (index?: number): Interaction }
 }
 
 const GameDesignContext = createContext<GameDesignContextProps>(
@@ -57,7 +55,6 @@ const GameDesignContext = createContext<GameDesignContextProps>(
         deleteInteraction: () => { },
         applyModification: () => { },
         modifyRoom: () => { },
-        getInteractionClone: () => makeBlankInteraction(),
         history: [],
         undoneHistory: []
     }
@@ -70,15 +67,7 @@ export const GameDesignProvider = ({
     children: ReactNode
     input: GameDesignContextInputs
 }) => {
-
     const { dispatchDesignUpdate, gameDesign } = input
-
-    const getInteractionClone = useCallback((index?: number): Interaction => {
-        const original = typeof index === 'number' ? gameDesign.interactions[index] : undefined;
-        return original
-            ? structuredClone({ ...original, consequences: original.consequences ?? [] })
-            : makeBlankInteraction()
-    }, [gameDesign.interactions])
 
     const value: GameDesignContextProps = {
         ...input,
@@ -88,7 +77,6 @@ export const GameDesignProvider = ({
         deleteArrayItem: (index, property) => dispatchDesignUpdate({ type: 'delete-data-item', index, property }),
         deleteInteraction: (index) => dispatchDesignUpdate({ type: 'delete-interaction', index }),
         modifyRoom: (description, id, mod) => dispatchDesignUpdate({ type: 'modify-design', description, mod: { rooms: patchMember(id, mod, gameDesign.rooms) } }),
-        getInteractionClone,
     }
 
     return (
