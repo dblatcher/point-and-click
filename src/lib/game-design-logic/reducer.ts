@@ -96,10 +96,10 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             }
         }
 
-        case "close-interaction": {
+        case "set-interaction-index": {
             return {
                 ...gameEditorState,
-                interactionIndex: undefined,
+                interactionIndex: action.interactionIndex,
             }
         }
 

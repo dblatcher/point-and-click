@@ -8,15 +8,15 @@ import { AddIcon, InteractionIcon } from "@/components/GameEditor/material-icons
 interface Props {
     close: { (): void },
     isOpen: boolean,
-    pickIndex: { (index: number | undefined): void }
+    pickIndex: { (index: number): void }
+    createAndOpenNew: { (): void }
     criteria: { (interaction: Interaction): boolean }
 }
 
-
-export const PickInteractionDialog: React.FunctionComponent<Props> = ({ close, isOpen, pickIndex, criteria }) => {
-
-    const { gameDesign } = useGameDesign()
-
+export const PickInteractionDialog: React.FunctionComponent<Props> = ({
+    close, isOpen, pickIndex, criteria, createAndOpenNew
+}) => {
+    const { gameDesign, deleteInteraction } = useGameDesign()
     const { interactions } = gameDesign
     const filteredInteractions = interactions.filter(criteria)
 
@@ -47,6 +47,12 @@ export const PickInteractionDialog: React.FunctionComponent<Props> = ({ close, i
                                         interaction={interaction}
                                         index={index}
                                         openEditor={() => { pickIndex(index) }}
+                                        deleteInteraction={(index) => {
+                                            if (filteredInteractions.length === 1) {
+                                                close()
+                                            }
+                                            deleteInteraction(index)
+                                        }}
                                     />)
                                 })}
                             </TableBody>
@@ -54,7 +60,7 @@ export const PickInteractionDialog: React.FunctionComponent<Props> = ({ close, i
                     </TableContainer>
 
                     <Button sx={{ alignSelf: 'flex-end' }}
-                        onClick={() => pickIndex(undefined)}
+                        onClick={createAndOpenNew}
                         variant="contained"
                         startIcon={<AddIcon />}
                     >create new interaction</Button>

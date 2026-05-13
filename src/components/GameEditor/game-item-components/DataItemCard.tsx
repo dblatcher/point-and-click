@@ -168,12 +168,12 @@ const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designP
         return <InteractionsDialogsButton variant='text'
             disabled={noInteraction}
             criteria={i => i.targetId === id}
-            newPartial={makeBlankInteraction({ targetId: id })} />
+            template={makeBlankInteraction({ targetId: id })} />
     }
     if (designProperty === 'items') {
         return <InteractionsDialogsButton variant='text'
             criteria={i => i.targetId === id || i.itemId === id}
-            newPartial={makeBlankInteraction({ itemId: id })} />
+            template={makeBlankInteraction({ itemId: id })} />
     }
     return null
 }

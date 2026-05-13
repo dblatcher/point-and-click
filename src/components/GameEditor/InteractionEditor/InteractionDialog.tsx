@@ -30,11 +30,13 @@ const DialogFrame = ({ children, interaction }: { children: ReactNode, interacti
     }
 
     useEffect(() => {
-        if (!interaction) { () => dispatchDesignUpdate({ type: 'close-interaction' }) }
+        if (!interaction) {
+            dispatchDesignUpdate({ type: 'set-interaction-index' })
+        }
     }, [interaction, dispatchDesignUpdate])
 
     return (
-        <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'} onClose={() => dispatchDesignUpdate({ type: 'close-interaction' })
+        <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'} onClose={() => dispatchDesignUpdate({ type: 'set-interaction-index' })
         }>
             <DialogTitle sx={{ alignItems: 'center', display: 'flex' }}>
                 <InteractionIcon />
@@ -45,7 +47,7 @@ const DialogFrame = ({ children, interaction }: { children: ReactNode, interacti
                 <UndoAndRedoButtons />
                 <Button
                     sx={{ marginLeft: 8 }}
-                    onClick={() => dispatchDesignUpdate({ type: 'close-interaction' })}
+                    onClick={() => dispatchDesignUpdate({ type: 'set-interaction-index' })}
                     variant="contained"
                 >
                     Done

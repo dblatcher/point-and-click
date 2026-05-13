@@ -111,7 +111,7 @@ export const DetailsAndStartPosition = ({ actorData, updateFromPartial, defaultP
                         <InteractionsDialogsButton
                             disabled={actorData.noInteraction || actorData.isPlayer}
                             criteria={(interaction) => interaction.targetId === actorData.id}
-                            newPartial={makeBlankInteraction({ targetId: actorData.id })}
+                            template={makeBlankInteraction({ targetId: actorData.id })}
                         />
                     </Box>
                 </EditorBox>

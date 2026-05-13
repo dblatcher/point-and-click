@@ -46,7 +46,7 @@ export function HotspotControl({ roomId, hotspot, index, changeHotspot }: Props)
                     <ButtonGroup>
                         <InteractionsDialogsButton
                             criteria={interaction => interaction.targetId === id && (!interaction.roomId || interaction.roomId === roomId)}
-                            newPartial={makeBlankInteraction({ roomId, targetId: id })}
+                            template={makeBlankInteraction({ roomId, targetId: id })}
                         />
                     </ButtonGroup>
                 </Box>

@@ -85,13 +85,13 @@ export const ItemEditor = ({ item }: Props) => {
                     <InteractionsDialogsButton
                         label="interactions as target"
                         criteria={(interaction) => interaction.targetId === id}
-                        newPartial={makeBlankInteraction({ targetId: id })}
+                        template={makeBlankInteraction({ targetId: id })}
                     />
 
                     <InteractionsDialogsButton
                         label="interactions as item"
                         criteria={(interaction) => interaction.itemId === id}
-                        newPartial={makeBlankInteraction({ itemId: id })}
+                        template={makeBlankInteraction({ itemId: id })}
                     />
                 </Box>
             </Stack>
