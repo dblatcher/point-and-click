@@ -33,7 +33,7 @@ const doesMatchFilters = (
 }
 
 export const InteractionEditor = () => {
-    const { gameDesign, changeOrAddInteraction, applyModification, deleteInteraction, openInEditor, interactionIndex } = useGameDesign()
+    const { gameDesign, changeOrAddInteraction, applyModification, deleteInteraction, openInEditor } = useGameDesign()
     const { interactions, verbs, items, rooms } = gameDesign
 
     const [verbFilter, setVerbFilter] = useState<string[]>([])
@@ -43,11 +43,6 @@ export const InteractionEditor = () => {
 
     const filteredInteractions = interactions.filter(doesMatchFilters(verbFilter, itemFilter, targetFilter, roomFilter))
     const { ids: targetIds, descriptions: targetDescriptions } = getTargetLists(gameDesign);
-
-    const saveInteraction = (interaction: Interaction) => {
-        changeOrAddInteraction(interaction, interactionIndex)
-        openInEditor('interactions')
-    }
 
     const moveInteractionInList = (index: number, direction: 'down' | 'up') => {
         const { interactions } = gameDesign

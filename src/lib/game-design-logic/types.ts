@@ -86,6 +86,13 @@ type ChangeOrAddInteractionAction = {
     index?: number
 }
 
+type ModifyInteractionAction = {
+    type: 'modify-interaction';
+    data: Interaction;
+    index: number;
+    description: string;
+}
+
 type DeleteInteractionAction = {
     type: 'delete-interaction',
     index: number
@@ -112,6 +119,7 @@ export type GameDesignAction =
     CreateDataItemAction |
     DeleteDataItemAction |
     ChangeOrAddInteractionAction |
+    ModifyInteractionAction |
     DeleteInteractionAction |
     SetDBInstance |
     SetUpgradeInfo |

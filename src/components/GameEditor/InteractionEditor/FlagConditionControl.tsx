@@ -9,7 +9,7 @@ import { MultipleSelectChip } from "../MultipleSelectChip";
 
 interface Props {
     interaction: Partial<Interaction>
-    updateInteraction: { (mod: Partial<Interaction>): void }
+    updateInteraction: { (mod: Partial<Interaction>, description: string): void }
 }
 
 
@@ -28,14 +28,20 @@ export const FlagConditionControl: React.FunctionComponent<Props> = ({ interacti
                 label="Must be on"
                 options={Object.keys(flagMap).filter(id => !flagsThatMustBeFalse.includes(id)).map(id => ({ id, description: flagMap[id]?.description }))}
                 selectedOptionIds={flagsThatMustBeTrue}
-                setSelectedOptionIds={flagsThatMustBeTrue => updateInteraction({ flagsThatMustBeTrue })}
+                setSelectedOptionIds={flagsThatMustBeTrue => updateInteraction(
+                    { flagsThatMustBeTrue },
+                    `flags ${flagsThatMustBeTrue.join()} must be on`
+                )}
                 idBase="flags-must-be-on"
             />
             <MultipleSelectChip
                 label="Must be off"
                 options={Object.keys(flagMap).filter(id => !flagsThatMustBeTrue.includes(id)).map(id => ({ id, description: flagMap[id]?.description }))}
                 selectedOptionIds={flagsThatMustBeFalse}
-                setSelectedOptionIds={flagsThatMustBeFalse => updateInteraction({ flagsThatMustBeFalse })}
+                setSelectedOptionIds={flagsThatMustBeFalse => updateInteraction(
+                    { flagsThatMustBeFalse },
+                    `flags ${flagsThatMustBeFalse.join()} must be off`
+                )}
                 idBase="flags-must-be-off"
             />
         </Stack>

@@ -58,25 +58,28 @@ const DialogFrame = ({ children, interaction }: { children: ReactNode, interacti
 }
 
 export const InteractionDialog = () => {
-    const { interactionIndex, gameDesign, changeOrAddInteraction } = useGameDesign()
+    const { interactionIndex, gameDesign, dispatchDesignUpdate } = useGameDesign()
     const interaction = typeof interactionIndex === 'number' ? gameDesign.interactions[interactionIndex] : undefined
     const [activeConsequenceIndex, setActiveConsequenceIndex] = useState<number | undefined>(undefined)
     const [insertConsequenceDialogIndex, setInsertConsequenceDialogIndex] = useState<number | undefined>(undefined)
 
-    const updateInteraction = (mod: Partial<Interaction>) => {
-        if (!interaction) {
+    const updateInteraction = (mod: Partial<Interaction>, description: string) => {
+        if (!interaction || typeof interactionIndex === 'undefined') {
             return
         }
-        changeOrAddInteraction({
-            ...interaction,
-            ...mod
-        }, interactionIndex)
+        dispatchDesignUpdate({
+            type: 'modify-interaction',
+            data: { ...interaction, ...mod },
+            index: interactionIndex,
+            description,
+        })
     }
 
     const updateConsequence = (consequence: Consequence) => {
-        updateInteraction({
-            consequences: replaceAt(activeConsequenceIndex ?? 0, consequence, interaction?.consequences ?? [])
-        })
+        updateInteraction(
+            { consequences: replaceAt(activeConsequenceIndex ?? 0, consequence, interaction?.consequences ?? []) },
+            "change consequence"
+        )
     }
 
     if (!interaction) {
@@ -109,7 +112,7 @@ export const InteractionDialog = () => {
                         <SelectInput
                             label="VERB"
                             optional
-                            inputHandler={(verbId: string | undefined) => { updateInteraction({ verbId }) }}
+                            inputHandler={(verbId: string | undefined) => { updateInteraction({ verbId }, `set verb to ${verbId}`) }}
                             value={interaction.verbId || ''}
                             options={listIds(gameDesign.verbs)} />
 
@@ -117,7 +120,7 @@ export const InteractionDialog = () => {
                             <SelectInput
                                 label="ITEM"
                                 optional
-                                inputHandler={(itemId: string | undefined) => { updateInteraction({ itemId }) }}
+                                inputHandler={(itemId: string | undefined) => { updateInteraction({ itemId }, `set item to ${itemId}`) }}
                                 value={interaction.itemId || ''}
                                 options={listIds(gameDesign.items)} descriptions={getItemDescriptions(gameDesign)} />
                             <Typography>{verb?.preposition}</Typography>
@@ -126,7 +129,7 @@ export const InteractionDialog = () => {
                         <SelectInput
                             label="TARGET"
                             optional
-                            inputHandler={(targetId: string | undefined) => { updateInteraction({ targetId }) }}
+                            inputHandler={(targetId: string | undefined) => { updateInteraction({ targetId }, `set target to ${targetId}`) }}
                             value={interaction.targetId || ''}
                             options={targetIds}
                             descriptions={targetDescriptions} />
@@ -140,35 +143,34 @@ export const InteractionDialog = () => {
                                 <SelectInput
                                     label="Room must be:"
                                     optional
-                                    inputHandler={(roomId: string | undefined) => { updateInteraction({ roomId }) }}
+                                    inputHandler={(roomId: string | undefined) => { updateInteraction({ roomId }, `room must be ${roomId}`) }}
                                     value={interaction.roomId || ''}
                                     options={listIds(gameDesign.rooms)} />
                                 <StringInput
                                     label="Target status must be"
-                                    inputHandler={(targetStatus) => { updateInteraction({ targetStatus }) }}
+                                    inputHandler={(targetStatus) => { updateInteraction({ targetStatus }, `targetStatus must be ${targetStatus}`) }}
                                     value={interaction.targetStatus || ''}
                                     suggestions={statusSuggestions}
                                 />
                                 <BooleanInput
                                     label="Must reach target first?"
-                                    inputHandler={(mustReachFirst) => { updateInteraction({ mustReachFirst }) }}
+                                    inputHandler={(mustReachFirst) => { updateInteraction({ mustReachFirst }, `must reach first: ${mustReachFirst.toString()}`) }}
                                     value={!!interaction.mustReachFirst}
                                 />
                                 <MultipleSelectChip
                                     label="allowed player"
                                     options={gameDesign.actors.filter(actor => typeof actor.canBePlayer === 'boolean').map(item => item)}
                                     selectedOptionIds={interaction.allowedPlayerIds ?? []}
-                                    setSelectedOptionIds={allowedPlayerIds => updateInteraction({ allowedPlayerIds })}
+                                    setSelectedOptionIds={allowedPlayerIds => updateInteraction({ allowedPlayerIds }, `restricted to ${allowedPlayerIds.join()}`)}
                                     idBase="allowed-players"
                                 />
                                 <MultipleSelectChip
                                     label="Required inventory items"
                                     options={gameDesign.items.map(item => item)}
                                     selectedOptionIds={interaction.requiredInventory ?? []}
-                                    setSelectedOptionIds={requiredInventory => updateInteraction({ requiredInventory })}
+                                    setSelectedOptionIds={requiredInventory => updateInteraction({ requiredInventory }, `required inventory: ${requiredInventory.join()}`)}
                                     idBase="required-inventory"
                                 />
-
                             </Stack>
                         </EditorBox>
                         <FlagConditionControl interaction={interaction} updateInteraction={updateInteraction} />
@@ -190,7 +192,7 @@ export const InteractionDialog = () => {
                                         />
                                     </Box>
                                 )}
-                                mutateList={consequences => updateInteraction({ consequences })}
+                                mutateList={consequences => updateInteraction({ consequences }, `change consequences`)}
                                 customInsertFunction={setInsertConsequenceDialogIndex}
                             />
                         </EditorBox>
@@ -208,7 +210,10 @@ export const InteractionDialog = () => {
                 onClose={() => setInsertConsequenceDialogIndex(undefined)}
                 handleChoice={type => {
                     if (typeof insertConsequenceDialogIndex === 'number') {
-                        updateInteraction({ consequences: insertAt(insertConsequenceDialogIndex, makeNewConsequence(type), interaction.consequences) })
+                        updateInteraction(
+                            { consequences: insertAt(insertConsequenceDialogIndex, makeNewConsequence(type), interaction.consequences) },
+                            `add ${type} consequence`
+                        )
                         setActiveConsequenceIndex(insertConsequenceDialogIndex)
                     }
                     setInsertConsequenceDialogIndex(undefined)

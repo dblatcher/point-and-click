@@ -2,7 +2,7 @@ import { Reducer } from "react"
 import { GameEditorState, GameDesignAction, NavigationState } from "./types"
 import { cloneData } from "../clone"
 import { addGameDataItem, putInteraction } from "./mutate-design"
-import { GameDataItemTypeEnum, GameDesign } from "point-click-lib"
+import { GameDataItemTypeEnum, GameDesign, Interaction } from "point-click-lib"
 import { storeSavedDesign } from "../indexed-db"
 
 const pushWithLimitLength = <T>(history: T[], item: T, maxLength = 10) => {
@@ -28,6 +28,13 @@ const navigationStatesAreSame = (a: NavigationState | undefined, b: NavigationSt
         GameDataItemTypeEnum.options.every(key =>
             a.gameItemIds[key] === b.gameItemIds[key]
         )
+}
+
+const describeInteraction = (interaction: Interaction) => {
+    const { verbId, targetId, itemId } = interaction;
+    return itemId
+        ? `${verbId} ${targetId} with ${itemId}`
+        : `${verbId} ${targetId}`
 }
 
 export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (gameEditorState, action) => {
@@ -209,9 +216,25 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
         case "change-or-add-interaction": {
             const { index, data } = action
             const { gameDesign } = gameEditorState
+            const message = typeof index === 'number'
+                ? `change interaction #${index}: ${describeInteraction(data)}`
+                : `add new interaction: ${describeInteraction(data)}`;
+
             return saveToQuitSave({
                 ...gameEditorState,
-                ...addHistory(`change interaction`),
+                ...addHistory(message),
+                gameDesign: putInteraction(gameDesign, data, index)
+            })
+        }
+
+        case "modify-interaction": {
+            const { index, data, description } = action
+            const { gameDesign } = gameEditorState
+            const message = `change interaction #${index}: ${description}`
+
+            return saveToQuitSave({
+                ...gameEditorState,
+                ...addHistory(message),
                 gameDesign: putInteraction(gameDesign, data, index)
             })
         }
@@ -223,11 +246,10 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             if (!interactionToDelete) {
                 return gameEditorState
             }
-            const { verbId, targetId, itemId = '[no item]' } = interactionToDelete;
             gameDesign.interactions.splice(index, 1);
             return saveToQuitSave({
                 ...gameEditorState,
-                ...addHistory(`delete interaction #${index}: ${verbId} ${targetId} (${itemId})`),
+                ...addHistory(`delete interaction #${index}: ${describeInteraction(interactionToDelete)}`),
                 gameDesign,
             })
         }
