@@ -33,7 +33,7 @@ const doesMatchFilters = (
 }
 
 export const InteractionEditor = () => {
-    const { gameDesign, changeOrAddInteraction, applyModification, deleteInteraction, openInEditor } = useGameDesign()
+    const { gameDesign, dispatchDesignUpdate, applyModification, deleteInteraction, openInEditor } = useGameDesign()
     const { interactions, verbs, items, rooms } = gameDesign
 
     const [verbFilter, setVerbFilter] = useState<string[]>([])
@@ -71,7 +71,7 @@ export const InteractionEditor = () => {
                     <Button
                         size="large"
                         onClick={() => {
-                            changeOrAddInteraction(makeBlankInteraction())
+                            dispatchDesignUpdate({ type: 'add-new-interaction', data: makeBlankInteraction() })
                             openInEditor('interactions', undefined, interactions.length)
                         }}
                         variant="contained"

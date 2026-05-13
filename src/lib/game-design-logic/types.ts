@@ -81,9 +81,8 @@ type DeleteDataItemAction = {
 }
 
 type ChangeOrAddInteractionAction = {
-    type: 'change-or-add-interaction',
-    data: Interaction,
-    index?: number
+    type: 'add-new-interaction';
+    data: Interaction;
 }
 
 type ModifyInteractionAction = {

@@ -21,12 +21,12 @@ export const InteractionsDialogsButton: React.FunctionComponent<Props> = ({
     label = 'interactions',
     variant = 'outlined'
 }) => {
-    const { gameDesign, changeOrAddInteraction, dispatchDesignUpdate } = useGameDesign()
+    const { gameDesign, dispatchDesignUpdate } = useGameDesign()
     const [pickInteractionDialogOpen, setPickInteractionDialogOpen] = useState(false)
     const count = gameDesign.interactions.filter(criteria).length;
 
     const createAndOpenNew = () => {
-        changeOrAddInteraction(makeBlankInteraction(template))
+        dispatchDesignUpdate({ type: 'add-new-interaction', data: makeBlankInteraction(template) })
         dispatchDesignUpdate({ type: 'set-interaction-index', interactionIndex: gameDesign.interactions.length })
     }
 

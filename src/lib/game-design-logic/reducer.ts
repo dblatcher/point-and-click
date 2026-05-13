@@ -213,17 +213,15 @@ export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (ga
             })
         }
 
-        case "change-or-add-interaction": {
-            const { index, data } = action
+        case "add-new-interaction": {
+            const { data } = action
             const { gameDesign } = gameEditorState
-            const message = typeof index === 'number'
-                ? `change interaction #${index}: ${describeInteraction(data)}`
-                : `add new interaction: ${describeInteraction(data)}`;
+            const message =  `add new interaction: ${describeInteraction(data)}`;
 
             return saveToQuitSave({
                 ...gameEditorState,
                 ...addHistory(message),
-                gameDesign: putInteraction(gameDesign, data, index)
+                gameDesign: putInteraction(gameDesign, data, undefined)
             })
         }
 
