@@ -61,8 +61,8 @@ export const makeBlankConversationChoice = (text = "...", end?: boolean): Conver
     sequence: '',
     end,
 })
-export const makeBlankConversation = (): Conversation => ({
-    id: 'NEW_CONVERSATION',
+export const makeBlankConversation = (id = "NEW_CONVERSATION"): Conversation => ({
+    id,
     defaultBranch: 'start',
     branches: {
         start: {
@@ -143,7 +143,6 @@ export const makeNewStep = {
     move: (): MoveStep => ({ speed: 1, x: 0, y: 0, animation: '' }),
 }
 
-export const makeEmptyStoryBoard = (id = "NEW_STORYBOARD"): StoryBoard => ({ id, pages: [] })
 export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({
     title: '',
     pictures: [],
@@ -151,6 +150,7 @@ export const makeEmptyStoryBoardPage = (): StoryBoardPage => ({
     backgroundColor: '#000000',
     color: '#FFFFFF'
 })
+export const makeEmptyStoryBoard = (id = "NEW_STORYBOARD"): StoryBoard => ({ id, pages: [makeEmptyStoryBoardPage()] })
 export const makeEmptyStoryBoardPagePicture = (imageId = ''): PagePicture => ({
     x: "center",
     y: "center",

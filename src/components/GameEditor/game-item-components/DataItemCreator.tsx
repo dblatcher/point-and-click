@@ -1,19 +1,18 @@
-import { AddIcon, UploadIcon } from "@/components/GameEditor/material-icons";
+import { UploadIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
-import { GameDataItem } from "point-click-lib";
-import { GameDataItemType } from "point-click-lib";
 import { DATA_TYPES_WITH_JSON, tabIcons, tabOrder } from "@/lib/editor-config";
 import { uploadJsonData } from "@/lib/files";
+import { findById } from "@/lib/util";
 import { Alert, Box, Button, ButtonGroup, Grid, Stack } from "@mui/material";
+import { GameDataItem, GameDataItemType } from "point-click-lib";
 import { useState } from "react";
 import { ZodSchema } from "zod";
-import { ButtonWithTextInput } from "../ButtonWithTextInput";
-import { DataItemCard } from "./DataItemCard";
-import { EditorHeading } from "../layout/EditorHeading";
-import { formatIdInput, hasPreview } from "../helpers";
-import { SearchControl } from "../SearchControl";
+import { hasPreview } from "../helpers";
 import { supportedHelpTopic } from "../HelpText";
-import { findById } from "@/lib/util";
+import { EditorHeading } from "../layout/EditorHeading";
+import { SearchControl } from "../SearchControl";
+import { AddItemButton } from "./AddItemButton";
+import { DataItemCard } from "./DataItemCard";
 
 type Props<DataType extends GameDataItem> = {
     createBlank: { (): DataType }
@@ -67,14 +66,6 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
     }
 
     const includeUploadButton = DATA_TYPES_WITH_JSON.includes(designProperty)
-
-    const getInputIdError = (input: string) => {
-        if (dataTypeArray.some(item => item.id === input)) {
-            return `${itemTypeName} "${input}" aleady exists.`
-        }
-        return undefined
-    }
-
     const helpTopic = supportedHelpTopic.safeParse(designProperty).data;
     const title = findById(designProperty, tabOrder)?.label ?? designProperty;
 
@@ -94,18 +85,9 @@ export const DataItemCreator = <DataType extends GameDataItem,>({ createBlank, s
                 ))}
                 <Grid item xs={6} lg={4} xl={3} minHeight={hasPreview(designProperty) ? 120 : 70} display={'flex'} flexDirection={'column'}>
                     <ButtonGroup orientation="vertical" sx={{ flex: 1 }} variant="contained">
-                        <ButtonWithTextInput
-                            label={`Add new ${itemTypeName}`}
-                            onEntry={handleStartFromScratch}
-                            modifyInput={formatIdInput}
-                            buttonProps={{
-                                startIcon: <AddIcon />,
-                                sx: { flex: 1 },
-                            }}
-                            getError={getInputIdError}
-                            dialogTitle={`Enter ${itemTypeName} id`}
-                            keyboardShortcut="#"
-                        />
+                        <AddItemButton itemTypeName={itemTypeName} 
+                            onEntry={handleStartFromScratch} 
+                            dataTypeArray={dataTypeArray}/>
                         {includeUploadButton && (
                             <Button
                                 sx={{ flex: 1 }}

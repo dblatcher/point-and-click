@@ -1,11 +1,10 @@
 import { SchemaForm } from "@/components/SchemaForm";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
-import { AnyConsequence, Consequence, GameDesign, Order } from "point-click-lib";
-import { consequenceMap, consequenceTypes, immediateConsequenceTypes, zoneTypes } from "point-click-lib";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { findById, insertAt, listIds } from "@/lib/util";
 import { Box } from "@mui/material";
+import { AnyConsequence, Consequence, consequenceMap, consequenceTypes, GameDesign, immediateConsequenceTypes, Order, zoneTypes } from "point-click-lib";
 import { useState } from "react";
 import { ZodObject } from "zod";
 import { ArrayControl } from "../ArrayControl";
@@ -14,7 +13,8 @@ import { OrderCard } from "../SequenceEditor/OrderCard";
 import { OrderDialog } from "../SequenceEditor/OrderDialog";
 import { SoundPreview } from "../SoundAssetTool/SoundPreview";
 import { SpritePreview } from "../SpritePreview";
-import { getDefaultOrder } from "../defaults";
+import { getDefaultOrder, makeBlankConversation, makeBlankSequence, makeEmptyStoryBoard } from "../defaults";
+import { AddItemButton } from "../game-item-components/AddItemButton";
 import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
 import { getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
 
@@ -41,7 +41,7 @@ const getBranchIdAndChoiceRefOptions = (consequence: Consequence, gameDesign: Ga
 
 export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) => {
     const { roomId, zoneType, actorId, sound, targetId } = consequence as AnyConsequence;
-    const { gameDesign } = useGameDesign()
+    const { gameDesign, dispatchDesignUpdate } = useGameDesign()
     const { soundAssets, soundService } = useAssets()
     const [orderIndexDialog, setDialogOrderIndex] = useState<number>()
     const { ids: targetIds } = getTargetLists(gameDesign)
@@ -123,6 +123,39 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
                         update(parsed.data)
                     }}
                 />
+                {(consequence.type === 'sequence') && (
+                    <AddItemButton
+                        itemTypeName={'sequence'}
+                        onEntry={(id) => {
+                            dispatchDesignUpdate({
+                                type: 'create-data-item', property: 'sequences', data: makeBlankSequence(id)
+                            })
+                            update({ ...consequence, sequence: id })
+                        }}
+                        dataTypeArray={gameDesign.sequences} />
+                )}
+                {(consequence.type === 'storyBoardConsequence') && (
+                    <AddItemButton
+                        itemTypeName={'storyBoard'}
+                        onEntry={(id) => {
+                            dispatchDesignUpdate({
+                                type: 'create-data-item', property: 'storyBoards', data: makeEmptyStoryBoard(id)
+                            })
+                            update({ ...consequence, storyBoardId: id })
+                        }}
+                        dataTypeArray={gameDesign.storyBoards ?? []} />
+                )}
+                {(consequence.type === 'conversation') && (
+                    <AddItemButton
+                        itemTypeName={'conversation'}
+                        onEntry={(id) => {
+                            dispatchDesignUpdate({
+                                type: 'create-data-item', property: 'conversations', data: makeBlankConversation(id)
+                            })
+                            update({ ...consequence, conversationId: id })
+                        }}
+                        dataTypeArray={gameDesign.storyBoards ?? []} />
+                )}
                 {(consequence.type === 'order') && (
                     <ArrayControl color="secondary"
                         list={consequence.orders}
