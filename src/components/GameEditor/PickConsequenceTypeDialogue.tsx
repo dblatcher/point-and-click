@@ -23,7 +23,7 @@ const groupings: ConsequenceGrouping[] = [
         members: [
             { consequence: 'teleportActor', displayName: 'teleport' },
             { consequence: 'removeActor', displayName: 'remove' },
-            { consequence: 'order', displayName: 'give orders' },
+            // { consequence: 'order', displayName: 'give orders' },
             { consequence: 'setActorPlayable', displayName: 'set playable' },
         ]
     },
