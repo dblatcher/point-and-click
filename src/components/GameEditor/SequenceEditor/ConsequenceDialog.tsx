@@ -10,11 +10,10 @@ interface Props {
     consequence: Consequence
     handleConsequenceUpdate: { (consequence: Consequence): void }
     close: { (): void }
-    immediateOnly?: boolean
 }
 
 
-export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence, immediateOnly }: Props) => {
+export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence }: Props) => {
     const { palette } = useTheme()
     const IconForConsequenceType = getConsequenceIcon(consequence.type)
     return (
@@ -31,7 +30,6 @@ export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence,
                 {consequence && (
                     <ConsequenceForm
                         consequence={consequence}
-                        immediateOnly={immediateOnly}
                         update={handleConsequenceUpdate}
                     />
                 )}

@@ -21,7 +21,6 @@ import { getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
 interface Props {
     consequence: Consequence;
     update: { (consequence: Consequence): void };
-    immediateOnly?: boolean;
 }
 
 
@@ -39,7 +38,7 @@ const getBranchIdAndChoiceRefOptions = (consequence: Consequence, gameDesign: Ga
     return { branchIdList, choiceRefList }
 }
 
-export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) => {
+export const ConsequenceForm = ({ consequence, update }: Props) => {
     const { roomId, zoneType, actorId, sound, targetId } = consequence as AnyConsequence;
     const { gameDesign, dispatchDesignUpdate } = useGameDesign()
     const { soundAssets, soundService } = useAssets()
@@ -48,7 +47,6 @@ export const ConsequenceForm = ({ consequence, update, immediateOnly }: Props) =
 
     const { branchIdList, choiceRefList } = getBranchIdAndChoiceRefOptions(consequence, gameDesign)
     const optionListIds = {
-        type: immediateOnly ? immediateConsequenceTypes : consequenceTypes,
         conversationId: listIds(gameDesign.conversations),
         actorId: listIds(gameDesign.actors),
         itemId: listIds(gameDesign.items),

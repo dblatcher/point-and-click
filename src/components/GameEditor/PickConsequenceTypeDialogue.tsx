@@ -17,13 +17,13 @@ type ConsequenceGrouping = {
     }[]
 }
 
-const groupings: ConsequenceGrouping[] = [
+const immediateConsequenceGroupings: ConsequenceGrouping[] = [
     {
         title: 'Actors',
         members: [
             { consequence: 'teleportActor', displayName: 'teleport' },
             { consequence: 'removeActor', displayName: 'remove' },
-            // { consequence: 'order', displayName: 'give orders' },
+
             { consequence: 'setActorPlayable', displayName: 'set playable' },
         ]
     },
@@ -46,6 +46,15 @@ const groupings: ConsequenceGrouping[] = [
         ]
     },
 ]
+
+const timedConsequenceGroupings: ConsequenceGrouping[] = [{
+    title: 'Actor Orders',
+    members: [
+        { consequence: 'order', displayName: 'give orders' },
+    ]
+}]
+
+const allGroups = [...timedConsequenceGroupings, ...immediateConsequenceGroupings]
 
 const ConsequenceIcon = ({ type }: { type: ConsequenceType }) => {
     const Icon = getConsequenceIcon(type)
@@ -72,23 +81,24 @@ const GroupList = ({ group, handleChoice }: { group: ConsequenceGrouping, handle
 
 
 export const PickConsequenceTypeDialogue = ({ immediateOnly, handleChoice, open, onClose }: Props) => {
-    const fullList = immediateOnly ? [...immediateConsequenceTypes] : [...consequenceTypes];
-    const miscConseqences = fullList
+    const allowedGroups = immediateOnly ? immediateConsequenceGroupings : allGroups;
+    const allTypeNames = immediateOnly ? [...immediateConsequenceTypes] : [...consequenceTypes];
+    const unhandledConsequenceTypeNames = allTypeNames
         .filter(consequence =>
-            !groupings.some(grouping =>
+            !allowedGroups.some(grouping =>
                 grouping.members.some(member =>
                     member.consequence === consequence)));
 
     const miscGrouping: ConsequenceGrouping = {
         title: 'Misc',
-        members: miscConseqences.map(consequence => ({ consequence }))
+        members: unhandledConsequenceTypeNames.map(consequence => ({ consequence }))
     }
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth>
             <DialogTitle>Pick Consequence Type</DialogTitle>
             <DialogContent>
-                {[...groupings, miscGrouping].map((group, index) => (
+                {[...allowedGroups, miscGrouping].map((group, index) => (
                     <GroupList key={index} group={group} handleChoice={handleChoice} />
                 ))}
             </DialogContent>
