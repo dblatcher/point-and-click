@@ -2,7 +2,7 @@ import { ConceptCard } from "@/components/GameEditor/ConceptCard";
 import { Consequence } from "point-click-lib";
 import { Box, Typography } from "@mui/material";
 import { DescriptionOutlinedIcon } from "../material-icons";
-import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";
+import { getConsequenceDescription, getConsequenceDisplayName, getConsequenceIcon } from "./get-order-details";
 import { OrderCard } from "./OrderCard";
 import { ShortcutsForConsequence } from "../EditorShortcut";
 
@@ -31,7 +31,7 @@ const DetailedDescription = ({ consequence, detailed }: Pick<Props, 'consequence
 
 export const ConsequenceCard = ({ consequence, handleEditButton, width, detailed }: Props) => {
 
-    const title = consequence.type === 'order' ? `${consequence.type}: ${consequence.actorId || "[PLAYER]"}` : consequence.type
+    const title = consequence.type === 'order' ? `${consequence.type}: ${consequence.actorId || "[PLAYER]"}` : getConsequenceDisplayName(consequence.type)
 
     return <ConceptCard
         title={title}

@@ -225,9 +225,9 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
                                 flexDirection={'column'}
                                 sx={{ overflowY: 'auto', backgroundColor: 'white' }}
                             >
+                                <MainWindowTutorial />
                                 <MainWindow />
                                 <UpgradeNotice />
-                                <MainWindowTutorial />
                             </Box>
                         </Box>
 

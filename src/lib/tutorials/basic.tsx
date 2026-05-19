@@ -33,7 +33,7 @@ const addInteraction: TutorialStage = {
         },
         {
             title: 'Give the PLAYER something to say',
-            detail: 'Click the add button in the Consequences section and pick an "order" CONSEQUENCE, select "PLAYER" as the ACTOR and create a "say" order.',
+            detail: 'Click the add button in the Consequences section and pick an "give orders" CONSEQUENCE, select "PLAYER" as the ACTOR and create a "say" order.',
             test(state) {
                 return state.gameDesign.interactions.some(
                     interaction => interaction.targetId === 'NPC' &&
@@ -126,7 +126,7 @@ const inventory: TutorialStage = {
         },
         {
             title: 'Create an INTERACTION with the TUBE actor as the target and "TAKE" as the verb.',
-            detail: 'You can create INTERACTIONS from the ACTOR screen, or from the main Interactions screen',
+            detail: 'Go to the ACTORs screen, click the "interactions" button for TUBE and create a new interaction, set the Verb to "TAKE"',
             test(state) {
                 return state.gameDesign.interactions.some(interaction => interaction.targetId === 'TUBE' && interaction.verbId === 'TAKE')
             },
@@ -207,6 +207,7 @@ const interactionUsingItem: TutorialStage = {
         },
         {
             title: "add a consequence to remove the item from the player's inventory",
+            detail: "add an Inventory consequence, select TUBE_ITEM as the item, and pick 'remove'",
             test(state) {
                 return state.gameDesign.interactions.some(interaction =>
                     interaction.verbId === 'GIVE' &&

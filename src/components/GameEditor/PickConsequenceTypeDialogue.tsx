@@ -1,6 +1,6 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material"
 import { ConsequenceType, consequenceTypes, immediateConsequenceTypes } from "point-click-lib"
-import { getConsequenceIcon } from "./SequenceEditor/get-order-details"
+import { getConsequenceDisplayName, getConsequenceIcon } from "./SequenceEditor/get-order-details"
 
 interface Props {
     immediateOnly?: boolean
@@ -11,38 +11,34 @@ interface Props {
 
 type ConsequenceGrouping = {
     title: string,
-    members: {
-        consequence: ConsequenceType,
-        displayName?: string
-    }[]
+    members: ConsequenceType[]
 }
 
 const immediateConsequenceGroupings: ConsequenceGrouping[] = [
     {
         title: 'Actors',
         members: [
-            { consequence: 'teleportActor', displayName: 'teleport' },
-            { consequence: 'removeActor', displayName: 'remove' },
-
-            { consequence: 'setActorPlayable', displayName: 'set playable' },
+            'teleportActor',
+            'removeActor',
+            'setActorPlayable',
         ]
     },
     {
         title: 'Game events',
         members: [
-            { consequence: 'conversation' },
-            { consequence: 'sequence' },
-            { consequence: 'storyBoardConsequence', displayName: 'Story Board' },
-            { consequence: 'changePlayerCharacter', displayName: 'Player Actor' },
-            { consequence: 'changeRoom', displayName: 'change room' },
+            'conversation',
+            'sequence',
+            'storyBoardConsequence',
+            'changePlayerCharacter',
+            'changeRoom',
         ]
     },
     {
         title: 'Sound',
         members: [
-            { consequence: 'ambientNoise' },
-            { consequence: 'backgroundMusic' },
-            { consequence: 'soundEffect', displayName: 'Play SFX' },
+            'ambientNoise',
+            'backgroundMusic',
+            'soundEffect',
         ]
     },
 ]
@@ -50,7 +46,7 @@ const immediateConsequenceGroupings: ConsequenceGrouping[] = [
 const timedConsequenceGroupings: ConsequenceGrouping[] = [{
     title: 'Actor Orders',
     members: [
-        { consequence: 'order', displayName: 'give orders' },
+        'order',
     ]
 }]
 
@@ -66,13 +62,13 @@ const GroupList = ({ group, handleChoice }: { group: ConsequenceGrouping, handle
         <Box>
             <Typography>{group.title}</Typography>
             <Box gap={2} display={'flex'} flexWrap={'wrap'} marginBottom={3}>
-                {group.members.map(member => (
+                {group.members.map(consequenceType => (
                     <Button sx={{ minWidth: "30%" }}
-                        key={member.consequence}
+                        key={consequenceType}
                         variant="outlined" color="secondary"
-                        onClick={() => handleChoice(member.consequence)}
-                        startIcon={<ConsequenceIcon type={member.consequence} />}
-                    >{member.displayName ?? member.consequence}</Button>
+                        onClick={() => handleChoice(consequenceType)}
+                        startIcon={<ConsequenceIcon type={consequenceType} />}
+                    >{getConsequenceDisplayName(consequenceType)}</Button>
                 ))}
             </Box>
         </Box>
@@ -86,12 +82,11 @@ export const PickConsequenceTypeDialogue = ({ immediateOnly, handleChoice, open,
     const unhandledConsequenceTypeNames = allTypeNames
         .filter(consequence =>
             !allowedGroups.some(grouping =>
-                grouping.members.some(member =>
-                    member.consequence === consequence)));
+                grouping.members.includes(consequence)));
 
     const miscGrouping: ConsequenceGrouping = {
         title: 'Misc',
-        members: unhandledConsequenceTypeNames.map(consequence => ({ consequence }))
+        members: unhandledConsequenceTypeNames
     }
 
     return (

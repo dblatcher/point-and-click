@@ -2,7 +2,7 @@
 
 import tutorialContent from "@/content/tutorials.md";
 import { tutorials } from '@/lib/tutorials';
-import { Box, Card, Container, List, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Box, Card, Container, List, ListItemAvatar, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { useRouter } from "next/router";
 import { MouseEvent } from "react";
 import { SchoolIcon } from './GameEditor/material-icons';

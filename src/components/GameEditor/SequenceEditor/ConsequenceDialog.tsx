@@ -3,7 +3,7 @@ import { Consequence } from "point-click-lib";
 import { ShortcutsForConsequence } from "../EditorShortcut";
 import { ConsequenceForm } from "../InteractionEditor/ConsequenceForm";
 import { NarrativeEditor } from "../NarrativeEditor";
-import { getConsequenceDescription, getConsequenceIcon } from "./get-order-details";
+import { getConsequenceDescription, getConsequenceDisplayName, getConsequenceIcon } from "./get-order-details";
 import { DialogTutorial } from "../tutorial/sections";
 
 interface Props {
@@ -21,9 +21,9 @@ export const ConsequenceDialog = ({ close, handleConsequenceUpdate, consequence 
             <DialogTitle sx={{ backgroundColor: palette.secondary.light }}>
                 <Box display="flex" gap={2} alignItems={'center'}>
                     <IconForConsequenceType />
-                    <span>edit consequence</span>
+                    <span>Edit Consequence</span>
                 </Box>
-                <Typography>{getConsequenceDescription(consequence)}</Typography>
+                <Typography>{getConsequenceDisplayName(consequence.type)}: {getConsequenceDescription(consequence)}</Typography>
             </DialogTitle>
             <DialogContent>
                 <DialogTutorial />

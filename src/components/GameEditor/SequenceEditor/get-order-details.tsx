@@ -1,4 +1,3 @@
-import { Consequence, ConsequenceType, Order } from "point-click-lib";
 import AnimationIcon from '@mui/icons-material/Animation';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import CameraIndoorOutlinedIcon from '@mui/icons-material/CameraIndoorOutlined';
@@ -13,7 +12,8 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import RouteIcon from '@mui/icons-material/Route';
 import SurroundSoundIcon from '@mui/icons-material/SurroundSound';
 import { Tooltip } from "@mui/material";
-import { ChangePlayerCharacterIcon, ConversationIcon, ExclamationIcon, FlagCircleIcon, SequenceIcon, SlideshowIcon, SoundIcon } from "../material-icons";
+import { Consequence, ConsequenceType, Order } from "point-click-lib";
+import { ChangePlayerCharacterIcon, ConversationIcon, ExclamationIcon, FlagCircleIcon, SequenceIcon, SetActorPlayableIcon, SlideshowIcon, SoundIcon } from "../material-icons";
 
 export const getOrderIcon = (orderType?: Order['type']): typeof ChatOutlinedIcon => {
     switch (orderType) {
@@ -29,6 +29,27 @@ export const getOrderIcon = (orderType?: Order['type']): typeof ChatOutlinedIcon
             return QuestionMarkIcon
     }
 }
+
+
+const CONSEQUENCE_DISPLAY_NAMES: Partial<Record<ConsequenceType, string>> = {
+    'teleportActor': 'teleport actor',
+    'removeActor': 'remove actor',
+    'setActorPlayable': 'set playable',
+    'conversation': 'conversation',
+    'sequence': 'sequence',
+    'storyBoardConsequence': 'story board',
+    'changePlayerCharacter': 'set player actor',
+    'changeRoom': 'change room',
+    'ambientNoise': 'set ambient noise',
+    'backgroundMusic': 'set room BGM',
+    'soundEffect': 'play SFX',
+    'order': 'give orders',
+    changeStatus: 'change status',
+    flag: 'set flag',
+    toggleZone: 'zone on/off',
+    conversationChoice: 'choice on/off'
+}
+export const getConsequenceDisplayName = (consequenceType: ConsequenceType): string => CONSEQUENCE_DISPLAY_NAMES[consequenceType] ?? consequenceType;
 
 
 export const getConsequenceIcon = (type: ConsequenceType): typeof ChatOutlinedIcon => {
@@ -62,6 +83,8 @@ export const getConsequenceIcon = (type: ConsequenceType): typeof ChatOutlinedIc
             return ChangePlayerCharacterIcon
         case "storyBoardConsequence":
             return SlideshowIcon
+        case "setActorPlayable":
+            return SetActorPlayableIcon
         case "changeStatus":
         default:
             return ExclamationIcon
@@ -79,42 +102,44 @@ const PLAYER = '[PLAYER]'
 const quoted = (text?: string) => text ? `"${text}"` : UNSET;
 const quotedNone = (text?: string) => text ? `"${text}"` : NONE;
 const brackets = (text?: string) => text ? `(${text})` : '';
+const defaulted = (text?: string) => (text && text.length > 0) ? text : UNSET;
+const actorForOrder = (actorId?: string) => (actorId && actorId.length > 0) ? actorId : PLAYER;
 
 export const getConsequenceDescription = (c: Consequence): string => {
     switch (c.type) {
         case "conversation":
             return `${c.end ? 'stop' : 'start'} ${c.conversationId}`
         case "changeRoom":
-            return `room: ${c.roomId ?? UNSET} ${c.takePlayer ? '(player comes)' : ''}`
+            return `room: ${defaulted(c.roomId)} ${c.takePlayer ? '(player comes)' : ''}`
         case "inventory":
             return `${c.addOrRemove} ${c.itemId} ${c.addOrRemove === 'ADD' ? 'TO' : 'FROM'} ${c.actorId ?? PLAYER} `
         case "removeActor":
-            return `remove actor ${c.actorId ?? UNSET}`;
+            return `remove actor ${defaulted(c.actorId)}`;
         case "teleportActor":
-            return `${c.actorId || UNSET} TO ${c.roomId || UNSET}`
+            return `${defaulted(c.actorId)} TO ${c.roomId || UNSET}`
         case "order":
-            return `${c.actorId ?? PLAYER}: ${c.orders.map(order => order.type).join('; ')}`
+            return `${actorForOrder(c.actorId)}: ${c.orders.map(order => order.type).join('; ')}`
         case "flag":
-            return `set ${c.flag || UNSET} to ${c.on ? 'ON' : 'OFF'}`
+            return `set ${quoted(c.flag)} to ${c.on ? 'ON' : 'OFF'}`
         case "soundEffect":
-            return `play sfx: ${c.sound ?? UNSET}`
+            return `play sfx: ${quoted(c.sound)}`
         case "toggleZone":
-            return `${c.on ? 'Activate' : 'Deactivate'} ${c.zoneType} ${quoted(c.ref)} in room ${c.roomId ?? UNSET}`
+            return `${c.on ? 'Activate' : 'Deactivate'} ${c.zoneType} ${quoted(c.ref)} in room ${defaulted(c.roomId)}`
         case "conversationChoice":
             return `${c.on ? 'Activate' : 'Deactivate'} choice ${quoted(c.branchId)} / ${quoted(c.choiceRef)} in  ${c.conversationId ?? UNSET}`
         case "sequence":
             return `run ${quoted(c.sequence)}`
         case "changeStatus":
-            return `${c.targetId ?? UNSET}${brackets(c.targetType)} status =  ${quoted(c.status)}`
+            return `${defaulted(c.targetId)}${brackets(c.targetType)} status =  ${quoted(c.status)}`
         case "backgroundMusic":
-            return `Set BGM in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
+            return `Set BGM in room ${defaulted(c.roomId)} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
         case "ambientNoise":
-            return `Set ambient noise in room ${c.roomId ?? UNSET} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
+            return `Set ambient noise in room ${defaulted(c.roomId)} to ${quotedNone(c.sound)} ${brackets(c.volume?.toString())}`
         case "storyBoardConsequence":
-            return `Run story board "${c.storyBoardId}"`
+            return `Run story board ${quoted(c.storyBoardId)}`
         case "changePlayerCharacter":
-            return `Change player character to ${c.actorId ?? UNSET}`
-        default:
-            return "[description]"
+            return `Change player character to ${defaulted(c.actorId)}`
+        case "setActorPlayable":
+            return `Makes ${defaulted(c.actorId)} ${c.canBePlayer ? "playable" : "not playable"}`
     }
 }

@@ -2,6 +2,7 @@ import { Button, ButtonGroup, ButtonProps, Dialog, DialogActions, DialogContent,
 import React, { ReactNode, useState } from "react";
 import { FramePicker } from "./FramePicker";
 import { FileAsset } from "@/services/assets";
+import { DialogTutorial } from "./tutorial/sections";
 
 interface Props {
     buttonContent?: ReactNode;
@@ -71,6 +72,7 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
         <Dialog open={dialogOpen} onClose={() => { setDialogOpen(false) }} fullWidth>
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>
+                <DialogTutorial />
                 <FramePicker
                     imageFilter={filterAssets}
                     setLocalFrame={(row, col, imageId) => setLocalFrame({ row, col, imageId })}

@@ -58,6 +58,7 @@ import ChangePlayerCharacterIcon from '@mui/icons-material/People';
 import ShortCutIcon from '@mui/icons-material/Shortcut';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import SetActorPlayableIcon from '@mui/icons-material/GroupAdd';
 
 export type IconComponent = typeof ActorIcon;
 
@@ -122,5 +123,6 @@ export {
     RoomIcon,
     SequenceIcon,
     SoundIcon,
+    SetActorPlayableIcon,
 };
 
