@@ -27,7 +27,6 @@ const immediateConsequenceGroupings: ConsequenceGrouping[] = [
         title: 'Game events',
         members: [
             'conversation',
-            'sequence',
             'storyBoardConsequence',
             'changePlayerCharacter',
             'changeRoom',
@@ -47,6 +46,7 @@ const timedConsequenceGroupings: ConsequenceGrouping[] = [{
     title: 'Actor Orders',
     members: [
         'order',
+        'sequence',
     ]
 }]
 
