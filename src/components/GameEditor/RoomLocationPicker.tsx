@@ -3,10 +3,11 @@ import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { XY } from "@/lib/types-and-constants";
 import { Box } from "@mui/material";
-import { ActorWithOrdersAndClickHandlers, Hotspot, Pin, Room, WalkableOrObstacle, locateClickInWorld } from "point-click-components";
+import { ActorWithOrdersAndClickHandlers, Hotspot, Pin, Room, locateClickInWorld } from "point-click-components";
 import { RoomData } from "point-click-lib";
 import { useState } from "react";
 import { RoomAngleFrame } from "./RoomEditor/RoomAngleFrame";
+import { WalkabilityZone } from "../svg/WalkabilityZone";
 
 
 interface Props {
@@ -30,7 +31,7 @@ export const RoomLocationPicker = ({
     onClick, renderAllZones, obstacleRefToFocus, walkableRefToFocus, hotspotIdToFocus,
     fixedView,
 }: Props) => {
-    const {gameDesign} = useGameDesign()
+    const { gameDesign } = useGameDesign()
     const { getImageAsset } = useAssets();
     const [viewAngleXState, setViewAngleXState] = useState(0)
     const [viewAngleYState, setViewAngleYState] = useState(0)
@@ -75,25 +76,31 @@ export const RoomLocationPicker = ({
         </>}
         parallaxContent={<>
             {obstacleInFocus && (
-                <WalkableOrObstacle
+                <WalkabilityZone
                     zone={obstacleInFocus}
-                    zoneType="obstacle"
-                    zoneOptions={{ blink: true }}
+                    zoneType='obstacle'
+                    className='flashing-zone'
                     markVertices={false}
                 />
             )}
             {walkableInFocus && (
-                <WalkableOrObstacle
+                <WalkabilityZone
                     zone={walkableInFocus}
-                    zoneType="walkable"
-                    zoneOptions={{ blink: true }}
+                    zoneType='walkable'
+                    className='flashing-zone'
                     markVertices={false}
                 />
             )}
             {hotspotInFocus && (
                 <Hotspot
                     zone={hotspotInFocus}
-                    flash={true}
+                    customInteractableStyling={{
+                        hotspot: {
+                            standard: {
+                                className: 'flashing-zone'
+                            }
+                        }
+                    }}
                 />
             )}
         </>}
