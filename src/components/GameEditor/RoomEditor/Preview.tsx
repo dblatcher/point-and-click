@@ -9,6 +9,7 @@ import { ActorData, getTargetPoint, HotspotZone, RoomData, ZoneType } from "poin
 import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { RoomAngleFrame } from "./RoomAngleFrame";
+import { WalkableAndObstacleZones } from "@/components/svg/WalkableAndObstacleZones";
 
 
 type Props = {
@@ -108,7 +109,6 @@ export const Preview = ({
                     setViewAngleY={setViewAngleY}>
                     <Room data={roomDataForView} noSound noMargin
                         sprites={gameDesign.sprites}
-                        renderAllZones={renderAllZones}
                         getImageAsset={getImageAsset}
                         getSoundAsset={() => undefined}
                         maxHeight={(roomDataForView.frameHeight || roomDataForView.height) * scaleForView}
@@ -119,8 +119,15 @@ export const Preview = ({
                         handleRoomClick={processClick}
                         highlightHotspots={highlightHotspots}
                         hotspotIndexToMark={zoneType === 'hotspot' ? activeZoneIndex : undefined}
-                        obstacleIndexToMark={zoneType === 'obstacle' ? activeZoneIndex : undefined}
-                        walkableIndexToMark={zoneType === 'walkable' ? activeZoneIndex : undefined}
+
+                        customInteractableStyling={{
+                            hotspot: {
+                                standard: {
+                                    className: 'no-hover-effect '
+                                }
+                            }
+                        }}
+
                         surfaceContent={<>
                             {showScaleLines && scaling.map((yAndScale, index) => (
                                 <HorizontalLine key={index}
@@ -135,6 +142,14 @@ export const Preview = ({
                                 />
                             )}
                         </>}
+                        parallaxContent={
+                            <WalkableAndObstacleZones
+                                roomData={roomData}
+                                renderAllZones={renderAllZones}
+                                obstacleIndexToMark={zoneType === 'obstacle' ? activeZoneIndex : undefined}
+                                walkableIndexToMark={zoneType === 'walkable' ? activeZoneIndex : undefined}
+                            />
+                        }
                     />
                 </RoomAngleFrame>
 

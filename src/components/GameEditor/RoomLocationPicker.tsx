@@ -6,8 +6,9 @@ import { Box } from "@mui/material";
 import { ActorWithOrdersAndClickHandlers, Hotspot, Pin, Room, locateClickInWorld } from "point-click-components";
 import { RoomData } from "point-click-lib";
 import { useState } from "react";
-import { RoomAngleFrame } from "./RoomEditor/RoomAngleFrame";
 import { WalkabilityZone } from "../svg/WalkabilityZone";
+import { WalkableAndObstacleZones } from "../svg/WalkableAndObstacleZones";
+import { RoomAngleFrame } from "./RoomEditor/RoomAngleFrame";
 
 
 interface Props {
@@ -48,7 +49,6 @@ export const RoomLocationPicker = ({
         orderedActors={contents}
         viewAngleX={viewAngleX}
         viewAngleY={viewAngleY}
-        renderAllZones={renderAllZones}
         getImageAsset={getImageAsset}
         getSoundAsset={() => undefined}
         handleRoomClick={(x, y) => {
@@ -75,6 +75,8 @@ export const RoomLocationPicker = ({
             ))}
         </>}
         parallaxContent={<>
+            {/* TO DO - make the zones to focus a prop of WalkableAndObstacleZones */}
+            <WalkableAndObstacleZones roomData={roomData} renderAllZones={renderAllZones} />
             {obstacleInFocus && (
                 <WalkabilityZone
                     zone={obstacleInFocus}
