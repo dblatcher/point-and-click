@@ -3,9 +3,10 @@ import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { XY } from "@/lib/types-and-constants";
 import { Box } from "@mui/material";
-import { ActorWithOrdersAndClickHandlers, Hotspot, Pin, Room, locateClickInWorld } from "point-click-components";
+import { ActorWithOrdersAndClickHandlers, Hotspot, Room, locateClickInWorld } from "point-click-components";
 import { RoomData } from "point-click-lib";
 import { useState } from "react";
+import { Pin } from "../svg/pins/Pin";
 import { WalkabilityZone } from "../svg/WalkabilityZone";
 import { WalkableAndObstacleZones } from "../svg/WalkableAndObstacleZones";
 import { RoomAngleFrame } from "./RoomEditor/RoomAngleFrame";
@@ -82,7 +83,6 @@ export const RoomLocationPicker = ({
                     zone={obstacleInFocus}
                     zoneType='obstacle'
                     className='flashing-zone'
-                    markVertices={false}
                 />
             )}
             {walkableInFocus && (
@@ -90,7 +90,6 @@ export const RoomLocationPicker = ({
                     zone={walkableInFocus}
                     zoneType='walkable'
                     className='flashing-zone'
-                    markVertices={false}
                 />
             )}
             {hotspotInFocus && (

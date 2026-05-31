@@ -1,12 +1,13 @@
 import { css, type SerializedStyles } from "@emotion/react"
 import { useRoomRender, ZoneShape } from "point-click-components"
 import type { Zone } from "point-click-lib"
+import { ZonePins } from "./pins/ZonePins"
 
 
 
 interface Props {
     zone: Zone,
-    markVertices: boolean
+    markVertices?: boolean
     zoneType: 'walkable' | 'obstacle'
     className?: string,
 }
@@ -60,7 +61,9 @@ export const WalkabilityZone = ({ zone, markVertices, zoneType, className }: Pro
             className={className}
             shapeSerialisedStyle={shapeSerialisedStyle}
             zone={zone}
-            markVertices={markVertices}
         />
+        {markVertices && (
+            <ZonePins zone={zone}/>
+        )}
     </svg>
 }

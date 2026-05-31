@@ -1,15 +1,16 @@
 import { BooleanInput } from "@/components/SchemaForm/BooleanInput";
 import { NumberInput } from "@/components/SchemaForm/NumberInput";
 import { MarkerShape } from "@/components/svg/MarkerShape";
+import { WalkableAndObstacleZones } from "@/components/svg/WalkableAndObstacleZones";
+import { ZonePins } from "@/components/svg/pins/ZonePins";
 import { useAssets } from "@/context/asset-context";
 import { useGameDesign } from "@/context/game-design-context";
 import { Box, Typography } from "@mui/material";
-import { HorizontalLine, putActorsInDisplayOrder, Room } from "point-click-components";
+import { HorizontalLine, Hotspot, putActorsInDisplayOrder, Room } from "point-click-components";
 import { ActorData, getTargetPoint, HotspotZone, RoomData, ZoneType } from "point-click-lib";
 import { useState } from "react";
 import { ClickEffect } from "./ClickEffect";
 import { RoomAngleFrame } from "./RoomAngleFrame";
-import { WalkableAndObstacleZones } from "@/components/svg/WalkableAndObstacleZones";
 
 
 type Props = {
@@ -82,7 +83,7 @@ export const Preview = ({
             .map(actor => ({ data: actor }))
         : []
 
-    const hotspotToHaveMarkWalkToPoint = zoneType === 'hotspot' && typeof activeZoneIndex === 'number' ? roomData.hotspots?.[activeZoneIndex] : undefined
+    const activeHotspot = zoneType === 'hotspot' && typeof activeZoneIndex === 'number' ? roomData.hotspots?.[activeZoneIndex] : undefined
 
     const roomDataForView: RoomData = compressedView
         ? { ...roomData, frameWidth: roomData.width, frameHeight: roomData.height ?? roomData.height }
@@ -118,12 +119,11 @@ export const Preview = ({
                         orderedActors={actorsInRoom}
                         handleRoomClick={processClick}
                         highlightHotspots={highlightHotspots}
-                        hotspotIndexToMark={zoneType === 'hotspot' ? activeZoneIndex : undefined}
 
                         customInteractableStyling={{
                             hotspot: {
                                 standard: {
-                                    className: 'no-hover-effect '
+                                    className: 'no-hover-effect'
                                 }
                             }
                         }}
@@ -135,21 +135,33 @@ export const Preview = ({
                                     text={`scale: ${yAndScale[1]}`}
                                 />
                             ))}
-                            {hotspotToHaveMarkWalkToPoint && (
+                            {activeHotspot && (<>
                                 <MarkerShape
-                                    text={getHotspotMarkerLabel(hotspotToHaveMarkWalkToPoint, roomDataForView)}
-                                    {...getTargetPoint(hotspotToHaveMarkWalkToPoint, roomDataForView)}
+                                    text={getHotspotMarkerLabel(activeHotspot, roomDataForView)}
+                                    {...getTargetPoint(activeHotspot, roomDataForView)}
                                 />
-                            )}
+                            </>)}
                         </>}
-                        parallaxContent={
+                        parallaxContent={<>
                             <WalkableAndObstacleZones
                                 roomData={roomData}
                                 renderAllZones={renderAllZones}
                                 obstacleIndexToMark={zoneType === 'obstacle' ? activeZoneIndex : undefined}
                                 walkableIndexToMark={zoneType === 'walkable' ? activeZoneIndex : undefined}
                             />
-                        }
+                            {activeHotspot && (<>
+                                <Hotspot zone={activeHotspot}
+                                    customInteractableStyling={{
+                                        hotspot: {
+                                            standard: {
+                                                className: 'flashing-zone no-interaction'
+                                            },
+                                        }
+                                    }}
+                                />
+                                <ZonePins zone={activeHotspot} parallax={activeHotspot.parallax} />
+                            </>)}
+                        </>}
                     />
                 </RoomAngleFrame>
 

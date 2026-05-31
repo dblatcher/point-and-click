@@ -38,3 +38,7 @@ body {
     .5s linear 0s infinite alternate flash-border, 
     1.5s linear 0s infinite border-march;
 }
+
+.no-interaction {
+  pointer-events: none;
+}
