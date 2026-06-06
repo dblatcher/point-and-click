@@ -1,13 +1,11 @@
 import { useGameDesign } from "@/context/game-design-context";
-import { Flag, FlagMap } from "point-click-lib";
-import { Box, Divider, FormControlLabel, Stack, Switch, Typography } from "@mui/material";
-import { ButtonWithConfirm } from "./ButtonWithConfirm";
-import { ButtonWithTextInput } from "./ButtonWithTextInput";
-import { makeNewFlag } from "./defaults";
-import { formatIdInput } from "./helpers";
-import { AddIcon, DeleteIcon, FlagFilledIcon, FlagOutlinedIcon } from "./material-icons";
 import { findFlagUsages, getModificationToRemoveFlagAndReferences } from "@/lib/find-uses";
+import { Box, Divider, FormControlLabel, Stack, Switch, Typography } from "@mui/material";
+import { Flag } from "point-click-lib";
+import { ButtonWithConfirm } from "./ButtonWithConfirm";
 import { DelayedStringInput } from "./DelayedStringInput";
+import { DeleteIcon, FlagFilledIcon, FlagOutlinedIcon } from "./material-icons";
+import { NewFlagButton } from "./NewFlagButton";
 
 
 interface Props {
@@ -15,13 +13,7 @@ interface Props {
 }
 
 export const FlagMapControl = ({ forModifier = false }: Props) => {
-    const { gameDesign, applyModification } = useGameDesign()
-
-    const addEntry = (key: string) => {
-        const mod: Partial<FlagMap> = {}
-        mod[key] = makeNewFlag()
-        return applyModification(`Add new flag ${key}`, { flagMap: { ...gameDesign.flagMap, ...mod } })
-    }
+    const { gameDesign } = useGameDesign()
 
     const flagList = Object.entries(gameDesign.flagMap).flatMap(([key, flag]) => {
         return flag ? { key, flag } : []
@@ -35,24 +27,7 @@ export const FlagMapControl = ({ forModifier = false }: Props) => {
         </Stack>
 
         {!forModifier && (
-            <ButtonWithTextInput
-                label={`Add new flag`}
-                onEntry={addEntry}
-                modifyInput={formatIdInput}
-                buttonProps={{
-                    startIcon: <AddIcon />,
-                    variant: 'contained',
-                    sx: { width: '100%' },
-                }}
-                getError={input => {
-                    if (flagList.some(item => item.key === input)) {
-                        return `there is already a flag called ${input}`
-                    }
-                    return undefined
-                }}
-                dialogTitle={`Enter flag name`}
-                keyboardShortcut={forModifier ? undefined : "#"}
-            />
+            <NewFlagButton keyboardShortcut="#" />
         )}
     </>
 };

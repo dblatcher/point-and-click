@@ -5,6 +5,7 @@ import React from "react";
 import { EditorBox } from "../layout/EditorBox";
 import { HelpButton } from "../HelpButton";
 import { MultipleSelectChip } from "../MultipleSelectChip";
+import { NewFlagButton } from "../NewFlagButton";
 
 
 interface Props {
@@ -20,6 +21,7 @@ export const FlagConditionControl: React.FunctionComponent<Props> = ({ interacti
 
     return <EditorBox title="Required Flags" barContent={(
         <div style={{ display: 'flex', alignItems: 'center' }}>
+            <NewFlagButton />
             <HelpButton helpTopic="flag-conditions" />
         </div>
     )}>

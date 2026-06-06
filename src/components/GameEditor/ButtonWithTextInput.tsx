@@ -8,7 +8,7 @@ import { useKeyBoard } from "@/hooks/use-keyboard";
 interface Props {
     label: string;
     onEntry: { (input: string): void };
-    dialogTitle: string;
+    dialogTitle?: string;
     useIconButton?: boolean;
     icon?: ReactNode;
     buttonProps?: ButtonProps;
@@ -23,7 +23,7 @@ interface Props {
 export const ButtonWithTextInput = ({
     onEntry,
     label,
-    dialogTitle,
+    dialogTitle = label,
     useIconButton,
     icon = <AddIcon color="primary" />,
     buttonProps = {},

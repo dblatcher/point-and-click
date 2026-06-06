@@ -4,17 +4,18 @@ import { useGameDesign } from "@/context/game-design-context";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { findById, insertAt, listIds } from "@/lib/util";
 import { Box } from "@mui/material";
-import { AnyConsequence, Consequence, consequenceMap, consequenceTypes, GameDesign, immediateConsequenceTypes, Order, zoneTypes } from "point-click-lib";
+import { AnyConsequence, Consequence, consequenceMap, GameDesign, Order, zoneTypes } from "point-click-lib";
 import { useState } from "react";
 import { ZodObject } from "zod";
 import { ArrayControl } from "../ArrayControl";
+import { getDefaultOrder, makeBlankConversation, makeBlankSequence, makeEmptyStoryBoard } from "../defaults";
+import { AddItemButton } from "../game-item-components/AddItemButton";
+import { NewFlagButton } from "../NewFlagButton";
 import { OrderTypeButtons } from "../OrderTypeButtons";
 import { OrderCard } from "../SequenceEditor/OrderCard";
 import { OrderDialog } from "../SequenceEditor/OrderDialog";
 import { SoundPreview } from "../SoundAssetTool/SoundPreview";
 import { SpritePreview } from "../SpritePreview";
-import { getDefaultOrder, makeBlankConversation, makeBlankSequence, makeEmptyStoryBoard } from "../defaults";
-import { AddItemButton } from "../game-item-components/AddItemButton";
 import { ConsequenceFormRoom } from "./ConsequenceFormRoom";
 import { getTargetLists, getZoneRefsOrIds } from "./getTargetLists";
 
@@ -172,6 +173,9 @@ export const ConsequenceForm = ({ consequence, update }: Props) => {
                         mutateList={newList => { updateOrders(newList) }}
                     />
                 )}
+                {(consequence.type === 'flag' && (
+                    <NewFlagButton afterAdd={(flag) => update({ ...consequence, flag })} />
+                ))}
             </Box>
 
             {needsRoomPreview &&
