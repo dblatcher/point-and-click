@@ -108,6 +108,24 @@ export const ConversationEditor = (props: Props) => {
         setActiveChoiceIndex(0)
     }
 
+    const addNewBranchAndSetCurrentChoiceToSetToIt = (branchName: string) => {
+        if (!branchName || conversation.branches[branchName]) {
+            return
+        }
+
+        const {branches, choice} = getBranchAndChoice()
+        branches[branchName] = {
+            choices: [
+                makeBlankConversationChoice()
+            ]
+        }
+        if (choice) {
+            choice.nextBranch = branchName
+
+        }
+        updateFromPartial({branches})
+    }
+
     const mutateChoiceList = (branchKey: string, newList: ConversationChoice[]) => {
         const getModifiedBranches = () => {
             const { branches } = getBranchAndChoice()
@@ -232,6 +250,7 @@ export const ConversationEditor = (props: Props) => {
                             updateChoiceListItem={updateChoiceListItem}
                             handleChoiceUpdate={handleChoiceUpdate}
                             actorIdsForSequences={actorIdsForSequences}
+                            addNewBranch={addNewBranchAndSetCurrentChoiceToSetToIt}
                         />
                     </>)}
                 </DialogContent>

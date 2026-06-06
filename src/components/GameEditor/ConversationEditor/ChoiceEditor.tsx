@@ -10,15 +10,18 @@ import { ButtonWithConfirm } from "../ButtonWithConfirm"
 import { HelpButton } from "../HelpButton"
 import { SequenceEditor } from "../SequenceEditor"
 import { makeBlankSequence } from "../defaults"
-import { DeleteIcon } from "../material-icons"
+import { AddIcon, DeleteIcon } from "../material-icons"
 import { ChoiceListControl } from "./ChoiceListControl"
 import { EditorShortcut } from "../EditorShortcut"
+import { ButtonWithTextInput } from "../ButtonWithTextInput"
+import { formatIdInput } from "../helpers"
 
 
 interface Props {
     choice: ConversationChoice
     conversation: Conversation
     openBranchId: string,
+    addNewBranch: { (branchKey: string): void },
     handleChoiceUpdate: { (mod: Partial<ConversationChoice>): void };
     addChoiceListItem: { (property: 'enablesChoices' | 'disablesChoices'): void };
     removeChoiceListItem: { (property: 'enablesChoices' | 'disablesChoices', index: number): void };
@@ -34,7 +37,8 @@ export const ChoiceEditor = ({
     choice, conversation, openBranchId,
     addChoiceListItem, removeChoiceListItem, updateChoiceListItem,
     handleChoiceUpdate,
-    actorIdsForSequences
+    actorIdsForSequences,
+    addNewBranch,
 }: Props) => {
 
     const [sequenceDialogOpen, setSequenceDialogOpen] = useState(false)
@@ -78,6 +82,23 @@ export const ChoiceEditor = ({
                 once: 'can use only once',
                 disabled: 'starts disabled',
                 end: 'ends conversation',
+            }}
+            customContentAfter={{
+                nextBranch: <Box>
+                    <ButtonWithTextInput
+                        label="change to new branch"
+                        onEntry={(entry) => {
+                            addNewBranch(entry)
+                        }}
+                        dialogTitle="enter branch name"
+                        clearOnOpen
+                        modifyInput={formatIdInput}
+                        buttonProps={{
+                            variant: 'outlined',
+                            startIcon: <AddIcon />,
+                        }}
+                    />
+                </Box>
             }}
         />
 
@@ -134,7 +155,7 @@ export const ChoiceEditor = ({
                     handleChoiceUpdate({ sequence: value })
                 }}
             />
-            <EditorShortcut itemType='sequences' itemId={choice.sequence} sx={{flexBasis:200}}/>
+            <EditorShortcut itemType='sequences' itemId={choice.sequence} sx={{ flexBasis: 200 }} />
         </Box>
         <Divider textAlign="left"><Typography fontWeight={700}>effect on other choices</Typography></Divider>
 

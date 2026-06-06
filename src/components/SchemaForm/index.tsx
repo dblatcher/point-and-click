@@ -1,5 +1,5 @@
-import { Stack, StackProps } from "@mui/material"
-import { ReactNode } from "react"
+import { Box, Stack, StackProps } from "@mui/material"
+import { Fragment, ReactNode } from "react"
 import { objectOutputType, ZodTypeAny, ZodRawShape, ZodBoolean, ZodEnum, ZodNumber, ZodObject, ZodString } from "zod"
 import { SchemaField } from "./SchemaField"
 import type { FieldDef, NumberInputSettings } from "./types"
@@ -15,6 +15,7 @@ interface Props<DataShape extends ZodRawShape> {
     suggestions?: Partial<Record<keyof DataShape, string[]>>;
     numberConfig?: Partial<Record<keyof DataShape, NumberInputSettings>>;
     fieldWrapperProps?: Omit<Partial<StackProps>, 'component' | 'children' | 'ref'>
+    customContentAfter?: Partial<Record<keyof DataShape, ReactNode>>
 }
 
 const getType = (typeName: string): FieldDef['type'] => {
@@ -43,6 +44,7 @@ export function SchemaForm<DataShape extends ZodRawShape>({
     options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {}, fieldAliases = {},
     fieldWrapperProps = {},
     textInputDelay,
+    customContentAfter = {},
 }: Props<DataShape>) {
     const fields: FieldDef[] = []
     for (const key in schema.shape) {
@@ -67,8 +69,9 @@ export function SchemaForm<DataShape extends ZodRawShape>({
 
 
     return <Stack spacing={1} {...fieldWrapperProps}>
-        {fields.map(field =>
-            <SchemaField key={field.key}
+        {fields.map(field => {
+            const extraContent = customContentAfter[field.key];
+            const renderField = () => <SchemaField
                 noTriState
                 options={options[field.key]}
                 optionDescriptions={optionDescriptions[field.key]}
@@ -80,6 +83,21 @@ export function SchemaForm<DataShape extends ZodRawShape>({
                 textInputDelay={textInputDelay}
                 schema={schema}
             />
-        )}
+
+            if (extraContent) {
+                return <Box key={field.key}
+                    display={'flex'}
+                    justifyContent={'space-between'}
+                    gap={2}
+                    alignItems={'flex-start'} >
+                    {renderField()}
+                    {extraContent}
+                </Box>
+            }
+
+            return <Fragment key={field.key}>
+                {renderField()}
+            </Fragment>
+        })}
     </Stack>
 }
