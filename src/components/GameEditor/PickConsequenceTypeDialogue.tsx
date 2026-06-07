@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material"
 import { ConsequenceType, consequenceTypes, immediateConsequenceTypes } from "point-click-lib"
 import { getConsequenceDisplayName, getConsequenceIcon } from "./SequenceEditor/get-order-details"
 

@@ -1,11 +1,11 @@
-import { InteractionIcon } from '@/components/GameEditor/material-icons';
 import { useGameDesign } from "@/context/game-design-context";
 import { findConversationsUsingSequence, findInteractionsUsingSequence } from '@/lib/find-uses';
-import { Badge, Button, ButtonGroup, ButtonProps, Dialog, DialogContent, DialogTitle } from "@mui/material";
-import { Sequence } from "point-click-lib";
-import React, { useState } from "react";
-import { EditorInteractionShortcut, EditorShortcut } from './EditorShortcut';
 import { describeInteraction } from '@/lib/game-design-logic/util';
+import { Badge, Button, ButtonGroup, ButtonProps, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Sequence } from "point-click-lib";
+import React from "react";
+import { ButtonForDialog } from '../ButtonForDialog';
+import { EditorInteractionShortcut, EditorShortcut } from './EditorShortcut';
 
 interface Props {
     item: Sequence
@@ -18,7 +18,6 @@ export const SequenceUsages: React.FunctionComponent<Props> = ({
     disabled,
     variant = 'outlined'
 }) => {
-    const [dialogOpen, setDialogOpen] = useState(false)
     const { gameDesign } = useGameDesign()
 
     const interactionsUsing = findInteractionsUsingSequence(item.id, gameDesign)
@@ -49,33 +48,35 @@ export const SequenceUsages: React.FunctionComponent<Props> = ({
     }
 
 
-    return <>
+    return (
         <Badge badgeContent={allUsages.length} color='secondary'>
-            <Button onClick={() => setDialogOpen(true)}
-                variant={variant}
-                disabled={disabled}
-            >usages</Button>
+            <ButtonForDialog buttonContent={'usages'}
+                buttonProps={{ variant, disabled }}
+            >
+                {(close) => <>
+                    <DialogTitle>Sequence usages</DialogTitle>
+                    <DialogContent>
+                        <ButtonGroup orientation='vertical'>
+                            {interactionsUsing.map(({ interaction, index }) => (
+                                <EditorInteractionShortcut key={index}
+                                    label={describeInteraction(interaction)}
+                                    interactionIndex={index} />
+                            ))}
+                            {conversationsUsing.map(conversation => (
+                                <EditorShortcut key={conversation.id}
+                                    itemType='conversations'
+                                    itemId={conversation.id}
+                                />
+                            ))}
+                        </ButtonGroup>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={close}>close</Button>
+                    </DialogActions>
+                </>}
+            </ButtonForDialog>
         </Badge>
+    )
 
-        <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-            <DialogTitle>Sequence usages</DialogTitle>
-            <DialogContent>
-                <ButtonGroup orientation='vertical'>
-                    {interactionsUsing.map(({ interaction, index }) => (
-                        <EditorInteractionShortcut key={index}
-                            label={describeInteraction(interaction)}
-                            interactionIndex={index} />
-                    ))}
 
-                    {conversationsUsing.map(conversation => (
-                        <EditorShortcut key={conversation.id}
-                            itemType='conversations'
-                            itemId={conversation.id}
-                        />
-                    ))}
-                </ButtonGroup>
-            </DialogContent>
-        </Dialog>
-
-    </>
 }
