@@ -4,12 +4,12 @@ import { Button, ButtonProps } from "@mui/material";
 import { Consequence } from "point-click-lib";
 import { ShortCutIcon } from "./material-icons";
 
-type Props = Omit<ButtonProps, 'children' | 'startIcon' | 'onClick' | 'disabled'> & {
+type EditorShortcutProps = Omit<ButtonProps, 'children' | 'startIcon' | 'onClick' | 'disabled'> & {
     itemType: TabId;
     itemId?: string | undefined;
 }
 
-export const EditorShortcut = ({ itemId, itemType, ...buttonProps }: Props) => {
+export const EditorShortcut = ({ itemId, itemType, ...buttonProps }: EditorShortcutProps) => {
 
     const { openInEditor } = useGameDesign()
 
@@ -24,6 +24,26 @@ export const EditorShortcut = ({ itemId, itemType, ...buttonProps }: Props) => {
         disabled={!itemId}
         {...buttonProps}
     >{itemId ?? itemType}</Button>
+}
+
+type EditorInteractionShortcutProps = Omit<ButtonProps, 'children' | 'startIcon' | 'onClick' | 'disabled'> & {
+    interactionIndex: number,
+    label?: string,
+}
+
+export const EditorInteractionShortcut = ({ interactionIndex, label, ...buttonProps }: EditorInteractionShortcutProps) => {
+    const { dispatchDesignUpdate } = useGameDesign()
+    const Icon = tabIcons['interactions']
+    const displayText = label ?? `interaction ${interactionIndex + 1}`
+
+    return <Button
+        aria-label={label ?? `edit interaction(${interactionIndex + 1})`}
+        startIcon={<ShortCutIcon />}
+        endIcon={Icon && <Icon />}
+        onClick={() => dispatchDesignUpdate({ type: 'set-interaction-index', interactionIndex })}
+        variant="outlined"
+        {...buttonProps}
+    >{displayText}</Button>
 }
 
 export const ShortcutsForConsequence = ({ consequence }: { consequence: Consequence }) => {

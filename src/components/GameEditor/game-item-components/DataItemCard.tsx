@@ -18,6 +18,7 @@ import { Box, BoxProps, Typography } from "@mui/material";
 import { ActorData, Conversation, GameDataItem, GameDataItemType, ItemData, RoomData, Sequence, SpriteData, StoryBoard } from "point-click-lib";
 import { StoryPageDisplay } from "../../storyboard/StoryPageDisplay";
 import { makeBlankInteraction } from "../defaults";
+import { SequenceUsages } from "../SequenceUsages";
 
 type Props<DataType extends GameDataItem> = {
     item: DataType;
@@ -178,6 +179,13 @@ const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designP
     return null
 }
 
+const ItemUsages = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
+    if (designProperty === 'sequences') {
+        return <SequenceUsages item={item as Sequence} />
+    }
+    return null
+}
+
 export const DataItemCard = <DataType extends GameDataItem,>({ attemptCreate, item, designProperty, itemTypeName }: Props<DataType>) => {
     const { gameDesign, openInEditor } = useGameDesign()
     const dataTypeArray = gameDesign[designProperty];
@@ -218,6 +226,7 @@ export const DataItemCard = <DataType extends GameDataItem,>({ attemptCreate, it
                     itemTypeName={itemTypeName}
                 />
                 <ItemInteraction item={item} designProperty={designProperty} />
+                <ItemUsages item={item} designProperty={designProperty} />
             </>}
         >
             <Box display={'flex'} gap={2} alignItems={'center'} justifyContent="space-between">

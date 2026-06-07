@@ -2,8 +2,9 @@ import { Reducer } from "react"
 import { GameEditorState, GameDesignAction, NavigationState } from "./types"
 import { cloneData } from "../clone"
 import { addGameDataItem, putInteraction } from "./mutate-design"
-import { GameDataItemTypeEnum, GameDesign, Interaction } from "point-click-lib"
+import { GameDataItemTypeEnum, GameDesign } from "point-click-lib"
 import { storeSavedDesign } from "../indexed-db"
+import { describeInteraction } from "./util"
 
 const pushWithLimitLength = <T>(history: T[], item: T, maxLength = 10) => {
     if (!history) { return }
@@ -28,13 +29,6 @@ const navigationStatesAreSame = (a: NavigationState | undefined, b: NavigationSt
         GameDataItemTypeEnum.options.every(key =>
             a.gameItemIds[key] === b.gameItemIds[key]
         )
-}
-
-const describeInteraction = (interaction: Interaction) => {
-    const { verbId, targetId, itemId } = interaction;
-    return itemId
-        ? `${verbId} ${targetId} with ${itemId}`
-        : `${verbId} ${targetId}`
 }
 
 export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (gameEditorState, action) => {

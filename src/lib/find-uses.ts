@@ -1,5 +1,7 @@
-import { Consequence, GameDesign, Sequence } from "point-click-lib";
+import { Consequence, Conversation, GameDesign, Sequence } from "point-click-lib";
 import { cloneData } from "./clone";
+import { interactions } from "@/data/test-game/interactions";
+import { conversations } from "@/data/test-game/conversations";
 
 
 const sequenceInvolvesFlag = (flagKey: string) => (sequence: Sequence) =>
@@ -67,3 +69,21 @@ export const getModificationToRemoveFlagAndReferences = (flagKey: string, gameDe
     return { flagMap, interactions, sequences, conversations }
 }
 
+export const findInteractionsUsingSequence = (sequenceId: string, gameDesign: GameDesign) => {
+    const interactionsAndIndeces = gameDesign.interactions.map((interaction, index) => ({ index, interaction }))
+    const interactions = interactionsAndIndeces.filter(
+        ({ interaction }) =>
+            interaction.consequences.some(consequence =>
+                consequence.type === 'sequence' && consequence.sequence === sequenceId
+            )
+    )
+    return interactions
+}
+
+export const findConversationsUsingSequence = (sequenceId: string, gameDesign: GameDesign): Conversation[] => {
+    return gameDesign.conversations.filter(conversation =>
+        Object.values(conversation.branches).some((branch) => 
+            branch?.choices.some(choice =>
+                choice.sequence === sequenceId)
+        ))
+}
