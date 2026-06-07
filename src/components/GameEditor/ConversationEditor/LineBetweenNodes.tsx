@@ -19,11 +19,13 @@ const determineCoordinates = (startNode: Element, endNode: Element, container: H
     const endBox = endNode.getBoundingClientRect()
 
     const startLeft = startBox.left - containerBox.left
+    const toEndBoxCenter = endBox.left - containerBox.left + endBox.width / 2
+    const goingRight = startLeft < toEndBoxCenter
+    const endX = !goingRight ? toEndBoxCenter + endBox.width * .15 : toEndBoxCenter - endBox.width * .15;
+    
+    
     const startY = startBox.top - containerBox.top + startBox.height / 2
-    const endX = endBox.left - containerBox.left + endBox.width / 2
     const topY = endBox.top - containerBox.top
-
-    const goingRight = startLeft < endX
     const goingUp = startY > topY
 
     const startX = goingRight ? startLeft + startBox.width : startLeft
@@ -55,8 +57,8 @@ export const LineBetweenNodes = ({ startNode, endNode, container }: { startNode:
     const { w, h, l, t, lineToTopRight, endX, endY, startX, startY } = coords
 
     const arrowPoints = startX < endX
-        ? ["50,20", "100,50", "50,80"].join(" ")
-        : ["50,20", "0,50", "50,80"].join(" ")
+        ? ["50,30", "100,50", "50,70"].join(" ")
+        : ["50,30", "0,50", "50,70"].join(" ")
 
     const direction = Math.atan((startY - endY) / (startX - endX))
 
@@ -90,10 +92,10 @@ export const LineBetweenNodes = ({ startNode, endNode, container }: { startNode:
 
         <div style={{
             position: 'absolute',
-            width: 20,
-            height: 20,
-            left: endX - 10,
-            top: endY - 10,
+            width: 30,
+            height: 30,
+            left: endX - 15,
+            top: endY - 15,
             overflow: "visible",
             pointerEvents: 'none',
         }}>
