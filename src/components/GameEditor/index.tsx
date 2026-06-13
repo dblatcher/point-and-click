@@ -24,7 +24,7 @@ import { DesignServicesIcon, SaveIcon } from './material-icons';
 import { SavedDesignDialog } from './SavedDesignDialog';
 import { TabButtonList } from './TabButtonList';
 import { TemplateDesignDialog } from './TemplateDesignDialog';
-import { TestGameDialog } from './TestGameDialog';
+import { TestGameDialog } from './game-tester/TestGameDialog';
 import { MainWindowTutorial } from './tutorial/sections';
 import { UpgradeNotice } from './UpgradeNotice';
 import { ZipFileButtons } from './ZipFileButtons';

@@ -1,6 +1,6 @@
 import { FlagMap } from "point-click-lib"
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material"
-import { FlagOutlinedIcon, FlagFilledIcon } from "../GameEditor/material-icons"
+import { FlagOutlinedIcon, FlagFilledIcon } from "../../material-icons"
 
 export const FlagList = ({ flagMap }: { flagMap: FlagMap }) => {
 

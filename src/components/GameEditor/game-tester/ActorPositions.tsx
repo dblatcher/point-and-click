@@ -1,7 +1,7 @@
 import { useGameDesign } from "@/context/game-design-context";
 import { List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { EditorBox } from "./layout/EditorBox";
-import { CheckBoxIcon, CheckBoxOutlineBlankIcon } from "./material-icons";
+import { EditorBox } from "../layout/EditorBox";
+import { CheckBoxIcon, CheckBoxOutlineBlankIcon } from "../material-icons";
 
 interface Props {
     actorId?: string,

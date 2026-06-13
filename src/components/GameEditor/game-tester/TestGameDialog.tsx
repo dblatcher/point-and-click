@@ -8,10 +8,10 @@ import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogC
 import { GameRunner, TemplateLayout } from "point-click-components";
 import { GameDesign } from "point-click-lib";
 import { useState } from "react";
-import { DebugLog } from "../DebugLog";
-import { BooleanInput } from "../SchemaForm/BooleanInput";
+import { DebugLog } from "./DebugLog";
+import { BooleanInput } from "../../SchemaForm/BooleanInput";
 import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
-import { PlayCircleFilledOutlinedIcon } from "./material-icons";
+import { PlayCircleFilledOutlinedIcon } from "../material-icons";
 
 
 export const TemplateLayoutWithDebugLog = () => <>
