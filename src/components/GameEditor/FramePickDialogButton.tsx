@@ -15,6 +15,7 @@ interface Props {
     showRemoveButton?: boolean;
     defaultState?: PickerState;
     noOptions?: boolean;
+    magnifiedPreview?: boolean;
 }
 
 
@@ -33,6 +34,7 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
     showRemoveButton,
     defaultState,
     noOptions,
+    magnifiedPreview,
 }: Props) => {
     const [dialogOpen, setDialogOpen] = useState(false)
     const [localFrame, setLocalFrame] = useState(defaultState ?? {})
@@ -81,7 +83,8 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
                     currentCol={localFrame.col}
                     currentRow={localFrame.row}
                     imageId={localFrame.imageId}
-                    />
+                    magnifiedPreview={magnifiedPreview}
+                />
             </DialogContent>
             <DialogActions>
                 <ButtonGroup variant="contained">

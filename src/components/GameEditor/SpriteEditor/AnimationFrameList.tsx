@@ -48,6 +48,7 @@ export const AnimationFrameList = ({
                         </Box>
                     }
                     noOptions
+                    magnifiedPreview
                     defaultState={frame}
                     pickFrame={(row, col, imageId) => {
                         const newFrame = imageId ? { row, col, imageId } : undefined;
@@ -68,7 +69,8 @@ export const AnimationFrameList = ({
                             sx: { alignSelf: 'center' }
                         }}
                         buttonLabel="Insert frame"
-                        noOptions
+                        noOptions 
+                        magnifiedPreview
                         defaultState={{ imageId: selectedSheetId }}
                         pickFrame={(row, col, imageId) => {
                             const newFrame = imageId ? { row, col, imageId } : undefined;
