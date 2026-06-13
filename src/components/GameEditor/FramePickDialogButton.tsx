@@ -3,6 +3,7 @@ import React, { ReactNode, useState } from "react";
 import { FramePicker } from "./FramePicker";
 import { FileAsset } from "@/services/assets";
 import { DialogTutorial } from "./tutorial/sections";
+import { ButtonForDialog } from "../ButtonForDialog";
 
 interface Props {
     buttonContent?: ReactNode;
@@ -36,7 +37,6 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
     noOptions,
     magnifiedPreview,
 }: Props) => {
-    const [dialogOpen, setDialogOpen] = useState(false)
     const [localFrame, setLocalFrame] = useState(defaultState ?? {})
 
     const handleSelection = (frame: PickerState) => {
@@ -48,51 +48,53 @@ export const FramePickDialogButton: React.FunctionComponent<Props> = ({
             return
         }
         pickFrame(row, col, imageId)
-        setDialogOpen(false)
     }
 
-    const remove = () => {
-        pickFrame(0, 0, undefined)
-        setDialogOpen(false)
-    }
 
-    const handleOpen = () => {
-        if (defaultState) {
-            setLocalFrame(defaultState)
-        }
-        setDialogOpen(true)
-    }
-
-    return <>
-        <Button aria-label={buttonLabel}
-            variant="outlined"
-            {...buttonProps}
-            disabled={disabled}
-            onClick={handleOpen}
-        >{buttonContent ?? buttonLabel}</Button>
-
-        <Dialog open={dialogOpen} onClose={() => { setDialogOpen(false) }} fullWidth>
-            <DialogTitle>{title}</DialogTitle>
-            <DialogContent>
-                <DialogTutorial />
-                <FramePicker
-                    imageFilter={filterAssets}
-                    setLocalFrame={(row, col, imageId) => setLocalFrame({ row, col, imageId })}
-                    noOptions={noOptions}
-                    handleSelection={handleSelection}
-                    currentCol={localFrame.col}
-                    currentRow={localFrame.row}
-                    imageId={localFrame.imageId}
-                    magnifiedPreview={magnifiedPreview}
-                />
-            </DialogContent>
-            <DialogActions>
-                <ButtonGroup variant="contained">
-                    <Button variant="outlined" onClick={() => setDialogOpen(false)}>cancel</Button>
-                    {showRemoveButton && <Button onClick={remove}>remove</Button>}
-                </ButtonGroup>
-            </DialogActions>
-        </Dialog>
-    </>
-
+    return (
+        <ButtonForDialog
+            buttonContent={buttonContent ?? buttonLabel}
+            onOpen={() => {
+                if (defaultState) {
+                    setLocalFrame(defaultState)
+                }
+            }}
+            buttonProps={{
+                'aria-label': buttonLabel,
+                variant: 'outlined',
+                ...buttonProps,
+                disabled,
+            }}
+            dialogProps={{ fullWidth: true }}
+        >
+            {close => (<>
+                <DialogTitle>{title}</DialogTitle>
+                <DialogContent>
+                    <DialogTutorial />
+                    <FramePicker
+                        imageFilter={filterAssets}
+                        setLocalFrame={(row, col, imageId) => setLocalFrame({ row, col, imageId })}
+                        noOptions={noOptions}
+                        handleSelection={(frame) => {
+                            handleSelection(frame)
+                            close()
+                        }}
+                        currentCol={localFrame.col}
+                        currentRow={localFrame.row}
+                        imageId={localFrame.imageId}
+                        magnifiedPreview={magnifiedPreview}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <ButtonGroup variant="contained">
+                        <Button variant="outlined" onClick={close}>cancel</Button>
+                        {showRemoveButton && <Button onClick={() => {
+                            pickFrame(0, 0, undefined)
+                            close()
+                        }}>remove</Button>}
+                    </ButtonGroup>
+                </DialogActions>
+            </>)}
+        </ButtonForDialog>
+    )
 }
