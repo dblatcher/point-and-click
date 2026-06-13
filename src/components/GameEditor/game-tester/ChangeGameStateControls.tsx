@@ -6,15 +6,14 @@ import { Box, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
 import { StringInput } from "../../SchemaForm/StringInput"
 import { DetailsAndStartPosition } from "../ActorEditor/DetailsAndStartPosition"
-import { ActorPositions } from "./ActorPositions"
-import { EditorBox } from "../layout/EditorBox"
 import { FlagMapControl } from "../FlagMapControl"
-import { StartingConditionsForm } from "../StartingConditionsForm"
+import { EditorBox } from "../layout/EditorBox"
 import { StartingInventory } from "../StartingInventory"
+import { ActorPositions } from "./ActorPositions"
+import { StartConditionsAndLocation } from "./StartConditionsAndLocation"
 
 
 export const ChangeGameStateControls = () => {
-
     const { gameDesign, applyModification } = useGameDesign();
     const [tabOpen, setTabOpen] = useState(0)
     const [actorId, setActorId] = useState<string | undefined>(() =>
@@ -28,14 +27,11 @@ export const ChangeGameStateControls = () => {
                 scrollButtons="auto">
                 <Tab label="Starting Conditions" value={0} />
                 <Tab label="Actor Positions" value={1} />
+                <Tab label="Flag and Items" value={2} />
             </Tabs>
             <Box display={'flex'} gap={2} marginTop={2}>
                 {tabOpen === 0 && (<>
-                    <StartingConditionsForm />
-                    <EditorBox title="Flags">
-                        <FlagMapControl forModifier />
-                    </EditorBox>
-                    <StartingInventory />
+                    <StartConditionsAndLocation />
                 </>)}
                 {tabOpen === 1 && (<>
                     <ActorPositions actorId={actorId} setActorId={setActorId} />
@@ -59,6 +55,12 @@ export const ChangeGameStateControls = () => {
                             />
                         </EditorBox>
                     )}
+                </>)}
+                {tabOpen === 2 && (<>
+                    <EditorBox title="Flags">
+                        <FlagMapControl forModifier />
+                    </EditorBox>
+                    <StartingInventory />
                 </>)}
             </Box>
         </>

@@ -1,24 +1,17 @@
 import { ButtonWithTextInput } from "@/components/GameEditor/ButtonWithTextInput";
 import { ConceptCard } from "@/components/GameEditor/ConceptCard";
-import { FramePreview } from "@/components/GameEditor/FramePreview";
 import { DeleteDataItemButton } from "@/components/GameEditor/game-item-components/DeleteDataItemButton";
 import { formatIdInput, truncateLine } from "@/components/GameEditor/helpers";
 import { InteractionsDialogsButton } from "@/components/GameEditor/InteractionsDialogsButton";
-import { CheckBoxIcon, CheckBoxOutlineBlankIcon, ContentCopyIcon, HideImageOutlinedIcon, RoomIcon } from "@/components/GameEditor/material-icons";
-import { RoomLocationPicker } from "@/components/GameEditor/RoomLocationPicker";
-import { SpritePreview } from "@/components/GameEditor/SpritePreview";
-import { useAssets } from "@/context/asset-context";
+import { CheckBoxIcon, CheckBoxOutlineBlankIcon, ContentCopyIcon, RoomIcon } from "@/components/GameEditor/material-icons";
 import { useGameDesign } from "@/context/game-design-context";
-import { useSprites } from "@/context/sprite-context";
 import { cloneData } from "@/lib/clone";
 import { tabIcons } from "@/lib/editor-config";
-import { buildActorData } from "@/lib/sprite-to-actor";
-import { findById } from "@/lib/util";
-import { Box, BoxProps, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { ActorData, Conversation, GameDataItem, GameDataItemType, ItemData, RoomData, Sequence, SpriteData, StoryBoard } from "point-click-lib";
-import { StoryPageDisplay } from "../../storyboard/StoryPageDisplay";
 import { makeBlankInteraction } from "../defaults";
 import { SequenceUsages } from "../SequenceUsages";
+import { ItemPreview } from "./ItemPreview";
 
 type Props<DataType extends GameDataItem> = {
     item: DataType;
@@ -27,65 +20,6 @@ type Props<DataType extends GameDataItem> = {
     attemptCreate: { (data: DataType): void }
 }
 
-
-const PREVIEW_WIDTH = 100
-const PREVIEW_HEIGHT = 80
-
-const previewBoxProps: BoxProps = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: PREVIEW_WIDTH,
-    height: PREVIEW_HEIGHT,
-}
-
-const ItemPreview = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
-    const { getImageAsset } = useAssets()
-    const sprites = useSprites();
-    if (designProperty === 'rooms') {
-        const roomData = item as RoomData
-        return <Box {...previewBoxProps}>
-            <RoomLocationPicker roomData={roomData} previewHeight={PREVIEW_HEIGHT} fixedView={{ x: 0, y: 0 }} previewWidth={PREVIEW_WIDTH} />
-        </Box>
-    }
-    if (designProperty === 'actors') {
-        const actorData = item as ActorData
-        return <Box {...previewBoxProps}>
-            <SpritePreview data={actorData} animation='default' noBaseLine maxHeight={PREVIEW_HEIGHT} />
-        </Box>
-    }
-    if (designProperty === 'sprites') {
-        const spriteData = item as SpriteData;
-        const sprite = findById(spriteData.id, sprites);
-        return <Box {...previewBoxProps}>
-            {sprite &&
-                <SpritePreview
-                    data={buildActorData(sprite, 'default', spriteData.defaultDirection)}
-                    animation='default' noBaseLine maxHeight={PREVIEW_HEIGHT}
-                    overrideSpriteData={spriteData}
-                />
-            }
-        </Box>
-
-    }
-    if (designProperty === 'items') {
-        const { imageId, row = 0, col = 0 } = item as ItemData
-        return <Box {...previewBoxProps}>
-            <FramePreview frame={imageId ? { imageId, row, col } : undefined} height={80} width={80} />
-        </Box>
-    }
-    if (designProperty === 'storyBoards') {
-        const { font, pages } = item as StoryBoard;
-        const [firstPage] = pages
-        return <Box {...previewBoxProps} flexDirection={'column'} alignItems={'stretch'} fontSize={3}>
-            {firstPage
-                ? <StoryPageDisplay page={firstPage} font={font} getImageAsset={getImageAsset} />
-                : <HideImageOutlinedIcon sx={{ height: 50, width: 50 }} />
-            }
-        </Box>
-    }
-    return null
-}
 
 const NameDisplay = ({ name }: { name?: string }) => name
     ? <Typography sx={{ fontWeight: 700 }}>{name}</Typography>
