@@ -14,7 +14,6 @@ interface Props {
     imageId?: string;
     setLocalFrame: { (row: number, col: number, imageId?: string): void };
     noOptions?: boolean;
-    magnifiedPreview?: boolean;
     imageFilter?: { (item: FileAsset): boolean }
     handleSelection: { (frame: SpriteFrame): void };
 }
@@ -34,6 +33,7 @@ const FrameButton = ({ image, row, col, onClick, isSelected, frameSize, onPointe
     return (
         <Button
             size="small"
+            sx={{ padding: 0 }}
             onClick={onClick}
             onPointerLeave={() => onPointer(row, col, false)}
             onPointerEnter={() => onPointer(row, col, true)}
@@ -59,6 +59,8 @@ const frameSizeFromButtonSize = (buttonSize: ButtonSize): number => {
     }
 }
 
+const MAGNIFIED_PREVIEW_SIZE = 150
+
 export const FramePicker: FunctionComponent<Props> = ({
     currentRow,
     currentCol,
@@ -67,7 +69,6 @@ export const FramePicker: FunctionComponent<Props> = ({
     noOptions = false,
     imageFilter,
     handleSelection,
-    magnifiedPreview = false,
 }) => {
     const { getImageAsset } = useAssets()
     const [showInOneRow, setShowInOneRow] = useState(false)
@@ -109,51 +110,51 @@ export const FramePicker: FunctionComponent<Props> = ({
     }
 
     return (
-        <Stack direction={'column'} justifyContent={'space-between'} alignItems={'flex-start'}>
-
-            <Box display={'flex'} justifyContent={'space-between'} alignSelf={'stretch'} paddingBottom={2}>
+        <Stack>
+            <Box alignSelf={'flex-start'}>
                 <FileAssetSelector assetType="image"
                     legend="sprite sheet"
                     format="select"
                     selectedItemId={imageId}
                     filterItems={imageFilter}
                     select={(item): void => { setLocalFrame(0, 0, item.id) }} />
-                {magnifiedPreview && (
-                    <Box minHeight={frameSize * 2} minWidth={frameSize * 2} component={Card}>
-                        {(imageId && hoveredFrame) && (
-                            <FramePreview
-                                height={frameSize * widthScale * 2}
-                                width={frameSize * heightScale * 2}
-                                frame={{ ...hoveredFrame, imageId }} />
-                        )}
-                    </Box>
-                )}
             </Box>
 
-            <Box sx={{
-                overflowY: 'auto',
-                maxHeight: 300
-            }}>
-                {image && (<>
-                    {showInOneRow ? (<>
-                        <div>
-                            {buttonPropsGrid.flat().map((buttonProps, buttonIndex) => (
-                                <FrameButton {...buttonProps} key={buttonIndex} />
-                            ))}
-                        </div>
-                    </>) : (<>
-                        {
-                            buttonPropsGrid.map((rowOfButtons, rowIndex) => (
-                                <div key={rowIndex}>
+            <Box display={'flex'} justifyContent={'space-between'} gap={2} >
+                <Box sx={{
+                    overflowY: 'auto',
+                    maxHeight: 300
+                }}>
+                    {image && (<>
+                        {showInOneRow
+                            ? (<div>
+                                {buttonPropsGrid.flat().map((buttonProps, buttonIndex) => (
+                                    <FrameButton {...buttonProps} key={buttonIndex} />
+                                ))}
+                            </div>
+                            )
+                            : buttonPropsGrid.map((rowOfButtons, rowIndex) => (
+                                <div key={rowIndex} style={{ marginBottom: 10 }}>
                                     {rowOfButtons.map((buttonProps, buttonIndex) => (
                                         <FrameButton {...buttonProps} key={buttonIndex} />
                                     ))}
                                 </div>
-                            ))
-                        }
-                    </>
+                            ))}
+                    </>)}
+                </Box>
+                <Box
+                    minHeight={MAGNIFIED_PREVIEW_SIZE}
+                    minWidth={MAGNIFIED_PREVIEW_SIZE}
+                    component={Card}
+                    alignSelf={'flex-end'}
+                >
+                    {(imageId && hoveredFrame) && (
+                        <FramePreview
+                            height={MAGNIFIED_PREVIEW_SIZE * widthScale}
+                            width={MAGNIFIED_PREVIEW_SIZE * heightScale}
+                            frame={{ ...hoveredFrame, imageId }} />
                     )}
-                </>)}
+                </Box>
             </Box>
 
             {!noOptions && (

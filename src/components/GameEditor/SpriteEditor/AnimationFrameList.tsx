@@ -48,7 +48,6 @@ export const AnimationFrameList = ({
                         </Box>
                     }
                     noOptions
-                    magnifiedPreview
                     defaultState={frame}
                     pickFrame={(row, col, imageId) => {
                         const newFrame = imageId ? { row, col, imageId } : undefined;
@@ -70,7 +69,6 @@ export const AnimationFrameList = ({
                         }}
                         buttonLabel="Insert frame"
                         noOptions 
-                        magnifiedPreview
                         defaultState={{ imageId: selectedSheetId }}
                         pickFrame={(row, col, imageId) => {
                             const newFrame = imageId ? { row, col, imageId } : undefined;
