@@ -10,8 +10,10 @@ import { tabIcons } from "@/lib/editor-config";
 import { Box, Typography } from "@mui/material";
 import { ActorData, Conversation, GameDataItem, GameDataItemType, ItemData, RoomData, Sequence, SpriteData, StoryBoard } from "point-click-lib";
 import { makeBlankInteraction } from "../defaults";
-import { SequenceUsages } from "../SequenceUsages";
+import { SequenceUsages } from "../usage-buttons/SequenceUsages";
 import { ItemPreview } from "./ItemPreview";
+import { ConversationUsages } from "../usage-buttons/ConversationUsages";
+import { StoryBoardUsages } from "../usage-buttons/StoryBoardUsages";
 
 type Props<DataType extends GameDataItem> = {
     item: DataType;
@@ -116,6 +118,12 @@ const ItemInteraction = ({ item, designProperty }: { item: GameDataItem, designP
 const ItemUsages = ({ item, designProperty }: { item: GameDataItem, designProperty: GameDataItemType }) => {
     if (designProperty === 'sequences') {
         return <SequenceUsages item={item as Sequence} />
+    }
+    if (designProperty === 'conversations') {
+        return <ConversationUsages item={item as Conversation} />
+    }
+    if (designProperty === 'storyBoards') {
+        return <StoryBoardUsages item={item as StoryBoard}/>
     }
     return null
 }

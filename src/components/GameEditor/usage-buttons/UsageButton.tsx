@@ -1,30 +1,28 @@
-import { useGameDesign } from "@/context/game-design-context";
-import { findConversationsUsingSequence, findInteractionsUsingSequence } from '@/lib/find-uses';
 import { describeInteraction } from '@/lib/game-design-logic/util';
 import { Badge, Button, ButtonGroup, ButtonProps, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { Sequence } from "point-click-lib";
-import React from "react";
-import { ButtonForDialog } from '../ButtonForDialog';
-import { EditorInteractionShortcut, EditorShortcut } from './EditorShortcut';
+import { Conversation, Interaction, Sequence } from "point-click-lib";
+import { ButtonForDialog } from '../../ButtonForDialog';
+import { EditorInteractionShortcut, EditorShortcut } from '../EditorShortcut';
 
 interface Props {
-    item: Sequence
     disabled?: boolean;
     variant?: ButtonProps['variant'];
+    interactionsUsing?: { interaction: Interaction, index: number }[],
+    sequencesUsing?: Sequence[]
+    conversationsUsing?: Conversation[]
 }
 
-export const SequenceUsages: React.FunctionComponent<Props> = ({
-    item,
+export const UsageButton = ({
     disabled,
-    variant = 'outlined'
-}) => {
-    const { gameDesign } = useGameDesign()
-
-    const interactionsUsing = findInteractionsUsingSequence(item.id, gameDesign)
+    variant,
+    interactionsUsing = [],
+    sequencesUsing = [],
+    conversationsUsing= [],
+}: Props) => {
     const [firstInteraction] = interactionsUsing
-    const conversationsUsing = findConversationsUsingSequence(item.id, gameDesign)
-    const [firstConversation] = conversationsUsing;
-    const allUsages = [...interactionsUsing, ...conversationsUsing]
+    const [firstSequence] = sequencesUsing;
+    const [firstConversation] = conversationsUsing
+    const allUsages = [...interactionsUsing, ...sequencesUsing, ...conversationsUsing]
 
     if (allUsages.length === 0) {
         return null
@@ -36,6 +34,12 @@ export const SequenceUsages: React.FunctionComponent<Props> = ({
                 title={describeInteraction(firstInteraction.interaction)}
                 label='usage'
                 interactionIndex={firstInteraction.index}
+            />
+        }
+        if (firstSequence) {
+            return <EditorShortcut
+                itemType='sequences'
+                itemId={firstSequence.id}
             />
         }
         if (firstConversation) {
@@ -62,6 +66,12 @@ export const SequenceUsages: React.FunctionComponent<Props> = ({
                                     label={describeInteraction(interaction)}
                                     interactionIndex={index} />
                             ))}
+                            {sequencesUsing.map(sequence => (
+                                <EditorShortcut key={sequence.id}
+                                    itemType='sequences'
+                                    itemId={sequence.id}
+                                />
+                            ))}
                             {conversationsUsing.map(conversation => (
                                 <EditorShortcut key={conversation.id}
                                     itemType='conversations'
@@ -77,6 +87,4 @@ export const SequenceUsages: React.FunctionComponent<Props> = ({
             </ButtonForDialog>
         </Badge>
     )
-
-
 }

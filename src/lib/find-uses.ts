@@ -1,8 +1,5 @@
 import { Consequence, Conversation, GameDesign, Sequence } from "point-click-lib";
 import { cloneData } from "./clone";
-import { interactions } from "@/data/test-game/interactions";
-import { conversations } from "@/data/test-game/conversations";
-
 
 const sequenceInvolvesFlag = (flagKey: string) => (sequence: Sequence) =>
     sequence.stages.some(stage =>
@@ -69,21 +66,61 @@ export const getModificationToRemoveFlagAndReferences = (flagKey: string, gameDe
     return { flagMap, interactions, sequences, conversations }
 }
 
-export const findInteractionsUsingSequence = (sequenceId: string, gameDesign: GameDesign) => {
-    const interactionsAndIndeces = gameDesign.interactions.map((interaction, index) => ({ index, interaction }))
-    const interactions = interactionsAndIndeces.filter(
+
+const consequenceUsesConversation = (conversationId: string) => (consequence: Consequence) =>
+    consequence.type === 'conversation' && consequence.conversationId === conversationId
+const consequenceUsesSequence = (sequenceId: string) => (consequence: Consequence) =>
+    consequence.type === 'sequence' && consequence.sequence === sequenceId
+const consequenceUsesStoryboard = (storyBoardId: string) => (consequence: Consequence) =>
+    consequence.type === 'storyBoardConsequence' && consequence.storyBoardId === storyBoardId
+
+const sequenceUsesConversation = (conversationId: string) => (sequence?: Sequence) => sequence?.stages.some(stage =>
+    stage.immediateConsequences?.some(consequenceUsesConversation(conversationId))
+)
+const sequenceUsesStoryBoard = (storyBoardId: string) => (sequence?: Sequence) => sequence?.stages.some(stage =>
+    stage.immediateConsequences?.some(consequenceUsesStoryboard(storyBoardId))
+)
+
+export const findInteractionsUsingSequence = (sequenceId: string, gameDesign: GameDesign) =>
+    gameDesign.interactions.map((interaction, index) => ({ index, interaction })).filter(
         ({ interaction }) =>
-            interaction.consequences.some(consequence =>
-                consequence.type === 'sequence' && consequence.sequence === sequenceId
-            )
+            interaction.consequences.some(consequenceUsesSequence(sequenceId))
     )
-    return interactions
-}
+export const findInteractionsUsingConversation = (conversationId: string, gameDesign: GameDesign) =>
+    gameDesign.interactions.map((interaction, index) => ({ index, interaction })).filter(
+        ({ interaction }) =>
+            interaction.consequences.some(consequenceUsesConversation(conversationId))
+    )
+export const findInteractionsUsingStoryboard = (storyBoardId: string, gameDesign: GameDesign) =>
+    gameDesign.interactions.map((interaction, index) => ({ index, interaction })).filter(
+        ({ interaction }) =>
+            interaction.consequences.some(consequenceUsesStoryboard(storyBoardId))
+    )
+
 
 export const findConversationsUsingSequence = (sequenceId: string, gameDesign: GameDesign): Conversation[] => {
     return gameDesign.conversations.filter(conversation =>
-        Object.values(conversation.branches).some((branch) => 
+        Object.values(conversation.branches).some((branch) =>
             branch?.choices.some(choice =>
                 choice.sequence === sequenceId)
         ))
 }
+export const findConversationsUsingConversation = (conversationId: string, gameDesign: GameDesign) =>
+    gameDesign.conversations.filter(conversation =>
+        Object.values(conversation.branches).some((branch) =>
+            branch?.choices.some(choice =>
+                sequenceUsesConversation(conversationId)(choice.choiceSequence)
+            ))
+    )
+export const findConversationsUsingStoryBoard = (storyBoardId: string, gameDesign: GameDesign) =>
+    gameDesign.conversations.filter(conversation =>
+        Object.values(conversation.branches).some((branch) =>
+            branch?.choices.some(choice =>
+                sequenceUsesStoryBoard(storyBoardId)(choice.choiceSequence)
+            ))
+    )
+
+export const findSequencesUsingConversation = (conversationId: string, gameDesign: GameDesign) =>
+    gameDesign.sequences.filter(sequenceUsesConversation(conversationId))
+export const findSequencesUsingStoryBoard = (storyBoardId: string, gameDesign: GameDesign) =>
+    gameDesign.sequences.filter(sequenceUsesStoryBoard(storyBoardId))
