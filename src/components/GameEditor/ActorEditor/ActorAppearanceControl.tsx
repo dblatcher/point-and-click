@@ -4,11 +4,12 @@ import { useGameDesign } from "@/context/game-design-context";
 import { useSprites } from "@/context/sprite-context";
 import { ActorData } from "point-click-lib";
 import { patchMember } from "@/lib/update-design";
-import { listIds } from "@/lib/util";
+import { findById, listIds } from "@/lib/util";
 import { Alert, Box, Divider, Stack } from "@mui/material";
 import { FramePickDialogButton } from "../FramePickDialogButton";
 import { SpritePreview } from "../SpritePreview";
 import { StatusFramesDialogButton } from "./StatusFramesDialogButton";
+import { RoomLocationPicker } from "../RoomLocationPicker";
 
 type Props = {
     data: ActorData;
@@ -27,9 +28,11 @@ export const ActorAppearanceControl = ({ data }: Props) => {
 
     const { sprite: spriteId, width = 1, height = 1 } = data
 
+    const roomData = findById(data.room, gameDesign.rooms)
+
     return (
         <>
-            <Box display={'flex'} gap={5} paddingTop={5}>
+            <Box display={'flex'} gap={5} paddingTop={5} >
                 <Stack spacing={2}>
                     <SelectInput optional
                         value={spriteId}
@@ -98,6 +101,14 @@ export const ActorAppearanceControl = ({ data }: Props) => {
                         </Alert>
                     )}
                 </Box>
+
+                {roomData && (
+                    <RoomLocationPicker
+                        roomData={roomData}
+                        contents={[{ data }]}
+                        previewWidth={250}
+                    />
+                )}
             </Box>
 
             <Divider flexItem />
