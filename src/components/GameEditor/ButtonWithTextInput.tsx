@@ -1,7 +1,7 @@
 import { StringInput } from "@/components/SchemaForm/inputs";
 import { defaultTheme } from "@/theme";
 import { Box, Button, ButtonProps, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ThemeProvider } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { AddIcon } from "@/components/GameEditor/material-icons"
 import { useKeyBoard } from "@/hooks/use-keyboard";
 
@@ -36,6 +36,15 @@ export const ButtonWithTextInput = ({
 }: Props) => {
     const [showDialog, setShowDialog] = useState<boolean>(false)
     const [input, setInput] = useState<string>('')
+    const inputRef = useRef<HTMLInputElement>()
+    useEffect(() => {
+        if (showDialog) {
+            setTimeout(() => {
+                inputRef.current?.focus()
+            }, 1)
+        }
+    }, [showDialog])
+
     const handleFirstButton = (): void => {
         if (clearOnOpen) {
             setInput('');
@@ -44,6 +53,7 @@ export const ButtonWithTextInput = ({
     }
     const handleInput = modifyInput ? (input: string) => setInput(modifyInput(input)) : setInput
     const errorMessage = getError?.(input);
+
 
     useKeyBoard(keyboardShortcut ? [{
         key: keyboardShortcut,
@@ -77,7 +87,7 @@ export const ButtonWithTextInput = ({
                     <DialogContent>
                         {children}
                         <Box minHeight={55} minWidth={250}>
-                            <StringInput
+                            <StringInput inputRef={inputRef}
                                 value={input}
                                 inputHandler={handleInput}
                                 error={errorMessage}
