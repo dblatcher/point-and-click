@@ -3,7 +3,7 @@ import { useGameDesign } from "@/context/game-design-context";
 import { getStatusSuggestions } from "@/lib/animationFunctions";
 import { findById, insertAt, listIds, replaceAt } from "@/lib/util";
 import { editorTheme } from "@/theme";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Stack, ThemeProvider, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Stack, ThemeProvider, Typography } from "@mui/material";
 import { Consequence, Interaction, findTarget } from "point-click-lib";
 import { ReactNode, useEffect, useState } from "react";
 import { ArrayControl } from "../ArrayControl";
@@ -18,10 +18,12 @@ import { ConsequenceDialog } from "../SequenceEditor/ConsequenceDialog";
 import { DialogTutorial } from "../tutorial/sections";
 import { FlagConditionControl } from "./FlagConditionControl";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
+import { Delete } from "@mui/icons-material";
+import { ButtonWithConfirm } from "../ButtonWithConfirm";
 
 
 const DialogFrame = ({ children, interaction }: { children: ReactNode, interaction?: Interaction }) => {
-    const { dispatchDesignUpdate } = useGameDesign()
+    const { dispatchDesignUpdate, deleteInteraction, interactionIndex } = useGameDesign()
 
     const dialogTitle = () => {
         if (!interaction) { return '' }
@@ -38,9 +40,21 @@ const DialogFrame = ({ children, interaction }: { children: ReactNode, interacti
     return (
         <Dialog open={true} scroll="paper" fullWidth maxWidth={'lg'} onClose={() => dispatchDesignUpdate({ type: 'set-interaction-index' })
         }>
-            <DialogTitle sx={{ alignItems: 'center', display: 'flex' }}>
-                <InteractionIcon />
-                Edit Interaction: {dialogTitle()}
+            <DialogTitle sx={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 5 }}>
+                    <InteractionIcon />
+                    Edit Interaction: {dialogTitle()}
+                </Box>
+                <ButtonWithConfirm
+                    icon={<Delete color="warning" />}
+                    useIconButton
+                    label="delete interaction"
+                    onClick={() => {
+                        dispatchDesignUpdate({ type: 'set-interaction-index' })
+                        if (typeof interactionIndex === 'number') {
+                            deleteInteraction(interactionIndex)
+                        }
+                    }} />
             </DialogTitle>
             {children}
             <DialogActions>
