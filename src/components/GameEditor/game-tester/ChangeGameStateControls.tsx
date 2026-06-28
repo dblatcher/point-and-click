@@ -2,7 +2,7 @@ import { useGameDesign } from "@/context/game-design-context"
 import { getStatusSuggestions } from "@/lib/animationFunctions"
 import { patchMember } from "@/lib/update-design"
 import { findById } from "@/lib/util"
-import { Box, Tab, Tabs } from "@mui/material"
+import { Box, List, ListItem, ListItemText, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
 import { StringInput } from "../../SchemaForm/StringInput"
 import { DetailsAndStartPosition } from "../ActorEditor/DetailsAndStartPosition"
@@ -14,7 +14,7 @@ import { StartConditionsAndLocation } from "./StartConditionsAndLocation"
 
 
 export const ChangeGameStateControls = () => {
-    const { gameDesign, applyModification } = useGameDesign();
+    const { gameDesign, applyModification, history } = useGameDesign();
     const [tabOpen, setTabOpen] = useState(0)
     const [actorId, setActorId] = useState<string | undefined>(() =>
         gameDesign.actors.find(actor => actor.isPlayer)?.id ?? gameDesign.actors[0]?.id
@@ -28,6 +28,7 @@ export const ChangeGameStateControls = () => {
                 <Tab label="Starting Conditions" value={0} />
                 <Tab label="Actor Positions" value={1} />
                 <Tab label="Flag and Items" value={2} />
+                <Tab label="Modifications" value={3} />
             </Tabs>
             <Box display={'flex'} gap={2} marginTop={2}>
                 {tabOpen === 0 && (<>
@@ -62,6 +63,17 @@ export const ChangeGameStateControls = () => {
                     </EditorBox>
                     <StartingInventory />
                 </>)}
+                {tabOpen === 3 && (
+                    <EditorBox title="history" boxProps={{ width: "100%", minHeight: 400 }}>
+                        <List>
+                            {history.map((item, index) => (
+                                <ListItem key={index}>
+                                    <ListItemText>{item.label}</ListItemText>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </EditorBox>
+                )}
             </Box>
         </>
     )

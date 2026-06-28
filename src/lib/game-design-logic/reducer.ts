@@ -31,7 +31,7 @@ const navigationStatesAreSame = (a: NavigationState | undefined, b: NavigationSt
         )
 }
 
-export const gameDesignReducer: Reducer<GameEditorState, GameDesignAction> = (gameEditorState, action) => {
+export const gameEditorStateReducer: Reducer<GameEditorState, GameDesignAction> = (gameEditorState, action) => {
     const addHistory = higherLevelAddHistoryItem(gameEditorState.history, cloneData(gameEditorState.gameDesign));
 
     const saveToQuitSave = (gameEditorState: GameEditorState) => {

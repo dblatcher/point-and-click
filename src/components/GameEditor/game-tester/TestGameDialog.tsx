@@ -7,11 +7,12 @@ import { editorTheme } from "@/theme";
 import { Box, Button, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Slider, ThemeProvider, Typography } from "@mui/material";
 import { GameRunner, TemplateLayout } from "point-click-components";
 import { GameDesign } from "point-click-lib";
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import { DebugLog } from "./DebugLog";
 import { BooleanInput } from "../../SchemaForm/BooleanInput";
 import { ChangeGameStateDialog } from "./ChangeGameStateDialog";
 import { PlayCircleFilledOutlinedIcon } from "../material-icons";
+import { gameEditorStateReducer } from "@/lib/game-design-logic/reducer";
 
 
 export const TemplateLayoutWithDebugLog = () => <>
@@ -29,6 +30,19 @@ export const TestGameDialog = () => {
     const [modifiedGameDesign, setModifiedGameDesign] = useState(cloneData(gameDesign))
     const [gameTestDialogOpen, setGameTestDialogOpen] = useState(false);
     const [resetTimeStamp, setResetTimeStamp] = useState(0);
+
+
+    const [modifiedGameEditorState, dispatchDesignUpdate] = useReducer(gameEditorStateReducer,
+        {
+            gameDesign: cloneData(gameDesign),
+            history: [],
+            undoneHistory: [],
+            tabOpen: 'main',
+            gameItemIds: {},
+            navigationStackBack: [],
+            navigationStackForward: [],
+        }
+    )
 
     const reset = () => setResetTimeStamp(Date.now())
     const close = () => {
@@ -78,7 +92,11 @@ export const TestGameDialog = () => {
                         <BooleanInput value={showDebugLog} inputHandler={setShowDebugLog} label="debug log" />
                         <ButtonGroup>
                             <Button onClick={reset} >reset</Button>
-                            <ChangeGameStateDialog sendModifiedDesign={handleModifiedDesign} />
+                            <ChangeGameStateDialog
+                                sendModifiedDesign={handleModifiedDesign}
+                                modifiedGameEditorState={modifiedGameEditorState}
+                                dispatchDesignUpdate={dispatchDesignUpdate}
+                            />
                             <Button onClick={close} >close</Button>
                         </ButtonGroup>
                     </DialogActions>

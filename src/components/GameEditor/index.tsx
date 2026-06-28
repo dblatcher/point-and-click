@@ -5,7 +5,7 @@ import { SpritesProvider } from '@/context/sprite-context';
 import { TutorialProvider } from '@/context/tutorial-context';
 import { getGameFromApi } from '@/lib/api-usage';
 import { getInitalDesign } from '@/lib/game-design-logic/initial-design';
-import { gameDesignReducer } from '@/lib/game-design-logic/reducer';
+import { gameEditorStateReducer } from '@/lib/game-design-logic/reducer';
 import { GameEditorProps } from '@/lib/game-design-logic/types';
 import { handleSoundUpdateToQuitSaveFunction, storeImageUpdateToQuitSaveFunction } from '@/lib/handle-asset-functions';
 import { MaybeDesignAndAssets, openDataBaseConnection } from '@/lib/indexed-db';
@@ -38,7 +38,7 @@ const GameEditor: React.FunctionComponent<GameEditorProps> = ({ usePrebuiltGame,
     const [isWaitingForDesign, setIsWaitingforDesign] = useState(true)
     const { setHeaderContent } = usePageMeta();
 
-    const [gameEditorState, dispatchDesignUpdate] = useReducer(gameDesignReducer, {
+    const [gameEditorState, dispatchDesignUpdate] = useReducer(gameEditorStateReducer, {
         gameDesign: getInitalDesign(),
         history: [],
         undoneHistory: [],

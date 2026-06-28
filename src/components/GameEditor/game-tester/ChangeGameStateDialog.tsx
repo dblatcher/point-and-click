@@ -1,61 +1,56 @@
 import { GameDesignProvider, useGameDesign } from "@/context/game-design-context"
-import { GameDesign } from "point-click-lib"
-import { cloneData } from "@/lib/clone"
-import { gameDesignReducer } from "@/lib/game-design-logic/reducer"
+import { GameDesignAction, GameEditorState } from "@/lib/game-design-logic/types"
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
-import { useReducer, useState } from "react"
+import { GameDesign } from "point-click-lib"
+import { Dispatch, useState } from "react"
 import { ChangeGameStateControls } from "./ChangeGameStateControls"
+import { UndoAndRedoButtons } from "../HistoryButtons"
 
 
 interface Props {
     sendModifiedDesign: { (gameDesign: GameDesign): void }
+    modifiedGameEditorState: GameEditorState;
+    dispatchDesignUpdate: Dispatch<GameDesignAction>
 }
 
-export const ChangeGameStateDialog = ({ sendModifiedDesign }: Props) => {
-    const { gameDesign } = useGameDesign()
+export const ChangeGameStateDialog = ({ sendModifiedDesign, modifiedGameEditorState, dispatchDesignUpdate }: Props) => {
+    const { gameDesign: actualGameDesign } = useGameDesign()
     const [dialogOpen, setDialogOpen] = useState(true)
 
-    const [modifiedGameState, dispatchDesignUpdate] = useReducer(gameDesignReducer,
-        {
-            gameDesign: cloneData(gameDesign),
-            history: [],
-            undoneHistory: [],
-            tabOpen: 'main',
-            gameItemIds: {},
-            navigationStackBack: [],
-            navigationStackForward: [],
-        }
-    )
+
 
     const closeAndSendDesign = () => {
         setDialogOpen(false)
-        sendModifiedDesign(modifiedGameState.gameDesign)
+        sendModifiedDesign(modifiedGameEditorState.gameDesign)
     }
 
-    return <>
-        <Button onClick={() => setDialogOpen(true)} >Modify</Button>
-        <Dialog open={dialogOpen} onClose={closeAndSendDesign} fullWidth maxWidth={'md'}>
-            <DialogTitle>Modify game: {gameDesign.id}</DialogTitle>
-            <DialogContent>
-                <GameDesignProvider input={{
-                    ...modifiedGameState,
-                    dispatchDesignUpdate,
-                    handleIncomingDesign: () => true,
-                    interactionIndex: undefined,
-                }}>
+    return (
+        <GameDesignProvider input={{
+            ...modifiedGameEditorState,
+            dispatchDesignUpdate,
+            handleIncomingDesign: () => true,
+            interactionIndex: undefined,
+        }}>
+            <Button onClick={() => setDialogOpen(true)} >Modify</Button>
+            <Dialog open={dialogOpen} onClose={closeAndSendDesign} fullWidth maxWidth={'md'}>
+                <DialogTitle>
+                    Modify game: {actualGameDesign.id}
+                </DialogTitle>
+                <DialogContent>
                     <ChangeGameStateControls />
-                </GameDesignProvider>
-            </DialogContent>
-            <DialogActions>
-                <DialogContentText>
-                    This control is for changing the starting conditions of the game for testing.
-                    It does not make any permanent changes to your game design.
-                </DialogContentText>
-                <Button variant="outlined" onClick={() => {
-                    dispatchDesignUpdate({ type: 'load-new', gameDesign: gameDesign })
-                }}>reset changes</Button>
-                <Button variant="contained" onClick={closeAndSendDesign} >start game with changes</Button>
-            </DialogActions>
-        </Dialog>
-    </>
+                </DialogContent>
+                <DialogActions sx={{gap:3}}>
+                    <DialogContentText>
+                        This control is for changing the starting conditions of the game for testing.
+                        It does not make any permanent changes to your game design.
+                    </DialogContentText>
+                    <UndoAndRedoButtons />
+                    <Button variant="outlined" onClick={() => {
+                        dispatchDesignUpdate({ type: 'load-new', gameDesign: actualGameDesign })
+                    }}>reset changes</Button>
+                    <Button variant="contained" onClick={closeAndSendDesign} >start game with changes</Button>
+                </DialogActions>
+            </Dialog>
+        </GameDesignProvider>
+    )
 }
