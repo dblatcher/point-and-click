@@ -7,7 +7,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, I
 import { Consequence, Interaction, findTarget } from "point-click-lib";
 import { ReactNode, useEffect, useState } from "react";
 import { ArrayControl } from "../ArrayControl";
-import { makeNewConsequence } from "../defaults";
+import { makeNewConsequence, makePlayerSaysConsequence } from "../defaults";
 import { UndoAndRedoButtons } from "../HistoryButtons";
 import { EditorBox } from "../layout/EditorBox";
 import { InteractionIcon } from "../material-icons";
@@ -194,24 +194,48 @@ export const InteractionDialog = () => {
                             boxProps={{ height: '100%', boxSizing: 'border-box', position: 'relative', display: 'flex', flexDirection: 'column' }}
                             contentBoxProps={{ flex: 1, sx: { paddingY: 4, paddingX: 3 } }}
                         >
-                            <ArrayControl
-                                list={consequences}
-                                createButtonPlacement="END"
-                                noMoveButtons={true}
-                                describeItem={(consequence, index) => (
-                                    <Box paddingBottom={1}>
-                                        <ConsequenceCard detailed
-                                            consequence={consequence}
-                                            handleEditButton={() => { setActiveConsequenceIndex(index) }}
-                                        />
-                                    </Box>
-                                )}
-                                mutateList={consequences => updateInteraction({ consequences }, `change consequences`)}
-                                customInsertFunction={setInsertConsequenceDialogIndex}
-                            />
+                            {consequences.length > 0 ? (
+                                <ArrayControl
+                                    list={consequences}
+                                    createButtonPlacement="END"
+                                    noMoveButtons={true}
+                                    describeItem={(consequence, index) => (
+                                        <Box paddingBottom={1}>
+                                            <ConsequenceCard detailed
+                                                consequence={consequence}
+                                                handleEditButton={() => { setActiveConsequenceIndex(index) }}
+                                            />
+                                        </Box>
+                                    )}
+                                    mutateList={consequences => updateInteraction({ consequences }, `change consequences`)}
+                                    customInsertFunction={setInsertConsequenceDialogIndex}
+                                />
+                            ) : (
+                                <Stack gap={4}>
+                                    <Button
+                                        size="large"
+                                        onClick={() => setInsertConsequenceDialogIndex(0)}
+                                        variant="contained"
+                                    >Add consequences</Button>
+                                    <Button
+                                        size="large"
+                                        variant="contained"
+                                        onClick={() => {
+                                            updateInteraction(
+                                                { consequences: insertAt(0, makePlayerSaysConsequence(), interaction.consequences) },
+                                                `add player says consequence`
+                                            )
+                                            setActiveConsequenceIndex(0)
+                                        }}
+                                    >
+                                        player says..
+                                    </Button>
+                                </Stack>
+                            )}
                         </EditorBox>
                         {activeConsequence && (
-                            <ConsequenceDialog close={() => { setActiveConsequenceIndex(undefined) }}
+                            <ConsequenceDialog
+                                close={() => { setActiveConsequenceIndex(undefined) }}
                                 consequence={activeConsequence}
                                 handleConsequenceUpdate={updateConsequence}
                             />

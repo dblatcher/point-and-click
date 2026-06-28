@@ -3,7 +3,7 @@ import { StringInput } from "@/components/SchemaForm/StringInput";
 import { Direction, directions } from "point-click-lib";
 import { Order } from "point-click-lib";
 import { Box, Stack } from "@mui/material";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { ActOrderForm } from "./ActOrderForm";
 import { GoToOrderForm } from "./GoToOrderForm";
 import { MoveOrderForm } from "./MoveOrderForm";
@@ -19,10 +19,24 @@ interface Props {
     updateData: { (data: Order): void };
 }
 
-export const OrderForm = ({ data, animationSuggestions, targetIdOptions, targetIdDescriptions, updateData, actorId }: Props) => {
+export const OrderForm = ({
+    data,
+    animationSuggestions,
+    targetIdOptions,
+    targetIdDescriptions,
+    updateData,
+    actorId
+}: Props) => {
+    const formContainerRef = useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        const inputToFocus =
+            formContainerRef.current?.querySelector("textarea") ??
+            formContainerRef.current?.querySelector("input:not([disabled])");
+        if (inputToFocus) { inputToFocus.focus() }
+    }, [])
 
     return (
-        <Box component={'article'} sx={{ flex: 1, minWidth: 400, paddingY: 2 }}>
+        <Box component={'article'} sx={{ flex: 1, minWidth: 400, paddingY: 2 }} ref={formContainerRef}>
             {data.type === 'act' && (
                 <ActOrderForm
                     data={data}

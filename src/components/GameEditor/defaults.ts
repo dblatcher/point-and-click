@@ -2,7 +2,8 @@ import { DEFAULT_TALK_TIME } from "@/lib/types-and-constants";
 import {
     Conversation, RoomData, Verb, Sequence, Consequence, ConsequenceType,
     Stage, ConversationChoice, Flag, Order, OrderType, ConversationBranch, ItemData, ActorData, SpriteData,
-    Interaction
+    Interaction,
+    OrderConsequence
 } from "point-click-lib";
 import { ActStep, MoveStep } from "point-click-lib";
 import { PagePicture, StoryBoard, StoryBoardPage } from "point-click-lib";
@@ -135,6 +136,20 @@ export function makeNewConsequence(type: ConsequenceType): Consequence {
             return { type, actorId: '' }
         case "setActorPlayable":
             return { type, actorId: '', canBePlayer: true }
+    }
+}
+
+export const makePlayerSaysConsequence = (): OrderConsequence => {
+    return {
+        type: 'order',
+        actorId: '',
+        orders: [
+            {
+                type: 'say',
+                text: "",
+                time: DEFAULT_TALK_TIME,
+            }
+        ]
     }
 }
 

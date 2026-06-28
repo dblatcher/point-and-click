@@ -39,11 +39,23 @@ const getBranchIdAndChoiceRefOptions = (consequence: Consequence, gameDesign: Ga
     return { branchIdList, choiceRefList }
 }
 
+const isNewPlayerSays = (consequence: Consequence): boolean => {
+    if (
+        consequence.type !== 'order' ||
+        !!consequence.actorId ||
+        consequence.orders.length !== 1
+    ) {
+        return false
+    }
+    const [order] = consequence.orders;
+    return order.type === 'say' && order.text === ''
+}
+
 export const ConsequenceForm = ({ consequence, update }: Props) => {
     const { roomId, zoneType, actorId, sound, targetId } = consequence as AnyConsequence;
     const { gameDesign, dispatchDesignUpdate } = useGameDesign()
     const { soundAssets, soundService } = useAssets()
-    const [orderIndexDialog, setDialogOrderIndex] = useState<number>()
+    const [orderIndexDialog, setDialogOrderIndex] = useState<number | undefined>(() => isNewPlayerSays(consequence) ? 0 : undefined)
     const { ids: targetIds } = getTargetLists(gameDesign)
 
     const { branchIdList, choiceRefList } = getBranchIdAndChoiceRefOptions(consequence, gameDesign)
