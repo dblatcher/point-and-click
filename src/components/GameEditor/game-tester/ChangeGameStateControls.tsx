@@ -2,7 +2,7 @@ import { useGameDesign } from "@/context/game-design-context"
 import { getStatusSuggestions } from "@/lib/animationFunctions"
 import { patchMember } from "@/lib/update-design"
 import { findById } from "@/lib/util"
-import { Box, List, ListItem, ListItemText, Tab, Tabs } from "@mui/material"
+import { Box, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
 import { StringInput } from "../../SchemaForm/StringInput"
 import { DetailsAndStartPosition } from "../ActorEditor/DetailsAndStartPosition"
@@ -10,6 +10,7 @@ import { FlagMapControl } from "../FlagMapControl"
 import { EditorBox } from "../layout/EditorBox"
 import { StartingInventory } from "../StartingInventory"
 import { ActorPositions } from "./ActorPositions"
+import { HistoryList } from "./HistoryList"
 import { StartConditionsAndLocation } from "./StartConditionsAndLocation"
 
 
@@ -30,7 +31,7 @@ export const ChangeGameStateControls = () => {
                 <Tab label="Flag and Items" value={2} />
                 <Tab label="Modifications" value={3} />
             </Tabs>
-            <Box display={'flex'} gap={2} marginTop={2}>
+            <Box display={'flex'} gap={2} marginTop={2} minHeight={450}>
                 {tabOpen === 0 && (<>
                     <StartConditionsAndLocation />
                 </>)}
@@ -64,15 +65,7 @@ export const ChangeGameStateControls = () => {
                     <StartingInventory />
                 </>)}
                 {tabOpen === 3 && (
-                    <EditorBox title="history" boxProps={{ width: "100%", minHeight: 400 }}>
-                        <List>
-                            {history.map((item, index) => (
-                                <ListItem key={index}>
-                                    <ListItemText>{item.label}</ListItemText>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </EditorBox>
+                    <HistoryList />
                 )}
             </Box>
         </>
