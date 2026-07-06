@@ -27,6 +27,10 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign, modifiedGameEditorSt
         sendModifiedDesign(actualGameDesign)
     }
 
+    const clearModifications = () => {
+        dispatchDesignUpdate({ type: 'load-new', gameDesign: actualGameDesign })
+    }
+
     return (
         <GameDesignProvider input={{
             ...modifiedGameEditorState,
@@ -39,14 +43,12 @@ export const ChangeGameStateDialog = ({ sendModifiedDesign, modifiedGameEditorSt
                 <DialogTitle justifyContent={'space-between'} display={"flex"}>
                     Modify game: {actualGameDesign.id}
                     <Box display={'flex'} gap={4}>
-                        <Button variant="outlined" onClick={() => {
-                            dispatchDesignUpdate({ type: 'load-new', gameDesign: actualGameDesign })
-                        }}>reset changes</Button>
+                        <Button variant="outlined" onClick={clearModifications}>reset changes</Button>
                         <UndoAndRedoButtons />
                     </Box>
                 </DialogTitle>
                 <DialogContent>
-                    <ChangeGameStateControls />
+                    <ChangeGameStateControls clearModifications={clearModifications}/>
                 </DialogContent>
                 <DialogActions sx={{ gap: 3 }}>
                     <DialogContentText>

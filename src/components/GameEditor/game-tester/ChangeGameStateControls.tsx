@@ -14,8 +14,12 @@ import { HistoryList } from "./HistoryList"
 import { StartConditionsAndLocation } from "./StartConditionsAndLocation"
 
 
-export const ChangeGameStateControls = () => {
-    const { gameDesign, applyModification, history } = useGameDesign();
+export const ChangeGameStateControls = ({
+    clearModifications
+}: {
+    clearModifications: { (): void }
+}) => {
+    const { gameDesign, applyModification } = useGameDesign();
     const [tabOpen, setTabOpen] = useState(0)
     const [actorId, setActorId] = useState<string | undefined>(() =>
         gameDesign.actors.find(actor => actor.isPlayer)?.id ?? gameDesign.actors[0]?.id
@@ -32,9 +36,9 @@ export const ChangeGameStateControls = () => {
                 <Tab label="Modifications" value={3} />
             </Tabs>
             <Box display={'flex'} gap={2} marginTop={2} minHeight={450}>
-                {tabOpen === 0 && (<>
-                    <StartConditionsAndLocation />
-                </>)}
+                {tabOpen === 0 && (
+                    <StartConditionsAndLocation clearModifications={clearModifications} />
+                )}
                 {tabOpen === 1 && (<>
                     <ActorPositions actorId={actorId} setActorId={setActorId} />
                     {actorToPosition && (

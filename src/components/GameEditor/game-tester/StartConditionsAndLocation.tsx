@@ -9,7 +9,11 @@ import { ItemPreview } from "../game-item-components/ItemPreview"
 import { RoomLocationPicker } from "../RoomLocationPicker"
 import { StartingConditionsForm } from "../StartingConditionsForm"
 
-export const StartConditionsAndLocation = () => {
+export const StartConditionsAndLocation = ({
+    clearModifications
+}: {
+    clearModifications: { (): void }
+}) => {
     const { gameDesign, applyModification } = useGameDesign()
     const player = gameDesign.actors.find(actor => actor.isPlayer);
     const [roomId, setRoomId] = useState<string>(gameDesign.currentRoomId)
@@ -29,9 +33,14 @@ export const StartConditionsAndLocation = () => {
             return
         }
 
+        // what I want in most cases - need to change history to store the actions to apply, not just the changed state
+        // so that they can be applied on top of a new updated design (like when a branch is rebased)
+        clearModifications()
         applyModification('set start position', {
             currentRoomId: roomId,
             actors: patchMember(player?.id, { ...point, room: roomId }, gameDesign.actors),
+            openingSequenceId: undefined,
+            openingStoryboardId: undefined,
         })
     }
 
