@@ -7,7 +7,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, I
 import { Consequence, Interaction, findTarget } from "point-click-lib";
 import { ReactNode, useEffect, useState } from "react";
 import { ArrayControl } from "../ArrayControl";
-import { makeNewConsequence, makePlayerSaysConsequence } from "../defaults";
+import { makeBlankSequence, makeNewConsequence, makePlayerSaysConsequence } from "../defaults";
 import { UndoAndRedoButtons } from "../HistoryButtons";
 import { EditorBox } from "../layout/EditorBox";
 import { InteractionIcon } from "../material-icons";
@@ -20,6 +20,8 @@ import { FlagConditionControl } from "./FlagConditionControl";
 import { getItemDescriptions, getTargetLists } from "./getTargetLists";
 import { Delete } from "@mui/icons-material";
 import { ButtonWithConfirm } from "../ButtonWithConfirm";
+import { ButtonWithTextInput } from "../ButtonWithTextInput";
+import { AddItemButton } from "../game-item-components/AddItemButton";
 
 
 const DialogFrame = ({ children, interaction }: { children: ReactNode, interaction?: Interaction }) => {
@@ -228,8 +230,26 @@ export const InteractionDialog = () => {
                                             setActiveConsequenceIndex(0)
                                         }}
                                     >
-                                        player says..
+                                        player says...
                                     </Button>
+                                    <AddItemButton
+                                        dataTypeArray={gameDesign.sequences}
+                                        itemTypeName="sequence"
+                                        onEntry={(sequenceId) => {
+                                            dispatchDesignUpdate({
+                                                type: 'create-data-item',
+                                                property: 'sequences',
+                                                data: makeBlankSequence(sequenceId)
+                                            })
+                                            updateInteraction(
+                                                { consequences: insertAt(0, { type: 'sequence', sequence: sequenceId }, interaction.consequences) },
+                                                `add sequence consequence`
+                                            )
+                                        }}
+                                        buttonProps={{
+                                            variant: 'contained'
+                                        }}
+                                    />
                                 </Stack>
                             )}
                         </EditorBox>

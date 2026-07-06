@@ -2,18 +2,21 @@ import { GameDataItem } from "point-click-lib"
 import { ButtonWithTextInput } from "../ButtonWithTextInput"
 import { AddIcon } from "../material-icons"
 import { formatIdInput } from "../helpers"
+import { ButtonProps } from "@mui/material"
 
 
 type Props = {
     itemTypeName: string,
     dataTypeArray: GameDataItem[],
-    onEntry: { (input: string): void }
+    onEntry: { (input: string): void },
+    buttonProps?: ButtonProps,
 }
 
 export const AddItemButton = ({
     itemTypeName,
     dataTypeArray,
-    onEntry
+    onEntry,
+    buttonProps
 }: Props) => {
 
     const getInputIdError = (input: string) => {
@@ -30,6 +33,7 @@ export const AddItemButton = ({
         buttonProps={{
             startIcon: <AddIcon />,
             sx: { flex: 1 },
+            ...buttonProps
         }}
         getError={getInputIdError}
         dialogTitle={`Enter ${itemTypeName} id`}
