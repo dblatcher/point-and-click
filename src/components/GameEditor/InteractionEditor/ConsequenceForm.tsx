@@ -8,7 +8,7 @@ import { AnyConsequence, Consequence, consequenceMap, GameDesign, Order, zoneTyp
 import { useState } from "react";
 import { ZodObject } from "zod";
 import { ArrayControl } from "../ArrayControl";
-import { getDefaultOrder, makeBlankConversation, makeBlankSequence, makeEmptyStoryBoard } from "../defaults";
+import { getDefaultOrder, makeBlankConversation, makeBlankItem, makeBlankSequence, makeEmptyStoryBoard } from "../defaults";
 import { AddItemButton } from "../game-item-components/AddItemButton";
 import { NewFlagButton } from "../NewFlagButton";
 import { OrderTypeButtons } from "../OrderTypeButtons";
@@ -102,7 +102,7 @@ export const ConsequenceForm = ({ consequence, update }: Props) => {
 
     return (
         <Box display={'flex'} paddingY={2} gap={2}>
-            <Box flexBasis={200}>
+            <Box flexBasis={250}>
                 <SchemaForm
                     schema={(consequenceMap[consequence.type] as unknown as ZodObject<any>).omit({
                         type: true,
@@ -132,6 +132,21 @@ export const ConsequenceForm = ({ consequence, update }: Props) => {
                             return
                         }
                         update(parsed.data)
+                    }}
+                    customContentAfter={{
+                        "itemId": (
+                            <AddItemButton
+                                dataTypeArray={gameDesign.items}
+                                itemTypeName="item"
+                                buttonProps={{ variant: 'contained' }}
+                                onEntry={(itemId) => {
+                                    dispatchDesignUpdate({ type: 'create-data-item', property: 'items', data: makeBlankItem(itemId) })
+                                    if ("itemId" in consequence) {
+                                        update({ ...consequence, itemId })
+                                    }
+                                }}
+                            />
+                        )
                     }}
                 />
                 {(consequence.type === 'sequence') && (

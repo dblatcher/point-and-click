@@ -176,10 +176,10 @@ export const makeEmptyStoryBoardPagePicture = (imageId = ''): PagePicture => ({
     }
 })
 
-export const makeBlankItem: { (): ItemData } = () => (
+export const makeBlankItem = (id = 'NEW_ITEM'): ItemData => (
     {
         type: 'item',
-        id: 'NEW_ITEM',
+        id,
     }
 )
 

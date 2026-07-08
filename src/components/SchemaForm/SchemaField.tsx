@@ -74,6 +74,7 @@ export function SchemaField<DataShape extends ZodRawShape>({
                 options={options}
                 optional={optional}
                 descriptions={optionDescriptions}
+                minWidth={80}
             />
         }
 

@@ -89,9 +89,10 @@ export function SchemaForm<DataShape extends ZodRawShape>({
                     display={'flex'}
                     justifyContent={'space-between'}
                     gap={2}
+                    flexWrap={'wrap'}
                     alignItems={'flex-start'} >
-                    {renderField()}
-                    {extraContent}
+                    <Box>{renderField()}</Box>
+                    <Box>{extraContent}</Box>
                 </Box>
             }
 
