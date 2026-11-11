@@ -19,14 +19,14 @@
     "jszip": "^3.10.1",
     "micromark": "^3.1.0",
     "next": "^14.2.24",
-    "point-click-components": "^0.3.4",
-    "point-click-lib": "^0.0.19",
+    "point-click-components": "^0.3.6",
+    "point-click-lib": "^0.1.1",
     "raw-loader": "^4.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sound-deck": "^0.0.2",
     "tiny-typed-emitter": "^2.1.0",
-    "zod": "^3.21.4"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "eslint": "8.57.1",

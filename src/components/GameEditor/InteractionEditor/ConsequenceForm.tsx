@@ -6,7 +6,7 @@ import { findById, insertAt, listIds } from "@/lib/util";
 import { Box } from "@mui/material";
 import { AnyConsequence, Consequence, consequenceMap, GameDesign, Order, zoneTypes } from "point-click-lib";
 import { useState } from "react";
-import { ZodObject } from "zod";
+import { ZodObject, ZodType } from "zod";
 import { ArrayControl } from "../ArrayControl";
 import { getDefaultOrder, makeBlankConversation, makeBlankItem, makeBlankSequence, makeEmptyStoryBoard } from "../defaults";
 import { AddItemButton } from "../game-item-components/AddItemButton";
@@ -24,6 +24,7 @@ interface Props {
     update: { (consequence: Consequence): void };
 }
 
+type AnyConsequenceSchema = ZodObject<Record<keyof AnyConsequence, ZodType>>;
 
 const getBranchIdAndChoiceRefOptions = (consequence: Consequence, gameDesign: GameDesign) => {
     const conversationId = consequence.type === 'conversation' || consequence.type === 'conversationChoice' ? consequence.conversationId : undefined;
@@ -104,11 +105,12 @@ export const ConsequenceForm = ({ consequence, update }: Props) => {
         <Box display={'flex'} paddingY={2} gap={2}>
             <Box flexBasis={250}>
                 <SchemaForm
-                    schema={(consequenceMap[consequence.type] as unknown as ZodObject<any>).omit({
+                    data={consequence as AnyConsequence}
+                    schema={(consequenceMap[consequence.type] as unknown as AnyConsequenceSchema).omit({
                         type: true,
                         narrative: true,
-                        orders: true,
-                    })}
+                        ...(('orders' in consequence) ? { orders: true } : {})
+                    }) as AnyConsequenceSchema}
                     numberConfig={{
                         volume: {
                             step: .1,
@@ -121,7 +123,7 @@ export const ConsequenceForm = ({ consequence, update }: Props) => {
                         targetId: targetIds,
                         status: getStatusSuggestions(targetId, gameDesign)
                     }}
-                    data={consequence}
+
                     changeValue={mod => {
                         const parsed = consequenceMap[consequence.type].safeParse({
                             ...consequence,

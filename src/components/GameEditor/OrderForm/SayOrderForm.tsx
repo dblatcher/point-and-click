@@ -22,7 +22,7 @@ export const SayOrderForm = ({
 
     return <SchemaForm
         textInputDelay={2000}
-        schema={SayOrderSchema.omit(orderBaseOmits)}
+        schema={SayOrderSchema.omit(orderBaseOmits) as typeof SayOrderSchema}
         data={data}
         changeValue={handleSchemaFormChange}
         suggestions={{ animation: animationSuggestions }}

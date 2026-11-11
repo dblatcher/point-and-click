@@ -1,60 +1,58 @@
 import { Box, Stack, StackProps } from "@mui/material"
 import { Fragment, ReactNode } from "react"
-import { objectOutputType, ZodTypeAny, ZodRawShape, ZodBoolean, ZodEnum, ZodNumber, ZodObject, ZodString } from "zod"
+import { ZodEnum, ZodObject, ZodOptional, ZodType } from "zod"
 import { SchemaField } from "./SchemaField"
-import type { FieldDef, NumberInputSettings } from "./types"
+import type { FieldDef, NumberInputSettings, SupportedData } from "./types"
 
-interface Props<DataShape extends ZodRawShape> {
-    schema: ZodObject<DataShape>;
-    changeValue: { (mod: Partial<objectOutputType<DataShape, ZodTypeAny>>): void };
+interface Props<T extends SupportedData> {
+    schema: ZodObject<Record<keyof T, ZodType>>;
+    changeValue: { (mod: Partial<T>): void };
     textInputDelay?: number
-    data: objectOutputType<DataShape, ZodTypeAny>;
-    options?: Partial<Record<keyof DataShape, string[]>>;
-    fieldAliases?: Partial<Record<keyof DataShape, string>>;
-    optionDescriptions?: Partial<Record<keyof DataShape, ReactNode[]>>;
-    suggestions?: Partial<Record<keyof DataShape, string[]>>;
-    numberConfig?: Partial<Record<keyof DataShape, NumberInputSettings>>;
+    data: T;
+    options?: Partial<Record<keyof T, string[]>>;
+    fieldAliases?: Partial<Record<keyof T, string>>;
+    optionDescriptions?: Partial<Record<keyof T, ReactNode[]>>;
+    suggestions?: Partial<Record<keyof T, string[]>>;
+    numberConfig?: Partial<Record<keyof T, NumberInputSettings>>;
     fieldWrapperProps?: Omit<Partial<StackProps>, 'component' | 'children' | 'ref'>
-    customContentAfter?: Partial<Record<keyof DataShape, ReactNode>>
+    customContentAfter?: Partial<Record<keyof T, ReactNode>>
 }
 
-const getType = (typeName: string): FieldDef['type'] => {
-    if (typeName === "ZodString") {
-        return 'ZodString'
+const checkZodTypeSupported = (typeName: string): FieldDef['type'] => {
+    switch (typeName) {
+        case 'string':
+        case 'boolean':
+        case 'enum':
+        case 'number':
+            return typeName
     }
-    if (typeName === "ZodBoolean") {
-        return 'ZodBoolean'
-    }
-    if (typeName === "ZodEnum") {
-        return 'ZodEnum'
-    }
-    if (typeName === "ZodNumber") {
-        return 'ZodNumber'
-    }
-    console.warn('TYPE GET FAIL!', typeName)
+    console.warn('Unsupported Zod Type', typeName)
+    return undefined
 }
 
 /**
  * Creates a form for the schema, Supports only primitives, optional primitives
  * and required string enums.
  */
-export function SchemaForm<DataShape extends ZodRawShape>({
+export function SchemaForm<T extends SupportedData>({
     schema, data,
     changeValue,
     options = {}, optionDescriptions = {}, numberConfig = {}, suggestions = {}, fieldAliases = {},
     fieldWrapperProps = {},
     textInputDelay,
     customContentAfter = {},
-}: Props<DataShape>) {
+}: Props<T>) {
     const fields: FieldDef[] = []
     for (const key in schema.shape) {
         const zod = schema.shape[key];
-        const optional = zod.isOptional();
-        const type = optional ? getType(zod._def.innerType._def.typeName) : getType(zod._def.typeName)
-        const enumOptions = type === 'ZodEnum'
+        const optional = zod.safeParse(undefined).success;
+        const type = zod.type === 'optional'
+            ? checkZodTypeSupported((zod as ZodOptional).unwrap()._zod.def.type)
+            : checkZodTypeSupported(zod.type)
+        const enumOptions = zod.type === 'enum'
             ? optional
-                ? zod._def.innerType._def.values
-                : zod._def.values
+                ? Object.keys((zod as ZodEnum).def.entries)
+                : Object.keys((zod as ZodEnum).def.entries)
             : undefined;
 
         fields.push({

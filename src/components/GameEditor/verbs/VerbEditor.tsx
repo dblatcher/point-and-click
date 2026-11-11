@@ -22,7 +22,6 @@ export const VerbEditor = ({ verb }: Props) => {
     const [localDefaultResponseWithItem, setLocalDefaultResponseWithItem] = useState(verb.defaultResponseWithItem)
 
     const handleUpdate = (mod: Partial<Verb>): void => {
-        console.log({ mod })
         const keys = Object.keys(mod);
         if (keys.includes('id')) {
             console.error('no id changes', mod)
@@ -45,7 +44,7 @@ export const VerbEditor = ({ verb }: Props) => {
                         defaultResponseCannotReach: true,
                         defaultResponseNoItem: true,
                         defaultResponseWithItem: true,
-                    })}
+                    }) as typeof VerbSchema}
                     fieldAliases={{
                         isNotForItems: 'cannot target items',
                         requiresItem: 'must have an item',

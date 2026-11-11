@@ -71,7 +71,7 @@ export const ChoiceEditor = ({
                 'enablesChoices': true,
                 'disablesChoices': true,
                 'choiceSequence': true
-            })}
+            }) as typeof ConversationChoiceSchema}
             data={choice}
             changeValue={handleChoiceUpdate}
             options={{

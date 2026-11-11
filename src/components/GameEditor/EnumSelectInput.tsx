@@ -3,7 +3,7 @@ import { SelectInput } from '../SchemaForm/SelectInput';
 import { FieldProps } from '../SchemaForm/types';
 
 type EnumSelectInputProps<T extends string> = FieldProps & {
-    enumSchema: ZodEnum<[T, ...T[]]>;
+    enumSchema: ZodEnum<Record<T,T>>;
     value: T | undefined;
     inputHandler: (value: T) => void;
     inputUndefinedHandler: () => void;
@@ -27,7 +27,7 @@ export const EnumSelectInput = <T extends string,>({
                 if (inputUndefinedHandler && typeof newValue === 'undefined') {
                     return inputUndefinedHandler()
                 }
-                const parse = enumSchema.safeParse(newValue)
+                const parse = enumSchema.safeParse(newValue);
                 if (parse.success) {
                     inputHandler(parse.data)
                 }

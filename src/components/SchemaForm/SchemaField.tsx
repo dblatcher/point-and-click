@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { objectOutputType, ZodObject, ZodRawShape, ZodTypeAny } from "zod";
+import { ZodObject, ZodRawShape, ZodType } from "zod";
 import { DelayedStringInput } from "../GameEditor/DelayedStringInput";
 import { BooleanInput } from "./BooleanInput";
 import { NumberInput } from "./NumberInput";
@@ -7,14 +7,14 @@ import { OptionalNumberInput } from "./OptionalNumberInput";
 import { SelectInput } from "./SelectInput";
 import { StringInput } from "./StringInput";
 import { TriStateInput } from "./TristateInput";
-import { type FieldDef, type NumberInputSettings } from "./types";
+import { SupportedData, type FieldDef, type NumberInputSettings } from "./types";
 
 // noTriState is set by default in SchemaForm, so no implementation of the
 // TriStateInput is currently needed
 
-interface SchemaFieldProps<DataShape extends ZodRawShape> {
-    schema: ZodObject<DataShape>;
-    changeValue: { (mod: Partial<objectOutputType<DataShape, ZodTypeAny>>): void };
+interface SchemaFieldProps<T extends SupportedData> {
+    schema: ZodObject<Record<keyof T, ZodType>>;
+    changeValue: { (mod: Partial<T>): void };
     textInputDelay?: number;
     field: FieldDef;
     noTriState?: boolean;
@@ -46,15 +46,15 @@ const describeUnknown = (value: unknown) => {
     }
 }
 
-export function SchemaField<DataShape extends ZodRawShape>({
+export function SchemaField<T extends ZodRawShape>({
     field, changeValue: change, noTriState,
     options, optionDescriptions,
     suggestions, stringInputType,
-    showUnsupported = false,
+    showUnsupported = true,
     numberInputSettings = {},
     textInputDelay,
     schema,
-}: SchemaFieldProps<DataShape>) {
+}: SchemaFieldProps<T>) {
     const { key, optional, type, value, alias } = field;
 
     const inputHandler = (value: unknown) => {
@@ -63,10 +63,11 @@ export function SchemaField<DataShape extends ZodRawShape>({
             console.error('Bad SchemaField input mod', { [key]: value }, parseMod.error.issues)
             return
         }
-        return change(parseMod.data);
+
+        return change(parseMod.data as Partial<T>);
     }
 
-    if (type === 'ZodString' && (typeof value === 'string' || typeof value === 'undefined')) {
+    if (type === 'string' && (typeof value === 'string' || typeof value === 'undefined')) {
         if (options) {
             return <SelectInput label={alias ?? key}
                 value={value || ''}
@@ -94,7 +95,7 @@ export function SchemaField<DataShape extends ZodRawShape>({
             />
     }
 
-    if (type === 'ZodBoolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {
+    if (type === 'boolean' && (typeof value === 'boolean' || typeof value === 'undefined')) {
         if (noTriState || !optional) {
             return <BooleanInput label={alias ?? key}
                 value={value ?? false}
@@ -107,7 +108,7 @@ export function SchemaField<DataShape extends ZodRawShape>({
         />
     }
 
-    if (type === 'ZodNumber') {
+    if (type === 'number') {
         if (typeof value === 'number' || typeof value === 'undefined') {
             return field.optional ? (
                 <OptionalNumberInput label={alias ?? key}
@@ -125,7 +126,7 @@ export function SchemaField<DataShape extends ZodRawShape>({
         }
     }
 
-    if (type === 'ZodEnum' && field.enumOptions) {
+    if (type === 'enum' && field.enumOptions) {
         if ((typeof value === 'string' || (field.optional && typeof value === 'undefined'))) {
             return <SelectInput label={alias ?? key}
                 value={value}

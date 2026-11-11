@@ -2,10 +2,12 @@ export interface FieldDef {
     key: string;
     alias?: string;
     optional: boolean;
-    type?: 'ZodString' | 'ZodBoolean' | 'ZodNumber' | 'ZodEnum';
+    type?: 'string' | 'boolean' | 'number' | 'enum';
     value: unknown;
     enumOptions?: string[];
 }
+
+export type SupportedData = Record<string, any>
 
 export type NumberInputSettings = {
     min?: number;

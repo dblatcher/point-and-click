@@ -43,7 +43,7 @@ export const GoToOrderForm = ({
 
     return <SchemaForm
         textInputDelay={1000}
-        schema={GotoOrderSchema.omit(orderBaseOmits)}
+        schema={GotoOrderSchema.omit(orderBaseOmits) as typeof GotoOrderSchema}
         data={data}
         changeValue={handleSchemaFormChange}
         suggestions={{
