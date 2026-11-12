@@ -1,7 +1,7 @@
 import { MarkDown } from '@/components/MarkDown'
 import { PageLayout } from '@/components/PageLayout'
 import attributionListContent from '@/content/attributionList.md'
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 
 export default function AttributionPage() {
     return (
