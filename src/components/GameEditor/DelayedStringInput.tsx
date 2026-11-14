@@ -9,7 +9,7 @@ export const DelayedStringInput: React.FunctionComponent<
     }
 > = ({ inputHandler, reportLocalChange, value, delayAfterEdits = 2000, ...props }) => {
 
-    const inputRef = useRef<HTMLInputElement>()
+    const inputRef = useRef<HTMLInputElement>(null)
     const [localvalue, setLocalValue] = useState(value)
     const timerIdRef = useRef<NodeJS.Timeout | undefined>(undefined)
 

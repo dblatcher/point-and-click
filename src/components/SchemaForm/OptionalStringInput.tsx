@@ -1,5 +1,5 @@
 import { Box, Checkbox, TextField } from "@mui/material";
-import { FormEventHandler, FunctionComponent, useState } from "react";
+import { ChangeEvent, FunctionComponent, InputEventHandler, useState } from "react";
 import { FieldProps } from "./types";
 import { eventToString } from "./util";
 
@@ -11,14 +11,14 @@ export const OptionalStringInput: FunctionComponent<FieldProps & {
     const { type = 'text', value, inputHandler, label } = props
     const [storedText, setStoredText] = useState(value ?? '')
 
-    const sendStringValue: FormEventHandler<HTMLInputElement> = (event) => {
+    const sendStringValue: InputEventHandler<HTMLElement> = (event) => {
         const inputValue = eventToString(event)
         setStoredText(inputValue)
         inputHandler(inputValue)
     }
 
-    const toggleUndefined: FormEventHandler<HTMLInputElement> = (event) => {
-        const { checked } = event.nativeEvent.target as HTMLInputElement;
+    
+    const toggleUndefined = (_event: ChangeEvent<HTMLInputElement, Element>, checked: boolean) => {
         if (!checked) {
             return inputHandler(undefined)
         }

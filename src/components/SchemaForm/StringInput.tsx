@@ -1,7 +1,7 @@
 import { Autocomplete, Box, TextField, TextFieldProps, Typography } from '@mui/material';
-import type { FormEventHandler, FunctionComponent, Ref } from 'react';
-import { eventToString } from './util';
+import type { FunctionComponent, InputEventHandler, Ref } from 'react';
 import { FieldProps } from './types';
+import { eventToString } from './util';
 
 export type StringInputProps = FieldProps & {
     value: string;
@@ -17,7 +17,7 @@ export type StringInputProps = FieldProps & {
 export const StringInput: FunctionComponent<StringInputProps> = (props) => {
     const { type = 'text', suggestions, label, error, optional, readOnly, inputRef, handleSuggestion, onBlur } = props;
 
-    const sendValue: FormEventHandler<HTMLInputElement> = (event) => {
+    const sendValue: InputEventHandler<HTMLElement> = (event) => {
         props.inputHandler(eventToString(event));
     };
 

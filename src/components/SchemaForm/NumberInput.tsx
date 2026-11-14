@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import type { FormEventHandler, FunctionComponent } from 'react';
+import type { FunctionComponent, InputEventHandler } from 'react';
 import type { FieldProps } from './types';
 import { eventToNumber } from './util';
 
@@ -15,7 +15,7 @@ export const NumberInput: FunctionComponent<
 > = (props) => {
     const { max, min } = props;
 
-    const sendValue: FormEventHandler<HTMLInputElement> = (event) => {
+    const sendValue: InputEventHandler<HTMLElement> = (event) => {
         const newValue = eventToNumber(event);
         if (typeof min === 'number' && newValue < min) {
             return;

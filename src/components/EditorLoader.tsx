@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import { GameEditorSkeleton } from "./GameEditorSkeleton"
 
 const DynamicComponent = dynamic<GameEditorProps>(() => import('@/components/GameEditor', {}), {
-  loading: GameEditorSkeleton,
+  loading: () => <GameEditorSkeleton />,
   ssr: false,
 })
 

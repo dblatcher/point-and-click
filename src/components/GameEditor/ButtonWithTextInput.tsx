@@ -36,7 +36,7 @@ export const ButtonWithTextInput = ({
 }: Props) => {
     const [showDialog, setShowDialog] = useState<boolean>(false)
     const [input, setInput] = useState<string>('')
-    const inputRef = useRef<HTMLInputElement>()
+    const inputRef = useRef<HTMLInputElement>(null)
     useEffect(() => {
         if (showDialog) {
             setTimeout(() => {

@@ -1,12 +1,12 @@
-import { Animation } from "point-click-lib";
-import { Direction, directions } from "point-click-lib";
-import { Stack } from "@mui/material";
-import { ButtonWithConfirm } from "../ButtonWithConfirm";
-import { EditorBox } from "../layout/EditorBox";
-import { AnimatedSpriteButton } from "./AnimatedSpriteButton";
 import { Sprite } from "@/lib/Sprite";
+import { Stack } from "@mui/material";
+import { Animation, Direction, directions } from "point-click-lib";
+import { ReactElement } from "react";
+import { ButtonWithConfirm } from "../ButtonWithConfirm";
 import { ButtonWithTextInput } from "../ButtonWithTextInput";
+import { EditorBox } from "../layout/EditorBox";
 import { ContentCopyIcon, DeleteIcon } from "../material-icons";
+import { AnimatedSpriteButton } from "./AnimatedSpriteButton";
 
 interface Props {
     animationKey: string
@@ -20,7 +20,7 @@ interface Props {
 
 
 export const AnimationGrid = ({ animation, animationKey, sprite, defaultDirection, deleteAnimation, copyAnimation, selectAnimationAndDirection }: Props) => {
-    const renderedButtons: Partial<Record<Direction, JSX.Element>> = {}
+    const renderedButtons: Partial<Record<Direction, ReactElement>> = {}
     {
         directions.forEach(direction => {
             renderedButtons[direction] = <AnimatedSpriteButton key={direction}

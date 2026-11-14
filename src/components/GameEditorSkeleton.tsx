@@ -1,5 +1,10 @@
 import { editorTheme } from "@/theme";
-import { Container, Stack, Skeleton, Box, ThemeProvider } from "@mui/material";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import ThemeProvider from "@mui/material/styles/ThemeProvider";
+
 import React, { ReactNode, Fragment } from "react";
 
 const Repeat = ({ children, count }: { children: ReactNode, count: number }) => {

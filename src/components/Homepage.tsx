@@ -1,11 +1,9 @@
 import featuresAndDetails from "@/content/featuresAndDetails.md";
 import homepageContent from "@/content/homepage.md";
-import DesignServicesIcon from '@mui/icons-material/DesignServices';
-import PlayCircleOutlineOutlinedIcon from '@mui/icons-material/PlayCircleOutlineOutlined';
-import SchoolIcon from '@mui/icons-material/School';
 import { Box, Card, Grid, Typography } from "@mui/material";
 import { LinkCard } from "./LinkCard";
 import { MarkDown } from "./MarkDown";
+import { DesignServicesIcon, PlayCircleOutlineOutlinedIcon, SchoolIcon } from "./GameEditor/material-icons";
 
 export const Homepage = () => {
 

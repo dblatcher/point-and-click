@@ -151,7 +151,7 @@ const BranchBox = ({ branch, branchKey, openEditor, addNewChoice, openOrderDialo
 
 export const ConversationFlow = ({ conversation, openEditor, addNewChoice, openOrderDialog, deleteBranch, addNewBranch, changeDefaultBranch }: Props) => {
     const [nodePairs, setNodePairs] = useState<[Element, Element][]>([])
-    const containerRef = useRef<HTMLElement>()
+    const containerRef = useRef<HTMLElement>(null)
     const heirarchy = getHeirarchy(conversation)
 
     useEffect(() => {
