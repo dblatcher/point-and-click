@@ -4,7 +4,7 @@ import { ImageAsset } from "@/services/assets";
 import { Box, Typography } from "@mui/material";
 import { EditorBox } from "../layout/EditorBox";
 import { HideImageOutlinedIcon } from "../material-icons";
-import { clamp } from "@/lib/util";
+import { clamp, formatFileSize } from "@/lib/util";
 
 interface Props {
     asset: Partial<ImageAsset>;
@@ -150,7 +150,10 @@ export const ImageAssetPreview: FunctionComponent<Props> = ({ asset: imageAsset,
                 />
             </Box>
 
-            <Box display={'flex'} justifyContent={'flex-end'}>
+            <Box display={'flex'} justifyContent={'flex-end'} gap={10}>
+                {imageAsset.size && (
+                    <Typography variant="caption">{formatFileSize(imageAsset.size)}</Typography>
+                )}
                 {naturalHeight && naturalWidth && (
                     <Typography variant="caption"> {naturalWidth} x {naturalHeight}</Typography>
                 )}

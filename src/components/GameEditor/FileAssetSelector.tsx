@@ -1,6 +1,6 @@
 import { DeleteIcon } from "@/components/GameEditor/material-icons";
 import { useAssets } from "@/context/asset-context";
-import { findById, listIds } from "@/lib/util";
+import { findById, formatFileSize, listIds } from "@/lib/util";
 import { FileAsset } from "@/services/assets";
 import { Box, IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { useState } from "react";
@@ -18,6 +18,13 @@ interface Props {
     filterItems?: { (item: FileAsset): boolean };
     currentSelection?: string;
 }
+
+const describeAsset = ({id, size}:FileAsset) => {
+    if (typeof size==='undefined') {
+        return id
+    }
+    return `${id}, ${formatFileSize(size)}`
+} 
 
 export const FileAssetSelector = ({
     assetType,
@@ -66,21 +73,21 @@ export const FileAssetSelector = ({
         case 'buttons':
         default:
             return (
-                <EditorBox title={legend} contentBoxProps={{display:'flex', flexDirection:'column', alignItems:'stretch', minWidth:200}}>
+                <EditorBox title={legend} contentBoxProps={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', minWidth: 200 }}>
                     <SearchControl searchInput={searchInput} setSearchInput={setSearchInput} />
                     <List dense disablePadding>
-                        {searchedItemsInFilter.map(({ id }) =>
-                            <ListItem key={id} disablePadding disableGutters
+                        {searchedItemsInFilter.map((asset) =>
+                            <ListItem key={asset.id} disablePadding disableGutters
                                 secondaryAction={
-                                    <IconButton edge="end" aria-label="delete" onClick={() => { deleteItem(id) }}>
+                                    <IconButton edge="end" aria-label="delete" onClick={() => { deleteItem(asset.id) }}>
                                         <DeleteIcon />
                                     </IconButton>
                                 }
                             >
                                 <ListItemButton
-                                    selected={id === currentSelection}
-                                    onClick={() => { handleSelect(id) }}>
-                                    <ListItemText primary={id} />
+                                    selected={asset.id === currentSelection}
+                                    onClick={() => { handleSelect(asset.id) }}>
+                                    <ListItemText primary={describeAsset(asset)} />
                                 </ListItemButton>
                             </ListItem>
                         )}
