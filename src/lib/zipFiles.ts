@@ -184,6 +184,7 @@ export const readImageAssetFromZipFile = async (
       return asset;
     }
     asset.href = imageUrl;
+    asset.size = imageBlob.size;
     return asset;
   }
 
@@ -239,6 +240,7 @@ export const readSoundAssetFromZipFile = async (
       return asset;
     }
     asset.href = objectUrl;
+    asset.size = assetBlob.size;
     return asset;
   }
 

@@ -76,7 +76,7 @@ export const AssetManager = <AssetType extends FileAsset>({
         setFileName(newFileName)
         setSaveWarning(undefined)
         if (shouldReplaceId) {
-            setAsset(({ ...asset, id: newFileName }))
+            setAsset(({ ...asset, id: newFileName, size: file.size }))
         }
     }
 

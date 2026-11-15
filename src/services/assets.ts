@@ -6,6 +6,7 @@ export type FileAsset = {
     href: string;
     originalFileName?: string;
     category?: string;
+    size?: number;
 }
 
 

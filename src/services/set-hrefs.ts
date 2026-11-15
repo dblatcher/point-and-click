@@ -13,6 +13,6 @@ export const setHrefsFromFiles = <FileAssetType extends FileAsset>(assetsAndFile
             console.error('failed to get object URL', asset, file)
             return { ...asset }
         }
-        return { ...asset, href: objectUrl };
+        return { ...{ ...asset, size: file.size }, href: objectUrl };
     })
 }
