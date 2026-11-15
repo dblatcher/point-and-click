@@ -8,7 +8,7 @@ import { FlagMapControl } from "./FlagMapControl";
 import { HelpButton } from "./HelpButton";
 import { StartingConditionsForm } from './StartingConditionsForm';
 import { StartingInventory } from './StartingInventory';
-import { FileAssetSelector } from "./FileAssetSelector";
+import { FileAssetSelector } from "./asset-components/FileAssetSelector";
 import { ImageBlock } from "../ImageBlock";
 import { ImageAsset } from "@/services/assets";
 import { HideImageOutlinedIcon } from "./material-icons";
@@ -40,7 +40,6 @@ export const Overview = () => {
 
             <FileAssetSelector
               selectedItemId={gameDesign.thumbnailAssetId}
-              format="select"
               filterItems={(asset) => {
                 const imageAsset = asset as ImageAsset;
                 return !imageAsset.cols && !imageAsset.rows;

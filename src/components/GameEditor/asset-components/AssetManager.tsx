@@ -8,8 +8,8 @@ import { Alert, Button, ButtonGroup, Grid, Snackbar, Typography } from "@mui/mat
 import { FunctionComponent, useState } from "react"
 import { EditorBox } from "../layout/EditorBox"
 import { EditorHeading } from "../layout/EditorHeading"
-import { FileAssetSelector } from "../FileAssetSelector"
 import { AddIcon, ImageIcon, SoundIcon } from "../material-icons"
+import { FileAssetList } from "./FileAssetList"
 import { SaveButtons } from "./SaveButtons"
 import { UploadAssetButtons } from "./UploadAssetButtons"
 import { ZipFileControl } from "./ZipFileControl"
@@ -224,7 +224,7 @@ export const AssetManager = <AssetType extends FileAsset>({
                         temporaryFileName={fileName} />
                 </Grid>
                 <Grid item>
-                    <FileAssetSelector assetType={assetType}
+                    <FileAssetList assetType={assetType}
                         legend="assets"
                         currentSelection={asset?.id}
                         select={openFromService} />

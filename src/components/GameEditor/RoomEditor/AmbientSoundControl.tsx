@@ -2,7 +2,7 @@ import { useAssets } from "@/context/asset-context";
 import { SoundInstance } from "point-click-lib";
 import { Alert, Box, Typography } from "@mui/material";
 import React from "react";
-import { FileAssetSelector } from "../FileAssetSelector";
+import { FileAssetSelector } from "../asset-components/FileAssetSelector";
 import { VolumeControl } from "../VolumeControl";
 
 interface Props {
@@ -19,7 +19,7 @@ export const AmbientSoundControl: React.FunctionComponent<Props> = ({ label, val
     return <Box marginBottom={3}>
         <Box display={'flex'} gap={2} alignItems={'center'} flexWrap={'wrap'}>
             <Typography minWidth={120} fontWeight={'bold'}>{label}</Typography>
-            <FileAssetSelector legend="sound Id" format="select"
+            <FileAssetSelector legend="sound Id" 
                 assetType="sound"
                 filterItems={(item) => item.category === 'music'}
                 selectedItemId={value?.soundId}

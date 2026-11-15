@@ -4,7 +4,7 @@ import { Fragment } from "react";
 import { ClearIcon } from "../material-icons";
 import { SoundAssetTestButton } from "../SoundAssetTestButton";
 import { VolumeControl } from "../VolumeControl";
-import { FileAssetSelector } from "../FileAssetSelector";
+import { FileAssetSelector } from "../asset-components/FileAssetSelector";
 
 interface Props {
     soundValues: SoundValue[],
@@ -43,7 +43,7 @@ export const SoundBoxes = ({
     const renderContents = (sv: SoundValue, index: number) => {
         if (continual) {
             return <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
-                <FileAssetSelector assetType="sound" format="select"
+                <FileAssetSelector assetType="sound"
                     selectedItemId={sv.soundId}
                     legend="continual sound"
                     select={(soundAsset) => editSound(index, { soundId: soundAsset.id })}
@@ -57,7 +57,7 @@ export const SoundBoxes = ({
         }
         return <>
             <Box display={'flex'} flex={1} justifyContent={'space-between'} alignItems={'center'}>
-                <FileAssetSelector assetType="sound" format="select"
+                <FileAssetSelector assetType="sound"
                     selectedItemId={sv.soundId}
                     legend="sound"
                     select={(soundAsset) => editSound(index, { soundId: soundAsset.id })}

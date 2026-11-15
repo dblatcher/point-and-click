@@ -5,7 +5,7 @@ import { SpriteFrame } from "point-click-lib";
 import { FileAsset, ImageAsset } from "@/services/assets";
 import { Box, Button, Card, Stack } from "@mui/material";
 import { FunctionComponent, useCallback, useState } from "react";
-import { FileAssetSelector } from "./FileAssetSelector";
+import { FileAssetSelector } from "./asset-components/FileAssetSelector";
 import { FramePreview } from "./FramePreview";
 
 interface Props {
@@ -114,7 +114,6 @@ export const FramePicker: FunctionComponent<Props> = ({
             <Box alignSelf={'flex-start'}>
                 <FileAssetSelector assetType="image"
                     legend="sprite sheet"
-                    format="select"
                     selectedItemId={imageId}
                     filterItems={imageFilter}
                     select={(item): void => { setLocalFrame(0, 0, item.id) }} />
