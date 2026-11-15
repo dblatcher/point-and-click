@@ -18,7 +18,7 @@ export const EditorHeading: FunctionComponent<Props> = ({
     heading, helpTopic, level = 2, itemId, children, icon: Icon,
 }: Props) => {
     return (
-        <Stack component={'header'} direction={'row'} justifyContent={'flex-start'} alignItems={'center'} borderBottom={2} marginBottom={2}>
+        <Stack gap={5} component={'header'} direction={'row'} justifyContent={'flex-start'} alignItems={'center'} borderBottom={2} marginBottom={2}>
             {Icon && <Icon fontSize="large" sx={{ marginTop: 2, marginRight: 3 }} />}
             <Box>
                 <Typography
@@ -26,7 +26,7 @@ export const EditorHeading: FunctionComponent<Props> = ({
                     variant={level === 2 ? 'h2' : 'h3'} >
                     {heading}
                 </Typography>
-                {itemId && <Typography>{itemId}</Typography>}
+                {itemId && <Typography>editing: <b>{itemId}</b></Typography>}
             </Box>
 
             <Box alignSelf={'flex-end'} padding={1} flex={1}>

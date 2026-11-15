@@ -1,7 +1,7 @@
 import { DeleteIcon } from "@/components/GameEditor/material-icons";
 import { formatFileSize } from "@/lib/util";
 import { FileAsset } from "@/services/assets";
-import { IconButton, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { IconButton, List, ListItem, ListItemButton, ListItemText, useTheme } from "@mui/material";
 import { useState } from "react";
 import { EditorBox } from "../layout/EditorBox";
 import { SearchControl } from "../SearchControl";
@@ -37,11 +37,19 @@ export const FileAssetList = ({
         ? itemsInFilter.filter(({ id }) => id.toLowerCase().includes(searchInput.toLowerCase()))
         : itemsInFilter
 
+    const theme = useTheme();
+
 
     return (
         <EditorBox title={legend} contentBoxProps={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', minWidth: 200 }}>
             <SearchControl searchInput={searchInput} setSearchInput={setSearchInput} />
-            <List dense disablePadding>
+            <List dense disablePadding sx={{
+                [theme.breakpoints.down('md')]: {
+                    height: 160,
+                    overflowY: 'scroll',
+                    overflowX: 'hidden',
+                }
+            }}>
                 {searchedItemsInFilter.map((asset) =>
                     <ListItem key={asset.id} disablePadding disableGutters
                         secondaryAction={

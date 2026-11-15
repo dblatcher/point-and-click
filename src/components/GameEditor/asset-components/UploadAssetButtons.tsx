@@ -13,16 +13,18 @@ export const UploadAssetButtons = ({ fileDescription, loadFile, loadUrl }: Props
     return (
         <>
             <Button variant="outlined"
+                title={`upload ${fileDescription} file`}
                 startIcon={<UploadIcon />}
                 onClick={loadFile}>
-                upload {fileDescription} file
+                upload
             </Button>
             <ButtonWithTextInput
                 buttonProps={{
                     variant: "outlined",
-                    startIcon: < LinkIcon />
+                    startIcon: < LinkIcon />,
+                    title:`get ${fileDescription} file from URL`,
                 }}
-                label={`get ${fileDescription} file from URL`}
+                label={'from url'}
                 onEntry={(input) => { loadUrl(input) }}
                 dialogTitle={`enter ${fileDescription} url`} />
         </>

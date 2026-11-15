@@ -4,7 +4,7 @@ import { fileToObjectUrl, makeDownloadFile, uploadFile, urlToBlob } from "@/lib/
 import { buildAssetZipBlob, ZipReadResult } from "@/lib/zipFiles"
 import { FileAsset } from "@/services/assets"
 import { FileAssetService } from "@/services/FileAssetService"
-import { Alert, Button, ButtonGroup, Grid, Snackbar, Typography } from "@mui/material"
+import { Alert, Box, Button, ButtonGroup, Grid, Snackbar, Typography, useTheme } from "@mui/material"
 import { FunctionComponent, useState } from "react"
 import { EditorBox } from "../layout/EditorBox"
 import { EditorHeading } from "../layout/EditorHeading"
@@ -49,13 +49,20 @@ export const AssetManager = <AssetType extends FileAsset>({
     validateAsset,
     service,
 }: Props<AssetType>) => {
-
+    const theme = useTheme();
     const [mode, setMode] = useState<Mode>(Mode.CREATE)
     const [asset, setAsset] = useState<Partial<AssetType>>({})
     const [fileObjectUrl, setFileObjectUrl] = useState<string>()
     const [fileName, setFileName] = useState<string>()
     const [saveWarning, setSaveWarning] = useState<string>()
     const [uploadWarning, setUploadWarning] = useState<string>()
+
+    const fileNameDisplay = (fileObjectUrl && fileName)
+        ? fileName
+        : mode === Mode.CREATE
+            ? '[no file]'
+            : asset.originalFileName ?? '[no file]'
+
 
     const revokeAndSetFileObjectUrl = (newUrl: string | undefined) => {
         if (fileObjectUrl && typeof window !== undefined) {
@@ -143,8 +150,15 @@ export const AssetManager = <AssetType extends FileAsset>({
                 heading={`${assetType} assets`}
                 icon={icons[assetType]}
                 itemId={mode === Mode.EDIT ? asset.id : '[new asset]'}
-            />
-            <ButtonGroup sx={{ marginY: 2 }}>
+            >
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={startNewAsset}>
+                    build new asset
+                </Button>
+            </EditorHeading>
+            <ButtonGroup sx={{ marginBottom: 2 }}>
                 <ZipFileControl
                     zipAssets={async () => {
                         const blobName = assetType === 'image' ? 'images' : 'sounds';
@@ -169,67 +183,82 @@ export const AssetManager = <AssetType extends FileAsset>({
                         service.add(result.data)
                     }}
                 />
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={startNewAsset}>
-                    build new asset
-                </Button>
-            </ButtonGroup>
 
-            <Grid container spacing={1} justifyContent={'space-between'}>
-                <Grid item display={'flex'} flexWrap={'wrap'} alignItems={'flex-start'}>
-                    <div>
-                        <EditorBox title="Asset Properties">
-                            <StringInput label="id"
-                                value={asset.id ?? ''}
-                                readOnly={mode === Mode.EDIT}
-                                inputHandler={id => setAsset(asset => ({ ...asset, id }))} />
-                            <StringInput label="original file name"
-                                value={asset.originalFileName ?? ''}
-                                readOnly={true}
-                                inputHandler={() => { }} />
-                            <FormComponent
-                                asset={asset}
-                                changeValue={(mod) => {
-                                    setAsset((asset) => ({ ...asset, ...mod }))
-                                }}
-                            />
-                            <SaveButtons
-                                mode={mode}
-                                idIsValid={!!asset.id && asset.id.length > 0}
-                                idIsAlreadyTaken={asset.id ? service.list().includes(asset.id) : false}
-                                saveAssetChanges={saveAssetChanges}
-                            />
-                        </EditorBox>
-                        <EditorBox title="Temporary file">
-                            <Typography textAlign={'center'}
-                                marginY={2}
-                            >{!!fileObjectUrl ? fileName : '[no file]'}</Typography>
-                            <ButtonGroup orientation="vertical" fullWidth>
-                                <UploadAssetButtons
-                                    fileDescription={assetType}
-                                    loadFile={loadFile}
-                                    loadUrl={loadUrl} />
-                                <Button
-                                    disabled={!fileObjectUrl}
-                                    onClick={clearFile}
-                                >clear file</Button>
-                            </ButtonGroup>
-                        </EditorBox>
-                    </div>
-                    <PreviewComponent
-                        asset={asset}
-                        temporarySrc={fileObjectUrl}
-                        temporaryFileName={fileName} />
-                </Grid>
-                <Grid item>
+            </ButtonGroup>
+            <Box sx={{
+                gap: 5,
+                display: 'grid',
+                gridTemplateColumns: 'fit-content(260px) 1fr 320px ',
+                gridTemplateRows: "1fr",
+                gridTemplateAreas: `
+                    "list preview edit"`,
+                [theme.breakpoints.down('lg')]: {
+                    gridTemplateColumns: 'fit-content(210px) 1fr',
+                    gridTemplateRows: "auto 1fr",
+                    gridTemplateAreas: `
+                    "list preview"
+                    "list edit"`,
+                },
+                [theme.breakpoints.down('md')]: {
+                    gridTemplateColumns: '1fr',
+                    gridTemplateRows: "auto",
+                    gridTemplateAreas: `
+                    "list"
+                    "preview"
+                    "edit"`,
+                }
+            }}>
+                <div style={{ gridArea: 'list' }}>
                     <FileAssetList assetType={assetType}
                         legend="assets"
                         currentSelection={asset?.id}
                         select={openFromService} />
-                </Grid>
-            </Grid>
+                </div>
+                <div style={{ gridArea: 'edit' }}>
+                    <EditorBox title="Asset Properties">
+                        <StringInput label="id"
+                            value={asset.id ?? ''}
+                            readOnly={mode === Mode.EDIT}
+                            inputHandler={id => setAsset(asset => ({ ...asset, id }))} />
+
+
+                        <Box paddingY={3}>
+                            <StringInput label="file"
+                                value={fileNameDisplay}
+                                readOnly={true}
+                                inputHandler={() => { }} />
+                            <UploadAssetButtons
+                                fileDescription={assetType}
+                                loadFile={loadFile}
+                                loadUrl={loadUrl} />
+                            <Button variant="outlined"
+                                disabled={!fileObjectUrl}
+                                onClick={clearFile}
+                            >clear</Button>
+                        </Box>
+
+
+                        <FormComponent
+                            asset={asset}
+                            changeValue={(mod) => {
+                                setAsset((asset) => ({ ...asset, ...mod }))
+                            }}
+                        />
+                        <SaveButtons
+                            mode={mode}
+                            idIsValid={!!asset.id && asset.id.length > 0}
+                            idIsAlreadyTaken={asset.id ? service.list().includes(asset.id) : false}
+                            saveAssetChanges={saveAssetChanges}
+                        />
+                    </EditorBox>
+                </div>
+                <div style={{ gridArea: 'preview' }}>
+                    <PreviewComponent
+                        asset={asset}
+                        temporarySrc={fileObjectUrl}
+                        temporaryFileName={fileName} />
+                </div>
+            </Box>
 
             <Snackbar open={!!uploadWarning} autoHideDuration={5000} onClose={() => setUploadWarning(undefined)}>
                 <Alert severity="error">{uploadWarning}</Alert>
