@@ -75,4 +75,4 @@ export const formatTimestamp = (time: number) => new Date(time).toLocaleString()
 
 export const displaySaveKey = (key: string) => key.startsWith("SAVE_") ? key.substring(5) : key;
 
-export const formatFileSize = (bytes:number) =>  `${(bytes/1024).toFixed(1)}KB`
+export const formatFileSize = (bytes?: number) => typeof bytes === 'number' ? `${(bytes / 1024).toFixed(1)}KB` : 'unknown size'

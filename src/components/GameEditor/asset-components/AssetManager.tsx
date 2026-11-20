@@ -54,7 +54,7 @@ export const AssetManager = <AssetType extends FileAsset>({
     const [asset, setAsset] = useState<Partial<AssetType>>({})
     const [fileObjectUrl, setFileObjectUrl] = useState<string>()
     const [fileName, setFileName] = useState<string>()
-    const [saveWarning, setSaveWarning] = useState<string>()
+    const [downloadWarning, setDownloadWarning] = useState<string>()
     const [uploadWarning, setUploadWarning] = useState<string>()
 
     const fileNameDisplay = (fileObjectUrl && fileName)
@@ -81,7 +81,6 @@ export const AssetManager = <AssetType extends FileAsset>({
         const shouldReplaceId = mode === Mode.CREATE && (!asset.id || asset.id === fileName)
         revokeAndSetFileObjectUrl(fileToObjectUrl(file));
         setFileName(newFileName)
-        setSaveWarning(undefined)
         if (shouldReplaceId) {
             setAsset(({ ...asset, id: newFileName, size: file.size }))
         }
@@ -103,6 +102,7 @@ export const AssetManager = <AssetType extends FileAsset>({
     };
 
     const loadFile = async () => {
+        // TO DO - check file type!
         const file = await uploadFile();
         if (!file) {
             setUploadWarning(`failed to upload ${assetType} file`)
@@ -118,26 +118,26 @@ export const AssetManager = <AssetType extends FileAsset>({
         setAsset({})
     }
 
-    const saveAssetChanges = () => {
-        setSaveWarning(undefined)
-
+    const buildAsset = (): { success: false, warning: string } | { success: true, data: AssetType } => {
         if (!fileObjectUrl && !asset.href) {
-            setSaveWarning('no file')
-            return
+            return { success: false, warning: 'no file' }
         }
         const copy = fileObjectUrl
             ? { ...asset, href: fileObjectUrl, originalFileName: fileName }
             : { ...asset }
         const isValid = validateAsset(copy);
         if (!isValid) {
-            setSaveWarning('invalid data')
-            return
+            return { success: false, warning: 'invalid data' }
         }
-        service.add(copy)
-        setAsset(copy)
+        return { success: true, data: copy }
+    }
+
+    const saveAssetChanges = (asset: AssetType) => {
+        service.add(asset)
+        setAsset(asset)
         setMode(Mode.EDIT)
         setFileName(undefined)
-        if (copy.href === fileObjectUrl) {
+        if (asset.href === fileObjectUrl) {
             setFileObjectUrl(undefined)
         } else {
             revokeAndSetFileObjectUrl(undefined)
@@ -164,7 +164,7 @@ export const AssetManager = <AssetType extends FileAsset>({
                         const blobName = assetType === 'image' ? 'images' : 'sounds';
                         const result = await buildAssetZipBlob(blobName, service);
                         if (result.success === false) {
-                            setSaveWarning(result.error)
+                            setDownloadWarning(result.error)
                             return
                         }
                         makeDownloadFile(`${blobName}.zip`, result.blob);
@@ -220,8 +220,6 @@ export const AssetManager = <AssetType extends FileAsset>({
                             value={asset.id ?? ''}
                             readOnly={mode === Mode.EDIT}
                             inputHandler={id => setAsset(asset => ({ ...asset, id }))} />
-
-
                         <Box paddingY={3}>
                             <StringInput label="file"
                                 value={fileNameDisplay}
@@ -246,9 +244,10 @@ export const AssetManager = <AssetType extends FileAsset>({
                         />
                         <SaveButtons
                             mode={mode}
-                            idIsValid={!!asset.id && asset.id.length > 0}
+                            asset={asset}
                             idIsAlreadyTaken={asset.id ? service.list().includes(asset.id) : false}
                             saveAssetChanges={saveAssetChanges}
+                            buildAsset={buildAsset}
                         />
                     </EditorBox>
                 </div>
@@ -263,8 +262,8 @@ export const AssetManager = <AssetType extends FileAsset>({
             <Snackbar open={!!uploadWarning} autoHideDuration={5000} onClose={() => setUploadWarning(undefined)}>
                 <Alert severity="error">{uploadWarning}</Alert>
             </Snackbar>
-            <Snackbar open={!!saveWarning} autoHideDuration={5000} onClose={() => setSaveWarning(undefined)}>
-                <Alert severity="error">{saveWarning}</Alert>
+            <Snackbar open={!!downloadWarning} autoHideDuration={5000} onClose={() => setDownloadWarning(undefined)}>
+                <Alert severity="error">{downloadWarning}</Alert>
             </Snackbar>
         </article >
     )

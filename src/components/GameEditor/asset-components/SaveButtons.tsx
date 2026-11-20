@@ -1,13 +1,21 @@
-import { AddIcon, SaveIcon } from "@/components/GameEditor/material-icons";
-import { Button, ButtonProps } from "@mui/material";
+import { AddIcon, ExclamationIcon, SaveIcon } from "@/components/GameEditor/material-icons";
+import { FileAsset } from "@/services/assets";
+import { Box, Button, ButtonProps, Tooltip } from "@mui/material";
 
 enum Mode { EDIT = 'edit', CREATE = 'create' }
 
-interface Props {
-    idIsValid: boolean;
+type Props<AssetType extends FileAsset> = {
     idIsAlreadyTaken: boolean;
-    saveAssetChanges: { (): void };
+    saveAssetChanges: { (asset: AssetType): void };
     mode: Mode;
+    asset: Partial<AssetType>;
+    buildAsset: () => {
+        success: false;
+        warning: string;
+    } | {
+        success: true;
+        data: AssetType;
+    }
 }
 
 const buttonDefaults: ButtonProps = {
@@ -19,25 +27,45 @@ const buttonDefaults: ButtonProps = {
     }
 }
 
-export const SaveButtons = ({ saveAssetChanges, idIsAlreadyTaken, idIsValid, mode }: Props) => {
+export const SaveButtons = <AssetType extends FileAsset>({
+    asset,
+    saveAssetChanges,
+    idIsAlreadyTaken,
+    mode,
+    buildAsset
+}: Props<AssetType>) => {
 
-    if (mode === 'edit') {
-        return <Button {...buttonDefaults}
-            startIcon={<SaveIcon />}
-            onClick={saveAssetChanges}>
-            Save Changes
+    const nonEmptyId = !!asset.id && asset.id.length > 0
+    const assetResult = buildAsset();
+    const buttonText = mode === 'edit' ? 'Save Changes' : 'Save New Asset'
+    const idIsOk = mode === 'edit' ? true : nonEmptyId && !idIsAlreadyTaken;
+
+    const validationWarning = !nonEmptyId
+        ? 'no id'
+        : idIsAlreadyTaken
+            ? 'id already used'
+            : !assetResult.success
+                ? assetResult.warning
+                : undefined
+
+    return <Box display={'flex'}>
+        <Button {...buttonDefaults}
+            disabled={!assetResult.success || !idIsOk}
+            startIcon={mode === 'edit' ? <SaveIcon /> : <AddIcon />}
+            onClick={() => {
+                if (!assetResult.success || !idIsOk) {
+                    return
+                }
+                saveAssetChanges(assetResult.data)
+            }}>
+            {buttonText}
         </Button>
-    }
-
-    return <Button {...buttonDefaults}
-        startIcon={<AddIcon />}
-        disabled={!idIsValid || idIsAlreadyTaken}
-        onClick={() => {
-            if (!idIsValid || idIsAlreadyTaken) {
-                return
-            }
-            saveAssetChanges()
-        }}>
-        Save New Asset
-    </Button>
+        <Box flexBasis={50} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+            {validationWarning && (
+                <Tooltip title={validationWarning}>
+                    <ExclamationIcon color="warning" />
+                </Tooltip>
+            )}
+        </Box>
+    </Box>
 }
