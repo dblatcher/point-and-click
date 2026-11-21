@@ -59,6 +59,7 @@ import ShortCutIcon from '@mui/icons-material/Shortcut';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import SetActorPlayableIcon from '@mui/icons-material/GroupAdd';
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
 
 export type IconComponent = typeof ActorIcon;
 
@@ -124,5 +125,6 @@ export {
     SequenceIcon,
     SoundIcon,
     SetActorPlayableIcon,
+    ZoomInIcon,
 };
 
