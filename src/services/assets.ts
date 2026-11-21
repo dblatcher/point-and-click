@@ -9,7 +9,7 @@ export type FileAsset = {
     size?: number;
 }
 
-
+export type AssetType = 'sound' | 'image'
 export type ImageAssetCategory = 'background' | 'item' | 'spriteSheet' | 'any'
 export type ImageAsset = FileAsset & {
     category: ImageAssetCategory;

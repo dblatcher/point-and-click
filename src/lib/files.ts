@@ -1,5 +1,22 @@
 import { z } from "zod"
 
+const fileTypeValidation = {
+    audio: {
+        checkMimeType: (mimeType: string) => mimeType.startsWith('audio') || mimeType.startsWith('application/ogg'),
+        accept: "audio/*,.ogg"
+    },
+    image: {
+        checkMimeType: (mimeType: string) => mimeType.startsWith('image'),
+        accept: "image/*"
+    },
+    zip: {
+        checkMimeType: (mimeType: string) => ["application/zip", "application/x-zip-compressed"].includes(mimeType),
+        accept: ".zip"
+    }
+} as const
+
+type FileType = keyof typeof fileTypeValidation;
+
 export function dataToBlob(data: unknown): Blob | null {
 
     try {
@@ -34,12 +51,15 @@ export function downloadJsonFile(data: { id: string }, fileType: string): void {
     }
 }
 
-export const uploadFile = async (): Promise<undefined | File> => {
+export const uploadFile = async (fileType?: FileType): Promise<undefined | File> => {
     if (typeof window !== 'undefined') {
         const { document } = window
         const input = document.createElement('input')
         input.setAttribute('type', 'file')
         input.setAttribute('hidden', 'true')
+        if (fileType) {
+            input.setAttribute('accept', fileTypeValidation[fileType].accept)
+        }
         document.body.appendChild(input);
         input.click()
         document.body.removeChild(input)
@@ -55,7 +75,17 @@ export const uploadFile = async (): Promise<undefined | File> => {
     return undefined
 }
 
-export const urlToBlob = async (urlString: string, validateAs?: 'image' | 'audio'): Promise<{ blob?: Blob, failure?: undefined } | { blob?: undefined, failure: string }> => {
+export const checkMimeType = (validateAs: FileType | undefined, blob: Blob) => {
+    if (!validateAs) {
+        return undefined
+    }
+    if (!fileTypeValidation[validateAs].checkMimeType(blob.type)) {
+        return { failure: `not ${validateAs}` }
+    }
+    return undefined
+}
+
+export const urlToBlob = async (urlString: string, validateAs?: FileType): Promise<{ blob?: Blob, failure?: undefined } | { blob?: undefined, failure: string }> => {
     try {
         const url = new URL(urlString)
         const response = await fetch(url, { mode: 'cors' })
@@ -63,17 +93,9 @@ export const urlToBlob = async (urlString: string, validateAs?: 'image' | 'audio
             return { failure: response.statusText }
         }
         const blob = await response.blob()
-        switch (validateAs) {
-            case 'image':
-                if (!blob.type.startsWith('image')) {
-                    return { failure: 'not image' }
-                }
-                break;
-            case 'audio':
-                if (!blob.type.startsWith('audio') && !blob.type.startsWith('application/ogg')) {
-                    return { failure: 'not audio' }
-                }
-                break;
+        const wrongTypeFailure = checkMimeType(validateAs, blob);
+        if (wrongTypeFailure) {
+            return wrongTypeFailure
         }
         return { blob }
     } catch (err) {

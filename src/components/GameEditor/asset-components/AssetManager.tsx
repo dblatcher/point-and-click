@@ -1,10 +1,10 @@
 import { StringInput } from "@/components/SchemaForm/StringInput"
 import { cloneData } from "@/lib/clone"
-import { fileToObjectUrl, makeDownloadFile, uploadFile, urlToBlob } from "@/lib/files"
+import { fileToObjectUrl, makeDownloadFile, uploadFile } from "@/lib/files"
 import { buildAssetZipBlob, ZipReadResult } from "@/lib/zipFiles"
-import { FileAsset } from "@/services/assets"
+import { AssetType, FileAsset } from "@/services/assets"
 import { FileAssetService } from "@/services/FileAssetService"
-import { Alert, Box, Button, ButtonGroup, Grid, Snackbar, Typography, useTheme } from "@mui/material"
+import { Alert, Box, Button, ButtonGroup, Snackbar, useTheme } from "@mui/material"
 import { FunctionComponent, useState } from "react"
 import { EditorBox } from "../layout/EditorBox"
 import { EditorHeading } from "../layout/EditorHeading"
@@ -15,22 +15,22 @@ import { UploadAssetButtons } from "./UploadAssetButtons"
 import { ZipFileControl } from "./ZipFileControl"
 
 
-type AssetFormProps<AssetType extends FileAsset> = {
-    asset: Partial<AssetType>;
-    changeValue: { (mod: Partial<AssetType>): void }
+type AssetFormProps<TypedAsset extends FileAsset> = {
+    asset: Partial<TypedAsset>;
+    changeValue: { (mod: Partial<TypedAsset>): void }
 }
 
-type Props<AssetType extends FileAsset> = {
+type Props<TypedAsset extends FileAsset> = {
     PreviewComponent: FunctionComponent<{
-        asset: Partial<AssetType>
+        asset: Partial<TypedAsset>
         temporarySrc?: string
         temporaryFileName?: string
     }>;
-    FormComponent: FunctionComponent<AssetFormProps<AssetType>>;
-    assetType: 'sound' | 'image';
-    validateZipFile: { (file: Blob): Promise<ZipReadResult<AssetType[]>> }
-    validateAsset: { (asset: unknown): asset is AssetType }
-    service: FileAssetService<AssetType>;
+    FormComponent: FunctionComponent<AssetFormProps<TypedAsset>>;
+    assetType: AssetType;
+    validateZipFile: { (file: Blob): Promise<ZipReadResult<TypedAsset[]>> }
+    validateAsset: { (asset: unknown): asset is TypedAsset }
+    service: FileAssetService<TypedAsset>;
 }
 
 
@@ -41,17 +41,17 @@ const icons = {
 
 enum Mode { EDIT = 'edit', CREATE = 'create' }
 
-export const AssetManager = <AssetType extends FileAsset>({
+export const AssetManager = <TypedAsset extends FileAsset>({
     PreviewComponent,
     FormComponent,
     assetType,
     validateZipFile,
     validateAsset,
     service,
-}: Props<AssetType>) => {
+}: Props<TypedAsset>) => {
     const theme = useTheme();
     const [mode, setMode] = useState<Mode>(Mode.CREATE)
-    const [asset, setAsset] = useState<Partial<AssetType>>({})
+    const [asset, setAsset] = useState<Partial<TypedAsset>>({})
     const [fileObjectUrl, setFileObjectUrl] = useState<string>()
     const [fileName, setFileName] = useState<string>()
     const [downloadWarning, setDownloadWarning] = useState<string>()
@@ -74,7 +74,7 @@ export const AssetManager = <AssetType extends FileAsset>({
     const openFromService = (asset: FileAsset) => {
         setMode(Mode.EDIT)
         revokeAndSetFileObjectUrl(undefined)
-        setAsset(cloneData(asset as AssetType))
+        setAsset(cloneData(asset as TypedAsset))
     }
 
     const setNewFile = (file: Blob | File, newFileName: string) => {
@@ -91,25 +91,6 @@ export const AssetManager = <AssetType extends FileAsset>({
         setFileName(undefined)
     }
 
-    const loadUrl = async (url: string) => {
-        const validateAs = assetType === 'sound' ? 'audio' : assetType;
-        const { blob, failure } = await urlToBlob(url, validateAs)
-        if (!blob) {
-            setUploadWarning(`failed to load ${assetType} URL: ${failure ?? ''}`)
-            return
-        }
-        setNewFile(blob, url.split('/').pop() ?? url)
-    };
-
-    const loadFile = async () => {
-        // TO DO - check file type!
-        const file = await uploadFile();
-        if (!file) {
-            setUploadWarning(`failed to upload ${assetType} file`)
-            return;
-        }
-        setNewFile(file, file.name)
-    }
 
     const startNewAsset = () => {
         revokeAndSetFileObjectUrl(undefined);
@@ -118,7 +99,7 @@ export const AssetManager = <AssetType extends FileAsset>({
         setAsset({})
     }
 
-    const buildAsset = (): { success: false, warning: string } | { success: true, data: AssetType } => {
+    const buildAsset = (): { success: false, warning: string } | { success: true, data: TypedAsset } => {
         if (!fileObjectUrl && !asset.href) {
             return { success: false, warning: 'no file' }
         }
@@ -132,7 +113,7 @@ export const AssetManager = <AssetType extends FileAsset>({
         return { success: true, data: copy }
     }
 
-    const saveAssetChanges = (asset: AssetType) => {
+    const saveAssetChanges = (asset: TypedAsset) => {
         service.add(asset)
         setAsset(asset)
         setMode(Mode.EDIT)
@@ -171,7 +152,7 @@ export const AssetManager = <AssetType extends FileAsset>({
                     }}
                     loadFromZipFile={async () => {
                         setUploadWarning(undefined)
-                        const file = await uploadFile();
+                        const file = await uploadFile('zip');
                         if (!file) {
                             return;
                         }
@@ -226,9 +207,10 @@ export const AssetManager = <AssetType extends FileAsset>({
                                 readOnly={true}
                                 inputHandler={() => { }} />
                             <UploadAssetButtons
-                                fileDescription={assetType}
-                                loadFile={loadFile}
-                                loadUrl={loadUrl} />
+                                assetType={assetType}
+                                setUploadWarning={setUploadWarning}
+                                setNewFile={setNewFile}
+                            />
                             <Button variant="outlined"
                                 disabled={!fileObjectUrl}
                                 onClick={clearFile}
@@ -243,9 +225,9 @@ export const AssetManager = <AssetType extends FileAsset>({
                             }}
                         />
                         <SaveButtons
+                            assetType={assetType}
                             mode={mode}
                             asset={asset}
-                            idIsAlreadyTaken={asset.id ? service.list().includes(asset.id) : false}
                             saveAssetChanges={saveAssetChanges}
                             buildAsset={buildAsset}
                         />

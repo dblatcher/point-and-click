@@ -1,20 +1,21 @@
 import { AddIcon, ExclamationIcon, SaveIcon } from "@/components/GameEditor/material-icons";
-import { FileAsset } from "@/services/assets";
+import { useAssets } from "@/context/asset-context";
+import { AssetType, FileAsset } from "@/services/assets";
 import { Box, Button, ButtonProps, Tooltip } from "@mui/material";
 
 enum Mode { EDIT = 'edit', CREATE = 'create' }
 
-type Props<AssetType extends FileAsset> = {
-    idIsAlreadyTaken: boolean;
-    saveAssetChanges: { (asset: AssetType): void };
+type Props<TypedAsset extends FileAsset> = {
+    assetType: AssetType;
+    saveAssetChanges: { (asset: TypedAsset): void };
     mode: Mode;
-    asset: Partial<AssetType>;
+    asset: Partial<TypedAsset>;
     buildAsset: () => {
         success: false;
         warning: string;
     } | {
         success: true;
-        data: AssetType;
+        data: TypedAsset;
     }
 }
 
@@ -27,22 +28,26 @@ const buttonDefaults: ButtonProps = {
     }
 }
 
-export const SaveButtons = <AssetType extends FileAsset>({
+export const SaveButtons = <TypedAsset extends FileAsset>({
     asset,
     saveAssetChanges,
-    idIsAlreadyTaken,
     mode,
-    buildAsset
-}: Props<AssetType>) => {
+    buildAsset,
+    assetType,
+}: Props<TypedAsset>) => {
 
+    const { soundAssets, imageAssets } = useAssets()
+    const allAssets = assetType === 'image' ? imageAssets : soundAssets;
+    const currentAssetIds = allAssets.map(asset => asset.id)
+    
+    const idIsAlreadyTaken = !!asset.id && currentAssetIds.includes(asset.id)
     const nonEmptyId = !!asset.id && asset.id.length > 0
+    const idIsOk = mode === 'edit' ? true : nonEmptyId && idIsAlreadyTaken;
+    
     const assetResult = buildAsset();
-    const buttonText = mode === 'edit' ? 'Save Changes' : 'Save New Asset'
-    const idIsOk = mode === 'edit' ? true : nonEmptyId && !idIsAlreadyTaken;
-
     const validationWarning = !nonEmptyId
         ? 'no id'
-        : idIsAlreadyTaken
+        : (idIsAlreadyTaken && mode === Mode.CREATE)
             ? 'id already used'
             : !assetResult.success
                 ? assetResult.warning
@@ -58,7 +63,7 @@ export const SaveButtons = <AssetType extends FileAsset>({
                 }
                 saveAssetChanges(assetResult.data)
             }}>
-            {buttonText}
+            {mode === 'edit' ? 'Save Changes' : 'Save New Asset'}
         </Button>
         <Box flexBasis={50} display={'flex'} justifyContent={'center'} alignItems={'center'}>
             {validationWarning && (
