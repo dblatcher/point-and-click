@@ -17,6 +17,16 @@ interface Props {
     currentSelection?: string;
 }
 
+/*
+Getting erroneous type error "Type error: Property 'size' does not exist on type 'FileAsset'."
+in build.
+using this unnecessary function to try and fix
+*/
+const getAssetFileSize = (asset:FileAsset) => {
+    const size = 'size' in asset ? asset['size'] : undefined;
+    return formatFileSize(size)
+}
+
 export const FileAssetList = ({
     assetType,
     select,
@@ -60,7 +70,7 @@ export const FileAssetList = ({
                         <ListItemButton
                             selected={asset.id === currentSelection}
                             onClick={() => { handleSelect(asset.id) }}>
-                            <ListItemText primary={<Box display={'flex'} justifyContent={'space-between'}><b>{asset.id}</b>{formatFileSize(asset.size)}</Box>} />
+                            <ListItemText primary={<Box display={'flex'} justifyContent={'space-between'}><b>{asset.id}</b>{getAssetFileSize(asset)}</Box>} />
                         </ListItemButton>
                     </ListItem>
                 )}
